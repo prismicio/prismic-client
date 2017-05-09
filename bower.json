@@ -1,0 +1,24 @@
+{
+  "name": "prismic-javascript",
+  "description": "JavaScript development kit for prismic.io",
+  "main": "dist/prismic-javascript.min.js",
+  "authors": [
+    "arnaudlewis"
+  ],
+  "license": "Apache-2.0",
+  "keywords": [
+    "prismic",
+    "prismic.io",
+    "cms",
+    "content",
+    "api"
+  ],
+  "homepage": "https://github.com/prismicio/prismic-javascript",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

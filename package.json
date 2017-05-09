@@ -1,0 +1,39 @@
+{
+  "name": "prismic-javascript",
+  "description": "JavaScript development kit for prismic.io",
+  "license": "Apache-2.0",
+  "url": "https://github.com/prismicio/prismic-javascript",
+  "keywords": [
+    "prismic",
+    "prismic.io",
+    "cms",
+    "content",
+    "api"
+  ],
+  "version": "3.5.5",
+  "devDependencies": {
+    "json-loader": "^0.5.4",
+    "ts-loader": "^2.0.3",
+    "tslint": "^5.1.0",
+    "typedoc": "^0.6.0",
+    "typescript": "^2.3.2",
+    "webpack": "^2.4.1",
+    "yargs": "^7.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prismicio/prismic-javascript.git"
+  },
+  "main": "dist/prismic-javascript.min.js",
+  "scripts": {
+    "build": "webpack --debug; webpack -p",
+    "dev": "webpack -d --watch",
+    "prepublish": "npm run build; npm run docs",
+    "docs": "typedoc --mode file --out ./docs/ ./src/",
+    "lint": "tslint src",
+    "posttest": "tslint lib"
+  },
+  "dependencies": {
+    "fetch-everywhere": "^1.0.5"
+  }
+}
