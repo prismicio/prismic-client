@@ -10,7 +10,7 @@
     "content",
     "api"
   ],
-  "version": "3.5.5",
+  "version": "1.0.0",
   "devDependencies": {
     "json-loader": "^0.5.4",
     "ts-loader": "^2.0.3",
