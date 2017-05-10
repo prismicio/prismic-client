@@ -10,6 +10,52 @@
 It's meant to work in pair with the prismic-dom library available here:
 * [prismic-dom](https://github.com/prismicio/prismic-dom) is on Github.
 
+------------------------------------
+
+
+[1. Installation](#installation)
+--------------------------------
+
+> [NPM](#npm) <br />
+> [CDN](#cdn) <br />
+> [Downloadable version](#downloadable-version) <br />
+> [Demo project](#demo-project) <br />
+> [Starter kits](#starter-kits) <br />
+
+[2. Query the content](#query-the-content)
+--------------------------------
+
+[3. Integrate the content](#integrate-the-content)
+-----------------------------------------------------
+
+> [Embed](#embed) <br />
+> [Image](#image) <br />
+> [Text](#text) <br />
+> [Number](#number) <br />
+> [Date](#date) <br />
+> [Timestamp](#timestamp) <br />
+> [Select](#select) <br />
+> [Color](#color) <br />
+> [StructuredText](#structuredText) <br />
+> [WebLink](#weblink) <br />
+> [DocumentLink](#documentlink) <br />
+> [ImageLink](#imagelink) <br />
+> [FileLink](#filelink) <br />
+> [Separator](#separator) <br />
+> [Group](#group) <br />
+> [GeoPoint](#geopoint) <br />
+> [Slices](#slices) <br />
+
+[4. Contribute to the kit](#contribute-to-the-kit)
+--------------------------------
+> [Install the kit locally](#install-the-kit-locally) <br />
+> [Documentation](#documentation) <br />
+
+[5. License](#license)
+-----------------------------------------------------
+
+===================================================
+
 ### Installation
 
 #### NPM
@@ -36,19 +82,19 @@ The kit is universal, it can be used:
 * Client-side as part of your build with Browserify, Webpack
 * Client-side with a simple script tag
 
-### Starter kits
+#### Starter kits
 
 For new project, you can start from a sample project:
 
 * [Node.js project](https://github.com/prismicio/nodejs-sdk)
 * [Node.js blog](https://github.com/prismicio/nodejs-blog)
 
-### Demo project
+#### Demo project
 
 You can find an integration of prismic content with the new API V2 in the following project:
 * [Node.js project](https://github.com/arnaudlewis/prismic-apiv2)
 
-### Usage
+### Query the content
 
 To fetch documents from your repository, you need to fetch the Api data first.
 
@@ -81,6 +127,396 @@ Prismic.api("https://your-repository-name.prismic.io/api").then(function(api) {
 ```
 
 See the [developer documentation](https://prismic.io/docs) or the [API documentation](https://prismicio.github.io/prismic-javascript/globals.html) for more details on how to use it.
+
+### Integrate the content
+
+In each case documented below, you will have a snippet of the custom type and another for the code needed to fill the content field into your JS Template.
+In these examples we have a `doc` parameter corresponding to the fetched prismic document.
+
+
+#### Embed
+Custom type
+```
+"video" : {
+  "type" : "Embed"
+}
+```
+
+Template JS
+```
+doc.data.video.embed_url
+```
+
+#### Image
+Custom type
+```
+"photo" : {
+  "type" : "Image",
+  "fieldset" : "Image",
+  "config" : {
+    "constraint" : {
+      "width" : 300,
+      "height" : 300
+    },
+    "thumbnails" : [ {
+      "name" : "Small",
+      "width" : 100,
+      "height" : 100
+    }, {
+      "name" : "Medium",
+      "width" : 200,
+      "height" : 200
+    }, {
+      "name" : "Large",
+      "width" : 300,
+      "height" : 300
+    } ]
+  }
+}
+```
+Template JS
+```
+//main view
+doc.data.photo.url
+doc.data.photo.alt
+doc.data.photo.width
+doc.data.photo.height
+
+//thumbnails => example for small view
+doc.data.photo.small.url
+doc.data.photo.small.alt
+doc.data.photo.small.width
+doc.data.photo.small.height
+```
+#### Text
+Custom type
+```
+"title" : {
+  "type" : "Text",
+}
+```
+
+Template JS
+```
+doc.data.title
+```
+#### Number
+Custom type
+```
+"count" : {
+  "type" : "Text",
+}
+```
+
+Template JS
+```
+doc.data.count
+```
+#### Date
+Custom type
+```
+"publication" : {
+  "type" : "Date",
+}
+```
+
+Template JS
+```
+import { Date } from 'prismic-dom'
+
+// date as string from the API
+doc.data.publication
+// date as JS Date
+Date(doc.data.publication)
+
+```
+#### Timestamp
+Custom type
+```
+"time" : {
+  "type" : "Timestamp",
+}
+```
+
+Template JS
+```
+import { Date } from 'prismic-dom'
+
+// timestamp as string from the API
+doc.data.time
+// timestamp as JS Datetime
+Date(doc.data.time)
+```
+#### Select
+Custom type
+```
+"gender" : {
+  "type" : "Select",
+}
+```
+
+Template JS
+```
+doc.data.gender
+```
+#### Color
+Custom type
+```
+"background" : {
+  "type" : "Color",
+}
+```
+
+Template JS
+```
+doc.data.background
+```
+#### RichText
+Custom type
+```
+"description" : {
+  "type" : "StructuredText",
+}
+```
+
+Template JS
+```
+import { RichText } from 'prismic-dom'
+
+RichText.asText(doc.data.description)
+
+//linkResolver must be declare somewhere
+RichText.asHtml(doc.data.description, linkResolver)
+```
+
+#### WebLink
+Custom type
+```
+"linktoweb" : {
+  "type" : "Link",
+  "config" : {
+    "select" : "web"
+  }
+}
+```
+
+Template JS
+```
+doc.data.linktoweb.url
+```
+#### DocumentLink
+Custom type
+```
+"linktodoc" : {
+  "type" : "Link",
+  "config" : {
+    "select" : "document",
+    "customtypes" : [ <your-custom-type-id> ],
+    "tags" : [ <your-tag> ],
+  }
+}
+```
+
+Template JS
+```
+//return url of the document link
+doc.data.linktodoc
+//return url of the document
+linkResolver(doc.data.linktodoc)
+```
+#### ImageLink
+Custom type
+```
+"linktomedia" : {
+  "type" : "Link",
+  "config" : {
+    "select" : "media"
+  }
+}
+```
+
+Template JS
+```
+doc.data.linktomedia.url
+```
+#### FileLink
+Custom type
+```
+"linktofile" : {
+  "type" : "Link",
+  "config" : {
+    "select" : "media"
+  }
+}
+```
+
+Template JS
+```
+doc.data.linktofile.url
+```
+#### Group
+Custom type
+```
+"feature" : {
+  "type" : "Group",
+  "repeat": true, //default to true but put explicitly for the example
+  "config" : {
+    "field" : {
+        "title" : {
+          "type" : "Text",
+        },
+        "description" : {
+          "type" : "StructuredText",
+        }
+    }
+  }
+}
+```
+
+Template JS
+```
+import { RichText } from 'prismic-dom'
+
+doc.data.feature.forEach(item => {
+    item.title
+    RichText.asHtml(item.description, linkResolver)
+})
+```
+#### GeoPoint
+Custom type
+```
+"location" : {
+  "type" : "GeoPoint",
+}
+```
+
+Template JS
+```
+doc.data.latitude
+doc.data.longitude
+```
+#### Slices
+**Slice with Group as value**
+The Group value will be put directly as Slice value
+Custom type
+```
+"contentAsSlices" : {
+    "fieldset" : "Dynamic page zone...",
+    "type" : "Slices",
+    "config" : {
+        "choices" : {
+            "slides" : {
+                "type" : "Group",
+                //required to display name in slice select in the writing room
+                "fieldset" : "Slides",
+                "config" : {
+                    "fields" : {
+                        "illustration" : {
+                          "type" : "Image"
+                        },
+                        "title" : {
+                          "type" : "StructuredText"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+Template JS
+```
+for(slice in doc.data.contentAsSlices) {
+    switch(slice.slice_type) {
+        case 'slides':
+          slice.value.forEach(item => {
+            item.illustration.url
+            item.title
+          })
+          break
+    }
+}
+
+```
+**Slice with basic fragment like Text as value**
+The fragment value will be put directly as Slice value
+Custom type
+```
+"contentAsSlices" : {
+    "fieldset" : "Dynamic page zone...",
+    "type" : "Slices",
+    "config" : {
+        "choices" : {
+            "description" : {
+              "type" : "StructuredText"
+            }
+        }
+    }
+}
+```
+
+Template JS
+```
+import { RichText } from 'prismic-dom'
+
+for(slice in doc.contentAsSlices) {
+    switch(slice.slice_type) {
+        case 'description':
+            RichText.asHtml(slice.value, linkResolver)
+            break
+    }
+}
+
+```
+
+**new Slice**
+the new Slice type allow you to create a repeatable area and a non repeatable one.
+```
+"contentAsSlices" : {
+    "fieldset" : "Dynamic page zone...",
+    "type" : "Slices",
+    "config" : {
+        "choices" : {
+            "newslice" : {
+              "type" : "Slice",
+              "non-repeat": {
+                "title": {
+                  "type": "Text"
+                }
+              },
+              "repeat": {
+                "description": {
+                  "type" : "StructuredText"
+                }
+              }
+            }
+        }
+    }
+}
+```
+
+Template JS
+```
+import { RichText } from 'prismic-dom'
+
+for(slice in doc.contentAsSlices) {
+    switch(slice.slice_type) {
+        case 'newslice':
+          //non repeatable part
+          slice.value.primary.title
+
+          //repeatable part
+          slice.value.items.forEach(item => {
+            RichText.asHtml(item.description, linkResolver)
+          })
+          break
+    }
+}
+
+```
+
+### Contribute to the kit
 
 #### Install the kit locally
 
