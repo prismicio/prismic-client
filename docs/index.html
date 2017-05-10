@@ -65,13 +65,54 @@
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
 				<h2 id="javascript-development-kit-v2-for-prismic-io">JavaScript development kit v2 for prismic.io</h2>
-				<p><a href="http://badge.fury.io/js/prismic.io"><img src="https://badge.fury.io/js/prismic.io.svg" alt="npm version"></a>
+				<p><a href="http://badge.fury.io/js/prismic-javascript"><img src="https://badge.fury.io/js/prismic-javascript.svg" alt="npm version"></a>
 				<a href="https://travis-ci.org/prismicio/prismic-javascript"><img src="https://api.travis-ci.org/prismicio/prismic-javascript.png" alt="Build Status"></a></p>
 				<ul>
 					<li>The <a href="https://github.com/prismicio/prismic-javascript">source code</a> is on Github.</li>
 					<li>The <a href="https://github.com/prismicio/prismic-javascript/releases">Changelog</a> is on Github&#39;s releases tab.</li>
 					<li>The <a href="https://prismicio.github.io/prismic-javascript/globals.html">API reference</a> is on Github.</li>
 				</ul>
+				<p>It&#39;s meant to work in pair with the prismic-dom library available here:</p>
+				<ul>
+					<li><a href="https://github.com/prismicio/prismic-dom">prismic-dom</a> is on Github.</li>
+				</ul>
+				<hr>
+				<h2 id="-1-installation-installation-"><a href="#installation">1. Installation</a></h2>
+				<blockquote>
+					<p><a href="#npm">NPM</a> <br />
+						<a href="#cdn">CDN</a> <br />
+						<a href="#downloadable-version">Downloadable version</a> <br />
+						<a href="#demo-project">Demo project</a> <br />
+					<a href="#starter-kits">Starter kits</a> <br /></p>
+				</blockquote>
+				<h2 id="-2-query-the-content-query-the-content-"><a href="#query-the-content">2. Query the content</a></h2>
+				<h2 id="-3-integrate-the-content-integrate-the-content-"><a href="#integrate-the-content">3. Integrate the content</a></h2>
+				<blockquote>
+					<p><a href="#embed">Embed</a> <br />
+						<a href="#image">Image</a> <br />
+						<a href="#text">Text</a> <br />
+						<a href="#number">Number</a> <br />
+						<a href="#date">Date</a> <br />
+						<a href="#timestamp">Timestamp</a> <br />
+						<a href="#select">Select</a> <br />
+						<a href="#color">Color</a> <br />
+						<a href="#structuredText">StructuredText</a> <br />
+						<a href="#weblink">WebLink</a> <br />
+						<a href="#documentlink">DocumentLink</a> <br />
+						<a href="#imagelink">ImageLink</a> <br />
+						<a href="#filelink">FileLink</a> <br />
+						<a href="#separator">Separator</a> <br />
+						<a href="#group">Group</a> <br />
+						<a href="#geopoint">GeoPoint</a> <br />
+					<a href="#slices">Slices</a> <br /></p>
+				</blockquote>
+				<h2 id="-4-contribute-to-the-kit-contribute-to-the-kit-"><a href="#contribute-to-the-kit">4. Contribute to the kit</a></h2>
+				<blockquote>
+					<p><a href="#install-the-kit-locally">Install the kit locally</a> <br />
+					<a href="#documentation">Documentation</a> <br /></p>
+				</blockquote>
+				<h2 id="-5-license-license-"><a href="#license">5. License</a></h2>
+				<p>===================================================</p>
 				<h3 id="installation">Installation</h3>
 				<h4 id="npm">NPM</h4>
 				<pre><code class="lang-sh">npm install prismic-javascript --save
@@ -87,18 +128,18 @@
 					<li>Client-side as part of your build with Browserify, Webpack</li>
 					<li>Client-side with a simple script tag</li>
 				</ul>
-				<h3 id="starter-kits">Starter kits</h3>
+				<h4 id="starter-kits">Starter kits</h4>
 				<p>For new project, you can start from a sample project:</p>
 				<ul>
 					<li><a href="https://github.com/prismicio/nodejs-sdk">Node.js project</a></li>
 					<li><a href="https://github.com/prismicio/nodejs-blog">Node.js blog</a></li>
 				</ul>
-				<h3 id="demo-project">Demo project</h3>
+				<h4 id="demo-project">Demo project</h4>
 				<p>You can find an integration of prismic content with the new API V2 in the following project:</p>
 				<ul>
 					<li><a href="https://github.com/arnaudlewis/prismic-apiv2">Node.js project</a></li>
 				</ul>
-				<h3 id="usage">Usage</h3>
+				<h3 id="query-the-content">Query the content</h3>
 				<p>To fetch documents from your repository, you need to fetch the Api data first.</p>
 				<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> Prismic = <span class="hljs-built_in">require</span>(<span class="hljs-string">'prismic-javascript'</span>);
 
@@ -124,6 +165,295 @@ Prismic.api(<span class="hljs-string">"https://your-repository-name.prismic.io/a
 });
 </code></pre>
 				<p>See the <a href="https://prismic.io/docs">developer documentation</a> or the <a href="https://prismicio.github.io/prismic-javascript/globals.html">API documentation</a> for more details on how to use it.</p>
+				<h3 id="integrate-the-content">Integrate the content</h3>
+				<p>In each case documented below, you will have a snippet of the custom type and another for the code needed to fill the content field into your JS Template.
+				In these examples we have a <code>doc</code> parameter corresponding to the fetched prismic document.</p>
+				<h4 id="embed">Embed</h4>
+				<p>Custom type</p>
+				<pre><code><span class="hljs-string">"video"</span> : {
+  <span class="hljs-string">"type"</span> : "<span class="hljs-type">Embed</span><span class="hljs-string">"
+}</span>
+</code></pre><p>Template JS</p>
+				<pre><code>doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.video</span><span class="hljs-selector-class">.embed_url</span>
+</code></pre><h4 id="image">Image</h4>
+				<p>Custom type</p>
+				<pre><code><span class="hljs-string">"photo"</span> : {
+  <span class="hljs-string">"type"</span> : <span class="hljs-string">"Image"</span>,
+  <span class="hljs-string">"fieldset"</span> : <span class="hljs-string">"Image"</span>,
+  <span class="hljs-string">"config"</span> : {
+    <span class="hljs-string">"constraint"</span> : {
+      <span class="hljs-string">"width"</span> : <span class="hljs-number">300</span>,
+      <span class="hljs-string">"height"</span> : <span class="hljs-number">300</span>
+    },
+    <span class="hljs-string">"thumbnails"</span> : [ {
+      <span class="hljs-string">"name"</span> : <span class="hljs-string">"Small"</span>,
+      <span class="hljs-string">"width"</span> : <span class="hljs-number">100</span>,
+      <span class="hljs-string">"height"</span> : <span class="hljs-number">100</span>
+    }, {
+      <span class="hljs-string">"name"</span> : <span class="hljs-string">"Medium"</span>,
+      <span class="hljs-string">"width"</span> : <span class="hljs-number">200</span>,
+      <span class="hljs-string">"height"</span> : <span class="hljs-number">200</span>
+    }, {
+      <span class="hljs-string">"name"</span> : <span class="hljs-string">"Large"</span>,
+      <span class="hljs-string">"width"</span> : <span class="hljs-number">300</span>,
+      <span class="hljs-string">"height"</span> : <span class="hljs-number">300</span>
+    } ]
+  }
+}
+</code></pre><p>Template JS</p>
+				<pre><code><span class="hljs-comment">//main view</span>
+doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.photo</span><span class="hljs-selector-class">.url</span>
+doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.photo</span><span class="hljs-selector-class">.alt</span>
+doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.photo</span><span class="hljs-selector-class">.width</span>
+doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.photo</span><span class="hljs-selector-class">.height</span>
+
+<span class="hljs-comment">//thumbnails =&gt; example for small view</span>
+doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.photo</span><span class="hljs-selector-class">.small</span><span class="hljs-selector-class">.url</span>
+doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.photo</span><span class="hljs-selector-class">.small</span><span class="hljs-selector-class">.alt</span>
+doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.photo</span><span class="hljs-selector-class">.small</span><span class="hljs-selector-class">.width</span>
+doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.photo</span><span class="hljs-selector-class">.small</span><span class="hljs-selector-class">.height</span>
+</code></pre><h4 id="text">Text</h4>
+				<p>Custom type</p>
+				<pre><code><span class="hljs-string">"title"</span> : {
+  <span class="hljs-string">"type"</span> : "<span class="hljs-type">Text</span><span class="hljs-string">",
+}</span>
+</code></pre><p>Template JS</p>
+				<pre><code>doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.title</span>
+</code></pre><h4 id="number">Number</h4>
+				<p>Custom type</p>
+				<pre><code><span class="hljs-string">"count"</span> : {
+  <span class="hljs-string">"type"</span> : "<span class="hljs-type">Text</span><span class="hljs-string">",
+}</span>
+</code></pre><p>Template JS</p>
+				<pre><code>doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.count</span>
+</code></pre><h4 id="date">Date</h4>
+				<p>Custom type</p>
+				<pre><code><span class="hljs-string">"publication"</span> : {
+  <span class="hljs-string">"type"</span> : "<span class="hljs-type">Date</span><span class="hljs-string">",
+}</span>
+</code></pre><p>Template JS</p>
+				<pre><code>import { Date } from <span class="hljs-string">'prismic-dom'</span>
+
+<span class="hljs-comment">// date as string from the API</span>
+doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.publication</span>
+<span class="hljs-comment">// date as JS Date</span>
+<span class="hljs-function"><span class="hljs-title">Date</span><span class="hljs-params">(doc.data.publication)</span></span>
+</code></pre><h4 id="timestamp">Timestamp</h4>
+				<p>Custom type</p>
+				<pre><code><span class="hljs-string">"time"</span> : {
+  <span class="hljs-string">"type"</span> : "<span class="hljs-type">Timestamp</span><span class="hljs-string">",
+}</span>
+</code></pre><p>Template JS</p>
+				<pre><code>import { Date } from <span class="hljs-string">'prismic-dom'</span>
+
+<span class="hljs-comment">// timestamp as string from the API</span>
+doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.time</span>
+<span class="hljs-comment">// timestamp as JS Datetime</span>
+<span class="hljs-function"><span class="hljs-title">Date</span><span class="hljs-params">(doc.data.time)</span></span>
+</code></pre><h4 id="select">Select</h4>
+				<p>Custom type</p>
+				<pre><code><span class="hljs-string">"gender"</span> : {
+  <span class="hljs-string">"type"</span> : "<span class="hljs-type">Select</span><span class="hljs-string">",
+}</span>
+</code></pre><p>Template JS</p>
+				<pre><code>doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.gender</span>
+</code></pre><h4 id="color">Color</h4>
+				<p>Custom type</p>
+				<pre><code><span class="hljs-string">"background"</span> : {
+  <span class="hljs-string">"type"</span> : "<span class="hljs-type">Color</span><span class="hljs-string">",
+}</span>
+</code></pre><p>Template JS</p>
+				<pre><code>doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.background</span>
+</code></pre><h4 id="richtext">RichText</h4>
+				<p>Custom type</p>
+				<pre><code><span class="hljs-string">"description"</span> : {
+  <span class="hljs-string">"type"</span> : "<span class="hljs-type">StructuredText</span><span class="hljs-string">",
+}</span>
+</code></pre><p>Template JS</p>
+				<pre><code>import { RichText } from <span class="hljs-string">'prismic-dom'</span>
+
+RichText.asText(doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.description</span>)
+
+<span class="hljs-comment">//linkResolver must be declare somewhere</span>
+RichText.asHtml(doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.description</span>, linkResolver)
+</code></pre><h4 id="weblink">WebLink</h4>
+				<p>Custom type</p>
+				<pre><code><span class="hljs-string">"linktoweb"</span> : {
+  <span class="hljs-string">"type"</span> : "<span class="hljs-type">Link</span><span class="hljs-string">",
+  "</span>config<span class="hljs-string">" : {
+    "</span><span class="hljs-keyword">select</span><span class="hljs-string">" : "</span>web<span class="hljs-string">"
+  }
+}</span>
+</code></pre><p>Template JS</p>
+				<pre><code>doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.linktoweb</span><span class="hljs-selector-class">.url</span>
+</code></pre><h4 id="documentlink">DocumentLink</h4>
+				<p>Custom type</p>
+				<pre><code><span class="hljs-string">"linktodoc"</span> : {
+  <span class="hljs-string">"type"</span> : <span class="hljs-string">"Link"</span>,
+  <span class="hljs-string">"config"</span> : {
+    <span class="hljs-string">"select"</span> : <span class="hljs-string">"document"</span>,
+    <span class="hljs-string">"customtypes"</span> : <span class="hljs-string">[ &lt;your-custom-type-id&gt; ]</span>,
+    <span class="hljs-string">"tags"</span> : <span class="hljs-string">[ &lt;your-tag&gt; ]</span>,
+  }
+}
+</code></pre><p>Template JS</p>
+				<pre><code><span class="hljs-comment">//return url of the document link</span>
+doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.linktodoc</span>
+<span class="hljs-comment">//return url of the document</span>
+<span class="hljs-function"><span class="hljs-title">linkResolver</span><span class="hljs-params">(doc.data.linktodoc)</span></span>
+</code></pre><h4 id="imagelink">ImageLink</h4>
+				<p>Custom type</p>
+				<pre><code><span class="hljs-string">"linktomedia"</span> : {
+  <span class="hljs-string">"type"</span> : "<span class="hljs-type">Link</span><span class="hljs-string">",
+  "</span>config<span class="hljs-string">" : {
+    "</span><span class="hljs-keyword">select</span><span class="hljs-string">" : "</span>media<span class="hljs-string">"
+  }
+}</span>
+</code></pre><p>Template JS</p>
+				<pre><code>doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.linktomedia</span><span class="hljs-selector-class">.url</span>
+</code></pre><h4 id="filelink">FileLink</h4>
+				<p>Custom type</p>
+				<pre><code><span class="hljs-string">"linktofile"</span> : {
+  <span class="hljs-string">"type"</span> : "<span class="hljs-type">Link</span><span class="hljs-string">",
+  "</span>config<span class="hljs-string">" : {
+    "</span><span class="hljs-keyword">select</span><span class="hljs-string">" : "</span>media<span class="hljs-string">"
+  }
+}</span>
+</code></pre><p>Template JS</p>
+				<pre><code>doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.linktofile</span><span class="hljs-selector-class">.url</span>
+</code></pre><h4 id="group">Group</h4>
+				<p>Custom type</p>
+				<pre><code><span class="hljs-string">"feature"</span> : {
+  <span class="hljs-string">"type"</span> : <span class="hljs-string">"Group"</span>,
+  <span class="hljs-string">"repeat"</span>: <span class="hljs-literal">true</span>, //<span class="hljs-keyword">default</span> <span class="hljs-keyword">to</span> <span class="hljs-literal">true</span> but put explicitly <span class="hljs-keyword">for</span> the example
+  <span class="hljs-string">"config"</span> : {
+    <span class="hljs-string">"field"</span> : {
+        <span class="hljs-string">"title"</span> : {
+          <span class="hljs-string">"type"</span> : <span class="hljs-string">"Text"</span>,
+        },
+        <span class="hljs-string">"description"</span> : {
+          <span class="hljs-string">"type"</span> : <span class="hljs-string">"StructuredText"</span>,
+        }
+    }
+  }
+}
+</code></pre><p>Template JS</p>
+				<pre><code>import { RichText } from <span class="hljs-string">'prismic-dom'</span>
+
+doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.feature</span><span class="hljs-selector-class">.forEach</span>(item =&gt; {
+    item<span class="hljs-selector-class">.title</span>
+    RichText.asHtml(item<span class="hljs-selector-class">.description</span>, linkResolver)
+})
+</code></pre><h4 id="geopoint">GeoPoint</h4>
+				<p>Custom type</p>
+				<pre><code><span class="hljs-string">"location"</span> : {
+  <span class="hljs-string">"type"</span> : "<span class="hljs-type">GeoPoint</span><span class="hljs-string">",
+}</span>
+</code></pre><p>Template JS</p>
+				<pre><code>doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.latitude</span>
+doc<span class="hljs-selector-class">.data</span><span class="hljs-selector-class">.longitude</span>
+</code></pre><h4 id="slices">Slices</h4>
+				<p><strong>Slice with Group as value</strong>
+					The Group value will be put directly as Slice value
+				Custom type</p>
+				<pre><code><span class="hljs-string">"contentAsSlices"</span> : {
+    <span class="hljs-string">"fieldset"</span> : <span class="hljs-string">"Dynamic page zone..."</span>,
+    <span class="hljs-string">"type"</span> : <span class="hljs-string">"Slices"</span>,
+    <span class="hljs-string">"config"</span> : {
+        <span class="hljs-string">"choices"</span> : {
+            <span class="hljs-string">"slides"</span> : {
+                <span class="hljs-string">"type"</span> : <span class="hljs-string">"Group"</span>,
+                //required to display name in slice select in the writing room
+                <span class="hljs-string">"fieldset"</span> : <span class="hljs-string">"Slides"</span>,
+                <span class="hljs-string">"config"</span> : {
+                    <span class="hljs-string">"fields"</span> : {
+                        <span class="hljs-string">"illustration"</span> : {
+                          <span class="hljs-string">"type"</span> : <span class="hljs-string">"Image"</span>
+                        },
+                        <span class="hljs-string">"title"</span> : {
+                          <span class="hljs-string">"type"</span> : <span class="hljs-string">"StructuredText"</span>
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+</code></pre><p>Template JS</p>
+				<pre><code><span class="hljs-function"><span class="hljs-title">for</span><span class="hljs-params">(slice in doc.data.contentAsSlices)</span></span> {
+    switch(slice.slice_type) {
+        case <span class="hljs-string">'slides'</span>:
+          slice<span class="hljs-selector-class">.value</span><span class="hljs-selector-class">.forEach</span>(item =&gt; {
+            item<span class="hljs-selector-class">.illustration</span><span class="hljs-selector-class">.url</span>
+            item<span class="hljs-selector-class">.title</span>
+          })
+          break
+    }
+}
+</code></pre><p><strong>Slice with basic fragment like Text as value</strong>
+					The fragment value will be put directly as Slice value
+				Custom type</p>
+				<pre><code><span class="hljs-string">"contentAsSlices"</span> : {
+    <span class="hljs-string">"fieldset"</span> : <span class="hljs-string">"Dynamic page zone..."</span>,
+    <span class="hljs-string">"type"</span> : <span class="hljs-string">"Slices"</span>,
+    <span class="hljs-string">"config"</span> : {
+        <span class="hljs-string">"choices"</span> : {
+            <span class="hljs-string">"description"</span> : {
+              <span class="hljs-string">"type"</span> : <span class="hljs-string">"StructuredText"</span>
+            }
+        }
+    }
+}
+</code></pre><p>Template JS</p>
+				<pre><code><span class="hljs-keyword">import</span> { RichText } from <span class="hljs-string">'prismic-dom'</span>
+
+<span class="hljs-keyword">for</span>(slice <span class="hljs-keyword">in</span> <span class="hljs-meta">doc</span>.contentAsSlices) {
+    <span class="hljs-keyword">switch</span>(slice.slice<span class="hljs-number">_</span>type) {
+        <span class="hljs-keyword">case</span> <span class="hljs-string">'description'</span>:
+            RichText.asHtml(slice.<span class="hljs-keyword">value</span>, linkResolver)
+            <span class="hljs-keyword">break</span>
+    }
+}
+</code></pre><p><strong>new Slice</strong>
+				the new Slice type allow you to create a repeatable area and a non repeatable one.</p>
+				<pre><code><span class="hljs-string">"contentAsSlices"</span> : {
+    <span class="hljs-string">"fieldset"</span> : <span class="hljs-string">"Dynamic page zone..."</span>,
+    <span class="hljs-string">"type"</span> : <span class="hljs-string">"Slices"</span>,
+    <span class="hljs-string">"config"</span> : {
+        <span class="hljs-string">"choices"</span> : {
+            <span class="hljs-string">"newslice"</span> : {
+              <span class="hljs-string">"type"</span> : <span class="hljs-string">"Slice"</span>,
+              <span class="hljs-string">"non-repeat"</span>: {
+                <span class="hljs-string">"title"</span>: {
+                  <span class="hljs-string">"type"</span>: <span class="hljs-string">"Text"</span>
+                }
+              },
+              <span class="hljs-string">"repeat"</span>: {
+                <span class="hljs-string">"description"</span>: {
+                  <span class="hljs-string">"type"</span> : <span class="hljs-string">"StructuredText"</span>
+                }
+              }
+            }
+        }
+    }
+}
+</code></pre><p>Template JS</p>
+				<pre><code>import { RichText } from <span class="hljs-string">'prismic-dom'</span>
+
+<span class="hljs-function"><span class="hljs-title">for</span><span class="hljs-params">(slice in doc.contentAsSlices)</span></span> {
+    switch(slice.slice_type) {
+        case <span class="hljs-string">'newslice'</span>:
+          <span class="hljs-comment">//non repeatable part</span>
+          slice<span class="hljs-selector-class">.value</span><span class="hljs-selector-class">.primary</span><span class="hljs-selector-class">.title</span>
+
+          <span class="hljs-comment">//repeatable part</span>
+          slice<span class="hljs-selector-class">.value</span><span class="hljs-selector-class">.items</span><span class="hljs-selector-class">.forEach</span>(item =&gt; {
+            RichText.asHtml(item<span class="hljs-selector-class">.description</span>, linkResolver)
+          })
+          break
+    }
+}
+</code></pre><h3 id="contribute-to-the-kit">Contribute to the kit</h3>
 				<h4 id="install-the-kit-locally">Install the kit locally</h4>
 				<p>Source files are in the <code>src/</code> directory. You only need <a href="http://www.joyent.com/blog/installing-node-and-npm/">Node.js and npm</a>
 				to work on the codebase.</p>
@@ -135,7 +465,7 @@ Prismic.api(<span class="hljs-string">"https://your-repository-name.prismic.io/a
 				<p>If you find existing code that is not optimally documented and wish to make it better, we really appreciate it; but you should document it on its own branch and its own pull request.</p>
 				<h3 id="license">License</h3>
 				<p>This software is licensed under the Apache 2 license, quoted below.</p>
-				<p>Copyright 2013-2016 Prismic.io (<a href="http://prismic.io">http://prismic.io</a>).</p>
+				<p>Copyright 2013-2017 Prismic.io (<a href="http://prismic.io">http://prismic.io</a>).</p>
 				<p>Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not use this project except in compliance with the License. You may obtain a copy of the License at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>.</p>
 				<p>Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</p>
 			</div>
