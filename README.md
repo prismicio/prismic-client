@@ -136,20 +136,20 @@ In these examples we have a `doc` parameter corresponding to the fetched prismic
 
 #### Embed
 Custom type
-```
+```javascript
 "video" : {
   "type" : "Embed"
 }
 ```
 
 Template JS
-```
+```javascript
 doc.data.video.embed_url
 ```
 
 #### Image
 Custom type
-```
+```javascript
 "photo" : {
   "type" : "Image",
   "fieldset" : "Image",
@@ -175,7 +175,7 @@ Custom type
 }
 ```
 Template JS
-```
+```javascript
 //main view
 doc.data.photo.url
 doc.data.photo.alt
@@ -190,38 +190,38 @@ doc.data.photo.small.height
 ```
 #### Text
 Custom type
-```
+```javascript
 "title" : {
   "type" : "Text",
 }
 ```
 
 Template JS
-```
+```javascript
 doc.data.title
 ```
 #### Number
 Custom type
-```
+```javascript
 "count" : {
   "type" : "Text",
 }
 ```
 
 Template JS
-```
+```javascript
 doc.data.count
 ```
 #### Date
 Custom type
-```
+```javascript
 "publication" : {
   "type" : "Date",
 }
 ```
 
 Template JS
-```
+```javascript
 import { Date } from 'prismic-dom'
 
 // date as string from the API
@@ -232,14 +232,14 @@ Date(doc.data.publication)
 ```
 #### Timestamp
 Custom type
-```
+```javascript
 "time" : {
   "type" : "Timestamp",
 }
 ```
 
 Template JS
-```
+```javascript
 import { Date } from 'prismic-dom'
 
 // timestamp as string from the API
@@ -249,38 +249,38 @@ Date(doc.data.time)
 ```
 #### Select
 Custom type
-```
+```javascript
 "gender" : {
   "type" : "Select",
 }
 ```
 
 Template JS
-```
+```javascript
 doc.data.gender
 ```
 #### Color
 Custom type
-```
+```javascript
 "background" : {
   "type" : "Color",
 }
 ```
 
 Template JS
-```
+```javascript
 doc.data.background
 ```
 #### RichText
 Custom type
-```
+```javascript
 "description" : {
   "type" : "StructuredText",
 }
 ```
 
 Template JS
-```
+```javascript
 import { RichText } from 'prismic-dom'
 
 RichText.asText(doc.data.description)
@@ -291,7 +291,7 @@ RichText.asHtml(doc.data.description, linkResolver)
 
 #### WebLink
 Custom type
-```
+```javascript
 "linktoweb" : {
   "type" : "Link",
   "config" : {
@@ -301,12 +301,12 @@ Custom type
 ```
 
 Template JS
-```
+```javascript
 doc.data.linktoweb.url
 ```
 #### DocumentLink
 Custom type
-```
+```javascript
 "linktodoc" : {
   "type" : "Link",
   "config" : {
@@ -318,7 +318,7 @@ Custom type
 ```
 
 Template JS
-```
+```javascript
 //return url of the document link
 doc.data.linktodoc
 //return url of the document
@@ -326,7 +326,7 @@ linkResolver(doc.data.linktodoc)
 ```
 #### ImageLink
 Custom type
-```
+```javascript
 "linktomedia" : {
   "type" : "Link",
   "config" : {
@@ -336,12 +336,12 @@ Custom type
 ```
 
 Template JS
-```
+```javascript
 doc.data.linktomedia.url
 ```
 #### FileLink
 Custom type
-```
+```javascript
 "linktofile" : {
   "type" : "Link",
   "config" : {
@@ -351,12 +351,12 @@ Custom type
 ```
 
 Template JS
-```
+```javascript
 doc.data.linktofile.url
 ```
 #### Group
 Custom type
-```
+```javascript
 "feature" : {
   "type" : "Group",
   "repeat": true, //default to true but put explicitly for the example
@@ -374,7 +374,7 @@ Custom type
 ```
 
 Template JS
-```
+```javascript
 import { RichText } from 'prismic-dom'
 
 doc.data.feature.forEach(item => {
@@ -384,14 +384,14 @@ doc.data.feature.forEach(item => {
 ```
 #### GeoPoint
 Custom type
-```
+```javascript
 "location" : {
   "type" : "GeoPoint",
 }
 ```
 
 Template JS
-```
+```javascript
 doc.data.latitude
 doc.data.longitude
 ```
@@ -399,7 +399,7 @@ doc.data.longitude
 **Slice with Group as value**
 The Group value will be put directly as Slice value
 Custom type
-```
+```javascript
 "contentAsSlices" : {
     "fieldset" : "Dynamic page zone...",
     "type" : "Slices",
@@ -426,7 +426,7 @@ Custom type
 ```
 
 Template JS
-```
+```javascript
 for(slice in doc.data.contentAsSlices) {
     switch(slice.slice_type) {
         case 'slides':
@@ -442,7 +442,7 @@ for(slice in doc.data.contentAsSlices) {
 **Slice with basic fragment like Text as value**
 The fragment value will be put directly as Slice value
 Custom type
-```
+```javascript
 "contentAsSlices" : {
     "fieldset" : "Dynamic page zone...",
     "type" : "Slices",
@@ -457,7 +457,7 @@ Custom type
 ```
 
 Template JS
-```
+```javascript
 import { RichText } from 'prismic-dom'
 
 for(slice in doc.contentAsSlices) {
@@ -472,7 +472,7 @@ for(slice in doc.contentAsSlices) {
 
 **new Slice**
 the new Slice type allow you to create a repeatable area and a non repeatable one.
-```
+```javascript
 "contentAsSlices" : {
     "fieldset" : "Dynamic page zone...",
     "type" : "Slices",
@@ -497,7 +497,7 @@ the new Slice type allow you to create a repeatable area and a non repeatable on
 ```
 
 Template JS
-```
+```javascript
 import { RichText } from 'prismic-dom'
 
 for(slice in doc.contentAsSlices) {
@@ -523,7 +523,7 @@ for(slice in doc.contentAsSlices) {
 Source files are in the `src/` directory. You only need [Node.js and npm](http://www.joyent.com/blog/installing-node-and-npm/)
 to work on the codebase.
 
-```
+```bash
 npm install
 npm run dev
 ```
