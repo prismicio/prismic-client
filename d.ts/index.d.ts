@@ -1,6 +1,6 @@
 import { Document } from "@root/documents";
 import { IApiOptions, IApi, Form, SearchForm } from "./api";
-import * as Predicates from '@root/predicates';
+import * as AllPredicates from '@root/predicates';
 import { Experiments } from '@root/experiments';
 declare var _default: {
     experimentCookie: string;
@@ -9,7 +9,36 @@ declare var _default: {
     SearchForm: typeof SearchForm;
     Form: typeof Form;
     Experiments: typeof Experiments;
-    Predicates: typeof Predicates;
+    Predicates: {
+        at: typeof AllPredicates.AtPredicate;
+        not: typeof AllPredicates.NotPredicate;
+        missing: typeof AllPredicates.MissingPredicate;
+        has: typeof AllPredicates.HasPredicate;
+        any: typeof AllPredicates.AnyPredicate;
+        in: typeof AllPredicates.InPredicate;
+        fulltext: typeof AllPredicates.FulltextPredicate;
+        similar: typeof AllPredicates.SimilarPredicate;
+        gt: typeof AllPredicates.GtPredicate;
+        lt: typeof AllPredicates.LtPredicate;
+        inRange: typeof AllPredicates.InRangePredicate;
+        before: typeof AllPredicates.DateBeforePredicate;
+        after: typeof AllPredicates.DateAfterPredicate;
+        between: typeof AllPredicates.DateBetweenPredicate;
+        dayOfMonth: typeof AllPredicates.DayOfMonthPredicate;
+        dayOfMonthAfter: typeof AllPredicates.DayOfMonthAfterPredicate;
+        dayOfMonthBefore: typeof AllPredicates.DayOfMonthBeforePredicate;
+        dayOfWeek: typeof AllPredicates.DayOfWeekPredicate;
+        dayOfWeekAfter: typeof AllPredicates.DayOfWeekAfterPredicate;
+        dayOfWeekBefore: typeof AllPredicates.DayOfWeekBeforePredicate;
+        month: typeof AllPredicates.MonthPredicate;
+        monthBefore: typeof AllPredicates.MonthBeforePredicate;
+        monthAfter: typeof AllPredicates.MonthAfterPredicate;
+        year: typeof AllPredicates.YearPredicate;
+        hour: typeof AllPredicates.HourPredicate;
+        hourBefore: typeof AllPredicates.HourBeforePredicate;
+        hourAfter: typeof AllPredicates.HourAfterPredicate;
+        near: typeof AllPredicates.NearPredicate;
+    };
     api: (url: string, options: IApiOptions) => Promise<IApi>;
 };
 export default _default;
