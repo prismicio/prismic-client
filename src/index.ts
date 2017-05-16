@@ -10,7 +10,7 @@ import {
 } from "./api";
 
 import { DefaultRequestHandler } from '@root/request';
-import * as Predicates from '@root/predicates';
+import * as AllPredicates from '@root/predicates';
 import { Experiments } from '@root/experiments';
 
 function getApi(url: string, options: IApiOptions): Promise<IApi> {
@@ -46,6 +46,6 @@ export default {
   SearchForm: SearchForm,
   Form: Form,
   Experiments: Experiments,
-  Predicates: Predicates,
+  Predicates: AllPredicates.Predicates,
   api: getApi
 };
