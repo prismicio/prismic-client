@@ -134,7 +134,7 @@ export interface IApiOptions {
     accessToken: string;
     complete?: (err: Error | null, value?: any, xhr?: any) => void;
     requestHandler?: IRequestHandler;
-    req: any;
+    req?: any;
     apiCache?: IApiCache;
     apiDataTTL?: number;
 }

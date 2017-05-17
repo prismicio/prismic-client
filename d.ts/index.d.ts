@@ -39,6 +39,6 @@ declare var _default: {
         hourAfter: typeof AllPredicates.HourAfterPredicate;
         near: typeof AllPredicates.NearPredicate;
     };
-    api: (url: string, options: IApiOptions) => Promise<IApi>;
+    api: (url: string, options: IApiOptions | null) => Promise<IApi>;
 };
 export default _default;
