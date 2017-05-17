@@ -13,12 +13,13 @@ import { DefaultRequestHandler } from '@root/request';
 import * as AllPredicates from '@root/predicates';
 import { Experiments } from '@root/experiments';
 
-function getApi(url: string, options: IApiOptions): Promise<IApi> {
-  var api = new Api(url, options);
+function getApi(url: string, options: IApiOptions | null): Promise<IApi> {
+  const safeOptions = options || {} as IApiOptions;
+  var api = new Api(url, safeOptions);
   //Use cached api data if available
   return new Promise(function(resolve, reject) {
     var cb = function(err: Error | null, api?: any) {
-      if (options.complete) options.complete(err, api);
+      if (safeOptions.complete) safeOptions.complete(err, api);
       if (err) {
         reject(err);
       } else {

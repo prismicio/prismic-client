@@ -281,7 +281,7 @@ export interface IApiOptions {
   accessToken: string;
   complete?: (err: Error | null, value?: any, xhr?: any) => void;
   requestHandler?: IRequestHandler;
-  req: any;
+  req?: any;
   apiCache?: IApiCache;
   apiDataTTL?: number;
 }
@@ -339,7 +339,7 @@ export class Api implements IApi {
   quickRoutes: any;
 
   constructor(url: string, options: IApiOptions) {
-    const opts = options || {};
+    const opts: IApiOptions = options || {};
     this.accessToken = opts.accessToken;
     this.url = url + (this.accessToken ? (url.indexOf('?') > -1 ? '&' : '?') + 'access_token=' + this.accessToken : '');
     this.req = opts.req;
