@@ -40,7 +40,7 @@ function getApi(url: string, options: IApiOptions | null): Promise<IApi> {
   });
 }
 
-export default {
+module.exports = {
   experimentCookie: ExperimentCookie,
   previewCookie: PreviewCookie,
   Document: Document,
