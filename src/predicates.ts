@@ -1,473 +1,156 @@
-export interface IPredicate {
-  op: Operator;
-  toString(): string;
+export const Operator = {
+  at: "at",
+  not: "not",
+  missing: "missing",
+  has: "has",
+  any: "any",
+  in: "in",
+  fulltext: "fulltext",
+  similar: "similar",
+  "number.gt": "number.gt",
+  "number.lt": "number.lt",
+  "number.inRange": "number.inRange",
+  "date.before": "date.before",
+  "date.after": "date.after",
+  "date.between": "date.between",
+  "date.day-of-month": "date.day-of-month",
+  "date.day-of-month-after": "date.day-of-month-after",
+  "date.day-of-month-before": "date.day-of-month-before",
+  "date.day-of-week": "date.day-of-week",
+  "date.day-of-week-after": "date.day-of-week-after",
+  "date.day-of-week-before": "date.day-of-week-before",
+  "date.month": "date.month",
+  "date.month-before": "date.month-before",
+  "date.month-after": "date.month-after",
+  "date.year": "date.year",
+  "date.hour": "date.hour",
+  "date.hour-before": "date.hour-before",
+  "date.hour-after": "date.hour-after",
+  "geopoint.near": "geopoint.near"
 }
 
-export enum Operator {
-  at,
-  not,
-  missing,
-  has,
-  any,
-  in,
-  fulltext,
-  similar,
-  "number.gt",
-  "number.lt",
-  "number.inRange",
-  "date.before",
-  "date.after",
-  "date.between",
-  "date.day-of-month",
-  "date.day-of-month-after",
-  "date.day-of-month-before",
-  "date.day-of-week",
-  "date.day-of-week-after",
-  "date.day-of-week-before",
-  "date.month",
-  "date.month-before",
-  "date.month-after",
-  "date.year",
-  "date.hour",
-  "date.hour-before",
-  "date.hour-after",
-  "geopoint.near"
+export function AtPredicate(fragment: string, value: string): string {
+  return `[:d = ${Operator.at}(${fragment}, "${value}")]`;
 }
 
-export class AtPredicate implements IPredicate {
-  fragment: string;
-  value: string;
-  op: Operator = Operator.at;
-
-  constructor(fragment: string, value: string) {
-    this.fragment = fragment;
-    this.value = value;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, "${this.value}")]`;
-  }
+export function NotPredicate(fragment: string, value: string): string {
+  return `[:d = ${Operator.not}(${fragment}, "${value}")]`;
 }
 
-export class NotPredicate implements IPredicate {
-  fragment: string;
-  value: string;
-  op: Operator = Operator.not;
-
-  constructor(fragment: string, value: string) {
-    this.fragment = fragment;
-    this.value = value;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, "${this.value}")]`;
-  }
+export function MissingPredicate(fragment: string): string {
+  return `[:d = ${Operator.missing}(${fragment})]`;
 }
 
-export class MissingPredicate implements IPredicate {
-  fragment: string;
-  op: Operator = Operator.missing;
-
-  constructor(fragment: string) {
-    this.fragment = fragment;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment})]`;
-  }
+export function HasPredicate(fragment: string): string {
+  return `[:d = ${Operator.has}(${fragment})]`;
 }
 
-export class HasPredicate implements IPredicate {
-  fragment: string;
-  op: Operator = Operator.has;
-
-  constructor(fragment: string) {
-    this.fragment = fragment;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment})]`;
-  }
+export function AnyPredicate(fragment: string, values: string[]): string {
+  return `[:d = ${Operator.any}(${fragment}, [${values.join(',')}])]`;
 }
 
-export class AnyPredicate implements IPredicate {
-  fragment: string;
-  values: string[];
-  op: Operator = Operator.any;
-
-  constructor(fragment: string, values: string[]) {
-    this.fragment = fragment;
-    this.values = values;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, [${this.values.join(',')}])]`;
-  }
+export function InPredicate(fragment: string, values: string[]): string {
+  return `[:d = ${Operator.in}(${fragment}, [${values.join(',')}])]`;
 }
 
-export class InPredicate implements IPredicate {
-  fragment: string;
-  values: string[];
-  op: Operator = Operator.in;
-
-  constructor(fragment: string, values: string[]) {
-    this.fragment = fragment;
-    this.values = values;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, [${this.values.join(',')}])]`;
-  }
+export function FulltextPredicate(fragment: string, value: string): string {
+  return `[:d = ${Operator.fulltext}(${fragment}, "${value}")]`;
 }
 
-export class FulltextPredicate implements IPredicate {
-  fragment: string;
-  value: string;
-  op: Operator = Operator.fulltext;
-
-  constructor(fragment: string, value: string) {
-    this.fragment = fragment;
-    this.value = value;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, "${this.value}")]`;
-  }
+export function SimilarPredicate(documentId: string, maxResults: number): string {
+  return `[:d = ${Operator.similar}("${this.documentId}", ${this.maxResults})]`;
 }
 
-export class SimilarPredicate implements IPredicate {
-  documentId: string;
-  maxResults: number;
-  op: Operator = Operator.similar;
-
-  constructor(documentId: string, maxResults: number) {
-    this.documentId = documentId;
-    this.maxResults = maxResults;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}("${this.documentId}", ${this.maxResults})]`;
-  }
+export function GtPredicate(fragment: string, value: number): string {
+  return `[:d = ${Operator["number.gt"]}(${fragment}, ${value})]`;
 }
 
-export class GtPredicate implements IPredicate {
-  fragment: string;
-  value: number;
-  op: Operator = Operator["number.gt"];
-
-  constructor(fragment: string, value: number) {
-    this.fragment = fragment;
-    this.value = value;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, ${this.value})]`;
-  }
+export function LtPredicate(fragment: string, value: number): string {
+  return `[:d = ${Operator["number.lt"]}(${fragment}, ${value})]`;
 }
 
-export class LtPredicate implements IPredicate {
-  fragment: string;
-  value: number;
-  op: Operator = Operator["number.lt"];
-
-  constructor(fragment: string, value: number) {
-    this.fragment = fragment;
-    this.value = value;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, ${this.value})]`;
-  }
+export function InRangePredicate(fragment: string, before: number, after: number): string {
+  return `[:d = ${Operator["number.inRange"]}(${fragment}, ${this.before}, ${this.after})]`;
 }
 
-export class InRangePredicate implements IPredicate {
-  fragment: string;
-  before: number;
-  after: number;
-  op: Operator = Operator["number.inRange"];
-
-  constructor(fragment: string, before: number, after: number) {
-    this.fragment = fragment;
-    this.before = before;
-    this.after = after;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, ${this.before}, ${this.after})]`;
-  }
+export function DateBeforePredicate(fragment: string, before: Date): string {
+  return `[:d = ${Operator["date.before"]}(${fragment}, ${this.before.getTime()})]`;
 }
 
-export class DateBeforePredicate implements IPredicate {
-  fragment: string;
-  before: Date;
-  op: Operator = Operator["date.before"];
-
-  constructor(fragment: string, before: Date) {
-    this.fragment = fragment;
-    this.before = before;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, ${this.before.getTime()})]`;
-  }
+export function DateAfterPredicate(fragment: string, after: Date): string {
+  return `[:d = ${Operator["date.after"]}(${fragment}, ${this.after.getTime()})]`;
 }
 
-export class DateAfterPredicate implements IPredicate {
-  fragment: string;
-  after: Date;
-  op: Operator = Operator["date.after"];
-
-  constructor(fragment: string, after: Date) {
-    this.fragment = fragment;
-    this.after = after;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, ${this.after.getTime()})]`;
-  }
+export function DateBetweenPredicate(fragment: string, before: Date, after: Date): string {
+  return `[:d = ${Operator["date.between"]}(${fragment}, ${this.before.getTime()}, ${this.after.getTime()})]`;
 }
 
-export class DateBetweenPredicate implements IPredicate {
-  fragment: string;
-  before: Date;
-  after: Date;
-  op: Operator = Operator["date.between"];
-
-  constructor(fragment: string, before: Date, after: Date) {
-    this.fragment = fragment;
-    this.before = before;
-    this.after = after;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, ${this.before.getTime()}, ${this.after.getTime()})]`;
-  }
+export function DayOfMonthPredicate(fragment: string, day: number): string {
+  return `[:d = ${Operator["date.day-of-month"]}(${fragment}, ${this.day})]`;
 }
 
-export class DayOfMonthPredicate implements IPredicate {
-  fragment: string;
-  day: number;
-  op: Operator = Operator["date.day-of-month"];
-
-  constructor(fragment: string, day: number) {
-    this.fragment = fragment;
-    this.day = day;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, ${this.day})]`;
-  }
+export function DayOfMonthAfterPredicate(fragment: string, day: number): string {
+  return `[:d = ${Operator["date.day-of-month-after"]}(${fragment}, ${this.day})]`;
 }
 
-export class DayOfMonthAfterPredicate implements IPredicate {
-  fragment: string;
-  day: number;
-  op: Operator = Operator["date.day-of-month-after"];
-
-  constructor(fragment: string, day: number) {
-    this.fragment = fragment;
-    this.day = day;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, ${this.day})]`;
-  }
+export function DayOfMonthBeforePredicate(fragment: string, day: number): string {
+  return `[:d = ${Operator["date.day-of-month-before"]}(${fragment}, ${this.day})]`;
 }
 
-export class DayOfMonthBeforePredicate implements IPredicate {
-  fragment: string;
-  day: number;
-  op: Operator = Operator["date.day-of-month-before"];
-
-  constructor(fragment: string, day: number) {
-    this.fragment = fragment;
-    this.day = day;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, ${this.day})]`;
-  }
+export function DayOfWeekPredicate(fragment: string, day: number): string {
+  return `[:d = ${Operator["date.day-of-week"]}(${fragment}, ${this.day})]`;
 }
 
-export class DayOfWeekPredicate implements IPredicate {
-  fragment: string;
-  day: number;
-  op: Operator = Operator["date.day-of-week"];
-
-  constructor(fragment: string, day: number) {
-    this.fragment = fragment;
-    this.day = day;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, ${this.day})]`;
-  }
+export function DayOfWeekAfterPredicate(fragment: string, day: number): string {
+  return `[:d = ${Operator["date.day-of-week-after"]}(${fragment}, ${this.day})]`;
 }
 
-export class DayOfWeekAfterPredicate implements IPredicate {
-  fragment: string;
-  day: number;
-  op: Operator = Operator["date.day-of-week-after"];
-
-  constructor(fragment: string, day: number) {
-    this.fragment = fragment;
-    this.day = day;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, ${this.day})]`;
-  }
-}
-
-export class DayOfWeekBeforePredicate implements IPredicate {
-  fragment: string;
-  day: number;
-  op: Operator = Operator["date.day-of-week-before"];
-
-  constructor(fragment: string, day: number) {
-    this.fragment = fragment;
-    this.day = day;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, ${this.day})]`;
-  }
+export function DayOfWeekBeforePredicate(fragment: string, day: number): string {
+  return `[:d = ${Operator["date.day-of-week-before"]}(${fragment}, ${this.day})]`;
 }
  
-export class MonthPredicate implements IPredicate {
-  fragment: string;
-  month: number | string;
-  op: Operator = Operator["date.month"];
-
-  constructor(fragment: string, month: number | string) {
-    this.fragment = fragment;
-    this.month = month;
-  }
-
-  toString(): string {
-    if(typeof this.month === 'number') {
-      return `[:d = ${Operator[this.op]}(${this.fragment}, ${this.month})]`;
-    } else {
-      return `[:d = ${Operator[this.op]}(${this.fragment}, "${this.month}")]`;
-    }
+export function MonthPredicate(fragment: string, month: number | string): string {
+  if(typeof this.month === 'number') {
+    return `[:d = ${Operator["date.month"]}(${fragment}, ${this.month})]`;
+  } else {
+    return `[:d = ${Operator["date.month"]}(${fragment}, "${this.month}")]`;
   }
 }
 
-export class MonthBeforePredicate implements IPredicate {
-  fragment: string;
-  month: number | string;
-  op: Operator = Operator["date.month-before"];
-
-  constructor(fragment: string, month: number | string) {
-    this.fragment = fragment;
-    this.month = month;
-  }
-
-  toString(): string {
-    if(typeof this.month === 'number') {
-      return `[:d = ${Operator[this.op]}(${this.fragment}, ${this.month})]`;
-    } else {
-      return `[:d = ${Operator[this.op]}(${this.fragment}, "${this.month}")]`;
-    }
+export function MonthBeforePredicate(fragment: string, month: number | string): string {
+  if(typeof this.month === 'number') {
+    return `[:d = ${Operator["date.month-before"]}(${fragment}, ${this.month})]`;
+  } else {
+    return `[:d = ${Operator["date.month-before"]}(${fragment}, "${this.month}")]`;
   }
 }
 
-export class MonthAfterPredicate implements IPredicate {
-  fragment: string;
-  month: number | string;
-  op: Operator = Operator["date.month-after"];
-
-  constructor(fragment: string, month: number | string) {
-    this.fragment = fragment;
-    this.month = month;
-  }
-
-  toString(): string {
-    if(typeof this.month === 'number') {
-      return `[:d = ${Operator[this.op]}(${this.fragment}, ${this.month})]`;
-    } else {
-      return `[:d = ${Operator[this.op]}(${this.fragment}, "${this.month}")]`;
-    }
+export function MonthAfterPredicate(fragment: string, month: number | string): string {
+  if(typeof this.month === 'number') {
+    return `[:d = ${Operator["date.month-after"]}(${fragment}, ${this.month})]`;
+  } else {
+    return `[:d = ${Operator["date.month-after"]}(${fragment}, "${this.month}")]`;
   }
 }
 
-export class YearPredicate implements IPredicate {
-  fragment: string;
-  year: number;
-  op: Operator = Operator["date.year"];
-
-  constructor(fragment: string, year: number) {
-    this.fragment = fragment;
-    this.year = year;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, ${this.year})]`;
-  }
+export function YearPredicate(fragment: string, year: number): string {
+  return `[:d = ${Operator["date.year"]}(${fragment}, ${this.year})]`;
 }
 
-export class HourPredicate implements IPredicate {
-  fragment: string;
-  hour: number;
-  op: Operator = Operator["date.hour"];
-
-  constructor(fragment: string, hour: number) {
-    this.fragment = fragment;
-    this.hour = hour;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, ${this.hour})]`;
-  }
+export function HourPredicate(fragment: string, hour: number): string {
+  return `[:d = ${Operator["date.hour"]}(${fragment}, ${this.hour})]`;
 }
 
-export class HourBeforePredicate implements IPredicate {
-  fragment: string;
-  hour: number;
-  op: Operator = Operator["date.hour-before"];
-
-  constructor(fragment: string, hour: number) {
-    this.fragment = fragment;
-    this.hour = hour;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, ${this.hour})]`;
-  }
+export function HourBeforePredicate(fragment: string, hour: number): string {
+  return `[:d = ${Operator["date.hour-before"]}(${fragment}, ${this.hour})]`;
 }
 
-export class HourAfterPredicate implements IPredicate {
-  fragment: string;
-  hour: number;
-  op: Operator = Operator["date.hour-after"];
-
-  constructor(fragment: string, hour: number) {
-    this.fragment = fragment;
-    this.hour = hour;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, ${this.hour})]`;
-  }
+export function HourAfterPredicate(fragment: string, hour: number): string {
+  return `[:d = ${Operator["date.hour-after"]}(${fragment}, ${this.hour})]`;
 }
 
-export class NearPredicate implements IPredicate {
-  fragment: string;
-  latitude: number;
-  longitude: number;
-  radius: number;
-  op: Operator = Operator["geopoint.near"];
-
-  constructor(fragment: string, latitude: number, longitude: number, radius: number) {
-    this.fragment = fragment;
-    this.latitude = latitude;
-    this.longitude = longitude;
-    this.radius = radius;
-  }
-
-  toString(): string {
-    return `[:d = ${Operator[this.op]}(${this.fragment}, ${this.latitude}, ${this.longitude}, ${this.radius})]`;
-  }
+export function NearPredicate(fragment: string, latitude: number, longitude: number, radius: number): string {
+  return `[:d = ${Operator["geopoint.near"]}(${fragment}, ${this.latitude}, ${this.longitude}, ${this.radius})]`;
 }
 
 export const Predicates = {

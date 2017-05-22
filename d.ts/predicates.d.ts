@@ -1,262 +1,88 @@
-export interface IPredicate {
-    op: Operator;
-    toString(): string;
-}
-export declare enum Operator {
-    at = 0,
-    not = 1,
-    missing = 2,
-    has = 3,
-    any = 4,
-    in = 5,
-    fulltext = 6,
-    similar = 7,
-    "number.gt" = 8,
-    "number.lt" = 9,
-    "number.inRange" = 10,
-    "date.before" = 11,
-    "date.after" = 12,
-    "date.between" = 13,
-    "date.day-of-month" = 14,
-    "date.day-of-month-after" = 15,
-    "date.day-of-month-before" = 16,
-    "date.day-of-week" = 17,
-    "date.day-of-week-after" = 18,
-    "date.day-of-week-before" = 19,
-    "date.month" = 20,
-    "date.month-before" = 21,
-    "date.month-after" = 22,
-    "date.year" = 23,
-    "date.hour" = 24,
-    "date.hour-before" = 25,
-    "date.hour-after" = 26,
-    "geopoint.near" = 27,
-}
-export declare class AtPredicate implements IPredicate {
-    fragment: string;
-    value: string;
-    op: Operator;
-    constructor(fragment: string, value: string);
-    toString(): string;
-}
-export declare class NotPredicate implements IPredicate {
-    fragment: string;
-    value: string;
-    op: Operator;
-    constructor(fragment: string, value: string);
-    toString(): string;
-}
-export declare class MissingPredicate implements IPredicate {
-    fragment: string;
-    op: Operator;
-    constructor(fragment: string);
-    toString(): string;
-}
-export declare class HasPredicate implements IPredicate {
-    fragment: string;
-    op: Operator;
-    constructor(fragment: string);
-    toString(): string;
-}
-export declare class AnyPredicate implements IPredicate {
-    fragment: string;
-    values: string[];
-    op: Operator;
-    constructor(fragment: string, values: string[]);
-    toString(): string;
-}
-export declare class InPredicate implements IPredicate {
-    fragment: string;
-    values: string[];
-    op: Operator;
-    constructor(fragment: string, values: string[]);
-    toString(): string;
-}
-export declare class FulltextPredicate implements IPredicate {
-    fragment: string;
-    value: string;
-    op: Operator;
-    constructor(fragment: string, value: string);
-    toString(): string;
-}
-export declare class SimilarPredicate implements IPredicate {
-    documentId: string;
-    maxResults: number;
-    op: Operator;
-    constructor(documentId: string, maxResults: number);
-    toString(): string;
-}
-export declare class GtPredicate implements IPredicate {
-    fragment: string;
-    value: number;
-    op: Operator;
-    constructor(fragment: string, value: number);
-    toString(): string;
-}
-export declare class LtPredicate implements IPredicate {
-    fragment: string;
-    value: number;
-    op: Operator;
-    constructor(fragment: string, value: number);
-    toString(): string;
-}
-export declare class InRangePredicate implements IPredicate {
-    fragment: string;
-    before: number;
-    after: number;
-    op: Operator;
-    constructor(fragment: string, before: number, after: number);
-    toString(): string;
-}
-export declare class DateBeforePredicate implements IPredicate {
-    fragment: string;
-    before: Date;
-    op: Operator;
-    constructor(fragment: string, before: Date);
-    toString(): string;
-}
-export declare class DateAfterPredicate implements IPredicate {
-    fragment: string;
-    after: Date;
-    op: Operator;
-    constructor(fragment: string, after: Date);
-    toString(): string;
-}
-export declare class DateBetweenPredicate implements IPredicate {
-    fragment: string;
-    before: Date;
-    after: Date;
-    op: Operator;
-    constructor(fragment: string, before: Date, after: Date);
-    toString(): string;
-}
-export declare class DayOfMonthPredicate implements IPredicate {
-    fragment: string;
-    day: number;
-    op: Operator;
-    constructor(fragment: string, day: number);
-    toString(): string;
-}
-export declare class DayOfMonthAfterPredicate implements IPredicate {
-    fragment: string;
-    day: number;
-    op: Operator;
-    constructor(fragment: string, day: number);
-    toString(): string;
-}
-export declare class DayOfMonthBeforePredicate implements IPredicate {
-    fragment: string;
-    day: number;
-    op: Operator;
-    constructor(fragment: string, day: number);
-    toString(): string;
-}
-export declare class DayOfWeekPredicate implements IPredicate {
-    fragment: string;
-    day: number;
-    op: Operator;
-    constructor(fragment: string, day: number);
-    toString(): string;
-}
-export declare class DayOfWeekAfterPredicate implements IPredicate {
-    fragment: string;
-    day: number;
-    op: Operator;
-    constructor(fragment: string, day: number);
-    toString(): string;
-}
-export declare class DayOfWeekBeforePredicate implements IPredicate {
-    fragment: string;
-    day: number;
-    op: Operator;
-    constructor(fragment: string, day: number);
-    toString(): string;
-}
-export declare class MonthPredicate implements IPredicate {
-    fragment: string;
-    month: number | string;
-    op: Operator;
-    constructor(fragment: string, month: number | string);
-    toString(): string;
-}
-export declare class MonthBeforePredicate implements IPredicate {
-    fragment: string;
-    month: number | string;
-    op: Operator;
-    constructor(fragment: string, month: number | string);
-    toString(): string;
-}
-export declare class MonthAfterPredicate implements IPredicate {
-    fragment: string;
-    month: number | string;
-    op: Operator;
-    constructor(fragment: string, month: number | string);
-    toString(): string;
-}
-export declare class YearPredicate implements IPredicate {
-    fragment: string;
-    year: number;
-    op: Operator;
-    constructor(fragment: string, year: number);
-    toString(): string;
-}
-export declare class HourPredicate implements IPredicate {
-    fragment: string;
-    hour: number;
-    op: Operator;
-    constructor(fragment: string, hour: number);
-    toString(): string;
-}
-export declare class HourBeforePredicate implements IPredicate {
-    fragment: string;
-    hour: number;
-    op: Operator;
-    constructor(fragment: string, hour: number);
-    toString(): string;
-}
-export declare class HourAfterPredicate implements IPredicate {
-    fragment: string;
-    hour: number;
-    op: Operator;
-    constructor(fragment: string, hour: number);
-    toString(): string;
-}
-export declare class NearPredicate implements IPredicate {
-    fragment: string;
-    latitude: number;
-    longitude: number;
-    radius: number;
-    op: Operator;
-    constructor(fragment: string, latitude: number, longitude: number, radius: number);
-    toString(): string;
-}
+export declare const Operator: {
+    at: string;
+    not: string;
+    missing: string;
+    has: string;
+    any: string;
+    in: string;
+    fulltext: string;
+    similar: string;
+    "number.gt": string;
+    "number.lt": string;
+    "number.inRange": string;
+    "date.before": string;
+    "date.after": string;
+    "date.between": string;
+    "date.day-of-month": string;
+    "date.day-of-month-after": string;
+    "date.day-of-month-before": string;
+    "date.day-of-week": string;
+    "date.day-of-week-after": string;
+    "date.day-of-week-before": string;
+    "date.month": string;
+    "date.month-before": string;
+    "date.month-after": string;
+    "date.year": string;
+    "date.hour": string;
+    "date.hour-before": string;
+    "date.hour-after": string;
+    "geopoint.near": string;
+};
+export declare function AtPredicate(fragment: string, value: string): string;
+export declare function NotPredicate(fragment: string, value: string): string;
+export declare function MissingPredicate(fragment: string): string;
+export declare function HasPredicate(fragment: string): string;
+export declare function AnyPredicate(fragment: string, values: string[]): string;
+export declare function InPredicate(fragment: string, values: string[]): string;
+export declare function FulltextPredicate(fragment: string, value: string): string;
+export declare function SimilarPredicate(documentId: string, maxResults: number): string;
+export declare function GtPredicate(fragment: string, value: number): string;
+export declare function LtPredicate(fragment: string, value: number): string;
+export declare function InRangePredicate(fragment: string, before: number, after: number): string;
+export declare function DateBeforePredicate(fragment: string, before: Date): string;
+export declare function DateAfterPredicate(fragment: string, after: Date): string;
+export declare function DateBetweenPredicate(fragment: string, before: Date, after: Date): string;
+export declare function DayOfMonthPredicate(fragment: string, day: number): string;
+export declare function DayOfMonthAfterPredicate(fragment: string, day: number): string;
+export declare function DayOfMonthBeforePredicate(fragment: string, day: number): string;
+export declare function DayOfWeekPredicate(fragment: string, day: number): string;
+export declare function DayOfWeekAfterPredicate(fragment: string, day: number): string;
+export declare function DayOfWeekBeforePredicate(fragment: string, day: number): string;
+export declare function MonthPredicate(fragment: string, month: number | string): string;
+export declare function MonthBeforePredicate(fragment: string, month: number | string): string;
+export declare function MonthAfterPredicate(fragment: string, month: number | string): string;
+export declare function YearPredicate(fragment: string, year: number): string;
+export declare function HourPredicate(fragment: string, hour: number): string;
+export declare function HourBeforePredicate(fragment: string, hour: number): string;
+export declare function HourAfterPredicate(fragment: string, hour: number): string;
+export declare function NearPredicate(fragment: string, latitude: number, longitude: number, radius: number): string;
 export declare const Predicates: {
-    at: typeof AtPredicate;
-    not: typeof NotPredicate;
-    missing: typeof MissingPredicate;
-    has: typeof HasPredicate;
-    any: typeof AnyPredicate;
-    in: typeof InPredicate;
-    fulltext: typeof FulltextPredicate;
-    similar: typeof SimilarPredicate;
-    gt: typeof GtPredicate;
-    lt: typeof LtPredicate;
-    inRange: typeof InRangePredicate;
-    before: typeof DateBeforePredicate;
-    after: typeof DateAfterPredicate;
-    between: typeof DateBetweenPredicate;
-    dayOfMonth: typeof DayOfMonthPredicate;
-    dayOfMonthAfter: typeof DayOfMonthAfterPredicate;
-    dayOfMonthBefore: typeof DayOfMonthBeforePredicate;
-    dayOfWeek: typeof DayOfWeekPredicate;
-    dayOfWeekAfter: typeof DayOfWeekAfterPredicate;
-    dayOfWeekBefore: typeof DayOfWeekBeforePredicate;
-    month: typeof MonthPredicate;
-    monthBefore: typeof MonthBeforePredicate;
-    monthAfter: typeof MonthAfterPredicate;
-    year: typeof YearPredicate;
-    hour: typeof HourPredicate;
-    hourBefore: typeof HourBeforePredicate;
-    hourAfter: typeof HourAfterPredicate;
-    near: typeof NearPredicate;
+    at: (fragment: string, value: string) => string;
+    not: (fragment: string, value: string) => string;
+    missing: (fragment: string) => string;
+    has: (fragment: string) => string;
+    any: (fragment: string, values: string[]) => string;
+    in: (fragment: string, values: string[]) => string;
+    fulltext: (fragment: string, value: string) => string;
+    similar: (documentId: string, maxResults: number) => string;
+    gt: (fragment: string, value: number) => string;
+    lt: (fragment: string, value: number) => string;
+    inRange: (fragment: string, before: number, after: number) => string;
+    before: (fragment: string, before: Date) => string;
+    after: (fragment: string, after: Date) => string;
+    between: (fragment: string, before: Date, after: Date) => string;
+    dayOfMonth: (fragment: string, day: number) => string;
+    dayOfMonthAfter: (fragment: string, day: number) => string;
+    dayOfMonthBefore: (fragment: string, day: number) => string;
+    dayOfWeek: (fragment: string, day: number) => string;
+    dayOfWeekAfter: (fragment: string, day: number) => string;
+    dayOfWeekBefore: (fragment: string, day: number) => string;
+    month: (fragment: string, month: string | number) => string;
+    monthBefore: (fragment: string, month: string | number) => string;
+    monthAfter: (fragment: string, month: string | number) => string;
+    year: (fragment: string, year: number) => string;
+    hour: (fragment: string, hour: number) => string;
+    hourBefore: (fragment: string, hour: number) => string;
+    hourAfter: (fragment: string, hour: number) => string;
+    near: (fragment: string, latitude: number, longitude: number, radius: number) => string;
 };

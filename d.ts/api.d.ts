@@ -1,4 +1,3 @@
-import { IPredicate } from '@root/predicates';
 import { IExperiments, IExperiment } from '@root/experiments';
 import { IRequestHandler } from '@root/request';
 import { IDocument } from '@root/documents';
@@ -51,7 +50,7 @@ export interface ISearchForm {
     data: any;
     set(field: string, value: any): ISearchForm;
     ref(ref: string): ISearchForm;
-    query(query: string | IPredicate | IPredicate[]): ISearchForm;
+    query(query: string | string[]): ISearchForm;
     pageSize(size: number): ISearchForm;
     fetch(fields: string | string[]): ISearchForm;
     fetchLinks(fields: string | string[]): ISearchForm;
@@ -76,7 +75,7 @@ export declare class SearchForm implements ISearchForm {
      * Sets a predicate-based query for this SearchForm. This is where you
      * paste what you compose in your prismic.io API browser.
      */
-    query(query: string | IPredicate | IPredicate[]): ISearchForm;
+    query(query: string | string[]): ISearchForm;
     /**
      * Sets a page size to query for this SearchForm. This is an optional method.
      *
@@ -167,7 +166,7 @@ export interface IApi {
     currentExperiment(): IExperiment | null;
     quickRoutesEnabled(): boolean;
     getQuickRoutes(callback: (err: Error, data: any, xhr: any) => void): Promise<any>;
-    query(q: string | IPredicate | IPredicate[], optionsOrCallback: object | ((err: Error | null, response?: any) => void), cb: (err: Error | null, response?: any) => void): Promise<IApiResponse>;
+    query(q: string | string[], optionsOrCallback: object | ((err: Error | null, response?: any) => void), cb: (err: Error | null, response?: any) => void): Promise<IApiResponse>;
 }
 export declare class Api implements IApi {
     url: string;
@@ -241,14 +240,14 @@ export declare class Api implements IApi {
     /**
      * Query the repository
      */
-    query(q: string | IPredicate | IPredicate[], optionsOrCallback: object | ((err: Error | null, response?: any) => void), cb: (err: Error | null, response?: any) => void): Promise<IApiResponse>;
+    query(q: string | string[], optionsOrCallback: object | ((err: Error | null, response?: any) => void), cb: (err: Error | null, response?: any) => void): Promise<IApiResponse>;
     /**
      * Retrieve the document returned by the given query
      * @param {string|array|Predicate} the query
      * @param {object} additional parameters. In NodeJS, pass the request as 'req'.
      * @param {function} callback(err, doc)
      */
-    queryFirst(q: string | IPredicate[] | IPredicate, optionsOrCallback: object | ((err: Error | null, response?: any) => void), cb: (err: Error | null, response?: any) => void): Promise<any>;
+    queryFirst(q: string | string[], optionsOrCallback: object | ((err: Error | null, response?: any) => void), cb: (err: Error | null, response?: any) => void): Promise<any>;
     /**
      * Retrieve the document with the given id
      */

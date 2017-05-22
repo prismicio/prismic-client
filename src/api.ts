@@ -1,4 +1,4 @@
-import { IPredicate, Predicates } from '@root/predicates';
+import { Predicates } from '@root/predicates';
 import { IExperiments, IExperiment, Experiments } from '@root/experiments';
 import { IRequestHandler, DefaultRequestHandler } from '@root/request';
 import { IDocument } from '@root/documents';
@@ -92,7 +92,7 @@ export interface ISearchForm {
 
   set(field: string, value: any): ISearchForm;
   ref(ref: string): ISearchForm;
-  query(query: string | IPredicate | IPredicate[]): ISearchForm;
+  query(query: string | string[]): ISearchForm;
   pageSize(size: number): ISearchForm;
   fetch(fields: string | string[]): ISearchForm;
   fetchLinks(fields: string | string[]): ISearchForm;
@@ -148,16 +148,13 @@ export class SearchForm implements ISearchForm {
    * Sets a predicate-based query for this SearchForm. This is where you
    * paste what you compose in your prismic.io API browser.
    */
-  query(query: string | IPredicate | IPredicate[]): ISearchForm {
+  query(query: string | string[]): ISearchForm {
     if (typeof query === 'string') {
-      return this.set("q", query);
-    } else if(query instanceof Array) {
-      const predicates = query.map((predicate: IPredicate) => {
-        return predicate.toString();
-      });
-      return this.query(`[${predicates.join("")}]`);
-    } else {
       return this.query([query]);
+    } else if(query instanceof Array) {
+      return this.set("q", (`[${query.join("")}]`));
+    } else {
+      throw new Error(`Invalid query : ${query}`)
     }
   }
 
@@ -316,7 +313,7 @@ export interface IApi {
   currentExperiment(): IExperiment | null;
   quickRoutesEnabled(): boolean;
   getQuickRoutes(callback: (err: Error, data: any, xhr: any) => void): Promise<any>;
-  query(q: string | IPredicate | IPredicate[], optionsOrCallback: object | ((err: Error | null, response?: any) => void), cb: (err: Error | null, response?: any) => void): Promise<IApiResponse>;
+  query(q: string | string[], optionsOrCallback: object | ((err: Error | null, response?: any) => void), cb: (err: Error | null, response?: any) => void): Promise<IApiResponse>;
 }
 
 export class Api implements IApi {
@@ -558,7 +555,7 @@ export class Api implements IApi {
   /**
    * Query the repository
    */
-  query(q: string | IPredicate | IPredicate[], optionsOrCallback: object | ((err: Error | null, response?: any) => void), cb: (err: Error | null, response?: any) => void): Promise<IApiResponse> {
+  query(q: string | string[], optionsOrCallback: object | ((err: Error | null, response?: any) => void), cb: (err: Error | null, response?: any) => void): Promise<IApiResponse> {
         const {options, callback} = typeof optionsOrCallback === 'function'
       ? {options: {}, callback: optionsOrCallback}
       : {options: optionsOrCallback || {}, callback: cb};
@@ -594,7 +591,7 @@ export class Api implements IApi {
    * @param {object} additional parameters. In NodeJS, pass the request as 'req'.
    * @param {function} callback(err, doc)
    */
-  queryFirst(q: string | IPredicate[] | IPredicate, optionsOrCallback: object | ((err: Error | null, response?: any) => void), cb: (err: Error | null, response?: any) => void) {
+  queryFirst(q: string | string[], optionsOrCallback: object | ((err: Error | null, response?: any) => void), cb: (err: Error | null, response?: any) => void) {
     const {options, callback} = typeof optionsOrCallback === 'function'
       ? {options: {}, callback: optionsOrCallback}
       : {options: optionsOrCallback || {}, callback: cb};
@@ -620,7 +617,7 @@ export class Api implements IApi {
   getByID(id: string, options: any, callback: (err: Error | null, response?: any) => void) {
     options = options || {};
     if(!options.lang) options.lang = '*';
-    return this.queryFirst(new Predicates.at('document.id', id), options, callback);
+    return this.queryFirst(Predicates.at('document.id', id), options, callback);
   }
 
   /**
@@ -629,7 +626,7 @@ export class Api implements IApi {
   getByIDs(ids: string[], options: any, callback: (err: Error | null, response?: any) => void) {
     options = options || {};
     if(!options.lang) options.lang = '*';
-    return this.query(new Predicates.in('document.id', ids), options, callback);
+    return this.query(Predicates.in('document.id', ids), options, callback);
   }
 
   /**
@@ -638,14 +635,14 @@ export class Api implements IApi {
   getByUID(type: string, uid: string, options: any, callback: (err: Error | null, response?: any) => void) {
     options = options || {};
     if(!options.lang) options.lang = '*';
-    return this.queryFirst(new Predicates.at(`my.${type}.uid`, uid), options, callback);
+    return this.queryFirst(Predicates.at(`my.${type}.uid`, uid), options, callback);
   }
 
   /**
    * Retrieve the singleton document with the given type
    */
   getSingle(type: string, options: any, callback: (err: Error | null, response?: any) => void) {
-    return this.queryFirst(new Predicates.at('document.type', type), options, callback);
+    return this.queryFirst(Predicates.at('document.type', type), options, callback);
   }
 
   /**
@@ -690,7 +687,7 @@ export class Api implements IApi {
           if (!mainDocumentId) {
             cb(null, defaultUrl, xhr);
           } else {
-            api.everything().query(new Predicates.at("document.id", mainDocumentId)).ref(token).lang('*').submit(function(err: Error, response: IApiResponse) {
+            api.everything().query(Predicates.at("document.id", mainDocumentId)).ref(token).lang('*').submit(function(err: Error, response: IApiResponse) {
               if (err) {
                 cb(err);
               }
