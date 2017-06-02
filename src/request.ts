@@ -38,8 +38,7 @@ function fetchRequest(
 ): any {
   return fetch(url, {
     headers: {
-      'Accept': 'application/json',
-      'User-Agent': 'Prismic-javascript-kit'
+      'Accept': 'application/json'
     }
   }).then(function (response) {
     if (~~(response.status / 100 != 2)) {
