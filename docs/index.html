@@ -64,7 +64,7 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<h2 id="javascript-development-kit-v2-for-prismic-io">JavaScript development kit v2 for prismic.io</h2>
+				<h2 id="javascript-development-for-prismic-io-api-v2-beta">JavaScript development for prismic.io API v2 BETA</h2>
 				<p><a href="http://badge.fury.io/js/prismic-javascript"><img src="https://badge.fury.io/js/prismic-javascript.svg" alt="npm version"></a>
 				<a href="https://travis-ci.org/prismicio/prismic-javascript"><img src="https://api.travis-ci.org/prismicio/prismic-javascript.png" alt="Build Status"></a></p>
 				<ul>
@@ -79,7 +79,8 @@
 				<hr>
 				<h2 id="-1-installation-installation-"><a href="#installation">1. Installation</a></h2>
 				<blockquote>
-					<p><a href="#npm">NPM</a> <br />
+					<p><a href="#prismic-api-settings">Prismic API Settings</a> <br />
+						<a href="#npm">NPM</a> <br />
 						<a href="#cdn">CDN</a> <br />
 						<a href="#downloadable-version">Downloadable version</a> <br />
 						<a href="#demo-project">Demo project</a> <br />
@@ -114,6 +115,10 @@
 				<h2 id="-5-license-license-"><a href="#license">5. License</a></h2>
 				<p>===================================================</p>
 				<h3 id="installation">Installation</h3>
+				<h4 id="prismic-api-settings">Prismic API Settings</h4>
+				<p>Your endpoint must contains &quot;v2&quot; at the end, otherwise it means that you&#39;re working on the API V1 so this library won&#39;t work for you.</p>
+				<pre><code class="lang-javascript">apiEndpoint: your-repo-name.prismic.io/api/v2
+</code></pre>
 				<h4 id="npm">NPM</h4>
 				<pre><code class="lang-sh">npm install prismic-javascript --save
 </code></pre>
