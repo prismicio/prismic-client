@@ -1,4 +1,4 @@
-## JavaScript development kit v2 for prismic.io
+## JavaScript development for prismic.io API v2 BETA
 
 [![npm version](https://badge.fury.io/js/prismic-javascript.svg)](http://badge.fury.io/js/prismic-javascript)
 [![Build Status](https://api.travis-ci.org/prismicio/prismic-javascript.png)](https://travis-ci.org/prismicio/prismic-javascript)
@@ -16,6 +16,7 @@ It's meant to work in pair with the prismic-dom library available here:
 [1. Installation](#installation)
 --------------------------------
 
+> [Prismic API Settings](#prismic-api-settings) <br />
 > [NPM](#npm) <br />
 > [CDN](#cdn) <br />
 > [Downloadable version](#downloadable-version) <br />
@@ -57,6 +58,13 @@ It's meant to work in pair with the prismic-dom library available here:
 ===================================================
 
 ### Installation
+
+#### Prismic API Settings
+Your endpoint must contains "v2" at the end, otherwise it means that you're working on the API V1 so this library won't work for you.
+
+```javascript
+apiEndpoint: your-repo-name.prismic.io/api/v2
+```
 
 #### NPM
 
