@@ -48,5 +48,6 @@ module.exports = {
   Form: Form,
   Experiments: Experiments,
   Predicates: AllPredicates.Predicates,
-  api: getApi
+  api: getApi,
+  getApi
 };
