@@ -28,8 +28,9 @@ export class DefaultApiCache implements IApiCache {
     const entryValue = this.lru.get(key, false);
     if(entryValue && !this.isExpired(key)) {
       cb(null, entryValue.data);
+    } else {
+      cb();
     }
-    cb();
   }
 
   set(key: string, value: any, ttl: number, cb: (error ?: Error) => void): void {
