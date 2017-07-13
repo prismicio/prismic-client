@@ -28,7 +28,7 @@ export declare const Operator: {
     "date.hour-after": string;
     "geopoint.near": string;
 };
-export declare function AtPredicate(fragment: string, value: string): string;
+export declare function AtPredicate(fragment: string, value: string | string[]): string;
 export declare function NotPredicate(fragment: string, value: string): string;
 export declare function MissingPredicate(fragment: string): string;
 export declare function HasPredicate(fragment: string): string;
@@ -57,7 +57,7 @@ export declare function HourBeforePredicate(fragment: string, hour: number): str
 export declare function HourAfterPredicate(fragment: string, hour: number): string;
 export declare function NearPredicate(fragment: string, latitude: number, longitude: number, radius: number): string;
 export declare const Predicates: {
-    at: (fragment: string, value: string) => string;
+    at: (fragment: string, value: string | string[]) => string;
     not: (fragment: string, value: string) => string;
     missing: (fragment: string) => string;
     has: (fragment: string) => string;
