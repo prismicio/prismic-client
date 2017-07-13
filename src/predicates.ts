@@ -29,12 +29,22 @@ export const Operator = {
   "geopoint.near": "geopoint.near"
 }
 
-export function AtPredicate(fragment: string, value: string): string {
-  return `[:d = ${Operator.at}(${fragment}, "${value}")]`;
+function encode(value: string | string[]): string | null {
+  if(typeof value === 'string') {
+    return `"${value}"`;
+  } else if(value instanceof Array) {
+    return `[${value.map(v => encode(v)).join(',')}]`;
+  } else {
+    return null;
+  }
+}
+
+export function AtPredicate(fragment: string, value: string | string[]): string {
+  return `[:d = ${Operator.at}(${fragment}, ${encode(value)})]`;
 }
 
 export function NotPredicate(fragment: string, value: string): string {
-  return `[:d = ${Operator.not}(${fragment}, "${value}")]`;
+  return `[:d = ${Operator.not}(${fragment}, ${encode(value)})]`;
 }
 
 export function MissingPredicate(fragment: string): string {
@@ -46,15 +56,15 @@ export function HasPredicate(fragment: string): string {
 }
 
 export function AnyPredicate(fragment: string, values: string[]): string {
-  return `[:d = ${Operator.any}(${fragment}, [${values.join(',')}])]`;
+  return `[:d = ${Operator.any}(${fragment}, ${encode(values)})]`;
 }
 
 export function InPredicate(fragment: string, values: string[]): string {
-  return `[:d = ${Operator.in}(${fragment}, [${values.join(',')}])]`;
+  return `[:d = ${Operator.in}(${fragment}, ${encode(values)})]`;
 }
 
 export function FulltextPredicate(fragment: string, value: string): string {
-  return `[:d = ${Operator.fulltext}(${fragment}, "${value}")]`;
+  return `[:d = ${Operator.fulltext}(${fragment}, ${encode(value)})]`;
 }
 
 export function SimilarPredicate(documentId: string, maxResults: number): string {
