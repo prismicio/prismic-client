@@ -50,7 +50,7 @@ export class Experiment implements IExperiment {
   constructor(data: any) {
     this.data = data;
     this.variations = (data.variations || []).map((v: any) => {
-      new Variation(v);
+      return new Variation(v);
     });
   }
 
@@ -59,11 +59,11 @@ export class Experiment implements IExperiment {
   }
 
   googleId(): string {
-    return this.data.ref;
+    return this.data.googleId;
   }
 
   name(): string {
-    return this.data.label;
+    return this.data.name;
   }
 }
 export class Experiments {
@@ -73,10 +73,10 @@ export class Experiments {
   constructor(data: any) {
     if(data) {
       this.drafts = (data.drafts || []).map((exp: any) => {
-        new Experiment(exp);
+        return new Experiment(exp);
       });
       this.running = (data.running || []).map((exp: any) => {
-        new Experiment(exp);
+        return new Experiment(exp);
       });
     }
   }
