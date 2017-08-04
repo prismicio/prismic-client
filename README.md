@@ -1,4 +1,4 @@
-## JavaScript development for prismic.io API v2 BETA
+## JavaScript development for prismic.io API v2
 
 [![npm version](https://badge.fury.io/js/prismic-javascript.svg)](http://badge.fury.io/js/prismic-javascript)
 [![Build Status](https://api.travis-ci.org/prismicio/prismic-javascript.png)](https://travis-ci.org/prismicio/prismic-javascript)
