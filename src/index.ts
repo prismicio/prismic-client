@@ -1,4 +1,4 @@
-import { Document, GroupDoc } from "@root/documents";
+import { Document, GroupDoc } from "./documents";
 import {
   IApiOptions,
   IApi,
@@ -9,9 +9,9 @@ import {
   SearchForm
 } from "./api";
 
-import { DefaultRequestHandler } from '@root/request';
-import * as AllPredicates from '@root/predicates';
-import { Experiments } from '@root/experiments';
+import { DefaultRequestHandler } from './request';
+import * as AllPredicates from './predicates';
+import { Experiments } from './experiments';
 
 function getApi(url: string, options: IApiOptions | null): Promise<IApi> {
   const safeOptions = options || {} as IApiOptions;

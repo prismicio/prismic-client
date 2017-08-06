@@ -1,7 +1,7 @@
-import { IExperiments, IExperiment } from '@root/experiments';
-import { IRequestHandler } from '@root/request';
-import { IDocument } from '@root/documents';
-import { IApiCache } from '@root/cache';
+import { IExperiments, IExperiment } from './experiments';
+import { IRequestHandler } from './request';
+import { IDocument } from './documents';
+import { IApiCache } from './cache';
 export declare const PreviewCookie = "io.prismic.preview";
 export declare const ExperimentCookie = "io.prismic.experiment";
 export interface IRef {
@@ -130,7 +130,7 @@ export declare class ApiResponse {
     constructor(page: number, results_per_page: number, results_size: number, total_results_size: number, total_pages: number, next_page: string, prev_page: string, results: IDocument[]);
 }
 export interface IApiOptions {
-    accessToken: string;
+    accessToken?: string;
     complete?: (err: Error | null, value?: any, xhr?: any) => void;
     requestHandler?: IRequestHandler;
     req?: any;
@@ -139,7 +139,7 @@ export interface IApiOptions {
 }
 export interface IApi {
     url: string;
-    accessToken: string;
+    accessToken?: string;
     req: any;
     apiCacheKey: string;
     apiCache: IApiCache;
@@ -170,7 +170,7 @@ export interface IApi {
 }
 export declare class Api implements IApi {
     url: string;
-    accessToken: string;
+    accessToken?: string;
     req: any;
     apiCacheKey: string;
     apiCache: IApiCache;

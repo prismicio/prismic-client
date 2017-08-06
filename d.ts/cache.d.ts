@@ -1,4 +1,4 @@
-import { ILRUCache } from '@root/lru';
+import { ILRUCache } from './lru';
 export interface IApiCache {
     isExpired(key: String): boolean;
     get(key: string, cb: (error?: Error | null, entry?: any) => any): void;

@@ -26,8 +26,8 @@
   },
   "main": "dist/prismic-javascript.min.js",
   "scripts": {
-    "build": "webpack --debug; webpack -p",
-    "dev": "webpack -d --watch",
+    "build": "webpack -p",
+    "dev": "tsc --pretty --noEmit --project ./tsconfig.json --watch",
     "prepublish": "npm run build; npm run docs",
     "docs": "typedoc --mode file --out ./docs/ ./src/",
     "lint": "tslint src",

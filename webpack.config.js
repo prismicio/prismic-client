@@ -35,7 +35,12 @@ var config = {
         exclude: /node_modules/,
         options: {
           emitErrors: true,
-          failOnHint: true
+          failOnHint: true,
+          compilerOptions: {
+            declaration: true,
+            declarationDir: "../d.ts",
+            module: "commonjs"
+          }
         }
       },
       {

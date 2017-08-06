@@ -1,12 +1,11 @@
-import { Predicates } from '@root/predicates';
-import { IExperiments, IExperiment, Experiments } from '@root/experiments';
-import { IRequestHandler, DefaultRequestHandler } from '@root/request';
-import { IDocument } from '@root/documents';
-import { IApiCache, DefaultApiCache } from '@root/cache';
-import Cookies from '@root/cookies';
+import { Predicates } from './predicates';
+import { IExperiments, IExperiment, Experiments } from './experiments';
+import { IRequestHandler, DefaultRequestHandler } from './request';
+import { IDocument } from './documents';
+import { IApiCache, DefaultApiCache } from './cache';
+import Cookies from './cookies';
 export const PreviewCookie = "io.prismic.preview";
 export const ExperimentCookie = "io.prismic.experiment";
-
 
 export interface IRef {
   ref: string;
@@ -275,7 +274,7 @@ export class ApiResponse {
 }
 
 export interface IApiOptions {
-  accessToken: string;
+  accessToken?: string;
   complete?: (err: Error | null, value?: any, xhr?: any) => void;
   requestHandler?: IRequestHandler;
   req?: any;
@@ -285,7 +284,7 @@ export interface IApiOptions {
 
 export interface IApi {
   url: string;
-  accessToken: string;
+  accessToken?: string;
   req: any;
   apiCacheKey: string;
   apiCache: IApiCache;
@@ -318,7 +317,7 @@ export interface IApi {
 
 export class Api implements IApi {
   url: string;
-  accessToken: string;
+  accessToken?: string;
   req: any;
   apiCacheKey: string;
   apiCache: IApiCache;
