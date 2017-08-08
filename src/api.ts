@@ -593,7 +593,7 @@ export class Api {
     });
   }
 
-  getNextPage(nextPage: number, callback: (err: Error | null, results: ApiResponse | null, xhr?: any) => void) {
+  getNextPage(nextPage: string, callback: (err: Error | null, results: ApiResponse | null, xhr?: any) => void) {
     return this.request(nextPage + (this.accessToken ? '&access_token=' + this.accessToken : ''), callback);
   }
 }
