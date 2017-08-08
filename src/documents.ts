@@ -1,23 +1,4 @@
-export interface IDocument {
-  id: string;
-  uid ?: string;
-  type: string;
-  href: string;
-  tags: string[];
-  slug: string;
-  slugs: string[];
-  firstPublicationDate: Date | null;
-  lastPublicationDate: Date | null;
-  lang ?: string;
-  alternateLanguages: string[];
-  data: object;
-}
-
-export interface IGroupDoc {
-  data: object;
-}
-
-export class Document implements IDocument {
+export class Document {
   id: string;
   uid ?: string;
   type: string;
@@ -59,12 +40,4 @@ export class Document implements IDocument {
     this.lastPublicationDate = lastPublicationDate ? new Date(lastPublicationDate) : null,
     this.data = data;
   };
-}
-
-export class GroupDoc implements IGroupDoc {
-  data: any;
-
-  constructor(data: any) {
-    this.data = data;
-  }
 }

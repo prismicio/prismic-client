@@ -1,4 +1,4 @@
-import { Document, GroupDoc } from "./documents";
+import { Document } from "./documents";
 import {
   ApiOptions,
   Api,
