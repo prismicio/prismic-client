@@ -1,4 +1,4 @@
-import { Predicates } from './predicates';
+import Predicates from './predicates';
 import { IExperiments, IExperiment, Experiments } from './experiments';
 import { RequestHandler, DefaultRequestHandler } from './request';
 import { Document } from './documents';

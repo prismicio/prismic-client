@@ -1,16 +1,15 @@
 import { Document } from "./documents";
+import Predicates from './predicates';
+import { DefaultRequestHandler } from './request';
+import { Experiments } from './experiments';
 import {
   ApiOptions,
   Api,
   ExperimentCookie,
   PreviewCookie,
   Form,
-  SearchForm
+  SearchForm,
 } from "./api";
-
-import { DefaultRequestHandler } from './request';
-import * as AllPredicates from './predicates';
-import { Experiments } from './experiments';
 
 function getApi(url: string, options: ApiOptions | null): Promise<Api> {
   const safeOptions = options || {} as ApiOptions;
@@ -42,10 +41,10 @@ function getApi(url: string, options: ApiOptions | null): Promise<Api> {
 module.exports = {
   experimentCookie: ExperimentCookie,
   previewCookie: PreviewCookie,
-  Document: Document,
-  SearchForm: SearchForm,
-  Experiments: Experiments,
-  Predicates: AllPredicates.Predicates,
+  Document,
+  SearchForm,
+  Experiments,
+  Predicates,
   api: getApi,
   getApi
 };

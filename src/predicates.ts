@@ -1,4 +1,4 @@
-export const Operator = {
+const Operator = {
   at: "at",
   not: "not",
   missing: "missing",
@@ -39,157 +39,128 @@ function encode(value: string | string[]): string | null {
   }
 }
 
-export function AtPredicate(fragment: string, value: string | string[]): string {
-  return `[:d = ${Operator.at}(${fragment}, ${encode(value)})]`;
-}
+export default {
+  at(fragment: string, value: string | string[]): string {
+    return `[${Operator.at}(${fragment}, ${encode(value)})]`;
+  },
+  
+  not(fragment: string, value: string): string {
+  return `[${Operator.not}(${fragment}, ${encode(value)})]`;
+  },
 
-export function NotPredicate(fragment: string, value: string): string {
-  return `[:d = ${Operator.not}(${fragment}, ${encode(value)})]`;
-}
+  missing(fragment: string): string {
+    return `[${Operator.missing}(${fragment})]`;
+  },
 
-export function MissingPredicate(fragment: string): string {
-  return `[:d = ${Operator.missing}(${fragment})]`;
-}
+  has(fragment: string): string {
+    return `[${Operator.has}(${fragment})]`;
+  },
 
-export function HasPredicate(fragment: string): string {
-  return `[:d = ${Operator.has}(${fragment})]`;
-}
+  any(fragment: string, values: string[]): string {
+    return `[${Operator.any}(${fragment}, ${encode(values)})]`;
+  },
 
-export function AnyPredicate(fragment: string, values: string[]): string {
-  return `[:d = ${Operator.any}(${fragment}, ${encode(values)})]`;
-}
+  in(fragment: string, values: string[]): string {
+    return `[${Operator.in}(${fragment}, ${encode(values)})]`;
+  },
 
-export function InPredicate(fragment: string, values: string[]): string {
-  return `[:d = ${Operator.in}(${fragment}, ${encode(values)})]`;
-}
+  fulltext(fragment: string, value: string): string {
+    return `[${Operator.fulltext}(${fragment}, ${encode(value)})]`;
+  },
 
-export function FulltextPredicate(fragment: string, value: string): string {
-  return `[:d = ${Operator.fulltext}(${fragment}, ${encode(value)})]`;
-}
+  similar(documentId: string, maxResults: number): string {
+    return `[${Operator.similar}("${this.documentId}", ${this.maxResults})]`;
+  },
 
-export function SimilarPredicate(documentId: string, maxResults: number): string {
-  return `[:d = ${Operator.similar}("${this.documentId}", ${this.maxResults})]`;
-}
+  gt(fragment: string, value: number): string {
+    return `[${Operator["number.gt"]}(${fragment}, ${value})]`;
+  },
 
-export function GtPredicate(fragment: string, value: number): string {
-  return `[:d = ${Operator["number.gt"]}(${fragment}, ${value})]`;
-}
+  lt(fragment: string, value: number): string {
+    return `[${Operator["number.lt"]}(${fragment}, ${value})]`;
+  },
 
-export function LtPredicate(fragment: string, value: number): string {
-  return `[:d = ${Operator["number.lt"]}(${fragment}, ${value})]`;
-}
+  inRange(fragment: string, before: number, after: number): string {
+    return `[${Operator["number.inRange"]}(${fragment}, ${this.before}, ${this.after})]`;
+  },
 
-export function InRangePredicate(fragment: string, before: number, after: number): string {
-  return `[:d = ${Operator["number.inRange"]}(${fragment}, ${this.before}, ${this.after})]`;
-}
+  dateBefore(fragment: string, before: Date): string {
+    return `[${Operator["date.before"]}(${fragment}, ${this.before.getTime()})]`;
+  },
 
-export function DateBeforePredicate(fragment: string, before: Date): string {
-  return `[:d = ${Operator["date.before"]}(${fragment}, ${this.before.getTime()})]`;
-}
+  dateAfter(fragment: string, after: Date): string {
+    return `[${Operator["date.after"]}(${fragment}, ${this.after.getTime()})]`;
+  },
 
-export function DateAfterPredicate(fragment: string, after: Date): string {
-  return `[:d = ${Operator["date.after"]}(${fragment}, ${this.after.getTime()})]`;
-}
+  dateBetween(fragment: string, before: Date, after: Date): string {
+    return `[${Operator["date.between"]}(${fragment}, ${this.before.getTime()}, ${this.after.getTime()})]`;
+  },
 
-export function DateBetweenPredicate(fragment: string, before: Date, after: Date): string {
-  return `[:d = ${Operator["date.between"]}(${fragment}, ${this.before.getTime()}, ${this.after.getTime()})]`;
-}
+  dayOfMonth(fragment: string, day: number): string {
+    return `[${Operator["date.day-of-month"]}(${fragment}, ${this.day})]`;
+  },
 
-export function DayOfMonthPredicate(fragment: string, day: number): string {
-  return `[:d = ${Operator["date.day-of-month"]}(${fragment}, ${this.day})]`;
-}
+  dayOfMonthAfter(fragment: string, day: number): string {
+    return `[${Operator["date.day-of-month-after"]}(${fragment}, ${this.day})]`;
+  },
 
-export function DayOfMonthAfterPredicate(fragment: string, day: number): string {
-  return `[:d = ${Operator["date.day-of-month-after"]}(${fragment}, ${this.day})]`;
-}
+  dayOfMonthBefore(fragment: string, day: number): string {
+    return `[${Operator["date.day-of-month-before"]}(${fragment}, ${this.day})]`;
+  },
 
-export function DayOfMonthBeforePredicate(fragment: string, day: number): string {
-  return `[:d = ${Operator["date.day-of-month-before"]}(${fragment}, ${this.day})]`;
-}
+  dayOfWeek(fragment: string, day: number): string {
+    return `[${Operator["date.day-of-week"]}(${fragment}, ${this.day})]`;
+  },
 
-export function DayOfWeekPredicate(fragment: string, day: number): string {
-  return `[:d = ${Operator["date.day-of-week"]}(${fragment}, ${this.day})]`;
-}
+  dayOfWeekAfter(fragment: string, day: number): string {
+    return `[${Operator["date.day-of-week-after"]}(${fragment}, ${this.day})]`;
+  },
 
-export function DayOfWeekAfterPredicate(fragment: string, day: number): string {
-  return `[:d = ${Operator["date.day-of-week-after"]}(${fragment}, ${this.day})]`;
-}
-
-export function DayOfWeekBeforePredicate(fragment: string, day: number): string {
-  return `[:d = ${Operator["date.day-of-week-before"]}(${fragment}, ${this.day})]`;
-}
+  dayOfWeekBefore(fragment: string, day: number): string {
+    return `[${Operator["date.day-of-week-before"]}(${fragment}, ${this.day})]`;
+  },
  
-export function MonthPredicate(fragment: string, month: number | string): string {
-  if(typeof this.month === 'number') {
-    return `[:d = ${Operator["date.month"]}(${fragment}, ${this.month})]`;
-  } else {
-    return `[:d = ${Operator["date.month"]}(${fragment}, "${this.month}")]`;
+  month(fragment: string, month: number | string): string {
+    if(typeof this.month === 'number') {
+      return `[${Operator["date.month"]}(${fragment}, ${this.month})]`;
+    } else {
+      return `[${Operator["date.month"]}(${fragment}, "${this.month}")]`;
+    }
+  },
+
+  monthBefore(fragment: string, month: number | string): string {
+    if(typeof this.month === 'number') {
+      return `[${Operator["date.month-before"]}(${fragment}, ${this.month})]`;
+    } else {
+      return `[${Operator["date.month-before"]}(${fragment}, "${this.month}")]`;
+    }
+  },
+
+  monthAfter(fragment: string, month: number | string): string {
+    if(typeof this.month === 'number') {
+      return `[${Operator["date.month-after"]}(${fragment}, ${this.month})]`;
+    } else {
+      return `[${Operator["date.month-after"]}(${fragment}, "${this.month}")]`;
+    }
+  },
+
+  year(fragment: string, year: number): string {
+    return `[${Operator["date.year"]}(${fragment}, ${this.year})]`;
+  },
+
+  hour(fragment: string, hour: number): string {
+    return `[${Operator["date.hour"]}(${fragment}, ${this.hour})]`;
+  },
+
+  hourBefore(fragment: string, hour: number): string {
+    return `[${Operator["date.hour-before"]}(${fragment}, ${this.hour})]`;
+  },
+
+  hourAfter(fragment: string, hour: number): string {
+    return `[${Operator["date.hour-after"]}(${fragment}, ${this.hour})]`;
+  },
+
+  near(fragment: string, latitude: number, longitude: number, radius: number): string {
+    return `[${Operator["geopoint.near"]}(${fragment}, ${this.latitude}, ${this.longitude}, ${this.radius})]`;
   }
 }
-
-export function MonthBeforePredicate(fragment: string, month: number | string): string {
-  if(typeof this.month === 'number') {
-    return `[:d = ${Operator["date.month-before"]}(${fragment}, ${this.month})]`;
-  } else {
-    return `[:d = ${Operator["date.month-before"]}(${fragment}, "${this.month}")]`;
-  }
-}
-
-export function MonthAfterPredicate(fragment: string, month: number | string): string {
-  if(typeof this.month === 'number') {
-    return `[:d = ${Operator["date.month-after"]}(${fragment}, ${this.month})]`;
-  } else {
-    return `[:d = ${Operator["date.month-after"]}(${fragment}, "${this.month}")]`;
-  }
-}
-
-export function YearPredicate(fragment: string, year: number): string {
-  return `[:d = ${Operator["date.year"]}(${fragment}, ${this.year})]`;
-}
-
-export function HourPredicate(fragment: string, hour: number): string {
-  return `[:d = ${Operator["date.hour"]}(${fragment}, ${this.hour})]`;
-}
-
-export function HourBeforePredicate(fragment: string, hour: number): string {
-  return `[:d = ${Operator["date.hour-before"]}(${fragment}, ${this.hour})]`;
-}
-
-export function HourAfterPredicate(fragment: string, hour: number): string {
-  return `[:d = ${Operator["date.hour-after"]}(${fragment}, ${this.hour})]`;
-}
-
-export function NearPredicate(fragment: string, latitude: number, longitude: number, radius: number): string {
-  return `[:d = ${Operator["geopoint.near"]}(${fragment}, ${this.latitude}, ${this.longitude}, ${this.radius})]`;
-}
-
-export const Predicates = {
-  at: AtPredicate,
-  not: NotPredicate,
-  missing: MissingPredicate,
-  has: HasPredicate,
-  any: AnyPredicate,
-  in: InPredicate,
-  fulltext: FulltextPredicate,
-  similar: SimilarPredicate,
-  gt: GtPredicate,
-  lt: LtPredicate,
-  inRange: InRangePredicate,
-  before: DateBeforePredicate,
-  after: DateAfterPredicate,
-  between: DateBetweenPredicate,
-  dayOfMonth: DayOfMonthPredicate,
-  dayOfMonthAfter: DayOfMonthAfterPredicate,
-  dayOfMonthBefore:DayOfMonthBeforePredicate,
-  dayOfWeek: DayOfWeekPredicate,
-  dayOfWeekAfter: DayOfWeekAfterPredicate,
-  dayOfWeekBefore: DayOfWeekBeforePredicate,
-  month: MonthPredicate,
-  monthBefore: MonthBeforePredicate,
-  monthAfter: MonthAfterPredicate,
-  year: YearPredicate,
-  hour: HourPredicate,
-  hourBefore: HourBeforePredicate,
-  hourAfter: HourAfterPredicate,
-  near: NearPredicate
-};
