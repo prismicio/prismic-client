@@ -1,6 +1,6 @@
 import { Predicates } from './predicates';
 import { IExperiments, IExperiment, Experiments } from './experiments';
-import { IRequestHandler, DefaultRequestHandler } from './request';
+import { RequestHandler, DefaultRequestHandler } from './request';
 import { Document } from './documents';
 import { ApiCache, DefaultApiCache } from './cache';
 import Cookies from './cookies';
@@ -175,7 +175,7 @@ export interface ApiResponse {
 export interface ApiOptions {
   accessToken?: string;
   complete?: (err: Error | null, value?: any, xhr?: any) => void;
-  requestHandler?: IRequestHandler;
+  requestHandler?: RequestHandler;
   req?: any;
   apiCache?: ApiCache;
   apiDataTTL?: number;
@@ -188,7 +188,7 @@ export class Api {
   apiCacheKey: string;
   apiCache: ApiCache;
   apiDataTTL: number;
-  requestHandler: IRequestHandler;
+  requestHandler: RequestHandler;
   experiments: IExperiments;
   bookmarks: string[];
   refs: Ref[];
