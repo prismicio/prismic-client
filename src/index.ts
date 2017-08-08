@@ -1,7 +1,6 @@
 import { Document, GroupDoc } from "./documents";
 import {
-  IApiOptions,
-  IApi,
+  ApiOptions,
   Api,
   ExperimentCookie,
   PreviewCookie,
@@ -13,8 +12,8 @@ import { DefaultRequestHandler } from './request';
 import * as AllPredicates from './predicates';
 import { Experiments } from './experiments';
 
-function getApi(url: string, options: IApiOptions | null): Promise<IApi> {
-  const safeOptions = options || {} as IApiOptions;
+function getApi(url: string, options: ApiOptions | null): Promise<Api> {
+  const safeOptions = options || {} as ApiOptions;
   var api = new Api(url, safeOptions);
   //Use cached api data if available
   return new Promise(function(resolve, reject) {
@@ -45,7 +44,6 @@ module.exports = {
   previewCookie: PreviewCookie,
   Document: Document,
   SearchForm: SearchForm,
-  Form: Form,
   Experiments: Experiments,
   Predicates: AllPredicates.Predicates,
   api: getApi,

@@ -1,6 +1,6 @@
 import { ILRUCache, MakeLRUCache } from './lru';
 
-export interface IApiCache {
+export interface ApiCache {
   isExpired(key: String): boolean;
   get(key: string, cb: (error ?: Error | null, entry?: any) => any): void;
   set(key: string, value: any, ttl: number, cb: (error ?: Error) => void): void;
@@ -8,7 +8,7 @@ export interface IApiCache {
   clear(cb: (error ?: Error | null) => any): void;
 }
 
-export class DefaultApiCache implements IApiCache {
+export class DefaultApiCache implements ApiCache {
   lru: ILRUCache;
 
   constructor(limit ?: number) {
