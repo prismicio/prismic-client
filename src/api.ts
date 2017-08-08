@@ -1,5 +1,5 @@
 import Predicates from './predicates';
-import { IExperiments, IExperiment, Experiments } from './experiments';
+import { Experiment, Experiments } from './experiments';
 import { RequestHandler, DefaultRequestHandler } from './request';
 import { Document } from './documents';
 import { ApiCache, DefaultApiCache } from './cache';
@@ -189,7 +189,7 @@ export class Api {
   apiCache: ApiCache;
   apiDataTTL: number;
   requestHandler: RequestHandler;
-  experiments: IExperiments;
+  experiments: Experiments;
   bookmarks: string[];
   refs: Ref[];
   types: object;
@@ -377,7 +377,7 @@ export class Api {
   /**
    * The current experiment, or null
    */
-  currentExperiment(): IExperiment | null {
+  currentExperiment(): Experiment | null {
     return this.experiments.current();
   }
 

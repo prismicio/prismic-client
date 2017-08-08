@@ -1,29 +1,4 @@
-export interface IExperiment {
-  variations: IVariation[];
-  data: any;
-
-  id(): string;
-  googleId(): string;
-  name(): string;
-}
-
-export interface IVariation {
-  data: any;
-
-  id(): string;
-  ref(): string;
-  label(): string;
-}
-
-export interface IExperiments {
-  drafts: IExperiment[];
-  running: IExperiment[];
-
-  current(): IExperiment | null;
-  refFromCookie(cookie: string): string | null;
-}
-
-export class Variation implements IVariation {
+export class Variation {
   data: any = {};
 
   constructor(data: any) {
@@ -43,8 +18,8 @@ export class Variation implements IVariation {
   }
 }
 
-export class Experiment implements IExperiment {
-  variations: IVariation[];
+export class Experiment {
+  variations: Variation[];
   data: any = {};
 
   constructor(data: any) {
@@ -66,9 +41,10 @@ export class Experiment implements IExperiment {
     return this.data.name;
   }
 }
+
 export class Experiments {
-  drafts: IExperiment[];
-  running: IExperiment[];
+  drafts: Experiment[];
+  running: Experiment[];
 
   constructor(data: any) {
     if(data) {
@@ -81,7 +57,7 @@ export class Experiments {
     }
   }
 
-  current(): IExperiment | null {
+  current(): Experiment | null {
     return this.running.length > 0 ? this.running[0] : null;
   }
   refFromCookie(cookie: string): string | null {
