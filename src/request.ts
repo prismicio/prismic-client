@@ -54,7 +54,7 @@ function fetchRequest(
   }).then(function(next: any) {
     var response = next.response;
     var json = next.json;
-    var cacheControl = response.headers['cache-control'];
+    var cacheControl = response.headers.get('cache-control');
     const parsedCacheControl: string[] | null = cacheControl ? /max-age=(\d+)/.exec(cacheControl) : null;
     var ttl = parsedCacheControl ? parseInt(parsedCacheControl[1], 10) : undefined;
     onSuccess({result: json, xhr: response, ttl} as IRequestCallbackSuccess);
@@ -73,7 +73,7 @@ function processQueue() {
   }
   running++;
   var next = queue.shift();
-  
+
   fetchRequest(next.url,
     function({result, xhr, ttl}: IRequestCallbackSuccess) {
       running--;
