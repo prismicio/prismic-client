@@ -7,7 +7,7 @@ export declare const ExperimentCookie = "io.prismic.experiment";
 export interface Ref {
     ref: string;
     label: string;
-    isMaster: string;
+    isMasterRef: string;
     scheduledAt: string;
     id: string;
 }

@@ -11,7 +11,7 @@ export const ExperimentCookie = "io.prismic.experiment";
 export interface Ref {
   ref: string;
   label: string;
-  isMaster: string;
+  isMasterRef: string;
   scheduledAt: string;
   id: string;
 }
@@ -308,7 +308,7 @@ export class Api {
 
     const refs: Ref[] = data.refs || [];
 
-    const master = refs.filter(r => r.isMaster)[0];
+    const master = refs.filter(r => r.isMasterRef)[0];
 
     const types = data.types;
 
