@@ -38,8 +38,7 @@ var config = {
           failOnHint: true,
           compilerOptions: {
             declaration: true,
-            declarationDir: "../d.ts",
-            module: "commonjs"
+            declarationDir: "../d.ts"
           }
         }
       },

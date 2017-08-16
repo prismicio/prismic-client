@@ -18,7 +18,8 @@
     "typedoc": "^0.6.0",
     "typescript": "^2.3.2",
     "webpack": "^2.4.1",
-    "yargs": "^7.1.0"
+    "yargs": "^7.1.0",
+    "tslint-config-airbnb": "^5.2.1"
   },
   "repository": {
     "type": "git",
@@ -30,9 +31,8 @@
     "dev": "webpack -d --watch",
     "check": "tsc --pretty --noEmit --project ./tsconfig.json --watch",
     "prepublish": "npm run build; npm run docs",
-    "docs": "typedoc --mode file --out ./docs/ ./src/",
-    "lint": "tslint src",
-    "posttest": "tslint lib"
+    "docs": "typedoc --mode file --out ./docs/ ./src/index.ts",
+    "lint": "tslint src/**/*.ts"
   },
   "dependencies": {
     "fetch-everywhere": "^1.0.5"
