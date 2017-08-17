@@ -40,6 +40,8 @@ module.exports = {
   experimentCookie: ExperimentCookie,
   previewCookie: PreviewCookie,
   Predicates,
+  Experiments,
   api: getApi,
+  Api,
   getApi
 };
