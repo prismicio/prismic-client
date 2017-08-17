@@ -34,6 +34,8 @@ function encode(value: string | string[]): string | null {
     return `"${value}"`;
   } else if(value instanceof Array) {
     return `[${value.map(v => encode(v)).join(',')}]`;
+  } else if(typeof value === 'number') {
+    return value;
   } else {
     return null;
   }
