@@ -68,8 +68,8 @@ export declare const Predicates: {
     gt: (fragment: string, value: number) => string;
     lt: (fragment: string, value: number) => string;
     inRange: (fragment: string, before: number, after: number) => string;
-    before: (fragment: string, before: Date) => string;
-    after: (fragment: string, after: Date) => string;
+    dateBefore: (fragment: string, before: Date) => string;
+    dateAfter: (fragment: string, after: Date) => string;
     between: (fragment: string, before: Date, after: Date) => string;
     dayOfMonth: (fragment: string, day: number) => string;
     dayOfMonthAfter: (fragment: string, day: number) => string;
