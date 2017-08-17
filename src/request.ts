@@ -81,7 +81,9 @@ function processQueue() {
       processQueue();
     },
     function({error}: IRequestCallbackFailure) {
+      running--;
       next.callback(error);
+      processQueue();
     }
   );
 }
