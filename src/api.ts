@@ -146,9 +146,9 @@ export class SearchForm {
   }
 
   /**
-   * Submits the query, and calls the callback function.
+   * Build the URL to query
    */
-  submit(callback: (error: Error | null, response: ApiResponse, xhr: any) => void): any {
+  url(): string {
     let url = this.form.action;
     if (this.data) {
       let sep = (url.indexOf('?') > -1 ? '&' : '?');
@@ -164,7 +164,14 @@ export class SearchForm {
         }
       }
     }
-    return this.api.request(url, callback);
+    return url;
+  }
+
+  /**
+   * Submits the query, and calls the callback function.
+   */
+  submit(callback: (error: Error | null, response: ApiResponse, xhr: any) => void): any {
+    return this.api.request(this.url(), callback);
   }
 }
 

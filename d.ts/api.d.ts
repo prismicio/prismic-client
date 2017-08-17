@@ -72,6 +72,10 @@ export declare class SearchForm {
      */
     orderings(orderings?: string[]): SearchForm;
     /**
+     * Build the URL to query
+     */
+    url(): string;
+    /**
      * Submits the query, and calls the callback function.
      */
     submit(callback: (error: Error | null, response: ApiResponse, xhr: any) => void): any;
