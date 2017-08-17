@@ -64,6 +64,10 @@ export declare class SearchForm {
      */
     page(p: number): SearchForm;
     /**
+     * Remove all the documents except for those after the specified document in the list. This is an optional method.
+     */
+    after(documentId: string): SearchForm;
+    /**
      * Sets the orderings to query for this SearchForm. This is an optional method.
      */
     orderings(orderings?: string[]): SearchForm;
