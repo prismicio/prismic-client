@@ -45,7 +45,7 @@ export default {
   },
   
   not(fragment: string, value: string): string {
-  return `[${Operator.not}(${fragment}, ${encode(value)})]`;
+    return `[${Operator.not}(${fragment}, ${encode(value)})]`;
   },
 
   missing(fragment: string): string {
