@@ -30,10 +30,12 @@ const Operator = {
 }
 
 function encode(value: string | string[]): string | null {
-  if(typeof value === 'string') {
+  if (typeof value === 'string') {
     return `"${value}"`;
-  } else if(value instanceof Array) {
+  } else if (value instanceof Array) {
     return `[${value.map(v => encode(v)).join(',')}]`;
+  } else if (typeof value === 'number') {
+    return value;
   } else {
     return null;
   }

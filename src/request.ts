@@ -10,7 +10,6 @@ function createError(status: number, message: string): RequestError {
   }
 }
 
-
 // Number of maximum simultaneous connections to the prismic server
 let MAX_CONNECTIONS: number = 20;
 // Number of requests currently running (capped by MAX_CONNECTIONS)
@@ -52,9 +51,9 @@ function fetchRequest(
       });
     }
   }).then(function(next: any) {
-    const response = next.response;
-    const json = next.json;
-    const cacheControl = response.headers['cache-control'];
+    var response = next.response;
+    var json = next.json;
+    var cacheControl = response.headers.get('cache-control');
     const parsedCacheControl: string[] | null = cacheControl ? /max-age=(\d+)/.exec(cacheControl) : null;
     const ttl = parsedCacheControl ? parseInt(parsedCacheControl[1], 10) : undefined;
     onSuccess({result: json, xhr: response, ttl} as RequestCallbackSuccess);
@@ -72,8 +71,9 @@ function processQueue() {
     return;
   }
   running++;
+
   const next = queue.shift();
-  
+
   fetchRequest(next.url,
     function({result, xhr, ttl}: RequestCallbackSuccess) {
       running--;
@@ -82,6 +82,7 @@ function processQueue() {
     },
     function({error}: RequestCallbackFailure) {
       next.callback(error);
+      processQueue();
     }
   );
 }
