@@ -18,10 +18,10 @@
     "ts-loader": "^2.0.3",
     "tslint": "^5.1.0",
     "tslint-config-airbnb": "^5.2.1",
-    "typedoc": "^0.6.0",
+    "typedoc": "^0.8.0",
     "typescript": "^2.3.2",
-    "webpack": "^2.4.1",
-    "yargs": "^7.1.0"
+    "webpack": "^3.5.5",
+    "yargs": "^8.0.2"
   },
   "repository": {
     "type": "git",
