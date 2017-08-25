@@ -47,7 +47,7 @@ export class Experiments {
   running: Experiment[];
 
   constructor(data: any) {
-    if(data) {
+    if (data) {
       this.drafts = (data.drafts || []).map((exp: any) => {
         return new Experiment(exp);
       });
@@ -57,8 +57,10 @@ export class Experiments {
     }
   }
 
-  current(): Experiment | null {
-    return this.running.length > 0 ? this.running[0] : null;
+  current(): Experiment | undefined {
+    if (this.running.length > 0) {
+      return this.running[0];
+    }
   }
   refFromCookie(cookie: string): string | null {
     if (!cookie || cookie.trim() === "") return null;

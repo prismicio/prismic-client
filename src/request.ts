@@ -1,98 +1,112 @@
-export interface RequestError extends Error {
-  status: number;
-}
-
-function createError(status: number, message: string): RequestError {
-  return {
-    name: "prismic-request-error",
-    message,
-    status
-  }
-}
-
 // Number of maximum simultaneous connections to the prismic server
-let MAX_CONNECTIONS: number = 20;
+const MAX_CONNECTIONS: number = 20;
 // Number of requests currently running (capped by MAX_CONNECTIONS)
 let running: number = 0;
 // Requests in queue
-let queue: any[]  = [];
+const queue: any[]  = [];
 
-interface RequestCallback {}
+export type RequestCallback<T> = (err: Error | null, result: T | null, xhr?: any) => void;
 
-interface RequestCallbackSuccess extends RequestCallback {
+interface RequestCallbackSuccess {
   result: any;
   xhr: any;
-  ttl ?: number;
+  ttl?: number;
 }
 
-interface RequestCallbackFailure extends RequestCallback {
-  error: Error
+interface RequestCallbackFailure {
+  error: Error;
 }
 
+interface NodeRequestInit extends RequestInit {
+  agent?: any;
+}
 
 function fetchRequest(
   url: string,
   onSuccess: (_: RequestCallbackSuccess) => void,
-  onError: (_: RequestCallbackFailure) => void
+  onError: (_: RequestCallbackFailure) => void,
+  options?: RequestHandlerOption,
 ): any {
-  return fetch(url, {
+
+  const fetchOptions = {
     headers: {
-      'Accept': 'application/json'
-    }
-  }).then(function (response) {
+      Accept: 'application/json',
+    },
+  } as NodeRequestInit;
+
+  if (options && options.proxyAgent) {
+    fetchOptions.agent = options.proxyAgent;
+  }
+
+  return fetch(url, fetchOptions).then((response) => {
     if (~~(response.status / 100 != 2)) {
-      throw createError(response.status, "Unexpected status code [" + response.status + "] on URL " + url);
+      const e: any = new Error(`Unexpected status code [${response.status}] on URL ${url}`);
+      e.status = response.status;
+      throw e;
     } else {
-      return response.json().then(function(json) {
+      return response.json().then((json) => {
         return {
-          response: response,
-          json: json
+          response,
+          json,
         };
       });
     }
-  }).then(function(next: any) {
-    var response = next.response;
-    var json = next.json;
-    var cacheControl = response.headers.get('cache-control');
+  }).then((next: any) => {
+    const response = next.response;
+    const json = next.json;
+    const cacheControl = response.headers.get('cache-control');
     const parsedCacheControl: string[] | null = cacheControl ? /max-age=(\d+)/.exec(cacheControl) : null;
     const ttl = parsedCacheControl ? parseInt(parsedCacheControl[1], 10) : undefined;
-    onSuccess({result: json, xhr: response, ttl} as RequestCallbackSuccess);
-  }).catch(function (error: Error) {
-    onError({error} as RequestCallbackFailure);
+    onSuccess({ ttl, result: json, xhr: response } as RequestCallbackSuccess);
+  }).catch((error: Error) => {
+    onError({ error } as RequestCallbackFailure);
   });
 }
 
 export interface RequestHandler {
-  request(url: String, cb: (error: Error | null, result?: any, xhr?: any) => void): void
+  request(url: String, cb: (error: Error | null, result?: any, xhr?: any) => void): void;
 }
 
-function processQueue() {
+function processQueue(options?: RequestHandlerOption) {
   if (queue.length === 0 || running >= MAX_CONNECTIONS) {
     return;
   }
+
   running++;
 
   const next = queue.shift();
 
-  fetchRequest(next.url,
-    function({result, xhr, ttl}: RequestCallbackSuccess) {
+  const onSuccess = ({ result, xhr, ttl }: RequestCallbackSuccess) => {
       running--;
       next.callback(null, result, xhr, ttl);
-      processQueue();
-    },
-    function({error}: RequestCallbackFailure) {
-      next.callback(error);
-      processQueue();
-    }
-  );
+      processQueue(options);
+  };
+
+  const onError = ({ error }: RequestCallbackFailure) => {
+    next.callback(error);
+    processQueue(options);
+  };
+
+  fetchRequest(next.url, onSuccess, onError);
+}
+
+export interface RequestHandlerOption {
+  proxyAgent: any;
 }
 
 export class DefaultRequestHandler implements RequestHandler {
+
+  options?: RequestHandlerOption;
+
+  constructor(options?: RequestHandlerOption) {
+    this.options = options;
+  }
+
   request(url: String, cb: (error: Error | null, result?: any, xhr?: any, ttl?: number) => void): void {
     queue.push({
-      'url': url,
-      'callback': cb
+      url,
+      callback: cb,
     });
-    processQueue();
+    processQueue(this.options);
   }
 }

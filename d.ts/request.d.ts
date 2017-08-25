@@ -1,6 +1,3 @@
-export interface RequestError extends Error {
-    status: number;
-}
 export interface RequestHandler {
     request(url: String, cb: (error: Error | null, result?: any, xhr?: any) => void): void;
 }
