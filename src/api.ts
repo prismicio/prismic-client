@@ -252,6 +252,7 @@ export class Api {
           }
 
           var parsed = this.parse(value);
+
           ttl = ttl || this.apiDataTTL;
 
           this.apiCache.set(cacheKey, parsed, ttl, (err: Error) => {

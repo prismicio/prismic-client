@@ -93,7 +93,7 @@
             "method": "GET",
             "rel": "collection",
             "enctype": "application/x-www-form-urlencoded",
-            "action": "https://wroom.prismic.io/api/v1/documents/search",
+            "action": "http://localhost:3000/api/v2/documents/search",
             "fields": {
                 "ref": {
                     "type": "String",
@@ -141,7 +141,7 @@
             "method": "GET",
             "rel": "collection",
             "enctype": "application/x-www-form-urlencoded",
-            "action": "https://wroom.prismic.io/api/v1/documents/search",
+            "action": "http://localhost:3000/api/v2/documents/search",
             "fields": {
                 "ref": {
                     "type": "String",
@@ -194,7 +194,7 @@
             "method": "GET",
             "rel": "collection",
             "enctype": "application/x-www-form-urlencoded",
-            "action": "https://wroom.prismic.io/api/v1/documents/search",
+            "action": "http://localhost:3000/api/v2/documents/search",
             "fields": {
                 "ref": {
                     "type": "String",
@@ -247,7 +247,7 @@
             "method": "GET",
             "rel": "collection",
             "enctype": "application/x-www-form-urlencoded",
-            "action": "https://wroom.prismic.io/api/v1/documents/search",
+            "action": "http://localhost:3000/api/v2/documents/search",
             "fields": {
                 "ref": {
                     "type": "String",
@@ -300,7 +300,7 @@
             "method": "GET",
             "rel": "collection",
             "enctype": "application/x-www-form-urlencoded",
-            "action": "https://wroom.prismic.io/api/v1/documents/search",
+            "action": "http://localhost:3000/api/v2/documents/search",
             "fields": {
                 "ref": {
                     "type": "String",
@@ -353,7 +353,7 @@
             "method": "GET",
             "rel": "collection",
             "enctype": "application/x-www-form-urlencoded",
-            "action": "https://wroom.prismic.io/api/v1/documents/search",
+            "action": "http://localhost:3000/api/v2/documents/search",
             "fields": {
                 "ref": {
                     "type": "String",
@@ -406,7 +406,7 @@
             "method": "GET",
             "rel": "collection",
             "enctype": "application/x-www-form-urlencoded",
-            "action": "https://wroom.prismic.io/api/v1/documents/search",
+            "action": "http://localhost:3000/api/v2/documents/search",
             "fields": {
                 "ref": {
                     "type": "String",
@@ -459,7 +459,7 @@
             "method": "GET",
             "rel": "collection",
             "enctype": "application/x-www-form-urlencoded",
-            "action": "https://wroom.prismic.io/api/v1/documents/search",
+            "action": "http://localhost:3000/api/v2/documents/search",
             "fields": {
                 "ref": {
                     "type": "String",
@@ -512,7 +512,7 @@
             "method": "GET",
             "rel": "collection",
             "enctype": "application/x-www-form-urlencoded",
-            "action": "https://wroom.prismic.io/api/v1/documents/search",
+            "action": "http://localhost:3000/api/v2/documents/search",
             "fields": {
                 "ref": {
                     "type": "String",
@@ -565,7 +565,7 @@
             "method": "GET",
             "rel": "collection",
             "enctype": "application/x-www-form-urlencoded",
-            "action": "https://wroom.prismic.io/api/v1/documents/search",
+            "action": "http://localhost:3000/api/v2/documents/search",
             "fields": {
                 "ref": {
                     "type": "String",
@@ -618,7 +618,7 @@
             "method": "GET",
             "rel": "collection",
             "enctype": "application/x-www-form-urlencoded",
-            "action": "https://wroom.prismic.io/api/v1/documents/search",
+            "action": "http://localhost:3000/api/v2/documents/search",
             "fields": {
                 "ref": {
                     "type": "String",
@@ -671,7 +671,7 @@
             "method": "GET",
             "rel": "collection",
             "enctype": "application/x-www-form-urlencoded",
-            "action": "https://wroom.prismic.io/api/v1/documents/search",
+            "action": "http://localhost:3000/api/v2/documents/search",
             "fields": {
                 "ref": {
                     "type": "String",
@@ -724,7 +724,7 @@
             "method": "GET",
             "rel": "collection",
             "enctype": "application/x-www-form-urlencoded",
-            "action": "https://wroom.prismic.io/api/v1/documents/search",
+            "action": "http://localhost:3000/api/v2/documents/search",
             "fields": {
                 "ref": {
                     "type": "String",
@@ -777,7 +777,7 @@
             "method": "GET",
             "rel": "collection",
             "enctype": "application/x-www-form-urlencoded",
-            "action": "https://wroom.prismic.io/api/v1/documents/search",
+            "action": "http://localhost:3000/api/v2/documents/search",
             "fields": {
                 "ref": {
                     "type": "String",
@@ -830,7 +830,7 @@
             "method": "GET",
             "rel": "collection",
             "enctype": "application/x-www-form-urlencoded",
-            "action": "https://wroom.prismic.io/api/v1/documents/search",
+            "action": "http://localhost:3000/api/v2/documents/search",
             "fields": {
                 "ref": {
                     "type": "String",
@@ -883,7 +883,7 @@
             "method": "GET",
             "rel": "collection",
             "enctype": "application/x-www-form-urlencoded",
-            "action": "https://wroom.prismic.io/api/v1/documents/search",
+            "action": "http://localhost:3000/api/v2/documents/search",
             "fields": {
                 "ref": {
                     "type": "String",
@@ -934,7 +934,7 @@
         "everything": {
             "method": "GET",
             "enctype": "application/x-www-form-urlencoded",
-            "action": "https://wroom.prismic.io/api/v1/documents/search",
+            "action": "http://localhost:3000/api/v2/documents/search",
             "fields": {
                 "ref": {
                     "type": "String",
@@ -986,8 +986,8 @@
             }
         }
     },
-    "oauth_initiate": "https://wroom.prismic.io/auth",
-    "oauth_token": "https://wroom.prismic.io/auth/token",
+    "oauth_initiate": "http://localhost:3000/auth",
+    "oauth_token": "http://localhost:3000/auth/token",
     "version": "4b678d2",
     "license": "All Rights Reserved",
     "experiments": {

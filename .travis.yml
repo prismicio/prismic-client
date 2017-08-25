@@ -8,7 +8,8 @@ os:
   - linux
   - osx
 before_script:
-  - npm install -g tape
+  - npm i --prefix ./test/server
+  - node test/server/bin/www &
+
 script:
-  - npm run lint
-  - npm run build
+  - npm test

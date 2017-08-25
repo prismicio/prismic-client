@@ -1,6 +1,7 @@
+var path = require('path');
 var chai = require('chai');
 var assert = chai.assert;
-var Prismic = require('../dist/prismic-javascript');
+var Prismic = require(path.join(__dirname, '../', 'dist', 'prismic-javascript.min.js'));
 
 describe('Predicates', function() {
 

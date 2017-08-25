@@ -25,6 +25,10 @@ function getApi(url: string, options: ApiOptions | null): Promise<Api> {
     api.get(function (err: Error, data: any) {
       if (!err && data) {
         api.data = data;
+        api.refs = data.refs;
+        api.tags = data.tags;
+        api.types = data.types;
+        api.forms = data.forms;
         api.bookmarks = data.bookmarks;
         api.experiments = new Experiments(data.experiments);
       }
