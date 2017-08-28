@@ -49,16 +49,13 @@ export class SearchForm {
 
   set(field: string, value: any): SearchForm {
     const fieldDesc = this.form.fields[field];
-    if(!fieldDesc) throw new Error("Unknown field " + field);
+    if (!fieldDesc) throw new Error('Unknown field ' + field);
+    const checkedValue = value === '' || value === undefined ? null : value;
     let values = this.data[field] || [];
-    if(value === '' || value === undefined) {
-      // we must compare value to null because we want to allow 0
-      value = null;
-    }
-    if(fieldDesc.multiple) {
-      if (value) values.push(value);
+    if (fieldDesc.multiple) {
+      values = checkedValue ? values.concat([checkedValue]) : values;
     } else {
-      values = value && [value];
+      values = checkedValue ? [checkedValue] : values;
     }
     this.data[field] = values;
     return this;
