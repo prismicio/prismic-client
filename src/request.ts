@@ -1,15 +1,14 @@
-export interface IRequestError extends Error {
+export interface RequestError extends Error {
   status: number;
 }
 
-function createError(status: number, message: string): IRequestError {
+function createError(status: number, message: string): RequestError {
   return {
     name: "prismic-request-error",
     message,
-    status: status
+    status
   }
 }
-
 
 // Number of maximum simultaneous connections to the prismic server
 let MAX_CONNECTIONS: number = 20;
@@ -18,23 +17,23 @@ let running: number = 0;
 // Requests in queue
 let queue: any[]  = [];
 
-interface IRequestCallback {}
+interface RequestCallback {}
 
-interface IRequestCallbackSuccess extends IRequestCallback {
+interface RequestCallbackSuccess extends RequestCallback {
   result: any;
   xhr: any;
   ttl ?: number;
 }
 
-interface IRequestCallbackFailure extends IRequestCallback {
+interface RequestCallbackFailure extends RequestCallback {
   error: Error
 }
 
 
 function fetchRequest(
   url: string,
-  onSuccess: (_: IRequestCallbackSuccess) => void,
-  onError: (_: IRequestCallbackFailure) => void
+  onSuccess: (_: RequestCallbackSuccess) => void,
+  onError: (_: RequestCallbackFailure) => void
 ): any {
   return fetch(url, {
     headers: {
@@ -56,14 +55,14 @@ function fetchRequest(
     var json = next.json;
     var cacheControl = response.headers.get('cache-control');
     const parsedCacheControl: string[] | null = cacheControl ? /max-age=(\d+)/.exec(cacheControl) : null;
-    var ttl = parsedCacheControl ? parseInt(parsedCacheControl[1], 10) : undefined;
-    onSuccess({result: json, xhr: response, ttl} as IRequestCallbackSuccess);
+    const ttl = parsedCacheControl ? parseInt(parsedCacheControl[1], 10) : undefined;
+    onSuccess({result: json, xhr: response, ttl} as RequestCallbackSuccess);
   }).catch(function (error: Error) {
-    onError({error} as IRequestCallbackFailure);
+    onError({error} as RequestCallbackFailure);
   });
 }
 
-export interface IRequestHandler {
+export interface RequestHandler {
   request(url: String, cb: (error: Error | null, result?: any, xhr?: any) => void): void
 }
 
@@ -72,23 +71,23 @@ function processQueue() {
     return;
   }
   running++;
-  var next = queue.shift();
+
+  const next = queue.shift();
 
   fetchRequest(next.url,
-    function({result, xhr, ttl}: IRequestCallbackSuccess) {
+    function({result, xhr, ttl}: RequestCallbackSuccess) {
       running--;
       next.callback(null, result, xhr, ttl);
       processQueue();
     },
-    function({error}: IRequestCallbackFailure) {
-      running--;
+    function({error}: RequestCallbackFailure) {
       next.callback(error);
       processQueue();
     }
   );
 }
 
-export class DefaultRequestHandler implements IRequestHandler {
+export class DefaultRequestHandler implements RequestHandler {
   request(url: String, cb: (error: Error | null, result?: any, xhr?: any, ttl?: number) => void): void {
     queue.push({
       'url': url,

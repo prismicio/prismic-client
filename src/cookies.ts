@@ -1,4 +1,4 @@
-export interface ICookie {
+export interface Cookie {
   [key: string]: string;
   value: string;
 }
@@ -20,7 +20,7 @@ function parse(str: string, options?: any) {
     throw new TypeError('argument str must be a string');
   }
 
-  var obj = <ICookie>{};
+  var obj = <Cookie>{};
   var opt = options || {};
   var pairs = str.split(/; */);
   var dec = opt.decode || decode;

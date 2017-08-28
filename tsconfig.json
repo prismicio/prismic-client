@@ -1,19 +1,14 @@
 {
-  "compileOnSave": false,
+  "files": ["./src/index.ts"],
   "compilerOptions": {
-    "declaration": true,
-    "declarationDir": "../d.ts",
-    "module": "commonjs",
     "noImplicitAny": true,
     "preserveConstEnums": true,
     "removeComments": false,
     "sourceMap": true,
+    "module": "commonjs",
     "lib": ["es5", "dom", "es2015.promise"],
     "strictNullChecks": true,
-    "baseUrl": ".",
-    "paths": {
-      "@root/*": ["./src/*"]
-    }
+    "baseUrl": "."
   },
   "exclude": [
     "node_modules"

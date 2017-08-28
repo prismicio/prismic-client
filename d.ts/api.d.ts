@@ -1,114 +1,86 @@
-import { IExperiments, IExperiment } from '@root/experiments';
-import { IRequestHandler } from '@root/request';
-import { IDocument } from '@root/documents';
-import { IApiCache } from '@root/cache';
+import { Experiment, Experiments } from './experiments';
+import { RequestHandler } from './request';
+import { Document } from './documents';
+import { ApiCache } from './cache';
 export declare const PreviewCookie = "io.prismic.preview";
 export declare const ExperimentCookie = "io.prismic.experiment";
-export interface IRef {
+export interface Ref {
     ref: string;
     label: string;
-    isMaster: string;
+    isMasterRef: string;
     scheduledAt: string;
     id: string;
 }
-export declare class Ref implements IRef {
-    ref: string;
-    label: string;
-    isMaster: string;
-    scheduledAt: string;
-    id: string;
-    constructor(ref: string, label: string, isMaster: string, scheduledAt: string, id: string);
-}
-export interface IField {
+export interface Field {
     [key: string]: string;
     value: string;
 }
-export interface IForm {
+export interface Form {
     fields: any;
     action: string;
     name: string;
     rel: string;
     form_method: string;
     enctype: string;
-    getField(field: string): IField | undefined;
-    getFieldSafe(field: string): IField;
 }
-export declare class Form implements IForm {
-    fields: any;
-    action: string;
-    name: string;
-    rel: string;
-    form_method: string;
-    enctype: string;
-    constructor(fields: any, action: string, name: string, rel: string, form_method: string, enctype: string);
-    getField(field: string): IField | undefined;
-    getFieldSafe(field: string): IField;
-}
-export interface ISearchForm {
-    api: IApi;
-    form: IForm;
+export declare class SearchForm {
+    api: Api;
+    form: Form;
     data: any;
-    set(field: string, value: any): ISearchForm;
-    ref(ref: string): ISearchForm;
-    query(query: string | string[]): ISearchForm;
-    pageSize(size: number): ISearchForm;
-    fetch(fields: string | string[]): ISearchForm;
-    fetchLinks(fields: string | string[]): ISearchForm;
-    lang(langCode: string): ISearchForm;
-    page(p: number): ISearchForm;
-    orderings(orderings?: string[]): ISearchForm;
-    submit(callback: (error: Error | null, response: IApiResponse, xhr: any) => void): any;
-}
-export declare class SearchForm implements ISearchForm {
-    api: IApi;
-    form: IForm;
-    data: any;
-    constructor(api: IApi, form: IForm, data: any);
-    set(field: string, value: any): ISearchForm;
+    constructor(api: Api, form: Form, data: any);
+    set(field: string, value: any): SearchForm;
     /**
      * Sets a ref to query on for this SearchForm. This is a mandatory
      * method to call before calling submit(), and api.form('everything').submit()
      * will not work.
      */
-    ref(ref: string): ISearchForm;
+    ref(ref: string): SearchForm;
     /**
      * Sets a predicate-based query for this SearchForm. This is where you
      * paste what you compose in your prismic.io API browser.
      */
-    query(query: string | string[]): ISearchForm;
+    query(query: string | string[]): SearchForm;
     /**
      * Sets a page size to query for this SearchForm. This is an optional method.
      *
      * @param {number} size - The page size
      * @returns {SearchForm} - The SearchForm itself
      */
-    pageSize(size: number): ISearchForm;
+    pageSize(size: number): SearchForm;
     /**
      * Restrict the results document to the specified fields
      */
-    fetch(fields: string | string[]): ISearchForm;
+    fetch(fields: string | string[]): SearchForm;
     /**
      * Include the requested fields in the DocumentLink instances in the result
      */
-    fetchLinks(fields: string | string[]): ISearchForm;
+    fetchLinks(fields: string | string[]): SearchForm;
     /**
      * Sets the language to query for this SearchForm. This is an optional method.
      */
-    lang(langCode: string): ISearchForm;
+    lang(langCode: string): SearchForm;
     /**
      * Sets the page number to query for this SearchForm. This is an optional method.
      */
-    page(p: number): ISearchForm;
+    page(p: number): SearchForm;
+    /**
+     * Remove all the documents except for those after the specified document in the list. This is an optional method.
+     */
+    after(documentId: string): SearchForm;
     /**
      * Sets the orderings to query for this SearchForm. This is an optional method.
      */
-    orderings(orderings?: string[]): ISearchForm;
+    orderings(orderings?: string[]): SearchForm;
+    /**
+     * Build the URL to query
+     */
+    url(): string;
     /**
      * Submits the query, and calls the callback function.
      */
-    submit(callback: (error: Error | null, response: IApiResponse, xhr: any) => void): any;
+    submit(callback: (error: Error | null, response: ApiResponse, xhr: any) => void): any;
 }
-export interface IApiResponse {
+export interface ApiResponse {
     page: number;
     results_per_page: number;
     results_size: number;
@@ -116,90 +88,50 @@ export interface IApiResponse {
     total_pages: number;
     next_page: string;
     prev_page: string;
-    results: IDocument[];
+    results: Document[];
 }
-export declare class ApiResponse {
-    page: number;
-    results_per_page: number;
-    results_size: number;
-    total_results_size: number;
-    total_pages: number;
-    next_page: string;
-    prev_page: string;
-    results: IDocument[];
-    constructor(page: number, results_per_page: number, results_size: number, total_results_size: number, total_pages: number, next_page: string, prev_page: string, results: IDocument[]);
-}
-export interface IApiOptions {
-    accessToken: string;
+export interface ApiOptions {
+    accessToken?: string;
     complete?: (err: Error | null, value?: any, xhr?: any) => void;
-    requestHandler?: IRequestHandler;
+    requestHandler?: RequestHandler;
     req?: any;
-    apiCache?: IApiCache;
+    apiCache?: ApiCache;
     apiDataTTL?: number;
 }
-export interface IApi {
+export declare class Api {
     url: string;
-    accessToken: string;
+    accessToken?: string;
     req: any;
     apiCacheKey: string;
-    apiCache: IApiCache;
+    apiCache: ApiCache;
     apiDataTTL: number;
-    requestHandler: IRequestHandler;
-    experiments: IExperiments;
-    bookmarks: string[];
+    requestHandler: RequestHandler;
+    experiments: Experiments;
+    bookmarks: {
+        [key: string]: string;
+    };
     refs: Ref[];
     types: object;
     tags: string[];
     data: any;
-    forms: IForm[];
+    forms: Form[];
     oauthInitiate: string;
     oauthToken: string;
     quickRoutes: any;
-    get(callback: (err: Error | null, value?: any, xhr?: any, ttl?: number) => void): Promise<IApi>;
-    request(url: string, callback: (err: Error | null, results: IApiResponse | null, xhr?: any) => void): PromiseLike<IApiResponse>;
-    refresh(callback: (err: Error | null | undefined, data: any, xhr: any) => void): PromiseLike<IApiResponse>;
-    parse(data: any): object;
-    form(formId: string): ISearchForm | null;
-    everything(): ISearchForm;
-    master(): string;
-    ref(label: string): string | null;
-    currentExperiment(): IExperiment | null;
-    quickRoutesEnabled(): boolean;
-    getQuickRoutes(callback: (err: Error, data: any, xhr: any) => void): Promise<any>;
-    query(q: string | string[], optionsOrCallback: object | ((err: Error | null, response?: any) => void), cb: (err: Error | null, response?: any) => void): Promise<IApiResponse>;
-}
-export declare class Api implements IApi {
-    url: string;
-    accessToken: string;
-    req: any;
-    apiCacheKey: string;
-    apiCache: IApiCache;
-    apiDataTTL: number;
-    requestHandler: IRequestHandler;
-    experiments: IExperiments;
-    bookmarks: string[];
-    refs: Ref[];
-    types: object;
-    tags: string[];
-    data: any;
-    forms: IForm[];
-    oauthInitiate: string;
-    oauthToken: string;
-    quickRoutes: any;
-    constructor(url: string, options: IApiOptions);
+    constructor(url: string, options: ApiOptions);
     /**
      * Fetches data used to construct the api client, from cache if it's
      * present, otherwise from calling the prismic api endpoint (which is
      * then cached).
      */
-    get(callback: (err: Error | null, value?: any, xhr?: any, ttl?: number) => void): Promise<IApi>;
+    get(callback: (err: Error | null, value?: any, xhr?: any, ttl?: number) => void): Promise<Api>;
     /**
      * Cleans api data from the cache and fetches an up to date copy.
      *
      * @param {function} callback - Optional callback function that is called after the data has been refreshed
      * @returns {Promise}
      */
-    refresh(callback: (err: Error | null | undefined, data: any, xhr: any) => void): PromiseLike<IApiResponse>;
+    refresh(callback: (err: Error | null | undefined, data: any, xhr: any) => void): PromiseLike<ApiResponse>;
     /**
      * Parses and returns the /api document.
      * This is for internal use, from outside this kit, you should call Prismic.Api()
@@ -214,8 +146,8 @@ export declare class Api implements IApi {
      * For instance: api.form("everything") works on every repository (as "everything" exists by default)
      * You can then chain the calls: api.form("everything").query('[[:d = at(document.id, "UkL0gMuvzYUANCpf")]]').ref(ref).submit()
      */
-    form(formId: string): ISearchForm | null;
-    everything(): ISearchForm;
+    form(formId: string): SearchForm | null;
+    everything(): SearchForm;
     /**
      * The ID of the master ref on this prismic.io API.
      * Do not use like this: searchForm.ref(api.master()).
@@ -231,7 +163,7 @@ export declare class Api implements IApi {
     /**
      * The current experiment, or null
      */
-    currentExperiment(): IExperiment | null;
+    currentExperiment(): Experiment | null;
     quickRoutesEnabled(): boolean;
     /**
      * Retrieve quick routes definitions
@@ -240,7 +172,7 @@ export declare class Api implements IApi {
     /**
      * Query the repository
      */
-    query(q: string | string[], optionsOrCallback: object | ((err: Error | null, response?: any) => void), cb: (err: Error | null, response?: any) => void): Promise<IApiResponse>;
+    query(q: string | string[], optionsOrCallback: object | ((err: Error | null, response?: any) => void), cb: (err: Error | null, response?: any) => void): Promise<ApiResponse>;
     /**
      * Retrieve the document returned by the given query
      * @param {string|array|Predicate} the query
@@ -255,7 +187,7 @@ export declare class Api implements IApi {
     /**
      * Retrieve multiple documents from an array of id
      */
-    getByIDs(ids: string[], options: any, callback: (err: Error | null, response?: any) => void): Promise<IApiResponse>;
+    getByIDs(ids: string[], options: any, callback: (err: Error | null, response?: any) => void): Promise<ApiResponse>;
     /**
      * Retrieve the document with the given uid
      */
@@ -275,10 +207,6 @@ export declare class Api implements IApi {
     /**
      * Fetch a URL corresponding to a query, and parse the response as a Response object
      */
-    request(url: string, callback: (err: Error | null, results: IApiResponse | null, xhr?: any) => void): PromiseLike<IApiResponse>;
-    getNextPage(nextPage: number, callback: (err: Error | null, results: IApiResponse | null, xhr?: any) => void): PromiseLike<IApiResponse>;
-    /**
-     * JSON documents to Response object
-     */
-    response(documents: any): ApiResponse;
+    request(url: string, callback: (err: Error | null, results: ApiResponse | null, xhr?: any) => void): PromiseLike<ApiResponse>;
+    getNextPage(nextPage: string, callback: (err: Error | null, results: ApiResponse | null, xhr?: any) => void): PromiseLike<ApiResponse>;
 }
