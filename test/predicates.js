@@ -87,11 +87,21 @@ describe('Predicates', function() {
       Prismic.Predicates.number.gt('my.product.price', 10),
       '[number.gt(my.product.price, 10)]'
     );
+
+    assert.strictEqual(
+      Prismic.Predicates.gt('my.product.price', 10),
+      '[number.gt(my.product.price, 10)]'
+    );
   });
 
   it('should build number.lt query', function() {
     assert.strictEqual(
       Prismic.Predicates.number.lt('my.product.price', 10),
+      '[number.lt(my.product.price, 10)]'
+    );
+
+    assert.strictEqual(
+      Prismic.Predicates.lt('my.product.price', 10),
       '[number.lt(my.product.price, 10)]'
     );
   });
@@ -102,12 +112,22 @@ describe('Predicates', function() {
       Prismic.Predicates.date.before('my.product.date', date),
       '[date.before(my.product.date, ' + date.getTime() + ')]'
     );
+
+    assert.strictEqual(
+      Prismic.Predicates.dateBefore('my.product.date', date),
+      '[date.before(my.product.date, ' + date.getTime() + ')]'
+    );
   });
 
   it('should build date.after query', function() {
     var date = new Date();
     assert.strictEqual(
       Prismic.Predicates.date.after('my.product.date', date),
+      '[date.after(my.product.date, ' + date.getTime() + ')]'
+    );
+
+    assert.strictEqual(
+      Prismic.Predicates.dateAfter('my.product.date', date),
       '[date.after(my.product.date, ' + date.getTime() + ')]'
     );
   });
@@ -119,11 +139,21 @@ describe('Predicates', function() {
       Prismic.Predicates.date.between('my.product.date', dateA, dateB),
       '[date.between(my.product.date, ' + dateA.getTime() + ', ' + dateB.getTime() + ')]'
     );
+
+    assert.strictEqual(
+      Prismic.Predicates.dateBetween('my.product.date', dateA, dateB),
+      '[date.between(my.product.date, ' + dateA.getTime() + ', ' + dateB.getTime() + ')]'
+    );
   });
 
   it('should build date.day-of-month query', function() {
     assert.strictEqual(
       Prismic.Predicates.date.dayOfMonth('my.product.date', 14),
+      '[date.day-of-month(my.product.date, 14)]'
+    );
+
+    assert.strictEqual(
+      Prismic.Predicates.dayOfMonth('my.product.date', 14),
       '[date.day-of-month(my.product.date, 14)]'
     );
   });
@@ -133,11 +163,21 @@ describe('Predicates', function() {
       Prismic.Predicates.date.dayOfMonthAfter('my.product.date', 14),
       '[date.day-of-month-after(my.product.date, 14)]'
     );
+
+    assert.strictEqual(
+      Prismic.Predicates.dayOfMonthAfter('my.product.date', 14),
+      '[date.day-of-month-after(my.product.date, 14)]'
+    );
   });
 
   it('should build date.day-of-month-before query', function() {
     assert.strictEqual(
       Prismic.Predicates.date.dayOfMonthBefore('my.product.date', 14),
+      '[date.day-of-month-before(my.product.date, 14)]'
+    );
+
+    assert.strictEqual(
+      Prismic.Predicates.dayOfMonthBefore('my.product.date', 14),
       '[date.day-of-month-before(my.product.date, 14)]'
     );
   });
@@ -147,11 +187,21 @@ describe('Predicates', function() {
       Prismic.Predicates.date.dayOfWeek('my.product.date', 2),
       '[date.day-of-week(my.product.date, 2)]'
     );
+
+    assert.strictEqual(
+      Prismic.Predicates.dayOfWeek('my.product.date', 2),
+      '[date.day-of-week(my.product.date, 2)]'
+    );
   });
 
   it('should build date.day-of-week-after query', function() {
     assert.strictEqual(
       Prismic.Predicates.date.dayOfWeekAfter('my.product.date', 2),
+      '[date.day-of-week-after(my.product.date, 2)]'
+    );
+
+    assert.strictEqual(
+      Prismic.Predicates.dayOfWeekAfter('my.product.date', 2),
       '[date.day-of-week-after(my.product.date, 2)]'
     );
   });
@@ -161,11 +211,21 @@ describe('Predicates', function() {
       Prismic.Predicates.date.dayOfWeekBefore('my.product.date', 2),
       '[date.day-of-week-before(my.product.date, 2)]'
     );
+
+    assert.strictEqual(
+      Prismic.Predicates.dayOfWeekBefore('my.product.date', 2),
+      '[date.day-of-week-before(my.product.date, 2)]'
+    );
   });
 
   it('should build date.month query', function() {
     assert.strictEqual(
       Prismic.Predicates.date.month('my.product.date', 10),
+      '[date.month(my.product.date, 10)]'
+    );
+
+    assert.strictEqual(
+      Prismic.Predicates.month('my.product.date', 10),
       '[date.month(my.product.date, 10)]'
     );
   });
@@ -175,11 +235,21 @@ describe('Predicates', function() {
       Prismic.Predicates.date.monthAfter('my.product.date', 10),
       '[date.month-after(my.product.date, 10)]'
     );
+
+    assert.strictEqual(
+      Prismic.Predicates.monthAfter('my.product.date', 10),
+      '[date.month-after(my.product.date, 10)]'
+    );
   });
 
   it('should build date.month-before query', function() {
     assert.strictEqual(
       Prismic.Predicates.date.monthBefore('my.product.date', 10),
+      '[date.month-before(my.product.date, 10)]'
+    );
+
+    assert.strictEqual(
+      Prismic.Predicates.monthBefore('my.product.date', 10),
       '[date.month-before(my.product.date, 10)]'
     );
   });
@@ -189,11 +259,21 @@ describe('Predicates', function() {
       Prismic.Predicates.date.year('my.product.date', 2017),
       '[date.year(my.product.date, 2017)]'
     );
+
+    assert.strictEqual(
+      Prismic.Predicates.year('my.product.date', 2017),
+      '[date.year(my.product.date, 2017)]'
+    );
   });
 
   it('should build date.hour query', function() {
     assert.strictEqual(
       Prismic.Predicates.date.hour('my.product.date', 14),
+      '[date.hour(my.product.date, 14)]'
+    );
+
+    assert.strictEqual(
+      Prismic.Predicates.hour('my.product.date', 14),
       '[date.hour(my.product.date, 14)]'
     );
   });
@@ -203,6 +283,11 @@ describe('Predicates', function() {
       Prismic.Predicates.date.hourAfter('my.product.date', 14),
       '[date.hour-after(my.product.date, 14)]'
     );
+
+    assert.strictEqual(
+      Prismic.Predicates.hourAfter('my.product.date', 14),
+      '[date.hour-after(my.product.date, 14)]'
+    );
   });
 
   it('should build date.hour-before query', function() {
@@ -210,11 +295,21 @@ describe('Predicates', function() {
       Prismic.Predicates.date.hourBefore('my.product.date', 14),
       '[date.hour-before(my.product.date, 14)]'
     );
+
+    assert.strictEqual(
+      Prismic.Predicates.hourBefore('my.product.date', 14),
+      '[date.hour-before(my.product.date, 14)]'
+    );
   });
 
   it('should build geopoint.near query', function() {
     assert.strictEqual(
       Prismic.Predicates.geopoint.near('my.product.shop', 48.23232323, 1.72323232, 1000),
+      '[geopoint.near(my.product.shop, 48.23232323, 1.72323232, 1000)]'
+    );
+
+    assert.strictEqual(
+      Prismic.Predicates.near('my.product.shop', 48.23232323, 1.72323232, 1000),
       '[geopoint.near(my.product.shop, 48.23232323, 1.72323232, 1000)]'
     );
   });
