@@ -3,9 +3,26 @@ var querystring = require('querystring');
 var chai = require('chai');
 var assert = chai.assert;
 var Prismic = require(path.join(__dirname, '../', 'dist', 'prismic-javascript.min.js'));
+var fs = require('fs');
+
+function fixtures(file) {
+  return JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', file)));
+}
 
 function getApi() {
-  return Prismic.getApi('http://localhost:3000/api');
+  var options = {
+    requestHandler: {
+      request: function(url, cb) {
+        if (url.startsWith('http://localhost:3000/api/v2/documents/search')) {
+          cb(null, fixtures('search.json'));
+        } else if(url === 'http://localhost:3000/api') {
+          cb(null, fixtures('api.json'));
+        }
+      },
+    },
+  };
+
+  return Prismic.getApi('http://localhost:3000/api', options);
 }
 
 describe('Api', function() {
@@ -131,7 +148,7 @@ describe('Api', function() {
         assert.strictEqual(document.id, 'WW4bKScAAMAqmluX');
         assert.strictEqual(document.uid, 'renaudbressand');
         assert.strictEqual(document.type, 'author');
-        assert.strictEqual(document.href, 'http://localhost:3000/api/v1/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22WW4bKScAAMAqmluX%22%29+%5D%5D');
+        assert.strictEqual(document.href, 'http://localhost:3000/api/v2/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22WW4bKScAAMAqmluX%22%29+%5D%5D');
         assert.deepEqual(document.tags, ['tagA', 'tagB']);
         assert.strictEqual(document.first_publication_date, '2017-07-18T14:29:39+0000');
         assert.strictEqual(document.last_publication_date, '2017-08-10T15:34:52+0000');
@@ -139,6 +156,67 @@ describe('Api', function() {
 
         done();
       })
-    }).catch(done);;
+    }).catch(done);
+  });
+
+  it('should query first document', function(done) {
+    getApi().then(function(api) {
+      return api.queryFirst(Prismic.Predicates.at('my.product.price', 20)).then(function(document) {
+        assert.strictEqual(document.id, 'WW4bKScAAMAqmluX');
+
+        done();
+      });
+    }).catch(done);
+  });
+
+  it('should query one document by id', function(done) {
+    getApi().then(function(api) {
+      return api.getByID('WW4bKScAAMAqmluX').then(function(document) {
+        assert.strictEqual(document.id, 'WW4bKScAAMAqmluX');
+
+        done();
+      });
+    }).catch(done);
+  });
+
+  it('should query n documents by ids', function(done) {
+    getApi().then(function(api) {
+      return api.getByIDs(['WW4bKScAAMAqmluX', 'WHT6MCgAAAUYJMjN']).then(function(response) {
+        var document = response.results[0];
+        assert.strictEqual(document.id, 'WW4bKScAAMAqmluX');
+
+        done();
+      });
+    }).catch(done);
+  });
+
+  it('should query single document', function(done) {
+    getApi().then(function(api) {
+      return api.getSingle('product').then(function(document) {
+        assert.strictEqual(document.id, 'WW4bKScAAMAqmluX');
+
+        done();
+      });
+    }).catch(done);
+  });
+
+  it('should query one document by uid', function(done) {
+    getApi().then(function(api) {
+      return api.getByUID('how-to-query-the-api').then(function(document) {
+        assert.strictEqual(document.id, 'WW4bKScAAMAqmluX');
+
+        done();
+      });
+    }).catch(done);
+  });
+
+  it('should query one document by bookmark', function(done) {
+    getApi().then(function(api) {
+      return api.getBookmark('faq').then(function(document) {
+        assert.strictEqual(document.id, 'WW4bKScAAMAqmluX');
+
+        done();
+      });
+    }).catch(done);
   });
 });

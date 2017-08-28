@@ -7,9 +7,6 @@ node_js:
 os:
   - linux
   - osx
-before_script:
-  - npm i --prefix ./test/server
-  - node test/server/bin/www &
 
 script:
   - npm test

@@ -204,7 +204,7 @@ export class Api {
   apiDataTTL: number;
   requestHandler: RequestHandler;
   experiments: Experiments;
-  bookmarks: string[];
+  bookmarks: { [key: string]: string };
   refs: Ref[];
   types: object;
   tags: string[];
@@ -510,18 +510,16 @@ export class Api {
    * Retrieve the document with the given bookmark
    */
   getBookmark(bookmark: string, options: any, callback: (err: Error | null, response?: any) => void) {
-    return new Promise(function(resolve, reject) {
-      var id = this.bookmarks[bookmark];
+    return new Promise<string>((resolve, reject) => {
+      const id = this.bookmarks[bookmark];
       if (id) {
         resolve(id);
       } else {
-        var err = new Error("Error retrieving bookmarked id");
+        const err = new Error("Error retrieving bookmarked id");
         if (callback) callback(err);
         reject(err);
       }
-    }).then(function(id) {
-      return this.getByID(id, options, callback);
-    });
+    }).then(id => this.getByID(id, options, callback));
   }
 
   /**

@@ -107,7 +107,9 @@ export declare class Api {
     apiDataTTL: number;
     requestHandler: RequestHandler;
     experiments: Experiments;
-    bookmarks: string[];
+    bookmarks: {
+        [key: string]: string;
+    };
     refs: Ref[];
     types: object;
     tags: string[];

@@ -11,7 +11,7 @@
             "id": "WW4bKScAAMAqmluX",
             "uid": "renaudbressand",
             "type": "author",
-            "href": "http://localhost:3000/api/v1/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22WW4bKScAAMAqmluX%22%29+%5D%5D",
+            "href": "http://localhost:3000/api/v2/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22WW4bKScAAMAqmluX%22%29+%5D%5D",
             "tags": ["tagA", "tagB"],
             "first_publication_date": "2017-07-18T14:29:39+0000",
             "last_publication_date": "2017-08-10T15:34:52+0000",
@@ -70,7 +70,7 @@
             "id": "U1kTRgEAAC8A5ldS",
             "uid": null,
             "type": "faq",
-            "href": "http://localhost:3000/api/v1/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22U1kTRgEAAC8A5ldS%22%29+%5D%5D",
+            "href": "http://localhost:3000/api/v2/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22U1kTRgEAAC8A5ldS%22%29+%5D%5D",
             "tags": [
                 "pricing"
             ],
@@ -120,7 +120,7 @@
             "id": "UkTEpLO53-4AY1ER",
             "uid": null,
             "type": "doc",
-            "href": "http://localhost:3000/api/v1/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UkTEpLO53-4AY1ER%22%29+%5D%5D",
+            "href": "http://localhost:3000/api/v2/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UkTEpLO53-4AY1ER%22%29+%5D%5D",
             "tags": [
                 "api"
             ],
@@ -673,7 +673,7 @@
             "id": "Vc34yhwAAIcID8AG",
             "uid": null,
             "type": "plan",
-            "href": "http://localhost:3000/api/v1/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22Vc34yhwAAIcID8AG%22%29+%5D%5D",
+            "href": "http://localhost:3000/api/v2/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22Vc34yhwAAIcID8AG%22%29+%5D%5D",
             "tags": [
                 "new"
             ],
@@ -735,7 +735,7 @@
             "id": "UfeAtt_mqSFd3EEs",
             "uid": null,
             "type": "argument-feature",
-            "href": "http://localhost:3000/api/v1/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UfeAtt_mqSFd3EEs%22%29+%5D%5D",
+            "href": "http://localhost:3000/api/v2/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UfeAtt_mqSFd3EEs%22%29+%5D%5D",
             "tags": [
                 "topargument",
                 "developers"
@@ -797,7 +797,7 @@
             "id": "UotrJknM01Itg9Ul",
             "uid": "structuring-content-leads-to-powerful-content-query",
             "type": "blog",
-            "href": "http://localhost:3000/api/v1/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UotrJknM01Itg9Ul%22%29+%5D%5D",
+            "href": "http://localhost:3000/api/v2/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UotrJknM01Itg9Ul%22%29+%5D%5D",
             "tags": [],
             "first_publication_date": null,
             "last_publication_date": "2017-07-19T15:00:34+0000",
@@ -1202,7 +1202,7 @@
             "id": "UmlghEnM00YhgHUB",
             "uid": null,
             "type": "doc",
-            "href": "http://localhost:3000/api/v1/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UmlghEnM00YhgHUB%22%29+%5D%5D",
+            "href": "http://localhost:3000/api/v2/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UmlghEnM00YhgHUB%22%29+%5D%5D",
             "tags": [
                 "api"
             ],
@@ -1360,7 +1360,7 @@
             "id": "WIIhhyIAANgCOPNL",
             "uid": "query-document-by-id-or-uid",
             "type": "doc-page",
-            "href": "http://localhost:3000/api/v1/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22WIIhhyIAANgCOPNL%22%29+%5D%5D",
+            "href": "http://localhost:3000/api/v2/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22WIIhhyIAANgCOPNL%22%29+%5D%5D",
             "tags": [],
             "first_publication_date": "2017-01-26T14:18:02+0000",
             "last_publication_date": "2017-04-11T15:04:03+0000",
@@ -1905,7 +1905,7 @@
             "id": "UjBh78uvzeMJvE4o",
             "uid": null,
             "type": "kit",
-            "href": "http://localhost:3000/api/v1/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UjBh78uvzeMJvE4o%22%29+%5D%5D",
+            "href": "http://localhost:3000/api/v2/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UjBh78uvzeMJvE4o%22%29+%5D%5D",
             "tags": [],
             "first_publication_date": null,
             "last_publication_date": null,
@@ -2061,7 +2061,7 @@
             "id": "VWbQHSsAACoA0aoy",
             "uid": "disclosure-of-issues-and-vulnerabilities",
             "type": "documentation-categoy",
-            "href": "http://localhost:3000/api/v1/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22VWbQHSsAACoA0aoy%22%29+%5D%5D",
+            "href": "http://localhost:3000/api/v2/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22VWbQHSsAACoA0aoy%22%29+%5D%5D",
             "tags": [],
             "first_publication_date": null,
             "last_publication_date": null,
@@ -2123,7 +2123,7 @@
             "id": "VBAPijEAAGoJ_-35",
             "uid": null,
             "type": "doc",
-            "href": "http://localhost:3000/api/v1/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22VBAPijEAAGoJ_-35%22%29+%5D%5D",
+            "href": "http://localhost:3000/api/v2/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22VBAPijEAAGoJ_-35%22%29+%5D%5D",
             "tags": [
                 "doc-developers"
             ],
@@ -2295,7 +2295,7 @@
             "id": "UfkX5t_mqWEA3EG2",
             "uid": null,
             "type": "faq",
-            "href": "http://localhost:3000/api/v1/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UfkX5t_mqWEA3EG2%22%29+%5D%5D",
+            "href": "http://localhost:3000/api/v2/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UfkX5t_mqWEA3EG2%22%29+%5D%5D",
             "tags": [
                 "main_faq",
                 "featured"
@@ -2393,7 +2393,7 @@
             "id": "VDuknDIAAC8AMsPH",
             "uid": null,
             "type": "doc",
-            "href": "http://localhost:3000/api/v1/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22VDuknDIAAC8AMsPH%22%29+%5D%5D",
+            "href": "http://localhost:3000/api/v2/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22VDuknDIAAC8AMsPH%22%29+%5D%5D",
             "tags": [
                 "doc-developers"
             ],
@@ -2546,7 +2546,7 @@
             "id": "VGS_QCQAAHEDqxnn",
             "uid": null,
             "type": "doc",
-            "href": "http://localhost:3000/api/v1/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22VGS_QCQAAHEDqxnn%22%29+%5D%5D",
+            "href": "http://localhost:3000/api/v2/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22VGS_QCQAAHEDqxnn%22%29+%5D%5D",
             "tags": [],
             "first_publication_date": null,
             "last_publication_date": null,
@@ -2849,7 +2849,7 @@
             "id": "WW9yICcAAKeVoEUx",
             "uid": "rudy-rigot",
             "type": "author",
-            "href": "http://localhost:3000/api/v1/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22WW9yICcAAKeVoEUx%22%29+%5D%5D",
+            "href": "http://localhost:3000/api/v2/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22WW9yICcAAKeVoEUx%22%29+%5D%5D",
             "tags": [],
             "first_publication_date": "2017-07-19T14:52:19+0000",
             "last_publication_date": "2017-07-28T10:08:46+0000",
@@ -2892,7 +2892,7 @@
             "id": "UhYRRd_mqU0JvVg2",
             "uid": null,
             "type": "doc",
-            "href": "http://localhost:3000/api/v1/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UhYRRd_mqU0JvVg2%22%29+%5D%5D",
+            "href": "http://localhost:3000/api/v2/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UhYRRd_mqU0JvVg2%22%29+%5D%5D",
             "tags": [
                 "contentwriter"
             ],
@@ -3093,7 +3093,7 @@
             "id": "Uo1P5AEAAP9P2eQO",
             "uid": null,
             "type": "doc",
-            "href": "http://localhost:3000/api/v1/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22Uo1P5AEAAP9P2eQO%22%29+%5D%5D",
+            "href": "http://localhost:3000/api/v2/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22Uo1P5AEAAP9P2eQO%22%29+%5D%5D",
             "tags": [
                 "publisher"
             ],
@@ -3267,7 +3267,7 @@
             "id": "UknpcrO53y0BSOL3",
             "uid": null,
             "type": "faq",
-            "href": "http://localhost:3000/api/v1/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UknpcrO53y0BSOL3%22%29+%5D%5D",
+            "href": "http://localhost:3000/api/v2/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UknpcrO53y0BSOL3%22%29+%5D%5D",
             "tags": [],
             "first_publication_date": "2016-08-04T14:21:20+0000",
             "last_publication_date": "2016-08-04T14:21:20+0000",
@@ -3313,7 +3313,7 @@
             "id": "UjBh0MuvzeMJvE4g",
             "uid": null,
             "type": "kit",
-            "href": "http://localhost:3000/api/v1/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UjBh0MuvzeMJvE4g%22%29+%5D%5D",
+            "href": "http://localhost:3000/api/v2/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22UjBh0MuvzeMJvE4g%22%29+%5D%5D",
             "tags": [],
             "first_publication_date": null,
             "last_publication_date": null,
@@ -3561,7 +3561,7 @@
             "id": "WHT6MCgAAAUYJMjN",
             "uid": "how-to-query-the-api",
             "type": "doc-page",
-            "href": "http://localhost:3000/api/v1/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22WHT6MCgAAAUYJMjN%22%29+%5D%5D",
+            "href": "http://localhost:3000/api/v2/documents/search?ref=WYx9HB8AAB8AmX7z&q=%5B%5B%3Ad+%3D+at%28document.id%2C+%22WHT6MCgAAAUYJMjN%22%29+%5D%5D",
             "tags": [],
             "first_publication_date": "2017-01-26T14:18:02+0000",
             "last_publication_date": "2017-04-11T15:04:03+0000",
