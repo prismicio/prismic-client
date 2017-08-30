@@ -1,11 +1,12 @@
-import Predicates from './predicates';
+import Predicates from './Predicates';
 import { DefaultRequestHandler } from './request';
 import { Experiments } from './experiments';
 
 import {
   ApiOptions,
   Api,
-} from "./api";
+} from './Api';
+
 
 import { EXPERIMENT_COOKIE, PREVIEW_COOKIE } from './ResolvedApi';
 
@@ -37,11 +38,11 @@ import { EXPERIMENT_COOKIE, PREVIEW_COOKIE } from './ResolvedApi';
 // }
 
 module.exports = {
-  experimentCookie: EXPERIMENT_COOKIE,
-  previewCookie: PREVIEW_COOKIE,
   Predicates,
   Experiments,
-//  api: getApi,
   Api,
+  experimentCookie: EXPERIMENT_COOKIE,
+  previewCookie: PREVIEW_COOKIE,
+//  api: getApi,
 //  getApi
 };

@@ -1,3 +1,4 @@
+
 // Number of maximum simultaneous connections to the prismic server
 const MAX_CONNECTIONS: number = 20;
 // Number of requests currently running (capped by MAX_CONNECTIONS)
@@ -5,15 +6,15 @@ let running: number = 0;
 // Requests in queue
 const queue: any[]  = [];
 
-interface RequestCallback {}
+export type RequestCallback<T> = (err: Error | null, result: T | null, xhr?: any) => void;
 
-interface RequestCallbackSuccess extends RequestCallback {
+interface RequestCallbackSuccess {
   result: any;
   xhr: any;
   ttl?: number;
 }
 
-interface RequestCallbackFailure extends RequestCallback {
+interface RequestCallbackFailure {
   error: Error;
 }
 
@@ -28,7 +29,7 @@ function fetchRequest(
     },
   }).then((response) => {
     if (~~(response.status / 100 !== 2)) {
-      const e = new Error(`Unexpected status code [${response.status}] on URL ${url}`);
+      const e: any = new Error(`Unexpected status code [${response.status}] on URL ${url}`);
       e.status = response.status;
       throw e;
     } else {

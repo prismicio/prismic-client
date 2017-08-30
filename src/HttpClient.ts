@@ -1,28 +1,59 @@
-class HttpClient {
+import { ApiCache, DefaultApiCache } from './cache';
+import { RequestHandler, DefaultRequestHandler, RequestCallback } from './request';
+
+export interface HttpClientOptions {
+  ttl?: number;
+  cacheKey?: string;
+}
+
+export default class HttpClient {
+
+  private cache: ApiCache;
+  private requestHandler: RequestHandler;
+
+  constructor(requestHandler?: RequestHandler, cache?: ApiCache) {
+    this.requestHandler = requestHandler || new DefaultRequestHandler();
+    this.cache = cache || new DefaultApiCache();
+  }
+
+  request<T>(url: string, callback: RequestCallback<T>): Promise<T> {
+    return new Promise((resolve, reject) => {
+      this.requestHandler.request(url, (err, result, xhr) => {
+        if (err) {
+          reject(err);
+          callback(err, null, xhr);
+        } else {
+          resolve(result);
+          callback(null, result, xhr);
+        }
+      });
+    });
+  }
 
   /**
    * Fetch a URL corresponding to a query, and parse the response as a Response object
    */
-  request(url: string, callback: (err: Error | null, results: any | null, xhr?: any) => void): Promise<any> {
-    const cacheKey = url + (this.options.accessToken ? ('#' + this.options.accessToken) : '');
-    const run = (cb: (err: Error | null, results: ApiSearchResponse | null, xhr?: any) => void) => {
-      this.options.apiCache.get(cacheKey, (err: Error, value: any) => {
+  cachedRequest<T>(url: string, callback: RequestCallback<T>, options?: HttpClientOptions): Promise<T> {
+    const opts = options || {};
+    const run = (cb: RequestCallback<T>) => {
+      const cacheKey = (options && options.cacheKey) || url;
+      this.cache.get(cacheKey, (err: Error, value: any) => {
         if (err || value) {
-          cb(err, value as ApiSearchResponse);
+          cb(err, value);
           return;
         }
-        this.options.requestHandler.request(url, (err: Error, documents: any, xhr: any, ttl?: number) => {
+        this.requestHandler.request(url, (err: Error, result: any, xhr: any, ttl?: number) => {
           if (err) {
             cb(err, null, xhr);
             return;
           }
 
-          if (ttl) {
-            this.options.apiCache.set(cacheKey, documents, ttl, (err: Error) => {
-              cb(err, documents as ApiSearchResponse);
+          if (ttl) { // TODO
+            this.cache.set(cacheKey, result, ttl, (err: Error) => {
+              cb(err, result);
             });
           } else {
-            cb(null, documents as ApiSearchResponse);
+            cb(null, result);
           }
         });
       });

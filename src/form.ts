@@ -1,4 +1,6 @@
 import ApiSearchResponse from './ApiSearchResponse';
+import HttpClient from './HttpClient';
+import { RequestCallback } from './request';
 
 export interface Field {
   [key: string]: string;
@@ -15,12 +17,12 @@ export interface Form {
 }
 
 export class SearchForm {
-  api: ResolvedApi;
+  httpClient: HttpClient;
   form: Form;
   data: any;
 
-  constructor(api: ResolvedApi, form: Form) {
-    this.api = api;
+  constructor(form: Form, httpClient: HttpClient) {
+    this.httpClient = httpClient;
     this.form = form;
 
     this.data = {};
@@ -33,16 +35,13 @@ export class SearchForm {
 
   set(field: string, value: any): SearchForm {
     const fieldDesc = this.form.fields[field];
-    if (!fieldDesc) throw new Error("Unknown field " + field);
+    if (!fieldDesc) throw new Error('Unknown field ' + field);
+    const checkedValue = value === '' || value === undefined ? null : value;
     let values = this.data[field] || [];
-    if (value === '' || value === undefined) {
-      // we must compare value to null because we want to allow 0
-      value = null;
-    }
     if (fieldDesc.multiple) {
-      if (value) values.push(value);
+      values = checkedValue ? values.concat([checkedValue]) : values;
     } else {
-      values = value && [value];
+      values = checkedValue ? [checkedValue] : values;
     }
     this.data[field] = values;
     return this;
@@ -54,7 +53,7 @@ export class SearchForm {
    * will not work.
    */
   ref(ref: string): SearchForm {
-    return this.set("ref", ref);
+    return this.set('ref', ref);
   }
 
   /**
@@ -65,7 +64,7 @@ export class SearchForm {
     if (typeof query === 'string') {
       return this.query([query]);
     } else if(query instanceof Array) {
-      return this.set("q", (`[${query.join("")}]`));
+      return this.set('q', (`[${query.join('')}]`));
     } else {
       throw new Error(`Invalid query : ${query}`)
     }
@@ -78,44 +77,44 @@ export class SearchForm {
    * @returns {SearchForm} - The SearchForm itself
    */
   pageSize(size: number): SearchForm {
-    return this.set("pageSize", size);
+    return this.set('pageSize', size);
   }
 
   /**
    * Restrict the results document to the specified fields
    */
   fetch(fields: string | string[]): SearchForm {
-    const strFields = fields instanceof Array ? fields.join(",") : fields;
-    return this.set("fetch", strFields);
+    const strFields = fields instanceof Array ? fields.join(',') : fields;
+    return this.set('fetch', strFields);
   }
 
   /**
    * Include the requested fields in the DocumentLink instances in the result
    */
   fetchLinks(fields: string | string[]): SearchForm {
-    const strFields = fields instanceof Array ? fields.join(",") : fields;
-    return this.set("fetchLinks", strFields);
+    const strFields = fields instanceof Array ? fields.join(',') : fields;
+    return this.set('fetchLinks', strFields);
   }
 
   /**
    * Sets the language to query for this SearchForm. This is an optional method.
    */
   lang(langCode: string) {
-    return this.set("lang", langCode);
+    return this.set('lang', langCode);
   }
 
   /**
    * Sets the page number to query for this SearchForm. This is an optional method.
    */
   page(p: number): SearchForm {
-    return this.set("page", p);
+    return this.set('page', p);
   }
 
   /**
    * Remove all the documents except for those after the specified document in the list. This is an optional method.
    */
   after(documentId: string): SearchForm {
-    return this.set("after", documentId);
+    return this.set('after', documentId);
   }
 
   /**
@@ -125,7 +124,7 @@ export class SearchForm {
     if (!orderings) {
       return this;
     } else {
-      return this.set("orderings", `[${orderings.join(",")}]`);
+      return this.set('orderings', `[${orderings.join(',')}]`);
     }
   }
 
@@ -136,8 +135,8 @@ export class SearchForm {
     let url = this.form.action;
     if (this.data) {
       let sep = (url.indexOf('?') > -1 ? '&' : '?');
-      for(const key in this.data) {
-        if (this.data.hasOwnProperty(key)) {
+      for (const key in this.data) {
+        if  (this.data.hasOwnProperty(key)) {
           const values = this.data[key];
           if (values) {
             for (let i = 0; i < values.length; i++) {
@@ -154,7 +153,7 @@ export class SearchForm {
   /**
    * Submits the query, and calls the callback function.
    */
-  submit(callback: (error: Error | null, response: ApiSearchResponse, xhr: any) => void): Promise<ApiSearchResponse> {
-    return this.api.request(this.url(), callback);
+  submit(cb: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse> {
+    return this.httpClient.cachedRequest<ApiSearchResponse>(this.url(), cb);
   }
 }
