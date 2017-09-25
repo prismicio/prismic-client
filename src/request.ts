@@ -29,17 +29,36 @@ interface RequestCallbackFailure extends RequestCallback {
   error: Error
 }
 
+interface NodeRequestInit extends RequestInit {
+  agent: any;
+}
 
 function fetchRequest(
   url: string,
   onSuccess: (_: RequestCallbackSuccess) => void,
   onError: (_: RequestCallbackFailure) => void
 ): any {
-  return fetch(url, {
+
+  const options = {
     headers: {
-      'Accept': 'application/json'
+      Accept: 'application/json',
+    },
+  } as NodeRequestInit;
+
+  if (typeof window === 'undefined') {
+    const httpProxy = process.env.http_proxy || process.env.HTTP_PROXY || null;
+    const httpsProxy = process.env.https_proxy || process.env.HTTPS_PROXY || null;
+
+    if (url.slice(0, 7) === 'http://' && httpProxy) {
+      const HttpProxyAgent = require('http-proxy-agent');
+      options.agent = new HttpProxyAgent(httpProxy);
+    } else if (url.slice(0, 8) === 'https://' && httpsProxy) {
+      const HttpsProxyAgent = require('https-proxy-agent');
+      options.agent = new HttpsProxyAgent(httpsProxy);
     }
-  }).then(function (response) {
+  }
+
+  return fetch(url, options).then(function (response) {
     if (~~(response.status / 100 != 2)) {
       throw createError(response.status, "Unexpected status code [" + response.status + "] on URL " + url);
     } else {

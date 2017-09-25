@@ -34,8 +34,6 @@ var config = {
         loader: 'ts-loader',
         exclude: /node_modules/,
         options: {
-          emitErrors: true,
-          failOnHint: true,
           compilerOptions: {
             declaration: true,
             declarationDir: "../d.ts"
@@ -54,6 +52,18 @@ var config = {
       commonjs2: 'fetch-everywhere',
       commonjs: 'fetch-everywhere',
       amd: 'fetch-everywhere'
+    },
+    "http-proxy-agent": {
+      root: 'http-proxy-agent',
+      commonjs2: 'http-proxy-agent',
+      commonjs: 'http-proxy-agent',
+      amd: 'http-proxy-agent'
+    },
+    "https-proxy-agent": {
+      root: 'https-proxy-agent',
+      commonjs2: 'https-proxy-agent',
+      commonjs: 'https-proxy-agent',
+      amd: 'https-proxy-agent'
     }
   }],
   resolve: {
@@ -62,7 +72,10 @@ var config = {
     },
     extensions: ['.ts']
   },
-  plugins: plugins
+  plugins: plugins,
+  node: {
+    process: false
+  }
 };
  
 module.exports = config;
