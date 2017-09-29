@@ -190,6 +190,7 @@ export interface ApiOptions {
   req?: any;
   apiCache?: ApiCache;
   apiDataTTL?: number;
+  proxyAgent?: any;
 }
 
 export class Api {
@@ -217,7 +218,7 @@ export class Api {
     this.url = url + (this.accessToken ? (url.indexOf('?') > -1 ? '&' : '?') + 'access_token=' + this.accessToken : '');
     this.req = opts.req;
     this.apiCache = opts.apiCache || new DefaultApiCache();
-    this.requestHandler = opts.requestHandler || new DefaultRequestHandler();
+    this.requestHandler = opts.requestHandler || new DefaultRequestHandler({ proxyAgent: opts.proxyAgent });
     this.apiCacheKey = this.url + (this.accessToken ? ('#' + this.accessToken) : '');
     this.apiDataTTL = opts.apiDataTTL || 5;
     return this;
