@@ -52,18 +52,6 @@ var config = {
       commonjs2: 'fetch-everywhere',
       commonjs: 'fetch-everywhere',
       amd: 'fetch-everywhere'
-    },
-    "http-proxy-agent": {
-      root: 'http-proxy-agent',
-      commonjs2: 'http-proxy-agent',
-      commonjs: 'http-proxy-agent',
-      amd: 'http-proxy-agent'
-    },
-    "https-proxy-agent": {
-      root: 'https-proxy-agent',
-      commonjs2: 'https-proxy-agent',
-      commonjs: 'https-proxy-agent',
-      amd: 'https-proxy-agent'
     }
   }],
   resolve: {
@@ -72,10 +60,7 @@ var config = {
     },
     extensions: ['.ts']
   },
-  plugins: plugins,
-  node: {
-    process: false
-  }
+  plugins: plugins
 };
  
 module.exports = config;
