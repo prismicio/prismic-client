@@ -97,6 +97,7 @@ export interface ApiOptions {
     req?: any;
     apiCache?: ApiCache;
     apiDataTTL?: number;
+    proxyAgent?: any;
 }
 export declare class Api {
     url: string;
