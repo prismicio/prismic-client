@@ -154,6 +154,6 @@ export class SearchForm {
    * Submits the query, and calls the callback function.
    */
   submit(cb: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse> {
-    return this.httpClient.cachedRequest<ApiSearchResponse>(this.url(), cb);
+    return this.httpClient.cachedRequest<ApiSearchResponse>(this.url(), cb); //TODO
   }
 }

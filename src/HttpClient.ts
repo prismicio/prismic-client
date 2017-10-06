@@ -33,7 +33,7 @@ export default class HttpClient {
   /**
    * Fetch a URL corresponding to a query, and parse the response as a Response object
    */
-  cachedRequest<T>(url: string, callback: RequestCallback<T>, options?: HttpClientOptions): Promise<T> {
+  cachedRequest<T>(url: string, options?: HttpClientOptions): Promise<T> {
     const opts = options || {};
     const run = (cb: RequestCallback<T>) => {
       const cacheKey = (options && options.cacheKey) || url;
@@ -61,7 +61,6 @@ export default class HttpClient {
 
     return new Promise((resolve, reject) => {
       run((err, value, xhr) => {
-        if (callback) callback(err, value, xhr);
         if (err) reject(err);
         if (value) resolve(value);
       });

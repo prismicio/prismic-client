@@ -37,6 +37,10 @@ export interface ApiData {
   licence: string;
 }
 
+export interface QueryOptions {
+  [key: string]: string | number;
+}
+
 export interface ResolvedApiOptions {
   req?: any;
 }
@@ -92,18 +96,16 @@ export default class ResolvedApi {
   /**
    * Query the repository
    */
-  query(q: string | string[], optionsOrCallback: object | RequestCallback<ApiSearchResponse>, cb: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse> { // TODO
-        const { options, callback } = typeof optionsOrCallback === 'function'
-      ? { options: {}, callback: optionsOrCallback }
-      : { options: optionsOrCallback || {}, callback: cb };
-
-    const opts: any = options;
+  query(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<ApiSearchResponse>, cb: RequestCallback<ApiSearchResponse> = () => {}): Promise<ApiSearchResponse> {
+    const { options, callback } = typeof optionsOrCallback === 'function'
+        ? { options: {} as QueryOptions, callback: optionsOrCallback }
+        : { options: optionsOrCallback || {}, callback: cb };
 
     let form = this.everything();
-    for (const key in opts) {
-      form = form.set(key, opts[key]);
+    for (const key in options) {
+      form = form.set(key, options[key]);
     }
-    if (!opts['ref']) {
+    if (!options.ref) {
       // Look in cookies if we have a ref (preview or experiment)
       let cookieString = '';
       if (this.options.req) { // NodeJS
@@ -128,15 +130,15 @@ export default class ResolvedApi {
    * @param {object} additional parameters. In NodeJS, pass the request as 'req'.
    * @param {function} callback(err, doc)
    */
-  queryFirst(q: string | string[], optionsOrCallback: object | RequestCallback<Document>, cb: RequestCallback<Document>) {
+  queryFirst(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document>, cb: RequestCallback<Document> = () => {}) {
     const { options, callback } = typeof optionsOrCallback === 'function'
-      ? { options: {}, callback: optionsOrCallback }
+      ? { options: {} as QueryOptions, callback: optionsOrCallback }
       : { options: optionsOrCallback || {}, callback: cb };
 
-    const opts: any = options;
-    opts.page = 1;
-    opts.pageSize = 1;
-    return this.query(q, opts, (err: Error, response: any) => {
+    options.page = 1;
+    options.pageSize = 1;
+
+    return this.query(q, options, (err: Error, response: any) => {
       if (callback) {
         const result = response && response.results && response.results[0];
         callback(err, result);
@@ -151,7 +153,7 @@ export default class ResolvedApi {
   /**
    * Retrieve the document with the given id
    */
-  getByID(id: string, options: any, cb: RequestCallback<Document>) {
+  getByID(id: string, options: QueryOptions, cb: RequestCallback<Document>) {
     const opts = options || {};
     if (!options.lang) opts.lang = '*';
     return this.queryFirst(Predicates.at('document.id', id), opts, cb);
@@ -160,7 +162,7 @@ export default class ResolvedApi {
   /**
    * Retrieve multiple documents from an array of id
    */
-  getByIDs(ids: string[], options: any, cb: RequestCallback<ApiSearchResponse>) {
+  getByIDs(ids: string[], options: QueryOptions, cb: RequestCallback<ApiSearchResponse>) {
     const opts = options || {};
     if (!options.lang) opts.lang = '*';
     return this.query(Predicates.in('document.id', ids), opts, cb);
@@ -169,7 +171,7 @@ export default class ResolvedApi {
   /**
    * Retrieve the document with the given uid
    */
-  getByUID(type: string, uid: string, options: any, cb: RequestCallback<Document>) {
+  getByUID(type: string, uid: string, options: QueryOptions, cb: RequestCallback<Document>) {
     const opts = options || {};
     if (!options.lang) opts.lang = '*';
     return this.queryFirst(Predicates.at(`my.${type}.uid`, uid), opts, cb);
@@ -178,14 +180,14 @@ export default class ResolvedApi {
   /**
    * Retrieve the singleton document with the given type
    */
-  getSingle(type: string, options: any, cb: RequestCallback<Document>) {
+  getSingle(type: string, options: QueryOptions, cb: RequestCallback<Document>) {
     return this.queryFirst(Predicates.at('document.type', type), options, cb);
   }
 
   /**
    * Retrieve the document with the given bookmark
    */
-  getBookmark(bookmark: string, options: any, cb: RequestCallback<Document>) {
+  getBookmark(bookmark: string, options: QueryOptions, cb: RequestCallback<Document>) {
     return new Promise<string>((resolve, reject) => {
       const id = this.data.bookmarks[bookmark];
       if (id) {

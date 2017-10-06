@@ -2,12 +2,11 @@ import Predicates from './Predicates';
 import { RequestHandler, RequestCallback } from './request';
 import { Document } from './documents';
 import { ApiCache } from './cache';
-import ResolvedApi from './ResolvedApi';
+import ResolvedApi, { ApiData } from './ResolvedApi';
 import HttpClient from './HttpClient';
 
 export interface ApiOptions {
   accessToken?: string;
-  complete?: (err: Error | null, value?: any, xhr?: any) => void;
   requestHandler?: RequestHandler;
   req?: any;
   apiCache?: ApiCache;
@@ -33,6 +32,13 @@ export class Api {
    * then cached).
    */
   get(cb: RequestCallback<ResolvedApi>): Promise<ResolvedApi> {
-    return this.httpClient.cachedRequest<ResolvedApi>(this.url, cb, { ttl: this.apiDataTTL });
+    return this.httpClient.cachedRequest<ApiData>(this.url, { ttl: this.apiDataTTL }).then((data) => {
+      const resolvedApi = new ResolvedApi(data, this.httpClient, this.options);
+      cb(null, resolvedApi);
+      return resolvedApi;
+    }).catch((error) => {
+      cb(error, null);
+      throw error;
+    });
   }
 }

@@ -1,6 +1,5 @@
 import Predicates from './Predicates';
 import { DefaultRequestHandler } from './request';
-import { Experiments } from './experiments';
 
 import {
   ApiOptions,
@@ -39,7 +38,6 @@ import { EXPERIMENT_COOKIE, PREVIEW_COOKIE } from './ResolvedApi';
 
 module.exports = {
   Predicates,
-  Experiments,
   Api,
   experimentCookie: EXPERIMENT_COOKIE,
   previewCookie: PREVIEW_COOKIE,
