@@ -34,8 +34,6 @@ var config = {
         loader: 'ts-loader',
         exclude: /node_modules/,
         options: {
-          emitErrors: true,
-          failOnHint: true,
           compilerOptions: {
             declaration: true,
             declarationDir: "../d.ts"

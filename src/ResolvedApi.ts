@@ -18,18 +18,12 @@ export interface Ref {
   id: string;
 }
 
-export interface QuickRoutes {
-  enabled: boolean;
-  url: string;
-}
-
 export interface ApiData {
   refs: Ref[];
   bookmarks: { [key: string]: string };
   types: { [key: string]: string };
   tags: string[];
   forms: { [key: string]: Form };
-  quickRoutes: QuickRoutes;
   experiments: any;
   oauth_initiate: string;
   oauth_token: string;
@@ -49,19 +43,23 @@ export default class ResolvedApi {
   data: ApiData;
   masterRef: Ref;
   experiments: Experiments;
-  currentExperiment: Experiment | null;
-  quickRoutesEnabled: boolean;
   options: ResolvedApiOptions;
   httpClient: HttpClient;
+  bookmarks: { [key: string]: string };
+  refs: Ref[];
+  tags: string[];
+  types: { [key: string]: string };
 
   constructor(data: ApiData, httpClient: HttpClient, options: ResolvedApiOptions) {
     this.data = data;
     this.masterRef = data.refs.filter(ref => ref.isMasterRef)[0];
     this.experiments = new Experiments(data.experiments);
-    this.currentExperiment = this.experiments.current();
-    this.quickRoutesEnabled = data.quickRoutes.enabled;
+    this.bookmarks = data.bookmarks;
     this.httpClient = httpClient;
     this.options = options;
+    this.refs = data.refs;
+    this.tags = data.tags;
+    this.types = data.types;
   }
 
   /**
@@ -84,6 +82,15 @@ export default class ResolvedApi {
   }
 
   /**
+   * The ID of the master ref on this prismic.io API.
+   * Do not use like this: searchForm.ref(api.master()).
+   * Instead, set your ref once in a variable, and call it when you need it; this will allow to change the ref you're viewing easily for your entire page.
+   */
+  master(): string {
+    return this.masterRef.ref;
+  }
+
+  /**
    * Returns the ref ID for a given ref's label.
    * Do not use like this: searchForm.ref(api.ref("Future release label")).
    * Instead, set your ref once in a variable, and call it when you need it; this will allow to change the ref you're viewing easily for your entire page.
@@ -91,6 +98,10 @@ export default class ResolvedApi {
   ref(label: string): string | null {
     const ref = this.data.refs.filter(ref => ref.label === label)[0];
     return ref ? ref.ref : null;
+  }
+
+  currentExperiment(): Experiment | undefined {
+    return this.experiments.current();
   }
 
   /**
@@ -155,7 +166,7 @@ export default class ResolvedApi {
    */
   getByID(id: string, options: QueryOptions, cb: RequestCallback<Document>) {
     const opts = options || {};
-    if (!options.lang) opts.lang = '*';
+    if (!opts.lang) opts.lang = '*';
     return this.queryFirst(Predicates.at('document.id', id), opts, cb);
   }
 
@@ -164,7 +175,7 @@ export default class ResolvedApi {
    */
   getByIDs(ids: string[], options: QueryOptions, cb: RequestCallback<ApiSearchResponse>) {
     const opts = options || {};
-    if (!options.lang) opts.lang = '*';
+    if (!opts.lang) opts.lang = '*';
     return this.query(Predicates.in('document.id', ids), opts, cb);
   }
 
@@ -173,7 +184,7 @@ export default class ResolvedApi {
    */
   getByUID(type: string, uid: string, options: QueryOptions, cb: RequestCallback<Document>) {
     const opts = options || {};
-    if (!options.lang) opts.lang = '*';
+    if (!opts.lang) opts.lang = '*';
     return this.queryFirst(Predicates.at(`my.${type}.uid`, uid), opts, cb);
   }
 
@@ -198,13 +209,6 @@ export default class ResolvedApi {
         reject(err);
       }
     }).then(id => this.getByID(id, options, cb));
-  }
-
-    /**
-   * Retrieve quick routes definitions
-   */
-  getQuickRoutes(cb: RequestCallback<any>): Promise<any> {
-    return this.httpClient.request(this.data.quickRoutes.url, cb);
   }
 
   /**

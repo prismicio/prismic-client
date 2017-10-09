@@ -11,6 +11,7 @@ export interface ApiOptions {
   req?: any;
   apiCache?: ApiCache;
   apiDataTTL?: number;
+  proxyAgent?: any;
 }
 
 export class Api {
@@ -23,7 +24,7 @@ export class Api {
     this.options = options || {};
     this.url = url + (this.options.accessToken ? (url.indexOf('?') > -1 ? '&' : '?') + 'access_token=' + this.options.accessToken : '');
     this.apiDataTTL = this.options.apiDataTTL || 5;
-    this.httpClient = new HttpClient(this.options.requestHandler, this.options.apiCache);
+    this.httpClient = new HttpClient(this.options.requestHandler, this.options.apiCache, this.options.proxyAgent);
   }
 
   /**
@@ -31,13 +32,13 @@ export class Api {
    * present, otherwise from calling the prismic api endpoint (which is
    * then cached).
    */
-  get(cb: RequestCallback<ResolvedApi>): Promise<ResolvedApi> {
+  get(cb?: RequestCallback<ResolvedApi>): Promise<ResolvedApi> {
     return this.httpClient.cachedRequest<ApiData>(this.url, { ttl: this.apiDataTTL }).then((data) => {
       const resolvedApi = new ResolvedApi(data, this.httpClient, this.options);
-      cb(null, resolvedApi);
+      cb && cb(null, resolvedApi);
       return resolvedApi;
     }).catch((error) => {
-      cb(error, null);
+      cb && cb(error, null);
       throw error;
     });
   }

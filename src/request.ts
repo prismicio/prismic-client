@@ -1,4 +1,3 @@
-
 // Number of maximum simultaneous connections to the prismic server
 const MAX_CONNECTIONS: number = 20;
 // Number of requests currently running (capped by MAX_CONNECTIONS)
@@ -18,17 +17,29 @@ interface RequestCallbackFailure {
   error: Error;
 }
 
+interface NodeRequestInit extends RequestInit {
+  agent?: any;
+}
+
 function fetchRequest(
   url: string,
   onSuccess: (_: RequestCallbackSuccess) => void,
   onError: (_: RequestCallbackFailure) => void,
+  options?: RequestHandlerOption,
 ): any {
-  return fetch(url, {
+
+  const fetchOptions = {
     headers: {
       Accept: 'application/json',
     },
-  }).then((response) => {
-    if (~~(response.status / 100 !== 2)) {
+  } as NodeRequestInit;
+
+  if (options && options.proxyAgent) {
+    fetchOptions.agent = options.proxyAgent;
+  }
+
+  return fetch(url, fetchOptions).then((response) => {
+    if (~~(response.status / 100 != 2)) {
       const e: any = new Error(`Unexpected status code [${response.status}] on URL ${url}`);
       e.status = response.status;
       throw e;
@@ -56,10 +67,11 @@ export interface RequestHandler {
   request(url: String, cb: (error: Error | null, result?: any, xhr?: any) => void): void;
 }
 
-function processQueue() {
+function processQueue(options?: RequestHandlerOption) {
   if (queue.length === 0 || running >= MAX_CONNECTIONS) {
     return;
   }
+
   running++;
 
   const next = queue.shift();
@@ -67,23 +79,34 @@ function processQueue() {
   const onSuccess = ({ result, xhr, ttl }: RequestCallbackSuccess) => {
       running--;
       next.callback(null, result, xhr, ttl);
-      processQueue();
+      processQueue(options);
   };
 
   const onError = ({ error }: RequestCallbackFailure) => {
     next.callback(error);
-    processQueue();
+    processQueue(options);
   };
 
   fetchRequest(next.url, onSuccess, onError);
 }
 
+export interface RequestHandlerOption {
+  proxyAgent: any;
+}
+
 export class DefaultRequestHandler implements RequestHandler {
+
+  options?: RequestHandlerOption;
+
+  constructor(options?: RequestHandlerOption) {
+    this.options = options;
+  }
+
   request(url: String, cb: (error: Error | null, result?: any, xhr?: any, ttl?: number) => void): void {
     queue.push({
       url,
       callback: cb,
     });
-    processQueue();
+    processQueue(this.options);
   }
 }
