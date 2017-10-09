@@ -1,3 +1,3 @@
 ﻿var typedoc = typedoc || {};
             typedoc.search = typedoc.search || {};
-            typedoc.search.data = {"kinds":{"64":"Function","65536":"Type literal"},"rows":[{"id":0,"kind":65536,"name":"__type","url":"classes/api.html#bookmarks.__type","classes":"tsd-kind-type-literal tsd-parent-kind-property tsd-is-not-exported","parent":"Api.bookmarks"},{"id":1,"kind":64,"name":"getApi","url":"globals.html#getapi","classes":"tsd-kind-function tsd-is-not-exported"}]};
+            typedoc.search.data = {"kinds":{"64":"Function"},"rows":[{"id":0,"kind":64,"name":"getApi","url":"globals.html#getapi","classes":"tsd-kind-function tsd-is-not-exported"}]};

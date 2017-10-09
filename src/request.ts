@@ -1,15 +1,3 @@
-export interface RequestError extends Error {
-  status: number;
-}
-
-function createError(status: number, message: string): RequestError {
-  return {
-    message,
-    status,
-    name: 'prismic-request-error',
-  };
-}
-
 // Number of maximum simultaneous connections to the prismic server
 const MAX_CONNECTIONS: number = 20;
 // Number of requests currently running (capped by MAX_CONNECTIONS)
@@ -17,16 +5,16 @@ let running: number = 0;
 // Requests in queue
 const queue: any[]  = [];
 
-interface RequestCallback {}
+export type RequestCallback<T> = (err: Error | null, result: T | null, xhr?: any) => void;
 
-interface RequestCallbackSuccess extends RequestCallback {
+interface RequestCallbackSuccess {
   result: any;
   xhr: any;
-  ttl ?: number;
+  ttl?: number;
 }
 
-interface RequestCallbackFailure extends RequestCallback {
-  error: Error
+interface RequestCallbackFailure {
+  error: Error;
 }
 
 interface NodeRequestInit extends RequestInit {
@@ -52,9 +40,11 @@ function fetchRequest(
 
   return fetch(url, fetchOptions).then((response) => {
     if (~~(response.status / 100 != 2)) {
-      throw createError(response.status, "Unexpected status code [" + response.status + "] on URL " + url);
+      const e: any = new Error(`Unexpected status code [${response.status}] on URL ${url}`);
+      e.status = response.status;
+      throw e;
     } else {
-      return response.json().then(function(json) {
+      return response.json().then((json) => {
         return {
           response,
           json,
@@ -67,37 +57,37 @@ function fetchRequest(
     const cacheControl = response.headers.get('cache-control');
     const parsedCacheControl: string[] | null = cacheControl ? /max-age=(\d+)/.exec(cacheControl) : null;
     const ttl = parsedCacheControl ? parseInt(parsedCacheControl[1], 10) : undefined;
-    onSuccess({result: json, xhr: response, ttl} as RequestCallbackSuccess);
+    onSuccess({ ttl, result: json, xhr: response } as RequestCallbackSuccess);
   }).catch((error: Error) => {
     onError({ error } as RequestCallbackFailure);
   });
 }
 
 export interface RequestHandler {
-  request(url: String, cb: (error: Error | null, result?: any, xhr?: any) => void): void
+  request(url: String, cb: (error: Error | null, result?: any, xhr?: any) => void): void;
 }
 
 function processQueue(options?: RequestHandlerOption) {
   if (queue.length === 0 || running >= MAX_CONNECTIONS) {
     return;
   }
+
   running++;
 
   const next = queue.shift();
 
-  fetchRequest(
-    next.url,
-    ({ result, xhr, ttl }: RequestCallbackSuccess) => {
+  const onSuccess = ({ result, xhr, ttl }: RequestCallbackSuccess) => {
       running--;
       next.callback(null, result, xhr, ttl);
       processQueue(options);
-    },
-    ({ error }: RequestCallbackFailure) => {
-      next.callback(error);
-      processQueue(options);
-    },
-    options,
-  );
+  };
+
+  const onError = ({ error }: RequestCallbackFailure) => {
+    next.callback(error);
+    processQueue(options);
+  };
+
+  fetchRequest(next.url, onSuccess, onError);
 }
 
 export interface RequestHandlerOption {
