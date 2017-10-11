@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Document | prismic-javascript</title>
+	<title>ApiData | prismic-javascript</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="document.html">Document</a>
+					<a href="apidata.html">ApiData</a>
 				</li>
 			</ul>
-			<h1>Interface Document</h1>
+			<h1>Interface ApiData</h1>
 		</div>
 	</div>
 </header>
@@ -70,7 +70,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">Document</span>
+						<span class="target">ApiData</span>
 					</li>
 				</ul>
 			</section>
@@ -81,18 +81,16 @@
 						<section class="tsd-index-section tsd-is-external">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="document.html#alternatelanguages" class="tsd-kind-icon">alternate<wbr>Languages</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="document.html#data" class="tsd-kind-icon">data</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="document.html#firstpublicationdate" class="tsd-kind-icon">first<wbr>Publication<wbr>Date</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="document.html#href" class="tsd-kind-icon">href</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="document.html#id" class="tsd-kind-icon">id</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="document.html#lang" class="tsd-kind-icon">lang</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="document.html#lastpublicationdate" class="tsd-kind-icon">last<wbr>Publication<wbr>Date</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="document.html#slug" class="tsd-kind-icon">slug</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="document.html#slugs" class="tsd-kind-icon">slugs</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="document.html#tags" class="tsd-kind-icon">tags</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="document.html#type" class="tsd-kind-icon">type</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="document.html#uid" class="tsd-kind-icon">uid</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="apidata.html#bookmarks" class="tsd-kind-icon">bookmarks</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="apidata.html#experiments" class="tsd-kind-icon">experiments</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="apidata.html#forms" class="tsd-kind-icon">forms</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="apidata.html#licence" class="tsd-kind-icon">licence</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="apidata.html#oauth_initiate" class="tsd-kind-icon">oauth_<wbr>initiate</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="apidata.html#oauth_token" class="tsd-kind-icon">oauth_<wbr>token</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="apidata.html#refs" class="tsd-kind-icon">refs</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="apidata.html#tags" class="tsd-kind-icon">tags</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="apidata.html#types" class="tsd-kind-icon">types</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="apidata.html#version" class="tsd-kind-icon">version</a></li>
 							</ul>
 						</section>
 					</div>
@@ -101,92 +99,88 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-external">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="alternatelanguages" class="tsd-anchor"></a>
-					<h3>alternate<wbr>Languages</h3>
-					<div class="tsd-signature tsd-kind-icon">alternate<wbr>Languages<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
+					<a name="bookmarks" class="tsd-anchor"></a>
+					<h3>bookmarks</h3>
+					<div class="tsd-signature tsd-kind-icon">bookmarks<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/documents.ts#L10">documents.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/ResolvedApi.ts#L23">ResolvedApi.ts:23</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-index-signature">
+								<h5><span class="tsd-signature-symbol">[</span>key: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">string</span></h5>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a name="experiments" class="tsd-anchor"></a>
+					<h3>experiments</h3>
+					<div class="tsd-signature tsd-kind-icon">experiments<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/ResolvedApi.ts#L27">ResolvedApi.ts:27</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="data" class="tsd-anchor"></a>
-					<h3>data</h3>
-					<div class="tsd-signature tsd-kind-icon">data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<a name="forms" class="tsd-anchor"></a>
+					<h3>forms</h3>
+					<div class="tsd-signature tsd-kind-icon">forms<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/documents.ts#L13">documents.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/ResolvedApi.ts#L26">ResolvedApi.ts:26</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-index-signature">
+								<h5><span class="tsd-signature-symbol">[</span>key: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><a href="form.html" class="tsd-signature-type">Form</a></h5>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a name="licence" class="tsd-anchor"></a>
+					<h3>licence</h3>
+					<div class="tsd-signature tsd-kind-icon">licence<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/ResolvedApi.ts#L31">ResolvedApi.ts:31</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="firstpublicationdate" class="tsd-anchor"></a>
-					<h3>first<wbr>Publication<wbr>Date</h3>
-					<div class="tsd-signature tsd-kind-icon">first<wbr>Publication<wbr>Date<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
+					<a name="oauth_initiate" class="tsd-anchor"></a>
+					<h3>oauth_<wbr>initiate</h3>
+					<div class="tsd-signature tsd-kind-icon">oauth_<wbr>initiate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/documents.ts#L11">documents.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/ResolvedApi.ts#L28">ResolvedApi.ts:28</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="href" class="tsd-anchor"></a>
-					<h3>href</h3>
-					<div class="tsd-signature tsd-kind-icon">href<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="oauth_token" class="tsd-anchor"></a>
+					<h3>oauth_<wbr>token</h3>
+					<div class="tsd-signature tsd-kind-icon">oauth_<wbr>token<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/documents.ts#L5">documents.ts:5</a></li>
+							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/ResolvedApi.ts#L29">ResolvedApi.ts:29</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="id" class="tsd-anchor"></a>
-					<h3>id</h3>
-					<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="refs" class="tsd-anchor"></a>
+					<h3>refs</h3>
+					<div class="tsd-signature tsd-kind-icon">refs<span class="tsd-signature-symbol">:</span> <a href="ref.html" class="tsd-signature-type">Ref</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/documents.ts#L2">documents.ts:2</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="lang" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> lang</h3>
-					<div class="tsd-signature tsd-kind-icon">lang<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/documents.ts#L9">documents.ts:9</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="lastpublicationdate" class="tsd-anchor"></a>
-					<h3>last<wbr>Publication<wbr>Date</h3>
-					<div class="tsd-signature tsd-kind-icon">last<wbr>Publication<wbr>Date<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/documents.ts#L12">documents.ts:12</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="slug" class="tsd-anchor"></a>
-					<h3>slug</h3>
-					<div class="tsd-signature tsd-kind-icon">slug<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/documents.ts#L7">documents.ts:7</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="slugs" class="tsd-anchor"></a>
-					<h3>slugs</h3>
-					<div class="tsd-signature tsd-kind-icon">slugs<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/documents.ts#L8">documents.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/ResolvedApi.ts#L22">ResolvedApi.ts:22</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -196,27 +190,35 @@
 					<div class="tsd-signature tsd-kind-icon">tags<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/documents.ts#L6">documents.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/ResolvedApi.ts#L25">ResolvedApi.ts:25</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="type" class="tsd-anchor"></a>
-					<h3>type</h3>
-					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="types" class="tsd-anchor"></a>
+					<h3>types</h3>
+					<div class="tsd-signature tsd-kind-icon">types<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/documents.ts#L4">documents.ts:4</a></li>
+							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/ResolvedApi.ts#L24">ResolvedApi.ts:24</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-index-signature">
+								<h5><span class="tsd-signature-symbol">[</span>key: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">string</span></h5>
+							</li>
+						</ul>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="uid" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> uid</h3>
-					<div class="tsd-signature tsd-kind-icon">uid<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<a name="version" class="tsd-anchor"></a>
+					<h3>version</h3>
+					<div class="tsd-signature tsd-kind-icon">version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/documents.ts#L3">documents.ts:3</a></li>
+							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ffc49cb/src/ResolvedApi.ts#L30">ResolvedApi.ts:30</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -235,43 +237,37 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-is-external">
-						<a href="document.html" class="tsd-kind-icon">Document</a>
+						<a href="apidata.html" class="tsd-kind-icon">Api<wbr>Data</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="document.html#alternatelanguages" class="tsd-kind-icon">alternate<wbr>Languages</a>
+								<a href="apidata.html#bookmarks" class="tsd-kind-icon">bookmarks</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="document.html#data" class="tsd-kind-icon">data</a>
+								<a href="apidata.html#experiments" class="tsd-kind-icon">experiments</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="document.html#firstpublicationdate" class="tsd-kind-icon">first<wbr>Publication<wbr>Date</a>
+								<a href="apidata.html#forms" class="tsd-kind-icon">forms</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="document.html#href" class="tsd-kind-icon">href</a>
+								<a href="apidata.html#licence" class="tsd-kind-icon">licence</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="document.html#id" class="tsd-kind-icon">id</a>
+								<a href="apidata.html#oauth_initiate" class="tsd-kind-icon">oauth_<wbr>initiate</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="document.html#lang" class="tsd-kind-icon">lang</a>
+								<a href="apidata.html#oauth_token" class="tsd-kind-icon">oauth_<wbr>token</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="document.html#lastpublicationdate" class="tsd-kind-icon">last<wbr>Publication<wbr>Date</a>
+								<a href="apidata.html#refs" class="tsd-kind-icon">refs</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="document.html#slug" class="tsd-kind-icon">slug</a>
+								<a href="apidata.html#tags" class="tsd-kind-icon">tags</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="document.html#slugs" class="tsd-kind-icon">slugs</a>
+								<a href="apidata.html#types" class="tsd-kind-icon">types</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="document.html#tags" class="tsd-kind-icon">tags</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="document.html#type" class="tsd-kind-icon">type</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="document.html#uid" class="tsd-kind-icon">uid</a>
+								<a href="apidata.html#version" class="tsd-kind-icon">version</a>
 							</li>
 						</ul>
 					</li>
