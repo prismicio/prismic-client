@@ -94,6 +94,10 @@ export interface RequestHandlerOption {
   proxyAgent: any;
 }
 
+export interface RequestHandlerOption {
+  proxyAgent: any;
+}
+
 export class DefaultRequestHandler implements RequestHandler {
 
   options?: RequestHandlerOption;
