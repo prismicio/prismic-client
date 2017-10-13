@@ -63,10 +63,10 @@ export class SearchForm {
   query(query: string | string[]): SearchForm {
     if (typeof query === 'string') {
       return this.query([query]);
-    } else if(query instanceof Array) {
+    } else if (query instanceof Array) {
       return this.set('q', (`[${query.join('')}]`));
     } else {
-      throw new Error(`Invalid query : ${query}`)
+      throw new Error(`Invalid query : ${query}`);
     }
   }
 
@@ -154,6 +154,6 @@ export class SearchForm {
    * Submits the query, and calls the callback function.
    */
   submit(cb: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse> {
-    return this.httpClient.cachedRequest<ApiSearchResponse>(this.url(), cb); //TODO
+    return this.httpClient.cachedRequest<ApiSearchResponse>(this.url(), cb);
   }
 }

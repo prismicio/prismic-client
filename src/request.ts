@@ -5,7 +5,7 @@ let running: number = 0;
 // Requests in queue
 const queue: any[]  = [];
 
-export type RequestCallback<T> = (err: Error | null, result: T | null, xhr?: any) => void;
+export type RequestCallback<T> = (error: Error | null, result: T | null, xhr?: any) => void;
 
 interface RequestCallbackSuccess {
   result: any;
@@ -39,7 +39,7 @@ function fetchRequest(
   }
 
   return fetch(url, fetchOptions).then((response) => {
-    if (~~(response.status / 100 != 2)) {
+    if (~~(response.status / 100 !== 2)) {
       const e: any = new Error(`Unexpected status code [${response.status}] on URL ${url}`);
       e.status = response.status;
       throw e;
@@ -55,7 +55,7 @@ function fetchRequest(
     const response = next.response;
     const json = next.json;
     const cacheControl = response.headers.get('cache-control');
-    const parsedCacheControl: string[] | null = cacheControl ? /max-age=(\d+)/.exec(cacheControl) : null;
+    const parsedCacheControl = cacheControl ? /max-age=(\d+)/.exec(cacheControl) : null;
     const ttl = parsedCacheControl ? parseInt(parsedCacheControl[1], 10) : undefined;
     onSuccess({ ttl, result: json, xhr: response } as RequestCallbackSuccess);
   }).catch((error: Error) => {
@@ -64,7 +64,7 @@ function fetchRequest(
 }
 
 export interface RequestHandler {
-  request(url: String, cb: (error: Error | null, result?: any, xhr?: any) => void): void;
+  request<T>(url: String, cb: RequestCallback<T>): void;
 }
 
 function processQueue(options?: RequestHandlerOption) {
@@ -77,9 +77,9 @@ function processQueue(options?: RequestHandlerOption) {
   const next = queue.shift();
 
   const onSuccess = ({ result, xhr, ttl }: RequestCallbackSuccess) => {
-      running--;
-      next.callback(null, result, xhr, ttl);
-      processQueue(options);
+    running--;
+    next.callback(null, result, xhr, ttl);
+    processQueue(options);
   };
 
   const onError = ({ error }: RequestCallbackFailure) => {
@@ -94,10 +94,6 @@ export interface RequestHandlerOption {
   proxyAgent: any;
 }
 
-export interface RequestHandlerOption {
-  proxyAgent: any;
-}
-
 export class DefaultRequestHandler implements RequestHandler {
 
   options?: RequestHandlerOption;
@@ -106,7 +102,7 @@ export class DefaultRequestHandler implements RequestHandler {
     this.options = options;
   }
 
-  request(url: String, cb: (error: Error | null, result?: any, xhr?: any, ttl?: number) => void): void {
+  request<T>(url: String, cb: RequestCallback<T>): void {
     queue.push({
       url,
       callback: cb,

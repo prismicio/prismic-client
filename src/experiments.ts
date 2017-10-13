@@ -63,13 +63,13 @@ export class Experiments {
     }
   }
   refFromCookie(cookie: string): string | null {
-    if (!cookie || cookie.trim() === "") return null;
-    const splitted = cookie.trim().split(" ");
+    if (!cookie || cookie.trim() === '') return null;
+    const splitted = cookie.trim().split(' ');
     if (splitted.length < 2) return null;
     const expId = splitted[0];
     const varIndex = parseInt(splitted[1], 10);
-    const exp = this.running.filter(function(exp) {
-      return exp.googleId() == expId && exp.variations.length > varIndex;
+    const exp = this.running.filter((exp) => {
+      return exp.googleId() === expId && exp.variations.length > varIndex;
     })[0];
     return exp ? exp.variations[varIndex].ref() : null;
   }

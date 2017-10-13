@@ -17,7 +17,7 @@ export class DefaultApiCache implements ApiCache {
 
   isExpired(key: string): boolean {
     const entryValue = this.lru.get(key, false);
-    if(entryValue) {
+    if (entryValue) {
       return entryValue.expiredIn !== 0 && entryValue.expiredIn < Date.now();
     } else {
       return false;
@@ -26,7 +26,7 @@ export class DefaultApiCache implements ApiCache {
 
   get(key: string, cb: (error ?: Error | null, entry?: any) => any): void {
     const entryValue = this.lru.get(key, false);
-    if(entryValue && !this.isExpired(key)) {
+    if (entryValue && !this.isExpired(key)) {
       cb(null, entryValue.data);
     } else {
       cb();
@@ -37,7 +37,7 @@ export class DefaultApiCache implements ApiCache {
     this.lru.remove(key);
     this.lru.put(key, {
       data: value,
-      expiredIn: ttl ? (Date.now() + (ttl * 1000)) : 0
+      expiredIn: ttl ? (Date.now() + (ttl * 1000)) : 0,
     });
     cb();
   }

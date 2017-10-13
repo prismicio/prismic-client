@@ -22,9 +22,16 @@ export class Api {
 
   constructor(url: string, options?: ApiOptions) {
     this.options = options || {};
-    this.url = url + (this.options.accessToken ? (url.indexOf('?') > -1 ? '&' : '?') + 'access_token=' + this.options.accessToken : '');
+    this.url = url;
+    if (this.options.accessToken) {
+      this.url += (url.indexOf('?') > -1 ? '&' : '?') + 'access_token=' + this.options.accessToken;
+    }
     this.apiDataTTL = this.options.apiDataTTL || 5;
-    this.httpClient = new HttpClient(this.options.requestHandler, this.options.apiCache, this.options.proxyAgent);
+    this.httpClient = new HttpClient(
+      this.options.requestHandler,
+      this.options.apiCache,
+      this.options.proxyAgent,
+    );
   }
 
   /**

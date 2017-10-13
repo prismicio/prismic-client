@@ -16,15 +16,15 @@ export default class HttpClient {
     this.cache = cache || new DefaultApiCache();
   }
 
-  request<T>(url: string, callback: RequestCallback<T>): Promise<T> {
+  request<T>(url: string, callback?: RequestCallback<T>): Promise<T> {
     return new Promise((resolve, reject) => {
-      this.requestHandler.request(url, (err, result, xhr) => {
+      this.requestHandler.request<T>(url, (err, result, xhr) => {
         if (err) {
           reject(err);
-          callback(err, null, xhr);
-        } else {
+          callback && callback(err, null, xhr);
+        } else if (result) {
           resolve(result);
-          callback(null, result, xhr);
+          callback && callback(null, result, xhr);
         }
       });
     });
@@ -42,13 +42,13 @@ export default class HttpClient {
           cb(err, value);
           return;
         }
-        this.requestHandler.request(url, (err: Error, result: any, xhr: any, ttl?: number) => {
+        this.request<T>(url, (err: Error, result: any, xhr: any, ttl?: number) => {
           if (err) {
             cb(err, null, xhr);
             return;
           }
 
-          if (ttl) { // TODO
+          if (ttl) {
             this.cache.set(cacheKey, result, ttl, (err: Error) => {
               cb(err, result);
             });

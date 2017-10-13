@@ -110,7 +110,7 @@ export default class ResolvedApi {
   query(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<ApiSearchResponse>, cb: RequestCallback<ApiSearchResponse> = () => {}): Promise<ApiSearchResponse> {
     const { options, callback } = typeof optionsOrCallback === 'function'
         ? { options: {} as QueryOptions, callback: optionsOrCallback }
-        : { options: optionsOrCallback || {}, callback: cb };
+    : { options: optionsOrCallback || {}, callback: cb };
 
     let form = this.everything();
     for (const key in options) {
@@ -141,10 +141,10 @@ export default class ResolvedApi {
    * @param {object} additional parameters. In NodeJS, pass the request as 'req'.
    * @param {function} callback(err, doc)
    */
-  queryFirst(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document>, cb: RequestCallback<Document> = () => {}) {
+  queryFirst(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document>, cb: RequestCallback<Document> = () => {}): Promise<Document> {
     const { options, callback } = typeof optionsOrCallback === 'function'
-      ? { options: {} as QueryOptions, callback: optionsOrCallback }
-      : { options: optionsOrCallback || {}, callback: cb };
+        ? { options: {} as QueryOptions, callback: optionsOrCallback }
+        : { options: optionsOrCallback || {}, callback: cb };
 
     options.page = 1;
     options.pageSize = 1;
@@ -164,7 +164,7 @@ export default class ResolvedApi {
   /**
    * Retrieve the document with the given id
    */
-  getByID(id: string, options: QueryOptions, cb: RequestCallback<Document>) {
+  getByID(id: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document> {
     const opts = options || {};
     if (!opts.lang) opts.lang = '*';
     return this.queryFirst(Predicates.at('document.id', id), opts, cb);
@@ -173,7 +173,7 @@ export default class ResolvedApi {
   /**
    * Retrieve multiple documents from an array of id
    */
-  getByIDs(ids: string[], options: QueryOptions, cb: RequestCallback<ApiSearchResponse>) {
+  getByIDs(ids: string[], options: QueryOptions, cb: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse> {
     const opts = options || {};
     if (!opts.lang) opts.lang = '*';
     return this.query(Predicates.in('document.id', ids), opts, cb);
@@ -182,7 +182,7 @@ export default class ResolvedApi {
   /**
    * Retrieve the document with the given uid
    */
-  getByUID(type: string, uid: string, options: QueryOptions, cb: RequestCallback<Document>) {
+  getByUID(type: string, uid: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document> {
     const opts = options || {};
     if (!opts.lang) opts.lang = '*';
     return this.queryFirst(Predicates.at(`my.${type}.uid`, uid), opts, cb);
@@ -191,14 +191,14 @@ export default class ResolvedApi {
   /**
    * Retrieve the singleton document with the given type
    */
-  getSingle(type: string, options: QueryOptions, cb: RequestCallback<Document>) {
+  getSingle(type: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document> {
     return this.queryFirst(Predicates.at('document.type', type), options, cb);
   }
 
   /**
    * Retrieve the document with the given bookmark
    */
-  getBookmark(bookmark: string, options: QueryOptions, cb: RequestCallback<Document>) {
+  getBookmark(bookmark: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document> {
     return new Promise<string>((resolve, reject) => {
       const id = this.data.bookmarks[bookmark];
       if (id) {
@@ -214,7 +214,7 @@ export default class ResolvedApi {
   /**
    * Return the URL to display a given preview
    */
-  previewSession(token: string, linkResolver: (ctx: any) => string, defaultUrl: string, cb: RequestCallback<string>): Promise<string> {
+  previewSession(token: string, linkResolver: (doc: any) => string, defaultUrl: string, cb?: RequestCallback<string>): Promise<string> {
     return new Promise((resolve, reject) => {
       const cb = (err: Error | null, url?: string, xhr?: any) => {
         if (cb) cb(err, url, xhr);
