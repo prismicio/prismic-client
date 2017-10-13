@@ -11,7 +11,7 @@ export interface ApiCache {
 export class DefaultApiCache implements ApiCache {
   lru: ILRUCache;
 
-  constructor(limit ?: number) {
+  constructor(limit: number = 1000) {
     this.lru = MakeLRUCache(limit);
   }
 
