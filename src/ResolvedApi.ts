@@ -6,6 +6,7 @@ import Predicates from './Predicates';
 import Cookies from './Cookies';
 import ApiSearchResponse from './ApiSearchResponse';
 import HttpClient from './HttpClient';
+import { Client } from './Client';
 
 export const PREVIEW_COOKIE = 'io.prismic.preview';
 export const EXPERIMENT_COOKIE = 'io.prismic.experiment';
@@ -39,7 +40,7 @@ export interface ResolvedApiOptions {
   req?: any;
 }
 
-export default class ResolvedApi {
+export default class ResolvedApi implements Client {
   data: ApiData;
   masterRef: Ref;
   experiments: Experiments;
