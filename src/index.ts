@@ -1,51 +1,54 @@
-import Predicates from './predicates';
-import { DefaultRequestHandler } from './request';
-import { Experiments } from './experiments';
+import PrismicPredicates  from './predicates';
+import { Experiments as PrismicExperiment } from './experiments';
 
 import {
   ApiOptions,
-  Api,
+  Api as PrismicApi,
   ExperimentCookie,
   PreviewCookie,
-} from "./api";
+} from './api';
 
-function getApi(url: string, options: ApiOptions | null): Promise<Api> {
-  const safeOptions = options || {} as ApiOptions;
-  var api = new Api(url, safeOptions);
-  //Use cached api data if available
-  return new Promise(function(resolve, reject) {
-    var cb = function(err: Error | null, api?: any) {
-      if (safeOptions.complete) safeOptions.complete(err, api);
-      if (err) {
-        reject(err);
-      } else {
-        resolve(api);
-      }
-    };
-    api.get(function (err: Error, data: any) {
-      if (!err && data) {
-        api.data = data;
-        api.refs = data.refs;
-        api.tags = data.tags;
-        api.types = data.types;
-        api.forms = data.forms;
-        api.bookmarks = data.bookmarks;
-        api.experiments = new Experiments(data.experiments);
-      }
+namespace Prismic {
 
-      cb(err, api);
+  export const experimentCookie = ExperimentCookie;
+  export const previewCookie = PreviewCookie;
+  export const Predicates = PrismicPredicates;
+  export const Experiments = PrismicExperiment;
+  export const Api = PrismicApi;
+
+  export function getApi(url: string, options: ApiOptions | null): Promise<PrismicApi> {
+    const safeOptions = options || {} as ApiOptions;
+    const api = new PrismicApi(url, safeOptions);
+    return new Promise((resolve, reject) => {
+      const cb = (err: Error | null, api?: any) => {
+        if (safeOptions.complete) safeOptions.complete(err, api);
+        if (err) {
+          reject(err);
+        } else {
+          resolve(api);
+        }
+      };
+      api.get((err: Error, data: any) => {
+        if (!err && data) {
+          api.data = data;
+          api.refs = data.refs;
+          api.tags = data.tags;
+          api.types = data.types;
+          api.forms = data.forms;
+          api.bookmarks = data.bookmarks;
+          api.experiments = new Experiments(data.experiments);
+        }
+
+        cb(err, api);
+      });
+
+      return api;
     });
+  }
 
-    return api;
-  });
+  export function api(url: string, options: ApiOptions | null): Promise<PrismicApi> {
+    return getApi(url, options);
+  }
 }
 
-module.exports = {
-  experimentCookie: ExperimentCookie,
-  previewCookie: PreviewCookie,
-  Predicates,
-  Experiments,
-  api: getApi,
-  Api,
-  getApi
-};
+export = Prismic;
