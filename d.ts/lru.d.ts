@@ -16,7 +16,7 @@
 *
 *  removed  <--  <--  <--  <--  <--  <--  <--  <--  <--  <--  <--  added
 */
-export declare function MakeLRUCache(limit: any): ILRUCache;
+export declare function MakeLRUCache(limit: number): ILRUCache;
 export interface ILRUCache {
     put(key: string, value: any): void;
     get(key: string, Entry: boolean): any;

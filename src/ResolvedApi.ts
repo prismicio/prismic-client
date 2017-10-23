@@ -6,7 +6,7 @@ import Predicates from './Predicates';
 import Cookies from './Cookies';
 import ApiSearchResponse from './ApiSearchResponse';
 import HttpClient from './HttpClient';
-import { Client } from './Client';
+import { Client } from './client';
 
 export const PREVIEW_COOKIE = 'io.prismic.preview';
 export const EXPERIMENT_COOKIE = 'io.prismic.experiment';

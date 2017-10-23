@@ -48,6 +48,8 @@ export default class HttpClient {
             return;
           }
 
+          ttl = ttl || opts.ttl;
+
           if (ttl) {
             this.cache.set(cacheKey, result, ttl, (err: Error) => {
               cb(err, result);

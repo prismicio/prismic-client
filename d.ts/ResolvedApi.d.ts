@@ -3,6 +3,7 @@ import { Experiment, Experiments } from './experiments';
 import { SearchForm, Form } from './form';
 import ApiSearchResponse from './ApiSearchResponse';
 import HttpClient from './HttpClient';
+import { Client } from './client';
 export declare const PREVIEW_COOKIE = "io.prismic.preview";
 export declare const EXPERIMENT_COOKIE = "io.prismic.experiment";
 export interface Ref {
@@ -36,7 +37,7 @@ export interface QueryOptions {
 export interface ResolvedApiOptions {
     req?: any;
 }
-export default class ResolvedApi {
+export default class ResolvedApi implements Client {
     data: ApiData;
     masterRef: Ref;
     experiments: Experiments;
@@ -81,11 +82,11 @@ export default class ResolvedApi {
      * @param {object} additional parameters. In NodeJS, pass the request as 'req'.
      * @param {function} callback(err, doc)
      */
-    queryFirst(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document>, cb?: RequestCallback<Document>): Promise<any>;
+    queryFirst(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document>, cb?: RequestCallback<Document>): Promise<Document>;
     /**
      * Retrieve the document with the given id
      */
-    getByID(id: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<any>;
+    getByID(id: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
     /**
      * Retrieve multiple documents from an array of id
      */
@@ -93,17 +94,17 @@ export default class ResolvedApi {
     /**
      * Retrieve the document with the given uid
      */
-    getByUID(type: string, uid: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<any>;
+    getByUID(type: string, uid: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
     /**
      * Retrieve the singleton document with the given type
      */
-    getSingle(type: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<any>;
+    getSingle(type: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
     /**
      * Retrieve the document with the given bookmark
      */
-    getBookmark(bookmark: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<any>;
+    getBookmark(bookmark: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
     /**
      * Return the URL to display a given preview
      */
-    previewSession(token: string, linkResolver: (ctx: any) => string, defaultUrl: string, cb: RequestCallback<string>): Promise<string>;
+    previewSession(token: string, linkResolver: (doc: any) => string, defaultUrl: string, cb?: RequestCallback<string>): Promise<string>;
 }

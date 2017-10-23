@@ -16,7 +16,7 @@ export interface Client {
   previewSession(token: string, linkResolver: (doc: any) => string, defaultUrl: string, cb?: RequestCallback<string>): Promise<string>;
 }
 
-export default class DefaultClient implements Client {
+export class DefaultClient implements Client {
 
   api: Api;
   resolvedApi: ResolvedApi;

@@ -10,7 +10,7 @@ export interface ApiOptions {
     apiDataTTL?: number;
     proxyAgent?: any;
 }
-export declare class Api {
+export default class Api {
     url: string;
     options: ApiOptions;
     apiDataTTL: number;
