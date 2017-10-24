@@ -13,38 +13,41 @@ function getClient(opts) {
     requestHandler: {
       request: function(url, cb) {
         if (url.startsWith('http://localhost:3000/api/v2/documents/search')) {
-          cb(null, fixtures('search.json'));
+          var searchJson = fixtures('search.json');
+          searchJson.results[0].last_publication_date = Date.now();
+          cb(null, searchJson);
         } else if(url === 'http://localhost:3000/api') {
           var apiJson = fixtures('api.json');
-          apiJson.refs = [{ id: 'master', ref: Date.now(), label: 'Master', isMasterRef: true }];
+          if (opts && opts.refresh_ref) {
+            apiJson.refs = [{ id: 'master', ref: Date.now(), label: 'Master', isMasterRef: true }];
+          }
           cb(null, apiJson);
         }
       },
     },
-    apiDataTTL: opts.ttl
+    apiDataTTL: opts && opts.ttl
   };
 
   return Prismic.client('http://localhost:3000/api', options);
 }
 
-function loop(client, options) {
-  client.getApi().then(function(api) {
-    setTimeout(function() {
-      if (Date.now() - options.start < options.duration) {
-        options.check(api);
-        loop(client, options);
-      } else {
-        options.end(api);
-      }
-    }, options.delay);
-  });
-}
+describe('Cache', function() {
 
-describe('Api', function() {
+  it('should cache Api for 1 second', function(done) {
+    function loop(client, options) {
+      client.getApi().then(function(api) {
+        setTimeout(function() {
+          if (Date.now() - options.start < options.duration) {
+            options.check(api);
+            loop(client, options);
+          } else {
+            options.done(api);
+          }
+        }, options.delay);
+      });
+    }
 
-  var client = getClient({ ttl: 1 });
-
-  it('should expire after 1 second', function(done) {
+    var client = getClient({ ttl: 1, refresh_ref: true });
     client.getApi().then(function(api) {
       loop(client, {
         start: api.master(),
@@ -53,7 +56,7 @@ describe('Api', function() {
         check: function(cachedApi) {
           assert.strictEqual(cachedApi.master(), api.master());
         },
-        end: function(refreshedApi) {
+        done: function(refreshedApi) {
           assert.notEqual(refreshedApi.master(), api.master());
           done();
         }
