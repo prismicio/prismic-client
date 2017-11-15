@@ -33,27 +33,27 @@ export class DefaultClient implements Client {
     return this.getApi().then(api => api.query(q, optionsOrCallback, cb));
   }
 
-  queryFirst(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document>, cb: RequestCallback<Document>): Promise<Document> {
+  queryFirst(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document>, cb?: RequestCallback<Document>): Promise<Document> {
     return this.getApi().then(api => api.queryFirst(q, optionsOrCallback, cb));
   }
 
-  getByID(id: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document> {
+  getByID(id: string, options: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
     return this.getApi().then(api => api.getByID(id, options, cb));
   }
 
-  getByIDs(ids: string[], options: QueryOptions, cb: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse> {
+  getByIDs(ids: string[], options: QueryOptions, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse> {
     return this.getApi().then(api => api.getByIDs(ids, options, cb));
   }
 
-  getByUID(type: string, uid: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document> {
+  getByUID(type: string, uid: string, options: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
     return this.getApi().then(api => api.getByUID(type, uid, options, cb));
   }
 
-  getSingle(type: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document> {
+  getSingle(type: string, options: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
     return this.getApi().then(api => api.getSingle(type, options, cb));
   }
 
-  getBookmark(bookmark: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document> {
+  getBookmark(bookmark: string, options: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
     return this.getApi().then(api => api.getBookmark(bookmark, options, cb));
   }
 

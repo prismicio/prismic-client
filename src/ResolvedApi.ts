@@ -142,10 +142,11 @@ export default class ResolvedApi implements Client {
    * @param {object} additional parameters. In NodeJS, pass the request as 'req'.
    * @param {function} callback(err, doc)
    */
-  queryFirst(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document>, cb: RequestCallback<Document> = () => {}): Promise<Document> {
+  queryFirst(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document>, cb?: RequestCallback<Document>): Promise<Document> {
+    const noop = () => {};
     const { options, callback } = typeof optionsOrCallback === 'function'
         ? { options: {} as QueryOptions, callback: optionsOrCallback }
-        : { options: optionsOrCallback || {}, callback: cb };
+        : { options: optionsOrCallback || {}, callback: cb || noop };
 
     options.page = 1;
     options.pageSize = 1;
@@ -165,7 +166,7 @@ export default class ResolvedApi implements Client {
   /**
    * Retrieve the document with the given id
    */
-  getByID(id: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document> {
+  getByID(id: string, options: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
     const opts = options || {};
     if (!opts.lang) opts.lang = '*';
     return this.queryFirst(Predicates.at('document.id', id), opts, cb);
@@ -174,7 +175,7 @@ export default class ResolvedApi implements Client {
   /**
    * Retrieve multiple documents from an array of id
    */
-  getByIDs(ids: string[], options: QueryOptions, cb: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse> {
+  getByIDs(ids: string[], options: QueryOptions, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse> {
     const opts = options || {};
     if (!opts.lang) opts.lang = '*';
     return this.query(Predicates.in('document.id', ids), opts, cb);
@@ -183,7 +184,7 @@ export default class ResolvedApi implements Client {
   /**
    * Retrieve the document with the given uid
    */
-  getByUID(type: string, uid: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document> {
+  getByUID(type: string, uid: string, options: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
     const opts = options || {};
     if (!opts.lang) opts.lang = '*';
     return this.queryFirst(Predicates.at(`my.${type}.uid`, uid), opts, cb);
@@ -192,14 +193,14 @@ export default class ResolvedApi implements Client {
   /**
    * Retrieve the singleton document with the given type
    */
-  getSingle(type: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document> {
+  getSingle(type: string, options: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
     return this.queryFirst(Predicates.at('document.type', type), options, cb);
   }
 
   /**
    * Retrieve the document with the given bookmark
    */
-  getBookmark(bookmark: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document> {
+  getBookmark(bookmark: string, options: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
     return new Promise<string>((resolve, reject) => {
       const id = this.data.bookmarks[bookmark];
       if (id) {
