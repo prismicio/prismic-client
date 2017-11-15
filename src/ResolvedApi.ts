@@ -218,41 +218,41 @@ export default class ResolvedApi implements Client {
    */
   previewSession(token: string, linkResolver: (doc: any) => string, defaultUrl: string, cb?: RequestCallback<string>): Promise<string> {
     return new Promise((resolve, reject) => {
-      const cb = (err: Error | null, url?: string, xhr?: any) => {
-        if (cb) cb(err, url, xhr);
+      const callback = (err: Error | null, url: string | null, xhr: any) => {
         if (err) {
           reject(err);
-        } else {
+        } else if (url) {
+          if (cb) cb(err, url, xhr);
           resolve(url);
         }
       };
       this.httpClient.request(token, (err: Error, result: any, xhr: any) => {
         if (err) {
-          cb(err, defaultUrl, xhr);
+          callback(err, defaultUrl, xhr);
           return;
         }
         try {
           const mainDocumentId = result.mainDocument;
           if (!mainDocumentId) {
-            cb(null, defaultUrl, xhr);
+            callback(null, defaultUrl, xhr);
           } else {
             this.getByID(mainDocumentId, {}, (err, document) => {
               if (err) {
-                cb(err);
+                callback(err, null, xhr);
               }
               try {
                 if (!document) {
-                  cb(null, defaultUrl, xhr);
+                  callback(null, defaultUrl, xhr);
                 } else {
-                  cb(null, linkResolver(document), xhr);
+                  callback(null, linkResolver(document), xhr);
                 }
               } catch (e) {
-                cb(e);
+                callback(e, null, xhr);
               }
             });
           }
         } catch (e) {
-          cb(e, defaultUrl, xhr);
+          callback(e, defaultUrl, xhr);
         }
       });
     });
