@@ -5,8 +5,6 @@ let running: number = 0;
 // Requests in queue
 const queue: any[]  = [];
 
-export type RequestCallback<T> = (error: Error | null, result: T | null, xhr?: any) => void;
-
 interface RequestCallbackSuccess {
   result: any;
   xhr: any;
@@ -26,7 +24,7 @@ function fetchRequest(
   onSuccess: (_: RequestCallbackSuccess) => void,
   onError: (_: RequestCallbackFailure) => void,
   options?: RequestHandlerOption,
-): any {
+): void {
 
   const fetchOptions = {
     headers: {
@@ -38,7 +36,7 @@ function fetchRequest(
     fetchOptions.agent = options.proxyAgent;
   }
 
-  return fetch(url, fetchOptions).then((response) => {
+  fetch(url, fetchOptions).then((response) => {
     if (~~(response.status / 100 !== 2)) {
       const e: any = new Error(`Unexpected status code [${response.status}] on URL ${url}`);
       e.status = response.status;
@@ -63,10 +61,6 @@ function fetchRequest(
   });
 }
 
-export interface RequestHandler {
-  request<T>(url: String, cb: RequestCallback<T>): void;
-}
-
 function processQueue(options?: RequestHandlerOption) {
   if (queue.length === 0 || running >= MAX_CONNECTIONS) {
     return;
@@ -83,15 +77,22 @@ function processQueue(options?: RequestHandlerOption) {
   };
 
   const onError = ({ error }: RequestCallbackFailure) => {
+    running--;
     next.callback(error);
     processQueue(options);
   };
 
-  fetchRequest(next.url, onSuccess, onError);
+  fetchRequest(next.url, onSuccess, onError, options);
 }
+
+export type RequestCallback<T> = (error: Error | null, result: T | null, xhr?: any) => void;
 
 export interface RequestHandlerOption {
   proxyAgent: any;
+}
+
+export interface RequestHandler {
+  request<T>(url: String, cb: RequestCallback<T>): void;
 }
 
 export class DefaultRequestHandler implements RequestHandler {
