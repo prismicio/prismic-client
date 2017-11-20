@@ -18,13 +18,13 @@ export default class HttpClient {
 
   request<T>(url: string, callback?: RequestCallback<T>): Promise<T> {
     return new Promise((resolve, reject) => {
-      this.requestHandler.request<T>(url, (err, result, xhr) => {
+      this.requestHandler.request<T>(url, (err, result, xhr, ttl) => {
         if (err) {
           reject(err);
-          callback && callback(err, null, xhr);
+          callback && callback(err, null, xhr, ttl);
         } else if (result) {
           resolve(result);
-          callback && callback(null, result, xhr);
+          callback && callback(null, result, xhr, ttl);
         }
       });
     });
@@ -33,36 +33,31 @@ export default class HttpClient {
   /**
    * Fetch a URL corresponding to a query, and parse the response as a Response object
    */
-  cachedRequest<T>(url: string, options?: HttpClientOptions): Promise<T> {
-    const opts = options || {};
+  cachedRequest<T>(url: string, maybeOptions?: HttpClientOptions): Promise<T> {
+    const options = maybeOptions || {};
     const run = (cb: RequestCallback<T>) => {
-      const cacheKey = (options && options.cacheKey) || url;
-      this.cache.get(cacheKey, (err: Error, value: any) => {
-        if (err || value) {
-          cb(err, value);
-          return;
+      const cacheKey = options.cacheKey || url;
+      this.cache.get<T>(cacheKey, (cacheGetError, cacheGetValue) => {
+        if (cacheGetError || cacheGetValue) {
+          cb(cacheGetError, cacheGetValue);
+        } else {
+          this.request<T>(url, (fetchError, fetchValue, xhr, ttlReq) => {
+            if (fetchError) {
+              cb(fetchError, null);
+            } else {
+              const ttl = ttlReq || options.ttl;
+              if (ttl) {
+                this.cache.set(cacheKey, fetchValue, ttl, cb);
+              }
+              cb(null, fetchValue);
+            }
+          });
         }
-        this.request<T>(url, (err: Error, result: any, xhr: any, ttl?: number) => {
-          if (err) {
-            cb(err, null, xhr);
-            return;
-          }
-
-          ttl = ttl || opts.ttl;
-
-          if (ttl) {
-            this.cache.set(cacheKey, result, ttl, (err: Error) => {
-              cb(err, result);
-            });
-          } else {
-            cb(null, result);
-          }
-        });
       });
     };
 
     return new Promise((resolve, reject) => {
-      run((err, value, xhr) => {
+      run((err, value) => {
         if (err) reject(err);
         if (value) resolve(value);
       });

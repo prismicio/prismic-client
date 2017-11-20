@@ -32,6 +32,10 @@ export interface ApiData {
   licence: string;
 }
 
+export interface PreviewResponse {
+  mainDocument?: string;
+}
+
 export interface QueryOptions {
   [key: string]: string | number;
 }
@@ -143,118 +147,90 @@ export default class ResolvedApi implements Client {
    * @param {function} callback(err, doc)
    */
   queryFirst(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document>, cb?: RequestCallback<Document>): Promise<Document> {
-    const noop = () => {};
     const { options, callback } = typeof optionsOrCallback === 'function'
         ? { options: {} as QueryOptions, callback: optionsOrCallback }
-        : { options: optionsOrCallback || {}, callback: cb || noop };
+        : { options: optionsOrCallback || {}, callback: cb || (() => {}) };
 
     options.page = 1;
     options.pageSize = 1;
 
-    return this.query(q, options, (err: Error, response: any) => {
-      if (callback) {
-        const result = response && response.results && response.results[0];
-        callback(err, result);
-      }
-    }).then((response: any) => {
-      return response && response.results && response.results[0];
-    }).catch((e: Error) => {
-      console.log(e);
+    return this.query(q, options).then((response) => {
+      const document = response && response.results && response.results[0];
+      callback(null, document);
+      return document;
+    }).catch((error) => {
+      callback(error);
+      throw error;
     });
   }
 
   /**
    * Retrieve the document with the given id
    */
-  getByID(id: string, options: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
-    const opts = options || {};
-    if (!opts.lang) opts.lang = '*';
-    return this.queryFirst(Predicates.at('document.id', id), opts, cb);
+  getByID(id: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
+    const options = maybeOptions || {};
+    if (!options.lang) options.lang = '*';
+    return this.queryFirst(Predicates.at('document.id', id), options, cb);
   }
 
   /**
    * Retrieve multiple documents from an array of id
    */
-  getByIDs(ids: string[], options: QueryOptions, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse> {
-    const opts = options || {};
-    if (!opts.lang) opts.lang = '*';
-    return this.query(Predicates.in('document.id', ids), opts, cb);
+  getByIDs(ids: string[], maybeOptions?: QueryOptions, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse> {
+    const options = maybeOptions || {};
+    if (!options.lang) options.lang = '*';
+    return this.query(Predicates.in('document.id', ids), options, cb);
   }
 
   /**
    * Retrieve the document with the given uid
    */
-  getByUID(type: string, uid: string, options: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
-    const opts = options || {};
-    if (!opts.lang) opts.lang = '*';
-    return this.queryFirst(Predicates.at(`my.${type}.uid`, uid), opts, cb);
+  getByUID(type: string, uid: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
+    const options = maybeOptions || {};
+    if (!options.lang) options.lang = '*';
+    return this.queryFirst(Predicates.at(`my.${type}.uid`, uid), options, cb);
   }
 
   /**
    * Retrieve the singleton document with the given type
    */
-  getSingle(type: string, options: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
+  getSingle(type: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
+    const options = maybeOptions || {};
     return this.queryFirst(Predicates.at('document.type', type), options, cb);
   }
 
   /**
    * Retrieve the document with the given bookmark
    */
-  getBookmark(bookmark: string, options: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
-    return new Promise<string>((resolve, reject) => {
-      const id = this.data.bookmarks[bookmark];
-      if (id) {
-        resolve(id);
-      } else {
-        const err = new Error('Error retrieving bookmarked id');
-        if (cb) cb(err, null);
-        reject(err);
-      }
-    }).then(id => this.getByID(id, options, cb));
+  getBookmark(bookmark: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
+    const id = this.data.bookmarks[bookmark];
+    if (id) {
+      return this.getByID(id, maybeOptions, cb);
+    } else {
+      return Promise.reject('Error retrieving bookmarked id');
+    }
   }
 
-  /**
-   * Return the URL to display a given preview
-   */
   previewSession(token: string, linkResolver: (doc: any) => string, defaultUrl: string, cb?: RequestCallback<string>): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const callback = (err: Error | null, url: string | null, xhr: any) => {
-        if (err) {
-          reject(err);
-        } else if (url) {
-          if (cb) cb(err, url, xhr);
-          resolve(url);
-        }
-      };
-      this.httpClient.request(token, (err: Error, result: any, xhr: any) => {
-        if (err) {
-          callback(err, defaultUrl, xhr);
-          return;
-        }
-        try {
-          const mainDocumentId = result.mainDocument;
-          if (!mainDocumentId) {
-            callback(null, defaultUrl, xhr);
+    return this.httpClient.request<PreviewResponse>(token).then((result) => {
+      if (!result.mainDocument) {
+        cb && cb(null, defaultUrl);
+        return Promise.resolve(defaultUrl);
+      } else {
+        return this.getByID(result.mainDocument).then((document) => {
+          if (!document) {
+            cb && cb(null, defaultUrl);
+            return defaultUrl;
           } else {
-            this.getByID(mainDocumentId, {}, (err, document) => {
-              if (err) {
-                callback(err, null, xhr);
-              }
-              try {
-                if (!document) {
-                  callback(null, defaultUrl, xhr);
-                } else {
-                  callback(null, linkResolver(document), xhr);
-                }
-              } catch (e) {
-                callback(e, null, xhr);
-              }
-            });
+            const url = linkResolver(document);
+            cb && cb(null, url);
+            return url;
           }
-        } catch (e) {
-          callback(e, defaultUrl, xhr);
-        }
-      });
+        });
+      }
+    }).catch((error) => {
+      cb && cb(error);
+      throw error;
     });
   }
 }

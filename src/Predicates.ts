@@ -7,26 +7,26 @@ const OPERATOR = {
   in: 'in',
   fulltext: 'fulltext',
   similar: 'similar',
-  'number.gt': 'number.gt',
-  'number.lt': 'number.lt',
-  'number.inRange': 'number.inRange',
-  'date.before': 'date.before',
-  'date.after': 'date.after',
-  'date.between': 'date.between',
-  'date.day-of-month': 'date.day-of-month',
-  'date.day-of-month-after': 'date.day-of-month-after',
-  'date.day-of-month-before': 'date.day-of-month-before',
-  'date.day-of-week': 'date.day-of-week',
-  'date.day-of-week-after': 'date.day-of-week-after',
-  'date.day-of-week-before': 'date.day-of-week-before',
-  'date.month': 'date.month',
-  'date.month-before': 'date.month-before',
-  'date.month-after': 'date.month-after',
-  'date.year': 'date.year',
-  'date.hour': 'date.hour',
-  'date.hour-before': 'date.hour-before',
-  'date.hour-after': 'date.hour-after',
-  'geopoint.near': 'geopoint.near',
+  numberGt: 'number.gt',
+  numberLt: 'number.lt',
+  numberInRange: 'number.inRange',
+  dateBefore: 'date.before',
+  dateAfter: 'date.after',
+  dateBetween: 'date.between',
+  dateDayOfMonth: 'date.day-of-month',
+  dateDayOfMonthAfter: 'date.day-of-month-after',
+  dateDayOfMonthBefore: 'date.day-of-month-before',
+  dateDayOfWeek: 'date.day-of-week',
+  dateDayOfWeekAfter: 'date.day-of-week-after',
+  dateDayOfWeekBefore: 'date.day-of-week-before',
+  dateMonth: 'date.month',
+  dateMonthBefore: 'date.month-before',
+  dateMonthAfter: 'date.month-after',
+  dateYear: 'date.year',
+  dateHour: 'date.hour',
+  dateHourBefore: 'date.hour-before',
+  dateHourAfter: 'date.hour-after',
+  GeopointNear: 'geopoint.near',
 };
 
 function encode(value: string | string[]): string | null {
@@ -43,100 +43,100 @@ function encode(value: string | string[]): string | null {
 
 const geopoint = {
   near(fragment: string, latitude: number, longitude: number, radius: number): string {
-    return `[${OPERATOR['geopoint.near']}(${fragment}, ${latitude}, ${longitude}, ${radius})]`;
+    return `[${OPERATOR.GeopointNear}(${fragment}, ${latitude}, ${longitude}, ${radius})]`;
   },
 };
 
 const date = {
 
   before(fragment: string, before: Date): string {
-    return `[${OPERATOR['date.before']}(${fragment}, ${before.getTime()})]`;
+    return `[${OPERATOR.dateBefore}(${fragment}, ${before.getTime()})]`;
   },
 
   after(fragment: string, after: Date): string {
-    return `[${OPERATOR['date.after']}(${fragment}, ${after.getTime()})]`;
+    return `[${OPERATOR.dateAfter}(${fragment}, ${after.getTime()})]`;
   },
 
   between(fragment: string, before: Date, after: Date): string {
-    return `[${OPERATOR['date.between']}(${fragment}, ${before.getTime()}, ${after.getTime()})]`;
+    return `[${OPERATOR.dateBetween}(${fragment}, ${before.getTime()}, ${after.getTime()})]`;
   },
 
   dayOfMonth(fragment: string, day: number): string {
-    return `[${OPERATOR['date.day-of-month']}(${fragment}, ${day})]`;
+    return `[${OPERATOR.dateDayOfMonth}(${fragment}, ${day})]`;
   },
 
   dayOfMonthAfter(fragment: string, day: number): string {
-    return `[${OPERATOR['date.day-of-month-after']}(${fragment}, ${day})]`;
+    return `[${OPERATOR.dateDayOfMonthAfter}(${fragment}, ${day})]`;
   },
 
   dayOfMonthBefore(fragment: string, day: number): string {
-    return `[${OPERATOR['date.day-of-month-before']}(${fragment}, ${day})]`;
+    return `[${OPERATOR.dateDayOfMonthBefore}(${fragment}, ${day})]`;
   },
 
   dayOfWeek(fragment: string, day: number): string {
-    return `[${OPERATOR['date.day-of-week']}(${fragment}, ${day})]`;
+    return `[${OPERATOR.dateDayOfWeek}(${fragment}, ${day})]`;
   },
 
   dayOfWeekAfter(fragment: string, day: number): string {
-    return `[${OPERATOR['date.day-of-week-after']}(${fragment}, ${day})]`;
+    return `[${OPERATOR.dateDayOfWeekAfter}(${fragment}, ${day})]`;
   },
 
   dayOfWeekBefore(fragment: string, day: number): string {
-    return `[${OPERATOR['date.day-of-week-before']}(${fragment}, ${day})]`;
+    return `[${OPERATOR.dateDayOfWeekBefore}(${fragment}, ${day})]`;
   },
 
   month(fragment: string, month: number | string): string {
     if (typeof month === 'number') {
-      return `[${OPERATOR['date.month']}(${fragment}, ${month})]`;
+      return `[${OPERATOR.dateMonth}(${fragment}, ${month})]`;
     } else {
-      return `[${OPERATOR['date.month']}(${fragment}, "${month}")]`;
+      return `[${OPERATOR.dateMonth}(${fragment}, "${month}")]`;
     }
   },
 
   monthBefore(fragment: string, month: number | string): string {
     if (typeof month === 'number') {
-      return `[${OPERATOR['date.month-before']}(${fragment}, ${month})]`;
+      return `[${OPERATOR.dateMonthBefore}(${fragment}, ${month})]`;
     } else {
-      return `[${OPERATOR['date.month-before']}(${fragment}, "${month}")]`;
+      return `[${OPERATOR.dateMonthBefore}(${fragment}, "${month}")]`;
     }
   },
 
   monthAfter(fragment: string, month: number | string): string {
     if (typeof month === 'number') {
-      return `[${OPERATOR['date.month-after']}(${fragment}, ${month})]`;
+      return `[${OPERATOR.dateMonthAfter}(${fragment}, ${month})]`;
     } else {
-      return `[${OPERATOR['date.month-after']}(${fragment}, "${month}")]`;
+      return `[${OPERATOR.dateMonthAfter}(${fragment}, "${month}")]`;
     }
   },
 
   year(fragment: string, year: number): string {
-    return `[${OPERATOR['date.year']}(${fragment}, ${year})]`;
+    return `[${OPERATOR.dateYear}(${fragment}, ${year})]`;
   },
 
   hour(fragment: string, hour: number): string {
-    return `[${OPERATOR['date.hour']}(${fragment}, ${hour})]`;
+    return `[${OPERATOR.dateHour}(${fragment}, ${hour})]`;
   },
 
   hourBefore(fragment: string, hour: number): string {
-    return `[${OPERATOR['date.hour-before']}(${fragment}, ${hour})]`;
+    return `[${OPERATOR.dateHourBefore}(${fragment}, ${hour})]`;
   },
 
   hourAfter(fragment: string, hour: number): string {
-    return `[${OPERATOR['date.hour-after']}(${fragment}, ${hour})]`;
+    return `[${OPERATOR.dateHourAfter}(${fragment}, ${hour})]`;
   },
 };
 
 const number = {
   gt(fragment: string, value: number): string {
-    return `[${OPERATOR['number.gt']}(${fragment}, ${value})]`;
+    return `[${OPERATOR.numberGt}(${fragment}, ${value})]`;
   },
 
   lt(fragment: string, value: number): string {
-    return `[${OPERATOR['number.lt']}(${fragment}, ${value})]`;
+    return `[${OPERATOR.numberLt}(${fragment}, ${value})]`;
   },
 
   inRange(fragment: string, before: number, after: number): string {
-    return `[${OPERATOR['number.inRange']}(${fragment}, ${before}, ${after})]`;
+    return `[${OPERATOR.numberInRange}(${fragment}, ${before}, ${after})]`;
   },
 };
 

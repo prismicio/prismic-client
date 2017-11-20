@@ -24,7 +24,8 @@ export default class Api {
     this.options = options || {};
     this.url = url;
     if (this.options.accessToken) {
-      this.url += (url.indexOf('?') > -1 ? '&' : '?') + 'access_token=' + this.options.accessToken;
+      const accessTokenParam = `access_token=${this.options.accessToken}`;
+      this.url += (url.indexOf('?') > -1 ? '&' : '?') + accessTokenParam;
     }
     this.apiDataTTL = this.options.apiDataTTL || 5;
     this.httpClient = new HttpClient(
@@ -45,7 +46,7 @@ export default class Api {
       cb && cb(null, resolvedApi);
       return resolvedApi;
     }).catch((error) => {
-      cb && cb(error, null);
+      cb && cb(error);
       throw error;
     });
   }
