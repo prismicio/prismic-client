@@ -12,5 +12,5 @@ export default class HttpClient {
     /**
      * Fetch a URL corresponding to a query, and parse the response as a Response object
      */
-    cachedRequest<T>(url: string, options?: HttpClientOptions): Promise<T>;
+    cachedRequest<T>(url: string, maybeOptions?: HttpClientOptions): Promise<T>;
 }

@@ -1,17 +1,37 @@
+import Api from './Api';
+import ResolvedApi from './ResolvedApi';
 import ApiSearchResponse from './ApiSearchResponse';
 import HttpClient from './HttpClient';
 import { RequestCallback } from './request';
-export interface Field {
-    [key: string]: string;
-    value: string;
-}
+export declare type Fields = {
+    [key: string]: any;
+};
 export interface Form {
-    fields: any;
+    fields: Fields;
     action: string;
     name: string;
     rel: string;
     form_method: string;
     enctype: string;
+}
+export declare class LazySearchForm {
+    id: string;
+    fields: Fields;
+    api: Api;
+    constructor(id: string, api: Api);
+    set(key: string, value: any): LazySearchForm;
+    ref(ref: string): LazySearchForm;
+    query(query: string | string[]): LazySearchForm;
+    pageSize(size: number): LazySearchForm;
+    fetch(fields: string | string[]): LazySearchForm;
+    fetchLinks(fields: string | string[]): LazySearchForm;
+    lang(langCode: string): LazySearchForm;
+    page(p: number): LazySearchForm;
+    after(documentId: string): LazySearchForm;
+    orderings(orderings?: string[]): LazySearchForm;
+    url(): Promise<string>;
+    submit(cb: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse>;
+    static toSearchForm(lazyForm: LazySearchForm, api: ResolvedApi): SearchForm;
 }
 export declare class SearchForm {
     httpClient: HttpClient;

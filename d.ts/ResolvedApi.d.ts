@@ -31,6 +31,9 @@ export interface ApiData {
     version: string;
     licence: string;
 }
+export interface PreviewResponse {
+    mainDocument?: string;
+}
 export interface QueryOptions {
     [key: string]: string | number;
 }
@@ -86,25 +89,22 @@ export default class ResolvedApi implements Client {
     /**
      * Retrieve the document with the given id
      */
-    getByID(id: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
+    getByID(id: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document>;
     /**
      * Retrieve multiple documents from an array of id
      */
-    getByIDs(ids: string[], options: QueryOptions, cb: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse>;
+    getByIDs(ids: string[], maybeOptions?: QueryOptions, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse>;
     /**
      * Retrieve the document with the given uid
      */
-    getByUID(type: string, uid: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
+    getByUID(type: string, uid: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document>;
     /**
      * Retrieve the singleton document with the given type
      */
-    getSingle(type: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
+    getSingle(type: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document>;
     /**
      * Retrieve the document with the given bookmark
      */
-    getBookmark(bookmark: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
-    /**
-     * Return the URL to display a given preview
-     */
+    getBookmark(bookmark: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document>;
     previewSession(token: string, linkResolver: (doc: any) => string, defaultUrl: string, cb?: RequestCallback<string>): Promise<string>;
 }
