@@ -1,6 +1,6 @@
 import ResolvedApi, { QueryOptions, EXPERIMENT_COOKIE, PREVIEW_COOKIE } from './ResolvedApi';
 import ApiSearchResponse from './ApiSearchResponse';
-import { SearchForm } from './form';
+import { SearchForm, LazySearchForm } from './form';
 import { Experiment } from './experiments';
 import { RequestHandler, RequestCallback } from './request';
 import Api, { ApiOptions } from './Api';
@@ -27,6 +27,14 @@ export class DefaultClient implements Client {
 
   getApi(): Promise<ResolvedApi> {
     return this.api.get();
+  }
+
+  everything(): LazySearchForm {
+    return this.form('everything');
+  }
+
+  form(formId: string): LazySearchForm {
+    return new LazySearchForm(formId, this.api);
   }
 
   query(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<ApiSearchResponse>, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse> {
