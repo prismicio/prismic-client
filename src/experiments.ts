@@ -57,9 +57,11 @@ export class Experiments {
     }
   }
 
-  current(): Experiment | undefined {
+  current(): Experiment | null {
     if (this.running.length > 0) {
       return this.running[0];
+    } else {
+      return null;
     }
   }
   refFromCookie(cookie: string): string | null {

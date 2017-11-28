@@ -105,7 +105,7 @@ export default class ResolvedApi implements Client {
     return ref ? ref.ref : null;
   }
 
-  currentExperiment(): Experiment | undefined {
+  currentExperiment(): Experiment | null {
     return this.experiments.current();
   }
 
