@@ -74,7 +74,7 @@ export default class ResolvedApi implements Client {
      * Instead, set your ref once in a variable, and call it when you need it; this will allow to change the ref you're viewing easily for your entire page.
      */
     ref(label: string): string | null;
-    currentExperiment(): Experiment | undefined;
+    currentExperiment(): Experiment | null;
     /**
      * Query the repository
      */

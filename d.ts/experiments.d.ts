@@ -17,6 +17,6 @@ export declare class Experiments {
     drafts: Experiment[];
     running: Experiment[];
     constructor(data: any);
-    current(): Experiment | undefined;
+    current(): Experiment | null;
     refFromCookie(cookie: string): string | null;
 }
