@@ -1,14 +1,12 @@
-export interface RequestError extends Error {
-    status: number;
+export declare type RequestCallback<T> = (error: Error | null, result?: T | null, xhr?: any, ttl?: number) => void;
+export interface RequestHandlerOption {
+    proxyAgent?: any;
 }
 export interface RequestHandler {
-    request(url: String, cb: (error: Error | null, result?: any, xhr?: any) => void): void;
-}
-export interface RequestHandlerOption {
-    proxyAgent: any;
+    request<T>(url: string, cb: RequestCallback<T>): void;
 }
 export declare class DefaultRequestHandler implements RequestHandler {
-    options?: RequestHandlerOption;
+    options: RequestHandlerOption;
     constructor(options?: RequestHandlerOption);
-    request(url: String, cb: (error: Error | null, result?: any, xhr?: any, ttl?: number) => void): void;
+    request<T>(url: string, callback: RequestCallback<T>): void;
 }

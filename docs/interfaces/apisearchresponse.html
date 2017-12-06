@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>RequestError | prismic-javascript</title>
+	<title>ApiSearchResponse | prismic-javascript</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="requesterror.html">RequestError</a>
+					<a href="apisearchresponse.html">ApiSearchResponse</a>
 				</li>
 			</ul>
-			<h1>Interface RequestError</h1>
+			<h1>Interface ApiSearchResponse</h1>
 		</div>
 	</div>
 </header>
@@ -70,12 +70,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="tsd-signature-type">Error</span>
-						<ul class="tsd-hierarchy">
-							<li>
-								<span class="target">RequestError</span>
-							</li>
-						</ul>
+						<span class="target">ApiSearchResponse</span>
 					</li>
 				</ul>
 			</section>
@@ -86,11 +81,14 @@
 						<section class="tsd-index-section tsd-is-external">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="requesterror.html#error" class="tsd-kind-icon">Error</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="requesterror.html#message" class="tsd-kind-icon">message</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external"><a href="requesterror.html#name" class="tsd-kind-icon">name</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external"><a href="requesterror.html#stack" class="tsd-kind-icon">stack</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="requesterror.html#status" class="tsd-kind-icon">status</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="apisearchresponse.html#next_page" class="tsd-kind-icon">next_<wbr>page</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="apisearchresponse.html#page" class="tsd-kind-icon">page</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="apisearchresponse.html#prev_page" class="tsd-kind-icon">prev_<wbr>page</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="apisearchresponse.html#results" class="tsd-kind-icon">results</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="apisearchresponse.html#results_per_page" class="tsd-kind-icon">results_<wbr>per_<wbr>page</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="apisearchresponse.html#results_size" class="tsd-kind-icon">results_<wbr>size</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="apisearchresponse.html#total_pages" class="tsd-kind-icon">total_<wbr>pages</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="apisearchresponse.html#total_results_size" class="tsd-kind-icon">total_<wbr>results_<wbr>size</a></li>
 							</ul>
 						</section>
 					</div>
@@ -99,56 +97,82 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-external">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="error" class="tsd-anchor"></a>
-					<h3>Error</h3>
-					<div class="tsd-signature tsd-kind-icon">Error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ErrorConstructor</span></div>
+					<a name="next_page" class="tsd-anchor"></a>
+					<h3>next_<wbr>page</h3>
+					<div class="tsd-signature tsd-kind-icon">next_<wbr>page<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in /Volumes/data/hub/prismic/prismic-javascript1/node_modules/typedoc/node_modules/typescript/lib/lib.es5.d.ts:884</li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="message" class="tsd-anchor"></a>
-					<h3>message</h3>
-					<div class="tsd-signature tsd-kind-icon">message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from Error.message</p>
-						<ul>
-							<li>Defined in /Volumes/data/hub/prismic/prismic-javascript1/node_modules/typedoc/node_modules/typescript/lib/lib.es5.d.ts:874</li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-					<a name="name" class="tsd-anchor"></a>
-					<h3>name</h3>
-					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from Error.name</p>
-						<ul>
-							<li>Defined in /Volumes/data/hub/prismic/prismic-javascript1/node_modules/typedoc/node_modules/typescript/lib/lib.es5.d.ts:873</li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external">
-					<a name="stack" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> stack</h3>
-					<div class="tsd-signature tsd-kind-icon">stack<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<p>Inherited from Error.stack</p>
-						<p>Overrides Error.stack</p>
-						<ul>
-							<li>Defined in /Volumes/data/hub/prismic/prismic-javascript1/node_modules/typedoc/node_modules/typescript/lib/lib.es5.d.ts:875</li>
+							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ba09ad0/src/ApiSearchResponse.ts#L7">ApiSearchResponse.ts:7</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-					<a name="status" class="tsd-anchor"></a>
-					<h3>status</h3>
-					<div class="tsd-signature tsd-kind-icon">status<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="page" class="tsd-anchor"></a>
+					<h3>page</h3>
+					<div class="tsd-signature tsd-kind-icon">page<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/42da3a5/src/request.ts#L2">request.ts:2</a></li>
+							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ba09ad0/src/ApiSearchResponse.ts#L2">ApiSearchResponse.ts:2</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a name="prev_page" class="tsd-anchor"></a>
+					<h3>prev_<wbr>page</h3>
+					<div class="tsd-signature tsd-kind-icon">prev_<wbr>page<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ba09ad0/src/ApiSearchResponse.ts#L8">ApiSearchResponse.ts:8</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a name="results" class="tsd-anchor"></a>
+					<h3>results</h3>
+					<div class="tsd-signature tsd-kind-icon">results<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Document</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ba09ad0/src/ApiSearchResponse.ts#L9">ApiSearchResponse.ts:9</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a name="results_per_page" class="tsd-anchor"></a>
+					<h3>results_<wbr>per_<wbr>page</h3>
+					<div class="tsd-signature tsd-kind-icon">results_<wbr>per_<wbr>page<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ba09ad0/src/ApiSearchResponse.ts#L3">ApiSearchResponse.ts:3</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a name="results_size" class="tsd-anchor"></a>
+					<h3>results_<wbr>size</h3>
+					<div class="tsd-signature tsd-kind-icon">results_<wbr>size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ba09ad0/src/ApiSearchResponse.ts#L4">ApiSearchResponse.ts:4</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a name="total_pages" class="tsd-anchor"></a>
+					<h3>total_<wbr>pages</h3>
+					<div class="tsd-signature tsd-kind-icon">total_<wbr>pages<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ba09ad0/src/ApiSearchResponse.ts#L6">ApiSearchResponse.ts:6</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a name="total_results_size" class="tsd-anchor"></a>
+					<h3>total_<wbr>results_<wbr>size</h3>
+					<div class="tsd-signature tsd-kind-icon">total_<wbr>results_<wbr>size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/prismicio/prismic-javascript/blob/ba09ad0/src/ApiSearchResponse.ts#L5">ApiSearchResponse.ts:5</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -167,22 +191,31 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-is-external">
-						<a href="requesterror.html" class="tsd-kind-icon">Request<wbr>Error</a>
+						<a href="apisearchresponse.html" class="tsd-kind-icon">Api<wbr>Search<wbr>Response</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="requesterror.html#error" class="tsd-kind-icon">Error</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="requesterror.html#message" class="tsd-kind-icon">message</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited tsd-is-external">
-								<a href="requesterror.html#name" class="tsd-kind-icon">name</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-overwrite tsd-is-inherited tsd-is-external">
-								<a href="requesterror.html#stack" class="tsd-kind-icon">stack</a>
+								<a href="apisearchresponse.html#next_page" class="tsd-kind-icon">next_<wbr>page</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
-								<a href="requesterror.html#status" class="tsd-kind-icon">status</a>
+								<a href="apisearchresponse.html#page" class="tsd-kind-icon">page</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+								<a href="apisearchresponse.html#prev_page" class="tsd-kind-icon">prev_<wbr>page</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+								<a href="apisearchresponse.html#results" class="tsd-kind-icon">results</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+								<a href="apisearchresponse.html#results_per_page" class="tsd-kind-icon">results_<wbr>per_<wbr>page</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+								<a href="apisearchresponse.html#results_size" class="tsd-kind-icon">results_<wbr>size</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+								<a href="apisearchresponse.html#total_pages" class="tsd-kind-icon">total_<wbr>pages</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+								<a href="apisearchresponse.html#total_results_size" class="tsd-kind-icon">total_<wbr>results_<wbr>size</a>
 							</li>
 						</ul>
 					</li>

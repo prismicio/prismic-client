@@ -1,5 +1,7 @@
 import { Experiments as PrismicExperiment } from './experiments';
-import { ApiOptions, Api as PrismicApi } from './api';
+import { DefaultClient } from './client';
+import PrismicApi, { ApiOptions } from './Api';
+import ResolvedApi from './ResolvedApi';
 declare namespace Prismic {
     const experimentCookie = "io.prismic.experiment";
     const previewCookie = "io.prismic.preview";
@@ -61,7 +63,8 @@ declare namespace Prismic {
     };
     const Experiments: typeof PrismicExperiment;
     const Api: typeof PrismicApi;
-    function getApi(url: string, options: ApiOptions | null): Promise<PrismicApi>;
-    function api(url: string, options: ApiOptions | null): Promise<PrismicApi>;
+    function client(url: string, options?: ApiOptions): DefaultClient;
+    function getApi(url: string, options?: ApiOptions): Promise<ResolvedApi>;
+    function api(url: string, options?: ApiOptions): Promise<ResolvedApi>;
 }
 export = Prismic;

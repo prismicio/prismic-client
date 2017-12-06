@@ -17,7 +17,7 @@
 *  removed  <--  <--  <--  <--  <--  <--  <--  <--  <--  <--  <--  added
 */
 
-export function MakeLRUCache(limit: any): ILRUCache {
+export function MakeLRUCache(limit: number): ILRUCache {
     return new (<any>LRUCache)(limit);
 }
 

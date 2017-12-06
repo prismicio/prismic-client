@@ -1,52 +1,26 @@
-import PrismicPredicates  from './predicates';
+import PrismicPredicates  from './Predicates';
 import { Experiments as PrismicExperiment } from './experiments';
-
-import {
-  ApiOptions,
-  Api as PrismicApi,
-  ExperimentCookie,
-  PreviewCookie,
-} from './api';
+import { DefaultClient } from './client';
+import PrismicApi, { ApiOptions } from './Api';
+import ResolvedApi, { EXPERIMENT_COOKIE, PREVIEW_COOKIE } from './ResolvedApi';
 
 namespace Prismic {
 
-  export const experimentCookie = ExperimentCookie;
-  export const previewCookie = PreviewCookie;
+  export const experimentCookie = EXPERIMENT_COOKIE;
+  export const previewCookie = PREVIEW_COOKIE;
   export const Predicates = PrismicPredicates;
   export const Experiments = PrismicExperiment;
   export const Api = PrismicApi;
 
-  export function getApi(url: string, options: ApiOptions | null): Promise<PrismicApi> {
-    const safeOptions = options || {} as ApiOptions;
-    const api = new PrismicApi(url, safeOptions);
-    return new Promise((resolve, reject) => {
-      const cb = (err: Error | null, api?: any) => {
-        if (safeOptions.complete) safeOptions.complete(err, api);
-        if (err) {
-          reject(err);
-        } else {
-          resolve(api);
-        }
-      };
-      api.get((err: Error, data: any) => {
-        if (!err && data) {
-          api.data = data;
-          api.refs = data.refs;
-          api.tags = data.tags;
-          api.types = data.types;
-          api.forms = data.forms;
-          api.bookmarks = data.bookmarks;
-          api.experiments = new Experiments(data.experiments);
-        }
-
-        cb(err, api);
-      });
-
-      return api;
-    });
+  export function client(url: string, options?: ApiOptions) {
+    return new DefaultClient(url, options);
   }
 
-  export function api(url: string, options: ApiOptions | null): Promise<PrismicApi> {
+  export function getApi(url: string, options?: ApiOptions): Promise<ResolvedApi> {
+    return DefaultClient.getApi(url, options);
+  }
+
+  export function api(url: string, options?: ApiOptions): Promise<ResolvedApi> {
     return getApi(url, options);
   }
 }

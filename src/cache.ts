@@ -2,53 +2,53 @@ import { ILRUCache, MakeLRUCache } from './lru';
 
 export interface ApiCache {
   isExpired(key: String): boolean;
-  get(key: string, cb: (error ?: Error | null, entry?: any) => any): void;
-  set(key: string, value: any, ttl: number, cb: (error ?: Error) => void): void;
-  remove(key: string, cb: (error ?: Error | null) => any): void;
-  clear(cb: (error ?: Error | null) => any): void;
+  get<T>(key: string, cb: (error: Error | null, entry?: T) => void): void;
+  set<T>(key: string, value: T, ttl: number, cb?: (error: Error | null) => void): void;
+  remove(key: string, cb?: (error: Error | null) => void): void;
+  clear(cb?: (error: Error | null) => void): void;
 }
 
 export class DefaultApiCache implements ApiCache {
   lru: ILRUCache;
 
-  constructor(limit ?: number) {
+  constructor(limit: number = 1000) {
     this.lru = MakeLRUCache(limit);
   }
 
   isExpired(key: string): boolean {
-    const entryValue = this.lru.get(key, false);
-    if(entryValue) {
-      return entryValue.expiredIn !== 0 && entryValue.expiredIn < Date.now();
+    const value = this.lru.get(key, false);
+    if (value) {
+      return value.expiredIn !== 0 && value.expiredIn < Date.now();
     } else {
       return false;
     }
   }
 
-  get(key: string, cb: (error ?: Error | null, entry?: any) => any): void {
-    const entryValue = this.lru.get(key, false);
-    if(entryValue && !this.isExpired(key)) {
-      cb(null, entryValue.data);
+  get<T>(key: string, cb: (error: Error | null, entry?: T) => void): void {
+    const value = this.lru.get(key, false);
+    if (value && !this.isExpired(key)) {
+      cb(null, value.data);
     } else {
-      cb();
+      cb && cb(null);
     }
   }
 
-  set(key: string, value: any, ttl: number, cb: (error ?: Error) => void): void {
+  set<T>(key: string, value: T, ttl: number, cb?: (error: Error | null) => void): void {
     this.lru.remove(key);
     this.lru.put(key, {
       data: value,
-      expiredIn: ttl ? (Date.now() + (ttl * 1000)) : 0
+      expiredIn: ttl ? (Date.now() + (ttl * 1000)) : 0,
     });
-    cb();
+    cb && cb(null);
   }
 
-  remove(key: string, cb: (error ?: Error | null) => any): void {
+  remove(key: string, cb?: (error: Error | null) => void): void {
     this.lru.remove(key);
-    cb();
+    cb && cb(null);
   }
 
-  clear(cb: (error ?: Error | null) => any): void {
+  clear(cb?: (error: Error | null) => void): void {
     this.lru.removeAll();
-    cb();
+    cb && cb(null);
   }
 }
