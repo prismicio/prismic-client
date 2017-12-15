@@ -14,11 +14,9 @@ export declare class Api {
     options: ApiOptions;
     apiCache: ApiCache;
     requestHandler: RequestHandler;
-<<<<<<< HEAD
     apiCacheKey: string;
     apiDataTTL: number;
     constructor(url: string, options?: ApiOptions);
-=======
     experiments: Experiments;
     bookmarks: {
         [key: string]: string;
@@ -32,7 +30,6 @@ export declare class Api {
     oauthToken: string;
     quickRoutes: any;
     constructor(url: string, options: ApiOptions);
->>>>>>> master
     /**
      * Fetches data used to construct the api client, from cache if it's
      * present, otherwise from calling the prismic api endpoint (which is
