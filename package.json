@@ -34,7 +34,7 @@
     "dev": "webpack -d --watch",
     "check": "tsc --pretty --noEmit --project ./tsconfig.json --watch",
     "test": "mocha",
-    "prepublish": "npm run build; npm run docs",
+    "prepublish": "npm run build && npm run docs",
     "docs": "typedoc --mode file --out ./docs/ ./src/index.ts",
     "lint": "tslint src/**/*.ts -e src/lru.ts -e src/Cookies.ts"
   },
