@@ -16,10 +16,12 @@
 *
 *  removed  <--  <--  <--  <--  <--  <--  <--  <--  <--  <--  <--  added
 */
+// tslint:disable-next-line:function-name
 export declare function MakeLRUCache(limit: number): ILRUCache;
 export interface ILRUCache {
-    put(key: string, value: any): void;
-    get(key: string, Entry: boolean): any;
-    remove(key: String): void;
-    removeAll(): void;
+  put(key: string, value: any): void;
+  // tslint:disable-next-line:variable-name
+  get(key: string, Entry: boolean): any;
+  remove(key: String): void;
+  removeAll(): void;
 }

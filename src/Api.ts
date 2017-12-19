@@ -14,7 +14,7 @@ export interface ApiOptions {
   proxyAgent?: any;
 }
 
-export default class Api {
+export default class PrismicApi {
   url: string;
   options: ApiOptions;
   apiDataTTL: number;

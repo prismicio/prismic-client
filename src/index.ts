@@ -1,4 +1,4 @@
-import PrismicPredicates  from './Predicates';
+import PrismicPredicates from './Predicates';
 import { Experiments as PrismicExperiment } from './experiments';
 import { DefaultClient } from './client';
 import PrismicApi, { ApiOptions } from './Api';
@@ -6,11 +6,13 @@ import ResolvedApi, { EXPERIMENT_COOKIE, PREVIEW_COOKIE } from './ResolvedApi';
 
 namespace Prismic {
 
+  // tslint:disable:variable-name
   export const experimentCookie = EXPERIMENT_COOKIE;
   export const previewCookie = PREVIEW_COOKIE;
   export const Predicates = PrismicPredicates;
   export const Experiments = PrismicExperiment;
   export const Api = PrismicApi;
+  // tslint:enable:variable-name
 
   export function client(url: string, options?: ApiOptions) {
     return new DefaultClient(url, options);
