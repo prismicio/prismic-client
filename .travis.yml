@@ -6,7 +6,6 @@ node_js:
 - '7'
 os:
   - linux
-  - osx
 
 script:
   - npm test
