@@ -10,3 +10,11 @@ os:
 
 script:
   - npm test
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: ./docs
+  on:
+    branch: master
