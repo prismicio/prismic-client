@@ -160,3 +160,6 @@ typings/
 !.vscode/extensions.json
 
 # End of https://www.gitignore.io/api/node,macos,intellij,visualstudiocode
+
+## documentation
+docs/
