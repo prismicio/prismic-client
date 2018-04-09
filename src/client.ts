@@ -38,31 +38,31 @@ export class DefaultClient implements Client {
     return new LazySearchForm(formId, this.api);
   }
 
-  query<T>(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<ApiSearchResponse<T>>, cb?: RequestCallback<ApiSearchResponse<T>>): Promise<ApiSearchResponse<T>> {
+  query<T = any>(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<ApiSearchResponse<T>>, cb?: RequestCallback<ApiSearchResponse<T>>): Promise<ApiSearchResponse<T>> {
     return this.getApi().then(api => api.query(q, optionsOrCallback, cb));
   }
 
-  queryFirst<T>(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document<T>>, cb?: RequestCallback<Document<T>>): Promise<Document<T>> {
+  queryFirst<T = any>(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document<T>>, cb?: RequestCallback<Document<T>>): Promise<Document<T>> {
     return this.getApi().then(api => api.queryFirst(q, optionsOrCallback, cb));
   }
 
-  getByID<T>(id: string, options: QueryOptions, cb?: RequestCallback<Document<T>>): Promise<Document<T>> {
+  getByID<T = any>(id: string, options: QueryOptions, cb?: RequestCallback<Document<T>>): Promise<Document<T>> {
     return this.getApi().then(api => api.getByID(id, options, cb));
   }
 
-  getByIDs<T>(ids: string[], options: QueryOptions, cb?: RequestCallback<ApiSearchResponse<T>>): Promise<ApiSearchResponse<T>> {
+  getByIDs<T = any>(ids: string[], options: QueryOptions, cb?: RequestCallback<ApiSearchResponse<T>>): Promise<ApiSearchResponse<T>> {
     return this.getApi().then(api => api.getByIDs(ids, options, cb));
   }
 
-  getByUID<T>(type: string, uid: string, options: QueryOptions, cb?: RequestCallback<Document<T>>): Promise<Document<T>> {
+  getByUID<T = any>(type: string, uid: string, options: QueryOptions, cb?: RequestCallback<Document<T>>): Promise<Document<T>> {
     return this.getApi().then(api => api.getByUID(type, uid, options, cb));
   }
 
-  getSingle<T>(type: string, options: QueryOptions, cb?: RequestCallback<Document<T>>): Promise<Document<T>> {
+  getSingle<T = any>(type: string, options: QueryOptions, cb?: RequestCallback<Document<T>>): Promise<Document<T>> {
     return this.getApi().then(api => api.getSingle(type, options, cb));
   }
 
-  getBookmark<T>(bookmark: string, options: QueryOptions, cb?: RequestCallback<Document<T>>): Promise<Document<T>> {
+  getBookmark<T = any>(bookmark: string, options: QueryOptions, cb?: RequestCallback<Document<T>>): Promise<Document<T>> {
     return this.getApi().then(api => api.getBookmark(bookmark, options, cb));
   }
 

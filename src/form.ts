@@ -73,7 +73,7 @@ export class LazySearchForm {
     });
   }
 
-  submit<T>(cb: RequestCallback<ApiSearchResponse<T>>): Promise<ApiSearchResponse<T>> {
+  submit<T = any>(cb: RequestCallback<ApiSearchResponse<T>>): Promise<ApiSearchResponse<T>> {
     return this.api.get().then((api) => {
       return LazySearchForm.toSearchForm(this, api).submit(cb);
     });
@@ -247,7 +247,7 @@ export class SearchForm {
   /**
    * Submits the query, and calls the callback function.
    */
-  submit<T>(cb: RequestCallback<ApiSearchResponse<T>>): Promise<ApiSearchResponse<T>> {
+  submit<T = any>(cb: RequestCallback<ApiSearchResponse<T>>): Promise<ApiSearchResponse<T>> {
 
     return this.httpClient.cachedRequest<ApiSearchResponse<T>>(this.url()).then((response) => {
       cb && cb(null, response);
