@@ -30,7 +30,7 @@ export declare class LazySearchForm {
     after(documentId: string): LazySearchForm;
     orderings(orderings?: string[]): LazySearchForm;
     url(): Promise<string>;
-    submit(cb: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse>;
+    submit<T>(cb: RequestCallback<ApiSearchResponse<T>>): Promise<ApiSearchResponse<T>>;
     static toSearchForm(lazyForm: LazySearchForm, api: ResolvedApi): SearchForm;
 }
 export declare class SearchForm {
@@ -88,5 +88,5 @@ export declare class SearchForm {
     /**
      * Submits the query, and calls the callback function.
      */
-    submit(cb: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse>;
+    submit<T>(cb: RequestCallback<ApiSearchResponse<T>>): Promise<ApiSearchResponse<T>>;
 }

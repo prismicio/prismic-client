@@ -113,7 +113,7 @@ export default class ResolvedApi implements Client {
   /**
    * Query the repository
    */
-  query(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<ApiSearchResponse>, cb: RequestCallback<ApiSearchResponse> = () => { }): Promise<ApiSearchResponse> {
+  query<T>(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<ApiSearchResponse<T>>, cb: RequestCallback<ApiSearchResponse<T>> = () => { }): Promise<ApiSearchResponse<T>> {
     const { options, callback } = typeof optionsOrCallback === 'function'
       ? { options: {} as QueryOptions, callback: optionsOrCallback }
       : { options: optionsOrCallback || {}, callback: cb };
@@ -147,7 +147,7 @@ export default class ResolvedApi implements Client {
    * @param {object} additional parameters. In NodeJS, pass the request as 'req'.
    * @param {function} callback(err, doc)
    */
-  queryFirst(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document>, cb?: RequestCallback<Document>): Promise<Document> {
+  queryFirst<T>(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document<T>>, cb?: RequestCallback<Document<T>>): Promise<Document<T>> {
     const { options, callback } = typeof optionsOrCallback === 'function'
       ? { options: {} as QueryOptions, callback: optionsOrCallback }
       : { options: optionsOrCallback || {}, callback: cb || (() => { }) };
@@ -155,7 +155,7 @@ export default class ResolvedApi implements Client {
     options.page = 1;
     options.pageSize = 1;
 
-    return this.query(q, options).then((response) => {
+    return this.query<T>(q, options).then((response) => {
       const document = response && response.results && response.results[0];
       callback(null, document);
       return document;
@@ -168,7 +168,7 @@ export default class ResolvedApi implements Client {
   /**
    * Retrieve the document with the given id
    */
-  getByID(id: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
+  getByID<T>(id: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document<T>>): Promise<Document<T>> {
     const options = maybeOptions || {};
     if (!options.lang) options.lang = '*';
     return this.queryFirst(Predicates.at('document.id', id), options, cb);
@@ -177,7 +177,7 @@ export default class ResolvedApi implements Client {
   /**
    * Retrieve multiple documents from an array of id
    */
-  getByIDs(ids: string[], maybeOptions?: QueryOptions, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse> {
+  getByIDs<T>(ids: string[], maybeOptions?: QueryOptions, cb?: RequestCallback<ApiSearchResponse<T>>): Promise<ApiSearchResponse<T>> {
     const options = maybeOptions || {};
     if (!options.lang) options.lang = '*';
     return this.query(Predicates.in('document.id', ids), options, cb);
@@ -186,7 +186,7 @@ export default class ResolvedApi implements Client {
   /**
    * Retrieve the document with the given uid
    */
-  getByUID(type: string, uid: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
+  getByUID<T>(type: string, uid: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document<T>>): Promise<Document<T>> {
     const options = maybeOptions || {};
     if (!options.lang) options.lang = '*';
     return this.queryFirst(Predicates.at(`my.${type}.uid`, uid), options, cb);
@@ -195,7 +195,7 @@ export default class ResolvedApi implements Client {
   /**
    * Retrieve the singleton document with the given type
    */
-  getSingle(type: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
+  getSingle<T>(type: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document<T>>): Promise<Document<T>> {
     const options = maybeOptions || {};
     return this.queryFirst(Predicates.at('document.type', type), options, cb);
   }
@@ -203,7 +203,7 @@ export default class ResolvedApi implements Client {
   /**
    * Retrieve the document with the given bookmark
    */
-  getBookmark(bookmark: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
+  getBookmark<T>(bookmark: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document<T>>): Promise<Document<T>> {
     const id = this.data.bookmarks[bookmark];
     if (id) {
       return this.getByID(id, maybeOptions, cb);

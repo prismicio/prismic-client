@@ -79,33 +79,33 @@ export default class ResolvedApi implements Client {
     /**
      * Query the repository
      */
-    query(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<ApiSearchResponse>, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse>;
+    query<T>(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<ApiSearchResponse<T>>, cb?: RequestCallback<ApiSearchResponse<T>>): Promise<ApiSearchResponse<T>>;
     /**
      * Retrieve the document returned by the given query
      * @param {string|array|Predicate} the query
      * @param {object} additional parameters. In NodeJS, pass the request as 'req'.
      * @param {function} callback(err, doc)
      */
-    queryFirst(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document>, cb?: RequestCallback<Document>): Promise<Document>;
+    queryFirst<T>(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document<T>>, cb?: RequestCallback<Document<T>>): Promise<Document<T>>;
     /**
      * Retrieve the document with the given id
      */
-    getByID(id: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document>;
+    getByID<T>(id: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document<T>>): Promise<Document<T>>;
     /**
      * Retrieve multiple documents from an array of id
      */
-    getByIDs(ids: string[], maybeOptions?: QueryOptions, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse>;
+    getByIDs<T>(ids: string[], maybeOptions?: QueryOptions, cb?: RequestCallback<ApiSearchResponse<T>>): Promise<ApiSearchResponse<T>>;
     /**
      * Retrieve the document with the given uid
      */
-    getByUID(type: string, uid: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document>;
+    getByUID<T>(type: string, uid: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document<T>>): Promise<Document<T>>;
     /**
      * Retrieve the singleton document with the given type
      */
-    getSingle(type: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document>;
+    getSingle<T>(type: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document<T>>): Promise<Document<T>>;
     /**
      * Retrieve the document with the given bookmark
      */
-    getBookmark(bookmark: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document>;
+    getBookmark<T>(bookmark: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document<T>>): Promise<Document<T>>;
     previewSession(token: string, linkResolver: (doc: any) => string, defaultUrl: string, cb?: RequestCallback<string>): Promise<string>;
 }
