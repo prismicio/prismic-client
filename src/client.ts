@@ -1,4 +1,5 @@
 import ResolvedApi, { QueryOptions, EXPERIMENT_COOKIE, PREVIEW_COOKIE } from './ResolvedApi';
+import { Document } from "./documents";
 import ApiSearchResponse from './ApiSearchResponse';
 import { SearchForm, LazySearchForm } from './form';
 import { Experiment } from './experiments';

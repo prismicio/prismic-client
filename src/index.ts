@@ -1,8 +1,9 @@
-import PrismicPredicates  from './Predicates';
+import PrismicPredicates from './Predicates';
 import { Experiments as PrismicExperiment } from './experiments';
 import { DefaultClient } from './client';
 import PrismicApi, { ApiOptions } from './Api';
 import ResolvedApi, { EXPERIMENT_COOKIE, PREVIEW_COOKIE } from './ResolvedApi';
+import { Document } from "./documents";
 
 namespace Prismic {
 

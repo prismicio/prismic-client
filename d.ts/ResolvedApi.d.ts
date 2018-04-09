@@ -4,6 +4,7 @@ import { SearchForm, Form } from './form';
 import ApiSearchResponse from './ApiSearchResponse';
 import HttpClient from './HttpClient';
 import { Client } from './client';
+import { Document } from "./documents";
 export declare const PREVIEW_COOKIE = "io.prismic.preview";
 export declare const EXPERIMENT_COOKIE = "io.prismic.experiment";
 export interface Ref {

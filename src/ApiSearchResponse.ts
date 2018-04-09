@@ -1,3 +1,4 @@
+import { Document } from "./documents";
 export default interface ApiSearchResponse {
   page: number;
   results_per_page: number;
