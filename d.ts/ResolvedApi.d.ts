@@ -35,7 +35,7 @@ export interface PreviewResponse {
     mainDocument?: string;
 }
 export interface QueryOptions {
-    [key: string]: string | number | string[];
+    [key: string]: string | number;
 }
 export interface ResolvedApiOptions {
     req?: any;
