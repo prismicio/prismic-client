@@ -37,7 +37,7 @@ export interface PreviewResponse {
 }
 
 export interface QueryOptions {
-  [key: string]: string | number | string[];
+  [key: string]: string | number;
 }
 
 export interface ResolvedApiOptions {
@@ -217,7 +217,7 @@ export default class ResolvedApi implements Client {
         cb && cb(null, defaultUrl);
         return Promise.resolve(defaultUrl);
       } else {
-        return this.getByID(result.mainDocument).then((document) => {
+        return this.getByID(result.mainDocument, {ref: token}).then((document) => {
           if (!document) {
             cb && cb(null, defaultUrl);
             return defaultUrl;
