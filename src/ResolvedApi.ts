@@ -7,6 +7,7 @@ import Cookies from './Cookies';
 import ApiSearchResponse from './ApiSearchResponse';
 import HttpClient from './HttpClient';
 import { Client } from './client';
+import { Document } from "./documents";
 
 export const PREVIEW_COOKIE = 'io.prismic.preview';
 export const EXPERIMENT_COOKIE = 'io.prismic.experiment';
@@ -112,10 +113,10 @@ export default class ResolvedApi implements Client {
   /**
    * Query the repository
    */
-  query(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<ApiSearchResponse>, cb: RequestCallback<ApiSearchResponse> = () => {}): Promise<ApiSearchResponse> {
+  query(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<ApiSearchResponse>, cb: RequestCallback<ApiSearchResponse> = () => { }): Promise<ApiSearchResponse> {
     const { options, callback } = typeof optionsOrCallback === 'function'
-        ? { options: {} as QueryOptions, callback: optionsOrCallback }
-    : { options: optionsOrCallback || {}, callback: cb };
+      ? { options: {} as QueryOptions, callback: optionsOrCallback }
+      : { options: optionsOrCallback || {}, callback: cb };
 
     let form = this.everything();
     for (const key in options) {
@@ -148,8 +149,8 @@ export default class ResolvedApi implements Client {
    */
   queryFirst(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document>, cb?: RequestCallback<Document>): Promise<Document> {
     const { options, callback } = typeof optionsOrCallback === 'function'
-        ? { options: {} as QueryOptions, callback: optionsOrCallback }
-        : { options: optionsOrCallback || {}, callback: cb || (() => {}) };
+      ? { options: {} as QueryOptions, callback: optionsOrCallback }
+      : { options: optionsOrCallback || {}, callback: cb || (() => { }) };
 
     options.page = 1;
     options.pageSize = 1;

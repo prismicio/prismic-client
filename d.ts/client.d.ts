@@ -1,4 +1,5 @@
 import ResolvedApi, { QueryOptions } from './ResolvedApi';
+import { Document } from "./documents";
 import ApiSearchResponse from './ApiSearchResponse';
 import { LazySearchForm } from './form';
 import { RequestCallback } from './request';
