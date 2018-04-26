@@ -1,4 +1,4 @@
-export interface Document {
+export interface Document<T> {
     id: string;
     uid?: string;
     type: string;
@@ -10,5 +10,5 @@ export interface Document {
     alternateLanguages: string[];
     firstPublicationDate: Date | null;
     lastPublicationDate: Date | null;
-    data: any;
+    data: T;
 }

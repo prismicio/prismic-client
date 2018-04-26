@@ -1,4 +1,5 @@
-export default interface ApiSearchResponse {
+import { Document } from "./documents";
+export default interface ApiSearchResponse<T> {
     page: number;
     results_per_page: number;
     results_size: number;
@@ -6,5 +7,5 @@ export default interface ApiSearchResponse {
     total_pages: number;
     next_page: string;
     prev_page: string;
-    results: Document[];
+    results: Document<T>[];
 }

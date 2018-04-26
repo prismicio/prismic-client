@@ -7,6 +7,7 @@ import Cookies from './Cookies';
 import ApiSearchResponse from './ApiSearchResponse';
 import HttpClient from './HttpClient';
 import { Client } from './client';
+import { Document } from "./documents";
 
 export const PREVIEW_COOKIE = 'io.prismic.preview';
 export const EXPERIMENT_COOKIE = 'io.prismic.experiment';
@@ -112,10 +113,10 @@ export default class ResolvedApi implements Client {
   /**
    * Query the repository
    */
-  query(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<ApiSearchResponse>, cb: RequestCallback<ApiSearchResponse> = () => {}): Promise<ApiSearchResponse> {
+  query<T = any>(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<ApiSearchResponse<T>>, cb: RequestCallback<ApiSearchResponse<T>> = () => { }): Promise<ApiSearchResponse<T>> {
     const { options, callback } = typeof optionsOrCallback === 'function'
-        ? { options: {} as QueryOptions, callback: optionsOrCallback }
-    : { options: optionsOrCallback || {}, callback: cb };
+      ? { options: {} as QueryOptions, callback: optionsOrCallback }
+      : { options: optionsOrCallback || {}, callback: cb };
 
     let form = this.everything();
     for (const key in options) {
@@ -146,15 +147,15 @@ export default class ResolvedApi implements Client {
    * @param {object} additional parameters. In NodeJS, pass the request as 'req'.
    * @param {function} callback(err, doc)
    */
-  queryFirst(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document>, cb?: RequestCallback<Document>): Promise<Document> {
+  queryFirst<T = any>(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document<T>>, cb?: RequestCallback<Document<T>>): Promise<Document<T>> {
     const { options, callback } = typeof optionsOrCallback === 'function'
-        ? { options: {} as QueryOptions, callback: optionsOrCallback }
-        : { options: optionsOrCallback || {}, callback: cb || (() => {}) };
+      ? { options: {} as QueryOptions, callback: optionsOrCallback }
+      : { options: optionsOrCallback || {}, callback: cb || (() => { }) };
 
     options.page = 1;
     options.pageSize = 1;
 
-    return this.query(q, options).then((response) => {
+    return this.query<T>(q, options).then((response) => {
       const document = response && response.results && response.results[0];
       callback(null, document);
       return document;
@@ -167,7 +168,7 @@ export default class ResolvedApi implements Client {
   /**
    * Retrieve the document with the given id
    */
-  getByID(id: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
+  getByID<T = any>(id: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document<T>>): Promise<Document<T>> {
     const options = maybeOptions || {};
     if (!options.lang) options.lang = '*';
     return this.queryFirst(Predicates.at('document.id', id), options, cb);
@@ -176,7 +177,7 @@ export default class ResolvedApi implements Client {
   /**
    * Retrieve multiple documents from an array of id
    */
-  getByIDs(ids: string[], maybeOptions?: QueryOptions, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse> {
+  getByIDs<T = any>(ids: string[], maybeOptions?: QueryOptions, cb?: RequestCallback<ApiSearchResponse<T>>): Promise<ApiSearchResponse<T>> {
     const options = maybeOptions || {};
     if (!options.lang) options.lang = '*';
     return this.query(Predicates.in('document.id', ids), options, cb);
@@ -185,7 +186,7 @@ export default class ResolvedApi implements Client {
   /**
    * Retrieve the document with the given uid
    */
-  getByUID(type: string, uid: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
+  getByUID<T = any>(type: string, uid: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document<T>>): Promise<Document<T>> {
     const options = maybeOptions || {};
     if (!options.lang) options.lang = '*';
     return this.queryFirst(Predicates.at(`my.${type}.uid`, uid), options, cb);
@@ -194,7 +195,7 @@ export default class ResolvedApi implements Client {
   /**
    * Retrieve the singleton document with the given type
    */
-  getSingle(type: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
+  getSingle<T = any>(type: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document<T>>): Promise<Document<T>> {
     const options = maybeOptions || {};
     return this.queryFirst(Predicates.at('document.type', type), options, cb);
   }
@@ -202,7 +203,7 @@ export default class ResolvedApi implements Client {
   /**
    * Retrieve the document with the given bookmark
    */
-  getBookmark(bookmark: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
+  getBookmark<T = any>(bookmark: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document<T>>): Promise<Document<T>> {
     const id = this.data.bookmarks[bookmark];
     if (id) {
       return this.getByID(id, maybeOptions, cb);
