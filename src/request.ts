@@ -1,6 +1,7 @@
+import { fetch } from 'cross-fetch';
+
 // Number of maximum simultaneous connections to the prismic server
 const MAX_CONNECTIONS: number = 20;
-
 // Number of requests currently running (capped by MAX_CONNECTIONS)
 let running: number = 0;
 

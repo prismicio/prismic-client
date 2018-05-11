@@ -16,7 +16,6 @@ if (yargs.argv.p) {
  
 var config = {
   entry: [
-    'cross-fetch',
     __dirname + '/src/index.ts'
   ],
   output: {
@@ -47,12 +46,6 @@ var config = {
     ]
   },
   externals: [{
-    "cross-fetch": {
-      root: 'cross-fetch',
-      commonjs2: 'cross-fetch',
-      commonjs: 'cross-fetch',
-      amd: 'cross-fetch'
-    }
   }],
   resolve: {
     alias:{
