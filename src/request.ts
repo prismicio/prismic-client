@@ -30,9 +30,16 @@ function fetchRequest<T>(url: string, options: RequestHandlerOption, callback: R
 
   fetch(url, fetchOptions).then((xhr) => {
     if (~~(xhr.status / 100 !== 2)) {
-      const e: any = new Error(`Unexpected status code [${xhr.status}] on URL ${url}`);
-      e.status = xhr.status;
-      throw e;
+        /**
+         * @description
+         * drain the xhr before throwing an error to prevent memory leaks
+         * @link https://github.com/bitinn/node-fetch/issues/83
+         */
+      return xhr.text().then(() => {
+        const e: any = new Error(`Unexpected status code [${xhr.status}] on URL ${url}`);
+        e.status = xhr.status;
+        throw e;
+      });
     } else {
       return xhr.json().then((result) => {
         const cacheControl = xhr.headers.get('cache-control');
