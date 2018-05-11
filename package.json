@@ -39,6 +39,6 @@
     "lint": "tslint src/**/*.ts -e src/lru.ts -e src/Cookies.ts"
   },
   "dependencies": {
-    "fetch-everywhere": "^1.0.5"
+    "cross-fetch": "^2.2.0"
   }
 }
