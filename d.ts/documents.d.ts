@@ -6,8 +6,8 @@ export interface Document {
     tags: string[];
     slugs: string[];
     lang?: string;
-    alternateLanguages: string[];
-    firstPublicationDate: Date | null;
-    lastPublicationDate: Date | null;
+    alternate_languages: string[];
+    first_publication_date: string | null;
+    last_publication_date: string | null;
     data: any;
 }
