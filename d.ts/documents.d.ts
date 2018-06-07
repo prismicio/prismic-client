@@ -4,7 +4,6 @@ export interface Document {
     type: string;
     href: string;
     tags: string[];
-    slug: string;
     slugs: string[];
     lang?: string;
     alternateLanguages: string[];
