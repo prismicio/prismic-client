@@ -202,7 +202,7 @@ describe('Api', function() {
 
   it('should query one document by uid', function(done) {
     getApi().then(function(api) {
-      return api.getByUID('how-to-query-the-api').then(function(document) {
+      return api.getByUID('product', 'how-to-query-the-api').then(function(document) {
         assert.strictEqual(document.id, 'WW4bKScAAMAqmluX');
 
         done();
