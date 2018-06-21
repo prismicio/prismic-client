@@ -1,3 +1,4 @@
+import { Document } from "./documents";
 import { RequestHandler, RequestCallback } from './request';
 import { ApiCache } from './cache';
 import { Experiment, Experiments } from './experiments';

@@ -1,3 +1,4 @@
+import { Document } from "./documents";
 import { RequestCallback } from './request';
 import { Experiment, Experiments } from './experiments';
 import { SearchForm, Form } from './form';

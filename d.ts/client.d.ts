@@ -1,3 +1,4 @@
+import { Document } from "./documents";
 import ResolvedApi, { QueryOptions } from './ResolvedApi';
 import ApiSearchResponse from './ApiSearchResponse';
 import { LazySearchForm } from './form';
