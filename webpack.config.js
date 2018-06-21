@@ -4,18 +4,19 @@ var webpack = require('webpack'),
  
 var fileName = 'prismic-javascript',
     libraryName = 'PrismicJS',
-    plugins = [],
     outputFile;
- 
+
 if (yargs.argv.p) {
-  plugins.push(new webpack.optimize.UglifyJsPlugin({ minimize: true }));
   outputFile = fileName + '.min.js';
 } else {
   outputFile = fileName + '.js';
 }
  
 var config = {
+  mode: yargs.argv.p ? 'production' : 'development',
   entry: [
+    'promise-polyfill/src/polyfill',
+    'cross-fetch/polyfill',
     __dirname + '/src/index.ts'
   ],
   output: {
@@ -23,7 +24,11 @@ var config = {
     filename: outputFile,
     library: libraryName,
     libraryTarget: 'umd',
-    umdNamedDefine: true
+    umdNamedDefine: true,
+    globalObject: 'typeof self !== \'undefined\' ? self : this'
+  },
+  optimization: {
+    minimize: !!yargs.argv.p,
   },
   module: {
     rules: [
@@ -45,15 +50,12 @@ var config = {
       }
     ]
   },
-  externals: [{
-  }],
   resolve: {
     alias:{
       "@root": path.resolve( __dirname, './src' )
     },
-    extensions: ['.ts']
-  },
-  plugins: plugins
+    extensions: ['.ts', '.js']
+  }
 };
  
 module.exports = config;
