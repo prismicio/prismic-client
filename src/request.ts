@@ -32,7 +32,10 @@ function fetchRequest<T>(url: string, options: RequestHandlerOption, callback: R
     if (~~(xhr.status / 100 !== 2)) {
       const e: any = new Error(`Unexpected status code [${xhr.status}] on URL ${url}`);
       e.status = xhr.status;
-      throw e;
+      xhr.json()
+        .then((json) => e.message = json)
+        .catch(() => e.message = null)
+        .finally(() => throw e)
     } else {
       return xhr.json().then((result) => {
         const cacheControl = xhr.headers.get('cache-control');
