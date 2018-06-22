@@ -33,9 +33,14 @@ function fetchRequest<T>(url: string, options: RequestHandlerOption, callback: R
       const e: any = new Error(`Unexpected status code [${xhr.status}] on URL ${url}`);
       e.status = xhr.status;
       xhr.json()
-        .then((json) => e.message = json)
-        .catch(() => e.message = null)
-        .finally(() => throw e)
+        .then((json) => {
+          e.message = json;
+          throw e;
+        })
+        .catch(() => {
+          e.message = null;
+          throw e;
+        })
     } else {
       return xhr.json().then((result) => {
         const cacheControl = xhr.headers.get('cache-control');
