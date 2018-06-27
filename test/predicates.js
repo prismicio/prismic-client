@@ -248,6 +248,11 @@ describe('Predicates', function() {
     );
 
     assert.strictEqual(
+      Prismic.Predicates.dayOfWeek('my.product.date', 'monday'),
+      '[date.day-of-week(my.product.date, "monday")]'
+    );
+
+    assert.strictEqual(
       Prismic.Predicates.dayOfWeek('my.product.date', 2),
       '[date.day-of-week(my.product.date, 2)]'
     );
@@ -260,6 +265,11 @@ describe('Predicates', function() {
     );
 
     assert.strictEqual(
+      Prismic.Predicates.dayOfWeekAfter('my.product.date', 'monday'),
+      '[date.day-of-week-after(my.product.date, "monday")]'
+    );
+
+    assert.strictEqual(
       Prismic.Predicates.dayOfWeekAfter('my.product.date', 2),
       '[date.day-of-week-after(my.product.date, 2)]'
     );
@@ -269,6 +279,11 @@ describe('Predicates', function() {
     assert.strictEqual(
       Prismic.Predicates.date.dayOfWeekBefore('my.product.date', 2),
       '[date.day-of-week-before(my.product.date, 2)]'
+    );
+
+    assert.strictEqual(
+      Prismic.Predicates.dayOfWeekBefore('my.product.date', 'monday'),
+      '[date.day-of-week-before(my.product.date, "monday")]'
     );
 
     assert.strictEqual(

@@ -21,9 +21,9 @@ declare namespace Prismic {
             dayOfMonth(fragment: string, day: number): string;
             dayOfMonthAfter(fragment: string, day: number): string;
             dayOfMonthBefore(fragment: string, day: number): string;
-            dayOfWeek(fragment: string, day: number): string;
-            dayOfWeekAfter(fragment: string, day: number): string;
-            dayOfWeekBefore(fragment: string, day: number): string;
+            dayOfWeek(fragment: string, day: string | number): string;
+            dayOfWeekAfter(fragment: string, day: string | number): string;
+            dayOfWeekBefore(fragment: string, day: string | number): string;
             month(fragment: string, month: string | number): string;
             monthBefore(fragment: string, month: string | number): string;
             monthAfter(fragment: string, month: string | number): string;
@@ -38,9 +38,9 @@ declare namespace Prismic {
         dayOfMonth: (fragment: string, day: number) => string;
         dayOfMonthAfter: (fragment: string, day: number) => string;
         dayOfMonthBefore: (fragment: string, day: number) => string;
-        dayOfWeek: (fragment: string, day: number) => string;
-        dayOfWeekAfter: (fragment: string, day: number) => string;
-        dayOfWeekBefore: (fragment: string, day: number) => string;
+        dayOfWeek: (fragment: string, day: string | number) => string;
+        dayOfWeekAfter: (fragment: string, day: string | number) => string;
+        dayOfWeekBefore: (fragment: string, day: string | number) => string;
         month: (fragment: string, month: string | number) => string;
         monthBefore: (fragment: string, month: string | number) => string;
         monthAfter: (fragment: string, month: string | number) => string;

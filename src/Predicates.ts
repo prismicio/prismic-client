@@ -77,40 +77,28 @@ const date = {
     return `[${OPERATOR.dateDayOfMonthBefore}(${fragment}, ${day})]`;
   },
 
-  dayOfWeek(fragment: string, day: number): string {
-    return `[${OPERATOR.dateDayOfWeek}(${fragment}, ${day})]`;
+  dayOfWeek(fragment: string, day: number | string): string {
+    return `[${OPERATOR.dateDayOfWeek}(${fragment}, ${encode(day)})]`;
   },
 
-  dayOfWeekAfter(fragment: string, day: number): string {
-    return `[${OPERATOR.dateDayOfWeekAfter}(${fragment}, ${day})]`;
+  dayOfWeekAfter(fragment: string, day: number | string): string {
+    return `[${OPERATOR.dateDayOfWeekAfter}(${fragment}, ${encode(day)})]`;
   },
 
-  dayOfWeekBefore(fragment: string, day: number): string {
-    return `[${OPERATOR.dateDayOfWeekBefore}(${fragment}, ${day})]`;
+  dayOfWeekBefore(fragment: string, day: number | string): string {
+    return `[${OPERATOR.dateDayOfWeekBefore}(${fragment}, ${encode(day)})]`;
   },
 
   month(fragment: string, month: number | string): string {
-    if (typeof month === 'number') {
-      return `[${OPERATOR.dateMonth}(${fragment}, ${month})]`;
-    } else {
-      return `[${OPERATOR.dateMonth}(${fragment}, "${month}")]`;
-    }
+    return `[${OPERATOR.dateMonth}(${fragment}, ${encode(month)})]`;
   },
 
   monthBefore(fragment: string, month: number | string): string {
-    if (typeof month === 'number') {
-      return `[${OPERATOR.dateMonthBefore}(${fragment}, ${month})]`;
-    } else {
-      return `[${OPERATOR.dateMonthBefore}(${fragment}, "${month}")]`;
-    }
+    return `[${OPERATOR.dateMonthBefore}(${fragment}, ${encode(month)})]`;
   },
 
   monthAfter(fragment: string, month: number | string): string {
-    if (typeof month === 'number') {
-      return `[${OPERATOR.dateMonthAfter}(${fragment}, ${month})]`;
-    } else {
-      return `[${OPERATOR.dateMonthAfter}(${fragment}, "${month}")]`;
-    }
+    return `[${OPERATOR.dateMonthAfter}(${fragment}, ${encode(month)})]`;
   },
 
   year(fragment: string, year: number): string {
