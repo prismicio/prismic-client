@@ -29,15 +29,19 @@ const OPERATOR = {
   GeopointNear: 'geopoint.near',
 };
 
-function encode(value: string | string[]): string | null {
+type PredicateValue = string | number | Date;
+
+function encode(value: PredicateValue | PredicateValue[]): string {
   if (typeof value === 'string') {
     return `"${value}"`;
+  } else if (typeof value === 'number') {
+    return value.toString();
+  } else if (value instanceof Date) {
+    return value.getTime().toString();
   } else if (value instanceof Array) {
     return `[${value.map(v => encode(v)).join(',')}]`;
-  } else if (typeof value === 'number') {
-    return value;
   } else {
-    return null;
+    throw new Error(`Unable to encode ${value} of type ${typeof value}`);
   }
 }
 
@@ -49,16 +53,16 @@ const geopoint = {
 
 const date = {
 
-  before(fragment: string, before: Date): string {
-    return `[${OPERATOR.dateBefore}(${fragment}, ${before.getTime()})]`;
+  before(fragment: string, before: PredicateValue): string {
+    return `[${OPERATOR.dateBefore}(${fragment}, ${encode(before)})]`;
   },
 
-  after(fragment: string, after: Date): string {
-    return `[${OPERATOR.dateAfter}(${fragment}, ${after.getTime()})]`;
+  after(fragment: string, after: PredicateValue): string {
+    return `[${OPERATOR.dateAfter}(${fragment}, ${encode(after)})]`;
   },
 
-  between(fragment: string, before: Date, after: Date): string {
-    return `[${OPERATOR.dateBetween}(${fragment}, ${before.getTime()}, ${after.getTime()})]`;
+  between(fragment: string, before: PredicateValue, after: PredicateValue): string {
+    return `[${OPERATOR.dateBetween}(${fragment}, ${encode(before)}, ${encode(after)})]`;
   },
 
   dayOfMonth(fragment: string, day: number): string {
@@ -73,40 +77,28 @@ const date = {
     return `[${OPERATOR.dateDayOfMonthBefore}(${fragment}, ${day})]`;
   },
 
-  dayOfWeek(fragment: string, day: number): string {
-    return `[${OPERATOR.dateDayOfWeek}(${fragment}, ${day})]`;
+  dayOfWeek(fragment: string, day: number | string): string {
+    return `[${OPERATOR.dateDayOfWeek}(${fragment}, ${encode(day)})]`;
   },
 
-  dayOfWeekAfter(fragment: string, day: number): string {
-    return `[${OPERATOR.dateDayOfWeekAfter}(${fragment}, ${day})]`;
+  dayOfWeekAfter(fragment: string, day: number | string): string {
+    return `[${OPERATOR.dateDayOfWeekAfter}(${fragment}, ${encode(day)})]`;
   },
 
-  dayOfWeekBefore(fragment: string, day: number): string {
-    return `[${OPERATOR.dateDayOfWeekBefore}(${fragment}, ${day})]`;
+  dayOfWeekBefore(fragment: string, day: number | string): string {
+    return `[${OPERATOR.dateDayOfWeekBefore}(${fragment}, ${encode(day)})]`;
   },
 
   month(fragment: string, month: number | string): string {
-    if (typeof month === 'number') {
-      return `[${OPERATOR.dateMonth}(${fragment}, ${month})]`;
-    } else {
-      return `[${OPERATOR.dateMonth}(${fragment}, "${month}")]`;
-    }
+    return `[${OPERATOR.dateMonth}(${fragment}, ${encode(month)})]`;
   },
 
   monthBefore(fragment: string, month: number | string): string {
-    if (typeof month === 'number') {
-      return `[${OPERATOR.dateMonthBefore}(${fragment}, ${month})]`;
-    } else {
-      return `[${OPERATOR.dateMonthBefore}(${fragment}, "${month}")]`;
-    }
+    return `[${OPERATOR.dateMonthBefore}(${fragment}, ${encode(month)})]`;
   },
 
   monthAfter(fragment: string, month: number | string): string {
-    if (typeof month === 'number') {
-      return `[${OPERATOR.dateMonthAfter}(${fragment}, ${month})]`;
-    } else {
-      return `[${OPERATOR.dateMonthAfter}(${fragment}, "${month}")]`;
-    }
+    return `[${OPERATOR.dateMonthAfter}(${fragment}, ${encode(month)})]`;
   },
 
   year(fragment: string, year: number): string {
@@ -141,11 +133,11 @@ const number = {
 };
 
 export default {
-  at(fragment: string, value: string | string[]): string {
+  at(fragment: string, value: PredicateValue | PredicateValue[]): string {
     return `[${OPERATOR.at}(${fragment}, ${encode(value)})]`;
   },
   
-  not(fragment: string, value: string): string {
+  not(fragment: string, value: PredicateValue | PredicateValue[]): string {
     return `[${OPERATOR.not}(${fragment}, ${encode(value)})]`;
   },
 
@@ -157,7 +149,7 @@ export default {
     return `[${OPERATOR.has}(${fragment})]`;
   },
 
-  any(fragment: string, values: string[]): string {
+  any(fragment: string, values: PredicateValue[]): string {
     return `[${OPERATOR.any}(${fragment}, ${encode(values)})]`;
   },
 

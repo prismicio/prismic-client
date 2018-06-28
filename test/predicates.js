@@ -5,14 +5,45 @@ var Prismic = require(path.join(__dirname, '../', 'dist', 'prismic-javascript.mi
 
 describe('Predicates', function() {
 
-  it('should build at query with string value', function() {
+  it('should build at query with number value', function() {
     assert.strictEqual(
       Prismic.Predicates.at('my.product.price', 10),
       '[at(my.product.price, 10)]'
     );
   });
 
-  it('should build at query with number value', function() {
+  it('should build at query with date value', function() {
+    var date = new Date();
+    assert.strictEqual(
+      Prismic.Predicates.at('my.product.date', date),
+      '[at(my.product.date, ' + date.getTime() + ')]'
+    );
+  });
+
+  it('should build at query with date values', function() {
+    var dateA = new Date();
+    var dateB = new Date();
+    assert.strictEqual(
+      Prismic.Predicates.at('my.product.date', [dateA, dateB]),
+      '[at(my.product.date, [' + dateA.getTime() + ',' + dateB.getTime() + '])]'
+    );
+  });
+
+  it('should build at query with number values', function() {
+    assert.strictEqual(
+      Prismic.Predicates.at('my.product.price', [10, 11]),
+      '[at(my.product.price, [10,11])]'
+    );
+  });
+
+  it('should build at query with string values', function() {
+    assert.strictEqual(
+      Prismic.Predicates.at('document.tags', ['tagA', 'tagB']),
+      '[at(document.tags, ["tagA","tagB"])]'
+    );
+  });
+
+  it('should build at query with string value', function() {
     assert.strictEqual(
       Prismic.Predicates.at('my.product.type', 'chair'),
       '[at(my.product.type, "chair")]'
@@ -106,8 +137,36 @@ describe('Predicates', function() {
     );
   });
 
-  it('should build date.before query', function() {
+  it('should build date.before query with timestamp value', function() {
     var date = new Date();
+    var timestamp = date.getTime();
+
+    assert.strictEqual(
+      Prismic.Predicates.date.before('my.product.date', timestamp),
+      '[date.before(my.product.date, ' + timestamp + ')]'
+    );
+
+    assert.strictEqual(
+      Prismic.Predicates.dateBefore('my.product.date', timestamp),
+      '[date.before(my.product.date, ' + timestamp + ')]'
+    );
+  });
+
+  it('should build date.before query with string value', function() {
+    assert.strictEqual(
+      Prismic.Predicates.date.before('my.product.date', '2017-08-24'),
+      '[date.before(my.product.date, "2017-08-24")]'
+    );
+
+    assert.strictEqual(
+      Prismic.Predicates.dateBefore('my.product.date', '2017-08-24'),
+      '[date.before(my.product.date, "2017-08-24")]'
+    );
+  });
+
+  it('should build date.before query with Date value', function() {
+    var date = new Date();
+
     assert.strictEqual(
       Prismic.Predicates.date.before('my.product.date', date),
       '[date.before(my.product.date, ' + date.getTime() + ')]'
@@ -189,6 +248,11 @@ describe('Predicates', function() {
     );
 
     assert.strictEqual(
+      Prismic.Predicates.dayOfWeek('my.product.date', 'monday'),
+      '[date.day-of-week(my.product.date, "monday")]'
+    );
+
+    assert.strictEqual(
       Prismic.Predicates.dayOfWeek('my.product.date', 2),
       '[date.day-of-week(my.product.date, 2)]'
     );
@@ -201,6 +265,11 @@ describe('Predicates', function() {
     );
 
     assert.strictEqual(
+      Prismic.Predicates.dayOfWeekAfter('my.product.date', 'monday'),
+      '[date.day-of-week-after(my.product.date, "monday")]'
+    );
+
+    assert.strictEqual(
       Prismic.Predicates.dayOfWeekAfter('my.product.date', 2),
       '[date.day-of-week-after(my.product.date, 2)]'
     );
@@ -210,6 +279,11 @@ describe('Predicates', function() {
     assert.strictEqual(
       Prismic.Predicates.date.dayOfWeekBefore('my.product.date', 2),
       '[date.day-of-week-before(my.product.date, 2)]'
+    );
+
+    assert.strictEqual(
+      Prismic.Predicates.dayOfWeekBefore('my.product.date', 'monday'),
+      '[date.day-of-week-before(my.product.date, "monday")]'
     );
 
     assert.strictEqual(
