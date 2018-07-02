@@ -67,7 +67,7 @@ describe('Prismic', function() {
   });
 
   it('should query one document by uid', function(done) {
-    client.getByUID('how-to-query-the-api').then(function(document) {
+    client.getByUID('product', 'how-to-query-the-api').then(function(document) {
       assert.strictEqual(document.id, 'WW4bKScAAMAqmluX');
       done();
     }).catch(done);
