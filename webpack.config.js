@@ -1,7 +1,7 @@
 var webpack = require('webpack'),
     path = require('path'),
     yargs = require('yargs');
- 
+
 var fileName = 'prismic-javascript',
     libraryName = 'PrismicJS',
     outputFile;
@@ -11,7 +11,7 @@ if (yargs.argv.p) {
 } else {
   outputFile = fileName + '.js';
 }
- 
+
 var config = {
   mode: yargs.argv.p ? 'production' : 'development',
   entry: [
@@ -19,6 +19,14 @@ var config = {
     'cross-fetch/polyfill',
     __dirname + '/src/index.ts'
   ],
+  externals: [{
+    "cross-fetch/polyfill": {
+      root: 'cross-fetch/polyfill',
+      commonjs2: 'cross-fetch/polyfill',
+      commonjs: 'cross-fetch/polyfill',
+      amd: 'cross-fetch/polyfill'
+    }
+  }],
   output: {
     path: path.join(__dirname, '/dist'),
     filename: outputFile,
@@ -57,5 +65,5 @@ var config = {
     extensions: ['.ts', '.js']
   }
 };
- 
+
 module.exports = config;
