@@ -2,8 +2,7 @@ export interface Cookie {
     [key: string]: string;
     value: string;
 }
-declare function parse(str: string, options?: any): Cookie;
 declare const _default: {
-    parse: typeof parse;
+    parse: (str: string, options?: any) => Cookie;
 };
 export default _default;
