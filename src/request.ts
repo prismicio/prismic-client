@@ -1,3 +1,14 @@
+// Polyfill fetch in node
+// See https://github.com/lquixada/cross-fetch/blob/master/src/node-polyfill.js
+if (typeof window === 'undefined' && global && !(global as any).fetch) {
+  const fetchNode = require('node-fetch');
+
+  (global as any).fetch = fetchNode;
+  (global as any).Response = fetchNode.Response;
+  (global as any).Headers = fetchNode.Headers;
+  (global as any).Request = fetchNode.Request;
+}
+
 // Number of maximum simultaneous connections to the prismic server
 const MAX_CONNECTIONS: number = 20;
 // Number of requests currently running (capped by MAX_CONNECTIONS)

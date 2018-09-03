@@ -14,17 +14,13 @@ if (yargs.argv.p) {
 
 var config = {
   mode: yargs.argv.p ? 'production' : 'development',
-  entry: [
-    'promise-polyfill/src/polyfill',
-    'cross-fetch/polyfill',
-    __dirname + '/src/index.ts'
-  ],
+  entry: __dirname + '/src/index.ts',
   externals: [{
-    "cross-fetch/polyfill": {
-      root: 'cross-fetch/polyfill',
-      commonjs2: 'cross-fetch/polyfill',
-      commonjs: 'cross-fetch/polyfill',
-      amd: 'cross-fetch/polyfill'
+    'node-fetch': {
+      root: 'node-fetch',
+      commonjs2: 'node-fetch',
+      commonjs: 'node-fetch',
+      amd: 'node-fetch'
     }
   }],
   output: {

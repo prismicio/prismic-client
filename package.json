@@ -40,7 +40,6 @@
     "lint": "tslint src/**/*.ts -e src/lru.ts -e src/Cookies.ts"
   },
   "dependencies": {
-    "cross-fetch": "^2.2.0",
-    "promise-polyfill": "8.0.0"
+    "node-fetch": "^2.2.0"
   }
 }
