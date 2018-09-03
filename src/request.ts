@@ -1,3 +1,16 @@
+// Polyfill fetch in node
+if (typeof window === 'undefined' && global && !(global as any).fetch) {
+  const fetchNode = require('node-fetch');
+  const fetch = fetchNode.fetch.bind({});
+
+  fetch.polyfill = true;
+
+  (global as any).fetch = fetch;
+  (global as any).Response = fetchNode.Response;
+  (global as any).Headers = fetchNode.Headers;
+  (global as any).Request = fetchNode.Request;
+}
+
 // Number of maximum simultaneous connections to the prismic server
 const MAX_CONNECTIONS: number = 20;
 // Number of requests currently running (capped by MAX_CONNECTIONS)
