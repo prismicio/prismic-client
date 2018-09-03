@@ -2,11 +2,8 @@
 // See https://github.com/lquixada/cross-fetch/blob/master/src/node-polyfill.js
 if (typeof window === 'undefined' && global && !(global as any).fetch) {
   const fetchNode = require('node-fetch');
-  const fetch = fetchNode.fetch.bind({});
 
-  fetch.polyfill = true;
-
-  (global as any).fetch = fetch;
+  (global as any).fetch = fetchNode;
   (global as any).Response = fetchNode.Response;
   (global as any).Headers = fetchNode.Headers;
   (global as any).Request = fetchNode.Request;
