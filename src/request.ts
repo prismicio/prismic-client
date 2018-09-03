@@ -1,4 +1,5 @@
 // Polyfill fetch in node
+// See https://github.com/lquixada/cross-fetch/blob/master/src/node-polyfill.js
 if (typeof window === 'undefined' && global && !(global as any).fetch) {
   const fetchNode = require('node-fetch');
   const fetch = fetchNode.fetch.bind({});
