@@ -1,122 +1,127 @@
-class Variation {
-    constructor(data) {
+var Variation = /** @class */ (function () {
+    function Variation(data) {
         this.data = {};
         this.data = data;
     }
-    id() {
+    Variation.prototype.id = function () {
         return this.data.id;
-    }
-    ref() {
+    };
+    Variation.prototype.ref = function () {
         return this.data.ref;
-    }
-    label() {
+    };
+    Variation.prototype.label = function () {
         return this.data.label;
-    }
-}
-class Experiment {
-    constructor(data) {
+    };
+    return Variation;
+}());
+var Experiment = /** @class */ (function () {
+    function Experiment(data) {
         this.data = {};
         this.data = data;
-        this.variations = (data.variations || []).map((v) => {
+        this.variations = (data.variations || []).map(function (v) {
             return new Variation(v);
         });
     }
-    id() {
+    Experiment.prototype.id = function () {
         return this.data.id;
-    }
-    googleId() {
+    };
+    Experiment.prototype.googleId = function () {
         return this.data.googleId;
-    }
-    name() {
+    };
+    Experiment.prototype.name = function () {
         return this.data.name;
-    }
-}
-class Experiments {
-    constructor(data) {
+    };
+    return Experiment;
+}());
+var Experiments = /** @class */ (function () {
+    function Experiments(data) {
         if (data) {
-            this.drafts = (data.drafts || []).map((exp) => {
+            this.drafts = (data.drafts || []).map(function (exp) {
                 return new Experiment(exp);
             });
-            this.running = (data.running || []).map((exp) => {
+            this.running = (data.running || []).map(function (exp) {
                 return new Experiment(exp);
             });
         }
     }
-    current() {
+    Experiments.prototype.current = function () {
         if (this.running.length > 0) {
             return this.running[0];
         }
         else {
             return null;
         }
-    }
-    refFromCookie(cookie) {
+    };
+    Experiments.prototype.refFromCookie = function (cookie) {
         if (!cookie || cookie.trim() === '')
             return null;
-        const splitted = cookie.trim().split(' ');
+        var splitted = cookie.trim().split(' ');
         if (splitted.length < 2)
             return null;
-        const expId = splitted[0];
-        const varIndex = parseInt(splitted[1], 10);
-        const exp = this.running.filter((exp) => {
+        var expId = splitted[0];
+        var varIndex = parseInt(splitted[1], 10);
+        var exp = this.running.filter(function (exp) {
             return exp.googleId() === expId && exp.variations.length > varIndex;
         })[0];
         return exp ? exp.variations[varIndex].ref() : null;
-    }
-}
+    };
+    return Experiments;
+}());
 
-class LazySearchForm {
-    constructor(id, api) {
+var LazySearchForm = /** @class */ (function () {
+    function LazySearchForm(id, api) {
         this.id = id;
         this.api = api;
         this.fields = {};
     }
-    set(key, value) {
+    LazySearchForm.prototype.set = function (key, value) {
         this.fields[key] = value;
         return this;
-    }
-    ref(ref) {
+    };
+    LazySearchForm.prototype.ref = function (ref) {
         return this.set('ref', ref);
-    }
-    query(query) {
+    };
+    LazySearchForm.prototype.query = function (query) {
         return this.set('q', query);
-    }
-    pageSize(size) {
+    };
+    LazySearchForm.prototype.pageSize = function (size) {
         return this.set('pageSize', size);
-    }
-    fetch(fields) {
+    };
+    LazySearchForm.prototype.fetch = function (fields) {
         return this.set('fetch', fields);
-    }
-    fetchLinks(fields) {
+    };
+    LazySearchForm.prototype.fetchLinks = function (fields) {
         return this.set('fetchLinks', fields);
-    }
-    lang(langCode) {
+    };
+    LazySearchForm.prototype.lang = function (langCode) {
         return this.set('lang', langCode);
-    }
-    page(p) {
+    };
+    LazySearchForm.prototype.page = function (p) {
         return this.set('page', p);
-    }
-    after(documentId) {
+    };
+    LazySearchForm.prototype.after = function (documentId) {
         return this.set('after', documentId);
-    }
-    orderings(orderings) {
+    };
+    LazySearchForm.prototype.orderings = function (orderings) {
         return this.set('orderings', orderings);
-    }
-    url() {
-        return this.api.get().then((api) => {
-            return LazySearchForm.toSearchForm(this, api).url();
+    };
+    LazySearchForm.prototype.url = function () {
+        var _this = this;
+        return this.api.get().then(function (api) {
+            return LazySearchForm.toSearchForm(_this, api).url();
         });
-    }
-    submit(cb) {
-        return this.api.get().then((api) => {
-            return LazySearchForm.toSearchForm(this, api).submit(cb);
+    };
+    LazySearchForm.prototype.submit = function (cb) {
+        var _this = this;
+        return this.api.get().then(function (api) {
+            return LazySearchForm.toSearchForm(_this, api).submit(cb);
         });
-    }
-    static toSearchForm(lazyForm, api) {
-        const form = api.form(lazyForm.id);
+    };
+    LazySearchForm.toSearchForm = function (lazyForm, api) {
+        var form = api.form(lazyForm.id);
         if (form) {
-            return Object.keys(lazyForm.fields).reduce((form, fieldKey) => {
-                const fieldValue = lazyForm.fields[fieldKey];
+            return Object.keys(lazyForm.fields).reduce(function (form, fieldKey) {
+                var fieldValue = lazyForm.fields[fieldKey];
                 if (fieldKey === 'q') {
                     return form.query(fieldValue);
                 }
@@ -147,27 +152,28 @@ class LazySearchForm {
             }, form);
         }
         else {
-            throw new Error(`Unable to access to form ${lazyForm.id}`);
+            throw new Error("Unable to access to form " + lazyForm.id);
         }
-    }
-}
-class SearchForm {
-    constructor(form, httpClient) {
+    };
+    return LazySearchForm;
+}());
+var SearchForm = /** @class */ (function () {
+    function SearchForm(form, httpClient) {
         this.httpClient = httpClient;
         this.form = form;
         this.data = {};
-        for (const field in form.fields) {
+        for (var field in form.fields) {
             if (form.fields[field]['default']) {
                 this.data[field] = [form.fields[field]['default']];
             }
         }
     }
-    set(field, value) {
-        const fieldDesc = this.form.fields[field];
+    SearchForm.prototype.set = function (field, value) {
+        var fieldDesc = this.form.fields[field];
         if (!fieldDesc)
             throw new Error('Unknown field ' + field);
-        const checkedValue = value === '' || value === undefined ? null : value;
-        let values = this.data[field] || [];
+        var checkedValue = value === '' || value === undefined ? null : value;
+        var values = this.data[field] || [];
         if (fieldDesc.multiple) {
             values = checkedValue ? values.concat([checkedValue]) : values;
         }
@@ -176,94 +182,94 @@ class SearchForm {
         }
         this.data[field] = values;
         return this;
-    }
+    };
     /**
      * Sets a ref to query on for this SearchForm. This is a mandatory
      * method to call before calling submit(), and api.form('everything').submit()
      * will not work.
      */
-    ref(ref) {
+    SearchForm.prototype.ref = function (ref) {
         return this.set('ref', ref);
-    }
+    };
     /**
      * Sets a predicate-based query for this SearchForm. This is where you
      * paste what you compose in your prismic.io API browser.
      */
-    query(query) {
+    SearchForm.prototype.query = function (query) {
         if (typeof query === 'string') {
             return this.query([query]);
         }
         else if (query instanceof Array) {
-            return this.set('q', `[${query.join('')}]`);
+            return this.set('q', "[" + query.join('') + "]");
         }
         else {
-            throw new Error(`Invalid query : ${query}`);
+            throw new Error("Invalid query : " + query);
         }
-    }
+    };
     /**
      * Sets a page size to query for this SearchForm. This is an optional method.
      *
      * @param {number} size - The page size
      * @returns {SearchForm} - The SearchForm itself
      */
-    pageSize(size) {
+    SearchForm.prototype.pageSize = function (size) {
         return this.set('pageSize', size);
-    }
+    };
     /**
      * Restrict the results document to the specified fields
      */
-    fetch(fields) {
-        const strFields = fields instanceof Array ? fields.join(',') : fields;
+    SearchForm.prototype.fetch = function (fields) {
+        var strFields = fields instanceof Array ? fields.join(',') : fields;
         return this.set('fetch', strFields);
-    }
+    };
     /**
      * Include the requested fields in the DocumentLink instances in the result
      */
-    fetchLinks(fields) {
-        const strFields = fields instanceof Array ? fields.join(',') : fields;
+    SearchForm.prototype.fetchLinks = function (fields) {
+        var strFields = fields instanceof Array ? fields.join(',') : fields;
         return this.set('fetchLinks', strFields);
-    }
+    };
     /**
      * Sets the language to query for this SearchForm. This is an optional method.
      */
-    lang(langCode) {
+    SearchForm.prototype.lang = function (langCode) {
         return this.set('lang', langCode);
-    }
+    };
     /**
      * Sets the page number to query for this SearchForm. This is an optional method.
      */
-    page(p) {
+    SearchForm.prototype.page = function (p) {
         return this.set('page', p);
-    }
+    };
     /**
      * Remove all the documents except for those after the specified document in the list. This is an optional method.
      */
-    after(documentId) {
+    SearchForm.prototype.after = function (documentId) {
         return this.set('after', documentId);
-    }
+    };
     /**
      * Sets the orderings to query for this SearchForm. This is an optional method.
      */
-    orderings(orderings) {
+    SearchForm.prototype.orderings = function (orderings) {
         if (!orderings) {
             return this;
         }
         else {
-            return this.set('orderings', `[${orderings.join(',')}]`);
+            return this.set('orderings', "[" + orderings.join(',') + "]");
         }
-    }
+    };
     /**
      * Build the URL to query
      */
-    url() {
-        let url = this.form.action;
+    SearchForm.prototype.url = function () {
+        var url = this.form.action;
         if (this.data) {
-            let sep = (url.indexOf('?') > -1 ? '&' : '?');
-            for (const key in this.data) {
+            var sep = (url.indexOf('?') > -1 ? '&' : '?');
+            for (var key in this.data) {
                 if (this.data.hasOwnProperty(key)) {
-                    const values = this.data[key];
+                    var values = this.data[key];
                     if (values) {
-                        for (let i = 0; i < values.length; i++) {
+                        for (var i = 0; i < values.length; i++) {
                             url += sep + key + '=' + encodeURIComponent(values[i]);
                             sep = '&';
                         }
@@ -272,22 +278,23 @@ class SearchForm {
             }
         }
         return url;
-    }
+    };
     /**
      * Submits the query, and calls the callback function.
      */
-    submit(cb) {
-        return this.httpClient.cachedRequest(this.url()).then((response) => {
+    SearchForm.prototype.submit = function (cb) {
+        return this.httpClient.cachedRequest(this.url()).then(function (response) {
             cb && cb(null, response);
             return response;
-        }).catch((error) => {
+        }).catch(function (error) {
             cb && cb(error);
             throw error;
         });
-    }
-}
+    };
+    return SearchForm;
+}());
 
-const OPERATOR = {
+var OPERATOR = {
     at: 'at',
     not: 'not',
     missing: 'missing',
@@ -319,7 +326,7 @@ const OPERATOR = {
 };
 function encode(value) {
     if (typeof value === 'string') {
-        return `"${value}"`;
+        return "\"" + value + "\"";
     }
     else if (typeof value === 'number') {
         return value.toString();
@@ -328,104 +335,104 @@ function encode(value) {
         return value.getTime().toString();
     }
     else if (value instanceof Array) {
-        return `[${value.map(v => encode(v)).join(',')}]`;
+        return "[" + value.map(function (v) { return encode(v); }).join(',') + "]";
     }
     else {
-        throw new Error(`Unable to encode ${value} of type ${typeof value}`);
+        throw new Error("Unable to encode " + value + " of type " + typeof value);
     }
 }
-const geopoint = {
-    near(fragment, latitude, longitude, radius) {
-        return `[${OPERATOR.GeopointNear}(${fragment}, ${latitude}, ${longitude}, ${radius})]`;
+var geopoint = {
+    near: function (fragment, latitude, longitude, radius) {
+        return "[" + OPERATOR.GeopointNear + "(" + fragment + ", " + latitude + ", " + longitude + ", " + radius + ")]";
     },
 };
-const date = {
-    before(fragment, before) {
-        return `[${OPERATOR.dateBefore}(${fragment}, ${encode(before)})]`;
+var date = {
+    before: function (fragment, before) {
+        return "[" + OPERATOR.dateBefore + "(" + fragment + ", " + encode(before) + ")]";
     },
-    after(fragment, after) {
-        return `[${OPERATOR.dateAfter}(${fragment}, ${encode(after)})]`;
+    after: function (fragment, after) {
+        return "[" + OPERATOR.dateAfter + "(" + fragment + ", " + encode(after) + ")]";
     },
-    between(fragment, before, after) {
-        return `[${OPERATOR.dateBetween}(${fragment}, ${encode(before)}, ${encode(after)})]`;
+    between: function (fragment, before, after) {
+        return "[" + OPERATOR.dateBetween + "(" + fragment + ", " + encode(before) + ", " + encode(after) + ")]";
     },
-    dayOfMonth(fragment, day) {
-        return `[${OPERATOR.dateDayOfMonth}(${fragment}, ${day})]`;
+    dayOfMonth: function (fragment, day) {
+        return "[" + OPERATOR.dateDayOfMonth + "(" + fragment + ", " + day + ")]";
     },
-    dayOfMonthAfter(fragment, day) {
-        return `[${OPERATOR.dateDayOfMonthAfter}(${fragment}, ${day})]`;
+    dayOfMonthAfter: function (fragment, day) {
+        return "[" + OPERATOR.dateDayOfMonthAfter + "(" + fragment + ", " + day + ")]";
     },
-    dayOfMonthBefore(fragment, day) {
-        return `[${OPERATOR.dateDayOfMonthBefore}(${fragment}, ${day})]`;
+    dayOfMonthBefore: function (fragment, day) {
+        return "[" + OPERATOR.dateDayOfMonthBefore + "(" + fragment + ", " + day + ")]";
     },
-    dayOfWeek(fragment, day) {
-        return `[${OPERATOR.dateDayOfWeek}(${fragment}, ${encode(day)})]`;
+    dayOfWeek: function (fragment, day) {
+        return "[" + OPERATOR.dateDayOfWeek + "(" + fragment + ", " + encode(day) + ")]";
     },
-    dayOfWeekAfter(fragment, day) {
-        return `[${OPERATOR.dateDayOfWeekAfter}(${fragment}, ${encode(day)})]`;
+    dayOfWeekAfter: function (fragment, day) {
+        return "[" + OPERATOR.dateDayOfWeekAfter + "(" + fragment + ", " + encode(day) + ")]";
     },
-    dayOfWeekBefore(fragment, day) {
-        return `[${OPERATOR.dateDayOfWeekBefore}(${fragment}, ${encode(day)})]`;
+    dayOfWeekBefore: function (fragment, day) {
+        return "[" + OPERATOR.dateDayOfWeekBefore + "(" + fragment + ", " + encode(day) + ")]";
     },
-    month(fragment, month) {
-        return `[${OPERATOR.dateMonth}(${fragment}, ${encode(month)})]`;
+    month: function (fragment, month) {
+        return "[" + OPERATOR.dateMonth + "(" + fragment + ", " + encode(month) + ")]";
     },
-    monthBefore(fragment, month) {
-        return `[${OPERATOR.dateMonthBefore}(${fragment}, ${encode(month)})]`;
+    monthBefore: function (fragment, month) {
+        return "[" + OPERATOR.dateMonthBefore + "(" + fragment + ", " + encode(month) + ")]";
     },
-    monthAfter(fragment, month) {
-        return `[${OPERATOR.dateMonthAfter}(${fragment}, ${encode(month)})]`;
+    monthAfter: function (fragment, month) {
+        return "[" + OPERATOR.dateMonthAfter + "(" + fragment + ", " + encode(month) + ")]";
     },
-    year(fragment, year) {
-        return `[${OPERATOR.dateYear}(${fragment}, ${year})]`;
+    year: function (fragment, year) {
+        return "[" + OPERATOR.dateYear + "(" + fragment + ", " + year + ")]";
     },
-    hour(fragment, hour) {
-        return `[${OPERATOR.dateHour}(${fragment}, ${hour})]`;
+    hour: function (fragment, hour) {
+        return "[" + OPERATOR.dateHour + "(" + fragment + ", " + hour + ")]";
     },
-    hourBefore(fragment, hour) {
-        return `[${OPERATOR.dateHourBefore}(${fragment}, ${hour})]`;
+    hourBefore: function (fragment, hour) {
+        return "[" + OPERATOR.dateHourBefore + "(" + fragment + ", " + hour + ")]";
     },
-    hourAfter(fragment, hour) {
-        return `[${OPERATOR.dateHourAfter}(${fragment}, ${hour})]`;
+    hourAfter: function (fragment, hour) {
+        return "[" + OPERATOR.dateHourAfter + "(" + fragment + ", " + hour + ")]";
     },
 };
-const number = {
-    gt(fragment, value) {
-        return `[${OPERATOR.numberGt}(${fragment}, ${value})]`;
+var number = {
+    gt: function (fragment, value) {
+        return "[" + OPERATOR.numberGt + "(" + fragment + ", " + value + ")]";
     },
-    lt(fragment, value) {
-        return `[${OPERATOR.numberLt}(${fragment}, ${value})]`;
+    lt: function (fragment, value) {
+        return "[" + OPERATOR.numberLt + "(" + fragment + ", " + value + ")]";
     },
-    inRange(fragment, before, after) {
-        return `[${OPERATOR.numberInRange}(${fragment}, ${before}, ${after})]`;
+    inRange: function (fragment, before, after) {
+        return "[" + OPERATOR.numberInRange + "(" + fragment + ", " + before + ", " + after + ")]";
     },
 };
 var Predicates = {
-    at(fragment, value) {
-        return `[${OPERATOR.at}(${fragment}, ${encode(value)})]`;
+    at: function (fragment, value) {
+        return "[" + OPERATOR.at + "(" + fragment + ", " + encode(value) + ")]";
     },
-    not(fragment, value) {
-        return `[${OPERATOR.not}(${fragment}, ${encode(value)})]`;
+    not: function (fragment, value) {
+        return "[" + OPERATOR.not + "(" + fragment + ", " + encode(value) + ")]";
     },
-    missing(fragment) {
-        return `[${OPERATOR.missing}(${fragment})]`;
+    missing: function (fragment) {
+        return "[" + OPERATOR.missing + "(" + fragment + ")]";
     },
-    has(fragment) {
-        return `[${OPERATOR.has}(${fragment})]`;
+    has: function (fragment) {
+        return "[" + OPERATOR.has + "(" + fragment + ")]";
     },
-    any(fragment, values) {
-        return `[${OPERATOR.any}(${fragment}, ${encode(values)})]`;
+    any: function (fragment, values) {
+        return "[" + OPERATOR.any + "(" + fragment + ", " + encode(values) + ")]";
     },
-    in(fragment, values) {
-        return `[${OPERATOR.in}(${fragment}, ${encode(values)})]`;
+    in: function (fragment, values) {
+        return "[" + OPERATOR.in + "(" + fragment + ", " + encode(values) + ")]";
     },
-    fulltext(fragment, value) {
-        return `[${OPERATOR.fulltext}(${fragment}, ${encode(value)})]`;
+    fulltext: function (fragment, value) {
+        return "[" + OPERATOR.fulltext + "(" + fragment + ", " + encode(value) + ")]";
     },
-    similar(documentId, maxResults) {
-        return `[${OPERATOR.similar}("${documentId}", ${maxResults})]`;
+    similar: function (documentId, maxResults) {
+        return "[" + OPERATOR.similar + "(\"" + documentId + "\", " + maxResults + ")]";
     },
-    date,
+    date: date,
     dateBefore: date.before,
     dateAfter: date.after,
     dateBetween: date.between,
@@ -442,12 +449,12 @@ var Predicates = {
     hour: date.hour,
     hourBefore: date.hourBefore,
     hourAfter: date.hourAfter,
-    number,
+    number: number,
     gt: number.gt,
     lt: number.lt,
     inRange: number.inRange,
     near: geopoint.near,
-    geopoint,
+    geopoint: geopoint,
 };
 
 // Some portions of code from https://github.com/jshttp/cookie
@@ -487,14 +494,14 @@ function parse(str, options) {
     });
     return obj;
 }
-var Cookies = { parse };
+var Cookies = { parse: parse };
 
-const PREVIEW_COOKIE = 'io.prismic.preview';
-const EXPERIMENT_COOKIE = 'io.prismic.experiment';
-class ResolvedApi {
-    constructor(data, httpClient, options) {
+var PREVIEW_COOKIE = 'io.prismic.preview';
+var EXPERIMENT_COOKIE = 'io.prismic.experiment';
+var ResolvedApi = /** @class */ (function () {
+    function ResolvedApi(data, httpClient, options) {
         this.data = data;
-        this.masterRef = data.refs.filter(ref => ref.isMasterRef)[0];
+        this.masterRef = data.refs.filter(function (ref) { return ref.isMasterRef; })[0];
         this.experiments = new Experiments(data.experiments);
         this.bookmarks = data.bookmarks;
         this.httpClient = httpClient;
@@ -508,161 +515,164 @@ class ResolvedApi {
      * For instance: api.form("everything") works on every repository (as "everything" exists by default)
      * You can then chain the calls: api.form("everything").query('[[:d = at(document.id, "UkL0gMuvzYUANCpf")]]').ref(ref).submit()
      */
-    form(formId) {
-        const form = this.data.forms[formId];
+    ResolvedApi.prototype.form = function (formId) {
+        var form = this.data.forms[formId];
         if (form) {
             return new SearchForm(form, this.httpClient);
         }
         return null;
-    }
-    everything() {
-        const f = this.form('everything');
+    };
+    ResolvedApi.prototype.everything = function () {
+        var f = this.form('everything');
         if (!f)
             throw new Error('Missing everything form');
         return f;
-    }
+    };
     /**
      * The ID of the master ref on this prismic.io API.
      * Do not use like this: searchForm.ref(api.master()).
      * Instead, set your ref once in a variable, and call it when you need it; this will allow to change the ref you're viewing easily for your entire page.
      */
-    master() {
+    ResolvedApi.prototype.master = function () {
         return this.masterRef.ref;
-    }
+    };
     /**
      * Returns the ref ID for a given ref's label.
      * Do not use like this: searchForm.ref(api.ref("Future release label")).
      * Instead, set your ref once in a variable, and call it when you need it; this will allow to change the ref you're viewing easily for your entire page.
      */
-    ref(label) {
-        const ref = this.data.refs.filter(ref => ref.label === label)[0];
+    ResolvedApi.prototype.ref = function (label) {
+        var ref = this.data.refs.filter(function (ref) { return ref.label === label; })[0];
         return ref ? ref.ref : null;
-    }
-    currentExperiment() {
+    };
+    ResolvedApi.prototype.currentExperiment = function () {
         return this.experiments.current();
-    }
+    };
     /**
      * Query the repository
      */
-    query(q, optionsOrCallback, cb = () => { }) {
-        const { options, callback } = typeof optionsOrCallback === 'function'
+    ResolvedApi.prototype.query = function (q, optionsOrCallback, cb) {
+        if (cb === void 0) { cb = function () { }; }
+        var _a = typeof optionsOrCallback === 'function'
             ? { options: {}, callback: optionsOrCallback }
-            : { options: optionsOrCallback || {}, callback: cb };
-        let form = this.everything();
-        for (const key in options) {
+            : { options: optionsOrCallback || {}, callback: cb }, options = _a.options, callback = _a.callback;
+        var form = this.everything();
+        for (var key in options) {
             form = form.set(key, options[key]);
         }
         if (!options.ref) {
             // Look in cookies if we have a ref (preview or experiment)
-            let cookieString = '';
+            var cookieString = '';
             if (this.options.req) { // NodeJS
                 cookieString = this.options.req.headers['cookie'] || '';
             }
             else if (typeof window !== 'undefined' && window.document) { // Browser
                 cookieString = window.document.cookie || '';
             }
-            const cookies = Cookies.parse(cookieString);
-            const previewRef = cookies[PREVIEW_COOKIE];
-            const experimentRef = this.experiments.refFromCookie(cookies[EXPERIMENT_COOKIE]);
+            var cookies = Cookies.parse(cookieString);
+            var previewRef = cookies[PREVIEW_COOKIE];
+            var experimentRef = this.experiments.refFromCookie(cookies[EXPERIMENT_COOKIE]);
             form = form.ref(previewRef || experimentRef || this.masterRef.ref);
         }
         if (q) {
             form.query(q);
         }
         return form.submit(callback);
-    }
+    };
     /**
      * Retrieve the document returned by the given query
      * @param {string|array|Predicate} the query
      * @param {object} additional parameters. In NodeJS, pass the request as 'req'.
      * @param {function} callback(err, doc)
      */
-    queryFirst(q, optionsOrCallback, cb) {
-        const { options, callback } = typeof optionsOrCallback === 'function'
+    ResolvedApi.prototype.queryFirst = function (q, optionsOrCallback, cb) {
+        var _a = typeof optionsOrCallback === 'function'
             ? { options: {}, callback: optionsOrCallback }
-            : { options: optionsOrCallback || {}, callback: cb || (() => { }) };
+            : { options: optionsOrCallback || {}, callback: cb || (function () { }) }, options = _a.options, callback = _a.callback;
         options.page = 1;
         options.pageSize = 1;
-        return this.query(q, options).then((response) => {
-            const document = response && response.results && response.results[0];
+        return this.query(q, options).then(function (response) {
+            var document = response && response.results && response.results[0];
             callback(null, document);
             return document;
-        }).catch((error) => {
+        }).catch(function (error) {
             callback(error);
             throw error;
         });
-    }
+    };
     /**
      * Retrieve the document with the given id
      */
-    getByID(id, maybeOptions, cb) {
-        const options = maybeOptions || {};
+    ResolvedApi.prototype.getByID = function (id, maybeOptions, cb) {
+        var options = maybeOptions || {};
         if (!options.lang)
             options.lang = '*';
         return this.queryFirst(Predicates.at('document.id', id), options, cb);
-    }
+    };
     /**
      * Retrieve multiple documents from an array of id
      */
-    getByIDs(ids, maybeOptions, cb) {
-        const options = maybeOptions || {};
+    ResolvedApi.prototype.getByIDs = function (ids, maybeOptions, cb) {
+        var options = maybeOptions || {};
         if (!options.lang)
             options.lang = '*';
         return this.query(Predicates.in('document.id', ids), options, cb);
-    }
+    };
     /**
      * Retrieve the document with the given uid
      */
-    getByUID(type, uid, maybeOptions, cb) {
-        const options = maybeOptions || {};
+    ResolvedApi.prototype.getByUID = function (type, uid, maybeOptions, cb) {
+        var options = maybeOptions || {};
         if (!options.lang)
             options.lang = '*';
-        return this.queryFirst(Predicates.at(`my.${type}.uid`, uid), options, cb);
-    }
+        return this.queryFirst(Predicates.at("my." + type + ".uid", uid), options, cb);
+    };
     /**
      * Retrieve the singleton document with the given type
      */
-    getSingle(type, maybeOptions, cb) {
-        const options = maybeOptions || {};
+    ResolvedApi.prototype.getSingle = function (type, maybeOptions, cb) {
+        var options = maybeOptions || {};
         return this.queryFirst(Predicates.at('document.type', type), options, cb);
-    }
+    };
     /**
      * Retrieve the document with the given bookmark
      */
-    getBookmark(bookmark, maybeOptions, cb) {
-        const id = this.data.bookmarks[bookmark];
+    ResolvedApi.prototype.getBookmark = function (bookmark, maybeOptions, cb) {
+        var id = this.data.bookmarks[bookmark];
         if (id) {
             return this.getByID(id, maybeOptions, cb);
         }
         else {
             return Promise.reject('Error retrieving bookmarked id');
         }
-    }
-    previewSession(token, linkResolver, defaultUrl, cb) {
-        return this.httpClient.request(token).then((result) => {
+    };
+    ResolvedApi.prototype.previewSession = function (token, linkResolver, defaultUrl, cb) {
+        var _this = this;
+        return this.httpClient.request(token).then(function (result) {
             if (!result.mainDocument) {
                 cb && cb(null, defaultUrl);
                 return Promise.resolve(defaultUrl);
             }
             else {
-                return this.getByID(result.mainDocument, { ref: token }).then((document) => {
+                return _this.getByID(result.mainDocument, { ref: token }).then(function (document) {
                     if (!document) {
                         cb && cb(null, defaultUrl);
                         return defaultUrl;
                     }
                     else {
-                        const url = linkResolver(document);
+                        var url = linkResolver(document);
                         cb && cb(null, url);
                         return url;
                     }
                 });
             }
-        }).catch((error) => {
+        }).catch(function (error) {
             cb && cb(error);
             throw error;
         });
-    }
-}
+    };
+    return ResolvedApi;
+}());
 
 /**
 * A doubly linked list-based Least Recently Used (LRU) cache. Will keep most
@@ -922,45 +932,47 @@ LRUCache.prototype.toString = function () {
     return s;
 };
 
-class DefaultApiCache {
-    constructor(limit = 1000) {
+var DefaultApiCache = /** @class */ (function () {
+    function DefaultApiCache(limit) {
+        if (limit === void 0) { limit = 1000; }
         this.lru = MakeLRUCache(limit);
     }
-    isExpired(key) {
-        const value = this.lru.get(key, false);
+    DefaultApiCache.prototype.isExpired = function (key) {
+        var value = this.lru.get(key, false);
         if (value) {
             return value.expiredIn !== 0 && value.expiredIn < Date.now();
         }
         else {
             return false;
         }
-    }
-    get(key, cb) {
-        const value = this.lru.get(key, false);
+    };
+    DefaultApiCache.prototype.get = function (key, cb) {
+        var value = this.lru.get(key, false);
         if (value && !this.isExpired(key)) {
             cb(null, value.data);
         }
         else {
             cb && cb(null);
         }
-    }
-    set(key, value, ttl, cb) {
+    };
+    DefaultApiCache.prototype.set = function (key, value, ttl, cb) {
         this.lru.remove(key);
         this.lru.put(key, {
             data: value,
             expiredIn: ttl ? (Date.now() + (ttl * 1000)) : 0,
         });
         cb && cb(null);
-    }
-    remove(key, cb) {
+    };
+    DefaultApiCache.prototype.remove = function (key, cb) {
         this.lru.remove(key);
         cb && cb(null);
-    }
-    clear(cb) {
+    };
+    DefaultApiCache.prototype.clear = function (cb) {
         this.lru.removeAll();
         cb && cb(null);
-    }
-}
+    };
+    return DefaultApiCache;
+}());
 
 function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
@@ -983,13 +995,13 @@ var browser_3 = browser.Response;
 
 // In the browser, node-fetch exports self.fetch:
 // Number of maximum simultaneous connections to the prismic server
-const MAX_CONNECTIONS = 20;
+var MAX_CONNECTIONS = 20;
 // Number of requests currently running (capped by MAX_CONNECTIONS)
-let running = 0;
+var running = 0;
 // Requests in queue
-const queue = [];
+var queue = [];
 function fetchRequest(url, options, callback) {
-    const fetchOptions = {
+    var fetchOptions = {
         headers: {
             Accept: 'application/json',
         },
@@ -997,24 +1009,24 @@ function fetchRequest(url, options, callback) {
     if (options && options.proxyAgent) {
         fetchOptions.agent = options.proxyAgent;
     }
-    browser(url, fetchOptions).then((xhr) => {
+    browser(url, fetchOptions).then(function (xhr) {
         if (~~(xhr.status / 100 !== 2)) {
             /**
              * @description
              * drain the xhr before throwing an error to prevent memory leaks
              * @link https://github.com/bitinn/node-fetch/issues/83
              */
-            return xhr.text().then(() => {
-                const e = new Error(`Unexpected status code [${xhr.status}] on URL ${url}`);
+            return xhr.text().then(function () {
+                var e = new Error("Unexpected status code [" + xhr.status + "] on URL " + url);
                 e.status = xhr.status;
                 throw e;
             });
         }
         else {
-            return xhr.json().then((result) => {
-                const cacheControl = xhr.headers.get('cache-control');
-                const parsedCacheControl = cacheControl ? /max-age=(\d+)/.exec(cacheControl) : null;
-                const ttl = parsedCacheControl ? parseInt(parsedCacheControl[1], 10) : undefined;
+            return xhr.json().then(function (result) {
+                var cacheControl = xhr.headers.get('cache-control');
+                var parsedCacheControl = cacheControl ? /max-age=(\d+)/.exec(cacheControl) : null;
+                var ttl = parsedCacheControl ? parseInt(parsedCacheControl[1], 10) : undefined;
                 callback(null, result, xhr, ttl);
             });
         }
@@ -1023,34 +1035,36 @@ function fetchRequest(url, options, callback) {
 function processQueue(options) {
     if (queue.length > 0 && running < MAX_CONNECTIONS) {
         running++;
-        const req = queue.shift();
-        if (req) {
-            fetchRequest(req.url, options, (error, result, xhr, ttl) => {
+        var req_1 = queue.shift();
+        if (req_1) {
+            fetchRequest(req_1.url, options, function (error, result, xhr, ttl) {
                 running--;
-                req.callback(error, result, xhr, ttl);
+                req_1.callback(error, result, xhr, ttl);
                 processQueue(options);
             });
         }
     }
 }
-class DefaultRequestHandler {
-    constructor(options) {
+var DefaultRequestHandler = /** @class */ (function () {
+    function DefaultRequestHandler(options) {
         this.options = options || {};
     }
-    request(url, callback) {
-        queue.push({ url, callback });
+    DefaultRequestHandler.prototype.request = function (url, callback) {
+        queue.push({ url: url, callback: callback });
         processQueue(this.options);
-    }
-}
+    };
+    return DefaultRequestHandler;
+}());
 
-class HttpClient {
-    constructor(requestHandler, cache, proxyAgent) {
-        this.requestHandler = requestHandler || new DefaultRequestHandler({ proxyAgent });
+var HttpClient = /** @class */ (function () {
+    function HttpClient(requestHandler, cache, proxyAgent) {
+        this.requestHandler = requestHandler || new DefaultRequestHandler({ proxyAgent: proxyAgent });
         this.cache = cache || new DefaultApiCache();
     }
-    request(url, callback) {
-        return new Promise((resolve, reject) => {
-            this.requestHandler.request(url, (err, result, xhr, ttl) => {
+    HttpClient.prototype.request = function (url, callback) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.requestHandler.request(url, function (err, result, xhr, ttl) {
                 if (err) {
                     reject(err);
                     callback && callback(err, null, xhr, ttl);
@@ -1061,27 +1075,28 @@ class HttpClient {
                 }
             });
         });
-    }
+    };
     /**
      * Fetch a URL corresponding to a query, and parse the response as a Response object
      */
-    cachedRequest(url, maybeOptions) {
-        const options = maybeOptions || {};
-        const run = (cb) => {
-            const cacheKey = options.cacheKey || url;
-            this.cache.get(cacheKey, (cacheGetError, cacheGetValue) => {
+    HttpClient.prototype.cachedRequest = function (url, maybeOptions) {
+        var _this = this;
+        var options = maybeOptions || {};
+        var run = function (cb) {
+            var cacheKey = options.cacheKey || url;
+            _this.cache.get(cacheKey, function (cacheGetError, cacheGetValue) {
                 if (cacheGetError || cacheGetValue) {
                     cb(cacheGetError, cacheGetValue);
                 }
                 else {
-                    this.request(url, (fetchError, fetchValue, xhr, ttlReq) => {
+                    _this.request(url, function (fetchError, fetchValue, xhr, ttlReq) {
                         if (fetchError) {
                             cb(fetchError, null);
                         }
                         else {
-                            const ttl = ttlReq || options.ttl;
+                            var ttl = ttlReq || options.ttl;
                             if (ttl) {
-                                this.cache.set(cacheKey, fetchValue, ttl, cb);
+                                _this.cache.set(cacheKey, fetchValue, ttl, cb);
                             }
                             cb(null, fetchValue);
                         }
@@ -1089,23 +1104,24 @@ class HttpClient {
                 }
             });
         };
-        return new Promise((resolve, reject) => {
-            run((err, value) => {
+        return new Promise(function (resolve, reject) {
+            run(function (err, value) {
                 if (err)
                     reject(err);
                 if (value)
                     resolve(value);
             });
         });
-    }
-}
+    };
+    return HttpClient;
+}());
 
-class Api {
-    constructor(url, options) {
+var Api = /** @class */ (function () {
+    function Api(url, options) {
         this.options = options || {};
         this.url = url;
         if (this.options.accessToken) {
-            const accessTokenParam = `access_token=${this.options.accessToken}`;
+            var accessTokenParam = "access_token=" + this.options.accessToken;
             this.url += (url.indexOf('?') > -1 ? '&' : '?') + accessTokenParam;
         }
         this.apiDataTTL = this.options.apiDataTTL || 5;
@@ -1116,60 +1132,63 @@ class Api {
      * present, otherwise from calling the prismic api endpoint (which is
      * then cached).
      */
-    get(cb) {
-        return this.httpClient.cachedRequest(this.url, { ttl: this.apiDataTTL }).then((data) => {
-            const resolvedApi = new ResolvedApi(data, this.httpClient, this.options);
+    Api.prototype.get = function (cb) {
+        var _this = this;
+        return this.httpClient.cachedRequest(this.url, { ttl: this.apiDataTTL }).then(function (data) {
+            var resolvedApi = new ResolvedApi(data, _this.httpClient, _this.options);
             cb && cb(null, resolvedApi);
             return resolvedApi;
-        }).catch((error) => {
+        }).catch(function (error) {
             cb && cb(error);
             throw error;
         });
-    }
-}
+    };
+    return Api;
+}());
 
-class DefaultClient {
-    constructor(url, options) {
+var DefaultClient = /** @class */ (function () {
+    function DefaultClient(url, options) {
         this.api = new Api(url, options);
     }
-    getApi() {
+    DefaultClient.prototype.getApi = function () {
         return this.api.get();
-    }
-    everything() {
+    };
+    DefaultClient.prototype.everything = function () {
         return this.form('everything');
-    }
-    form(formId) {
+    };
+    DefaultClient.prototype.form = function (formId) {
         return new LazySearchForm(formId, this.api);
-    }
-    query(q, optionsOrCallback, cb) {
-        return this.getApi().then(api => api.query(q, optionsOrCallback, cb));
-    }
-    queryFirst(q, optionsOrCallback, cb) {
-        return this.getApi().then(api => api.queryFirst(q, optionsOrCallback, cb));
-    }
-    getByID(id, options, cb) {
-        return this.getApi().then(api => api.getByID(id, options, cb));
-    }
-    getByIDs(ids, options, cb) {
-        return this.getApi().then(api => api.getByIDs(ids, options, cb));
-    }
-    getByUID(type, uid, options, cb) {
-        return this.getApi().then(api => api.getByUID(type, uid, options, cb));
-    }
-    getSingle(type, options, cb) {
-        return this.getApi().then(api => api.getSingle(type, options, cb));
-    }
-    getBookmark(bookmark, options, cb) {
-        return this.getApi().then(api => api.getBookmark(bookmark, options, cb));
-    }
-    previewSession(token, linkResolver, defaultUrl, cb) {
-        return this.getApi().then(api => api.previewSession(token, linkResolver, defaultUrl, cb));
-    }
-    static getApi(url, options) {
-        const api = new Api(url, options);
+    };
+    DefaultClient.prototype.query = function (q, optionsOrCallback, cb) {
+        return this.getApi().then(function (api) { return api.query(q, optionsOrCallback, cb); });
+    };
+    DefaultClient.prototype.queryFirst = function (q, optionsOrCallback, cb) {
+        return this.getApi().then(function (api) { return api.queryFirst(q, optionsOrCallback, cb); });
+    };
+    DefaultClient.prototype.getByID = function (id, options, cb) {
+        return this.getApi().then(function (api) { return api.getByID(id, options, cb); });
+    };
+    DefaultClient.prototype.getByIDs = function (ids, options, cb) {
+        return this.getApi().then(function (api) { return api.getByIDs(ids, options, cb); });
+    };
+    DefaultClient.prototype.getByUID = function (type, uid, options, cb) {
+        return this.getApi().then(function (api) { return api.getByUID(type, uid, options, cb); });
+    };
+    DefaultClient.prototype.getSingle = function (type, options, cb) {
+        return this.getApi().then(function (api) { return api.getSingle(type, options, cb); });
+    };
+    DefaultClient.prototype.getBookmark = function (bookmark, options, cb) {
+        return this.getApi().then(function (api) { return api.getBookmark(bookmark, options, cb); });
+    };
+    DefaultClient.prototype.previewSession = function (token, linkResolver, defaultUrl, cb) {
+        return this.getApi().then(function (api) { return api.previewSession(token, linkResolver, defaultUrl, cb); });
+    };
+    DefaultClient.getApi = function (url, options) {
+        var api = new Api(url, options);
         return api.get();
-    }
-}
+    };
+    return DefaultClient;
+}());
 
 function client(url, options) {
     return new DefaultClient(url, options);
