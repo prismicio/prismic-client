@@ -1,11 +1,3 @@
-'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
-var fetch = _interopDefault(require('node-fetch'));
-
 class Variation {
     constructor(data) {
         this.data = {};
@@ -1037,6 +1029,25 @@ class DefaultApiCache {
     }
 }
 
+function createCommonjsModule(fn, module) {
+	return module = { exports: {} }, fn(module, module.exports), module.exports;
+}
+
+var browser = createCommonjsModule(function (module, exports) {
+
+module.exports = exports = self.fetch;
+
+// Needed for TypeScript and Webpack.
+exports.default = self.fetch.bind(self);
+
+exports.Headers = self.Headers;
+exports.Request = self.Request;
+exports.Response = self.Response;
+});
+var browser_1 = browser.Headers;
+var browser_2 = browser.Request;
+var browser_3 = browser.Response;
+
 // In the browser, node-fetch exports self.fetch:
 // Number of maximum simultaneous connections to the prismic server
 const MAX_CONNECTIONS = 20;
@@ -1053,7 +1064,7 @@ function fetchRequest(url, options, callback) {
     if (options && options.proxyAgent) {
         fetchOptions.agent = options.proxyAgent;
     }
-    fetch(url, fetchOptions).then((xhr) => {
+    browser(url, fetchOptions).then((xhr) => {
         if (~~(xhr.status / 100 !== 2)) {
             /**
              * @description
@@ -1237,12 +1248,5 @@ function api(url, options) {
     return getApi(url, options);
 }
 
-exports.experimentCookie = EXPERIMENT_COOKIE;
-exports.previewCookie = PREVIEW_COOKIE;
-exports.Predicates = Predicates;
-exports.Experiments = Experiments$1;
-exports.Api = Api;
-exports.client = client;
-exports.getApi = getApi;
-exports.api = api;
-//# sourceMappingURL=prismic-javascript.js.map
+export { EXPERIMENT_COOKIE as experimentCookie, PREVIEW_COOKIE as previewCookie, Predicates, Experiments$1 as Experiments, Api, client, getApi, api };
+//# sourceMappingURL=prismic-javascript.browser.mjs.map

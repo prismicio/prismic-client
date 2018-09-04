@@ -29,10 +29,10 @@
     "url": "https://github.com/prismicio/prismic-javascript.git"
   },
   "main": "dist/prismic-javascript.js",
-  "module": "dist/prismic-javascript.esm.js",
+  "module": "dist/prismic-javascript.mjs",
   "browser": {
     "./dist/prismic-javascript.js": "dist/prismic-javascript.browser.js",
-    "./dist/prismic-javascript.esm.js": "dist/prismic-javascript.browser.esm.js"
+    "./dist/prismic-javascript.mjs": "dist/prismic-javascript.browser.mjs"
   },
   "types": "./d.ts/index.d.ts",
   "scripts": {

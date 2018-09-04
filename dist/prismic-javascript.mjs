@@ -1,10 +1,4 @@
-'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
-var fetch = _interopDefault(require('node-fetch'));
+import fetch from 'node-fetch';
 
 class Variation {
     constructor(data) {
@@ -1237,12 +1231,5 @@ function api(url, options) {
     return getApi(url, options);
 }
 
-exports.experimentCookie = EXPERIMENT_COOKIE;
-exports.previewCookie = PREVIEW_COOKIE;
-exports.Predicates = Predicates;
-exports.Experiments = Experiments$1;
-exports.Api = Api;
-exports.client = client;
-exports.getApi = getApi;
-exports.api = api;
-//# sourceMappingURL=prismic-javascript.js.map
+export { EXPERIMENT_COOKIE as experimentCookie, PREVIEW_COOKIE as previewCookie, Predicates, Experiments$1 as Experiments, Api, client, getApi, api };
+//# sourceMappingURL=prismic-javascript.mjs.map
