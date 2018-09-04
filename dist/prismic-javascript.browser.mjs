@@ -664,73 +664,6 @@ class ResolvedApi {
     }
 }
 
-class Variation$1 {
-    constructor(data) {
-        this.data = {};
-        this.data = data;
-    }
-    id() {
-        return this.data.id;
-    }
-    ref() {
-        return this.data.ref;
-    }
-    label() {
-        return this.data.label;
-    }
-}
-class Experiment$1 {
-    constructor(data) {
-        this.data = {};
-        this.data = data;
-        this.variations = (data.variations || []).map((v) => {
-            return new Variation$1(v);
-        });
-    }
-    id() {
-        return this.data.id;
-    }
-    googleId() {
-        return this.data.googleId;
-    }
-    name() {
-        return this.data.name;
-    }
-}
-class Experiments$1 {
-    constructor(data) {
-        if (data) {
-            this.drafts = (data.drafts || []).map((exp) => {
-                return new Experiment$1(exp);
-            });
-            this.running = (data.running || []).map((exp) => {
-                return new Experiment$1(exp);
-            });
-        }
-    }
-    current() {
-        if (this.running.length > 0) {
-            return this.running[0];
-        }
-        else {
-            return null;
-        }
-    }
-    refFromCookie(cookie) {
-        if (!cookie || cookie.trim() === '')
-            return null;
-        const splitted = cookie.trim().split(' ');
-        if (splitted.length < 2)
-            return null;
-        const expId = splitted[0];
-        const varIndex = parseInt(splitted[1], 10);
-        const exp = this.running.filter((exp) => {
-            return exp.googleId() === expId && exp.variations.length > varIndex;
-        })[0];
-        return exp ? exp.variations[varIndex].ref() : null;
-    }
-}
-
 /**
 * A doubly linked list-based Least Recently Used (LRU) cache. Will keep most
 * recently used items while discarding least recently used items when its limit
@@ -1248,5 +1181,5 @@ function api(url, options) {
     return getApi(url, options);
 }
 
-export { EXPERIMENT_COOKIE as experimentCookie, PREVIEW_COOKIE as previewCookie, Predicates, Experiments$1 as Experiments, Api, client, getApi, api };
+export { EXPERIMENT_COOKIE as experimentCookie, PREVIEW_COOKIE as previewCookie, Predicates, Experiments, Api, client, getApi, api };
 //# sourceMappingURL=prismic-javascript.browser.mjs.map

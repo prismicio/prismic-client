@@ -1,6 +1,6 @@
 import ResolvedApi, { EXPERIMENT_COOKIE as experimentCookie, PREVIEW_COOKIE as previewCookie } from './ResolvedApi';
 import Predicates from './Predicates';
-import { Experiments } from './Experiments';
+import { Experiments } from './experiments';
 import Api, { ApiOptions } from './Api';
 import { DefaultClient } from './client';
 
