@@ -1,6 +1,6 @@
 // In the browser, node-fetch exports self.fetch:
 // https://github.com/bitinn/node-fetch/blob/master/browser.js
-import fetches, { RequestInit } from 'node-fetch';
+import fetch, { RequestInit } from 'node-fetch';
 
 // Number of maximum simultaneous connections to the prismic server
 const MAX_CONNECTIONS: number = 20;
@@ -31,7 +31,7 @@ function fetchRequest<T>(url: string, options: RequestHandlerOption, callback: R
     fetchOptions.agent = options.proxyAgent;
   }
 
-  fetches(url, fetchOptions).then((xhr) => {
+  fetch(url, fetchOptions).then((xhr) => {
     if (~~(xhr.status / 100 !== 2)) {
         /**
          * @description
