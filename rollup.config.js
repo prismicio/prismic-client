@@ -5,12 +5,12 @@ import { terser } from 'rollup-plugin-terser';
 import pkg from './package.json';
 
 export default [
-  /* prismic-javascript.js and prismic-javascript.esm.js */
+  /* prismic-javascript.js and prismic-javascript.mjs */
   {
     input: 'src/index.ts',
     output: [
       { file: `dist/${pkg.name}.js`, format: 'cjs', sourcemap: true },
-      { file: `dist/${pkg.name}.esm.js`, format: 'esm', sourcemap: true },
+      { file: `dist/${pkg.name}.mjs`, format: 'esm', sourcemap: true },
     ],
     plugins: [
       resolve(),
@@ -24,12 +24,12 @@ export default [
     ]
   },
 
-  /* prismic-javascript.browser.js and prismic-javascript.browser.esm.js */
+  /* prismic-javascript.browser.js and prismic-javascript.browser.mjs */
   {
     input: 'src/index.ts',
     output: [
       { file: `dist/${pkg.name}.browser.js`, format: 'umd', name: 'PrismicJS', sourcemap: true },
-      { file: `dist/${pkg.name}.browser.esm.js`, format: 'esm', sourcemap: true },
+      { file: `dist/${pkg.name}.browser.mjs`, format: 'esm', sourcemap: true },
     ],
     plugins: [
       resolve({
