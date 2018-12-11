@@ -29,7 +29,6 @@
     "url": "https://github.com/prismicio/prismic-javascript.git"
   },
   "main": "dist/prismic-javascript.min.js",
-  "types": "./d.ts/index.d.ts",
   "scripts": {
     "build": "node_modules/.bin/webpack-cli -p",
     "dev": "node_modules/.bin/webpack-cli -d --watch",
