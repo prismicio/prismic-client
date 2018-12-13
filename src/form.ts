@@ -44,11 +44,17 @@ export class LazySearchForm {
   }
 
   fetch(fields: string | string[]): LazySearchForm {
+    console.warn('Warning: Using Fetch is deprecated. Use the property `graphQuery` instead.');
     return this.set('fetch', fields);
   }
 
   fetchLinks(fields: string | string[]): LazySearchForm {
+    console.warn('Warning: Using FetchLinks is deprecated. Use the property `graphQuery` instead.');
     return this.set('fetchLinks', fields);
+  }
+
+  graphQuery(query: string): LazySearchForm {
+    return this.set('graphQuery', query);
   }
 
   lang(langCode: string): LazySearchForm {
@@ -92,6 +98,8 @@ export class LazySearchForm {
           return form.fetch(fieldValue);
         } else if (fieldKey === 'fetchLinks') {
           return form.fetchLinks(fieldValue);
+        } else if (fieldKey === 'graphQuery') {
+          return form.graphQuery(fieldValue);
         } else if (fieldKey === 'lang') {
           return form.lang(fieldValue);
         } else if (fieldKey === 'page') {
@@ -178,6 +186,7 @@ export class SearchForm {
    * Restrict the results document to the specified fields
    */
   fetch(fields: string | string[]): SearchForm {
+    console.warn('Warning: Using Fetch is deprecated. Use the property `graphQuery` instead.');
     const strFields = fields instanceof Array ? fields.join(',') : fields;
     return this.set('fetch', strFields);
   }
@@ -186,8 +195,16 @@ export class SearchForm {
    * Include the requested fields in the DocumentLink instances in the result
    */
   fetchLinks(fields: string | string[]): SearchForm {
+    console.warn('Warning: Using FetchLinks is deprecated. Use the property `graphQuery` instead.');
     const strFields = fields instanceof Array ? fields.join(',') : fields;
     return this.set('fetchLinks', strFields);
+  }
+
+  /**
+   * Sets the graphquery to query for this SearchForm. This is an optional method.
+   */
+  graphQuery(query: string): SearchForm {
+    return this.set('graphQuery', query);
   }
 
   /**
