@@ -215,25 +215,29 @@ export default class ResolvedApi implements Client {
   }
 
   previewSession(token: string, linkResolver: (doc: any) => string, defaultUrl: string, cb?: RequestCallback<string>): Promise<string> {
-    return this.httpClient.request<PreviewResponse>(token).then((result) => {
-      if (!result.mainDocument) {
-        cb && cb(null, defaultUrl);
-        return Promise.resolve(defaultUrl);
-      } else {
-        return this.getByID(result.mainDocument, { ref: token }).then((document) => {
-          if (!document) {
+    return new Promise((resolve, reject) => {
+      this.httpClient.request<PreviewResponse>(token, (e, result) => {
+        if (e) {
+          cb && cb(e);
+          reject(e);
+        } else if (result) {
+          if (!result.mainDocument) {
             cb && cb(null, defaultUrl);
-            return defaultUrl;
+            resolve(defaultUrl);
           } else {
-            const url = linkResolver(document);
-            cb && cb(null, url);
-            return url;
+            return this.getByID(result.mainDocument, { ref: token }).then((document) => {
+              if (!document) {
+                cb && cb(null, defaultUrl);
+                resolve(defaultUrl);
+              } else {
+                const url = linkResolver(document);
+                cb && cb(null, url);
+                resolve(url);
+              }
+            }).catch(reject);
           }
-        });
-      }
-    }).catch((error) => {
-      cb && cb(error);
-      throw error;
+        }
+      });
     });
   }
 }
