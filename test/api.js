@@ -200,16 +200,6 @@ describe('Api', function() {
     }).catch(done);
   });
 
-  it('should query one document by uid', function(done) {
-    getApi().then(function(api) {
-      return api.getByUID('product', 'how-to-query-the-api').then(function(document) {
-        assert.strictEqual(document.id, 'WW4bKScAAMAqmluX');
-
-        done();
-      });
-    }).catch(done);
-  });
-
   it('should query one document by bookmark', function(done) {
     getApi().then(function(api) {
       return api.getBookmark('faq').then(function(document) {
