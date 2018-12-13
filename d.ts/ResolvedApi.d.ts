@@ -10,7 +10,7 @@ export declare const EXPERIMENT_COOKIE = "io.prismic.experiment";
 export interface Ref {
     ref: string;
     label: string;
-    isMasterRef: string;
+    isMasterRef: boolean;
     scheduledAt: string;
     id: string;
 }
