@@ -66,13 +66,6 @@ describe('Prismic', function() {
     }).catch(done);
   });
 
-  it('should query one document by uid', function(done) {
-    client.getByUID('product', 'how-to-query-the-api').then(function(document) {
-      assert.strictEqual(document.id, 'WW4bKScAAMAqmluX');
-      done();
-    }).catch(done);
-  });
-
   it('should query one document by bookmark', function(done) {
     client.getBookmark('faq').then(function(document) {
       assert.strictEqual(document.id, 'WW4bKScAAMAqmluX');

@@ -188,7 +188,9 @@ export default class ResolvedApi implements Client {
    */
   getByUID(type: string, uid: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
     const options = maybeOptions || {};
-    if (!options.lang) options.lang = '*';
+    if(options.lang === "*") throw new Error("FORDIDDEN. You can't use getByUID with *, use the predicates instead.")
+    if(!options.page) options.page = 1;
+
     return this.queryFirst(Predicates.at(`my.${type}.uid`, uid), options, cb);
   }
 
