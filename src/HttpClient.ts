@@ -16,17 +16,13 @@ export default class HttpClient {
     this.cache = cache || new DefaultApiCache();
   }
 
-  request<T>(url: string, callback?: RequestCallback<T>): Promise<T> {
-    return new Promise((resolve, reject) => {
-      this.requestHandler.request<T>(url, (err, result, xhr, ttl) => {
-        if (err) {
-          reject(err);
-          callback && callback(err, null, xhr, ttl);
-        } else if (result) {
-          resolve(result);
-          callback && callback(null, result, xhr, ttl);
-        }
-      });
+  request<T>(url: string, callback?: RequestCallback<T>): void {
+    this.requestHandler.request<T>(url, (err, result, xhr, ttl) => {
+      if (err) {
+        callback && callback(err, null, xhr, ttl);
+      } else if (result) {
+        callback && callback(null, result, xhr, ttl);
+      }
     });
   }
 
