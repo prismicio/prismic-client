@@ -10,7 +10,7 @@
     "content",
     "api"
   ],
-  "version": "2.0.0",
+  "version": "2.0.1",
   "devDependencies": {
     "chai": "^4.1.1",
     "json-loader": "^0.5.4",
