@@ -17,7 +17,7 @@
     "mocha": "^5.2.0",
     "ts-loader": "^4.4.1",
     "tslint": "^5.1.0",
-    "tslint-config-airbnb": "^5.2.1",
+    "tslint-config-airbnb": "^5.11.1",
     "typedoc": "^0.11.1",
     "typescript": "^2.3.2",
     "webpack": "^4.12.0",
@@ -35,7 +35,7 @@
     "dev": "node_modules/.bin/webpack-cli -d --watch",
     "check": "tsc --pretty --noEmit --project ./tsconfig.json --watch",
     "test": "mocha",
-    "prepublish": "npm run build; npm run docs",
+    "prepare": "npm run build; npm run docs",
     "docs": "typedoc --mode file --out ./docs/ ./src/index.ts",
     "lint": "tslint src/**/*.ts -e src/lru.ts -e src/Cookies.ts"
   },
