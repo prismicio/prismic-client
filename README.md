@@ -134,6 +134,16 @@ Prismic.api("https://your-repository-name.prismic.io/api").then(function(api) {
 });
 ```
 
+If you included prismic through the script tag (CDN) there is a global variable PrismicJS: 
+```javascript
+PrismicJS.api("https://your-repository-name.prismic.io/api").then( api => {
+  const faq = PrismicJS.Predicates.at('document.type', 'faq');
+  api.query(faq, { lang: 'en-en' }).then( response => {
+    console.log("Documents: ", response.results);
+  })
+})
+```
+
 See the [developer documentation](https://prismic.io/docs) or the [API documentation](https://prismicio.github.io/prismic-javascript/globals.html) for more details on how to use it.
 
 ### Integrate the content
