@@ -125,8 +125,8 @@ export default class ResolvedApi implements Client {
     if (!options.ref) {
       // Look in cookies if we have a ref (preview or experiment)
       let cookieString = '';
-      if (this.options.req) { // NodeJS
-        cookieString = this.options.req.headers['cookie'] || '';
+      if (options.req || this.options.req) { // NodeJS
+        cookieString = (options.req || this.options.req).headers['cookie'] || '';
       } else if (typeof window !== 'undefined' && window.document) { // Browser
         cookieString = window.document.cookie || '';
       }
