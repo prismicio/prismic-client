@@ -165,7 +165,7 @@ export class SearchForm {
   query(query: string | string[]): SearchForm {
     if (typeof query === 'string') {
       return this.query([query]);
-    } else if (query instanceof Array) {
+    } else if (Array.isArray(query)) {
       return this.set('q', `[${query.join('')}]`);
     } else {
       throw new Error(`Invalid query : ${query}`);
@@ -187,7 +187,7 @@ export class SearchForm {
    */
   fetch(fields: string | string[]): SearchForm {
     console.warn('Warning: Using Fetch is deprecated. Use the property `graphQuery` instead.');
-    const strFields = fields instanceof Array ? fields.join(',') : fields;
+    const strFields = Array.isArray(fields) ? fields.join(',') : fields;
     return this.set('fetch', strFields);
   }
 
@@ -196,7 +196,7 @@ export class SearchForm {
    */
   fetchLinks(fields: string | string[]): SearchForm {
     console.warn('Warning: Using FetchLinks is deprecated. Use the property `graphQuery` instead.');
-    const strFields = fields instanceof Array ? fields.join(',') : fields;
+    const strFields = Array.isArray(fields) ? fields.join(',') : fields;
     return this.set('fetchLinks', strFields);
   }
 
