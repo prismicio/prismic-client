@@ -38,7 +38,7 @@ function encode(value: PredicateValue | PredicateValue[]): string {
     return value.toString();
   } else if (value instanceof Date) {
     return value.getTime().toString();
-  } else if (value instanceof Array) {
+  } else if (Array.isArray(value)) {
     return `[${value.map(v => encode(v)).join(',')}]`;
   } else {
     throw new Error(`Unable to encode ${value} of type ${typeof value}`);
@@ -136,7 +136,7 @@ export default {
   at(fragment: string, value: PredicateValue | PredicateValue[]): string {
     return `[${OPERATOR.at}(${fragment}, ${encode(value)})]`;
   },
-  
+
   not(fragment: string, value: PredicateValue | PredicateValue[]): string {
     return `[${OPERATOR.not}(${fragment}, ${encode(value)})]`;
   },
