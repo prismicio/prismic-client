@@ -1,6 +1,6 @@
 export interface Document {
     id: string;
-    uid?: string;
+    uid?: string | null;
     type: string;
     href: string;
     tags: string[];
