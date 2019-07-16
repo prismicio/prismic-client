@@ -11,6 +11,10 @@ const httpsAgent = new  HttpsAgent({
   maxSockets: 20,
 });
 
+function changeAgent(parsedUrl: any) {
+  return (parsedUrl.protocol === 'http:') ? httpAgent : httpsAgent;
+}
+
 interface Task {
   url: string;
   callback: RequestCallback<any>;
@@ -19,8 +23,6 @@ interface Task {
 interface NodeRequestInit extends RequestInit {
   agent?: any;
 }
-
-const httpRegex = /http:\/\//;
 
 function fetchRequest<T>(url: string, options: RequestHandlerOption, callback: RequestCallback<T>): void {
 
@@ -32,10 +34,8 @@ function fetchRequest<T>(url: string, options: RequestHandlerOption, callback: R
 
   if (options && options.proxyAgent) {
     fetchOptions.agent = options.proxyAgent;
-  } else if (httpRegex.test(url)) {
-    fetchOptions.agent = httpAgent;
   } else {
-    fetchOptions.agent = httpsAgent;
+    fetchOptions.agent = changeAgent;
   }
 
   fetch(url, fetchOptions).then((xhr) => {
