@@ -1,19 +1,26 @@
-// Number of maximum simultaneous connections to the prismic server
-const MAX_CONNECTIONS: number = 20;
-// Number of requests currently running (capped by MAX_CONNECTIONS)
-let running: number = 0;
+import { Agent as HttpAgent } from 'http';
+import { Agent as HttpsAgent } from 'https';
+
+// default agent to use see https://nodejs.org/api/http.html#http_class_http_agent for more options
+const httpAgent = new HttpAgent({
+  keepAlive: true,
+  maxSockets: 20,
+});
+const httpsAgent = new  HttpsAgent({
+  keepAlive: true,
+  maxSockets: 20,
+});
 
 interface Task {
   url: string;
   callback: RequestCallback<any>;
 }
 
-// Requests in queue
-const queue: Task[] = [];
-
 interface NodeRequestInit extends RequestInit {
   agent?: any;
 }
+
+const httpRegex = /http:\/\//;
 
 function fetchRequest<T>(url: string, options: RequestHandlerOption, callback: RequestCallback<T>): void {
 
@@ -25,6 +32,10 @@ function fetchRequest<T>(url: string, options: RequestHandlerOption, callback: R
 
   if (options && options.proxyAgent) {
     fetchOptions.agent = options.proxyAgent;
+  } else if (httpRegex.test(url)) {
+    fetchOptions.agent = httpAgent;
+  } else {
+    fetchOptions.agent = httpsAgent;
   }
 
   fetch(url, fetchOptions).then((xhr) => {
@@ -50,23 +61,6 @@ function fetchRequest<T>(url: string, options: RequestHandlerOption, callback: R
   }).catch(callback);
 }
 
-function processQueue(options: RequestHandlerOption): void {
-  if (queue.length > 0 && running < MAX_CONNECTIONS) {
-    running++;
-
-    const req = queue.shift();
-
-    if (req) {
-
-      fetchRequest(req.url, options, (error, result, xhr, ttl) => {
-        running--;
-        req.callback(error, result, xhr, ttl);
-        processQueue(options);
-      });
-    }
-  }
-}
-
 export type RequestCallback<T> = (error: Error | null, result?: T | null, xhr?: any, ttl?: number) => void;
 
 export interface RequestHandlerOption {
@@ -86,7 +80,7 @@ export class DefaultRequestHandler implements RequestHandler {
   }
 
   request<T>(url: string, callback: RequestCallback<T>): void {
-    queue.push({ url, callback });
-    processQueue(this.options);
+
+    fetchRequest(url, this.options, callback);
   }
 }
