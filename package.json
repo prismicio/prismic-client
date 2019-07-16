@@ -35,7 +35,7 @@
     "build": "node_modules/.bin/webpack-cli -p",
     "dev": "node_modules/.bin/webpack-cli -d --watch",
     "check": "tsc --pretty --noEmit --project ./tsconfig.json --watch",
-    "test": "npm run build && mocha",
+    "test": "mocha",
     "prepare": "npm run build; npm run docs",
     "docs": "typedoc --mode file --out ./docs/ ./src/index.ts",
     "lint": "tslint src/**/*.ts -e src/lru.ts -e src/Cookies.ts"
