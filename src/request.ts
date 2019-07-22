@@ -1,20 +1,3 @@
-import { Agent as HttpAgent } from 'http';
-import { Agent as HttpsAgent } from 'https';
-
-// default agent to use see https://nodejs.org/api/http.html#http_class_http_agent for more options
-const httpAgent = new HttpAgent({
-  keepAlive: true,
-  maxSockets: 20,
-});
-const httpsAgent = new  HttpsAgent({
-  keepAlive: true,
-  maxSockets: 20,
-});
-
-function changeAgent(parsedUrl: any) {
-  return (parsedUrl.protocol === 'http:') ? httpAgent : httpsAgent;
-}
-
 interface Task {
   url: string;
   callback: RequestCallback<any>;
@@ -34,8 +17,6 @@ function fetchRequest<T>(url: string, options: RequestHandlerOption, callback: R
 
   if (options && options.proxyAgent) {
     fetchOptions.agent = options.proxyAgent;
-  } else {
-    fetchOptions.agent = changeAgent;
   }
 
   fetch(url, fetchOptions).then((xhr) => {
@@ -50,14 +31,15 @@ function fetchRequest<T>(url: string, options: RequestHandlerOption, callback: R
         e.status = xhr.status;
         throw e;
       });
-    } else {
-      return xhr.json().then((result) => {
-        const cacheControl = xhr.headers.get('cache-control');
-        const parsedCacheControl = cacheControl ? /max-age=(\d+)/.exec(cacheControl) : null;
-        const ttl = parsedCacheControl ? parseInt(parsedCacheControl[1], 10) : undefined;
-        callback(null, result, xhr, ttl);
-      });
     }
+
+    return xhr.json().then((result) => {
+      const cacheControl = xhr.headers.get('cache-control');
+      const parsedCacheControl = cacheControl ? /max-age=(\d+)/.exec(cacheControl) : null;
+      const ttl = parsedCacheControl ? parseInt(parsedCacheControl[1], 10) : undefined;
+
+      callback(null, result, xhr, ttl);
+    });
   }).catch(callback);
 }
 
