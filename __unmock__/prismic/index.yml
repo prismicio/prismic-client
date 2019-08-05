@@ -1,0 +1,10 @@
+servers:
+- https://example.prismic.io
+paths:
+  /api/v2: {
+    refs: [],
+    experiments: {},
+    bookmarks: {},
+    tags: {},
+    types: {},
+  }
