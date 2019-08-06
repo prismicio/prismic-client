@@ -1,5 +1,5 @@
 servers:
-- https://example.prismic.io
+- url: https://example.prismic.io
 paths:
   /api/v2: {
     refs: [],

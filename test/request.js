@@ -14,7 +14,13 @@ describe('request', () => {
      Prismic.getApi('https://example.prismic.io/api/v2')
       .then((json) => {
         const data = json.data;
-        assert.hasAllKeys(data, ['refs', 'experiments', 'bookmarks', 'tags', 'types']);
+        assert.deepEqual(data, {
+          refs: [],
+          experiments: {},
+          bookmarks: {},
+          tags: {},
+          types: {},
+        });
         done();
       }).catch(done);
    });
