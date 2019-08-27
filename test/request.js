@@ -3,7 +3,7 @@ const nock = require('nock');
 const chai = require('chai');
 
 const assert = chai.assert;
-const Prismic = require(path.join(__dirname, '../', 'dist', 'prismic-javascript.min.js'));
+const Prismic = require(path.join(__dirname, '../', 'dist', 'prismic-javascript.js'));
 
 const STUB_RESPONSE = {
   refs: [],

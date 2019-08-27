@@ -96,10 +96,15 @@ var LazySearchForm = /** @class */ (function () {
         return this.set('pageSize', size);
     };
     LazySearchForm.prototype.fetch = function (fields) {
+        console.warn('Warning: Using Fetch is deprecated. Use the property `graphQuery` instead.');
         return this.set('fetch', fields);
     };
     LazySearchForm.prototype.fetchLinks = function (fields) {
+        console.warn('Warning: Using FetchLinks is deprecated. Use the property `graphQuery` instead.');
         return this.set('fetchLinks', fields);
+    };
+    LazySearchForm.prototype.graphQuery = function (query) {
+        return this.set('graphQuery', query);
     };
     LazySearchForm.prototype.lang = function (langCode) {
         return this.set('lang', langCode);
@@ -141,6 +146,9 @@ var LazySearchForm = /** @class */ (function () {
                 }
                 else if (fieldKey === 'fetchLinks') {
                     return form.fetchLinks(fieldValue);
+                }
+                else if (fieldKey === 'graphQuery') {
+                    return form.graphQuery(fieldValue);
                 }
                 else if (fieldKey === 'lang') {
                     return form.lang(fieldValue);
@@ -207,7 +215,7 @@ var SearchForm = /** @class */ (function () {
         if (typeof query === 'string') {
             return this.query([query]);
         }
-        else if (query instanceof Array) {
+        else if (Array.isArray(query)) {
             return this.set('q', "[" + query.join('') + "]");
         }
         else {
@@ -227,15 +235,23 @@ var SearchForm = /** @class */ (function () {
      * Restrict the results document to the specified fields
      */
     SearchForm.prototype.fetch = function (fields) {
-        var strFields = fields instanceof Array ? fields.join(',') : fields;
+        console.warn('Warning: Using Fetch is deprecated. Use the property `graphQuery` instead.');
+        var strFields = Array.isArray(fields) ? fields.join(',') : fields;
         return this.set('fetch', strFields);
     };
     /**
      * Include the requested fields in the DocumentLink instances in the result
      */
     SearchForm.prototype.fetchLinks = function (fields) {
-        var strFields = fields instanceof Array ? fields.join(',') : fields;
+        console.warn('Warning: Using FetchLinks is deprecated. Use the property `graphQuery` instead.');
+        var strFields = Array.isArray(fields) ? fields.join(',') : fields;
         return this.set('fetchLinks', strFields);
+    };
+    /**
+     * Sets the graphquery to query for this SearchForm. This is an optional method.
+     */
+    SearchForm.prototype.graphQuery = function (query) {
+        return this.set('graphQuery', query);
     };
     /**
      * Sets the language to query for this SearchForm. This is an optional method.
@@ -342,7 +358,7 @@ function encode(value) {
     else if (value instanceof Date) {
         return value.getTime().toString();
     }
-    else if (value instanceof Array) {
+    else if (Array.isArray(value)) {
         return "[" + value.map(function (v) { return encode(v); }).join(',') + "]";
     }
     else {
@@ -631,8 +647,10 @@ var ResolvedApi = /** @class */ (function () {
      */
     ResolvedApi.prototype.getByUID = function (type, uid, maybeOptions, cb) {
         var options = maybeOptions || {};
-        if (!options.lang)
-            options.lang = '*';
+        if (options.lang === "*")
+            throw new Error("FORDIDDEN. You can't use getByUID with *, use the predicates instead.");
+        if (!options.page)
+            options.page = 1;
         return this.queryFirst(Predicates.at("my." + type + ".uid", uid), options, cb);
     };
     /**
@@ -656,27 +674,32 @@ var ResolvedApi = /** @class */ (function () {
     };
     ResolvedApi.prototype.previewSession = function (token, linkResolver, defaultUrl, cb) {
         var _this = this;
-        return this.httpClient.request(token).then(function (result) {
-            if (!result.mainDocument) {
-                cb && cb(null, defaultUrl);
-                return Promise.resolve(defaultUrl);
-            }
-            else {
-                return _this.getByID(result.mainDocument, { ref: token }).then(function (document) {
-                    if (!document) {
+        return new Promise(function (resolve, reject) {
+            _this.httpClient.request(token, function (e, result) {
+                if (e) {
+                    cb && cb(e);
+                    reject(e);
+                }
+                else if (result) {
+                    if (!result.mainDocument) {
                         cb && cb(null, defaultUrl);
-                        return defaultUrl;
+                        resolve(defaultUrl);
                     }
                     else {
-                        var url = linkResolver(document);
-                        cb && cb(null, url);
-                        return url;
+                        return _this.getByID(result.mainDocument, { ref: token }).then(function (document) {
+                            if (!document) {
+                                cb && cb(null, defaultUrl);
+                                resolve(defaultUrl);
+                            }
+                            else {
+                                var url = linkResolver(document);
+                                cb && cb(null, url);
+                                resolve(url);
+                            }
+                        }).catch(reject);
                     }
-                });
-            }
-        }).catch(function (error) {
-            cb && cb(error);
-            throw error;
+                }
+            });
         });
     };
     return ResolvedApi;
@@ -983,12 +1006,6 @@ var DefaultApiCache = /** @class */ (function () {
 }());
 
 // In the browser, node-fetch exports self.fetch:
-// Number of maximum simultaneous connections to the prismic server
-var MAX_CONNECTIONS = 20;
-// Number of requests currently running (capped by MAX_CONNECTIONS)
-var running = 0;
-// Requests in queue
-var queue = [];
 function fetchRequest(url, options, callback) {
     var fetchOptions = {
         headers: {
@@ -1011,36 +1028,20 @@ function fetchRequest(url, options, callback) {
                 throw e;
             });
         }
-        else {
-            return xhr.json().then(function (result) {
-                var cacheControl = xhr.headers.get('cache-control');
-                var parsedCacheControl = cacheControl ? /max-age=(\d+)/.exec(cacheControl) : null;
-                var ttl = parsedCacheControl ? parseInt(parsedCacheControl[1], 10) : undefined;
-                callback(null, result, xhr, ttl);
-            });
-        }
+        return xhr.json().then(function (result) {
+            var cacheControl = xhr.headers.get('cache-control');
+            var parsedCacheControl = cacheControl ? /max-age=(\d+)/.exec(cacheControl) : null;
+            var ttl = parsedCacheControl ? parseInt(parsedCacheControl[1], 10) : undefined;
+            callback(null, result, xhr, ttl);
+        });
     }).catch(callback);
-}
-function processQueue(options) {
-    if (queue.length > 0 && running < MAX_CONNECTIONS) {
-        running++;
-        var req_1 = queue.shift();
-        if (req_1) {
-            fetchRequest(req_1.url, options, function (error, result, xhr, ttl) {
-                running--;
-                req_1.callback(error, result, xhr, ttl);
-                processQueue(options);
-            });
-        }
-    }
 }
 var DefaultRequestHandler = /** @class */ (function () {
     function DefaultRequestHandler(options) {
         this.options = options || {};
     }
     DefaultRequestHandler.prototype.request = function (url, callback) {
-        queue.push({ url: url, callback: callback });
-        processQueue(this.options);
+        fetchRequest(url, this.options, callback);
     };
     return DefaultRequestHandler;
 }());
@@ -1051,18 +1052,13 @@ var HttpClient = /** @class */ (function () {
         this.cache = cache || new DefaultApiCache();
     }
     HttpClient.prototype.request = function (url, callback) {
-        var _this = this;
-        return new Promise(function (resolve, reject) {
-            _this.requestHandler.request(url, function (err, result, xhr, ttl) {
-                if (err) {
-                    reject(err);
-                    callback && callback(err, null, xhr, ttl);
-                }
-                else if (result) {
-                    resolve(result);
-                    callback && callback(null, result, xhr, ttl);
-                }
-            });
+        this.requestHandler.request(url, function (err, result, xhr, ttl) {
+            if (err) {
+                callback && callback(err, null, xhr, ttl);
+            }
+            else if (result) {
+                callback && callback(null, result, xhr, ttl);
+            }
         });
     };
     /**
