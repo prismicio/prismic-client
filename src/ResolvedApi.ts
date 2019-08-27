@@ -15,7 +15,7 @@ export const EXPERIMENT_COOKIE = 'io.prismic.experiment';
 export interface Ref {
   ref: string;
   label: string;
-  isMasterRef: string;
+  isMasterRef: boolean;
   scheduledAt: string;
   id: string;
 }
@@ -188,7 +188,9 @@ export default class ResolvedApi implements Client {
    */
   getByUID(type: string, uid: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
     const options = maybeOptions || {};
-    if (!options.lang) options.lang = '*';
+    if(options.lang === "*") throw new Error("FORDIDDEN. You can't use getByUID with *, use the predicates instead.")
+    if(!options.page) options.page = 1;
+
     return this.queryFirst(Predicates.at(`my.${type}.uid`, uid), options, cb);
   }
 
@@ -213,25 +215,29 @@ export default class ResolvedApi implements Client {
   }
 
   previewSession(token: string, linkResolver: (doc: any) => string, defaultUrl: string, cb?: RequestCallback<string>): Promise<string> {
-    return this.httpClient.request<PreviewResponse>(token).then((result) => {
-      if (!result.mainDocument) {
-        cb && cb(null, defaultUrl);
-        return Promise.resolve(defaultUrl);
-      } else {
-        return this.getByID(result.mainDocument, { ref: token }).then((document) => {
-          if (!document) {
+    return new Promise((resolve, reject) => {
+      this.httpClient.request<PreviewResponse>(token, (e, result) => {
+        if (e) {
+          cb && cb(e);
+          reject(e);
+        } else if (result) {
+          if (!result.mainDocument) {
             cb && cb(null, defaultUrl);
-            return defaultUrl;
+            resolve(defaultUrl);
           } else {
-            const url = linkResolver(document);
-            cb && cb(null, url);
-            return url;
+            return this.getByID(result.mainDocument, { ref: token }).then((document) => {
+              if (!document) {
+                cb && cb(null, defaultUrl);
+                resolve(defaultUrl);
+              } else {
+                const url = linkResolver(document);
+                cb && cb(null, url);
+                resolve(url);
+              }
+            }).catch(reject);
           }
-        });
-      }
-    }).catch((error) => {
-      cb && cb(error);
-      throw error;
+        }
+      });
     });
   }
 }

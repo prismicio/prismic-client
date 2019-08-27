@@ -25,6 +25,7 @@ export declare class LazySearchForm {
     pageSize(size: number): LazySearchForm;
     fetch(fields: string | string[]): LazySearchForm;
     fetchLinks(fields: string | string[]): LazySearchForm;
+    graphQuery(query: string): LazySearchForm;
     lang(langCode: string): LazySearchForm;
     page(p: number): LazySearchForm;
     after(documentId: string): LazySearchForm;
@@ -65,6 +66,10 @@ export declare class SearchForm {
      * Include the requested fields in the DocumentLink instances in the result
      */
     fetchLinks(fields: string | string[]): SearchForm;
+    /**
+     * Sets the graphquery to query for this SearchForm. This is an optional method.
+     */
+    graphQuery(query: string): SearchForm;
     /**
      * Sets the language to query for this SearchForm. This is an optional method.
      */

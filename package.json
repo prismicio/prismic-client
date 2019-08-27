@@ -10,10 +10,11 @@
     "content",
     "api"
   ],
-  "version": "1.5.0",
+  "version": "2.1.1",
   "devDependencies": {
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
+    "nock": "^10.0.6",
     "rollup": "^0.65.0",
     "rollup-plugin-commonjs": "^9.1.6",
     "rollup-plugin-node-resolve": "^3.3.0",
@@ -40,7 +41,7 @@
     "dev": "rollup -c -w",
     "check": "tsc --pretty --noEmit --watch",
     "test": "mocha",
-    "prepublish": "npm run build; npm run docs; npm run declarations",
+    "prepare": "npm run build; npm run docs; npm run declarations",
     "docs": "typedoc --mode file --out ./docs ./src/index.ts",
     "declarations": "tsc --emitDeclarationOnly --declaration --declarationDir ./d.ts",
     "lint": "tslint src/**/*.ts -e src/lru.ts -e src/Cookies.ts"

@@ -85,54 +85,6 @@ describe('Api', function() {
     }).catch(done);
   });
 
-  it('should build query', function(done) {
-    getApi().then(function(api) {
-      var ref = 'AAAAA';
-      var pageSize = 8;
-      var page = 2;
-      var lang = 'en-US';
-      var after = 'XXXXX';
-      var accessToken = 'YYYYY';
-      var query = ['at(document.type, "product")'];
-      var orderings = ['my.product.price'];
-      var fetchLinks = 'people.name, people.age';
-      var fetch = 'product.title, product.desc';
-
-      function wrap(arr) {
-        return '[' + arr.join(',') + ']';
-      }
-
-      var url = api
-          .everything()
-          .query(query)
-          .ref(ref)
-          .pageSize(pageSize)
-          .lang(lang)
-          .page(page)
-          .orderings(orderings)
-          .fetchLinks(fetchLinks)
-          .fetch(fetch)
-          .after(after)
-          .set('access_token', accessToken)
-          .url();
-
-      var qs = querystring.parse(url.split('?')[1]);
-
-      assert.strictEqual(qs.ref, ref);
-      assert.equal(qs.pageSize, pageSize);
-      assert.equal(qs.page, page);
-      assert.strictEqual(qs.lang, lang);
-      assert.strictEqual(qs.after, after);
-      assert.strictEqual(qs['access_token'], accessToken);
-      assert.strictEqual(qs.q, wrap(query));
-      assert.strictEqual(qs.orderings, wrap(orderings));
-      assert.strictEqual(qs.fetchLinks, fetchLinks);
-      assert.strictEqual(qs.fetch, fetch);
-
-      done();
-    }).catch(done);
-  });
-
   it('should retrieve content', function(done) {
     getApi().then(function(api) {
       return api.everything().submit().then(function(response) {
@@ -193,16 +145,6 @@ describe('Api', function() {
   it('should query single document', function(done) {
     getApi().then(function(api) {
       return api.getSingle('product').then(function(document) {
-        assert.strictEqual(document.id, 'WW4bKScAAMAqmluX');
-
-        done();
-      });
-    }).catch(done);
-  });
-
-  it('should query one document by uid', function(done) {
-    getApi().then(function(api) {
-      return api.getByUID('product', 'how-to-query-the-api').then(function(document) {
         assert.strictEqual(document.id, 'WW4bKScAAMAqmluX');
 
         done();
