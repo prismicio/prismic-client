@@ -10,7 +10,7 @@
 It's meant to work in pair with the prismic-dom library available here:
 * [prismic-dom](https://github.com/prismicio/prismic-dom) is on Github.
 
-------------------------------------
+---
 
 
 [1. Installation](#installation)
@@ -55,7 +55,7 @@ It's meant to work in pair with the prismic-dom library available here:
 [5. License](#license)
 -----------------------------------------------------
 
-===================================================
+---
 
 ### Installation
 
