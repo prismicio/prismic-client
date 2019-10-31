@@ -2,7 +2,7 @@ var path = require('path');
 var querystring = require('querystring');
 var chai = require('chai');
 var assert = chai.assert;
-var Prismic = require(path.join(__dirname, '../', 'dist', 'prismic-javascript.min.js'));
+var Prismic = require(path.join(__dirname, '../', 'dist', 'prismic-javascript.js'));
 var fs = require('fs');
 
 function fixtures(file) {
