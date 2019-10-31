@@ -12,8 +12,10 @@ if (yargs.argv.p) {
   outputFile = fileName + '.js';
 }
 
+
 var config = {
   mode: yargs.argv.p ? 'production' : 'development',
+  node: { global: false },
   entry: [
     'promise-polyfill/src/polyfill',
     'cross-fetch/polyfill',
