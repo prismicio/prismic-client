@@ -92,7 +92,7 @@ The kit is universal, it can be used:
 * Client-side with a simple script tag
 
 #### Polyfills
-To support legacy browsers you will need to include polyfills.
+To support legacy browsers include polyfills as needed.
 
 #### Starter kits
 
