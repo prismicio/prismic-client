@@ -20,6 +20,7 @@ It's meant to work in pair with the prismic-dom library available here:
 > [NPM](#npm) <br />
 > [CDN](#cdn) <br />
 > [Downloadable version](#downloadable-version) <br />
+> [Polyfills](#polyfills) <br />
 > [Demo project](#demo-project) <br />
 > [Starter kits](#starter-kits) <br />
 
@@ -89,6 +90,9 @@ The kit is universal, it can be used:
 * Server-side with NodeJS
 * Client-side as part of your build with Browserify, Webpack
 * Client-side with a simple script tag
+
+#### Polyfils
+To support legacy browsers you will need to include polyfills.
 
 #### Starter kits
 
