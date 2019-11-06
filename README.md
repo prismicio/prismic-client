@@ -91,7 +91,7 @@ The kit is universal, it can be used:
 * Client-side as part of your build with Browserify, Webpack
 * Client-side with a simple script tag
 
-#### Polyfils
+#### Polyfills
 To support legacy browsers you will need to include polyfills.
 
 #### Starter kits
