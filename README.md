@@ -85,14 +85,16 @@ https://unpkg.com/prismic-javascript
 
 On our release page: [https://github.com/prismicio/prismic-javascript/releases](https://github.com/prismicio/prismic-javascript/releases).
 
-The kit is universal, it can be used:
 
-* Server-side with NodeJS
-* Client-side as part of your build with Browserify, Webpack
-* Client-side with a simple script tag
+#### Files
+
++ prismic-javascript.js: CommonJs2 build for Node.js 
++ prismic-javascript.mjs: ESM build for Node.js and code compilers
++ prismic-javascript.browser.js: UMD build for browsers
++ prismic-javascript.browser.mjs: ESM build for browsers
 
 #### Polyfills
-To support legacy browsers include polyfills as needed.
+To support legacy browsers and node envirooments include a fetch polyfill in your pollyfill strategy.
 
 #### Starter kits
 
