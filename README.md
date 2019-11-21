@@ -94,7 +94,8 @@ On our release page: [https://github.com/prismicio/prismic-javascript/releases](
 + prismic-javascript.browser.mjs: ESM build for browsers
 
 #### Polyfills
-To support legacy browsers and node envirooments include a fetch polyfill in your pollyfill strategy.
+To support legacy browsers inlcude a fetch and promise polyfills.
+For node envirooments include a fetch polyfill.
 
 #### Starter kits
 
