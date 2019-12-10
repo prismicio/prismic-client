@@ -110,6 +110,21 @@ export default class ResolvedApi implements Client {
     return this.experiments.current();
   }
 
+  getResolvedRef(): string {
+    // Look in cookies if we have a ref (preview or experiment)
+    let cookieString = '';
+    if (this.options.req) { // NodeJS
+      cookieString = this.options.req.headers['cookie'] || '';
+    } else if (typeof window !== 'undefined' && window.document) { // Browser
+      cookieString = window.document.cookie || '';
+    }
+    const cookies = Cookies.parse(cookieString);
+    const previewRef = cookies[PREVIEW_COOKIE];
+    const experimentRef = this.experiments.refFromCookie(cookies[EXPERIMENT_COOKIE]);
+
+    return previewRef || experimentRef || this.masterRef.ref;
+  }
+
   /**
    * Query the repository
    */
@@ -123,17 +138,8 @@ export default class ResolvedApi implements Client {
       form = form.set(key, options[key]);
     }
     if (!options.ref) {
-      // Look in cookies if we have a ref (preview or experiment)
-      let cookieString = '';
-      if (this.options.req) { // NodeJS
-        cookieString = this.options.req.headers['cookie'] || '';
-      } else if (typeof window !== 'undefined' && window.document) { // Browser
-        cookieString = window.document.cookie || '';
-      }
-      const cookies = Cookies.parse(cookieString);
-      const previewRef = cookies[PREVIEW_COOKIE];
-      const experimentRef = this.experiments.refFromCookie(cookies[EXPERIMENT_COOKIE]);
-      form = form.ref(previewRef || experimentRef || this.masterRef.ref);
+      const resolvedRef = this.getResolvedRef();
+      form = form.ref(resolvedRef);
     }
     if (q) {
       form.query(q);

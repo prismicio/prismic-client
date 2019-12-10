@@ -76,6 +76,7 @@ export default class ResolvedApi implements Client {
      */
     ref(label: string): string | null;
     currentExperiment(): Experiment | null;
+    getResolvedRef(): string;
     /**
      * Query the repository
      */

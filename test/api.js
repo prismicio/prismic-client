@@ -107,7 +107,7 @@ describe('Api', function() {
         assert.strictEqual(document.lang, 'en-us');
 
         done();
-      })
+      });
     }).catch(done);
   });
 
@@ -159,6 +159,15 @@ describe('Api', function() {
 
         done();
       });
+    }).catch(done);
+  });
+
+  it('should get the resolved ref', function(done) {
+    getApi().then(function(api) {
+      const resolvedRef = api.getResolvedRef();
+      assert.strictEqual(api.master(), resolvedRef);
+
+      done();
     }).catch(done);
   });
 });
