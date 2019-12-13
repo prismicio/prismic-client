@@ -14,11 +14,16 @@ export interface Ref {
     scheduledAt: string;
     id: string;
 }
+export interface Language {
+    id: string;
+    name: string;
+}
 export interface ApiData {
     refs: Ref[];
     bookmarks: {
         [key: string]: string;
     };
+    languages: Language[];
     types: {
         [key: string]: string;
     };
@@ -55,6 +60,7 @@ export default class ResolvedApi implements Client {
     types: {
         [key: string]: string;
     };
+    languages: Language[];
     constructor(data: ApiData, httpClient: HttpClient, options: ResolvedApiOptions);
     /**
      * Returns a useable form from its id, as described in the RESTful description of the API.

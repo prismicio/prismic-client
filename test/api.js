@@ -85,6 +85,14 @@ describe('Api', function() {
     }).catch(done);
   });
 
+  it('should access to languages', function(done) {
+    getApi().then(function(api) {
+      const language = api.languages[0];
+      assert.deepEqual({ id: 'en-gb', name: 'English - Great Britain'}, language);
+      done();
+    }).catch(done);
+  });
+
   it('should retrieve content', function(done) {
     getApi().then(function(api) {
       return api.everything().submit().then(function(response) {
@@ -107,7 +115,7 @@ describe('Api', function() {
         assert.strictEqual(document.lang, 'en-us');
 
         done();
-      })
+      });
     }).catch(done);
   });
 
