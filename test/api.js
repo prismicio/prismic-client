@@ -107,14 +107,18 @@ describe('Api', function() {
         assert.strictEqual(document.lang, 'en-us');
 
         done();
-      })
+      });
     }).catch(done);
   });
 
   it('should query first document', function(done) {
     getApi().then(function(api) {
+      const options = {};
+      const providedOptions = Object.assign({}, options);
+
       return api.queryFirst(Prismic.Predicates.at('my.product.price', 20)).then(function(document) {
         assert.strictEqual(document.id, 'WW4bKScAAMAqmluX');
+        assert.deepEqual(providedOptions, options);
 
         done();
       });
@@ -123,8 +127,12 @@ describe('Api', function() {
 
   it('should query one document by id', function(done) {
     getApi().then(function(api) {
-      return api.getByID('WW4bKScAAMAqmluX').then(function(document) {
+      const options = {};
+      const providedOptions = Object.assign({}, options);
+
+      return api.getByID('WW4bKScAAMAqmluX', providedOptions).then(function(document) {
         assert.strictEqual(document.id, 'WW4bKScAAMAqmluX');
+        assert.deepEqual(providedOptions, options);
 
         done();
       });
@@ -133,9 +141,13 @@ describe('Api', function() {
 
   it('should query n documents by ids', function(done) {
     getApi().then(function(api) {
-      return api.getByIDs(['WW4bKScAAMAqmluX', 'WHT6MCgAAAUYJMjN']).then(function(response) {
+      const options = {};
+      const providedOptions = Object.assign({}, options);
+
+      return api.getByIDs(['WW4bKScAAMAqmluX', 'WHT6MCgAAAUYJMjN'], providedOptions).then(function(response) {
         var document = response.results[0];
         assert.strictEqual(document.id, 'WW4bKScAAMAqmluX');
+        assert.deepEqual(providedOptions, options);
 
         done();
       });
@@ -144,8 +156,12 @@ describe('Api', function() {
 
   it('should query single document', function(done) {
     getApi().then(function(api) {
-      return api.getSingle('product').then(function(document) {
+      const options = {};
+      const providedOptions = Object.assign({}, options);
+
+      return api.getSingle('product', providedOptions).then(function(document) {
         assert.strictEqual(document.id, 'WW4bKScAAMAqmluX');
+        assert.deepEqual(providedOptions, options);
 
         done();
       });

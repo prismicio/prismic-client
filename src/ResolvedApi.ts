@@ -150,7 +150,7 @@ export default class ResolvedApi implements Client {
   queryFirst(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document>, cb?: RequestCallback<Document>): Promise<Document> {
     const { options, callback } = typeof optionsOrCallback === 'function'
         ? { options: {} as QueryOptions, callback: optionsOrCallback }
-        : { options: optionsOrCallback || {}, callback: cb || (() => {}) };
+        : { options: {...optionsOrCallback} || {}, callback: cb || (() => {}) };
 
     options.page = 1;
     options.pageSize = 1;
@@ -169,7 +169,7 @@ export default class ResolvedApi implements Client {
    * Retrieve the document with the given id
    */
   getByID(id: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
-    const options = maybeOptions || {};
+    const options = maybeOptions ? {...maybeOptions} : {};
     if (!options.lang) options.lang = '*';
     return this.queryFirst(Predicates.at('document.id', id), options, cb);
   }
@@ -178,7 +178,7 @@ export default class ResolvedApi implements Client {
    * Retrieve multiple documents from an array of id
    */
   getByIDs(ids: string[], maybeOptions?: QueryOptions, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse> {
-    const options = maybeOptions || {};
+    const options = maybeOptions ? {...maybeOptions} : {};
     if (!options.lang) options.lang = '*';
     return this.query(Predicates.in('document.id', ids), options, cb);
   }
@@ -187,7 +187,7 @@ export default class ResolvedApi implements Client {
    * Retrieve the document with the given uid
    */
   getByUID(type: string, uid: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
-    const options = maybeOptions || {};
+    const options = maybeOptions ? {...maybeOptions} : {};
     if(options.lang === "*") throw new Error("FORDIDDEN. You can't use getByUID with *, use the predicates instead.")
     if(!options.page) options.page = 1;
 
@@ -198,7 +198,7 @@ export default class ResolvedApi implements Client {
    * Retrieve the singleton document with the given type
    */
   getSingle(type: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
-    const options = maybeOptions || {};
+    const options = maybeOptions ? {...maybeOptions} : {};
     return this.queryFirst(Predicates.at('document.type', type), options, cb);
   }
 
