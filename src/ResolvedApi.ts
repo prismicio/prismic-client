@@ -20,9 +20,15 @@ export interface Ref {
   id: string;
 }
 
+export interface Language {
+  id: string;
+  name: string;
+}
+
 export interface ApiData {
   refs: Ref[];
   bookmarks: { [key: string]: string };
+  languages: Language[];
   types: { [key: string]: string };
   tags: string[];
   forms: { [key: string]: Form };
@@ -55,6 +61,7 @@ export default class ResolvedApi implements Client {
   refs: Ref[];
   tags: string[];
   types: { [key: string]: string };
+  languages: Language[];
 
   constructor(data: ApiData, httpClient: HttpClient, options: ResolvedApiOptions) {
     this.data = data;
@@ -66,6 +73,7 @@ export default class ResolvedApi implements Client {
     this.refs = data.refs;
     this.tags = data.tags;
     this.types = data.types;
+    this.languages = data.languages;
   }
 
   /**
