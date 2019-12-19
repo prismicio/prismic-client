@@ -7,7 +7,7 @@ import HttpClient from './HttpClient';
 
 export interface ApiOptions {
   accessToken?: string;
-  linkResolver?: any;
+  routes?: any;
   requestHandler?: RequestHandler;
   req?: any;
   apiCache?: ApiCache;
@@ -31,8 +31,8 @@ export default class Api {
       const accessTokenParam = `access_token=${this.options.accessToken}`;
       this.url += separator(url) + accessTokenParam;
     }
-    if(this.options.linkResolver) {
-      this.url += separator(url) + `link_resolver=${JSON.stringify(this.options.linkResolver)}`;
+    if(this.options.routes) {
+      this.url += separator(url) + `routes=${JSON.stringify(this.options.routes)}`;
     }
 
     this.apiDataTTL = this.options.apiDataTTL || 5;

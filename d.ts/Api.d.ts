@@ -4,7 +4,7 @@ import ResolvedApi from './ResolvedApi';
 import HttpClient from './HttpClient';
 export interface ApiOptions {
     accessToken?: string;
-    linkResolver?: any;
+    routes?: any;
     requestHandler?: RequestHandler;
     req?: any;
     apiCache?: ApiCache;
