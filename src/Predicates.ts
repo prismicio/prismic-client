@@ -32,7 +32,7 @@ const OPERATOR = {
 type PredicateValue = string | number | Date;
 
 function encode(value: PredicateValue | PredicateValue[]): string {
-  if (typeof value === 'string') {
+  if (typeof value === 'string' || typeof value === 'boolean') {
     return `"${value}"`;
   } else if (typeof value === 'number') {
     return value.toString();
