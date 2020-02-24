@@ -97,6 +97,24 @@ On our release page: [https://github.com/prismicio/prismic-javascript/releases](
 To support legacy browsers inlcude a fetch and promise polyfills.
 For node envirooments include a fetch polyfill.
 
+#### Bundeling 
+Webpack should work as is.
+If using Rollup remember and targeting browsers remember to turn on the browser flag in the [resolver options](https://github.com/rollup/plugins/tree/master/packages/node-resolve#browser) 
+```js 
+// rollup.config.js
+import resolve from '@rollup/plugin-node-resolve';
+
+export default {
+  input: 'src/index.js',
+  output: {
+    dir: 'output',
+    format: 'cjs'
+  },
+  plugins: [resolve({ browser: true })]
+};
+
+```
+
 #### Starter kits
 
 For new project, you can start from a sample project:
