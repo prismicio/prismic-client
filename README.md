@@ -94,10 +94,10 @@ On our release page: [https://github.com/prismicio/prismic-javascript/releases](
 + prismic-javascript.browser.mjs: ESM build for browsers
 
 #### Polyfills
-To support legacy browsers inlcude a fetch and promise polyfills.
-For node envirooments include a fetch polyfill.
+To support legacy browsers include a fetch and promise polyfills.
+For node environments include a fetch polyfill.
 
-#### Bundeling 
+#### Bundling 
 Webpack should work as is.
 If using Rollup remember and targeting browsers remember to turn on the browser flag in the [resolver options](https://github.com/rollup/plugins/tree/master/packages/node-resolve#browser) 
 ```js 
