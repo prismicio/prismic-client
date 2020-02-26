@@ -1,3 +1,15 @@
+const __assign = Object.assign || function (target) {
+    for (var source, i = 1; i < arguments.length; i++) {
+        source = arguments[i];
+        for (var prop in source) {
+            if (Object.prototype.hasOwnProperty.call(source, prop)) {
+                target[prop] = source[prop];
+            }
+        }
+    }
+    return target;
+};
+
 var Variation = /** @class */ (function () {
     function Variation(data) {
         this.data = {};
@@ -353,6 +365,9 @@ function encode(value) {
     else if (Array.isArray(value)) {
         return "[" + value.map(function (v) { return encode(v); }).join(',') + "]";
     }
+    else if (typeof value === "boolean") {
+        return value.toString();
+    }
     else {
         throw new Error("Unable to encode " + value + " of type " + typeof value);
     }
@@ -525,6 +540,7 @@ var ResolvedApi = /** @class */ (function () {
         this.refs = data.refs;
         this.tags = data.tags;
         this.types = data.types;
+        this.languages = data.languages;
     }
     /**
      * Returns a useable form from its id, as described in the RESTful description of the API.
@@ -604,7 +620,7 @@ var ResolvedApi = /** @class */ (function () {
     ResolvedApi.prototype.queryFirst = function (q, optionsOrCallback, cb) {
         var _a = typeof optionsOrCallback === 'function'
             ? { options: {}, callback: optionsOrCallback }
-            : { options: optionsOrCallback || {}, callback: cb || (function () { }) }, options = _a.options, callback = _a.callback;
+            : { options: __assign({}, optionsOrCallback) || {}, callback: cb || (function () { }) }, options = _a.options, callback = _a.callback;
         options.page = 1;
         options.pageSize = 1;
         return this.query(q, options).then(function (response) {
@@ -620,7 +636,7 @@ var ResolvedApi = /** @class */ (function () {
      * Retrieve the document with the given id
      */
     ResolvedApi.prototype.getByID = function (id, maybeOptions, cb) {
-        var options = maybeOptions || {};
+        var options = maybeOptions ? __assign({}, maybeOptions) : {};
         if (!options.lang)
             options.lang = '*';
         return this.queryFirst(Predicates.at('document.id', id), options, cb);
@@ -629,7 +645,7 @@ var ResolvedApi = /** @class */ (function () {
      * Retrieve multiple documents from an array of id
      */
     ResolvedApi.prototype.getByIDs = function (ids, maybeOptions, cb) {
-        var options = maybeOptions || {};
+        var options = maybeOptions ? __assign({}, maybeOptions) : {};
         if (!options.lang)
             options.lang = '*';
         return this.query(Predicates.in('document.id', ids), options, cb);
@@ -638,7 +654,7 @@ var ResolvedApi = /** @class */ (function () {
      * Retrieve the document with the given uid
      */
     ResolvedApi.prototype.getByUID = function (type, uid, maybeOptions, cb) {
-        var options = maybeOptions || {};
+        var options = maybeOptions ? __assign({}, maybeOptions) : {};
         if (options.lang === "*")
             throw new Error("FORDIDDEN. You can't use getByUID with *, use the predicates instead.");
         if (!options.page)
@@ -649,7 +665,7 @@ var ResolvedApi = /** @class */ (function () {
      * Retrieve the singleton document with the given type
      */
     ResolvedApi.prototype.getSingle = function (type, maybeOptions, cb) {
-        var options = maybeOptions || {};
+        var options = maybeOptions ? __assign({}, maybeOptions) : {};
         return this.queryFirst(Predicates.at('document.type', type), options, cb);
     };
     /**
@@ -1092,13 +1108,19 @@ var HttpClient = /** @class */ (function () {
     return HttpClient;
 }());
 
+function separator(url) {
+    return url.indexOf('?') > -1 ? '&' : '?';
+}
 var Api = /** @class */ (function () {
     function Api(url, options) {
         this.options = options || {};
         this.url = url;
         if (this.options.accessToken) {
             var accessTokenParam = "access_token=" + this.options.accessToken;
-            this.url += (url.indexOf('?') > -1 ? '&' : '?') + accessTokenParam;
+            this.url += separator(url) + accessTokenParam;
+        }
+        if (this.options.routes) {
+            this.url += separator(url) + ("routes=" + JSON.stringify(this.options.routes));
         }
         this.apiDataTTL = this.options.apiDataTTL || 5;
         this.httpClient = new HttpClient(this.options.requestHandler, this.options.apiCache, this.options.proxyAgent);

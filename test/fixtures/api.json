@@ -38,6 +38,32 @@
         "customers": "Vebi4x8AAB4AFXCd",
         "pricing": "UffVud_mqZR-3EGd"
     },
+    "languages": [{
+        "id": "en-gb",
+        "name": "English - Great Britain"
+      }, {
+        "id": "fr-fr",
+        "name": "French - France"
+      }, {
+        "id": "de-de",
+        "name": "German - Germany"
+      }, {
+        "id": "de-ch",
+        "name": "German - Switzerland"
+      }, {
+        "id": "nl-nl",
+        "name": "Dutch - Netherlands"
+      }, {
+        "id": "es-es",
+        "name": "Spanish - Spain (Traditional)"
+      }, {
+        "id": "en-dk",
+        "name": "English - Denmark"
+      }, {
+        "id": "en-se",
+        "name": "English - Sweden"
+      }
+    ],
     "types": {
         "post": "Post Page",
         "author": "author",

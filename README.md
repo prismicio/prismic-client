@@ -10,7 +10,7 @@
 It's meant to work in pair with the prismic-dom library available here:
 * [prismic-dom](https://github.com/prismicio/prismic-dom) is on Github.
 
-------------------------------------
+---
 
 
 [1. Installation](#installation)
@@ -56,7 +56,7 @@ It's meant to work in pair with the prismic-dom library available here:
 [5. License](#license)
 -----------------------------------------------------
 
-===================================================
+---
 
 ### Installation
 
@@ -157,6 +157,16 @@ Prismic.api("https://your-repository-name.prismic.io/api").then(function(api) {
 }, function(err) {
   console.log("Something went wrong: ", err);
 });
+```
+
+If you included prismic through the script tag (CDN) there is a global variable PrismicJS: 
+```javascript
+PrismicJS.api("https://your-repository-name.prismic.io/api").then( api => {
+  const faq = PrismicJS.Predicates.at('document.type', 'faq');
+  api.query(faq, { lang: 'en-en' }).then( response => {
+    console.log("Documents: ", response.results);
+  })
+})
 ```
 
 See the [developer documentation](https://prismic.io/docs) or the [API documentation](https://prismicio.github.io/prismic-javascript/globals.html) for more details on how to use it.

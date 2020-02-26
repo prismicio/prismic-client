@@ -12,6 +12,14 @@ describe('Predicates', function() {
     );
   });
 
+  it('should build at query with boolean value', function() {
+    assert.strictEqual(
+      Prismic.Predicates.at('my.product.pinned', true),
+      '[at(my.product.pinned, true)]'
+    );
+  });
+
+
   it('should build at query with date value', function() {
     var date = new Date();
     assert.strictEqual(
@@ -61,6 +69,13 @@ describe('Predicates', function() {
     assert.strictEqual(
       Prismic.Predicates.not('my.product.price', 10),
       '[not(my.product.price, 10)]'
+    );
+  });
+
+  it('should build not query with boolean value', function() {
+    assert.strictEqual(
+      Prismic.Predicates.not('my.product.pinned', false),
+      '[not(my.product.pinned, false)]'
     );
   });
 
@@ -388,4 +403,3 @@ describe('Predicates', function() {
     );
   });
 });
-

@@ -29,7 +29,7 @@ const OPERATOR = {
   GeopointNear: 'geopoint.near',
 };
 
-type PredicateValue = string | number | Date;
+type PredicateValue = boolean | string | number | Date;
 
 function encode(value: PredicateValue | PredicateValue[]): string {
   if (typeof value === 'string') {
@@ -40,6 +40,8 @@ function encode(value: PredicateValue | PredicateValue[]): string {
     return value.getTime().toString();
   } else if (Array.isArray(value)) {
     return `[${value.map(v => encode(v)).join(',')}]`;
+  } else if (typeof value === "boolean") {
+    return value.toString()
   } else {
     throw new Error(`Unable to encode ${value} of type ${typeof value}`);
   }
