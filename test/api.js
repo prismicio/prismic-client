@@ -219,4 +219,17 @@ describe('Api', function() {
     assert.equal(expect, redirectUrl);
    
   });
+
+  it('getPreviewDocument works only one argument', async function() {
+    const linkResolver = (doc) => `/${doc.uid}`;
+    const token = "WJr3eikAAClRybU5~WYx9HB8AAB8AmX7z";
+    // const documentId = "WW4bKScAAMAqmluX";
+    const expect = "/";
+      
+    const api = await getApi()
+    const redirectUrl = await api.getPreviewResolver(token/*, documentId */).resolve(linkResolver, '/');
+
+    assert.equal(expect, redirectUrl);
+   
+  });
 });
