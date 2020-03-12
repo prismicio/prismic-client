@@ -1,6 +1,6 @@
 export interface AlternateLanguage {
     id: string;
-    uid: string;
+    uid?: string;
     type: string;
     lang: string;
 }
