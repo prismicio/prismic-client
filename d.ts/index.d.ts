@@ -6,18 +6,18 @@ declare namespace Prismic {
     const experimentCookie = "io.prismic.experiment";
     const previewCookie = "io.prismic.preview";
     const Predicates: {
-        at(fragment: string, value: string | number | Date | (string | number | Date)[]): string;
-        not(fragment: string, value: string | number | Date | (string | number | Date)[]): string;
+        at(fragment: string, value: string | number | boolean | Date | (string | number | boolean | Date)[]): string;
+        not(fragment: string, value: string | number | boolean | Date | (string | number | boolean | Date)[]): string;
         missing(fragment: string): string;
         has(fragment: string): string;
-        any(fragment: string, values: (string | number | Date)[]): string;
+        any(fragment: string, values: (string | number | boolean | Date)[]): string;
         in(fragment: string, values: string[]): string;
         fulltext(fragment: string, value: string): string;
         similar(documentId: string, maxResults: number): string;
         date: {
-            before(fragment: string, before: string | number | Date): string;
-            after(fragment: string, after: string | number | Date): string;
-            between(fragment: string, before: string | number | Date, after: string | number | Date): string;
+            before(fragment: string, before: string | number | boolean | Date): string;
+            after(fragment: string, after: string | number | boolean | Date): string;
+            between(fragment: string, before: string | number | boolean | Date, after: string | number | boolean | Date): string;
             dayOfMonth(fragment: string, day: number): string;
             dayOfMonthAfter(fragment: string, day: number): string;
             dayOfMonthBefore(fragment: string, day: number): string;
@@ -32,9 +32,9 @@ declare namespace Prismic {
             hourBefore(fragment: string, hour: number): string;
             hourAfter(fragment: string, hour: number): string;
         };
-        dateBefore: (fragment: string, before: string | number | Date) => string;
-        dateAfter: (fragment: string, after: string | number | Date) => string;
-        dateBetween: (fragment: string, before: string | number | Date, after: string | number | Date) => string;
+        dateBefore: (fragment: string, before: string | number | boolean | Date) => string;
+        dateAfter: (fragment: string, after: string | number | boolean | Date) => string;
+        dateBetween: (fragment: string, before: string | number | boolean | Date, after: string | number | boolean | Date) => string;
         dayOfMonth: (fragment: string, day: number) => string;
         dayOfMonthAfter: (fragment: string, day: number) => string;
         dayOfMonthBefore: (fragment: string, day: number) => string;
