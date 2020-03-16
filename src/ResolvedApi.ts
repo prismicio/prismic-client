@@ -12,6 +12,14 @@ import { Client } from './client';
 export const PREVIEW_COOKIE = 'io.prismic.preview';
 export const EXPERIMENT_COOKIE = 'io.prismic.experiment';
 
+export type LinkResolver = (doc: any) => string;
+
+export interface PreviewResolver {
+  token: string;
+  documentId?: string;
+  resolve(linkResolver: LinkResolver, defaultUrl: string, cb?: RequestCallback<string>): Promise<String>;
+}
+
 export interface Ref {
   ref: string;
   label: string;
@@ -222,7 +230,31 @@ export default class ResolvedApi implements Client {
     }
   }
 
-  previewSession(token: string, linkResolver: (doc: any) => string, defaultUrl: string, cb?: RequestCallback<string>): Promise<string> {
+  getPreviewResolver(token: string, documentId?: string): PreviewResolver {
+    
+    const resolve = (linkResolver: LinkResolver, defaultUrl: string, cb?: RequestCallback<string>) => {
+      if (documentId) {
+        return this.getByID(documentId, { ref: token }).then((document: Document) => {
+          if (!document) {
+            cb && cb(null, defaultUrl);
+            return defaultUrl;
+          } else {
+            const url = linkResolver(document);
+            cb && cb(null, url);
+            return url;
+          }
+        });
+      } else {
+        return Promise.resolve(defaultUrl);
+      }
+    }
+    
+   
+    return { token, documentId, resolve }
+  }
+
+  previewSession(token: string, linkResolver: LinkResolver, defaultUrl: string, cb?: RequestCallback<string>): Promise<string> {
+    console.warn('previewSession function is deprecated in favor of getPreviewResolver function.')
     return new Promise((resolve, reject) => {
       this.httpClient.request<PreviewResponse>(token, (e, result) => {
         if (e) {
