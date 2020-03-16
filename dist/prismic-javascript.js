@@ -684,8 +684,31 @@ var ResolvedApi = /** @class */ (function () {
             return Promise.reject('Error retrieving bookmarked id');
         }
     };
+    ResolvedApi.prototype.getPreviewResolver = function (token, documentId) {
+        var _this = this;
+        var resolve = function (linkResolver, defaultUrl, cb) {
+            if (documentId) {
+                return _this.getByID(documentId, { ref: token }).then(function (document) {
+                    if (!document) {
+                        cb && cb(null, defaultUrl);
+                        return defaultUrl;
+                    }
+                    else {
+                        var url = linkResolver(document);
+                        cb && cb(null, url);
+                        return url;
+                    }
+                });
+            }
+            else {
+                return Promise.resolve(defaultUrl);
+            }
+        };
+        return { token: token, documentId: documentId, resolve: resolve };
+    };
     ResolvedApi.prototype.previewSession = function (token, linkResolver, defaultUrl, cb) {
         var _this = this;
+        console.warn('previewSession function is deprecated in favor of getPreviewResolver function.');
         return new Promise(function (resolve, reject) {
             _this.httpClient.request(token, function (e, result) {
                 if (e) {
