@@ -99,7 +99,7 @@ For node environments include a fetch polyfill.
 
 #### Bundling 
 Webpack should work as is.
-If using Rollup remember and targeting browsers remember to turn on the browser flag in the [resolver options](https://github.com/rollup/plugins/tree/master/packages/node-resolve#browser) 
+If using Rollup and targeting browsers remember to turn on the browser flag in the [resolver options](https://github.com/rollup/plugins/tree/master/packages/node-resolve#browser) 
 ```js 
 // rollup.config.js
 import resolve from '@rollup/plugin-node-resolve';
