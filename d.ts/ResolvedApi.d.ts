@@ -7,6 +7,12 @@ import HttpClient from './HttpClient';
 import { Client } from './client';
 export declare const PREVIEW_COOKIE = "io.prismic.preview";
 export declare const EXPERIMENT_COOKIE = "io.prismic.experiment";
+export declare type LinkResolver = (doc: any) => string;
+export interface PreviewResolver {
+    token: string;
+    documentId?: string;
+    resolve(linkResolver: LinkResolver, defaultUrl: string, cb?: RequestCallback<string>): Promise<String>;
+}
 export interface Ref {
     ref: string;
     label: string;
@@ -113,5 +119,6 @@ export default class ResolvedApi implements Client {
      * Retrieve the document with the given bookmark
      */
     getBookmark(bookmark: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document>;
-    previewSession(token: string, linkResolver: (doc: any) => string, defaultUrl: string, cb?: RequestCallback<string>): Promise<string>;
+    getPreviewResolver(token: string, documentId?: string): PreviewResolver;
+    previewSession(token: string, linkResolver: LinkResolver, defaultUrl: string, cb?: RequestCallback<string>): Promise<string>;
 }

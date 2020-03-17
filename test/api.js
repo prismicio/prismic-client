@@ -21,7 +21,7 @@ function getApi() {
       },
     },
   };
-
+ 
   return Prismic.getApi('http://localhost:3000/api', options);
 }
 
@@ -183,6 +183,53 @@ describe('Api', function() {
 
         done();
       });
+    }).catch(done); 
+  });
+
+  it('getPreviewDocument', function(done) {
+    const token = "WJr3eikAAClRybU5~WYx9HB8AAB8AmX7z";
+    const documentId = "WW4bKScAAMAqmluX";
+    const linkResolver = (doc) => doc;
+
+    getApi().then((api) => {
+      
+      const previewResolver = api.getPreviewResolver(token, documentId);
+
+      assert.equal(token, previewResolver.token);
+      assert.equal(documentId, previewResolver.documentId);
+
+      return previewResolver.resolve(linkResolver, '/');
+
+    }).then((doc) => {
+      assert.equal(doc.id, documentId);
+      assert.equal(doc.uid, 'renaudbressand');
+      done();
     }).catch(done);
+  });
+
+  it('getPreviewDocument works with async', async function() {
+    const linkResolver = (doc) => `/${doc.uid}`;
+    const token = "WJr3eikAAClRybU5~WYx9HB8AAB8AmX7z";
+    const documentId = "WW4bKScAAMAqmluX";
+    const expect = "/renaudbressand";
+      
+    const api = await getApi()
+    const redirectUrl = await api.getPreviewResolver(token, documentId).resolve(linkResolver, '/');
+
+    assert.equal(expect, redirectUrl);
+   
+  });
+
+  it('getPreviewDocument works only one argument', async function() {
+    const linkResolver = (doc) => `/${doc.uid}`;
+    const token = "WJr3eikAAClRybU5~WYx9HB8AAB8AmX7z";
+    // const documentId = "WW4bKScAAMAqmluX";
+    const expect = "/";
+      
+    const api = await getApi()
+    const redirectUrl = await api.getPreviewResolver(token/*, documentId */).resolve(linkResolver, '/');
+
+    assert.equal(expect, redirectUrl);
+   
   });
 });
