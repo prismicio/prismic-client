@@ -7,7 +7,7 @@ export interface HttpClientOptions {
 export default class HttpClient {
     private cache;
     private requestHandler;
-    constructor(requestHandler?: RequestHandler, cache?: ApiCache, proxyAgent?: any);
+    constructor(requestHandler?: RequestHandler, cache?: ApiCache, proxyAgent?: any, timeoutInMs?: number);
     request<T>(url: string, callback?: RequestCallback<T>): void;
     /**
      * Fetch a URL corresponding to a query, and parse the response as a Response object
