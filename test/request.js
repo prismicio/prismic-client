@@ -28,7 +28,7 @@ describe('request', () => {
       }).catch(done);
   });
 
-  it('Supports request timeout parameter', (done) => {
+  it('Supports response timeout parameter', (done) => {
 
     nock(/example\.prismic\.io/)
     .get('/api/v2')
