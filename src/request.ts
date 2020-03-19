@@ -17,17 +17,19 @@ function fetchRequest<T>(url: string, options: RequestHandlerOption, callback: R
   // can't use number because of NodeJS globals included
   let timeoutId: any;
 
-  const timeoutPromise = new Promise((_, reject) => {
-    timeoutId = setTimeout(
-      () => reject(new Error(`${url} response timeout`)),
-      options.timeoutInMs || 10000,
-    )
-  });
+  const fetchPromise = fetch(url, fetchOptions)
 
-  Promise.race([
-    fetch(url, fetchOptions),
-    timeoutPromise as Promise<Response>
-  ]).then((resp: Response) => {
+  const promise = options.timeoutInMs ? Promise.race([
+    fetchPromise,
+    new Promise((_, reject) => {
+      timeoutId = setTimeout(
+        () => reject(new Error(`${url} response timeout`)),
+        options.timeoutInMs
+      )
+    }) as Promise<Response>
+  ]) : fetchPromise
+
+  promise.then((resp: Response) => {
 
     clearTimeout(timeoutId);
 
