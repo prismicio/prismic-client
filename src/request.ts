@@ -1,7 +1,4 @@
-interface Task {
-  url: string;
-  callback: RequestCallback<any>;
-}
+import fetch, { RequestInit } from 'node-fetch';
 
 interface NodeRequestInit extends RequestInit {
   agent?: any;

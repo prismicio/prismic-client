@@ -1,52 +1,40 @@
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import typescript from 'rollup-plugin-typescript';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import typescript from '@rollup/plugin-typescript';
 import { terser } from 'rollup-plugin-terser';
 import pkg from './package.json';
+
+const prod = process.env.NODE_ENV === 'production'
+
+const suffix = prod ? '.min' : ''
 
 export default [
   /* prismic-javascript.js and prismic-javascript.mjs */
   {
     input: 'src/index.ts',
     output: [
-      { file: `dist/${pkg.name}.js`, format: 'cjs', sourcemap: true },
-      { file: `dist/${pkg.name}.mjs`, format: 'esm', sourcemap: true },
+      { file: `dist/${pkg.name}${suffix}.js`, format: 'cjs', sourcemap: true },
+      { file: `dist/${pkg.name}${suffix}.mjs`, format: 'esm', sourcemap: true },
     ],
     plugins: [
-      resolve(),
+      resolve({
+        preferBuiltins: true
+      }),
       commonjs(),
       typescript({
         typescript: require('typescript')
-      })
+      }),
+      prod && terser()
     ],
-    external: [
-      'node-fetch'
-    ]
+    external: ['stream', 'http', 'url', 'https', 'zlib']
   },
 
   /* prismic-javascript.browser.js and prismic-javascript.browser.mjs */
   {
     input: 'src/index.ts',
     output: [
-      { file: `dist/${pkg.name}.browser.js`, format: 'umd', name: 'PrismicJS', sourcemap: true },
-      { file: `dist/${pkg.name}.browser.mjs`, format: 'esm', sourcemap: true },
-    ],
-    plugins: [
-      resolve({
-        browser: true
-      }),
-      commonjs(),
-      typescript({
-        typescript: require('typescript')
-      })
-    ]
-  },
-
-  /* prismic-javascript.min.js */
-  {
-    input: 'src/index.ts',
-    output: [
-      { file: `dist/${pkg.name}.min.js`, format: 'umd', name: 'PrismicJS' }
+      { file: `dist/${pkg.name}.browser${suffix}.js`, format: 'umd', name: 'PrismicJS', sourcemap: true },
+      { file: `dist/${pkg.name}.browser${suffix}.mjs`, format: 'esm', sourcemap: true },
     ],
     plugins: [
       resolve({
@@ -56,7 +44,8 @@ export default [
       typescript({
         typescript: require('typescript')
       }),
-      terser()
-    ]
+      prod && terser()
+    ],
+    external: ['fetch']
   }
 ];

@@ -31,18 +31,18 @@
     "type": "git",
     "url": "https://github.com/prismicio/prismic-javascript.git"
   },
-  "main": "dist/prismic-javascript.js",
-  "module": "dist/prismic-javascript.mjs",
+  "main": "dist/prismic-javascript.min.js",
+  "module": "dist/prismic-javascript.min.mjs",
   "browser": {
-    "./dist/prismic-javascript.js": "dist/prismic-javascript.browser.js",
-    "./dist/prismic-javascript.mjs": "dist/prismic-javascript.browser.mjs"
+    "./dist/prismic-javascript.js": "dist/prismic-javascript.browser.min.js",
+    "./dist/prismic-javascript.mjs": "dist/prismic-javascript.browser.min.mjs"
   },
   "files": [
     "dist/*.js"
   ],
   "types": "./d.ts/index.d.ts",
   "scripts": {
-    "build": "rollup -c",
+    "build": "NODE_ENV=production rollup -c",
     "dev": "rollup -c -w",
     "check": "tsc --pretty --noEmit --watch",
     "test": "mocha",
