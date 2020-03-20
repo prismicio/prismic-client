@@ -45,7 +45,7 @@
     "build": "NODE_ENV=production rollup -c",
     "dev": "rollup -c -w",
     "check": "tsc --pretty --noEmit --watch",
-    "test": "mocha",
+    "test": "npm run build && mocha",
     "prepublish": "npm run build; npm run docs; npm run declarations",
     "docs": "typedoc --mode file --out ./docs ./src/index.ts",
     "declarations": "tsc --emitDeclarationOnly --declaration --declarationDir ./d.ts",
