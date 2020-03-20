@@ -16,34 +16,56 @@ function fetchRequest<T>(url: string, options: RequestHandlerOption, callback: R
     fetchOptions.agent = options.proxyAgent;
   }
 
-  nodeFetch(url, fetchOptions).then((xhr) => {
-    if (~~(xhr.status / 100 !== 2)) {
+  // can't use number because of NodeJS globals included
+  let timeoutId: any;
+
+  const fetchPromise = nodeFetch(url, fetchOptions)
+
+  const promise = options.timeoutInMs ? Promise.race([
+    fetchPromise,
+    new Promise((_, reject) => {
+      timeoutId = setTimeout(
+        () => reject(new Error(`${url} response timeout`)),
+        options.timeoutInMs
+      )
+    }) as Promise<Response>
+  ]) : fetchPromise
+
+  promise.then((resp: Response) => {
+
+    clearTimeout(timeoutId);
+
+    if (~~(resp.status / 100 !== 2)) {
         /**
          * @description
-         * drain the xhr before throwing an error to prevent memory leaks
+         * drain the resp before throwing an error to prevent memory leaks
          * @link https://github.com/bitinn/node-fetch/issues/83
          */
-      return xhr.text().then(() => {
-        const e: any = new Error(`Unexpected status code [${xhr.status}] on URL ${url}`);
-        e.status = xhr.status;
+      return resp.text().then(() => {
+        const e: any = new Error(`Unexpected status code [${resp.status}] on URL ${url}`);
+        e.status = resp.status;
         throw e;
       });
     }
 
-    return xhr.json().then((result) => {
-      const cacheControl = xhr.headers.get('cache-control');
+    return resp.json().then((result) => {
+      const cacheControl = resp.headers.get('cache-control');
       const parsedCacheControl = cacheControl ? /max-age=(\d+)/.exec(cacheControl) : null;
       const ttl = parsedCacheControl ? parseInt(parsedCacheControl[1], 10) : undefined;
 
-      callback(null, result, xhr, ttl);
+      callback(null, result, resp, ttl);
     });
-  }).catch(callback);
+  }).catch(err => {
+    clearTimeout(timeoutId);
+    callback(err);
+  });
 }
 
-export type RequestCallback<T> = (error: Error | null, result?: T | null, xhr?: any, ttl?: number) => void;
+export type RequestCallback<T> = (error: Error | null, result?: T | null, resp?: Response, ttl?: number) => void;
 
 export interface RequestHandlerOption {
   proxyAgent?: any;
+  timeoutInMs?: number;
 }
 
 export interface RequestHandler {

@@ -11,8 +11,8 @@ export default class HttpClient {
   private cache: ApiCache;
   private requestHandler: RequestHandler;
 
-  constructor(requestHandler?: RequestHandler, cache?: ApiCache, proxyAgent?: any) {
-    this.requestHandler = requestHandler || new DefaultRequestHandler({ proxyAgent });
+  constructor(requestHandler?: RequestHandler, cache?: ApiCache, proxyAgent?: any, timeoutInMs?: number) {
+    this.requestHandler = requestHandler || new DefaultRequestHandler({ proxyAgent, timeoutInMs });
     this.cache = cache || new DefaultApiCache();
   }
 

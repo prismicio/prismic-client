@@ -5,14 +5,9 @@ import { SearchForm, Form } from './form';
 import ApiSearchResponse from './ApiSearchResponse';
 import HttpClient from './HttpClient';
 import { Client } from './client';
+import { PreviewResolver, LinkResolver } from './PreviewResolver';
 export declare const PREVIEW_COOKIE = "io.prismic.preview";
 export declare const EXPERIMENT_COOKIE = "io.prismic.experiment";
-export declare type LinkResolver = (doc: any) => string;
-export interface PreviewResolver {
-    token: string;
-    documentId?: string;
-    resolve(linkResolver: LinkResolver, defaultUrl: string, cb?: RequestCallback<string>): Promise<String>;
-}
 export interface Ref {
     ref: string;
     label: string;
