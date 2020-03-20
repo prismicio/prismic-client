@@ -13,6 +13,7 @@ export interface ApiOptions {
   apiCache?: ApiCache;
   apiDataTTL?: number;
   proxyAgent?: any;
+  timeoutInMs?: number;
 }
 
 function separator(url: string) {
@@ -40,6 +41,7 @@ export default class Api {
       this.options.requestHandler,
       this.options.apiCache,
       this.options.proxyAgent,
+      this.options.timeoutInMs,
     );
   }
 

@@ -164,3 +164,6 @@ typings/
 
 ## documentation
 docs/
+
+## dev build
+dist/prismic-javascript.js

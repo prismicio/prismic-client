@@ -10,6 +10,7 @@ export interface ApiOptions {
     apiCache?: ApiCache;
     apiDataTTL?: number;
     proxyAgent?: any;
+    timeoutInMs?: number;
 }
 export default class Api {
     url: string;
