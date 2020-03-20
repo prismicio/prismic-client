@@ -36,6 +36,9 @@
     "./dist/prismic-javascript.js": "dist/prismic-javascript.browser.js",
     "./dist/prismic-javascript.mjs": "dist/prismic-javascript.browser.mjs"
   },
+  "files": [
+    "dist/*.js"
+  ],
   "types": "./d.ts/index.d.ts",
   "scripts": {
     "build": "rollup -c",
