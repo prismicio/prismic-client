@@ -12,10 +12,10 @@
   ],
   "version": "2.1.5",
   "devDependencies": {
-    "@types/node-fetch": "^2.5.5",
     "@rollup/plugin-commonjs": "^11.0.2",
     "@rollup/plugin-node-resolve": "^7.1.1",
     "@rollup/plugin-typescript": "^4.0.0",
+    "@types/node-fetch": "^2.1.2",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "nock": "^11.6.0",
