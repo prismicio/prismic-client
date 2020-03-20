@@ -12,19 +12,20 @@
   ],
   "version": "2.1.5",
   "devDependencies": {
+    "@types/node-fetch": "^2.5.5",
+    "@rollup/plugin-commonjs": "^11.0.2",
+    "@rollup/plugin-node-resolve": "^7.1.1",
+    "@rollup/plugin-typescript": "^4.0.0",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "nock": "^11.6.0",
     "node-fetch": "^2.6.0",
-    "rollup": "^0.65.0",
-    "rollup-plugin-commonjs": "^9.1.6",
-    "rollup-plugin-node-resolve": "^3.3.0",
-    "rollup-plugin-terser": "^2.0.2",
-    "rollup-plugin-typescript": "^0.8.1",
+    "rollup": "^2.1.0",
+    "rollup-plugin-terser": "^5.3.0",
     "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.11.0",
     "typedoc": "^0.16.10",
-    "typescript": "^3.0.3"
+    "typescript": "^3.8.3"
   },
   "repository": {
     "type": "git",
@@ -49,8 +50,5 @@
     "docs": "typedoc --mode file --out ./docs ./src/index.ts",
     "declarations": "tsc --emitDeclarationOnly --declaration --declarationDir ./d.ts",
     "lint": "tslint src/**/*.ts -e src/lru.ts -e src/Cookies.ts"
-  },
-  "dependencies": {
-    "@types/node-fetch": "^2.1.2"
   }
 }
