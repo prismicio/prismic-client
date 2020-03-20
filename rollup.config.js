@@ -33,8 +33,8 @@ export default [
   {
     input: 'src/index.ts',
     output: [
-      { file: `dist/${pkg.name}.browser${suffix}.js`, format: 'umd', name: 'PrismicJS', sourcemap: true },
-      { file: `dist/${pkg.name}.browser${suffix}.mjs`, format: 'esm', sourcemap: true },
+      { file: `dist/${pkg.name}.browser${suffix}.js`, format: 'umd', name: 'PrismicJS', sourcemap: true, globals: { 'node-fetch': 'fetch' } },
+      { file: `dist/${pkg.name}.browser${suffix}.mjs`, format: 'esm', sourcemap: true, globals: { 'node-fetch': 'fetch' }},
     ],
     plugins: [
       resolve({
@@ -46,6 +46,6 @@ export default [
       }),
       prod && terser()
     ],
-    external: ['fetch']
+    external: ['node-fetch']
   }
 ];
