@@ -1,4 +1,4 @@
-import fetch, { RequestInit } from 'node-fetch';
+import nodeFetch, { RequestInit } from 'node-fetch';
 
 interface NodeRequestInit extends RequestInit {
   agent?: any;
@@ -16,7 +16,7 @@ function fetchRequest<T>(url: string, options: RequestHandlerOption, callback: R
     fetchOptions.agent = options.proxyAgent;
   }
 
-  fetch(url, fetchOptions).then((xhr) => {
+  nodeFetch(url, fetchOptions).then((xhr) => {
     if (~~(xhr.status / 100 !== 2)) {
         /**
          * @description
