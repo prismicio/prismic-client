@@ -5,6 +5,7 @@ import { SearchForm, LazySearchForm } from './form';
 import { Experiment } from './experiments';
 import { RequestHandler, RequestCallback } from './request';
 import Api, { ApiOptions } from './Api';
+import { PreviewResolver, createPreviewResolver } from './PreviewResolver';
 
 export interface Client {
   query(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<ApiSearchResponse>, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse>;
@@ -14,6 +15,7 @@ export interface Client {
   getByUID(type: string, uid: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
   getSingle(type: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
   getBookmark(bookmark: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
+  getPreviewResolver(token: string, documentId?: string): PreviewResolver;
   previewSession(token: string, linkResolver: (doc: any) => string, defaultUrl: string, cb?: RequestCallback<string>): Promise<string>;
 }
 
@@ -68,6 +70,13 @@ export class DefaultClient implements Client {
 
   previewSession(token: string, linkResolver: (doc: any) => string, defaultUrl: string, cb?: RequestCallback<string>): Promise<string> {
     return this.getApi().then(api => api.previewSession(token, linkResolver, defaultUrl, cb));
+  }
+
+  getPreviewResolver(token: string, documentId?: string): PreviewResolver {
+    const getDocById = (documentId: string) => this.getApi().then((api) => {
+      return api.getByID(documentId);
+    });
+    return createPreviewResolver(token, documentId, getDocById);
   }
 
   static getApi(url: string, options?: ApiOptions): Promise<ResolvedApi> {

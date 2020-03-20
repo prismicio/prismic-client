@@ -73,4 +73,23 @@ describe('Prismic', function() {
     }).catch(done);
   });
 
+  it('should resolve the previewed document', async function() {
+    const linkResolver = (doc) => `/${doc.uid}`;
+    const token = "WJr3eikAAClRybU5~WYx9HB8AAB8AmX7z";
+    const documentId = "WW4bKScAAMAqmluX";
+    const expect = "/renaudbressand";
+    const redirectUrl = await client.getPreviewResolver(token, documentId).resolve(linkResolver, '/');
+
+    assert.equal(expect, redirectUrl);
+  });
+
+  it('should resolve the default url because no documentId', async function() {
+    const linkResolver = (doc) => `/${doc.uid}`;
+    const token = "WJr3eikAAClRybU5~WYx9HB8AAB8AmX7z";
+    const expect = "/";
+    const documentId = null;
+    const redirectUrl = await client.getPreviewResolver(token, documentId).resolve(linkResolver, '/');
+
+    assert.equal(expect, redirectUrl);
+  });
 });
