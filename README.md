@@ -88,19 +88,18 @@ On our release page: [https://github.com/prismicio/prismic-javascript/releases](
 
 #### Files
 
-+ prismic-javascript.js: CommonJs2 build for Node.js 
++ prismic-javascript.js: CommonJs2 build for Node.js
 + prismic-javascript.mjs: ESM build for Node.js and code compilers
 + prismic-javascript.browser.js: UMD build for browsers
 + prismic-javascript.browser.mjs: ESM build for browsers
 
 #### Polyfills
 To support legacy browsers include a fetch and promise polyfills.
-For node environments include a fetch polyfill.
 
-#### Bundling 
+#### Bundling
 Webpack should work as is.
-If using Rollup and targeting browsers remember to turn on the browser flag in the [resolver options](https://github.com/rollup/plugins/tree/master/packages/node-resolve#browser) 
-```js 
+If using Rollup and targeting browsers remember to turn on the browser flag in the [resolver options](https://github.com/rollup/plugins/tree/master/packages/node-resolve#browser)
+```js
 // rollup.config.js
 import resolve from '@rollup/plugin-node-resolve';
 
@@ -159,7 +158,7 @@ Prismic.api("https://your-repository-name.prismic.io/api").then(function(api) {
 });
 ```
 
-If you included prismic through the script tag (CDN) there is a global variable PrismicJS: 
+If you included prismic through the script tag (CDN) there is a global variable PrismicJS:
 ```javascript
 PrismicJS.api("https://your-repository-name.prismic.io/api").then( api => {
   const faq = PrismicJS.Predicates.at('document.type', 'faq');
