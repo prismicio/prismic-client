@@ -4,12 +4,18 @@ import { Experiments } from './experiments';
 import Api, { ApiOptions } from './Api';
 import { DefaultClient } from './client';
 
-export {
+export default {
   experimentCookie,
   previewCookie,
   Predicates,
   Experiments,
-  Api
+  Api,
+  // ! Backward compatibility support !
+  // client, getApi, api must be exported in the default object AND using named
+  // exports
+  client,
+  getApi,
+  api,
 };
 
 export function client(url: string, options?: ApiOptions): DefaultClient {
