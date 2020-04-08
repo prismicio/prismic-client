@@ -10,22 +10,32 @@ export default {
   Predicates,
   Experiments,
   Api,
-  // ! Backward compatibility support !
-  // client, getApi, api must be exported in the default object AND using named
-  // exports
   client,
   getApi,
   api,
 };
 
-export function client(url: string, options?: ApiOptions): DefaultClient {
+// ! Backward compatibility support !
+// default export AND using named exports
+export {
+  experimentCookie,
+  previewCookie,
+  Predicates,
+  Experiments,
+  Api,
+  client,
+  getApi,
+  api,
+}
+
+function client(url: string, options?: ApiOptions): DefaultClient {
   return new DefaultClient(url, options);
 }
 
-export function getApi(url: string, options?: ApiOptions): Promise<ResolvedApi> {
+function getApi(url: string, options?: ApiOptions): Promise<ResolvedApi> {
   return DefaultClient.getApi(url, options);
 }
 
-export function api(url: string, options?: ApiOptions): Promise<ResolvedApi> {
+function api(url: string, options?: ApiOptions): Promise<ResolvedApi> {
   return getApi(url, options);
 }
