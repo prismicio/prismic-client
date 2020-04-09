@@ -33,7 +33,7 @@ export default class Api {
       this.url += separator(url) + accessTokenParam;
     }
     if(this.options.routes) {
-      this.url += separator(url) + `routes=${JSON.stringify(this.options.routes)}`;
+      this.url += separator(url) + `routes=${encodeURIComponent(JSON.stringify(this.options.routes))}`;
     }
 
     this.apiDataTTL = this.options.apiDataTTL || 5;
