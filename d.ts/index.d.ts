@@ -1,5 +1,4 @@
-import ResolvedApi, { EXPERIMENT_COOKIE as experimentCookie, PREVIEW_COOKIE as previewCookie } from './ResolvedApi';
-import Predicates from './Predicates';
+import ResolvedApi from './ResolvedApi';
 import { Experiments } from './experiments';
 import Api, { ApiOptions } from './Api';
 import { DefaultClient } from './client';
@@ -69,7 +68,6 @@ declare const _default: {
     api: typeof api;
 };
 export default _default;
-export { experimentCookie, previewCookie, Predicates, Experiments, Api, client, getApi, api, };
 declare function client(url: string, options?: ApiOptions): DefaultClient;
 declare function getApi(url: string, options?: ApiOptions): Promise<ResolvedApi>;
 declare function api(url: string, options?: ApiOptions): Promise<ResolvedApi>;

@@ -15,19 +15,6 @@ export default {
   api,
 };
 
-// ! Backward compatibility support !
-// default export AND using named exports
-export {
-  experimentCookie,
-  previewCookie,
-  Predicates,
-  Experiments,
-  Api,
-  client,
-  getApi,
-  api,
-}
-
 function client(url: string, options?: ApiOptions): DefaultClient {
   return new DefaultClient(url, options);
 }

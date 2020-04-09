@@ -13,8 +13,8 @@ export default [
   {
     input: 'src/index.ts',
     output: [
-      { file: `dist/${pkg.name}${suffix}.js`, format: 'cjs', sourcemap: true, exports: 'named' },
-      { file: `dist/${pkg.name}${suffix}.mjs`, format: 'esm', sourcemap: true, exports: 'named' },
+      { file: `dist/${pkg.name}${suffix}.js`, format: 'cjs', sourcemap: true },
+      { file: `dist/${pkg.name}${suffix}.mjs`, format: 'esm', sourcemap: true },
     ],
     plugins: [
       resolve({
@@ -33,8 +33,8 @@ export default [
   {
     input: 'src/index.ts',
     output: [
-      { file: `dist/${pkg.name}.browser${suffix}.js`, format: 'umd', name: 'PrismicJS', sourcemap: true, globals: { 'node-fetch': 'fetch' }, exports: 'named' },
-      { file: `dist/${pkg.name}.browser${suffix}.mjs`, format: 'esm', sourcemap: true, globals: { 'node-fetch': 'fetch' }, exports: 'named' },
+      { file: `dist/${pkg.name}.browser${suffix}.js`, format: 'umd', name: 'PrismicJS', sourcemap: true, globals: { 'node-fetch': 'fetch' } },
+      { file: `dist/${pkg.name}.browser${suffix}.mjs`, format: 'esm', sourcemap: true, globals: { 'node-fetch': 'fetch' } },
     ],
     plugins: [
       resolve({
