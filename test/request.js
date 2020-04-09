@@ -2,8 +2,6 @@ const path = require('path');
 const nock = require('nock');
 const chai = require('chai');
 
-global.fetch = require('node-fetch')
-
 const assert = chai.assert;
 const Prismic = require(path.join(__dirname, '../', 'dist', 'prismic-javascript.min.js'));
 
