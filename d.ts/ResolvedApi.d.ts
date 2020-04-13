@@ -1,4 +1,4 @@
-import { Document } from "./documents";
+import { Document } from './documents';
 import { RequestCallback } from './request';
 import { Experiment, Experiments } from './experiments';
 import { SearchForm, Form } from './form';
@@ -86,14 +86,14 @@ export default class ResolvedApi implements Client {
     /**
      * Query the repository
      */
-    query(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<ApiSearchResponse>, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse>;
+    query(q: string | string[], optionsOrCallback?: QueryOptions | RequestCallback<ApiSearchResponse>, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse>;
     /**
      * Retrieve the document returned by the given query
      * @param {string|array|Predicate} the query
      * @param {object} additional parameters. In NodeJS, pass the request as 'req'.
      * @param {function} callback(err, doc)
      */
-    queryFirst(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document>, cb?: RequestCallback<Document>): Promise<Document>;
+    queryFirst(q: string | string[], optionsOrCallback?: QueryOptions | RequestCallback<Document>, cb?: RequestCallback<Document>): Promise<Document>;
     /**
      * Retrieve the document with the given id
      */
