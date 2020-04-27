@@ -3,6 +3,8 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "preserveConstEnums": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
     "removeComments": false,
     "sourceMap": true,
     "lib": ["ES5", "ES6", "DOM"],

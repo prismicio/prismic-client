@@ -16,7 +16,10 @@
     "@rollup/plugin-node-resolve": "^7.1.1",
     "@rollup/plugin-typescript": "^4.0.0",
     "@types/node-fetch": "^2.1.2",
+    "@typescript-eslint/eslint-plugin": "^2.29.0",
+    "@typescript-eslint/parser": "^2.29.0",
     "chai": "^4.1.2",
+    "eslint": "^6.8.0",
     "mocha": "^5.2.0",
     "nock": "^11.6.0",
     "node-fetch": "^2.6.0",
@@ -49,6 +52,6 @@
     "prepublish": "npm run build; npm run docs; npm run declarations",
     "docs": "typedoc --mode file --out ./docs ./src/index.ts",
     "declarations": "tsc --emitDeclarationOnly --declaration --declarationDir ./d.ts",
-    "lint": "tslint src/**/*.ts -e src/lru.ts -e src/Cookies.ts"
+    "lint": "eslint src/**/*.ts"
   }
 }

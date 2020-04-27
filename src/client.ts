@@ -1,9 +1,8 @@
 import { Document } from "./documents";
-import ResolvedApi, { QueryOptions, EXPERIMENT_COOKIE, PREVIEW_COOKIE } from './ResolvedApi';
+import ResolvedApi, { QueryOptions } from './ResolvedApi';
 import ApiSearchResponse from './ApiSearchResponse';
-import { SearchForm, LazySearchForm } from './form';
-import { Experiment } from './experiments';
-import { RequestHandler, RequestCallback } from './request';
+import { LazySearchForm } from './form';
+import { RequestCallback } from './request';
 import Api, { ApiOptions } from './Api';
 import { PreviewResolver, createPreviewResolver } from './PreviewResolver';
 

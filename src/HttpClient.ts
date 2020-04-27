@@ -37,7 +37,7 @@ export default class HttpClient {
         if (cacheGetError || cacheGetValue) {
           cb(cacheGetError, cacheGetValue);
         } else {
-          this.request<T>(url, (fetchError, fetchValue, xhr, ttlReq) => {
+          this.request<T>(url, (fetchError, fetchValue, _, ttlReq) => {
             if (fetchError) {
               cb(fetchError, null);
             } else {

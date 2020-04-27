@@ -1,6 +1,5 @@
 import { Document } from "./documents";
-import { RequestHandler, RequestCallback } from './request';
-import { ApiCache } from './cache';
+import { RequestCallback } from './request';
 import { Experiment, Experiments } from './experiments';
 import { SearchForm, Form } from './form';
 import Predicates from './Predicates';

@@ -1,6 +1,4 @@
-import Predicates from './Predicates';
 import { RequestHandler, RequestCallback } from './request';
-import { Document } from './documents';
 import { ApiCache } from './cache';
 import ResolvedApi, { ApiData } from './ResolvedApi';
 import HttpClient from './HttpClient';
@@ -16,7 +14,7 @@ export interface ApiOptions {
   timeoutInMs?: number;
 }
 
-function separator(url: string) {
+function separator(url: string): string {
   return url.indexOf('?') > -1 ? '&' : '?';
 }
 export default class Api {
