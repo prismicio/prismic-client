@@ -21,9 +21,7 @@ export default [
         preferBuiltins: true
       }),
       commonjs(),
-      typescript({
-        typescript: require('typescript')
-      }),
+      typescript(),
       prod && terser()
     ],
     external: ['stream', 'http', 'url', 'https', 'zlib']
@@ -41,9 +39,7 @@ export default [
         browser: true
       }),
       commonjs(),
-      typescript({
-        typescript: require('typescript')
-      }),
+      typescript(),
       prod && terser()
     ],
     external: ['node-fetch']
