@@ -35,10 +35,7 @@
   },
   "main": "dist/prismic-javascript.min.js",
   "module": "dist/prismic-javascript.min.mjs",
-  "browser": {
-    "./dist/prismic-javascript.js": "dist/prismic-javascript.browser.min.js",
-    "./dist/prismic-javascript.mjs": "dist/prismic-javascript.browser.min.mjs"
-  },
+  "browser": "dist/prismic-javascript.browser.min.js",
   "files": [
     "dist/*.js"
   ],
