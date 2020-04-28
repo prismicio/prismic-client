@@ -14,7 +14,7 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.0.2",
     "@rollup/plugin-node-resolve": "^7.1.1",
-    "@rollup/plugin-typescript": "^4.0.0",
+    "@rollup/plugin-typescript": "^4.1.1",
     "@types/node-fetch": "^2.1.2",
     "@typescript-eslint/eslint-plugin": "^2.29.0",
     "@typescript-eslint/parser": "^2.29.0",
@@ -25,6 +25,7 @@
     "node-fetch": "^2.6.0",
     "rollup": "^2.1.0",
     "rollup-plugin-terser": "^5.3.0",
+    "tslib": "^1.11.1",
     "typedoc": "^0.17.6",
     "typescript": "^3.8.3"
   },
