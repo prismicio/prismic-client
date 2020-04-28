@@ -41,7 +41,6 @@ export default [
       commonjs(),
       typescript(),
       prod && terser()
-    ],
-    external: ['node-fetch']
+    ]
   }
 ];
