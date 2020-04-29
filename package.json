@@ -34,8 +34,9 @@
   "main": "dist/prismic-javascript.min.js",
   "module": "dist/prismic-javascript.min.mjs",
   "files": [
-    "dist/*.js",
-    "dist/*.mjs"
+    "dist/*",
+    "d.ts/*",
+    "docs/*"
   ],
   "types": "./d.ts/index.d.ts",
   "scripts": {
