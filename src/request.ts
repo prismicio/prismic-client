@@ -1,4 +1,4 @@
-import nodeFetch, { RequestInit } from 'node-fetch';
+import crossFetch from 'cross-fetch';
 
 interface NodeRequestInit extends RequestInit {
   agent?: any;
@@ -19,7 +19,7 @@ function fetchRequest<T>(url: string, options: RequestHandlerOption, callback: R
   // can't use number because of NodeJS globals included
   let timeoutId: any;
 
-  const fetchPromise = nodeFetch(url, fetchOptions)
+  const fetchPromise = crossFetch(url, fetchOptions)
 
   const promise = options.timeoutInMs ? Promise.race([
     fetchPromise,

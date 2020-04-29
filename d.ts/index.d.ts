@@ -1,3 +1,4 @@
+/// <reference types="src/declarations" />
 import ResolvedApi from './ResolvedApi';
 import { Experiments } from './experiments';
 import Api, { ApiOptions } from './Api';
