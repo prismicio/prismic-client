@@ -7,8 +7,8 @@ export default {
   output: [
     { file: `cjs/${pkg.name}.js`, format: 'cjs', sourcemap: true },
     { file: `esm/${pkg.name}.mjs`, format: 'esm', sourcemap: true },
-    { file: `umd/${pkg.name}.js`, format: 'umd', name: 'PrismicJS', globals: { 'cross-fetch': 'fetch' } },
-    { file: `umd/${pkg.name}.min.js`, format: 'umd', name: 'PrismicJS', globals: { 'cross-fetch': 'fetch' }, plugins: [terser()]},
+    { file: `umd/${pkg.name}.js`, format: 'umd', name: 'PrismicJS', globals: { 'cross-fetch': 'fetch' }, sourcemap: true },
+    { file: `umd/${pkg.name}.min.js`, format: 'umd', name: 'PrismicJS', globals: { 'cross-fetch': 'fetch' }, sourcemap: true, plugins: [terser()] },
   ],
   plugins: [
     typescript(),
