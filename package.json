@@ -33,7 +33,7 @@
   "module": "dist/prismic-javascript.min.mjs",
   "files": [
     "dist/*",
-    "d.ts/*",
+    "d.ts/*"
   ],
   "types": "./d.ts/index.d.ts",
   "scripts": {
