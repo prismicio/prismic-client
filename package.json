@@ -29,21 +29,24 @@
     "type": "git",
     "url": "https://github.com/prismicio/prismic-javascript.git"
   },
-  "main": "dist/prismic-javascript.min.js",
-  "module": "dist/prismic-javascript.min.mjs",
+  "main": "cjs/prismic-javascript.js",
+  "module": "esm/prismic-javascript.mjs",
+  "unpkg": "umd/prismic-javascript.min.js",
   "files": [
-    "dist/*",
-    "d.ts/*"
+    "cjs/",
+    "esm/",
+    "umd/",
+    "types/"
   ],
-  "types": "./d.ts/index.d.ts",
+  "types": "./types/index.d.ts",
   "scripts": {
-    "build": "NODE_ENV=production rollup -c",
+    "build": "rollup -c",
     "dev": "rollup -c -w",
     "check": "tsc --pretty --noEmit --watch",
     "test": "npm run build && mocha",
     "prepublish": "npm run build; npm run docs; npm run declarations",
     "docs": "typedoc --mode file --out ./docs ./src/index.ts",
-    "declarations": "tsc --emitDeclarationOnly --declaration --declarationDir ./d.ts",
+    "declarations": "tsc --emitDeclarationOnly --declaration --declarationDir ./types",
     "lint": "eslint src/**/*.ts"
   },
   "dependencies": {

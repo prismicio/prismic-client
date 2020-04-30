@@ -165,4 +165,7 @@ typings/
 ## documentation
 docs/
 
-dist/
+# build folders
+esm/
+cjs/
+umd/

@@ -1,4 +1,4 @@
-/// <reference types="d.ts/cross-fetch" />
+/// <reference types="types/cross-fetch" />
 import ResolvedApi from './ResolvedApi';
 import { Experiments } from './experiments';
 import Api, { ApiOptions } from './Api';
