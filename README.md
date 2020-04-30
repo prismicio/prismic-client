@@ -85,34 +85,8 @@ https://unpkg.com/prismic-javascript
 
 On our release page: [https://github.com/prismicio/prismic-javascript/releases](https://github.com/prismicio/prismic-javascript/releases).
 
-
-#### Files
-
-+ prismic-javascript.js: CommonJs2 build for Node.js
-+ prismic-javascript.mjs: ESM build for Node.js and code compilers
-+ prismic-javascript.browser.js: UMD build for browsers
-+ prismic-javascript.browser.mjs: ESM build for browsers
-
 #### Polyfills
-To support legacy browsers include a fetch and promise polyfills.
-
-#### Bundling
-Webpack should work as is.
-If using Rollup and targeting browsers remember to turn on the browser flag in the [resolver options](https://github.com/rollup/plugins/tree/master/packages/node-resolve#browser)
-```js
-// rollup.config.js
-import resolve from '@rollup/plugin-node-resolve';
-
-export default {
-  input: 'src/index.js',
-  output: {
-    dir: 'output',
-    format: 'cjs'
-  },
-  plugins: [resolve({ browser: true })]
-};
-
-```
+To support legacy browsers include a promise polyfill.
 
 #### Starter kits
 
