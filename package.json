@@ -34,7 +34,6 @@
   "files": [
     "dist/*",
     "d.ts/*",
-    "docs/*"
   ],
   "types": "./d.ts/index.d.ts",
   "scripts": {
