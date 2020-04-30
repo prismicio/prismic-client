@@ -10,7 +10,7 @@ export default {
   input: 'src/index.ts',
   output: [
     { file: `dist/${pkg.name}${suffix}.js`, format: 'umd', name: 'PrismicJS', sourcemap: true, globals: { 'cross-fetch': 'fetch' }},
-    { file: `dist/${pkg.name}${suffix}.mjs`, format: 'esm', sourcemap: true, globals: { 'cross-fetch': 'fetch' }},
+    { file: `dist/${pkg.name}${suffix}.mjs`, format: 'esm', sourcemap: true },
   ],
   plugins: [
     typescript(),
