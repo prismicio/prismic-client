@@ -10,7 +10,8 @@
 It's meant to work in pair with the prismic-dom library available here:
 * [prismic-dom](https://github.com/prismicio/prismic-dom) is on Github.
 
-🎉Our library just hit v3! That's right, it's the v3 of an API V2 package... [read the changelog](https://github.com/prismicio/prismic-javascript/releases/tag/3.0.0)!
+🎉Our library will hit v3 soon! That's right, it's the v3 of an API V2 package...
+You can try it by installing the beta version from npm. [Read the changelog](https://github.com/prismicio/prismic-javascript/releases/tag/3.0.0)!
 
 ---
 
