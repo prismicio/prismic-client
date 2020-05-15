@@ -1,6 +1,5 @@
-import { Document } from "./documents";
-import { RequestHandler, RequestCallback } from './request';
-import { ApiCache } from './cache';
+import { Document } from './documents';
+import { RequestCallback } from './request';
 import { Experiment, Experiments } from './experiments';
 import { SearchForm, Form } from './form';
 import Predicates from './Predicates';
@@ -122,7 +121,7 @@ export default class ResolvedApi implements Client {
   /**
    * Query the repository
    */
-  query(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<ApiSearchResponse>, cb: RequestCallback<ApiSearchResponse> = () => {}): Promise<ApiSearchResponse> {
+  query(q: string | string[], optionsOrCallback?: QueryOptions | RequestCallback<ApiSearchResponse>, cb: RequestCallback<ApiSearchResponse> = () => {}): Promise<ApiSearchResponse> {
     const { options, callback } = typeof optionsOrCallback === 'function'
         ? { options: {} as QueryOptions, callback: optionsOrCallback }
     : { options: optionsOrCallback || {}, callback: cb };
@@ -156,10 +155,10 @@ export default class ResolvedApi implements Client {
    * @param {object} additional parameters. In NodeJS, pass the request as 'req'.
    * @param {function} callback(err, doc)
    */
-  queryFirst(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document>, cb?: RequestCallback<Document>): Promise<Document> {
+  queryFirst(q: string | string[], optionsOrCallback?: QueryOptions | RequestCallback<Document>, cb?: RequestCallback<Document>): Promise<Document> {
     const { options, callback } = typeof optionsOrCallback === 'function'
         ? { options: {} as QueryOptions, callback: optionsOrCallback }
-        : { options: {...optionsOrCallback} || {}, callback: cb || (() => {}) };
+        : { options: optionsOrCallback || {}, callback: cb || (() => {}) };
 
     options.page = 1;
     options.pageSize = 1;
@@ -197,8 +196,8 @@ export default class ResolvedApi implements Client {
    */
   getByUID(type: string, uid: string, maybeOptions?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
     const options = maybeOptions ? {...maybeOptions} : {};
-    if(options.lang === "*") throw new Error("FORDIDDEN. You can't use getByUID with *, use the predicates instead.")
-    if(!options.page) options.page = 1;
+    if (options.lang === '*') throw new Error("FORBIDDEN. You can't use getByUID with *, use the predicates instead.");
+    if (!options.page) options.page = 1;
 
     return this.queryFirst(Predicates.at(`my.${type}.uid`, uid), options, cb);
   }
@@ -228,7 +227,7 @@ export default class ResolvedApi implements Client {
   }
 
   previewSession(token: string, linkResolver: LinkResolver, defaultUrl: string, cb?: RequestCallback<string>): Promise<string> {
-    console.warn('previewSession function is deprecated in favor of getPreviewResolver function.')
+    console.warn('previewSession function is deprecated in favor of getPreviewResolver function.');
     return new Promise((resolve, reject) => {
       this.httpClient.request<PreviewResponse>(token, (e, result) => {
         if (e) {

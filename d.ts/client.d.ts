@@ -6,8 +6,8 @@ import { RequestCallback } from './request';
 import Api, { ApiOptions } from './Api';
 import { PreviewResolver } from './PreviewResolver';
 export interface Client {
-    query(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<ApiSearchResponse>, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse>;
-    queryFirst(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document>, cb: RequestCallback<Document>): Promise<Document>;
+    query(q: string | string[], optionsOrCallback?: QueryOptions | RequestCallback<ApiSearchResponse>, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse>;
+    queryFirst(q: string | string[], optionsOrCallback?: QueryOptions | RequestCallback<Document>, cb?: RequestCallback<Document>): Promise<Document>;
     getByID(id: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
     getByIDs(ids: string[], options: QueryOptions, cb: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse>;
     getByUID(type: string, uid: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
@@ -18,13 +18,12 @@ export interface Client {
 }
 export declare class DefaultClient implements Client {
     api: Api;
-    resolvedApi: ResolvedApi;
     constructor(url: string, options?: ApiOptions);
     getApi(): Promise<ResolvedApi>;
     everything(): LazySearchForm;
     form(formId: string): LazySearchForm;
-    query(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<ApiSearchResponse>, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse>;
-    queryFirst(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document>, cb?: RequestCallback<Document>): Promise<Document>;
+    query(q: string | string[], optionsOrCallback?: QueryOptions | RequestCallback<ApiSearchResponse>, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse>;
+    queryFirst(q: string | string[], optionsOrCallback?: QueryOptions | RequestCallback<Document>, cb?: RequestCallback<Document>): Promise<Document>;
     getByID(id: string, options: QueryOptions, cb?: RequestCallback<Document>): Promise<Document>;
     getByIDs(ids: string[], options: QueryOptions, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse>;
     getByUID(type: string, uid: string, options: QueryOptions, cb?: RequestCallback<Document>): Promise<Document>;

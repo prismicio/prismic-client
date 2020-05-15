@@ -1,15 +1,14 @@
 import { Document } from "./documents";
-import ResolvedApi, { QueryOptions, EXPERIMENT_COOKIE, PREVIEW_COOKIE } from './ResolvedApi';
+import ResolvedApi, { QueryOptions } from './ResolvedApi';
 import ApiSearchResponse from './ApiSearchResponse';
-import { SearchForm, LazySearchForm } from './form';
-import { Experiment } from './experiments';
-import { RequestHandler, RequestCallback } from './request';
+import { LazySearchForm } from './form';
+import { RequestCallback } from './request';
 import Api, { ApiOptions } from './Api';
 import { PreviewResolver, createPreviewResolver } from './PreviewResolver';
 
 export interface Client {
-  query(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<ApiSearchResponse>, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse>;
-  queryFirst(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document>, cb: RequestCallback<Document>): Promise<Document>;
+  query(q: string | string[], optionsOrCallback?: QueryOptions | RequestCallback<ApiSearchResponse>, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse>;
+  queryFirst(q: string | string[], optionsOrCallback?: QueryOptions | RequestCallback<Document>, cb?: RequestCallback<Document>): Promise<Document>;
   getByID(id: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
   getByIDs(ids: string[], options: QueryOptions, cb: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse>;
   getByUID(type: string, uid: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
@@ -22,7 +21,6 @@ export interface Client {
 export class DefaultClient implements Client {
 
   api: Api;
-  resolvedApi: ResolvedApi;
 
   constructor(url: string, options?: ApiOptions) {
     this.api = new Api(url, options);
@@ -40,11 +38,11 @@ export class DefaultClient implements Client {
     return new LazySearchForm(formId, this.api);
   }
 
-  query(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<ApiSearchResponse>, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse> {
+  query(q: string | string[], optionsOrCallback?: QueryOptions | RequestCallback<ApiSearchResponse>, cb?: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse> {
     return this.getApi().then(api => api.query(q, optionsOrCallback, cb));
   }
 
-  queryFirst(q: string | string[], optionsOrCallback: QueryOptions | RequestCallback<Document>, cb?: RequestCallback<Document>): Promise<Document> {
+  queryFirst(q: string | string[], optionsOrCallback?: QueryOptions | RequestCallback<Document>, cb?: RequestCallback<Document>): Promise<Document> {
     return this.getApi().then(api => api.queryFirst(q, optionsOrCallback, cb));
   }
 
