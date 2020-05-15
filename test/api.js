@@ -1,9 +1,9 @@
-var path = require('path');
-var querystring = require('querystring');
-var chai = require('chai');
-var assert = chai.assert;
-var Prismic = require(path.join(__dirname, '../', 'dist', 'prismic-javascript.min.js'));
-var fs = require('fs');
+const path = require('path');
+const querystring = require('querystring');
+const chai = require('chai');
+const assert = chai.assert;
+const Prismic = require(path.join(__dirname, '../', 'cjs', 'prismic-javascript.js'));
+const fs = require('fs');
 
 function fixtures(file) {
   return JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', file)));
@@ -21,7 +21,7 @@ function getApi() {
       },
     },
   };
-  
+
   return Prismic.getApi('http://localhost:3000/api', options);
 }
 
@@ -183,7 +183,7 @@ describe('Api', function() {
 
         done();
       });
-    }).catch(done); 
+    }).catch(done);
   });
 
   it('should resolve the previewed document', async function() {

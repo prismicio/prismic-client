@@ -165,5 +165,7 @@ typings/
 ## documentation
 docs/
 
-## dev build
-dist/prismic-javascript.js
+# build folders
+esm/
+cjs/
+umd/

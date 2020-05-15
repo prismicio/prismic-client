@@ -231,7 +231,7 @@ export class SearchForm {
   /**
    * Sets the orderings to query for this SearchForm. This is an optional method.
    */
-  orderings(orderings ?: string[]): SearchForm {
+  orderings(orderings?: string[]): SearchForm {
     if (!orderings) {
       return this;
     } else {
@@ -247,7 +247,7 @@ export class SearchForm {
     if (this.data) {
       let sep = (url.indexOf('?') > -1 ? '&' : '?');
       for (const key in this.data) {
-        if  (this.data.hasOwnProperty(key)) {
+        if  (Object.prototype.hasOwnProperty.call(this.data, key)) {
           const values = this.data[key];
           if (values) {
             for (let i = 0; i < values.length; i++) {

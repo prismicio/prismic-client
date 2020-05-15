@@ -1,11 +1,12 @@
-import { Experiments as PrismicExperiment } from './experiments';
-import { DefaultClient } from './client';
-import PrismicApi, { ApiOptions } from './Api';
+/// <reference types="types/cross-fetch" />
 import ResolvedApi from './ResolvedApi';
-declare namespace Prismic {
-    const experimentCookie = "io.prismic.experiment";
-    const previewCookie = "io.prismic.preview";
-    const Predicates: {
+import { Experiments } from './experiments';
+import Api, { ApiOptions } from './Api';
+import { DefaultClient } from './client';
+declare const _default: {
+    experimentCookie: string;
+    previewCookie: string;
+    Predicates: {
         at(fragment: string, value: string | number | boolean | Date | (string | number | boolean | Date)[]): string;
         not(fragment: string, value: string | number | boolean | Date | (string | number | boolean | Date)[]): string;
         missing(fragment: string): string;
@@ -61,10 +62,13 @@ declare namespace Prismic {
             near(fragment: string, latitude: number, longitude: number, radius: number): string;
         };
     };
-    const Experiments: typeof PrismicExperiment;
-    const Api: typeof PrismicApi;
-    function client(url: string, options?: ApiOptions): DefaultClient;
-    function getApi(url: string, options?: ApiOptions): Promise<ResolvedApi>;
-    function api(url: string, options?: ApiOptions): Promise<ResolvedApi>;
-}
-export = Prismic;
+    Experiments: typeof Experiments;
+    Api: typeof Api;
+    client: typeof client;
+    getApi: typeof getApi;
+    api: typeof api;
+};
+export default _default;
+declare function client(url: string, options?: ApiOptions): DefaultClient;
+declare function getApi(url: string, options?: ApiOptions): Promise<ResolvedApi>;
+declare function api(url: string, options?: ApiOptions): Promise<ResolvedApi>;

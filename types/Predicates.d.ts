@@ -1,16 +1,17 @@
+declare type PredicateValue = boolean | string | number | Date;
 declare const _default: {
-    at(fragment: string, value: string | number | boolean | Date | (string | number | boolean | Date)[]): string;
-    not(fragment: string, value: string | number | boolean | Date | (string | number | boolean | Date)[]): string;
+    at(fragment: string, value: string | number | boolean | Date | PredicateValue[]): string;
+    not(fragment: string, value: string | number | boolean | Date | PredicateValue[]): string;
     missing(fragment: string): string;
     has(fragment: string): string;
-    any(fragment: string, values: (string | number | boolean | Date)[]): string;
+    any(fragment: string, values: PredicateValue[]): string;
     in(fragment: string, values: string[]): string;
     fulltext(fragment: string, value: string): string;
     similar(documentId: string, maxResults: number): string;
     date: {
-        before(fragment: string, before: string | number | boolean | Date): string;
-        after(fragment: string, after: string | number | boolean | Date): string;
-        between(fragment: string, before: string | number | boolean | Date, after: string | number | boolean | Date): string;
+        before(fragment: string, before: PredicateValue): string;
+        after(fragment: string, after: PredicateValue): string;
+        between(fragment: string, before: PredicateValue, after: PredicateValue): string;
         dayOfMonth(fragment: string, day: number): string;
         dayOfMonthAfter(fragment: string, day: number): string;
         dayOfMonthBefore(fragment: string, day: number): string;
@@ -25,9 +26,9 @@ declare const _default: {
         hourBefore(fragment: string, hour: number): string;
         hourAfter(fragment: string, hour: number): string;
     };
-    dateBefore: (fragment: string, before: string | number | boolean | Date) => string;
-    dateAfter: (fragment: string, after: string | number | boolean | Date) => string;
-    dateBetween: (fragment: string, before: string | number | boolean | Date, after: string | number | boolean | Date) => string;
+    dateBefore: (fragment: string, before: PredicateValue) => string;
+    dateAfter: (fragment: string, after: PredicateValue) => string;
+    dateBetween: (fragment: string, before: PredicateValue, after: PredicateValue) => string;
     dayOfMonth: (fragment: string, day: number) => string;
     dayOfMonthAfter: (fragment: string, day: number) => string;
     dayOfMonthBefore: (fragment: string, day: number) => string;

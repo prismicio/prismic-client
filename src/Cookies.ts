@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 export interface Cookie {
   [key: string]: string;
   value: string;

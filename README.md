@@ -20,6 +20,7 @@ It's meant to work in pair with the prismic-dom library available here:
 > [NPM](#npm) <br />
 > [CDN](#cdn) <br />
 > [Downloadable version](#downloadable-version) <br />
+> [Polyfills](#polyfills) <br />
 > [Demo project](#demo-project) <br />
 > [Starter kits](#starter-kits) <br />
 
@@ -84,11 +85,8 @@ https://unpkg.com/prismic-javascript
 
 On our release page: [https://github.com/prismicio/prismic-javascript/releases](https://github.com/prismicio/prismic-javascript/releases).
 
-The kit is universal, it can be used:
-
-* Server-side with NodeJS
-* Client-side as part of your build with Browserify, Webpack
-* Client-side with a simple script tag
+#### Polyfills
+To support legacy browsers include a promise polyfill.
 
 #### Starter kits
 
@@ -134,7 +132,7 @@ Prismic.api("https://your-repository-name.prismic.io/api").then(function(api) {
 });
 ```
 
-If you included prismic through the script tag (CDN) there is a global variable PrismicJS: 
+If you included prismic through the script tag (CDN) there is a global variable PrismicJS:
 ```javascript
 PrismicJS.api("https://your-repository-name.prismic.io/api").then( api => {
   const faq = PrismicJS.Predicates.at('document.type', 'faq');

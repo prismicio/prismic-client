@@ -10,38 +10,46 @@
     "content",
     "api"
   ],
-  "version": "2.7.1",
+  "version": "3.0.0-beta.0",
   "devDependencies": {
-    "chai": "^4.1.1",
-    "json-loader": "^0.5.4",
+    "@rollup/plugin-typescript": "^4.1.1",
+    "@typescript-eslint/eslint-plugin": "^2.29.0",
+    "@typescript-eslint/parser": "^2.29.0",
+    "chai": "^4.2.0",
+    "eslint": "^6.8.0",
     "mocha": "^5.2.0",
-    "nock": "^10.0.6",
-    "ts-loader": "^4.4.1",
-    "tslint": "^5.1.0",
-    "tslint-config-airbnb": "^5.11.1",
-    "typedoc": "^0.14.2",
-    "typescript": "^2.3.2",
-    "webpack": "^4.12.0",
-    "webpack-cli": "^3.0.8",
-    "yargs": "^11.0.0"
+    "nock": "^11.6.0",
+    "rollup": "^2.1.0",
+    "rollup-plugin-terser": "^5.3.0",
+    "tslib": "^1.11.1",
+    "typedoc": "^0.17.6",
+    "typescript": "^3.8.3"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/prismicio/prismic-javascript.git"
   },
-  "main": "dist/prismic-javascript.min.js",
-  "types": "./d.ts/index.d.ts",
+  "main": "cjs/prismic-javascript.js",
+  "module": "esm/prismic-javascript.mjs",
+  "unpkg": "umd/prismic-javascript.min.js",
+  "files": [
+    "cjs/",
+    "esm/",
+    "umd/",
+    "types/"
+  ],
+  "types": "./types/index.d.ts",
   "scripts": {
-    "build": "node_modules/.bin/webpack-cli -p",
-    "dev": "node_modules/.bin/webpack-cli -d --watch",
-    "check": "tsc --pretty --noEmit --project ./tsconfig.json --watch",
-    "test": "mocha",
-    "prepare": "npm run build; npm run docs",
-    "docs": "typedoc --mode file --out ./docs/ ./src/index.ts",
-    "lint": "tslint src/**/*.ts -e src/lru.ts -e src/Cookies.ts"
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "check": "tsc --pretty --noEmit --watch",
+    "test": "npm run build && mocha",
+    "prepublish": "npm run build; npm run docs; npm run declarations",
+    "docs": "typedoc --mode file --out ./docs ./src/index.ts",
+    "declarations": "tsc --emitDeclarationOnly --declaration --declarationDir ./types",
+    "lint": "eslint src/**/*.ts"
   },
   "dependencies": {
-    "cross-fetch": "^2.2.3",
-    "promise-polyfill": "8.0.0"
+    "cross-fetch": "^3.0.4"
   }
 }

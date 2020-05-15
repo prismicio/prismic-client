@@ -1,28 +1,29 @@
-import PrismicPredicates  from './Predicates';
-import { Experiments as PrismicExperiment } from './experiments';
+/// <reference path="../types/cross-fetch.d.ts" />
+import ResolvedApi, { EXPERIMENT_COOKIE as experimentCookie, PREVIEW_COOKIE as previewCookie } from './ResolvedApi';
+import Predicates from './Predicates';
+import { Experiments } from './experiments';
+import Api, { ApiOptions } from './Api';
 import { DefaultClient } from './client';
-import PrismicApi, { ApiOptions } from './Api';
-import ResolvedApi, { EXPERIMENT_COOKIE, PREVIEW_COOKIE } from './ResolvedApi';
 
-namespace Prismic {
+export default {
+  experimentCookie,
+  previewCookie,
+  Predicates,
+  Experiments,
+  Api,
+  client,
+  getApi,
+  api,
+};
 
-  export const experimentCookie = EXPERIMENT_COOKIE;
-  export const previewCookie = PREVIEW_COOKIE;
-  export const Predicates = PrismicPredicates;
-  export const Experiments = PrismicExperiment;
-  export const Api = PrismicApi;
-
-  export function client(url: string, options?: ApiOptions) {
-    return new DefaultClient(url, options);
-  }
-
-  export function getApi(url: string, options?: ApiOptions): Promise<ResolvedApi> {
-    return DefaultClient.getApi(url, options);
-  }
-
-  export function api(url: string, options?: ApiOptions): Promise<ResolvedApi> {
-    return getApi(url, options);
-  }
+function client(url: string, options?: ApiOptions): DefaultClient {
+  return new DefaultClient(url, options);
 }
 
-export = Prismic;
+function getApi(url: string, options?: ApiOptions): Promise<ResolvedApi> {
+  return DefaultClient.getApi(url, options);
+}
+
+function api(url: string, options?: ApiOptions): Promise<ResolvedApi> {
+  return getApi(url, options);
+}

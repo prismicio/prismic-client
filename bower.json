@@ -1,7 +1,7 @@
 {
   "name": "prismic-javascript",
   "description": "JavaScript development kit for prismic.io",
-  "main": "dist/prismic-javascript.min.js",
+  "main": "umd/prismic-javascript.min.js",
   "authors": [
     "arnaudlewis"
   ],
