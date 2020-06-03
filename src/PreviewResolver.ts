@@ -1,7 +1,7 @@
 import { Document } from "./documents";
 import { RequestCallback } from './request';
 
-export type LinkResolver = (doc: any) => string;
+export type LinkResolver = (doc: any) => string | null;
 
 export interface PreviewResolver {
   token: string;
@@ -21,7 +21,9 @@ export function createPreviewResolver(
           cb && cb(null, defaultUrl);
           return defaultUrl;
         } else {
-          const url = document.url || linkResolver(document);
+          const url = linkResolver
+            ? linkResolver(document)
+            : document.url || defaultUrl;
           cb && cb(null, url);
           return url;
         }
