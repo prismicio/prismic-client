@@ -21,7 +21,7 @@ export function createPreviewResolver(
           cb && cb(null, defaultUrl);
           return defaultUrl;
         } else {
-          const url = linkResolver(document);
+          const url = document.url || linkResolver(document);
           cb && cb(null, url);
           return url;
         }

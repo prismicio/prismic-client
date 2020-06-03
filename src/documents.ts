@@ -8,6 +8,7 @@ export interface AlternateLanguage {
 export interface Document {
   id: string;
   uid?: string;
+  url?: string;
   type: string;
   href: string;
   tags: string[];
