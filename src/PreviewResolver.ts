@@ -15,13 +15,15 @@ export function createPreviewResolver(
   getDocByID?: (documentId: string, maybeOptions?: object) => Promise<Document>
 ): PreviewResolver {
   const resolve = (linkResolver: LinkResolver, defaultUrl: string, cb?: RequestCallback<string>) => {
+    console.log({ resolve: true, documentId, getDocByID })
     if (documentId && getDocByID) {
       return getDocByID(documentId, { ref: token }).then((document: Document) => {
         if (!document) {
           cb && cb(null, defaultUrl);
           return defaultUrl;
         } else {
-          const url = linkResolver(document);
+          console.log({ document })
+          const url = document.url || linkResolver(document);
           cb && cb(null, url);
           return url;
         }
