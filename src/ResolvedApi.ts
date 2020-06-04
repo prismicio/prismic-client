@@ -243,7 +243,9 @@ export default class ResolvedApi implements Client {
                 cb && cb(null, defaultUrl);
                 resolve(defaultUrl);
               } else {
-                const url = linkResolver(document);
+                const url = linkResolver
+                  ? linkResolver(document)
+                  : document.url || defaultUrl;
                 cb && cb(null, url);
                 resolve(url);
               }
