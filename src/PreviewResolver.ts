@@ -1,7 +1,7 @@
 import { Document } from "./documents";
 import { RequestCallback } from './request';
 
-export type LinkResolver = (doc: any) => string | null;
+export type LinkResolver = ((doc: any) => string) | null;
 
 export interface PreviewResolver {
   token: string;
