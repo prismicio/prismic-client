@@ -71,8 +71,8 @@ export class DefaultClient implements Client {
   }
 
   getPreviewResolver(token: string, documentId?: string): PreviewResolver {
-    const getDocById = (documentId: string) => this.getApi().then((api) => {
-      return api.getByID(documentId);
+    const getDocById = (documentId: string, maybeOptions?: QueryOptions) => this.getApi().then((api) => {
+      return api.getByID(documentId, maybeOptions);
     });
     return createPreviewResolver(token, documentId, getDocById);
   }
