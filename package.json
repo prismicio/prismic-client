@@ -45,7 +45,7 @@
     "check": "tsc --pretty --noEmit --watch",
     "test": "npm run build && mocha",
     "prepare": "npm run build; npm run docs; npm run declarations",
-    "prepublishOnly": "npm run test && npm run prepare",
+    "prepublishOnly": "npm run test",
     "docs": "typedoc --mode file --out ./docs ./src/index.ts",
     "declarations": "tsc --emitDeclarationOnly --declaration --declarationDir ./types",
     "lint": "eslint src/**/*.ts"
