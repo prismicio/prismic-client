@@ -50,7 +50,7 @@ export default class Api {
    */
   get(cb?: RequestCallback<ResolvedApi>): Promise<ResolvedApi> {
     return this.httpClient.cachedRequest<ApiData>(this.url, { ttl: this.apiDataTTL }).then((data) => {
-      const resolvedApi = new ResolvedApi(data, this.httpClient, this.options);
+      const resolvedApi = new ResolvedApi(data, this.url, this.httpClient, this.options);
       cb && cb(null, resolvedApi);
       return resolvedApi;
     }).catch((error) => {

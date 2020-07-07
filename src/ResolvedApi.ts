@@ -52,6 +52,7 @@ export interface ResolvedApiOptions {
 }
 
 export default class ResolvedApi implements Client {
+  url: string;
   data: ApiData;
   masterRef: Ref;
   experiments: Experiments;
@@ -63,8 +64,9 @@ export default class ResolvedApi implements Client {
   types: { [key: string]: string };
   languages: Language[];
 
-  constructor(data: ApiData, httpClient: HttpClient, options: ResolvedApiOptions) {
+  constructor(data: ApiData, url: string, httpClient: HttpClient, options: ResolvedApiOptions) {
     this.data = data;
+    this.url = url;
     this.masterRef = data.refs.filter(ref => ref.isMasterRef)[0];
     this.experiments = new Experiments(data.experiments);
     this.bookmarks = data.bookmarks;
@@ -228,6 +230,24 @@ export default class ResolvedApi implements Client {
 
   previewSession(token: string, linkResolver: LinkResolver, defaultUrl: string, cb?: RequestCallback<string>): Promise<string> {
     console.warn('previewSession function is deprecated in favor of getPreviewResolver function.');
+
+    // Extract API host.
+    // The easiest way here would be to use `URL`, but it is not widely
+    // supported by Internet Explorer at the time of writing this fix.
+    // See: https://developer.mozilla.org/fr/docs/Web/API/URL/URL
+    const protocol = this.url.slice(0, this.url.indexOf('://') + 3);
+    const pathIdx = this.url.indexOf('/', protocol.length);
+    const targetHost = pathIdx < 0 ? this.url : this.url.slice(0, pathIdx);
+    const tokenPrefix = `${targetHost}/`;
+
+    // Check that the token points to a valid host
+    // Do not use `startsWith` method as it is not supported in Internet Explorer.
+    if (token.slice(0, tokenPrefix.length) !== tokenPrefix) {
+      return Promise.reject(new Error(
+        `The token should starts with: ${tokenPrefix}`
+      ));
+    }
+
     return new Promise((resolve, reject) => {
       this.httpClient.request<PreviewResponse>(token, (e, result) => {
         if (e) {

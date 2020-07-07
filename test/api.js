@@ -186,6 +186,19 @@ describe('Api', function() {
     }).catch(done);
   });
 
+  it('should fail to resolve external URL', async function() {
+    const linkResolver = (doc) => `/${doc.uid}`;
+    const token = 'https://google.fr';
+    const api = await getApi();
+
+    try {
+      await api.previewSession(token, linkResolver, '/');
+      assert.fail('An external URL should not be resolved');
+    } catch (e) {
+      assert.equal(e.message, 'The token should starts with: http://localhost:3000/');
+    }
+  });
+
   it('should resolve the previewed document', async function() {
     const linkResolver = (doc) => `/${doc.uid}`;
     const token = "WJr3eikAAClRybU5~WYx9HB8AAB8AmX7z";
