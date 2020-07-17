@@ -1,4 +1,4 @@
-/// <reference types="types/cross-fetch" />
+/// <reference types="./cross-fetch" />
 import ResolvedApi from './ResolvedApi';
 import { Experiments } from './experiments';
 import Api, { ApiOptions } from './Api';
