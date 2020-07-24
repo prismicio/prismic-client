@@ -9,7 +9,9 @@ function fixtures(file) {
   return JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', file)));
 }
 
-function getApi(endpoint) {
+function getApi() {
+  var endpoint = 'http://localhost:3000/api';
+  var endpointAsURL = new URL(endpoint);
   var options = {
     requestHandler: {
       request: function(url, cb) {
@@ -17,6 +19,10 @@ function getApi(endpoint) {
           cb(null, fixtures('search.json'));
         } else if(url === endpoint) {
           cb(null, fixtures('api.json'));
+        } else if(url.startsWith(`${endpointAsURL.origin}/previews`)) {
+          return cb(null, {
+            mainDocument: 'WYx9HB8AAB8AmX7z',
+          });
         }
       },
     },
@@ -25,21 +31,17 @@ function getApi(endpoint) {
   return Prismic.getApi(endpoint, options);
 }
 
-function getDefaultApi() {
-  return getApi('http://localhost:3000/api');
-}
-
 describe('Api', function() {
 
   it('should access to master ref', function(done) {
-    getDefaultApi().then(function(api) {
+    getApi().then(function(api) {
       assert.strictEqual(api.master(), 'WYx9HB8AAB8AmX7z');
       done();
     }).catch(done);
   });
 
   it('should access to forms', function(done) {
-    getDefaultApi().then(function(api) {
+    getApi().then(function(api) {
       assert.exists(api.everything());
       assert.exists(api.form('documentation'));
       done();
@@ -47,7 +49,7 @@ describe('Api', function() {
   });
 
   it('should access to current experiment', function(done) {
-    getDefaultApi().then(function(api) {
+    getApi().then(function(api) {
       assert.strictEqual('experimentA', api.currentExperiment().name());
       assert.strictEqual('variationA', api.currentExperiment().variations[0].label());
       done();
@@ -55,42 +57,42 @@ describe('Api', function() {
   });
 
   it('should access to bookmarks', function(done) {
-    getDefaultApi().then(function(api) {
+    getApi().then(function(api) {
       assert.strictEqual('UfkL59_mqdr73EGn', api.bookmarks.faq);
       done();
     }).catch(done);
   });
 
   it('should access to ref from label', function(done) {
-    getDefaultApi().then(function(api) {
+    getApi().then(function(api) {
       assert.strictEqual('WJr3eikAAClRybU5~WYx9HB8AAB8AmX7z', api.ref('Documentation'));
       done();
     }).catch(done);
   });
 
   it('should access to refs', function(done) {
-    getDefaultApi().then(function(api) {
+    getApi().then(function(api) {
       assert.strictEqual('WYx9HB8AAB8AmX7z', api.refs[0].ref);
       done();
     }).catch(done);
   });
 
   it('should access to tags', function(done) {
-    getDefaultApi().then(function(api) {
+    getApi().then(function(api) {
       assert.strictEqual('contentwriter', api.tags[0]);
       done();
     }).catch(done);
   });
 
   it('should access to types', function(done) {
-    getDefaultApi().then(function(api) {
+    getApi().then(function(api) {
       assert.strictEqual('Post Page', api.types.post);
       done();
     }).catch(done);
   });
 
   it('should access to languages', function(done) {
-    getDefaultApi().then(function(api) {
+    getApi().then(function(api) {
       const language = api.languages[0];
       assert.deepEqual({ id: 'en-gb', name: 'English - Great Britain'}, language);
       done();
@@ -98,7 +100,7 @@ describe('Api', function() {
   });
 
   it('should retrieve content', function(done) {
-    getDefaultApi().then(function(api) {
+    getApi().then(function(api) {
       return api.everything().submit().then(function(response) {
         assert.strictEqual(response.page, 2);
         assert.strictEqual(response.results_per_page, 20);
@@ -124,7 +126,7 @@ describe('Api', function() {
   });
 
   it('should query first document', function(done) {
-    getDefaultApi().then(function(api) {
+    getApi().then(function(api) {
       const options = {};
       const providedOptions = Object.assign({}, options);
 
@@ -138,7 +140,7 @@ describe('Api', function() {
   });
 
   it('should query one document by id', function(done) {
-    getDefaultApi().then(function(api) {
+    getApi().then(function(api) {
       const options = {};
       const providedOptions = Object.assign({}, options);
 
@@ -152,7 +154,7 @@ describe('Api', function() {
   });
 
   it('should query n documents by ids', function(done) {
-    getDefaultApi().then(function(api) {
+    getApi().then(function(api) {
       const options = {};
       const providedOptions = Object.assign({}, options);
 
@@ -167,7 +169,7 @@ describe('Api', function() {
   });
 
   it('should query single document', function(done) {
-    getDefaultApi().then(function(api) {
+    getApi().then(function(api) {
       const options = {};
       const providedOptions = Object.assign({}, options);
 
@@ -181,7 +183,7 @@ describe('Api', function() {
   });
 
   it('should query one document by bookmark', function(done) {
-    getDefaultApi().then(function(api) {
+    getApi().then(function(api) {
       return api.getBookmark('faq').then(function(document) {
         assert.strictEqual(document.id, 'WW4bKScAAMAqmluX');
 
@@ -193,7 +195,7 @@ describe('Api', function() {
   it('should fail to resolve invalid token', async function() {
     const linkResolver = (doc) => `/${doc.uid}`;
     const token = 'xxxxx';
-    const api = await getApi('http://myrepo.cdn.prismic.io/api');
+    const api = await getApi();
 
     try {
       await api.previewSession(token, linkResolver, '/');
@@ -206,7 +208,7 @@ describe('Api', function() {
   it('should fail to resolve external URL', async function() {
     const linkResolver = (doc) => `/${doc.uid}`;
     const token = 'https://google.fr';
-    const api = await getApi('http://myrepo.cdn.prismic.io/api');
+    const api = await getApi();
 
     try {
       await api.previewSession(token, linkResolver, '/');
@@ -218,15 +220,9 @@ describe('Api', function() {
 
   it('should succeed to resolve valid token', async function() {
     const linkResolver = (doc) => `/${doc.uid}`;
-    const token = 'https://myrepo.cdn.wroom.test/previews/XxlRmhIAACIAoNUO';
-    const api = await getApi('https://myrepo.cdn.prismic.io/api');
-
-    try {
-      await api.previewSession(token, linkResolver, '/');
-      assert.fail('An external URL should not be resolved');
-    } catch (e) {
-      assert.equal(e.message, 'Invalid token');
-    }
+    const token = 'http://localhost:3000/previews/XxlRmhIAACIAoNUO';
+    const api = await getApi();
+    const url = await api.previewSession(token, linkResolver, '/');
   });
 
   it('should resolve the previewed document', async function() {
@@ -234,7 +230,7 @@ describe('Api', function() {
     const token = "WJr3eikAAClRybU5~WYx9HB8AAB8AmX7z";
     const documentId = "WW4bKScAAMAqmluX";
     const expect = "/renaudbressand";
-    const api = await getDefaultApi();
+    const api = await getApi();
     const redirectUrl = await api.getPreviewResolver(token, documentId).resolve(linkResolver, '/');
 
     assert.equal(expect, redirectUrl);
@@ -244,7 +240,7 @@ describe('Api', function() {
     const linkResolver = (doc) => `/${doc.uid}`;
     const token = "WJr3eikAAClRybU5~WYx9HB8AAB8AmX7z";
     const expect = "/";
-    const api = await getDefaultApi();
+    const api = await getApi();
     const documentId = null;
     const redirectUrl = await api.getPreviewResolver(token, documentId).resolve(linkResolver, '/');
 
