@@ -33,13 +33,13 @@ describe('request', () => {
     nock(/example\.prismic\.io/)
     .get('/api/v2')
     .reply((uri, requestBody, cb) => {
-      setTimeout(() => cb(null, [200, STUB_RESPONSE]), 50)
-    })
+      setTimeout(() => cb(null, [200, STUB_RESPONSE]), 50);
+    });
 
     Prismic.getApi('https://example.prismic.io/api/v2', { timeoutInMs: 10 })
     .catch(err => {
-      assert.equal(err.toString(), 'Error: https://example.prismic.io/api/v2 response timeout')
-      done()
-    })
+      assert.equal(err.toString(), 'Error: https://example.prismic.io/api/v2 response timeout');
+      done();
+    });
   });
 });

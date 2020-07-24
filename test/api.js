@@ -9,33 +9,37 @@ function fixtures(file) {
   return JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', file)));
 }
 
-function getApi() {
+function getApi(endpoint) {
   var options = {
     requestHandler: {
       request: function(url, cb) {
-        if (url.startsWith('http://localhost:3000/api/v2/documents/search')) {
+        if (url.startsWith(`${endpoint}/v2/documents/search`)) {
           cb(null, fixtures('search.json'));
-        } else if(url === 'http://localhost:3000/api') {
+        } else if(url === endpoint) {
           cb(null, fixtures('api.json'));
         }
       },
     },
   };
 
-  return Prismic.getApi('http://localhost:3000/api', options);
+  return Prismic.getApi(endpoint, options);
+}
+
+function getDefaultApi() {
+  return getApi('http://localhost:3000/api');
 }
 
 describe('Api', function() {
 
   it('should access to master ref', function(done) {
-    getApi().then(function(api) {
+    getDefaultApi().then(function(api) {
       assert.strictEqual(api.master(), 'WYx9HB8AAB8AmX7z');
       done();
     }).catch(done);
   });
 
   it('should access to forms', function(done) {
-    getApi().then(function(api) {
+    getDefaultApi().then(function(api) {
       assert.exists(api.everything());
       assert.exists(api.form('documentation'));
       done();
@@ -43,7 +47,7 @@ describe('Api', function() {
   });
 
   it('should access to current experiment', function(done) {
-    getApi().then(function(api) {
+    getDefaultApi().then(function(api) {
       assert.strictEqual('experimentA', api.currentExperiment().name());
       assert.strictEqual('variationA', api.currentExperiment().variations[0].label());
       done();
@@ -51,42 +55,42 @@ describe('Api', function() {
   });
 
   it('should access to bookmarks', function(done) {
-    getApi().then(function(api) {
+    getDefaultApi().then(function(api) {
       assert.strictEqual('UfkL59_mqdr73EGn', api.bookmarks.faq);
       done();
     }).catch(done);
   });
 
   it('should access to ref from label', function(done) {
-    getApi().then(function(api) {
+    getDefaultApi().then(function(api) {
       assert.strictEqual('WJr3eikAAClRybU5~WYx9HB8AAB8AmX7z', api.ref('Documentation'));
       done();
     }).catch(done);
   });
 
   it('should access to refs', function(done) {
-    getApi().then(function(api) {
+    getDefaultApi().then(function(api) {
       assert.strictEqual('WYx9HB8AAB8AmX7z', api.refs[0].ref);
       done();
     }).catch(done);
   });
 
   it('should access to tags', function(done) {
-    getApi().then(function(api) {
+    getDefaultApi().then(function(api) {
       assert.strictEqual('contentwriter', api.tags[0]);
       done();
     }).catch(done);
   });
 
   it('should access to types', function(done) {
-    getApi().then(function(api) {
+    getDefaultApi().then(function(api) {
       assert.strictEqual('Post Page', api.types.post);
       done();
     }).catch(done);
   });
 
   it('should access to languages', function(done) {
-    getApi().then(function(api) {
+    getDefaultApi().then(function(api) {
       const language = api.languages[0];
       assert.deepEqual({ id: 'en-gb', name: 'English - Great Britain'}, language);
       done();
@@ -94,7 +98,7 @@ describe('Api', function() {
   });
 
   it('should retrieve content', function(done) {
-    getApi().then(function(api) {
+    getDefaultApi().then(function(api) {
       return api.everything().submit().then(function(response) {
         assert.strictEqual(response.page, 2);
         assert.strictEqual(response.results_per_page, 20);
@@ -120,7 +124,7 @@ describe('Api', function() {
   });
 
   it('should query first document', function(done) {
-    getApi().then(function(api) {
+    getDefaultApi().then(function(api) {
       const options = {};
       const providedOptions = Object.assign({}, options);
 
@@ -134,7 +138,7 @@ describe('Api', function() {
   });
 
   it('should query one document by id', function(done) {
-    getApi().then(function(api) {
+    getDefaultApi().then(function(api) {
       const options = {};
       const providedOptions = Object.assign({}, options);
 
@@ -148,7 +152,7 @@ describe('Api', function() {
   });
 
   it('should query n documents by ids', function(done) {
-    getApi().then(function(api) {
+    getDefaultApi().then(function(api) {
       const options = {};
       const providedOptions = Object.assign({}, options);
 
@@ -163,7 +167,7 @@ describe('Api', function() {
   });
 
   it('should query single document', function(done) {
-    getApi().then(function(api) {
+    getDefaultApi().then(function(api) {
       const options = {};
       const providedOptions = Object.assign({}, options);
 
@@ -177,7 +181,7 @@ describe('Api', function() {
   });
 
   it('should query one document by bookmark', function(done) {
-    getApi().then(function(api) {
+    getDefaultApi().then(function(api) {
       return api.getBookmark('faq').then(function(document) {
         assert.strictEqual(document.id, 'WW4bKScAAMAqmluX');
 
@@ -186,16 +190,42 @@ describe('Api', function() {
     }).catch(done);
   });
 
-  it('should fail to resolve external URL', async function() {
+  it('should fail to resolve invalid token', async function() {
     const linkResolver = (doc) => `/${doc.uid}`;
-    const token = 'https://google.fr';
-    const api = await getApi();
+    const token = 'xxxxx';
+    const api = await getApi('http://myrepo.cdn.prismic.io/api');
 
     try {
       await api.previewSession(token, linkResolver, '/');
       assert.fail('An external URL should not be resolved');
     } catch (e) {
-      assert.equal(e.message, 'The token should starts with: http://localhost:3000/');
+      assert.equal(e.message, 'Invalid token');
+    }
+  });
+
+  it('should fail to resolve external URL', async function() {
+    const linkResolver = (doc) => `/${doc.uid}`;
+    const token = 'https://google.fr';
+    const api = await getApi('http://myrepo.cdn.prismic.io/api');
+
+    try {
+      await api.previewSession(token, linkResolver, '/');
+      assert.fail('An external URL should not be resolved');
+    } catch (e) {
+      assert.equal(e.message, 'Invalid token');
+    }
+  });
+
+  it('should succeed to resolve valid token', async function() {
+    const linkResolver = (doc) => `/${doc.uid}`;
+    const token = 'https://myrepo.cdn.wroom.test/previews/XxlRmhIAACIAoNUO';
+    const api = await getApi('https://myrepo.cdn.prismic.io/api');
+
+    try {
+      await api.previewSession(token, linkResolver, '/');
+      assert.fail('An external URL should not be resolved');
+    } catch (e) {
+      assert.equal(e.message, 'Invalid token');
     }
   });
 
@@ -204,7 +234,7 @@ describe('Api', function() {
     const token = "WJr3eikAAClRybU5~WYx9HB8AAB8AmX7z";
     const documentId = "WW4bKScAAMAqmluX";
     const expect = "/renaudbressand";
-    const api = await getApi();
+    const api = await getDefaultApi();
     const redirectUrl = await api.getPreviewResolver(token, documentId).resolve(linkResolver, '/');
 
     assert.equal(expect, redirectUrl);
@@ -214,7 +244,7 @@ describe('Api', function() {
     const linkResolver = (doc) => `/${doc.uid}`;
     const token = "WJr3eikAAClRybU5~WYx9HB8AAB8AmX7z";
     const expect = "/";
-    const api = await getApi();
+    const api = await getDefaultApi();
     const documentId = null;
     const redirectUrl = await api.getPreviewResolver(token, documentId).resolve(linkResolver, '/');
 
