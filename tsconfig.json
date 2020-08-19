@@ -10,6 +10,7 @@
     "lib": ["ES5", "ES6", "DOM"],
     "target": "ES5",
     "module": "ES6",
+    "moduleResolution": "node",
     "baseUrl": "."
   },
   "include": [

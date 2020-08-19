@@ -1,4 +1,3 @@
-/// <reference path="../types/cross-fetch.d.ts" />
 import ResolvedApi, { EXPERIMENT_COOKIE as experimentCookie, PREVIEW_COOKIE as previewCookie } from './ResolvedApi';
 import Predicates from './Predicates';
 import { Experiments } from './experiments';
