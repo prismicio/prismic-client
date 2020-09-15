@@ -1,7 +1,7 @@
 var path = require('path');
 var chai = require('chai');
 var assert = chai.assert;
-var Prismic = require(path.join(__dirname, '../', 'cjs', 'client.js'));
+var Prismic = require(path.join(__dirname, '../', 'cjs', '@prismicio/client.js'));
 
 describe('Predicates', function() {
 

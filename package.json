@@ -29,9 +29,9 @@
     "type": "git",
     "url": "https://github.com/prismicio/prismic-javascript.git"
   },
-  "main": "cjs/client.js",
-  "module": "esm/client.mjs",
-  "unpkg": "umd/client.min.js",
+  "main": "cjs/@prismicio/client.js",
+  "module": "esm/@prismicio/client.mjs",
+  "unpkg": "umd/@prismicio/client.min.js",
   "files": [
     "cjs/",
     "esm/",
