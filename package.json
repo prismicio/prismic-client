@@ -44,7 +44,7 @@
     "dev": "rollup -c -w",
     "check": "tsc --pretty --noEmit --watch",
     "test": "npm run build && mocha",
-    "prepare": "npm run build; npm run docs; npm run declarations",
+    "prepare": "npm run build && npm run docs && npm run declarations",
     "prepublishOnly": "npm run test",
     "docs": "typedoc --mode file --out ./docs ./src/index.ts",
     "declarations": "tsc --emitDeclarationOnly --declaration --declarationDir ./types",

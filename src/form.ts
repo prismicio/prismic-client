@@ -84,10 +84,6 @@ export class LazySearchForm {
           return form.query(fieldValue);
         } else if (fieldKey === 'pageSize') {
           return form.pageSize(fieldValue);
-        } else if (fieldKey === 'fetch') {
-          return form.fetch(fieldValue);
-        } else if (fieldKey === 'fetchLinks') {
-          return form.fetchLinks(fieldValue);
         } else if (fieldKey === 'graphQuery') {
           return form.graphQuery(fieldValue);
         } else if (fieldKey === 'lang') {
