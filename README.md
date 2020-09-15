@@ -73,7 +73,7 @@ apiEndpoint: your-repo-name.prismic.io/api/v2
 #### NPM
 
 ```sh
-npm install prismic-javascript --save
+npm install @prismicio/client --save
 ```
 
 #### CDN
