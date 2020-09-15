@@ -15,7 +15,6 @@ export interface Client {
   getSingle(type: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
   getBookmark(bookmark: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
   getPreviewResolver(token: string, documentId?: string): PreviewResolver;
-  previewSession(token: string, linkResolver: (doc: any) => string, defaultUrl: string, cb?: RequestCallback<string>): Promise<string>;
 }
 
 export class DefaultClient implements Client {
@@ -64,10 +63,6 @@ export class DefaultClient implements Client {
 
   getBookmark(bookmark: string, options: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
     return this.getApi().then(api => api.getBookmark(bookmark, options, cb));
-  }
-
-  previewSession(token: string, linkResolver: (doc: any) => string, defaultUrl: string, cb?: RequestCallback<string>): Promise<string> {
-    return this.getApi().then(api => api.previewSession(token, linkResolver, defaultUrl, cb));
   }
 
   getPreviewResolver(token: string, documentId?: string): PreviewResolver {
