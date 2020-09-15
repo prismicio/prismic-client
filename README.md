@@ -79,7 +79,7 @@ npm install prismic-javascript --save
 #### CDN
 
 ```
-https://unpkg.com/prismic-javascript
+https://unpkg.com/@prismicio/javascript
 ```
 
 (You may need to adapt the version number)
@@ -100,48 +100,73 @@ For new project, you can start from a sample project:
 
 #### Demo project
 
-You can find an integration of prismic content with the new API V2 in the following project:
-* [Node.js project](https://github.com/arnaudlewis/prismic-apiv2)
+You can find an integration of prismic content with the new API V2 in the following projects:
+* [Next.js project](https://github.com/prismicio/nextjs-website)
+* [Node.js project](https://github.com/prismicio/nodejs-website)
+
+### Instantiate the Prismic Client
+
+The client is synchronous and allow you to make queries directly to your API.
+
+```javascript
+const Prismic = require('@prismicio/javascript');
+
+const options = {
+  // see specifications below
+}
+const client = Prismic.client("http://your_repository_name.prismic.io/api", options)
+```
+
+Options:
+
+| Param          	| Type                       	| Required 	| Default Value 	| Description                                                                                                                  	|
+|----------------	|----------------------------	|----------	|---------------	|------------------------------------------------------------------------------------------------------------------------------	|
+| accessToken    	| string                     	| false    	| null          	| If your API is private, pass your token to access your content                                                               	|
+| routes         	| array                      	| false    	| null          	| Options used by the API to resolve link urls (replaces linkResolver)                                                         	|
+| requestHandler 	| RequestHandler (see desc.) 	| false    	| null          	| See RequestHandler interface. Implements a request function and a callback to be called once request has returned.           	|
+| req            	| object                     	| false    	| null          	| Request object when using the client server-side (eg: Next.js, Express, Koa...)                                               |
+| apiCache       	| ApiCache (see desc.)       	| false    	| null          	| Swap default api cache with your own. Needs at least get and set properties. See ApiCache interface for full implementation. 	|
+| apiDataTTL     	| number                     	| false    	| 5             	| Sets the refresh rate of API data. Used by the default api cache.                                                            	|
+| proxyAgent     	| any                        	| false    	| null          	| Use your own proxy agent (eg. https://github.com/http-party/node-http-proxy)                                                 	|
+| timeoutInMs    	| number                     	| false    	| null          	| Sets the timeout in milliseconds of requess. Used by the default request handler.                                            	|
 
 ### Query the content
 
-To fetch documents from your repository, you need to fetch the Api data first.
+To fetch documents from your repository, you need to instantiate the client first.
 
 ```javascript
-var Prismic = require('prismic-javascript');
+const Prismic = require('@prismicio/client');
 
-Prismic.api("http://your_repository_name.prismic.io/api", function(error, api) {
-  var options = {}; // In Node.js, pass the request as 'req' to read the reference from the cookies
-  api.query("", options, function(err, response) { // An empty query will return all the documents
-    if (err) {
-      console.log("Something went wrong: ", err);
-    }
-    console.log("Documents: ", response.documents);
-  });
+const client = Prismic.client("http://your_repository_name.prismic.io/api")
+var options = {}; // In Node.js, pass the request as 'req' to read the reference from the cookies
+client.query("", options, function(err, response) { // An empty query will return all the documents
+  if (err) {
+    console.log("Something went wrong: ", err);
+  }
+  console.log("Documents: ", response.documents);
 });
 ```
 
 All asynchronous calls return ES2015 promises, so alternatively you can use them instead of callbacks.
 
 ```javascript
-var Prismic = require('prismic-javascript');
+const Prismic = require('@prismicio/client');
 
-Prismic.api("https://your-repository-name.prismic.io/api").then(function(api) {
-  return api.query(""); // An empty query will return all the documents
-}).then(function(response) {
-  console.log("Documents: ", response.results);
-}, function(err) {
-  console.log("Something went wrong: ", err);
-});
+const client = Prismic.client("http://your_repository_name.prismic.io/api")
+return client.query(""); // An empty query will return all the documents
+  .then(function(response) {
+    console.log("Documents: ", response.results);
+  }, function(err) {
+    console.log("Something went wrong: ", err);
+  });
 ```
 
 If you included prismic through the script tag (CDN) there is a global variable PrismicJS:
 ```javascript
-PrismicJS.api("https://your-repository-name.prismic.io/api").then( api => {
-  const faq = PrismicJS.Predicates.at('document.type', 'faq');
-  api.query(faq, { lang: 'en-en' }).then( response => {
-    console.log("Documents: ", response.results);
-  })
+const client = PrismicJS.client("http://your_repository_name.prismic.io/api")
+const faq = PrismicJS.Predicates.at('document.type', 'faq');
+client.query(faq, { lang: 'en-en' }).then( response => {
+  console.log("Documents: ", response.results);
 })
 ```
 

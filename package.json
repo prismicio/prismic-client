@@ -1,5 +1,5 @@
 {
-  "name": "prismic-javascript",
+  "name": "@prismicio/client",
   "description": "JavaScript development kit for prismic.io",
   "license": "Apache-2.0",
   "url": "https://github.com/prismicio/prismic-javascript",
