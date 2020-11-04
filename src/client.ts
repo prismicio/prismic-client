@@ -11,7 +11,7 @@ export interface Client {
   queryFirst(q: string | string[], optionsOrCallback?: QueryOptions | RequestCallback<Document>, cb?: RequestCallback<Document>): Promise<Document>;
   getByID(id: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
   getByIDs(ids: string[], options: QueryOptions, cb: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse>;
-  getByUID(type: string, uid: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
+  getByUID(type: string, uid: string, options?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document>;
   getSingle(type: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
   getBookmark(bookmark: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
   getPreviewResolver(token: string, documentId?: string): PreviewResolver;
@@ -54,7 +54,7 @@ export class DefaultClient implements Client {
     return this.getApi().then(api => api.getByIDs(ids, options, cb));
   }
 
-  getByUID(type: string, uid: string, options: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
+  getByUID(type: string, uid: string, options?: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
     return this.getApi().then(api => api.getByUID(type, uid, options, cb));
   }
 
