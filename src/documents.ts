@@ -5,7 +5,7 @@ export interface AlternateLanguage {
   lang: string;
 }
 
-export interface Document {
+export interface Document<T> {
   id: string;
   uid?: string;
   url?: string;
@@ -17,5 +17,5 @@ export interface Document {
   alternate_languages: AlternateLanguage[];
   first_publication_date: string | null;
   last_publication_date: string | null;
-  data: any;
+  data: T;
 }

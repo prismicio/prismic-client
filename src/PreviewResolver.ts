@@ -9,19 +9,19 @@ export interface PreviewResolver {
   resolve(linkResolver: LinkResolver, defaultUrl: string, cb?: RequestCallback<string>): Promise<string>;
 }
 
-export function createPreviewResolver(
+export function createPreviewResolver<T>(
   token: string,
   documentId?: string,
-  getDocByID?: (documentId: string, maybeOptions?: object) => Promise<Document>
+  getDocByID?: (documentId: string, maybeOptions?: object) => Promise<Document<T>>
 ): PreviewResolver {
   const resolve = (linkResolver: LinkResolver, defaultUrl: string, cb?: RequestCallback<string>) => {
     if (documentId && getDocByID) {
-      return getDocByID(documentId, { ref: token }).then((document: Document) => {
+      return getDocByID(documentId, { ref: token }).then((document: Document<T>) => {
         if (!document) {
           cb && cb(null, defaultUrl);
           return defaultUrl;
         } else {
-          const url = (linkResolver && linkResolver(document)) || document.url || defaultUrl
+          const url = (linkResolver && linkResolver(document))|| document.url || defaultUrl
           cb && cb(null, url);
           return url;
         }
