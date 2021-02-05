@@ -8,16 +8,18 @@ export interface HttpClientOptions {
 
 export default class HttpClient {
 
-  private cache: ApiCache;
-  private requestHandler: RequestHandler;
+  private readonly cache: ApiCache;
+  private readonly requestHandler: RequestHandler;
+  private readonly accessToken: string | undefined;
 
-  constructor(requestHandler?: RequestHandler, cache?: ApiCache, proxyAgent?: any, timeoutInMs?: number) {
+  constructor(requestHandler?: RequestHandler, cache?: ApiCache, proxyAgent?: any, timeoutInMs?: number, accessToken?: string) {
     this.requestHandler = requestHandler || new DefaultRequestHandler({ proxyAgent, timeoutInMs });
     this.cache = cache || new DefaultApiCache();
+    this.accessToken = accessToken;
   }
 
   request<T>(url: string, callback?: RequestCallback<T>): void {
-    this.requestHandler.request<T>(url, (err, result, xhr, ttl) => {
+    this.requestHandler.request<T>(url, this.accessToken, (err, result, xhr, ttl) => {
       if (err) {
         callback && callback(err, null, xhr, ttl);
       } else if (result) {

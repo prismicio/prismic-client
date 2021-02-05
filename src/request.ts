@@ -4,11 +4,13 @@ interface NodeRequestInit extends RequestInit {
   agent?: any;
 }
 
-function fetchRequest<T>(url: string, options: RequestHandlerOption, callback: RequestCallback<T>): void {
+function fetchRequest<T>(url: string, options: RequestHandlerOption, accessToken: string | undefined, callback: RequestCallback<T>): void {
 
+  const authorizationHeader = accessToken ? { Authorization: `Token ${accessToken}` } : {};
   const fetchOptions = {
     headers: {
       Accept: 'application/json',
+      ...authorizationHeader
     },
   } as NodeRequestInit;
 
@@ -69,7 +71,8 @@ export interface RequestHandlerOption {
 }
 
 export interface RequestHandler {
-  request<T>(url: string, cb: RequestCallback<T>): void;
+  options: RequestHandlerOption;
+  request<T>(url: string, accessToken: string | undefined, cb: RequestCallback<T>): void;
 }
 
 export class DefaultRequestHandler implements RequestHandler {
@@ -80,8 +83,7 @@ export class DefaultRequestHandler implements RequestHandler {
     this.options = options || {};
   }
 
-  request<T>(url: string, callback: RequestCallback<T>): void {
-
-    fetchRequest(url, this.options, callback);
+  request<T>(url: string, accessToken: string | undefined, callback: RequestCallback<T>): void {
+    fetchRequest(url, this.options, accessToken, callback);
   }
 }

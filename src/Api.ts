@@ -26,10 +26,7 @@ export default class Api {
   constructor(url: string, options?: ApiOptions) {
     this.options = options || {};
     this.url = url;
-    if (this.options.accessToken) {
-      const accessTokenParam = `access_token=${this.options.accessToken}`;
-      this.url += separator(url) + accessTokenParam;
-    }
+
     if(this.options.routes) {
       this.url += separator(url) + `routes=${encodeURIComponent(JSON.stringify(this.options.routes))}`;
     }
@@ -40,6 +37,7 @@ export default class Api {
       this.options.apiCache,
       this.options.proxyAgent,
       this.options.timeoutInMs,
+      this.options.accessToken,
     );
   }
 
