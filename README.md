@@ -79,7 +79,7 @@ npm install @prismicio/client --save
 #### CDN
 
 ```
-https://unpkg.com/@prismicio/javascript
+https://unpkg.com/@prismicio/client
 ```
 
 (You may need to adapt the version number)
@@ -109,7 +109,7 @@ You can find an integration of prismic content with the new API V2 in the follow
 The client is synchronous and allow you to make queries directly to your API.
 
 ```javascript
-const Prismic = require('@prismicio/javascript');
+const Prismic = require('@prismicio/client');
 
 const options = {
   // see specifications below
