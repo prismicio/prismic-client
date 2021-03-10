@@ -11,6 +11,9 @@
     "api"
   ],
   "version": "4.0.0",
+  "engines": {
+    "node": ">=0.10.3 <15"
+  },
   "devDependencies": {
     "@rollup/plugin-typescript": "^4.1.1",
     "@typescript-eslint/eslint-plugin": "^2.29.0",
