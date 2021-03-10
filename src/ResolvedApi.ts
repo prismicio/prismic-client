@@ -7,7 +7,7 @@ import Cookies from './Cookies';
 import ApiSearchResponse from './ApiSearchResponse';
 import HttpClient from './HttpClient';
 import { Client } from './client';
-import { PreviewResolver, createPreviewResolver, LinkResolver } from './PreviewResolver';
+import { PreviewResolver, createPreviewResolver } from './PreviewResolver';
 
 export const PREVIEW_COOKIE = 'io.prismic.preview';
 export const EXPERIMENT_COOKIE = 'io.prismic.experiment';
@@ -224,33 +224,5 @@ export default class ResolvedApi implements Client {
 
   getPreviewResolver(token: string, documentId?: string): PreviewResolver {
     return createPreviewResolver(token, documentId, this.getByID.bind(this));
-  }
-
-  previewSession(token: string, linkResolver: LinkResolver, defaultUrl: string, cb?: RequestCallback<string>): Promise<string> {
-    console.warn('previewSession function is deprecated in favor of getPreviewResolver function.');
-    return new Promise((resolve, reject) => {
-      this.httpClient.request<PreviewResponse>(token, (e, result) => {
-        if (e) {
-          cb && cb(e);
-          reject(e);
-        } else if (result) {
-          if (!result.mainDocument) {
-            cb && cb(null, defaultUrl);
-            resolve(defaultUrl);
-          } else {
-            return this.getByID(result.mainDocument, { ref: token }).then((document) => {
-              if (!document) {
-                cb && cb(null, defaultUrl);
-                resolve(defaultUrl);
-              } else {
-                const url = (linkResolver && linkResolver(document)) || document.url || defaultUrl
-                cb && cb(null, url);
-                resolve(url);
-              }
-            }).catch(reject);
-          }
-        }
-      });
-    });
   }
 }

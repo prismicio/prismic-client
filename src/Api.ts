@@ -26,11 +26,15 @@ export default class Api {
   constructor(url: string, options?: ApiOptions) {
     this.options = options || {};
     this.url = url;
+    const queryStrings = [
+      this.options.routes && `routes=${encodeURIComponent(JSON.stringify(this.options.routes))}`
+    ]
+    .filter(Boolean)
 
-    if(this.options.routes) {
-      this.url += separator(url) + `routes=${encodeURIComponent(JSON.stringify(this.options.routes))}`;
+    if(queryStrings.length > 0) {
+      this.url += separator(url) + queryStrings.join('&')
     }
-
+    
     this.apiDataTTL = this.options.apiDataTTL || 5;
     this.httpClient = new HttpClient(
       this.options.requestHandler,

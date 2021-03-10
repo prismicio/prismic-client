@@ -8,6 +8,7 @@ export default {
   experimentCookie,
   previewCookie,
   Predicates,
+  predicates: Predicates,
   Experiments,
   Api,
   client,

@@ -2,7 +2,7 @@ const path = require('path');
 const querystring = require('querystring');
 const chai = require('chai');
 const assert = chai.assert;
-const Prismic = require(path.join(__dirname, '../', 'cjs', 'prismic-javascript.js'));
+const Prismic = require(path.join(__dirname, '../', 'cjs', '@prismicio/client.js'));
 const fs = require('fs');
 
 function fixtures(file) {

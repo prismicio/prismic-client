@@ -1,7 +1,7 @@
 var path = require('path');
 var chai = require('chai');
 var assert = chai.assert;
-var Prismic = require(path.join(__dirname, '../', 'cjs', 'prismic-javascript.js'));
+var Prismic = require(path.join(__dirname, '../', 'cjs', '@prismicio/client.js'));
 var fs = require('fs');
 
 function fixtures(file) {
@@ -54,7 +54,7 @@ describe('Cache', function() {
         delay: 125,
         duration: 1100,
         check: function(cachedApi) {
-          assert.strictEqual(cachedApi.master(), api.master());
+          assert.equal(cachedApi.master(), api.master());
         },
         done: function(refreshedApi) {
           assert.notEqual(refreshedApi.master(), api.master());
