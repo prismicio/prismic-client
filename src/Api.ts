@@ -26,14 +26,16 @@ export default class Api {
   constructor(url: string, options?: ApiOptions) {
     this.options = options || {};
     this.url = url;
-    if (this.options.accessToken) {
-      const accessTokenParam = `access_token=${this.options.accessToken}`;
-      this.url += separator(url) + accessTokenParam;
-    }
-    if(this.options.routes) {
-      this.url += separator(url) + `routes=${encodeURIComponent(JSON.stringify(this.options.routes))}`;
-    }
+    const queryStrings = [
+      this.options.accessToken && `access_token=${this.options.accessToken}`,
+      this.options.routes && `routes=${encodeURIComponent(JSON.stringify(this.options.routes))}`
+    ]
+    .filter(Boolean)
 
+    if(queryStrings.length > 0) {
+      this.url += separator(url) + queryStrings.join('&')
+    }
+    
     this.apiDataTTL = this.options.apiDataTTL || 5;
     this.httpClient = new HttpClient(
       this.options.requestHandler,

@@ -43,16 +43,6 @@ export class LazySearchForm {
     return this.set('pageSize', size);
   }
 
-  fetch(fields: string | string[]): LazySearchForm {
-    console.warn('Warning: Using Fetch is deprecated. Use the property `graphQuery` instead.');
-    return this.set('fetch', fields);
-  }
-
-  fetchLinks(fields: string | string[]): LazySearchForm {
-    console.warn('Warning: Using FetchLinks is deprecated. Use the property `graphQuery` instead.');
-    return this.set('fetchLinks', fields);
-  }
-
   graphQuery(query: string): LazySearchForm {
     return this.set('graphQuery', query);
   }
@@ -94,10 +84,6 @@ export class LazySearchForm {
           return form.query(fieldValue);
         } else if (fieldKey === 'pageSize') {
           return form.pageSize(fieldValue);
-        } else if (fieldKey === 'fetch') {
-          return form.fetch(fieldValue);
-        } else if (fieldKey === 'fetchLinks') {
-          return form.fetchLinks(fieldValue);
         } else if (fieldKey === 'graphQuery') {
           return form.graphQuery(fieldValue);
         } else if (fieldKey === 'lang') {
@@ -180,24 +166,6 @@ export class SearchForm {
    */
   pageSize(size: number): SearchForm {
     return this.set('pageSize', size);
-  }
-
-  /**
-   * Restrict the results document to the specified fields
-   */
-  fetch(fields: string | string[]): SearchForm {
-    console.warn('Warning: Using Fetch is deprecated. Use the property `graphQuery` instead.');
-    const strFields = Array.isArray(fields) ? fields.join(',') : fields;
-    return this.set('fetch', strFields);
-  }
-
-  /**
-   * Include the requested fields in the DocumentLink instances in the result
-   */
-  fetchLinks(fields: string | string[]): SearchForm {
-    console.warn('Warning: Using FetchLinks is deprecated. Use the property `graphQuery` instead.');
-    const strFields = Array.isArray(fields) ? fields.join(',') : fields;
-    return this.set('fetchLinks', strFields);
   }
 
   /**
