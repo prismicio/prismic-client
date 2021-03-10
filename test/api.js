@@ -12,7 +12,7 @@ function fixtures(file) {
 function getApi() {
   var options = {
     requestHandler: {
-      request: function(url, cb) {
+      request: function(url, _, cb) {
         if (url.startsWith('http://localhost:3000/api/v2/documents/search')) {
           cb(null, fixtures('search.json'));
         } else if(url === 'http://localhost:3000/api') {

@@ -11,7 +11,7 @@ function fixtures(file) {
 function getClient(opts) {
   var options = {
     requestHandler: {
-      request: function(url, cb) {
+      request: function(url, _, cb) {
         if (url.startsWith('http://localhost:3000/api/v2/documents/search')) {
           var searchJson = fixtures('search.json');
           searchJson.results[0].last_publication_date = Date.now();
