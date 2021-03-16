@@ -153,7 +153,7 @@ All asynchronous calls return ES2015 promises, so alternatively you can use them
 const Prismic = require('@prismicio/client');
 
 const client = Prismic.client("http://your_repository_name.prismic.io/api")
-return client.query(""); // An empty query will return all the documents
+return client.query("") // An empty query will return all the documents
   .then(function(response) {
     console.log("Documents: ", response.results);
   }, function(err) {
