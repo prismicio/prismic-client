@@ -114,7 +114,7 @@ const Prismic = require('@prismicio/client');
 const options = {
   // see specifications below
 }
-const client = Prismic.client("http://your_repository_name.prismic.io/api", options)
+const client = Prismic.client("http://your_repository_name.cdn.prismic.io/api", options)
 ```
 
 Options:
