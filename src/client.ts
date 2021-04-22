@@ -29,6 +29,10 @@ export class DefaultClient implements Client {
     return this.api.get();
   }
 
+  getTags(): Promise<Array<string>> {
+    return this.api.getTags();
+  }
+
   everything(): LazySearchForm {
     return this.form('everything');
   }
@@ -75,5 +79,10 @@ export class DefaultClient implements Client {
   static getApi(url: string, options?: ApiOptions): Promise<ResolvedApi> {
     const api = new Api(url, options);
     return api.get();
+  }
+
+  static getTags(url: string, options?: ApiOptions): Promise<Array<string>> {
+    const api = new Api(url, options);
+    return api.getTags();
   }
 }
