@@ -19,7 +19,7 @@ function separator(url: string): string {
 }
 export default class Api {
   url: string;
-  originalUrl: string;
+  tagsUrl: string;
   options: ApiOptions;
   apiDataTTL: number;
   httpClient: HttpClient;
@@ -27,7 +27,7 @@ export default class Api {
   constructor(url: string, options?: ApiOptions) {
     this.options = options || {};
     this.url = url;
-    this.originalUrl = url;
+    this.tagsUrl = `${url}/tags`;
     const accessTokenParam = this.options.accessToken && `access_token=${this.options.accessToken}`;
     const queryStrings = [
       accessTokenParam,
@@ -40,7 +40,7 @@ export default class Api {
     }
 
     if(accessTokenParam) {
-      this.originalUrl += separator(url) + accessTokenParam;
+      this.tagsUrl += separator(url) + accessTokenParam;
     }
     
     this.apiDataTTL = this.options.apiDataTTL || 5;
@@ -58,7 +58,7 @@ export default class Api {
    * then cached).
    */
   get(cb?: RequestCallback<ResolvedApi>): Promise<ResolvedApi> {
-    return this.httpClient.cachedRequest<ApiData>(`${this.originalUrl}/tags`, { ttl: this.apiDataTTL }).then((data) => {
+    return this.httpClient.cachedRequest<ApiData>(this.url, { ttl: this.apiDataTTL }).then((data) => {
       const resolvedApi = new ResolvedApi(data, this.httpClient, this.options);
       cb && cb(null, resolvedApi);
       return resolvedApi;
@@ -70,7 +70,7 @@ export default class Api {
 
   getTags(cb?: RequestCallback<Array<string>>): Promise<Array<string>> {
     return new Promise(((resolve, reject) => {
-      this.httpClient.request<Array<string>>(`${this.url}/tags`, ((error, result, resp) => {
+      this.httpClient.request<Array<string>>(this.tagsUrl, ((error, result, resp) => {
         if (result) {
           cb && cb(null, result, resp)
           resolve(result);
