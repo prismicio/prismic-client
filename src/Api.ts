@@ -19,7 +19,6 @@ function separator(url: string): string {
 }
 export default class Api {
   url: string;
-  tagsUrl: string;
   options: ApiOptions;
   apiDataTTL: number;
   httpClient: HttpClient;
@@ -27,10 +26,8 @@ export default class Api {
   constructor(url: string, options?: ApiOptions) {
     this.options = options || {};
     this.url = url;
-    this.tagsUrl = `${url}/tags`;
-    const accessTokenParam = this.options.accessToken && `access_token=${this.options.accessToken}`;
     const queryStrings = [
-      accessTokenParam,
+      this.options.accessToken && `access_token=${this.options.accessToken}`,
       this.options.routes && `routes=${encodeURIComponent(JSON.stringify(this.options.routes))}`
     ]
     .filter(Boolean)
@@ -39,10 +36,6 @@ export default class Api {
       this.url += separator(url) + queryStrings.join('&');
     }
 
-    if(accessTokenParam) {
-      this.tagsUrl += separator(url) + accessTokenParam;
-    }
-    
     this.apiDataTTL = this.options.apiDataTTL || 5;
     this.httpClient = new HttpClient(
       this.options.requestHandler,
@@ -59,31 +52,12 @@ export default class Api {
    */
   get(cb?: RequestCallback<ResolvedApi>): Promise<ResolvedApi> {
     return this.httpClient.cachedRequest<ApiData>(this.url, { ttl: this.apiDataTTL }).then((data) => {
-      const resolvedApi = new ResolvedApi(data, this.httpClient, this.options);
+      const resolvedApi = new ResolvedApi(data, this.httpClient, this.options, this.url);
       cb && cb(null, resolvedApi);
       return resolvedApi;
     }).catch((error) => {
       cb && cb(error);
       throw error;
     });
-  }
-
-  getTags(cb?: RequestCallback<Array<string>>): Promise<Array<string>> {
-    return new Promise(((resolve, reject) => {
-      this.httpClient.request<Array<string>>(this.tagsUrl, ((error, result, resp) => {
-        if (result) {
-          cb && cb(null, result, resp)
-          resolve(result);
-        } else if (error) {
-          cb && cb(error, null, resp)
-          reject(error);
-        } else {
-          const e: any = new Error();
-          e.response = resp;
-          cb && cb(e, null, resp)
-          reject(e);
-        }
-      }))
-    }))
   }
 }

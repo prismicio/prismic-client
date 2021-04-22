@@ -49,6 +49,7 @@ export interface QueryOptions {
 
 export interface ResolvedApiOptions {
   req?: any;
+  accessToken?: string;
 }
 
 export default class ResolvedApi implements Client {
@@ -62,8 +63,9 @@ export default class ResolvedApi implements Client {
   tags: string[];
   types: { [key: string]: string };
   languages: Language[];
+  url: string;
 
-  constructor(data: ApiData, httpClient: HttpClient, options: ResolvedApiOptions) {
+  constructor(data: ApiData, httpClient: HttpClient, options: ResolvedApiOptions, url: string) {
     this.data = data;
     this.masterRef = data.refs.filter(ref => ref.isMasterRef)[0];
     this.experiments = new Experiments(data.experiments);
@@ -74,10 +76,20 @@ export default class ResolvedApi implements Client {
     this.tags = data.tags;
     this.types = data.types;
     this.languages = data.languages;
+    this.url = url;
+  }
+
+  private getTagsUrl(): string {
+    const tagsUrl = `${this.url}/tags`;
+    const accessTokenParam = this.options.accessToken && `access_token=${this.options.accessToken}`;
+    if(accessTokenParam) {
+      return `${tagsUrl}?${accessTokenParam}`;
+    }
+    return tagsUrl;
   }
 
   /**
-   * Returns a useable form from its id, as described in the RESTful description of the API.
+   * Returns a usable form from its id, as described in the RESTful description of the API.
    * For instance: api.form("everything") works on every repository (as "everything" exists by default)
    * You can then chain the calls: api.form("everything").query('[[:d = at(document.id, "UkL0gMuvzYUANCpf")]]').ref(ref).submit()
    */
@@ -224,5 +236,21 @@ export default class ResolvedApi implements Client {
 
   getPreviewResolver(token: string, documentId?: string): PreviewResolver {
     return createPreviewResolver(token, documentId, this.getByID.bind(this));
+  }
+
+  getTags(): Promise<Array<string>> {
+    return new Promise(((resolve, reject) => {
+      this.httpClient.request<Array<string>>(this.getTagsUrl(), ((error, result, resp) => {
+        if (result) {
+          resolve(result);
+        } else if (error) {
+          reject(error);
+        } else {
+          const e: any = new Error();
+          e.response = resp;
+          reject(e);
+        }
+      }))
+    }))
   }
 }

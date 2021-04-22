@@ -15,6 +15,7 @@ export interface Client {
   getSingle(type: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
   getBookmark(bookmark: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
   getPreviewResolver(token: string, documentId?: string): PreviewResolver;
+  getTags(): Promise<Array<string>>;
 }
 
 export class DefaultClient implements Client {
@@ -27,10 +28,6 @@ export class DefaultClient implements Client {
 
   getApi(): Promise<ResolvedApi> {
     return this.api.get();
-  }
-
-  getTags(): Promise<Array<string>> {
-    return this.api.getTags();
   }
 
   everything(): LazySearchForm {
@@ -76,13 +73,12 @@ export class DefaultClient implements Client {
     return createPreviewResolver(token, documentId, getDocById);
   }
 
+  getTags(): Promise<Array<string>> {
+    return this.getApi().then(api => api.getTags());
+  }
+
   static getApi(url: string, options?: ApiOptions): Promise<ResolvedApi> {
     const api = new Api(url, options);
     return api.get();
-  }
-
-  static getTags(url: string, options?: ApiOptions): Promise<Array<string>> {
-    const api = new Api(url, options);
-    return api.getTags();
   }
 }
