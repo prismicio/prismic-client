@@ -35,7 +35,7 @@ function fetchRequest<T>(url: string, options: RequestHandlerOption, callback: R
 
     clearTimeout(timeoutId);
 
-    if (~~(resp.status / 100 !== 2)) {
+    if (~~(resp.status / 100) !== 2) {
         /**
          * @description
          * drain the resp before throwing an error to prevent memory leaks

@@ -15,6 +15,7 @@ export interface Client {
   getSingle(type: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
   getBookmark(bookmark: string, options: QueryOptions, cb: RequestCallback<Document>): Promise<Document>;
   getPreviewResolver(token: string, documentId?: string): PreviewResolver;
+  getTags(): Promise<Array<string>>;
 }
 
 export class DefaultClient implements Client {
@@ -70,6 +71,10 @@ export class DefaultClient implements Client {
       return api.getByID(documentId, maybeOptions);
     });
     return createPreviewResolver(token, documentId, getDocById);
+  }
+
+  getTags(): Promise<Array<string>> {
+    return this.getApi().then(api => api.getTags());
   }
 
   static getApi(url: string, options?: ApiOptions): Promise<ResolvedApi> {

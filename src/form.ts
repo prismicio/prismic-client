@@ -5,13 +5,14 @@ import HttpClient from './HttpClient';
 import { RequestCallback } from './request';
 
 export type Fields = { [key: string]: any };
+export type FormFields = {[key: string]: {type?: string, multiple?: boolean, default?: string}};
 
 export interface Form {
-  fields: Fields;
+  fields: FormFields;
   action: string;
   name: string;
   rel: string;
-  form_method: string;
+  method: string;
   enctype: string;
 }
 
@@ -65,7 +66,7 @@ export class LazySearchForm {
 
   url(): Promise<string> {
     return this.api.get().then((api) => {
-      return LazySearchForm.toSearchForm(this, api).url();
+      return LazySearchForm.toSearchForm(this, api).easyForm.url();
     });
   }
 
@@ -104,7 +105,7 @@ export class LazySearchForm {
   }
 }
 
-export class SearchForm {
+export class EasyForm {
   httpClient: HttpClient;
   form: Form;
   data: any;
@@ -121,17 +122,60 @@ export class SearchForm {
     }
   }
 
+  /**
+   * Build the URL to query
+   */
+  url(): string {
+    let url = this.form.action;
+    if (this.data) {
+      let sep = (url.indexOf('?') > -1 ? '&' : '?');
+      for (const key in this.data) {
+        if (Object.prototype.hasOwnProperty.call(this.data, key)) {
+          const values = this.data[key];
+          if (values) {
+            for (let i = 0; i < values.length; i++) {
+              url += sep + key + '=' + encodeURIComponent(values[i]);
+              sep = '&';
+            }
+          }
+        }
+      }
+    }
+    return url;
+  }
+
+  /**
+   * Submits the query, and calls the callback function.
+   */
+  submit<T>(cb?: RequestCallback<T>): Promise<T> {
+    return this.httpClient.cachedRequest<T>(this.url()).then((response) => {
+      cb && cb(null, response);
+      return response;
+    }).catch((error) => {
+      cb && cb(error);
+      throw error;
+    });
+  }
+}
+
+export class SearchForm {
+  easyForm: EasyForm
+
+  constructor(form: Form, httpClient: HttpClient) {
+    this.easyForm = new EasyForm(form, httpClient);
+  }
+
   set(field: string, value: any): SearchForm {
-    const fieldDesc = this.form.fields[field];
+    const fieldDesc = this.easyForm.form.fields[field];
     if (!fieldDesc) throw new Error('Unknown field ' + field);
     const checkedValue = value === '' || value === undefined ? null : value;
-    let values = this.data[field] || [];
+    let values = this.easyForm.data[field] || [];
     if (fieldDesc.multiple) {
       values = checkedValue ? values.concat([checkedValue]) : values;
     } else {
       values = checkedValue ? [checkedValue] : values;
     }
-    this.data[field] = values;
+    this.easyForm.data[field] = values;
     return this;
   }
 
@@ -208,37 +252,9 @@ export class SearchForm {
   }
 
   /**
-   * Build the URL to query
-   */
-  url(): string {
-    let url = this.form.action;
-    if (this.data) {
-      let sep = (url.indexOf('?') > -1 ? '&' : '?');
-      for (const key in this.data) {
-        if  (Object.prototype.hasOwnProperty.call(this.data, key)) {
-          const values = this.data[key];
-          if (values) {
-            for (let i = 0; i < values.length; i++) {
-              url += sep + key + '=' + encodeURIComponent(values[i]);
-              sep = '&';
-            }
-          }
-        }
-      }
-    }
-    return url;
-  }
-
-  /**
    * Submits the query, and calls the callback function.
    */
   submit(cb: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse> {
-    return this.httpClient.cachedRequest<ApiSearchResponse>(this.url()).then((response) => {
-      cb && cb(null, response);
-      return response;
-    }).catch((error) => {
-      cb && cb(error);
-      throw error;
-    });
+    return this.easyForm.submit(cb);
   }
 }

@@ -1,7 +1,7 @@
 import { Document } from './documents';
 import { RequestCallback } from './request';
 import { Experiment, Experiments } from './experiments';
-import { SearchForm, Form } from './form';
+import { SearchForm, Form, EasyForm } from './form';
 import Predicates from './Predicates';
 import Cookies from './Cookies';
 import ApiSearchResponse from './ApiSearchResponse';
@@ -93,6 +93,12 @@ export default class ResolvedApi implements Client {
     const f = this.form('everything');
     if (!f) throw new Error('Missing everything form');
     return f;
+  }
+
+  private tagsForm(): EasyForm {
+    const f = this.form('tags');
+    if (!f) throw new Error('Missing everything form');
+    return f.easyForm;
   }
 
   /**
@@ -224,5 +230,12 @@ export default class ResolvedApi implements Client {
 
   getPreviewResolver(token: string, documentId?: string): PreviewResolver {
     return createPreviewResolver(token, documentId, this.getByID.bind(this));
+  }
+
+  /**
+   * Return all tags of your repository
+   */
+  getTags(): Promise<Array<string>> {
+    return this.tagsForm().submit();
   }
 }
