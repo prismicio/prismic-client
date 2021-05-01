@@ -1,22 +1,19 @@
 {
   "compilerOptions": {
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "preserveConstEnums": true,
-    "noUnusedParameters": true,
-    "noUnusedLocals": true,
-    "removeComments": false,
-    "sourceMap": true,
-    "lib": ["ES5", "ES6", "DOM"],
-    "target": "ES5",
-    "module": "ES6",
+    "strict": true,
+    "skipLibCheck": true,
+
+    "forceConsistentCasingInFileNames": true,
+
+    "target": "ESNext",
+    "module": "ESNext",
+    "declaration": false,
     "moduleResolution": "node",
-    "baseUrl": "."
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+
+    "lib": ["ESNext", "DOM"]
   },
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }
