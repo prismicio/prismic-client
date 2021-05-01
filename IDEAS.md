@@ -106,9 +106,9 @@ const fooAndBarDocuments = await client.getByTags(['Foo', 'Bar'])
 const blogPosts = await client.getAllByType('blog_post', {
   predicates: prismic.predicates.at('document.tags', ['featured']),
   orderings: [
-    { field: 'date', order: 'desc' },
-    { documentField: 'last_publication_date', order: 'desc' },
-    'first_publication_date',
+    { field: 'my.blog_post.date', order: 'desc' },
+    { field: 'document.last_publication_date', order: 'desc' },
+    'first_publication_date desc',
   ],
 })
 // the `q` REST API parameter effectively will contain:
