@@ -9,6 +9,17 @@ import * as prismic from '@prismicio/client'
 
 prismic.getEndpoint('repo-name')
 // => https://repo-name.cdn.prismic.io/api/v2
+```
+
+The following example will not be used. If someone wants to create a more custom
+endpoint URL, such as without the CDN or using `wroom.io`, it can be created
+manually without `getEndpoint`.
+
+```typescript
+import * as prismic from '@prismicio/client'
+
+prismic.getEndpoint('repo-name')
+// => https://repo-name.cdn.prismic.io/api/v2
 
 prismic.getEndpoint('repo-name', { type: 'wroom' })
 // => https://repo-name.cdn.wroom.io/api/v2
@@ -110,6 +121,10 @@ const blogPosts = await client.getAllByType('blog_post', {
     { field: 'document.last_publication_date', order: 'desc' },
     'first_publication_date desc',
   ],
+  // Total limit. If multiple network requests are made to get all documents in
+  // this method, it would stop once it reached 100 documents, even if there are
+  // more to fetch.
+  limit: 100,
 })
 // the `q` REST API parameter effectively will contain:
 //   prismic.predicates.at('document.type', 'blog_post')
