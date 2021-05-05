@@ -21,6 +21,10 @@
       "require": "./dist/index.js",
       "import": "./dist/index.es.js"
     },
+    "./predicate": {
+      "require": "./dist/predicate.js",
+      "import": "./dist/predicate.es.js"
+    },
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.ts",
@@ -30,12 +34,29 @@
     "lint": "eslint src/** test/**",
     "test": "npm run lint && ava"
   },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
   "prettier": {
     "printWidth": 80,
     "proseWrap": "always",
     "semi": false,
     "singleQuote": true,
     "trailingComma": "all"
+  },
+  "ava": {
+    "extensions": [
+      "ts"
+    ],
+    "files": [
+      "./test/**/*.test.ts"
+    ],
+    "require": [
+      "ts-eager/register"
+    ],
+    "verbose": true
   },
   "devDependencies": {
     "@commitlint/cli": "^12.1.1",
@@ -59,22 +80,5 @@
   },
   "simple-git-hooks": {
     "commit-msg": "npx commitlint --edit"
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
-  "ava": {
-    "files": [
-      "./test/**/*.test.ts"
-    ],
-    "extensions": [
-      "ts"
-    ],
-    "require": [
-      "ts-eager/register"
-    ],
-    "verbose": true
   }
 }

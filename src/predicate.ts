@@ -9,57 +9,53 @@ const formatValue = (
     ? `${value.getTime()}`
     : `${value}`
 
-const pathWithArgsPredicate = <
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Args extends Array<any> = [value: string | number | (string | number)[]]
->(
-  name: string,
-) =>
+type DefaultPredicateArgs = [value: string | number | (string | number)[]]
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const pathWithArgsPredicate = <Args extends any[]>(name: string) =>
   /**
    * @param path Path to the value to be compared.
    */
   (path: string, ...args: Args): string =>
-    `[${name}(${path}${args.length ? ', ' : ''}${args
+    `[${name}(${path}${path && args.length ? ', ' : ''}${args
       .map(formatValue)
       .join(', ')})]`
 
 const pathPredicate = (name: string) => (path: string): string =>
-  pathWithArgsPredicate(name)(path, [])
+  pathWithArgsPredicate(name)(path)
 
-const argsPredicate = <
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Args extends Array<any> = [value: string | number | (string | number)[]]
->(
-  name: string,
-) => (...args: Args): string => pathWithArgsPredicate(name)('', args)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const argsPredicate = <Args extends any[]>(name: string) => (
+  ...args: Args
+): string => pathWithArgsPredicate<Args>(name)('', ...args)
 
 /**
  * The `at` predicate checks that the path matches the described value exactly. It takes a single value for a field or an array (only for tags).
  *
  * @see https://prismic.io/docs/technologies/query-predicates-reference-rest-api#at
  */
-export const at = pathWithArgsPredicate('at')
+export const at = pathWithArgsPredicate<DefaultPredicateArgs>('at')
 
 /**
  * The `not` predicate checks that the path doesn't match the provided value exactly. It takes a single value as the argument.
  *
  * @see https://prismic.io/docs/technologies/query-predicates-reference-rest-api#not
  */
-export const not = pathWithArgsPredicate('not')
+export const not = pathWithArgsPredicate<DefaultPredicateArgs>('not')
 
 /**
  * The `any` predicate takes an array of values. It works exactly the same way as the `at` operator, but checks whether the fragment matches any of the values in the array.
  *
  * @see https://prismic.io/docs/technologies/query-predicates-reference-rest-api#any
  */
-export const any = pathWithArgsPredicate('any')
+export const any = pathWithArgsPredicate<DefaultPredicateArgs>('any')
 
 /**
  * The `in` predicate is used specifically to retrieve an array of documents by their IDs or UIDs. This predicate is much more efficient at this than the any predicate.
  *
  * @see https://prismic.io/docs/technologies/query-predicates-reference-rest-api#in
  */
-const _in = pathWithArgsPredicate('in')
+const _in = pathWithArgsPredicate<DefaultPredicateArgs>('in')
 
 // Named `_in` since `in` is a keyword.
 export { _in as in }
@@ -72,7 +68,7 @@ export { _in as in }
  *
  * @see https://prismic.io/docs/technologies/query-predicates-reference-rest-api#fulltext
  */
-export const fulltext = pathWithArgsPredicate('fulltext')
+export const fulltext = pathWithArgsPredicate<DefaultPredicateArgs>('fulltext')
 
 /**
  * The `has` predicate checks whether a fragment has a value. It will return all the documents of the specified type that contain a value for the specified field.
