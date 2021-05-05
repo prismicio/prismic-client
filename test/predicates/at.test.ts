@@ -1,12 +1,23 @@
 import test from 'ava'
 
-import * as predicate from '../../src/predicates'
+import { isTitleMacro } from '../__testutils__/isTitleMacro'
 
-test('[at(document.type, "product")]', (t) =>
-  t.is(predicate.at('document.type', 'product'), t.title))
+import * as predicate from '../../src/predicate'
 
-test('[at(document.tags, ["Macaron", "Cupcake"])]', (t) =>
-  t.is(predicate.at('document.tags', ['Macaron', 'Cupcake']), t.title))
+test(
+  '[at(document.type, "product")]',
+  isTitleMacro,
+  predicate.at('document.type', 'product'),
+)
 
-test('[at(my.product.price, 50)]', (t) =>
-  t.is(predicate.at('my.product.price', 50), t.title))
+test(
+  '[at(document.tags, ["Macaron", "Cupcake"])]',
+  isTitleMacro,
+  predicate.at('document.tags', ['Macaron', 'Cupcake']),
+)
+
+test(
+  '[at(my.product.price, 50)]',
+  isTitleMacro,
+  predicate.at('my.product.price', 50),
+)
