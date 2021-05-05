@@ -39,6 +39,16 @@ const firstResult = <TDocument extends Document>(
   queryResponse: Query<TDocument>,
 ): TDocument => queryResponse.results[0]
 
+const findRef = (refs: Ref[], predicate: (ref: Ref) => boolean): Ref => {
+  const ref = refs.find((ref) => predicate(ref))
+
+  if (!ref) {
+    throw new Error('Ref could not be found.')
+  }
+
+  return ref
+}
+
 export const createClient = (
   ...args: ConstructorParameters<typeof Client>
 ): Client => new Client(...args)
@@ -181,26 +191,13 @@ export class Client {
     )
   }
 
+  getByTags = this.getByTag
   async getByTag<TDocument extends Document>(
-    tag: string,
-    params?: Partial<BuildQueryURLArgs>,
-  ): Promise<Query<TDocument>> {
-    return await this.get<TDocument>(
-      appendPredicates(tagsPredicate(tag))(params),
-    )
-  }
-
-  async getAllByTag<TDocument extends Document>(
-    tag: string,
-    params?: Partial<BuildQueryURLArgs>,
-  ): Promise<TDocument[]> {
-    return await this.getAll<TDocument>(
-      appendPredicates(tagsPredicate(tag))(params),
-    )
-  }
-
-  async getByTags<TDocument extends Document>(
     tags: string[],
+    params?: Partial<BuildQueryURLArgs>,
+  ): Promise<Query<TDocument>>
+  async getByTag<TDocument extends Document>(
+    tags: string | string[],
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<Query<TDocument>> {
     return await this.get<TDocument>(
@@ -208,8 +205,13 @@ export class Client {
     )
   }
 
-  async getAllByTags<TDocument extends Document>(
-    tags: string[],
+  getAllByTags = this.getAllByTag
+  async getAllByTag<TDocument extends Document>(
+    tag: string,
+    params?: Partial<BuildQueryURLArgs>,
+  ): Promise<TDocument[]>
+  async getAllByTag<TDocument extends Document>(
+    tags: string | string[],
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<TDocument[]> {
     return await this.getAll<TDocument>(
@@ -225,39 +227,26 @@ export class Client {
 
   async getRefById(id: string): Promise<Ref> {
     const refs = await this.getRefs()
-    const ref = refs.find((ref) => ref.id === id)
 
-    if (!ref) {
-      throw new Error('Ref could not be found.')
-    }
-
-    return ref
+    return findRef(refs, (ref) => ref.id === id)
   }
 
   async getRefByLabel(label: string): Promise<Ref> {
     const refs = await this.getRefs()
-    const ref = refs.find((ref) => ref.label === label)
 
-    if (!ref) {
-      throw new Error('Ref could not be found.')
-    }
-
-    return ref
+    return findRef(refs, (ref) => ref.label === label)
   }
 
   async getMasterRef(): Promise<Ref> {
     const refs = await this.getRefs()
-    const masterRef = refs.find((ref) => ref.isMasterRef)
 
-    if (!masterRef) {
-      throw new Error('Master ref could not be found.')
-    }
-
-    return masterRef
+    return findRef(refs, (ref) => ref.isMasterRef)
   }
 
-  async buildQueryURL(params?: Partial<BuildQueryURLArgs>): Promise<string> {
-    const ref = params?.ref ?? (await this.getResolvedRefString())
+  async buildQueryURL(
+    params: Partial<BuildQueryURLArgs> = {},
+  ): Promise<string> {
+    const ref = params.ref || (await this.getResolvedRefString())
 
     return buildQueryURL(this.endpoint, {
       ...this.params,
