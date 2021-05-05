@@ -9,8 +9,6 @@ const formatValue = (
     ? `${value.getTime()}`
     : `${value}`
 
-type DefaultPredicateArgs = [value: string | number | (string | number)[]]
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const pathWithArgsPredicate = <Args extends any[]>(name: string) =>
   /**
@@ -28,6 +26,8 @@ const pathPredicate = (name: string) => (path: string): string =>
 const argsPredicate = <Args extends any[]>(name: string) => (
   ...args: Args
 ): string => pathWithArgsPredicate<Args>(name)('', ...args)
+
+type DefaultPredicateArgs = [value: string | number | (string | number)[]]
 
 /**
  * The `at` predicate checks that the path matches the described value exactly. It takes a single value for a field or an array (only for tags).

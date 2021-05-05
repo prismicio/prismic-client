@@ -1,10 +1,11 @@
-import { castArray } from './lib/castArray'
+import { appendPredicates } from './lib/appendPredicates'
 import { getCookie } from './lib/getCookie'
+import { orElseThrow } from './lib/orElseThrow'
 
 import { Document, Query, Ref, Repository } from './types'
 import { buildQueryURL, BuildQueryURLArgs } from './buildQueryURL'
 import * as cookie from './cookie'
-import * as predicate from './predicates'
+import * as predicate from './predicate'
 
 interface HttpRequest {
   headers: {
@@ -12,12 +13,13 @@ interface HttpRequest {
   }
 }
 
-type RefIdOrFn = string | (() => string | undefined)
+type RefStringOrFn = string | (() => string | undefined)
+
 type Fetch = typeof fetch
 
 type ClientConfig = {
   accessToken?: string
-  ref?: RefIdOrFn
+  ref?: RefStringOrFn
   fetch?: Fetch
 } & Omit<BuildQueryURLArgs, 'ref'>
 
@@ -27,32 +29,28 @@ type GetAllParams = {
 
 const MAX_PAGE_SIZE = 100
 
-const concatCastArray = <T>(...elements: (T | T[])[]): T[] =>
-  elements.map((element) => castArray(element)).flat()
+const typePredicate = (documentType: string): string =>
+  predicate.at('document.type', documentType)
 
-const appendPredicates = (...predicates: string[]) => (
-  params: Partial<BuildQueryURLArgs> = {},
-): Partial<BuildQueryURLArgs> => ({
-  ...params,
-  predicates: concatCastArray(params?.predicates ?? [], ...predicates),
-})
+const tagsPredicate = (tags: string | string[]): string =>
+  predicate.at('document.tags', tags)
 
-const orElseThrow = <T>(a: T | null | undefined, error: Error): T => {
-  if (a == null) {
-    throw error
-  }
+const firstResult = <TDocument extends Document>(
+  queryResponse: Query<TDocument>,
+): TDocument => queryResponse.results[0]
 
-  return a
-}
+export const createClient = (
+  ...args: ConstructorParameters<typeof Client>
+): Client => new Client(...args)
 
 export class Client {
-  private endpoint: string
-  private accessToken?: string
-  private ref?: RefIdOrFn
-  private fetchFn: Fetch
-  private httpRequest?: HttpRequest
-  private params?: Omit<BuildQueryURLArgs, 'ref'>
-  private internalEnableAutomaticPreviews: boolean
+  endpoint: string
+  accessToken?: string
+  ref?: RefStringOrFn
+  fetchFn: Fetch
+  httpRequest?: HttpRequest
+  params?: Omit<BuildQueryURLArgs, 'ref'>
+  private autoPreviewsEnabled: boolean
 
   constructor(endpoint: string, options: ClientConfig = {}) {
     const { ref, accessToken, ...params } = options
@@ -61,31 +59,30 @@ export class Client {
     this.accessToken = accessToken
     this.ref = ref
     this.params = params
-    this.internalEnableAutomaticPreviews = true
+    this.autoPreviewsEnabled = true
 
     if (options.fetch) {
       this.fetchFn = options.fetch
+    } else if (typeof globalThis.fetch === 'function') {
+      this.fetchFn = globalThis.fetch
     } else {
-      if (typeof fetch === 'undefined') {
-        throw new Error(
-          'A fetch implementation was not provided. In environments where fetch is not available (including Node.js), a fetch implementation must be provided via a polyfill or the `fetch` option.',
-        )
-      } else {
-        this.fetchFn = globalThis.fetch
-      }
+      throw new Error(
+        'A fetch implementation was not provided. In environments where fetch is not available (including Node.js), a fetch implementation must be provided via a polyfill or the `fetch` option.',
+      )
     }
   }
 
-  enableAutomaticPreviews(): void {
-    this.internalEnableAutomaticPreviews = true
+  enableAutoPreviews(): void {
+    this.autoPreviewsEnabled = true
   }
 
-  enableAutomaticPreviewsFromReq<R extends HttpRequest>(req: R): void {
+  enableAutoPreviewsFromReq<R extends HttpRequest>(req: R): void {
     this.httpRequest = req
+    this.autoPreviewsEnabled = true
   }
 
-  disableAutomaticPreviews(): void {
-    this.internalEnableAutomaticPreviews = false
+  disableAutoPreviews(): void {
+    this.autoPreviewsEnabled = false
   }
 
   query = this.get
@@ -109,7 +106,7 @@ export class Client {
     let page = result.page
     let documents = result.results
 
-    while (page <= result.total_pages && documents.length < limit) {
+    while (page < result.total_pages && documents.length < limit) {
       page += 1
       const result = await this.get<TDocument>({ ...resolvedParams, page })
       documents = [...documents, ...result.results]
@@ -122,11 +119,12 @@ export class Client {
     id: string,
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<TDocument> {
-    const generateParams = appendPredicates(predicate.at('document.id', id))
-    const result = await this.get<TDocument>(generateParams(params))
+    const result = await this.get<TDocument>(
+      appendPredicates(predicate.at('document.id', id))(params),
+    )
 
     return orElseThrow(
-      result.results[0],
+      firstResult(result),
       new Error(`A document with ID "${id}" could not be found.`),
     )
   }
@@ -136,14 +134,15 @@ export class Client {
     uid: string,
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<TDocument> {
-    const generateParams = appendPredicates(
-      predicate.at('document.type', documentType),
-      predicate.at('document.uid', uid),
+    const result = await this.get<TDocument>(
+      appendPredicates(
+        typePredicate(documentType),
+        predicate.at('document.uid', uid),
+      )(params),
     )
-    const result = await this.get<TDocument>(generateParams(params))
 
     return orElseThrow(
-      result.results[0],
+      firstResult(result),
       new Error(
         `A document of type "${documentType}" with UID "${uid}" could not be found.`,
       ),
@@ -154,13 +153,12 @@ export class Client {
     documentType: string,
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<TDocument> {
-    const generateParams = appendPredicates(
-      predicate.at('document.type', documentType),
+    const result = await this.get<TDocument>(
+      appendPredicates(typePredicate(documentType))(params),
     )
-    const result = await this.get<TDocument>(generateParams(params))
 
     return orElseThrow(
-      result.results[0],
+      firstResult(result),
       new Error(`A document of type "${documentType}" could not be found.`),
     )
   }
@@ -169,58 +167,93 @@ export class Client {
     documentType: string,
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<Query<TDocument>> {
-    const generateParams = appendPredicates(
-      predicate.at('document.type', documentType),
+    return await this.get<TDocument>(
+      appendPredicates(typePredicate(documentType))(params),
     )
-
-    return await this.get<TDocument>(generateParams(params))
   }
 
   async getAllByType<TDocument extends Document>(
     documentType: string,
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<TDocument[]> {
-    const generateParams = appendPredicates(
-      predicate.at('document.type', documentType),
+    return await this.getAll<TDocument>(
+      appendPredicates(typePredicate(documentType))(params),
     )
-
-    return await this.getAll<TDocument>(generateParams(params))
   }
 
   async getByTag<TDocument extends Document>(
     tag: string,
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<Query<TDocument>> {
-    const generateParams = appendPredicates(predicate.at('document.tags', tag))
-
-    return await this.get<TDocument>(generateParams(params))
+    return await this.get<TDocument>(
+      appendPredicates(tagsPredicate(tag))(params),
+    )
   }
 
   async getAllByTag<TDocument extends Document>(
     tag: string,
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<TDocument[]> {
-    const generateParams = appendPredicates(predicate.at('document.tags', tag))
-
-    return await this.getAll<TDocument>(generateParams(params))
+    return await this.getAll<TDocument>(
+      appendPredicates(tagsPredicate(tag))(params),
+    )
   }
 
   async getByTags<TDocument extends Document>(
     tags: string[],
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<Query<TDocument>> {
-    const generateParams = appendPredicates(predicate.at('document.tags', tags))
-
-    return await this.get<TDocument>(generateParams(params))
+    return await this.get<TDocument>(
+      appendPredicates(tagsPredicate(tags))(params),
+    )
   }
 
   async getAllByTags<TDocument extends Document>(
     tags: string[],
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<TDocument[]> {
-    const generateParams = appendPredicates(predicate.at('document.tags', tags))
+    return await this.getAll<TDocument>(
+      appendPredicates(tagsPredicate(tags))(params),
+    )
+  }
 
-    return await this.getAll<TDocument>(generateParams(params))
+  async getRefs(): Promise<Ref[]> {
+    const res = await this.fetch<Repository>(this.endpoint)
+
+    return res.refs
+  }
+
+  async getRefById(id: string): Promise<Ref> {
+    const refs = await this.getRefs()
+    const ref = refs.find((ref) => ref.id === id)
+
+    if (!ref) {
+      throw new Error('Ref could not be found.')
+    }
+
+    return ref
+  }
+
+  async getRefByLabel(label: string): Promise<Ref> {
+    const refs = await this.getRefs()
+    const ref = refs.find((ref) => ref.label === label)
+
+    if (!ref) {
+      throw new Error('Ref could not be found.')
+    }
+
+    return ref
+  }
+
+  async getMasterRef(): Promise<Ref> {
+    const refs = await this.getRefs()
+    const masterRef = refs.find((ref) => ref.isMasterRef)
+
+    if (!masterRef) {
+      throw new Error('Master ref could not be found.')
+    }
+
+    return masterRef
   }
 
   async buildQueryURL(params?: Partial<BuildQueryURLArgs>): Promise<string> {
@@ -233,23 +266,6 @@ export class Client {
     })
   }
 
-  async getRefs(): Promise<Ref[]> {
-    const res = await this.fetch<Repository>(this.endpoint)
-
-    return res.refs
-  }
-
-  private async getMasterRef(): Promise<Ref> {
-    const refs = await this.getRefs()
-    const masterRef = refs.find((ref) => ref.isMasterRef)
-
-    if (!masterRef) {
-      throw new Error('Master ref could not be found.')
-    }
-
-    return masterRef
-  }
-
   private getPreviewRefString(): string | undefined {
     if (typeof globalThis.document !== 'undefined') {
       return getCookie(cookie.preview, globalThis.document.cookie)
@@ -259,7 +275,7 @@ export class Client {
   }
 
   private async getResolvedRefString(): Promise<string> {
-    if (this.internalEnableAutomaticPreviews) {
+    if (this.autoPreviewsEnabled) {
       const previewRef = this.getPreviewRefString()
 
       if (previewRef) {
@@ -275,7 +291,7 @@ export class Client {
       if (typeof res === 'string') {
         return res
       }
-    } else if (typeof thisRefIdOrFn === 'string') {
+    } else if (thisRefIdOrFn) {
       return thisRefIdOrFn
     }
 
@@ -285,13 +301,9 @@ export class Client {
   }
 
   private buildRequestOptions(): RequestInit {
-    const headers = new Headers()
-
-    if (this.accessToken) {
-      headers.set('Authorization', `Token ${this.accessToken}`)
-    }
-
-    return { headers }
+    return this.accessToken
+      ? { headers: { Authorization: `Token ${this.accessToken}` } }
+      : {}
   }
 
   private async fetch<T = unknown>(
@@ -301,22 +313,16 @@ export class Client {
     const baseOptions = this.buildRequestOptions()
     const res = await this.fetchFn(uri, { ...baseOptions, ...options })
 
-    if (res.ok) {
+    if (res.status === 200) {
       // We can assume Prismic REST API responses will have a `application/json`
       // Content Type.
       return await res.json()
+    } else if (res.status === 401) {
+      throw new Error(
+        '401 Unauthorized: A valid access token is required to access this repository.',
+      )
     } else {
-      switch (res.status) {
-        case 401: {
-          throw new Error(
-            '401 Unauthorized: A valid access token is required to access this repository.',
-          )
-        }
-
-        default: {
-          throw new Error(`${res.status}: An unknown network error occured.`)
-        }
-      }
+      throw new Error(`${res.status}: An unknown network error occured.`)
     }
   }
 }

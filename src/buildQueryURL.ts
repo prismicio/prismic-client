@@ -1,4 +1,4 @@
-import { IterableElement, ValueOf } from 'type-fest'
+import { ValueOf } from 'type-fest'
 
 import { castArray } from './lib/castArray'
 
@@ -112,22 +112,12 @@ const RENAMED_PARAMS = {
 } as const
 
 /**
- * Parameter keys in this list are not actual Prismic REST API V2 parameters.
- * They are used for other API inputs and functionality.
- *
- * These parameters are *not* included in URL builder products.
- *
- * This list should match parameters included in `BuildQueryURLParams`.
- */
-const NON_PARAM_ARGS = ['ref', 'predicates'] as const
-
-/**
  * A valid parameter name for the Prismic REST API V2.
  */
 type ValidParamName =
   | Exclude<
       keyof QueryParams,
-      keyof typeof RENAMED_PARAMS | IterableElement<typeof NON_PARAM_ARGS>
+      keyof typeof RENAMED_PARAMS | keyof BuildQueryURLParams
     >
   | ValueOf<typeof RENAMED_PARAMS>
 
@@ -142,7 +132,7 @@ type ValidParamName =
 const castOrderingToString = (ordering: Ordering | string): string =>
   typeof ordering === 'string'
     ? ordering
-    : [ordering.field, ordering.direction].join(' ')
+    : [ordering.field, ordering.direction].filter(Boolean).join(' ')
 
 export type BuildQueryURLArgs = QueryParams & BuildQueryURLParams
 
@@ -186,19 +176,15 @@ export const buildQueryURL = (
 
     let value: string | string[] | null | undefined
 
-    switch (name) {
-      case 'orderings': {
-        const scopedValue = params[name]
+    if (name === 'orderings') {
+      const scopedValue = params[name]
 
-        if (scopedValue) {
-          const v = castArray(scopedValue)
-            .map((ordering) => castOrderingToString(ordering))
-            .join(',')
+      if (scopedValue) {
+        const v = castArray(scopedValue)
+          .map((ordering) => castOrderingToString(ordering))
+          .join(',')
 
-          value = `[${v}]`
-        }
-
-        break
+        value = `[${v}]`
       }
     }
 
