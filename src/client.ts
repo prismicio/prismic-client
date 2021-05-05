@@ -191,13 +191,26 @@ export class Client {
     )
   }
 
-  getByTags = this.getByTag
   async getByTag<TDocument extends Document>(
-    tags: string[],
+    tag: string,
     params?: Partial<BuildQueryURLArgs>,
-  ): Promise<Query<TDocument>>
-  async getByTag<TDocument extends Document>(
-    tags: string | string[],
+  ): Promise<Query<TDocument>> {
+    return await this.get<TDocument>(
+      appendPredicates(tagsPredicate(tag))(params),
+    )
+  }
+
+  async getAllByTag<TDocument extends Document>(
+    tag: string,
+    params?: Partial<BuildQueryURLArgs>,
+  ): Promise<TDocument[]> {
+    return await this.getAll<TDocument>(
+      appendPredicates(tagsPredicate(tag))(params),
+    )
+  }
+
+  async getByTags<TDocument extends Document>(
+    tags: string[],
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<Query<TDocument>> {
     return await this.get<TDocument>(
@@ -205,13 +218,8 @@ export class Client {
     )
   }
 
-  getAllByTags = this.getAllByTag
-  async getAllByTag<TDocument extends Document>(
-    tag: string,
-    params?: Partial<BuildQueryURLArgs>,
-  ): Promise<TDocument[]>
-  async getAllByTag<TDocument extends Document>(
-    tags: string | string[],
+  async getAllByTags<TDocument extends Document>(
+    tags: string[],
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<TDocument[]> {
     return await this.getAll<TDocument>(
@@ -315,3 +323,6 @@ export class Client {
     }
   }
 }
+
+const client = createClient('e')
+client.getByTag(['test'])
