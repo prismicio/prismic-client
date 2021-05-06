@@ -34,6 +34,9 @@
     "lint": "eslint src/** test/**",
     "test": "npm run lint && ava"
   },
+  "simple-git-hooks": {
+    "commit-msg": "npx commitlint --edit"
+  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
@@ -82,8 +85,5 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "simple-git-hooks": {
-    "commit-msg": "npx commitlint --edit"
   }
 }
