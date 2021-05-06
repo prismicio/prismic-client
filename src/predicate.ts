@@ -1,3 +1,10 @@
+/**
+ * Formats the value of a predicate element to a stringified version accepted by the Prismic REST API.
+ *
+ * @params value Value to format.
+ *
+ * @returns `value` formatted for the Prismic REST API.
+ */
 const formatValue = (
   value: string | number | Date | (string | number | Date)[],
 ): string =>
@@ -9,6 +16,13 @@ const formatValue = (
     ? `${value.getTime()}`
     : `${value}`
 
+/**
+ * Creates a predicate builder function for predicates with a path and arguments.
+ *
+ * @params name Name of the predicate used in the resulting string.
+ *
+ * @returns Predicate builder function for the given name.
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const pathWithArgsPredicate = <Args extends any[]>(name: string) =>
   /**
@@ -19,14 +33,31 @@ const pathWithArgsPredicate = <Args extends any[]>(name: string) =>
       .map(formatValue)
       .join(', ')})]`
 
+/**
+ * Creates a predicate builder function for predicates with only a path.
+ *
+ * @params name Name of the predicate used in the resulting string.
+ *
+ * @returns Predicate builder function for the given name.
+ */
 const pathPredicate = (name: string) => (path: string): string =>
   pathWithArgsPredicate(name)(path)
 
+/**
+ * Creates a predicate builder function for predicates with only arguments and no path.
+ *
+ * @params name Name of the predicate used in the resulting string.
+ *
+ * @returns Predicate builder function for the given name.
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const argsPredicate = <Args extends any[]>(name: string) => (
   ...args: Args
 ): string => pathWithArgsPredicate<Args>(name)('', ...args)
 
+/**
+ * The default arguments allowed by predicates.
+ */
 type DefaultPredicateArgs = [value: string | number | (string | number)[]]
 
 /**
