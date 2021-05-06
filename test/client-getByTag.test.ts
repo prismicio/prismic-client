@@ -1,13 +1,13 @@
 import test from 'ava'
 import * as mswNode from 'msw/node'
 
-import { createDocument } from '../__testutils__/createDocument'
-import { createMockQueryHandler } from '../__testutils__/createMockQueryHandler'
-import { createMockRepositoryHandler } from '../__testutils__/createMockRepositoryHandler'
-import { createQueryResponse } from '../__testutils__/createQueryResponse'
-import { createTestClient } from '../__testutils__/createClient'
+import { createDocument } from './__testutils__/createDocument'
+import { createMockQueryHandler } from './__testutils__/createMockQueryHandler'
+import { createMockRepositoryHandler } from './__testutils__/createMockRepositoryHandler'
+import { createQueryResponse } from './__testutils__/createQueryResponse'
+import { createTestClient } from './__testutils__/createClient'
 
-import * as prismic from '../../src'
+import * as prismic from '../src'
 
 const server = mswNode.setupServer()
 test.before(() => server.listen({ onUnhandledRequest: 'error' }))

@@ -1,8 +1,8 @@
 import test from 'ava'
 
-import { isTitleMacro } from '../__testutils__/isTitleMacro'
+import { isTitleMacro } from './__testutils__/isTitleMacro'
 
-import * as predicate from '../../src/predicate'
+import * as predicate from '../src/predicate'
 
 test(
   '[in(document.id, ["V9rIvCQAAB0ACq6y", "V9ZtvCcAALuRUzmO"])]',

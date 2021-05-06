@@ -1,8 +1,8 @@
 import test from 'ava'
 
-import { isTitleMacro } from '../__testutils__/isTitleMacro'
+import { isTitleMacro } from './__testutils__/isTitleMacro'
 
-import * as predicate from '../../src/predicate'
+import * as predicate from '../src/predicate'
 
 test(
   '[date.after(document.first_publication_date, "2017-05-18T17:00:00-0500")]',

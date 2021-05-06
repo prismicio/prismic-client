@@ -1,13 +1,13 @@
 import test from 'ava'
 import * as mswNode from 'msw/node'
 
-import { createDocument } from '../__testutils__/createDocument'
-import { createMockQueryHandler } from '../__testutils__/createMockQueryHandler'
-import { createMockRepositoryHandler } from '../__testutils__/createMockRepositoryHandler'
-import { createQueryResponse } from '../__testutils__/createQueryResponse'
-import { createTestClient } from '../__testutils__/createClient'
+import { createDocument } from './__testutils__/createDocument'
+import { createMockQueryHandler } from './__testutils__/createMockQueryHandler'
+import { createMockRepositoryHandler } from './__testutils__/createMockRepositoryHandler'
+import { createQueryResponse } from './__testutils__/createQueryResponse'
+import { createTestClient } from './__testutils__/createClient'
 
-import * as prismic from '../../src'
+import * as prismic from '../src'
 
 const server = mswNode.setupServer()
 test.before(() => server.listen({ onUnhandledRequest: 'error' }))
@@ -21,15 +21,12 @@ test('queries for document by ID', async (t) => {
     createMockRepositoryHandler(t),
     createMockQueryHandler(t, [queryResponse], undefined, {
       ref: 'masterRef',
-      q: [
-        `[[at(document.type, "${document.type}")]]`,
-        `[[at(document.uid, "${document.uid}")]]`,
-      ],
+      q: `[[at(document.id, "${document.id}")]]`,
     }),
   )
 
   const client = createTestClient(t)
-  const res = await client.getByUID(document.type, document.uid)
+  const res = await client.getByID(document.id)
 
   t.deepEqual(res, document)
 })
@@ -48,16 +45,13 @@ test('includes params if provided', async (t) => {
     createMockRepositoryHandler(t),
     createMockQueryHandler(t, [queryResponse], params.accessToken, {
       ref: params.ref as string,
-      q: [
-        `[[at(document.type, "${document.type}")]]`,
-        `[[at(document.uid, "${document.uid}")]]`,
-      ],
+      q: `[[at(document.id, "${document.id}")]]`,
       lang: params.lang,
     }),
   )
 
   const client = createTestClient(t)
-  const res = await client.getByUID(document.type, document.uid, params)
+  const res = await client.getByID(document.id, params)
 
   t.deepEqual(res, document)
 })

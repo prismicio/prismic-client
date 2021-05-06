@@ -12,8 +12,8 @@ type CreateQueryResponsePagesArgs<TData = Record<string, unknown>> = {
 export const createQueryResponsePages = <
   TData extends Record<string, unknown> = Record<string, unknown>
 >({
-  numPages = 20,
-  numDocsPerPage = 20,
+  numPages = 3,
+  numDocsPerPage = 3,
   fields,
 }: CreateQueryResponsePagesArgs<TData>): prismic.Query[] => {
   const documents = Array(numDocsPerPage)

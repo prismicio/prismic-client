@@ -1,9 +1,9 @@
 import test from 'ava'
 import * as mswNode from 'msw/node'
 
-import { createMockRepositoryHandler } from '../__testutils__/createMockRepositoryHandler'
-import { createRepositoryResponse } from '../__testutils__/createRepositoryResponse'
-import { createTestClient } from '../__testutils__/createClient'
+import { createMockRepositoryHandler } from './__testutils__/createMockRepositoryHandler'
+import { createRepositoryResponse } from './__testutils__/createRepositoryResponse'
+import { createTestClient } from './__testutils__/createClient'
 
 const server = mswNode.setupServer()
 test.before(() => server.listen({ onUnhandledRequest: 'error' }))

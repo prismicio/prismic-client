@@ -1,11 +1,11 @@
 import test from 'ava'
 import * as mswNode from 'msw/node'
 
-import { createMockRepositoryHandler } from '../__testutils__/createMockRepositoryHandler'
-import { createRepositoryResponse } from '../__testutils__/createRepositoryResponse'
-import { createTestClient } from '../__testutils__/createClient'
+import { createMockRepositoryHandler } from './__testutils__/createMockRepositoryHandler'
+import { createRepositoryResponse } from './__testutils__/createRepositoryResponse'
+import { createTestClient } from './__testutils__/createClient'
 
-import * as prismic from '../../src'
+import * as prismic from '../src'
 
 const server = mswNode.setupServer()
 test.before(() => server.listen({ onUnhandledRequest: 'error' }))
@@ -19,6 +19,7 @@ test('builds a query URL using the master ref', async (t) => {
   const res = await client.buildQueryURL()
   const url = new URL(res)
 
+  t.is(url.host, new URL(client.endpoint).host)
   t.is(url.pathname, '/api/v2/documents/search')
   t.is(url.search, '?ref=masterRef')
 })

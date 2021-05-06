@@ -6,10 +6,11 @@ export const createDocument = <TData = Record<string, unknown>>(
   fields?: Partial<prismic.Document<TData>>,
 ): SetRequired<prismic.Document<TData>, 'uid'> => {
   const id = Math.random().toString()
+  const uid = Math.random().toString()
 
   return {
     id,
-    uid: id,
+    uid,
     url: 'url',
     type: 'type',
     href: 'href',

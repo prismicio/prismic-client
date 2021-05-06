@@ -61,7 +61,7 @@ export const createRepositoryResponse = (
       foo: 'Foo',
     },
     tags: ['foo', 'bar'],
-    // forms: {},
+    forms: {},
     experiments: {
       draft: [
         {
