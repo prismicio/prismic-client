@@ -39,7 +39,10 @@ export interface Repository {
   languages: Language[]
   types: Record<string, string>
   tags: string[]
-  // forms: Record<string, Form>
+  forms: Record<string, Form>
+  /**
+   * @deprecated
+   */
   experiments: unknown
   oauth_initiate: string
   oauth_token: string
@@ -56,4 +59,19 @@ export interface Query<TDocument extends Document = Document> {
   next_page: string | null
   prev_page: string | null
   results: TDocument[]
+}
+
+export interface Form {
+  method: 'GET'
+  enctype: string
+  action: string
+  name?: string
+  rel?: string
+  fields: Record<string, FormField>
+}
+
+export interface FormField {
+  type: 'String' | 'Integer'
+  multiple: boolean
+  default?: string
 }
