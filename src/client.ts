@@ -250,6 +250,12 @@ export class Client {
     return findRef(refs, (ref) => ref.isMasterRef)
   }
 
+  async getTags(): Promise<string[]> {
+    const res = await this.fetch<Repository>(this.endpoint)
+
+    return res.tags
+  }
+
   async buildQueryURL(
     params: Partial<BuildQueryURLArgs> = {},
   ): Promise<string> {
