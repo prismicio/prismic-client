@@ -1,4 +1,5 @@
-export { createClient, Client } from './client'
-export { buildQueryURL } from './buildQueryURL'
+export { getEndpoint } from './getEndpoint'
+export { createClient, Client, ClientConfig } from './client'
+export { buildQueryURL, QueryParams, BuildQueryURLArgs } from './buildQueryURL'
 export * as cookie from './cookie'
-export * as types from './types'
+export * from './types'

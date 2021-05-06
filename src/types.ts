@@ -2,7 +2,7 @@ export interface Ref {
   ref: string
   label: string
   isMasterRef: boolean
-  scheduledAt: string
+  scheduledAt?: string
   id: string
 }
 
@@ -44,7 +44,7 @@ export interface Repository {
   oauth_initiate: string
   oauth_token: string
   version: string
-  licence: string
+  license: string
 }
 
 export interface Query<TDocument extends Document = Document> {

@@ -174,7 +174,7 @@ export const buildQueryURL = (
     const name = (RENAMED_PARAMS[k as keyof typeof RENAMED_PARAMS] ??
       k) as ValidParamName
 
-    let value: string | string[] | null | undefined
+    let value = params[k as keyof typeof params]
 
     if (name === 'orderings') {
       const scopedValue = params[name]
