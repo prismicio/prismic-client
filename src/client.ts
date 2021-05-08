@@ -261,6 +261,34 @@ export class Client {
   }
 
   /**
+   * Queries all documents from the Prismic repository with specific IDs.
+   *
+   * This method may make multiple network requests to query all matching content.
+   *
+   * @remarks
+   *
+   * A document's UID is different from its ID. An ID is automatically generated for all documents and is made available on its `id` property. A UID is provided in the Prismic editor and is unique among all documents of its Custom Type.
+   *
+   * @param ids A list of document IDs.
+   * @param params Parameters to filter, sort, and paginate the results.
+   *
+   * @returns A list of documents with IDs matching the `ids` parameter, if a matching document exists.
+   *
+   * @example
+   * ```ts
+   * const response = await client.getAllByIDs(['WW4bKScAAMAqmluX', 'U1kTRgEAAC8A5ldS'])
+   * ```
+   */
+  async getAllByIDs<TDocument extends Document>(
+    ids: string[],
+    params?: Partial<BuildQueryURLArgs>,
+  ): Promise<TDocument[]> {
+    return await this.getAll<TDocument>(
+      appendPredicates(predicate.at('document.id', ids))(params),
+    )
+  }
+
+  /**
    * Queries a document from the Prismic repository with a specific UID and Custom Type.
    *
    * @remarks
