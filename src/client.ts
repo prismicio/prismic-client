@@ -444,8 +444,6 @@ export class Client {
   /**
    * Queries documents from the Prismic repository with a specific tag.
    *
-   * This method may make multiple network requests to query all matching content.
-   *
    * @param tags A list of tags that must be included on a document.
    * @param params Parameters to filter, sort, and paginate the results.
    *
