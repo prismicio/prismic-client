@@ -1,15 +1,16 @@
 import { appendPredicates } from './lib/appendPredicates'
 import { getCookie } from './lib/getCookie'
 
-import { Document, Query, Ref, Repository } from './types'
+import { Document, LinkResolver, Query, Ref, Repository } from './types'
 import { buildQueryURL, BuildQueryURLArgs } from './buildQueryURL'
 import * as cookie from './cookie'
 import * as predicate from './predicate'
 
 interface HttpRequestLike {
-  headers: {
-    cookie: string | null | undefined
+  headers?: {
+    cookie?: string
   }
+  query?: Record<string, unknown>
 }
 
 type RefStringOrFn =
@@ -27,6 +28,13 @@ export type ClientConfig = {
 
 type GetAllParams = {
   limit?: number
+}
+
+type ResolvePreviewArgs = {
+  linkResolver: LinkResolver
+  defaultUrl: string
+  previewToken?: string
+  documentId?: string
 }
 
 const MAX_PAGE_SIZE = 100
@@ -572,6 +580,49 @@ export class Client {
   }
 
   /**
+   * Determines the URL for a previewed document during an active preview session. The result of this method should be used to redirect the user to the document's URL.
+   *
+   * @param args Arguments to configure the URL resolving.
+   *
+   * @returns The URL for the previewed document during an active preview session. The user should be redirected to this URL.
+   *
+   * @example
+   * ```ts
+   * const url = resolvePreviewUrl({
+   *   linkResolver: (document) => `/${document.uid}`
+   *   defaultUrl: '/'
+   * })
+   * ```
+   */
+  async resolvePreviewUrl(args: ResolvePreviewArgs): Promise<string> {
+    let documentId = args.documentId
+    let previewToken = args.previewToken
+
+    if (typeof globalThis.location !== 'undefined') {
+      const searchParams = new URLSearchParams(globalThis.location.search)
+      documentId = documentId || searchParams.get('documentId') || undefined
+      previewToken = previewToken || searchParams.get('token') || undefined
+    } else if (this.httpRequest?.query) {
+      if (typeof this.httpRequest.query.documentId === 'string') {
+        documentId = documentId || this.httpRequest?.query?.documentId
+      }
+      if (typeof this.httpRequest.query.token === 'string') {
+        previewToken = previewToken || this.httpRequest.query.token
+      }
+    }
+
+    if (documentId != null) {
+      const document = await this.getByID(documentId, {
+        ref: previewToken,
+      })
+
+      return args.linkResolver(document)
+    } else {
+      return args.defaultUrl
+    }
+  }
+
+  /**
    * Returns the preview ref for the client, if one exists.
    *
    * If this method is used in the browser, the browser's cookies will be read. If this method is used on the server, the cookies from the saved HTTP Request will be read, if an HTTP Request was given.
@@ -581,7 +632,7 @@ export class Client {
   private getPreviewRefString(): string | undefined {
     if (typeof globalThis.document !== 'undefined') {
       return getCookie(cookie.preview, globalThis.document.cookie)
-    } else if (this.httpRequest?.headers.cookie) {
+    } else if (this.httpRequest?.headers?.cookie) {
       return getCookie(cookie.preview, this.httpRequest.headers.cookie)
     }
   }

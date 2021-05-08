@@ -75,3 +75,7 @@ export interface FormField {
   multiple: boolean
   default?: string
 }
+
+export type LinkResolver<TDocument extends Document = Document> = (
+  document: TDocument,
+) => string
