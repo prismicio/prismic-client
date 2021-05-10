@@ -132,7 +132,12 @@ type ValidParamName =
 const castOrderingToString = (ordering: Ordering | string): string =>
   typeof ordering === 'string'
     ? ordering
-    : [ordering.field, ordering.direction].filter(Boolean).join(' ')
+    : [
+        ordering.field,
+        ordering.direction === 'desc' ? ordering.direction : undefined,
+      ]
+        .filter(Boolean)
+        .join(' ')
 
 export type BuildQueryURLArgs = QueryParams & BuildQueryURLParams
 
