@@ -147,18 +147,53 @@ export const createClient = (
 
 /**
  * A client that allows querying content from a Prismic repository.
+ *
+ * If used in an environment where a global `fetch` function is unavailable, such as Node.js, the `fetch` option must be provided as part of the `options` parameter.
  */
 export class Client {
+  /**
+   * The Prismic REST API V2 endpoint for the repository (use `prismic.getEndpoint` for the default endpoint).
+   */
   endpoint: string
+
+  /**
+   * The secure token for accessing the API (only needed if your repository is set to private).
+   *
+   * @see https://user-guides.prismic.io/en/articles/1036153-generating-an-access-token
+   */
   accessToken?: string
+
+  /**
+   * Ref used to query documents.
+   *
+   * @see https://prismic.io/docs/technologies/introduction-to-the-content-query-api#prismic-api-ref
+   */
   ref?: RefStringOrFn
+
+  /**
+   * The function used to make network requests to the Prismic REST API. In environments where a global `fetch` function does not exist, such as Node.js, this function must be provided.
+   */
   fetchFn: Fetch
+
+  /**
+   * An HTTP server request object containing the request's cookies. In a server environment, the request is used to support automatic Prismic preview support when querying draft content.
+   */
   httpRequest?: HttpRequestLike
+
+  /**
+   * Default parameters that will be sent with each query. These parameters can be overridden on each query if needed.
+   */
   defaultParams?: Omit<BuildQueryURLArgs, 'ref'>
+
+  /**
+   * Determines if queries will automatically point to a preview ref if available.
+   */
   private autoPreviewsEnabled: boolean
 
   /**
    * Creates a Prismic client that can be used to query a repository.
+   *
+   * If used in an environment where a global `fetch` function is unavailable, such as Node.js, the `fetch` option must be provided as part of the `options` parameter.
    *
    * @param endpoint The Prismic REST API V2 endpoint for the repository (use `prismic.getEndpoint` to get the default endpoint).
    * @param options Configuration that determines how content will be queried from the Prismic repository.

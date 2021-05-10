@@ -153,7 +153,7 @@ export type BuildQueryURLArgs = QueryParams & BuildQueryURLParams
  * @see https://prismic.io/docs/technologies/introduction-to-the-content-query-api#prismic-api-ref
  * @see https://prismic.io/docs/technologies/query-predicates-reference-rest-api
  *
- * @param endpoint Endpoint to the repository's REST API.
+ * @param endpoint URL to the repository's REST API V2.
  * @param args Arguments to filter and scope the query.
  *
  * @returns URL that can be used to request documents from the repository.
