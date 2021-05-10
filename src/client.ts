@@ -6,6 +6,9 @@ import { buildQueryURL, BuildQueryURLArgs } from './buildQueryURL'
 import * as cookie from './cookie'
 import * as predicate from './predicate'
 
+/**
+ * The minimum required properties to treat as an HTTP Request for automatic Prismic preview support.
+ */
 interface HttpRequestLike {
   headers?: {
     cookie?: string
@@ -13,38 +16,113 @@ interface HttpRequestLike {
   query?: Record<string, unknown>
 }
 
+/**
+ * A ref or a function that returns a ref. If a static ref is known, one can be given. If the ref must be fetched on-demand, a function can be provided. This function can optionally be asynchronous.
+ */
 type RefStringOrFn =
   | string
   | (() => string | undefined | Promise<string | undefined>)
 
-type Fetch = typeof fetch
+/**
+ * A universal API to make network requests.
+ */
+type Fetch = typeof globalThis.fetch
 
+/**
+ * Configuration for clients that determine how content is queried.
+ */
 export type ClientConfig = {
+  /**
+   * The secure token for accessing the Prismic repository. This is only required if the repository is set to private.
+   */
   accessToken?: string
+
+  /**
+   * A string representing a version of the Prismic repository's content. This may point to the latest version (called the "master ref"), or a preview with draft content.
+   */
   ref?: RefStringOrFn
+
+  /**
+   * Default parameters that will be sent with each query. These parameters can be overridden on each query if needed.
+   */
   defaultParams?: Omit<BuildQueryURLArgs, 'ref' | 'accessToken'>
+
+  /**
+   * The function used to make network requests to the Prismic REST API. In environments where a global `fetch` function does not exist, such as Node.js, this function must be provided.
+   */
   fetch?: Fetch
 }
 
+/**
+ * Parameters specific to client methods that fetch all documents. These methods start with `getAll` (for example, `getAllByType`).
+ */
 type GetAllParams = {
+  /**
+   * Limit the number of documents queried. If a number is not provided, there will be no limit and all matching documents will be returned.
+   */
   limit?: number
 }
 
+/**
+ * Arguments to determine how the URL for a preview session is resolved.
+ */
 type ResolvePreviewArgs = {
+  /**
+   * A function that maps a Prismic document to a URL within your app.
+   */
   linkResolver: LinkResolver
+
+  /**
+   * A fallback URL if the Link Resolver does not return a value.
+   */
   defaultUrl: string
+
+  /**
+   * The preview token (also known as a ref) that will be used to query preview content from the Prismic repository.
+   */
   previewToken?: string
+
+  /**
+   * The previewed document that will be used to determine the destination URL.
+   */
   documentId?: string
 }
 
+/**
+ * The largest page size allowed by the Prismic REST API V2. This value is used to minimize the number of requests required to query content.
+ */
 const MAX_PAGE_SIZE = 100
 
+/**
+ * Creates a predicate to filter content by document type.
+ *
+ * @param documentType The document type to filter queried content.
+ *
+ * @returns A predicate that can be used in a Prismic REST API V2 request.
+ */
 const typePredicate = (documentType: string): string =>
   predicate.at('document.type', documentType)
 
+/**
+ * Creates a predicate to filter content by document tags.
+ *
+ * @param documentType Document tags to filter queried content.
+ *
+ * @returns A predicate that can be used in a Prismic REST API V2 request.
+ */
 const tagsPredicate = (tags: string | string[]): string =>
   predicate.at('document.tags', tags)
 
+/**
+ * Returns the first ref from a list that passes a predicate (a function that returns true).
+ *
+ * @throws If a matching ref cannot be found.
+ *
+ * @param refs A list of refs to search.
+ * @param predicate A function that determines if a ref from the list matches the criteria.
+ *
+ * @returns The first matching ref.
+ */
 const findRef = (refs: Ref[], predicate: (ref: Ref) => boolean): Ref => {
   const ref = refs.find((ref) => predicate(ref))
 
@@ -55,10 +133,21 @@ const findRef = (refs: Ref[], predicate: (ref: Ref) => boolean): Ref => {
   return ref
 }
 
+/**
+ * Creates a Prismic client that can be used to query a repository.
+ *
+ * @param endpoint The Prismic REST API V2 endpoint for the repository (use `prismic.getEndpoint` for the default endpoint).
+ * @param options Configuration that determines how content will be queried from the Prismic repository.
+ *
+ * @returns A client that can query content from the repository.
+ */
 export const createClient = (
   ...args: ConstructorParameters<typeof Client>
 ): Client => new Client(...args)
 
+/**
+ * A client that allows querying content from a Prismic repository.
+ */
 export class Client {
   endpoint: string
   accessToken?: string
@@ -68,6 +157,14 @@ export class Client {
   defaultParams?: Omit<BuildQueryURLArgs, 'ref'>
   private autoPreviewsEnabled: boolean
 
+  /**
+   * Creates a Prismic client that can be used to query a repository.
+   *
+   * @param endpoint The Prismic REST API V2 endpoint for the repository (use `prismic.getEndpoint` to get the default endpoint).
+   * @param options Configuration that determines how content will be queried from the Prismic repository.
+   *
+   * @returns A client that can query content from the repository.
+   */
   constructor(endpoint: string, options: ClientConfig = {}) {
     this.endpoint = endpoint
     this.accessToken = options.accessToken
@@ -630,7 +727,7 @@ export class Client {
    * @returns The preview ref as a string, if one exists.
    */
   private getPreviewRefString(): string | undefined {
-    if (typeof globalThis.document !== 'undefined') {
+    if (globalThis.document?.cookie) {
       return getCookie(cookie.preview, globalThis.document.cookie)
     } else if (this.httpRequest?.headers?.cookie) {
       return getCookie(cookie.preview, this.httpRequest.headers.cookie)
