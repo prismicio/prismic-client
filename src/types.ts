@@ -1,3 +1,5 @@
+// TODO: Migrate types to @prismicio/types and use that library throughout the package.
+
 export interface Ref {
   ref: string
   label: string
