@@ -21,16 +21,13 @@
       "require": "./dist/index.js",
       "import": "./dist/index.es.js"
     },
-    "./predicate": {
-      "require": "./dist/predicate.js",
-      "import": "./dist/predicate.es.js"
-    },
     "./package.json": "./package.json"
   },
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "siroc build",
     "dev": "npm run build -- --watch",
+    "format": "prettier --write src/**",
     "lint": "eslint src/** test/**",
     "test": "npm run lint && ava"
   },
