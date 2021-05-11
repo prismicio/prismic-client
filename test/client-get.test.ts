@@ -1,4 +1,5 @@
 import test from 'ava'
+import { Response } from 'node-fetch'
 import * as mswNode from 'msw/node'
 
 import { createMockQueryHandler } from './__testutils__/createMockQueryHandler'
@@ -102,4 +103,26 @@ test('merges params and default params if provided', async (t) => {
   const res = await client.get(params)
 
   t.deepEqual(res, queryResponse)
+})
+
+test('throws if access token is invalid', async (t) => {
+  const queryResponse = createQueryResponse()
+
+  server.use(
+    createMockRepositoryHandler(t),
+    createMockQueryHandler(t, [queryResponse], 'accessToken', {
+      ref: 'masterRef',
+    }),
+  )
+
+  const client = createTestClient(t)
+
+  try {
+    await client.get()
+  } catch (error) {
+    t.true(/invalid access token/i.test(error.message))
+    t.is(error.url, `${client.endpoint}/documents/search?ref=masterRef`)
+    t.deepEqual(error.options, {})
+    t.true(error.response instanceof Response)
+  }
 })

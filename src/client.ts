@@ -3,6 +3,7 @@ import { getCookie } from './lib/getCookie'
 
 import { Document, LinkResolver, Query, Ref, Repository } from './types'
 import { buildQueryURL, BuildQueryURLArgs } from './buildQueryURL'
+import { HTTPError } from './HTTPError'
 import * as cookie from './cookie'
 import * as predicate from './predicate'
 
@@ -845,11 +846,9 @@ export class Client {
       // Content Type.
       return await res.json()
     } else if (res.status === 401) {
-      throw new Error(
-        '401 Unauthorized: A valid access token is required to access this repository.',
-      )
+      throw new HTTPError('Invalid access token', res, url, options)
     } else {
-      throw new Error(`${res.status}: An unknown network error occured.`)
+      throw new HTTPError(undefined, res, url, options)
     }
   }
 }
