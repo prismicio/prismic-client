@@ -6,7 +6,12 @@
  * @returns `value` formatted for the Prismic REST API.
  */
 const formatValue = (
-  value: string | number | Date | (string | number | Date)[],
+  value:
+    | string
+    | number
+    | Date
+    | unknown
+    | (string | number | Date | unknown)[],
 ): string =>
   Array.isArray(value)
     ? `[${value.map(formatValue).join(', ')}]`
@@ -23,8 +28,8 @@ const formatValue = (
  *
  * @returns Predicate builder function for the given name.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const pathWithArgsPredicate = <Args extends any[]>(name: string) =>
+const pathWithArgsPredicate =
+  <Args extends unknown[]>(name: string) =>
   /**
    * @param path Path to the value to be compared.
    */
@@ -40,8 +45,10 @@ const pathWithArgsPredicate = <Args extends any[]>(name: string) =>
  *
  * @returns Predicate builder function for the given name.
  */
-const pathPredicate = (name: string) => (path: string): string =>
-  pathWithArgsPredicate(name)(path)
+const pathPredicate =
+  (name: string) =>
+  (path: string): string =>
+    pathWithArgsPredicate(name)(path)
 
 /**
  * Creates a predicate builder function for predicates with only arguments and no path.
@@ -50,10 +57,10 @@ const pathPredicate = (name: string) => (path: string): string =>
  *
  * @returns Predicate builder function for the given name.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const argsPredicate = <Args extends any[]>(name: string) => (
-  ...args: Args
-): string => pathWithArgsPredicate<Args>(name)('', ...args)
+const argsPredicate =
+  <Args extends unknown[]>(name: string) =>
+  (...args: Args): string =>
+    pathWithArgsPredicate<Args>(name)('', ...args)
 
 /**
  * The default arguments allowed by predicates.
@@ -129,72 +136,70 @@ export const similar = argsPredicate<[id: string, value: number]>('similar')
  *
  * @see https://prismic.io/docs/technologies/query-predicates-reference-rest-api#near
  */
-export const geopointNear = pathWithArgsPredicate<
-  [latitude: number, longitude: number, radius: number]
->('geopoint.near')
+export const geopointNear =
+  pathWithArgsPredicate<[latitude: number, longitude: number, radius: number]>(
+    'geopoint.near',
+  )
 
 /**
  * The `number.lt` predicate checks that the value in the number field is less than the value passed into the predicate.
  *
  * @see https://prismic.io/docs/technologies/query-predicates-reference-rest-api#lt-less-than
  */
-export const numberLessThan = pathWithArgsPredicate<[value: number]>(
-  'number.lt',
-)
+export const numberLessThan =
+  pathWithArgsPredicate<[value: number]>('number.lt')
 
 /**
  * The `number.gt` predicate checks that the value in the number field is greater than the value passed into the predicate.
  *
  * @see https://prismic.io/docs/technologies/query-predicates-reference-rest-api#gt-greater-than
  */
-export const numberGreaterThan = pathWithArgsPredicate<[value: number]>(
-  'number.gt',
-)
+export const numberGreaterThan =
+  pathWithArgsPredicate<[value: number]>('number.gt')
 
 /**
  * The `number.inRange` predicate checks that the value in the path is within the two values passed into the predicate.
  *
  * @see https://prismic.io/docs/technologies/query-predicates-reference-rest-api#inrange
  */
-export const numberInRange = pathWithArgsPredicate<
-  [lowerLimit: number, upperLimit: number]
->('number.inRange')
+export const numberInRange =
+  pathWithArgsPredicate<[lowerLimit: number, upperLimit: number]>(
+    'number.inRange',
+  )
 
 /**
  * The `date.after` predicate checks that the value in the path is after the date value passed into the predicate.
  *
  * @see https://prismic.io/docs/technologies/date-and-time-based-predicate-reference-rest-api#after
  */
-export const dateAfter = pathWithArgsPredicate<[date: string | number | Date]>(
-  'date.after',
-)
+export const dateAfter =
+  pathWithArgsPredicate<[date: string | number | Date]>('date.after')
 
 /**
  * The `date.before` predicate checks that the value in the path is before the date value passed into the predicate.
  *
  * @see https://prismic.io/docs/technologies/date-and-time-based-predicate-reference-rest-api#before
  */
-export const dateBefore = pathWithArgsPredicate<[date: string | number | Date]>(
-  'date.before',
-)
+export const dateBefore =
+  pathWithArgsPredicate<[date: string | number | Date]>('date.before')
 
 /**
  * The `date.between` predicate checks that the value in the path is within the date values passed into the predicate.
  *
  * @see https://prismic.io/docs/technologies/date-and-time-based-predicate-reference-rest-api#between
  */
-export const dateBetween = pathWithArgsPredicate<
-  [startDate: string | number | Date, endDate: string | number | Date]
->('date.between')
+export const dateBetween =
+  pathWithArgsPredicate<
+    [startDate: string | number | Date, endDate: string | number | Date]
+  >('date.between')
 
 /**
  * The `date.day-of-month` predicate checks that the value in the path is equal to the day of the month passed into the predicate.
  *
  * @see https://prismic.io/docs/technologies/date-and-time-based-predicate-reference-rest-api#dayofmonth
  */
-export const dateDayOfMonth = pathWithArgsPredicate<[day: number]>(
-  'date.day-of-month',
-)
+export const dateDayOfMonth =
+  pathWithArgsPredicate<[day: number]>('date.day-of-month')
 
 /**
  * The `date.day-of-month-after` predicate checks that the value in the path is after the day of the month passed into the predicate.
@@ -219,9 +224,8 @@ export const dateDayOfMonthBefore = pathWithArgsPredicate<[day: number]>(
  *
  * @see https://prismic.io/docs/technologies/date-and-time-based-predicate-reference-rest-api#dayofweek
  */
-export const dateDayOfWeek = pathWithArgsPredicate<[day: string | number]>(
-  'date.day-of-week',
-)
+export const dateDayOfWeek =
+  pathWithArgsPredicate<[day: string | number]>('date.day-of-week')
 
 /**
  * The `date.day-of-week-after` predicate checks that the value in the path is after the day of the week passed into the predicate.
@@ -246,27 +250,24 @@ export const dateDayOfWeekBefore = pathWithArgsPredicate<
  *
  * @see https://prismic.io/docs/technologies/date-and-time-based-predicate-reference-rest-api#month
  */
-export const dateMonth = pathWithArgsPredicate<[month: string | number]>(
-  'date.month',
-)
+export const dateMonth =
+  pathWithArgsPredicate<[month: string | number]>('date.month')
 
 /**
  * The `date.month-after` predicate checks that the value in the path occurs in any month after the value passed into the predicate.
  *
  * @see https://prismic.io/docs/technologies/date-and-time-based-predicate-reference-rest-api#monthafter
  */
-export const dateMonthAfter = pathWithArgsPredicate<[month: string | number]>(
-  'date.month-after',
-)
+export const dateMonthAfter =
+  pathWithArgsPredicate<[month: string | number]>('date.month-after')
 
 /**
  * The `date.month-before` predicate checks that the value in the path occurs in any month before the value passed into the predicate.
  *
  * @see https://prismic.io/docs/technologies/date-and-time-based-predicate-reference-rest-api#monthbefore
  */
-export const dateMonthBefore = pathWithArgsPredicate<[month: string | number]>(
-  'date.month-before',
-)
+export const dateMonthBefore =
+  pathWithArgsPredicate<[month: string | number]>('date.month-before')
 
 /**
  * The `date.year` predicate checks that the value in the path occurs in the year value passed into the predicate.
@@ -287,15 +288,13 @@ export const dateHour = pathWithArgsPredicate<[hour: number]>('date.hour')
  *
  * @see https://prismic.io/docs/technologies/date-and-time-based-predicate-reference-rest-api#hourafter
  */
-export const dateHourAfter = pathWithArgsPredicate<[hour: number]>(
-  'date.hour-after',
-)
+export const dateHourAfter =
+  pathWithArgsPredicate<[hour: number]>('date.hour-after')
 
 /**
  * The `date.hour-before` predicate checks that the value in the path occurs before the hour value passed into the predicate.
  *
  * @see https://prismic.io/docs/technologies/date-and-time-based-predicate-reference-rest-api#hourbefore
  */
-export const dateHourBefore = pathWithArgsPredicate<[hour: number]>(
-  'date.hour-before',
-)
+export const dateHourBefore =
+  pathWithArgsPredicate<[hour: number]>('date.hour-before')
