@@ -7,9 +7,20 @@ The official JavaScript + TypeScript client library for [Prismic][prismic].
 - Automatically query draft content during [preview sessions][prismic-previews].
 - Built for browser and server usage.
 
+```typescript
+import * as prismic from '@prismicio/client'
+
+// First, create a client
+const endpoint = prismic.getEndpoint('my-repository')
+const client = prismic.createClient(endpoint)
+
+// Then query for your content
+const response = await client.getAllByType('blog_post')
+```
+
 ## Install
 
-```
+```sh
 npm install @prismicio/client
 ```
 
