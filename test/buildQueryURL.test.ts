@@ -1,6 +1,6 @@
 import test from 'ava'
+
 import * as prismic from '../src'
-import * as predicate from '../src/predicate'
 
 const endpoint = prismic.getEndpoint('qwerty')
 
@@ -16,7 +16,7 @@ test('supports single predicate', (t) => {
     decodeURIComponent(
       prismic.buildQueryURL(endpoint, {
         ref: 'ref',
-        predicates: predicate.has('my.document.title'),
+        predicates: prismic.predicate.has('my.document.title'),
       }),
     ),
     'https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&q=[[has(my.document.title)]]',
@@ -29,8 +29,8 @@ test('supports multiple predicates', (t) => {
       prismic.buildQueryURL(endpoint, {
         ref: 'ref',
         predicates: [
-          predicate.has('my.document.title'),
-          predicate.has('my.document.subtitle'),
+          prismic.predicate.has('my.document.title'),
+          prismic.predicate.has('my.document.subtitle'),
         ],
       }),
     ),

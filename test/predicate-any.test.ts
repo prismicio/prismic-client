@@ -2,10 +2,10 @@ import test from 'ava'
 
 import { isTitleMacro } from './__testutils__/isTitleMacro'
 
-import * as predicate from '../src/predicate'
+import * as prismic from '../src'
 
 test(
   '[any(document.type, ["product", "blog-post"])]',
   isTitleMacro,
-  predicate.any('document.type', ['product', 'blog-post']),
+  prismic.predicate.any('document.type', ['product', 'blog-post']),
 )
