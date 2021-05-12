@@ -6,6 +6,9 @@ export * from './client'
 // Predicates API.
 export * as predicate from './predicate'
 
+// Custom error used by Client.
+export * from './HTTPError'
+
 // A collection of well-known cookie names shared between Prismic libraries and systems.
 export * as cookie from './cookie'
 
