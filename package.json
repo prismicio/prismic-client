@@ -29,7 +29,7 @@
     "dev": "npm run build -- --watch",
     "format": "prettier --write src/**",
     "lint": "eslint src/** test/**",
-    "test": "npm run lint && ava"
+    "test": "npm run lint && nyc ava"
   },
   "simple-git-hooks": {
     "commit-msg": "npx commitlint --edit"
@@ -69,6 +69,7 @@
     "eslint": "^7.26.0",
     "msw": "^0.28.2",
     "node-fetch": "^2.6.1",
+    "nyc": "^15.1.0",
     "prettier": "^2.3.0",
     "simple-git-hooks": "^2.4.1",
     "sinon": "^10.0.0",
