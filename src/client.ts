@@ -1,7 +1,15 @@
 import { appendPredicates } from './lib/appendPredicates'
 import { getCookie } from './lib/getCookie'
 
-import { Document, LinkResolver, Query, Ref, Repository } from './types'
+import {
+  Document,
+  FetchLike,
+  LinkResolver,
+  Query,
+  Ref,
+  Repository,
+  RequestInitLike,
+} from './types'
 import { buildQueryURL, BuildQueryURLArgs } from './buildQueryURL'
 import { HTTPError } from './HTTPError'
 import * as cookie from './cookie'
@@ -25,24 +33,6 @@ type RefStringOrFn =
   | (() => string | undefined | Promise<string | undefined>)
 
 /**
- * The minimum required properties from Response.
- */
-interface ResponseLike {
-  status: number
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  json(): Promise<any>
-}
-
-interface RequestInitLike {
-  headers?: Record<string, string>
-}
-
-/**
- * A universal API to make network requests.
- */
-type Fetch = (input: string, init?: RequestInitLike) => Promise<ResponseLike>
-
-/**
  * Configuration for clients that determine how content is queried.
  */
 export type ClientConfig = {
@@ -64,7 +54,7 @@ export type ClientConfig = {
   /**
    * The function used to make network requests to the Prismic REST API. In environments where a global `fetch` function does not exist, such as Node.js, this function must be provided.
    */
-  fetch?: Fetch
+  fetch?: FetchLike
 }
 
 /**
@@ -187,7 +177,7 @@ export class Client {
   /**
    * The function used to make network requests to the Prismic REST API. In environments where a global `fetch` function does not exist, such as Node.js, this function must be provided.
    */
-  fetchFn: Fetch
+  fetchFn: FetchLike
 
   /**
    * An HTTP server request object containing the request's cookies. In a server environment, the request is used to support automatic Prismic preview support when querying draft content.

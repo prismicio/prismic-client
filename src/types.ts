@@ -81,3 +81,27 @@ export interface FormField {
 export type LinkResolver<TDocument extends Document = Document> = (
   document: TDocument,
 ) => string
+
+/**
+ * A universal API to make network requests. A subset of the `fetch()` API.
+ */
+export type FetchLike = (
+  input: string,
+  init?: RequestInitLike,
+) => Promise<ResponseLike>
+
+/**
+ * The minimum required properties from RequestInit.
+ */
+export interface RequestInitLike {
+  headers?: Record<string, string>
+}
+
+/**
+ * The minimum required properties from Response.
+ */
+export interface ResponseLike {
+  status: number
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  json(): Promise<any>
+}

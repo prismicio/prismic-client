@@ -1,9 +1,4 @@
-/**
- * The minimum required properties from Response.
- */
-interface ResponseLike {
-  status: number
-}
+import { ResponseLike } from './types'
 
 /**
  * An error representing a failed HTTP request.
