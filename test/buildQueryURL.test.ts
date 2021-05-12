@@ -58,6 +58,26 @@ test('supports params', (t) => {
   )
 })
 
+test('ignores nullish params', (t) => {
+  t.is(
+    decodeURIComponent(
+      prismic.buildQueryURL(endpoint, {
+        ref: 'ref',
+        accessToken: undefined,
+        pageSize: undefined,
+        page: undefined,
+        after: undefined,
+        fetch: undefined,
+        fetchLinks: undefined,
+        graphQuery: undefined,
+        lang: undefined,
+        orderings: undefined,
+      }),
+    ),
+    'https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref',
+  )
+})
+
 test('supports array fetch param', (t) => {
   t.is(
     decodeURIComponent(
@@ -79,6 +99,28 @@ test('supports array fetchLinks param', (t) => {
       }),
     ),
     'https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&fetchLinks=page.link,page.second_link',
+  )
+})
+
+test('supports empty orderings param', (t) => {
+  t.is(
+    decodeURIComponent(
+      prismic.buildQueryURL(endpoint, {
+        ref: 'ref',
+        orderings: '',
+      }),
+    ),
+    'https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[]',
+  )
+
+  t.is(
+    decodeURIComponent(
+      prismic.buildQueryURL(endpoint, {
+        ref: 'ref',
+        orderings: [],
+      }),
+    ),
+    'https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[]',
   )
 })
 

@@ -21,3 +21,13 @@ test('returns a ref by ID', async (t) => {
 
   t.deepEqual(res, ref2)
 })
+
+test('throws if ref could not be found', async (t) => {
+  server.use(createMockRepositoryHandler(t))
+
+  const client = createTestClient(t)
+
+  await t.throwsAsync(async () => await client.getRefById('non-existant'), {
+    message: /could not be found/i,
+  })
+})

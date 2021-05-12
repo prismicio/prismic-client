@@ -105,6 +105,37 @@ test('merges params and default params if provided', async (t) => {
   t.deepEqual(res, queryResponse)
 })
 
+test('supports ref thunk param', async (t) => {
+  const queryResponse = createQueryResponse()
+  const ref = 'ref'
+
+  server.use(
+    createMockRepositoryHandler(t),
+    createMockQueryHandler(t, [queryResponse], undefined, { ref }),
+  )
+
+  const client = createTestClient(t, { ref: () => ref })
+  const res = await client.get()
+
+  t.deepEqual(res, queryResponse)
+})
+
+test('uses master ref if ref thunk param returns non-string value', async (t) => {
+  const queryResponse = createQueryResponse()
+
+  server.use(
+    createMockRepositoryHandler(t),
+    createMockQueryHandler(t, [queryResponse], undefined, {
+      ref: 'masterRef',
+    }),
+  )
+
+  const client = createTestClient(t, { ref: () => undefined })
+  const res = await client.get()
+
+  t.deepEqual(res, queryResponse)
+})
+
 test('throws if access token is invalid', async (t) => {
   const queryResponse = createQueryResponse()
 
@@ -124,5 +155,38 @@ test('throws if access token is invalid', async (t) => {
     t.is(error.url, `${client.endpoint}/documents/search?ref=masterRef`)
     t.deepEqual(error.options, {})
     t.true(error.response instanceof Response)
+    t.is(error.response.status, 401)
+  }
+})
+
+test('throws if a non-200 or non-401 network error occurs', async (t) => {
+  const queryResponse = createQueryResponse()
+
+  server.use(
+    createMockRepositoryHandler(t),
+    createMockQueryHandler(
+      t,
+      [queryResponse],
+      undefined,
+      {
+        // We are forcing a 404 error by not matching the `ref` param.
+        ref: 'non-existant-ref',
+      },
+      // We're turning off debug support since we are intentionally creating is
+      // mismatched handler.
+      false,
+    ),
+  )
+
+  const client = createTestClient(t)
+
+  try {
+    await client.get()
+  } catch (error) {
+    t.true(/status code 404/i.test(error.message))
+    t.is(error.url, `${client.endpoint}/documents/search?ref=masterRef`)
+    t.deepEqual(error.options, {})
+    t.true(error.response instanceof Response)
+    t.is(error.response.status, 404)
   }
 })

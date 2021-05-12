@@ -1,10 +1,11 @@
 import test from 'ava'
 import * as mswNode from 'msw/node'
 
+import { createDocument } from './__testutils__/createDocument'
 import { createMockQueryHandler } from './__testutils__/createMockQueryHandler'
 import { createMockRepositoryHandler } from './__testutils__/createMockRepositoryHandler'
+import { createQueryResponse } from './__testutils__/createQueryResponse'
 import { createTestClient } from './__testutils__/createClient'
-import { createQueryResponsePages } from './__testutils__/createQueryResponsePages'
 
 import * as prismic from '../src'
 
@@ -12,29 +13,25 @@ const server = mswNode.setupServer()
 test.before(() => server.listen({ onUnhandledRequest: 'error' }))
 test.after(() => server.close())
 
-test('returns matching documents from paginated response', async (t) => {
-  const pagedResponses = createQueryResponsePages({
-    numPages: 2,
-    numDocsPerPage: 2,
-  })
-  const allDocs = pagedResponses.flatMap((page) => page.results)
+test('queries for documents by id', async (t) => {
+  const documents = [createDocument(), createDocument()]
+  const documentIds = documents.map((doc) => doc.id)
+  const queryResponse = createQueryResponse(documents)
 
   server.use(
     createMockRepositoryHandler(t),
-    createMockQueryHandler(t, pagedResponses, undefined, {
+    createMockQueryHandler(t, [queryResponse], undefined, {
       ref: 'masterRef',
-      q: `[[at(document.id, [${allDocs
-        .map((doc) => `"${doc.id}"`)
+      q: `[[at(document.id, [${documentIds
+        .map((id) => `"${id}"`)
         .join(', ')}])]]`,
-      pageSize: 100,
     }),
   )
 
   const client = createTestClient(t)
-  const res = await client.getByIDs(allDocs.map((doc) => doc.id))
+  const res = await client.getByIDs(documentIds)
 
-  t.deepEqual(res, allDocs)
-  t.is(res.length, 2 * 2)
+  t.deepEqual(res, queryResponse)
 })
 
 test('includes params if provided', async (t) => {
@@ -43,30 +40,24 @@ test('includes params if provided', async (t) => {
     ref: 'custom-ref',
     lang: '*',
   }
-  const pagedResponses = createQueryResponsePages({
-    numPages: 2,
-    numDocsPerPage: 2,
-  })
-  const allDocs = pagedResponses.flatMap((page) => page.results)
+
+  const documents = [createDocument(), createDocument()]
+  const documentIds = documents.map((doc) => doc.id)
+  const queryResponse = createQueryResponse(documents)
 
   server.use(
     createMockRepositoryHandler(t),
-    createMockQueryHandler(t, pagedResponses, params.accessToken, {
+    createMockQueryHandler(t, [queryResponse], params.accessToken, {
       ref: params.ref as string,
-      q: `[[at(document.id, [${allDocs
-        .map((doc) => `"${doc.id}"`)
+      q: `[[at(document.id, [${documentIds
+        .map((id) => `"${id}"`)
         .join(', ')}])]]`,
-      pageSize: 100,
       lang: params.lang,
     }),
   )
 
   const client = createTestClient(t)
-  const res = await client.getByIDs(
-    allDocs.map((doc) => doc.id),
-    params,
-  )
+  const res = await client.getByIDs(documentIds, params)
 
-  t.deepEqual(res, allDocs)
-  t.is(res.length, 2 * 2)
+  t.deepEqual(res, queryResponse)
 })
