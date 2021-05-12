@@ -25,9 +25,22 @@ type RefStringOrFn =
   | (() => string | undefined | Promise<string | undefined>)
 
 /**
+ * The minimum required properties from Response.
+ */
+interface ResponseLike {
+  status: number
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  json(): Promise<any>
+}
+
+interface RequestInitLike {
+  headers?: Record<string, string>
+}
+
+/**
  * A universal API to make network requests.
  */
-type Fetch = typeof globalThis.fetch
+type Fetch = (input: string, init?: RequestInitLike) => Promise<ResponseLike>
 
 /**
  * Configuration for clients that determine how content is queried.
@@ -818,7 +831,7 @@ export class Client {
    */
   private buildRequestOptions(
     params?: Partial<BuildQueryURLArgs>,
-  ): RequestInit {
+  ): RequestInitLike {
     const accessToken = params?.accessToken || this.accessToken
 
     return accessToken
