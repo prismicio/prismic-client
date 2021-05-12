@@ -184,7 +184,7 @@ export const buildQueryURL = (
     if (name === 'orderings') {
       const scopedValue = params[name]
 
-      if (scopedValue) {
+      if (scopedValue != null) {
         const v = castArray(scopedValue)
           .map((ordering) => castOrderingToString(ordering))
           .join(',')
