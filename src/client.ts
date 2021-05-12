@@ -398,8 +398,8 @@ export class Client {
   async getByIDs<TDocument extends Document>(
     ids: string[],
     params?: Partial<BuildQueryURLArgs>,
-  ): Promise<TDocument[]> {
-    return await this.getAll<TDocument>(
+  ): Promise<Query<TDocument>> {
+    return await this.get<TDocument>(
       appendPredicates(predicate.at('document.id', ids))(params),
     )
   }
@@ -740,7 +740,7 @@ export class Client {
       previewToken = previewToken || searchParams.get('token') || undefined
     } else if (this.httpRequest?.query) {
       if (typeof this.httpRequest.query.documentId === 'string') {
-        documentId = documentId || this.httpRequest?.query?.documentId
+        documentId = documentId || this.httpRequest.query.documentId
       }
       if (typeof this.httpRequest.query.token === 'string') {
         previewToken = previewToken || this.httpRequest.query.token
