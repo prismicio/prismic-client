@@ -16,7 +16,7 @@ const readValue = (value: string): string => {
 
 export const parse = (cookieString: string): { [name: string]: string } => {
   const result: { [name: string]: string } = {}
-  const cookies = cookieString ? cookieString.split('; ') : []
+  const cookies = cookieString.split('; ')
 
   for (const cookie of cookies) {
     const parts = cookie.split('=')
