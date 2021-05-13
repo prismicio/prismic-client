@@ -105,3 +105,13 @@ export interface ResponseLike {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   json(): Promise<any>
 }
+
+/**
+ * The minimum required properties to treat as an HTTP Request for automatic Prismic preview support.
+ */
+export interface HttpRequestLike {
+  headers?: {
+    cookie?: string
+  }
+  query?: Record<string, unknown>
+}

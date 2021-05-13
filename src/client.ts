@@ -4,6 +4,7 @@ import { getCookie } from './lib/getCookie'
 import {
   Document,
   FetchLike,
+  HttpRequestLike,
   LinkResolver,
   Query,
   Ref,
@@ -14,16 +15,6 @@ import { buildQueryURL, BuildQueryURLArgs } from './buildQueryURL'
 import { HTTPError } from './HTTPError'
 import * as cookie from './cookie'
 import * as predicate from './predicate'
-
-/**
- * The minimum required properties to treat as an HTTP Request for automatic Prismic preview support.
- */
-interface HttpRequestLike {
-  headers?: {
-    cookie?: string
-  }
-  query?: Record<string, unknown>
-}
 
 /**
  * A ref or a function that returns a ref. If a static ref is known, one can be given. If the ref must be fetched on-demand, a function can be provided. This function can optionally be asynchronous.
