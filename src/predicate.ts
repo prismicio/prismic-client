@@ -12,14 +12,21 @@ const formatValue = (
     | Date
     | unknown
     | (string | number | Date | unknown)[],
-): string =>
-  Array.isArray(value)
-    ? `[${value.map(formatValue).join(', ')}]`
-    : typeof value === 'string'
-    ? `"${value}"`
-    : value instanceof Date
-    ? `${value.getTime()}`
-    : `${value}`
+): string => {
+  if (Array.isArray(value)) {
+    return `[${value.map(formatValue).join(', ')}]`
+  }
+
+  if (typeof value === 'string') {
+    return `"${value}"`
+  }
+
+  if (value instanceof Date) {
+    return `${value.getTime()}`
+  }
+
+  return `${value}`
+}
 
 /**
  * Creates a predicate builder function for predicates with a path and arguments.
@@ -28,15 +35,19 @@ const formatValue = (
  *
  * @returns Predicate builder function for the given name.
  */
-const pathWithArgsPredicate =
-  <Args extends unknown[]>(name: string) =>
+const pathWithArgsPredicate = <Args extends unknown[]>(name: string) => {
   /**
    * @param path Path to the value to be compared.
    */
-  (path: string, ...args: Args): string =>
-    `[${name}(${path}${path && args.length ? ', ' : ''}${args
-      .map(formatValue)
-      .join(', ')})]`
+  const fn = (path: string, ...args: Args): string => {
+    const formattedArgs = args.map(formatValue).join(', ')
+    const joiner = path && args.length ? ', ' : ''
+
+    return `[${name}(${path}${joiner}${formattedArgs})]`
+  }
+
+  return fn
+}
 
 /**
  * Creates a predicate builder function for predicates with only a path.
@@ -45,10 +56,18 @@ const pathWithArgsPredicate =
  *
  * @returns Predicate builder function for the given name.
  */
-const pathPredicate =
-  (name: string) =>
-  (path: string): string =>
-    pathWithArgsPredicate(name)(path)
+const pathPredicate = (name: string) => {
+  const predicateFn = pathWithArgsPredicate(name)
+
+  /**
+   * @param path Path for the predicate.
+   */
+  const fn = (path: string): string => {
+    return predicateFn(path)
+  }
+
+  return fn
+}
 
 /**
  * Creates a predicate builder function for predicates with only arguments and no path.
@@ -57,10 +76,18 @@ const pathPredicate =
  *
  * @returns Predicate builder function for the given name.
  */
-const argsPredicate =
-  <Args extends unknown[]>(name: string) =>
-  (...args: Args): string =>
-    pathWithArgsPredicate<Args>(name)('', ...args)
+const argsPredicate = <Args extends unknown[]>(name: string) => {
+  const predicateFn = pathWithArgsPredicate<Args>(name)
+
+  /**
+   * @param args Arguments for the predicate.
+   */
+  const fn = (...args: Args): string => {
+    return predicateFn('', ...args)
+  }
+
+  return fn
+}
 
 /**
  * The default arguments allowed by predicates.
