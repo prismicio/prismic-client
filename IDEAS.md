@@ -234,3 +234,23 @@ for (const key in Prismic) {
   assert.equal(Prismic[key], prismic[key])
 }
 ```
+
+---
+
+# Examples
+
+- Create a client
+
+- Basic querying
+
+- Filtering and sorting
+
+- Server usage
+
+  - Provide Fetch
+  - Enable automatic previews
+    - Provide Express-compatible middleware
+
+- Custom caching
+
+- Previews

@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@prismicio/client": "^5.0.0",
+    "quick-lru": "^6.0.0"
+  }
+}
