@@ -268,6 +268,7 @@ export class Client {
   /**
    * Queries content from the Prismic repository.
    *
+   * @typeParam TDocument Type of Prismic documents returned.
    * @param params Parameters to filter, sort, and paginate results.
    *
    * @returns A paginated response containing the result of the query.
@@ -287,6 +288,7 @@ export class Client {
   /**
    * Queries content from the Prismic repository and returns only the first result, if any.
    *
+   * @typeParam TDocument Type of the Prismic document returned.
    * @param params Parameters to filter, sort, and paginate results.
    *
    * @returns The first result of the query, if any.
@@ -314,6 +316,7 @@ export class Client {
    *
    * This method may make multiple network requests to query all matching content.
    *
+   * @typeParam TDocument Type of Prismic documents returned.
    * @param params Parameters to filter, sort, and paginate results.
    *
    * @returns A list of documents matching the query.
@@ -350,6 +353,7 @@ export class Client {
    *
    * A document's UID is different from its ID. An ID is automatically generated for all documents and is made available on its `id` property. A UID is provided in the Prismic editor and is unique among all documents of its Custom Type.
    *
+   * @typeParam TDocument Type of the Prismic document returned.
    * @param id ID of the document.
    * @param params Parameters to filter, sort, and paginate the results.
    *
@@ -376,6 +380,7 @@ export class Client {
    *
    * A document's UID is different from its ID. An ID is automatically generated for all documents and is made available on its `id` property. A UID is provided in the Prismic editor and is unique among all documents of its Custom Type.
    *
+   * @typeParam TDocument Type of Prismic documents returned.
    * @param ids A list of document IDs.
    * @param params Parameters to filter, sort, and paginate the results.
    *
@@ -404,6 +409,7 @@ export class Client {
    *
    * A document's UID is different from its ID. An ID is automatically generated for all documents and is made available on its `id` property. A UID is provided in the Prismic editor and is unique among all documents of its Custom Type.
    *
+   * @typeParam TDocument Type of Prismic documents returned.
    * @param ids A list of document IDs.
    * @param params Parameters to filter, sort, and paginate the results.
    *
@@ -430,6 +436,7 @@ export class Client {
    *
    * A document's UID is different from its ID. An ID is automatically generated for all documents and is made available on its `id` property. A UID is provided in the Prismic editor and is unique among all documents of its Custom Type.
    *
+   * @typeParam TDocument Type of the Prismic document returned.
    * @param documentType The API ID of the document's Custom Type.
    * @param uid UID of the document.
    * @param params Parameters to filter, sort, and paginate the results.
@@ -461,6 +468,7 @@ export class Client {
    *
    * A singleton document is one that is configured in Prismic to only allow one instance. For example, a repository may be configured to contain just one Settings document. This is in contrast to a repeatable Custom Type which allows multiple instances of itself.
    *
+   * @typeParam TDocument Type of the Prismic document returned.
    * @param documentType The API ID of the singleton Custom Type.
    * @param params Parameters to filter, sort, and paginate the results.
    *
@@ -485,6 +493,7 @@ export class Client {
    *
    * Use `getAllByType` instead if you need to query all documents for a specific Custom Type.
    *
+   * @typeParam TDocument Type of Prismic documents returned.
    * @param documentType The API ID of the Custom Type.
    * @param params Parameters to filter, sort, and paginate the results.
    *
@@ -509,6 +518,7 @@ export class Client {
    *
    * This method may make multiple network requests to query all matching content.
    *
+   * @typeParam TDocument Type of Prismic documents returned.
    * @param documentType The API ID of the Custom Type.
    * @param params Parameters to filter, sort, and paginate the results.
    *
@@ -533,6 +543,7 @@ export class Client {
    *
    * Use `getAllByTag` instead if you need to query all documents with a specific tag.
    *
+   * @typeParam TDocument Type of Prismic documents returned.
    * @param tag The tag that must be included on a document.
    * @param params Parameters to filter, sort, and paginate the results.
    *
@@ -557,6 +568,7 @@ export class Client {
    *
    * This method may make multiple network requests to query all matching content.
    *
+   * @typeParam TDocument Type of Prismic documents returned.
    * @param tag The tag that must be included on a document.
    * @param params Parameters to filter, sort, and paginate the results.
    *
@@ -579,6 +591,7 @@ export class Client {
   /**
    * Queries documents from the Prismic repository with a specific tag.
    *
+   * @typeParam TDocument Type of Prismic documents returned.
    * @param tags A list of tags that must be included on a document.
    * @param params Parameters to filter, sort, and paginate the results.
    *
@@ -603,6 +616,7 @@ export class Client {
    *
    * This method may make multiple network requests to query all matching content.
    *
+   * @typeParam TDocument Type of Prismic documents returned.
    * @param tags A list of tags that must be included on a document.
    * @param params Parameters to filter, sort, and paginate the results.
    *
@@ -823,6 +837,7 @@ export class Client {
   /**
    * Performs a network request using the configured `fetch` function. It assumes all successful responses will have a JSON content type. It also normalizes unsuccessful network requests.
    *
+   * @typeParam T The JSON response.
    * @param url URL to the resource to fetch.
    * @param params Prismic REST API parameters for the network request.
    *

@@ -1,6 +1,7 @@
 /**
  * Throws an error if a given value is nullish.
  *
+ * @typeParam Nullable value to check.
  * @param a Nullable value to check.
  * @param error Error to throw if `a` is nullish.
  *
