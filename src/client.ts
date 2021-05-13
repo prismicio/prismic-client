@@ -154,14 +154,14 @@ export class Client {
   /**
    * The secure token for accessing the API (only needed if your repository is set to private).
    *
-   * @see https://user-guides.prismic.io/en/articles/1036153-generating-an-access-token
+   * {@link https://user-guides.prismic.io/en/articles/1036153-generating-an-access-token}
    */
   accessToken?: string
 
   /**
    * Ref used to query documents.
    *
-   * @see https://prismic.io/docs/technologies/introduction-to-the-content-query-api#prismic-api-ref
+   * {@link https://prismic.io/docs/technologies/introduction-to-the-content-query-api#prismic-api-ref}
    */
   ref?: RefStringOrFn
 

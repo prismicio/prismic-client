@@ -5,69 +5,69 @@ import { castArray } from './lib/castArray'
 /**
  * Parameters for the Prismic REST API V2.
  *
- * @see https://prismic.io/docs/technologies/introduction-to-the-content-query-api
+ * {@link https://prismic.io/docs/technologies/introduction-to-the-content-query-api}
  */
 export interface QueryParams {
   /**
    * The secure token for accessing the API (only needed if your repository is set to private).
    *
-   * @see https://user-guides.prismic.io/en/articles/1036153-generating-an-access-token
+   * {@link https://user-guides.prismic.io/en/articles/1036153-generating-an-access-token}
    */
   accessToken?: string
 
   /**
    * The `pageSize` parameter defines the maximum number of documents that the API will return for your query.
    *
-   * @see https://prismic.io/docs/technologies/search-parameters-reference-rest-api#pagesize
+   * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#pagesize}
    */
   pageSize?: number
 
   /**
    * The `page` parameter defines the pagination for the result of your query.
    *
-   * @see https://prismic.io/docs/technologies/search-parameters-reference-rest-api#page
+   * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#page}
    */
   page?: number
 
   /**
    * The `after` parameter can be used along with the orderings option. It will remove all the documents except for those after the specified document in the list.
    *
-   * @see https://prismic.io/docs/technologies/search-parameters-reference-rest-api#after
+   * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#after}
    */
   after?: string
 
   /**
    * The `fetch` parameter is used to make queries faster by only retrieving the specified field(s).
    *
-   * @see https://prismic.io/docs/technologies/search-parameters-reference-rest-api#fetch
+   * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#fetch}
    */
   fetch?: string | string[]
 
   /**
    * The `fetchLinks` parameter allows you to retrieve a specific content field from a linked document and add it to the document response object.
    *
-   * @see https://prismic.io/docs/technologies/search-parameters-reference-rest-api#fetchlinks
+   * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#fetchlinks}
    */
   fetchLinks?: string | string[]
 
   /**
    * The `graphQuery` parameter allows you to specify which fields to retrieve and what content to retrieve from Linked Documents / Content Relationships.
    *
-   * @see https://prismic.io/docs/technologies/graphquery-rest-api
+   * {@link https://prismic.io/docs/technologies/graphquery-rest-api}
    */
   graphQuery?: string
 
   /**
    * The `lang` option defines the language code for the results of your query.
    *
-   * @see https://prismic.io/docs/technologies/search-parameters-reference-rest-api#lang
+   * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#lang}
    */
   lang?: string
 
   /**
    * The `orderings` parameter orders the results by the specified field(s). You can specify as many fields as you want.
    *
-   * @see https://prismic.io/docs/technologies/search-parameters-reference-rest-api#orderings
+   * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#orderings}
    */
   orderings?: Ordering | string | (Ordering | string)[]
 }
@@ -79,14 +79,14 @@ type BuildQueryURLParams = {
   /**
    * Ref used to query documents.
    *
-   * @see https://prismic.io/docs/technologies/introduction-to-the-content-query-api#prismic-api-ref
+   * {@link https://prismic.io/docs/technologies/introduction-to-the-content-query-api#prismic-api-ref}
    */
   ref: string
 
   /**
    * One or more predicates to filter documents for the query.
    *
-   * @see https://prismic.io/docs/technologies/query-predicates-reference-rest-api
+   * {@link https://prismic.io/docs/technologies/query-predicates-reference-rest-api}
    */
   predicates?: string | string[]
 }
@@ -94,7 +94,7 @@ type BuildQueryURLParams = {
 /**
  * An `orderings` parameter that orders the results by the specified field.
  *
- * @see https://prismic.io/docs/technologies/search-parameters-reference-rest-api#orderings
+ * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#orderings}
  */
 type Ordering = {
   field: string
@@ -150,8 +150,8 @@ export type BuildQueryURLArgs = QueryParams & BuildQueryURLParams
  *
  * Type the JSON response with `Query`.
  *
- * @see https://prismic.io/docs/technologies/introduction-to-the-content-query-api#prismic-api-ref
- * @see https://prismic.io/docs/technologies/query-predicates-reference-rest-api
+ * {@link https://prismic.io/docs/technologies/introduction-to-the-content-query-api#prismic-api-ref}
+ * {@link https://prismic.io/docs/technologies/query-predicates-reference-rest-api}
  *
  * @param endpoint URL to the repository's REST API V2.
  * @param args Arguments to filter and scope the query.
