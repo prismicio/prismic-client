@@ -29,7 +29,7 @@
     "dev": "npm run build -- --watch",
     "format": "prettier --write src/**",
     "lint": "eslint src/** test/**",
-    "test": "npm run lint && nyc ava"
+    "test": "npm run lint && nyc --reporter=lcovonly --reporter=text --exclude-after-remap=false ava"
   },
   "simple-git-hooks": {
     "commit-msg": "npx commitlint --edit"
