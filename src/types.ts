@@ -1,4 +1,4 @@
-// TODO: Migrate types to @prismicio/types and use that library throughout the package.
+import * as prismicT from '@prismicio/types'
 
 export interface Ref {
   ref: string
@@ -11,28 +11,6 @@ export interface Ref {
 export interface Language {
   id: string
   name: string
-}
-
-export interface Document<Data = Record<string, unknown>> {
-  id: string
-  uid?: string
-  url?: string
-  type: string
-  href: string
-  tags: string[]
-  slugs: string[]
-  lang?: string
-  alternate_languages: AlternateLanguage[]
-  first_publication_date: string | null
-  last_publication_date: string | null
-  data: Data
-}
-
-export interface AlternateLanguage {
-  id: string
-  uid?: string
-  type: string
-  lang: string
 }
 
 export interface Repository {
@@ -52,7 +30,9 @@ export interface Repository {
   license: string
 }
 
-export interface Query<TDocument extends Document = Document> {
+export interface Query<
+  TDocument extends prismicT.PrismicDocument = prismicT.PrismicDocument,
+> {
   page: number
   results_per_page: number
   results_size: number
@@ -78,9 +58,9 @@ export interface FormField {
   default?: string
 }
 
-export type LinkResolver<TDocument extends Document = Document> = (
-  document: TDocument,
-) => string
+export type LinkResolver<
+  TDocument extends prismicT.PrismicDocument = prismicT.PrismicDocument,
+> = (document: TDocument) => string
 
 /**
  * A universal API to make network requests. A subset of the `fetch()` API.
@@ -114,4 +94,14 @@ export interface HttpRequestLike {
     cookie?: string
   }
   query?: Record<string, unknown>
+}
+
+/**
+ * An `orderings` parameter that orders the results by the specified field.
+ *
+ * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#orderings}
+ */
+export interface Ordering {
+  field: string
+  direction?: 'asc' | 'desc'
 }

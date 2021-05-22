@@ -16,6 +16,7 @@
   },
   "license": "Apache-2.0",
   "author": "Prismic <contact@prismic.io> (https://prismic.io)",
+  "type": "module",
   "exports": {
     ".": {
       "require": "./dist/index.js",
@@ -61,6 +62,7 @@
   "devDependencies": {
     "@commitlint/cli": "^12.1.4",
     "@commitlint/config-conventional": "^12.1.4",
+    "@prismicio/types": "^0.0.6",
     "@types/node-fetch": "^2.5.10",
     "@types/sinon": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^4.24.0",

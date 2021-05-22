@@ -1,8 +1,9 @@
+import * as prismicT from '@prismicio/types'
+
 import { appendPredicates } from './lib/appendPredicates'
 import { getCookie } from './lib/getCookie'
 
 import {
-  Document,
   FetchLike,
   HttpRequestLike,
   LinkResolver,
@@ -277,7 +278,7 @@ export class Client {
    * const response = await client.get()
    * ```
    */
-  async get<TDocument extends Document>(
+  async get<TDocument extends prismicT.PrismicDocument>(
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<Query<TDocument>> {
     const url = await this.buildQueryURL(params)
@@ -298,7 +299,7 @@ export class Client {
    * const document = await client.getFirst()
    * ```
    */
-  async getFirst<TDocument extends Document>(
+  async getFirst<TDocument extends prismicT.PrismicDocument>(
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<TDocument> {
     const result = await this.get<TDocument>(params)
@@ -326,7 +327,7 @@ export class Client {
    * const response = await client.getAll()
    * ```
    */
-  async getAll<TDocument extends Document>(
+  async getAll<TDocument extends prismicT.PrismicDocument>(
     params: Partial<Omit<BuildQueryURLArgs, 'page'>> & GetAllParams = {},
   ): Promise<TDocument[]> {
     const { limit = Infinity, ...actualParams } = params
@@ -364,7 +365,7 @@ export class Client {
    * const document = await client.getByID('WW4bKScAAMAqmluX')
    * ```
    */
-  async getByID<TDocument extends Document>(
+  async getByID<TDocument extends prismicT.PrismicDocument>(
     id: string,
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<TDocument> {
@@ -391,7 +392,7 @@ export class Client {
    * const response = await client.getByIDs(['WW4bKScAAMAqmluX', 'U1kTRgEAAC8A5ldS'])
    * ```
    */
-  async getByIDs<TDocument extends Document>(
+  async getByIDs<TDocument extends prismicT.PrismicDocument>(
     ids: string[],
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<Query<TDocument>> {
@@ -420,7 +421,7 @@ export class Client {
    * const response = await client.getAllByIDs(['WW4bKScAAMAqmluX', 'U1kTRgEAAC8A5ldS'])
    * ```
    */
-  async getAllByIDs<TDocument extends Document>(
+  async getAllByIDs<TDocument extends prismicT.PrismicDocument>(
     ids: string[],
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<TDocument[]> {
@@ -448,7 +449,7 @@ export class Client {
    * const document = await client.getByUID('blog_post', 'my-first-post')
    * ```
    */
-  async getByUID<TDocument extends Document>(
+  async getByUID<TDocument extends prismicT.PrismicDocument>(
     documentType: string,
     uid: string,
     params?: Partial<BuildQueryURLArgs>,
@@ -479,7 +480,7 @@ export class Client {
    * const document = await client.getSingle('settings')
    * ```
    */
-  async getSingle<TDocument extends Document>(
+  async getSingle<TDocument extends prismicT.PrismicDocument>(
     documentType: string,
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<TDocument> {
@@ -504,7 +505,7 @@ export class Client {
    * const response = await client.getByType('blog_post')
    * ```
    */
-  async getByType<TDocument extends Document>(
+  async getByType<TDocument extends prismicT.PrismicDocument>(
     documentType: string,
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<Query<TDocument>> {
@@ -529,7 +530,7 @@ export class Client {
    * const response = await client.getByType('blog_post')
    * ```
    */
-  async getAllByType<TDocument extends Document>(
+  async getAllByType<TDocument extends prismicT.PrismicDocument>(
     documentType: string,
     params?: Partial<Omit<BuildQueryURLArgs, 'page'>>,
   ): Promise<TDocument[]> {
@@ -554,7 +555,7 @@ export class Client {
    * const response = await client.getByTag('food')
    * ```
    */
-  async getByTag<TDocument extends Document>(
+  async getByTag<TDocument extends prismicT.PrismicDocument>(
     tag: string,
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<Query<TDocument>> {
@@ -579,7 +580,7 @@ export class Client {
    * const response = await client.getAllByTag('food')
    * ```
    */
-  async getAllByTag<TDocument extends Document>(
+  async getAllByTag<TDocument extends prismicT.PrismicDocument>(
     tag: string,
     params?: Partial<Omit<BuildQueryURLArgs, 'page'>>,
   ): Promise<TDocument[]> {
@@ -602,7 +603,7 @@ export class Client {
    * const response = await client.getAllByTag('food')
    * ```
    */
-  async getByTags<TDocument extends Document>(
+  async getByTags<TDocument extends prismicT.PrismicDocument>(
     tags: string[],
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<Query<TDocument>> {
@@ -627,7 +628,7 @@ export class Client {
    * const response = await client.getAllByTag('food')
    * ```
    */
-  async getAllByTags<TDocument extends Document>(
+  async getAllByTags<TDocument extends prismicT.PrismicDocument>(
     tags: string[],
     params?: Partial<Omit<BuildQueryURLArgs, 'page'>>,
   ): Promise<TDocument[]> {

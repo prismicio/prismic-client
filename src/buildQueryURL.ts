@@ -2,6 +2,8 @@ import { ValueOf } from 'type-fest'
 
 import { castArray } from './lib/castArray'
 
+import { Ordering } from './types'
+
 /**
  * Parameters for the Prismic REST API V2.
  *
@@ -89,16 +91,6 @@ type BuildQueryURLParams = {
    * {@link https://prismic.io/docs/technologies/query-predicates-reference-rest-api}
    */
   predicates?: string | string[]
-}
-
-/**
- * An `orderings` parameter that orders the results by the specified field.
- *
- * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#orderings}
- */
-type Ordering = {
-  field: string
-  direction?: 'asc' | 'desc'
 }
 
 /**
