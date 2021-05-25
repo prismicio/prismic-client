@@ -2,7 +2,6 @@ import * as prismic from '@prismicio/client'
 import fetch from 'node-fetch'
 
 const endpoint = prismic.getEndpoint('qwerty')
-
 const client = prismic.createClient(endpoint, {
   fetch,
   // A default language can be set here. If a `lang` option is not set, your
