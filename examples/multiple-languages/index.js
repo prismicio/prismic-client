@@ -6,7 +6,7 @@ const endpoint = prismic.getEndpoint('qwerty')
 const client = prismic.createClient(endpoint, {
   fetch,
   // A default language can be set here. If a `lang` option is not set, your
-  // repository's default language will be used by default.
+  // repository's default language will be used.
   defaultParams: {
     lang: 'en-us',
   },
