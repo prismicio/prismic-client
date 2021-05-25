@@ -9,6 +9,15 @@ Remember that in the browser, caching is enabled by default by using the global
 function. Browsers will automatically utilize their caching mechanism unless it
 is disabled by a user.
 
+**Note**: This example is written for Node.js. If you plan to use this code for
+the browser, you can remove `node-fetch` from the example.
+
+```diff
+   import * as prismic from '@prismicio/client'
+-  import fetch from 'node-fetch'
+   import QuickLRU from 'quick-lru'
+```
+
 ## How to run the example
 
 ```sh

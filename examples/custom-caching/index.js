@@ -1,13 +1,13 @@
 import * as prismic from '@prismicio/client'
+import fetch from 'node-fetch'
 import QuickLRU from 'quick-lru'
 
-const endpoint = prismic.getEndpoint('my-repo')
+const endpoint = prismic.getEndpoint('qwerty')
 const cache = new QuickLRU({
-  maxAge: 10000, // 10 seconds
   maxSize: 1000, // 1000 entries
 })
 
-export const client = prismic.createClient(endpoint, {
+const client = prismic.createClient(endpoint, {
   fetch: async (url, options) => {
     // The cache key contains the requested URL and headers
     const key = JSON.stringify({ url, options })
@@ -30,9 +30,9 @@ export const client = prismic.createClient(endpoint, {
 })
 
 const homepage = await client.getByUID('page', 'home')
-console.log(homepage)
+console.log('First uncached result: ', homepage)
 // => The `page` document with a UID of `home`
 
 const homepageFetchedAgain = await client.getByUID('page', 'home')
-console.log(homepageFetchedAgain)
+console.log('Second cached result: ', homepageFetchedAgain)
 // => This call will use the cache rather than make another network request.
