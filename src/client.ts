@@ -849,16 +849,20 @@ export class Client {
     params?: Partial<BuildQueryURLArgs>,
   ): Promise<T> {
     const options = this.buildRequestOptions(params)
-    const res = await this.fetchFn(url, options)
+    const rawRes = await this.fetchFn(url, options)
+
+    // We clone to response to avoid reading an already used Response object.
+    // This could happen if the user implements their own caching solution.
+    const res = rawRes.clone()
 
     if (res.status === 200) {
       // We can assume Prismic REST API responses will have a `application/json`
       // Content Type.
       return await res.json()
-    } else if (res.status === 401) {
-      throw new HTTPError('Invalid access token', res, url, options)
+    } else if (rawRes.status === 401) {
+      throw new HTTPError('Invalid access token', rawRes, url, options)
     } else {
-      throw new HTTPError(undefined, res, url, options)
+      throw new HTTPError(undefined, rawRes, url, options)
     }
   }
 }
