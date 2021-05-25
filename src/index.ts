@@ -13,4 +13,17 @@ export * from './HTTPError'
 export * as cookie from './cookie'
 
 // General types used throughout the project. These are made public to allow users to better type their projects.
-export * from './types'
+export type {
+  FetchLike,
+  Form,
+  FormField,
+  HttpRequestLike,
+  Language,
+  LinkResolver,
+  Ordering,
+  Query,
+  Ref,
+  Repository,
+  RequestInitLike,
+  ResponseLike,
+} from './types'
