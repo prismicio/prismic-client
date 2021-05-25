@@ -23,7 +23,7 @@ test('queries for document by ID', async (t) => {
       ref: 'masterRef',
       q: [
         `[[at(document.type, "${document.type}")]]`,
-        `[[at(document.uid, "${document.uid}")]]`,
+        `[[at(my.${document.type}.uid, "${document.uid}")]]`,
       ],
     }),
   )
@@ -50,7 +50,7 @@ test('includes params if provided', async (t) => {
       ref: params.ref as string,
       q: [
         `[[at(document.type, "${document.type}")]]`,
-        `[[at(document.uid, "${document.uid}")]]`,
+        `[[at(my.${document.type}.uid, "${document.uid}")]]`,
       ],
       lang: params.lang,
     }),

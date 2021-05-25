@@ -457,7 +457,7 @@ export class Client {
     return await this.getFirst<TDocument>(
       appendPredicates(
         typePredicate(documentType),
-        predicate.at('document.uid', uid),
+        predicate.at(`my.${documentType}.uid`, uid),
       )(params),
     )
   }
