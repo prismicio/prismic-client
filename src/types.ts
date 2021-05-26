@@ -8,6 +8,8 @@ export interface Ref {
   id: string
 }
 
+export type Release = Ref
+
 export interface Language {
   id: string
   name: string

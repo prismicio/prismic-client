@@ -264,6 +264,20 @@ export class Client {
     this.autoPreviewsEnabled = false
   }
 
+  /**
+   * Queries content from the Prismic repository.
+   *
+   * @typeParam TDocument Type of Prismic documents returned.
+   * @param params Parameters to filter, sort, and paginate results.
+   *
+   * @returns A paginated response containing the result of the query.
+   *
+   * ```ts
+   * const response = await client.get()
+   * ```
+   *
+   * @deprecated Use `get` instead.
+   */
   query = this.get.bind(this)
 
   /**
@@ -638,41 +652,28 @@ export class Client {
   }
 
   /**
-   * Returns a list of all refs for the Prismic repository.
+   * Returns a list of all Releases for the Prismic repository. Releases are used to group content changes.
    *
-   * Refs are used to identify which version of the repository's content should be queried. All repositories will have at least one ref pointing to the latest published content called the "master ref".
+   * All repositories will have at least one Release pointing to the latest published content called the "master ref".
    *
-   * @returns A list of all refs for the Prismic repository.
-   *
-   * @deprecated
+   * @returns A list of all Releases for the Prismic repository.
    */
-  async getRefs(): Promise<Ref[]> {
+  async getReleases(): Promise<Ref[]> {
     const res = await this.fetch<Repository>(this.endpoint)
 
     return res.refs
   }
 
   /**
-   * Returns a list of all Releases for the Prismic repository. Releases are used to group content changes before publishing.
+   * Returns a list of all refs for the Prismic repository.
    *
-   * @returns A list of all Releases for the Prismic repository.
+   * Refs are used to identify which version of the repository's content should be queried. All repositories will have at least one ref pointing to the latest published content called the "master ref".
+   *
+   * @returns A list of all refs for the Prismic repository.
+   *
+   * @deprecated Use `getReleases` instead.
    */
-  getReleases = this.getRefs.bind(this)
-
-  /**
-   * Returns a ref for the Prismic repository with a matching ID.
-   *
-   * @param id ID of the ref.
-   *
-   * @returns The ref with a matching ID, if it exists.
-   *
-   * @deprecated
-   */
-  async getRefById(id: string): Promise<Ref> {
-    const refs = await this.getRefs()
-
-    return findRef(refs, (ref) => ref.id === id)
-  }
+  getRefs = this.getReleases.bind(this)
 
   /**
    * Returns a Release for the Prismic repository with a matching ID.
@@ -681,22 +682,22 @@ export class Client {
    *
    * @returns The Release with a matching ID, if it exists.
    */
-  getReleaseById = this.getRefById.bind(this)
+  async getReleaseById(id: string): Promise<Ref> {
+    const releases = await this.getReleases()
+
+    return findRef(releases, (ref) => ref.id === id)
+  }
 
   /**
-   * Returns a ref for the Prismic repository with a matching label.
+   * Returns a ref for the Prismic repository with a matching ID.
    *
-   * @param label Label of the ref.
+   * @param id ID of the ref.
    *
-   * @returns The ref with a matching label, if it exists.
+   * @returns The ref with a matching ID, if it exists.
    *
-   * @deprecated
+   * @deprecated Use `getReleaseById` instead.
    */
-  async getRefByLabel(label: string): Promise<Ref> {
-    const refs = await this.getRefs()
-
-    return findRef(refs, (ref) => ref.label === label)
-  }
+  getRefById = this.getReleaseById.bind(this)
 
   /**
    * Returns a Release for the Prismic repository with a matching label.
@@ -705,7 +706,22 @@ export class Client {
    *
    * @returns The ref with a matching label, if it exists.
    */
-  getReleaseByLabel = this.getRefByLabel.bind(this)
+  async getReleaseByLabel(label: string): Promise<Ref> {
+    const releases = await this.getReleases()
+
+    return findRef(releases, (ref) => ref.label === label)
+  }
+
+  /**
+   * Returns a ref for the Prismic repository with a matching label.
+   *
+   * @param label Label of the ref.
+   *
+   * @returns The ref with a matching label, if it exists.
+   *
+   * @deprecated Use `getReleaseByLabel` instead.
+   */
+  getRefByLabel = this.getReleaseByLabel.bind(this)
 
   /**
    * Returns the master ref for the Prismic repository. The master ref points to the repository's latest published content.
@@ -713,9 +729,9 @@ export class Client {
    * @returns The repository's master ref.
    */
   async getMasterRef(): Promise<Ref> {
-    const refs = await this.getRefs()
+    const releases = await this.getReleases()
 
-    return findRef(refs, (ref) => ref.isMasterRef)
+    return findRef(releases, (ref) => ref.isMasterRef)
   }
 
   /**
@@ -799,11 +815,15 @@ export class Client {
    * Sets the client to query content from currently published documents for all future queries.
    *
    * If the `ref` parameter is provided during a query, it takes priority for that query.
+   *
+   * @returns The repository's master Ref.
    */
-  async queryCurrentContent(): Promise<void> {
+  async queryCurrentContent(): Promise<Ref> {
     const masterRef = await this.getMasterRef()
 
     this.ref = masterRef.ref
+
+    return masterRef
   }
 
   /**
@@ -811,12 +831,16 @@ export class Client {
    *
    * If the `ref` parameter is provided during a query, it takes priority for that query.
    *
-   * @param releaseId The ID of the Release.
+   * @param id The ID of the Release.
+   *
+   * @returns The Release with a matching ID, if it exists.
    */
-  async queryContentFromReleaseByID(releaseId: string): Promise<void> {
-    const releaseRef = await this.getRefById(releaseId)
+  async queryContentFromReleaseByID(id: string): Promise<Ref> {
+    const releaseRef = await this.getReleaseById(id)
 
     this.ref = releaseRef.ref
+
+    return releaseRef
   }
 
   /**
@@ -824,12 +848,16 @@ export class Client {
    *
    * If the `ref` parameter is provided during a query, it takes priority for that query.
    *
-   * @param releaseLabel The label of the Release.
+   * @param label The label of the Release.
+   *
+   * @returns The Release with a matching label, if it exists.
    */
-  async queryContentFromReleaseByLabel(releaseLabel: string): Promise<void> {
-    const releaseRef = await this.getRefByLabel(releaseLabel)
+  async queryContentFromReleaseByLabel(label: string): Promise<Ref> {
+    const releaseRef = await this.getReleaseByLabel(label)
 
     this.ref = releaseRef.ref
+
+    return releaseRef
   }
 
   /**
