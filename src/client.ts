@@ -851,7 +851,7 @@ export class Client {
    *
    * 2. If a ref or a function that returns a ref is given at client instantiation via the `ref` configuration option, it will be returned. If a function is provided, it will be resolved before returning.
    *
-   * 3. If any of the above methods return a falsy value, the master ref will be used.
+   * 3. If any of the above methods return a falsy value, the master ref will be used. If the master ref is used, it will be persisted for all future queries until overridden.
    */
   private async getResolvedRefString(): Promise<string> {
     if (this.autoPreviewsEnabled) {
