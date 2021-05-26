@@ -665,17 +665,6 @@ export class Client {
   }
 
   /**
-   * Returns a list of all refs for the Prismic repository.
-   *
-   * Refs are used to identify which version of the repository's content should be queried. All repositories will have at least one ref pointing to the latest published content called the "master ref".
-   *
-   * @returns A list of all refs for the Prismic repository.
-   *
-   * @deprecated Use `getReleases` instead.
-   */
-  getRefs = this.getReleases.bind(this)
-
-  /**
    * Returns a Release for the Prismic repository with a matching ID.
    *
    * @param id ID of the Release.
@@ -689,17 +678,6 @@ export class Client {
   }
 
   /**
-   * Returns a ref for the Prismic repository with a matching ID.
-   *
-   * @param id ID of the ref.
-   *
-   * @returns The ref with a matching ID, if it exists.
-   *
-   * @deprecated Use `getReleaseById` instead.
-   */
-  getRefById = this.getReleaseById.bind(this)
-
-  /**
    * Returns a Release for the Prismic repository with a matching label.
    *
    * @param label Label of the ref.
@@ -711,17 +689,6 @@ export class Client {
 
     return findRef(releases, (ref) => ref.label === label)
   }
-
-  /**
-   * Returns a ref for the Prismic repository with a matching label.
-   *
-   * @param label Label of the ref.
-   *
-   * @returns The ref with a matching label, if it exists.
-   *
-   * @deprecated Use `getReleaseByLabel` instead.
-   */
-  getRefByLabel = this.getReleaseByLabel.bind(this)
 
   /**
    * Returns the master ref for the Prismic repository. The master ref points to the repository's latest published content.
