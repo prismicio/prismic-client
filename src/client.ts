@@ -264,7 +264,7 @@ export class Client {
     this.autoPreviewsEnabled = false
   }
 
-  query = this.get
+  query = this.get.bind(this)
 
   /**
    * Queries content from the Prismic repository.
@@ -643,6 +643,8 @@ export class Client {
    * Refs are used to identify which version of the repository's content should be queried. All repositories will have at least one ref pointing to the latest published content called the "master ref".
    *
    * @returns A list of all refs for the Prismic repository.
+   *
+   * @deprecated
    */
   async getRefs(): Promise<Ref[]> {
     const res = await this.fetch<Repository>(this.endpoint)
@@ -651,11 +653,20 @@ export class Client {
   }
 
   /**
+   * Returns a list of all Releases for the Prismic repository. Releases are used to group content changes before publishing.
+   *
+   * @returns A list of all Releases for the Prismic repository.
+   */
+  getReleases = this.getRefs.bind(this)
+
+  /**
    * Returns a ref for the Prismic repository with a matching ID.
    *
    * @param id ID of the ref.
    *
    * @returns The ref with a matching ID, if it exists.
+   *
+   * @deprecated
    */
   async getRefById(id: string): Promise<Ref> {
     const refs = await this.getRefs()
@@ -664,17 +675,37 @@ export class Client {
   }
 
   /**
+   * Returns a Release for the Prismic repository with a matching ID.
+   *
+   * @param id ID of the Release.
+   *
+   * @returns The Release with a matching ID, if it exists.
+   */
+  getReleaseById = this.getRefById.bind(this)
+
+  /**
    * Returns a ref for the Prismic repository with a matching label.
    *
    * @param label Label of the ref.
    *
    * @returns The ref with a matching label, if it exists.
+   *
+   * @deprecated
    */
   async getRefByLabel(label: string): Promise<Ref> {
     const refs = await this.getRefs()
 
     return findRef(refs, (ref) => ref.label === label)
   }
+
+  /**
+   * Returns a Release for the Prismic repository with a matching label.
+   *
+   * @param label Label of the ref.
+   *
+   * @returns The ref with a matching label, if it exists.
+   */
+  getReleaseByLabel = this.getRefByLabel.bind(this)
 
   /**
    * Returns the master ref for the Prismic repository. The master ref points to the repository's latest published content.
@@ -765,6 +796,43 @@ export class Client {
   }
 
   /**
+   * Sets the client to query content from currently published documents for all future queries.
+   *
+   * If the `ref` parameter is provided during a query, it takes priority for that query.
+   */
+  async queryCurrentContent(): Promise<void> {
+    const masterRef = await this.getMasterRef()
+
+    this.ref = masterRef.ref
+  }
+
+  /**
+   * Sets the client to query content from a specific Release identified by its ID for all future queries.
+   *
+   * If the `ref` parameter is provided during a query, it takes priority for that query.
+   *
+   * @param releaseId The ID of the Release.
+   */
+  async queryContentFromReleaseByID(releaseId: string): Promise<void> {
+    const releaseRef = await this.getRefById(releaseId)
+
+    this.ref = releaseRef.ref
+  }
+
+  /**
+   * Sets the client to query content from a specific Release identified by its label for all future queries.
+   *
+   * If the `ref` parameter is provided during a query, it takes priority for that query.
+   *
+   * @param releaseLabel The label of the Release.
+   */
+  async queryContentFromReleaseByLabel(releaseLabel: string): Promise<void> {
+    const releaseRef = await this.getRefByLabel(releaseLabel)
+
+    this.ref = releaseRef.ref
+  }
+
+  /**
    * Returns the preview ref for the client, if one exists.
    *
    * If this method is used in the browser, the browser's cookies will be read. If this method is used on the server, the cookies from the saved HTTP Request will be read, if an HTTP Request was given.
@@ -812,6 +880,9 @@ export class Client {
     }
 
     const masterRef = await this.getMasterRef()
+
+    // We will persist the master ref to avoid refetching repository metadata.
+    this.ref = masterRef.ref
 
     return masterRef.ref
   }
