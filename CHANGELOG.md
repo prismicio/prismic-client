@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0-alpha.0](http://github.com/prismicio/prismic-javascript/compare/v5.0.0-alpha.1...v6.0.0-alpha.0) (2021-05-27)
+
 ## [5.0.0-alpha.1](http://github.com/prismicio/prismic-javascript/compare/v5.0.0-alpha.0...v5.0.0-alpha.1) (2021-05-27)
 
 
