@@ -11,14 +11,14 @@ const client = prismic.createClient(endpoint, {
 await client.queryContentFromReleaseByLabel("My Release");
 
 const homepage = await client.getByUID("page", "home");
-console.log(homepage);
+console.info(homepage);
 // => The `page` document with a UID of `home` with edits from "My Release"
 
 // Now the client will point all queries to the latest published content.
 await client.queryCurrentContent();
 
 const aboutPage = await client.getByUID("page", "about");
-console.log(aboutPage);
+console.info(aboutPage);
 // => The `page` document with a UID of `about`
 
 // At any point, we can override which "ref" the client uses to query for content.
@@ -27,5 +27,5 @@ const releases = await client.getReleases();
 const contactPage = await client.getByUID("page", "contact", {
 	ref: releases[0].ref
 });
-console.log(contactPage);
+console.info(contactPage);
 // => The `page` document with a UID of `contact` from the given ref.

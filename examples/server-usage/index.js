@@ -9,5 +9,5 @@ const client = prismic.createClient(endpoint, {
 });
 
 const homepage = await client.getByUID("page", "home");
-console.log(homepage);
+console.info(homepage);
 // => The `page` document with a UID of `home`

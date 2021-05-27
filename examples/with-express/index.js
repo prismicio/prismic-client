@@ -63,5 +63,5 @@ app.get("/articles", async (_req, res) => {
 
 app.listen(3000);
 
-console.log(`Open http://localhost:3000/articles to see the response`);
-console.log("Press CTRL+C to stop the server");
+console.info(`Open http://localhost:3000/articles to see the response`);
+console.info("Press CTRL+C to stop the server");

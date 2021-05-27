@@ -30,9 +30,9 @@ const client = prismic.createClient(endpoint, {
 });
 
 const homepage = await client.getByUID("page", "home");
-console.log("First uncached result: ", homepage);
+console.info("First uncached result: ", homepage);
 // => The `page` document with a UID of `home`
 
 const homepageFetchedAgain = await client.getByUID("page", "home");
-console.log("Second cached result: ", homepageFetchedAgain);
+console.info("Second cached result: ", homepageFetchedAgain);
 // => This call will use the cache rather than make another network request.

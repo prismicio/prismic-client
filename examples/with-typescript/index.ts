@@ -64,26 +64,26 @@ const main = async () => {
 
 	const type = homepage.type;
 	// => Typed as `"page"`
-	console.log("title: ", type);
+	console.info("title: ", type);
 
 	const lang = homepage.lang;
 	// => Typed as `"en-us" | "fr-fr"`
-	console.log("lang: ", lang);
+	console.info("lang: ", lang);
 
 	const title = homepage.data.title;
 	// => Typed as `string | null`
-	console.log("title: ", title);
+	console.info("title: ", title);
 
 	// @ts-expect-error - non_existant_field does not exist in `data`
 	const nonExistantField = homepage.data.non_existant_field;
 	// TypeScript Error: Property 'non_existant_field' does not exist on type '{ title: KeyTextField; }'
-	console.log("nonExistantField: ", nonExistantField);
+	console.info("nonExistantField: ", nonExistantField);
 
 	const blogPosts = await client.getAllByType<PrismicDocumentBlogPost>(
 		"blog_post"
 	);
 	// => All Blog Post documents.
-	console.log("blogPosts: ", blogPosts);
+	console.info("blogPosts: ", blogPosts);
 };
 
 main();

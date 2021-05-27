@@ -13,18 +13,18 @@ const client = prismic.createClient(endpoint, {
 
 // This will fetch Article documents with the `en-us` lang.
 const articlesDefaultLanguage = await client.getAllByType("article");
-console.log("articlesDefaultLanguage: ", articlesDefaultLanguage);
+console.info("articlesDefaultLanguage: ", articlesDefaultLanguage);
 
 // This will also fetch Article documents with the `en-us` lang.
 const articlesEnglish = await client.getAllByType("article", { lang: "en-us" });
-console.log("articlesEnglish: ", articlesEnglish);
+console.info("articlesEnglish: ", articlesEnglish);
 
 // This will fetch Article documents with the `fr-fr` lang.
 const articlesFrench = await client.getAllByType("article", { lang: "fr-fr" });
-console.log("articlesFrench: ", articlesFrench);
+console.info("articlesFrench: ", articlesFrench);
 
 // This will fetch Article documents with any language.
 const articlesAllLanguages = await client.getAllByType("article", {
 	lang: "*"
 });
-console.log("articlesAllLanguages: ", articlesAllLanguages);
+console.info("articlesAllLanguages: ", articlesAllLanguages);
