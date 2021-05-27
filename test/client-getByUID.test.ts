@@ -1,63 +1,63 @@
-import test from 'ava'
-import * as mswNode from 'msw/node'
+import test from "ava";
+import * as mswNode from "msw/node";
 
-import { createDocument } from './__testutils__/createDocument'
-import { createMockQueryHandler } from './__testutils__/createMockQueryHandler'
-import { createMockRepositoryHandler } from './__testutils__/createMockRepositoryHandler'
-import { createQueryResponse } from './__testutils__/createQueryResponse'
-import { createTestClient } from './__testutils__/createClient'
+import { createDocument } from "./__testutils__/createDocument";
+import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
+import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
+import { createQueryResponse } from "./__testutils__/createQueryResponse";
+import { createTestClient } from "./__testutils__/createClient";
 
-import * as prismic from '../src'
+import * as prismic from "../src";
 
-const server = mswNode.setupServer()
-test.before(() => server.listen({ onUnhandledRequest: 'error' }))
-test.after(() => server.close())
+const server = mswNode.setupServer();
+test.before(() => server.listen({ onUnhandledRequest: "error" }));
+test.after(() => server.close());
 
-test('queries for document by ID', async (t) => {
-  const document = createDocument()
-  const queryResponse = createQueryResponse([document])
+test("queries for document by ID", async t => {
+	const document = createDocument();
+	const queryResponse = createQueryResponse([document]);
 
-  server.use(
-    createMockRepositoryHandler(t),
-    createMockQueryHandler(t, [queryResponse], undefined, {
-      ref: 'masterRef',
-      q: [
-        `[[at(document.type, "${document.type}")]]`,
-        `[[at(my.${document.type}.uid, "${document.uid}")]]`,
-      ],
-    }),
-  )
+	server.use(
+		createMockRepositoryHandler(t),
+		createMockQueryHandler(t, [queryResponse], undefined, {
+			ref: "masterRef",
+			q: [
+				`[[at(document.type, "${document.type}")]]`,
+				`[[at(my.${document.type}.uid, "${document.uid}")]]`
+			]
+		})
+	);
 
-  const client = createTestClient(t)
-  const res = await client.getByUID(document.type, document.uid)
+	const client = createTestClient(t);
+	const res = await client.getByUID(document.type, document.uid);
 
-  t.deepEqual(res, document)
-})
+	t.deepEqual(res, document);
+});
 
-test('includes params if provided', async (t) => {
-  const params: prismic.BuildQueryURLArgs = {
-    accessToken: 'custom-accessToken',
-    ref: 'custom-ref',
-    lang: '*',
-  }
+test("includes params if provided", async t => {
+	const params: prismic.BuildQueryURLArgs = {
+		accessToken: "custom-accessToken",
+		ref: "custom-ref",
+		lang: "*"
+	};
 
-  const document = createDocument()
-  const queryResponse = createQueryResponse([document])
+	const document = createDocument();
+	const queryResponse = createQueryResponse([document]);
 
-  server.use(
-    createMockRepositoryHandler(t),
-    createMockQueryHandler(t, [queryResponse], params.accessToken, {
-      ref: params.ref as string,
-      q: [
-        `[[at(document.type, "${document.type}")]]`,
-        `[[at(my.${document.type}.uid, "${document.uid}")]]`,
-      ],
-      lang: params.lang,
-    }),
-  )
+	server.use(
+		createMockRepositoryHandler(t),
+		createMockQueryHandler(t, [queryResponse], params.accessToken, {
+			ref: params.ref as string,
+			q: [
+				`[[at(document.type, "${document.type}")]]`,
+				`[[at(my.${document.type}.uid, "${document.uid}")]]`
+			],
+			lang: params.lang
+		})
+	);
 
-  const client = createTestClient(t)
-  const res = await client.getByUID(document.type, document.uid, params)
+	const client = createTestClient(t);
+	const res = await client.getByUID(document.type, document.uid, params);
 
-  t.deepEqual(res, document)
-})
+	t.deepEqual(res, document);
+});

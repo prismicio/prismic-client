@@ -1,18 +1,18 @@
-import * as prismic from '../../src'
+import * as prismic from "../../src";
 
 export const createRef = (
-  isMasterRef = false,
-  overrides?: Partial<prismic.Ref>,
+	isMasterRef = false,
+	overrides?: Partial<prismic.Ref>
 ): prismic.Ref => {
-  const id = Math.random().toString()
-  const ref = isMasterRef ? 'masterRef' : Math.random().toString()
-  const label = Math.random().toString()
+	const id = Math.random().toString();
+	const ref = isMasterRef ? "masterRef" : Math.random().toString();
+	const label = Math.random().toString();
 
-  return {
-    id,
-    ref,
-    label,
-    isMasterRef,
-    ...overrides,
-  }
-}
+	return {
+		id,
+		ref,
+		label,
+		isMasterRef,
+		...overrides
+	};
+};

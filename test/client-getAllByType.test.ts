@@ -1,69 +1,69 @@
-import test from 'ava'
-import * as mswNode from 'msw/node'
+import test from "ava";
+import * as mswNode from "msw/node";
 
-import { createMockQueryHandler } from './__testutils__/createMockQueryHandler'
-import { createMockRepositoryHandler } from './__testutils__/createMockRepositoryHandler'
-import { createTestClient } from './__testutils__/createClient'
-import { createQueryResponsePages } from './__testutils__/createQueryResponsePages'
+import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
+import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
+import { createTestClient } from "./__testutils__/createClient";
+import { createQueryResponsePages } from "./__testutils__/createQueryResponsePages";
 
-import * as prismic from '../src'
+import * as prismic from "../src";
 
-const server = mswNode.setupServer()
-test.before(() => server.listen({ onUnhandledRequest: 'error' }))
-test.after(() => server.close())
+const server = mswNode.setupServer();
+test.before(() => server.listen({ onUnhandledRequest: "error" }));
+test.after(() => server.close());
 
-test('returns all documents by type from paginated response', async (t) => {
-  const documentType = 'foo'
-  const pagedResponses = createQueryResponsePages({
-    numPages: 3,
-    numDocsPerPage: 3,
-    fields: { type: documentType },
-  })
-  const allDocs = pagedResponses.flatMap((page) => page.results)
+test("returns all documents by type from paginated response", async t => {
+	const documentType = "foo";
+	const pagedResponses = createQueryResponsePages({
+		numPages: 3,
+		numDocsPerPage: 3,
+		fields: { type: documentType }
+	});
+	const allDocs = pagedResponses.flatMap(page => page.results);
 
-  server.use(
-    createMockRepositoryHandler(t),
-    createMockQueryHandler(t, pagedResponses, undefined, {
-      ref: 'masterRef',
-      q: `[[at(document.type, "${documentType}")]]`,
-      pageSize: 100,
-    }),
-  )
+	server.use(
+		createMockRepositoryHandler(t),
+		createMockQueryHandler(t, pagedResponses, undefined, {
+			ref: "masterRef",
+			q: `[[at(document.type, "${documentType}")]]`,
+			pageSize: 100
+		})
+	);
 
-  const client = createTestClient(t)
-  const res = await client.getAllByType(documentType)
+	const client = createTestClient(t);
+	const res = await client.getAllByType(documentType);
 
-  t.deepEqual(res, allDocs)
-  t.is(res.length, 3 * 3)
-})
+	t.deepEqual(res, allDocs);
+	t.is(res.length, 3 * 3);
+});
 
-test('includes params if provided', async (t) => {
-  const params: prismic.BuildQueryURLArgs = {
-    accessToken: 'custom-accessToken',
-    ref: 'custom-ref',
-    lang: '*',
-  }
-  const documentType = 'foo'
-  const pagedResponses = createQueryResponsePages({
-    numPages: 3,
-    numDocsPerPage: 3,
-    fields: { type: documentType },
-  })
-  const allDocs = pagedResponses.flatMap((page) => page.results)
+test("includes params if provided", async t => {
+	const params: prismic.BuildQueryURLArgs = {
+		accessToken: "custom-accessToken",
+		ref: "custom-ref",
+		lang: "*"
+	};
+	const documentType = "foo";
+	const pagedResponses = createQueryResponsePages({
+		numPages: 3,
+		numDocsPerPage: 3,
+		fields: { type: documentType }
+	});
+	const allDocs = pagedResponses.flatMap(page => page.results);
 
-  server.use(
-    createMockRepositoryHandler(t),
-    createMockQueryHandler(t, pagedResponses, params.accessToken, {
-      ref: params.ref as string,
-      q: `[[at(document.type, "${documentType}")]]`,
-      pageSize: 100,
-      lang: params.lang,
-    }),
-  )
+	server.use(
+		createMockRepositoryHandler(t),
+		createMockQueryHandler(t, pagedResponses, params.accessToken, {
+			ref: params.ref as string,
+			q: `[[at(document.type, "${documentType}")]]`,
+			pageSize: 100,
+			lang: params.lang
+		})
+	);
 
-  const client = createTestClient(t)
-  const res = await client.getAllByType(documentType, params)
+	const client = createTestClient(t);
+	const res = await client.getAllByType(documentType, params);
 
-  t.deepEqual(res, allDocs)
-  t.is(res.length, 3 * 3)
-})
+	t.deepEqual(res, allDocs);
+	t.is(res.length, 3 * 3);
+});
