@@ -1,13 +1,13 @@
-import * as prismic from '@prismicio/client'
-import fetch from 'node-fetch'
+import * as prismic from "@prismicio/client";
+import fetch from "node-fetch";
 
-const endpoint = prismic.getEndpoint('qwerty')
+const endpoint = prismic.getEndpoint("qwerty");
 const client = prismic.createClient(endpoint, {
-  // Here, we provide a way for the client to make network requests.
-  // `node-fetch` is a Node.js fetch-compatible package.
-  fetch,
-})
+	// Here, we provide a way for the client to make network requests.
+	// `node-fetch` is a Node.js fetch-compatible package.
+	fetch
+});
 
-const homepage = await client.getByUID('page', 'home')
-console.log(homepage)
+const homepage = await client.getByUID("page", "home");
+console.log(homepage);
 // => The `page` document with a UID of `home`

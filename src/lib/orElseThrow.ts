@@ -10,9 +10,9 @@
  * @returns `a`, whose type is narrowed to be non-nullable.
  */
 export const orElseThrow = <T>(a: T | null | undefined, error: Error): T => {
-  if (a == null) {
-    throw error
-  }
+	if (a == null) {
+		throw error;
+	}
 
-  return a
-}
+	return a;
+};

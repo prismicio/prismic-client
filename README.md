@@ -15,14 +15,14 @@ The official JavaScript + TypeScript client library for [Prismic][prismic].
 - Built for browser and server usage.
 
 ```typescript
-import * as prismic from '@prismicio/client'
+import * as prismic from "@prismicio/client";
 
 // Create a client
-const endpoint = prismic.getEndpoint('my-repository')
-const client = prismic.createClient(endpoint)
+const endpoint = prismic.getEndpoint("my-repository");
+const client = prismic.createClient(endpoint);
 
 // Then query for your content
-const blogPosts = await client.getAllByType('blog_post')
+const blogPosts = await client.getAllByType("blog_post");
 ```
 
 ## Install
@@ -77,17 +77,13 @@ specific language governing permissions and limitations under the License.
 <!-- Links -->
 
 [prismic]: https://prismic.io
-[prismic-predicates]:
-  https://prismic.io/docs/technologies/query-predicate-reference-javascript
+[prismic-predicates]: https://prismic.io/docs/technologies/query-predicate-reference-javascript
 [prismic-previews]: https://prismic.io/docs/core-concepts/previews
 [prismic-docs]: https://prismic.io/docs/technologies/javascript
 [changelog]: /CHANGELOG.md
-[forum-question]:
-  https://community.prismic.io/c/kits-and-dev-languages/javascript/14
-[repo-bug-report]:
-  https://github.com/prismicio/prismic-client/issues/new?assignees=&labels=bug&template=bug_report.md&title=
-[repo-feature-request]:
-  https://github.com/prismicio/prismic-client/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=
+[forum-question]: https://community.prismic.io/c/kits-and-dev-languages/javascript/14
+[repo-bug-report]: https://github.com/prismicio/prismic-client/issues/new?assignees=&labels=bug&template=bug_report.md&title=
+[repo-feature-request]: https://github.com/prismicio/prismic-client/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=
 [repo-pull-requests]: https://github.com/prismicio/prismic-client/pulls
 
 <!-- Badges -->
@@ -96,15 +92,11 @@ specific language governing permissions and limitations under the License.
 [npm-version-href]: https://npmjs.com/package/@prismicio/client
 [npm-downloads-src]: https://img.shields.io/npm/dm/@prismicio/client.svg
 [npm-downloads-href]: https://npmjs.com/package/@prismicio/client
-[github-actions-ci-src]:
-  https://github.com/prismicio/prismic-client/workflows/ci/badge.svg
-[github-actions-ci-href]:
-  https://github.com/prismicio/prismic-client/actions?query=workflow%3Aci
-[codecov-src]:
-  https://img.shields.io/codecov/c/github/prismicio/prismic-client.svg
+[github-actions-ci-src]: https://github.com/prismicio/prismic-client/workflows/ci/badge.svg
+[github-actions-ci-href]: https://github.com/prismicio/prismic-client/actions?query=workflow%3Aci
+[codecov-src]: https://img.shields.io/codecov/c/github/prismicio/prismic-client.svg
 [codecov-href]: https://codecov.io/gh/prismicio/prismic-client
-[conventional-commits-src]:
-  https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg
+[conventional-commits-src]: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg
 [conventional-commits-href]: https://conventionalcommits.org
 [license-src]: https://img.shields.io/npm/l/@prismicio/client.svg
 [license-href]: https://npmjs.com/package/@prismicio/client

@@ -1,8 +1,8 @@
 {
-  "type": "module",
-  "dependencies": {
-    "@prismicio/client": "^5.0.0",
-    "node-fetch": "^2.6.1",
-    "quick-lru": "^6.0.0"
-  }
+	"type": "module",
+	"dependencies": {
+		"@prismicio/client": "^5.0.0",
+		"node-fetch": "^2.6.1",
+		"quick-lru": "^6.0.0"
+	}
 }

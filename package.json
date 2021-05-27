@@ -1,89 +1,70 @@
 {
-  "name": "@prismicio/client",
-  "version": "5.0.0-alpha.0",
-  "private": true,
-  "description": "JavaScript development kit for prismic.io",
-  "keywords": [
-    "prismic",
-    "prismic.io",
-    "cms",
-    "content",
-    "api"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:prismicio/prismic-javascript.git"
-  },
-  "license": "Apache-2.0",
-  "author": "Prismic <contact@prismic.io> (https://prismic.io)",
-  "type": "module",
-  "exports": {
-    ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.es.js"
-    },
-    "./package.json": "./package.json"
-  },
-  "types": "./dist/index.d.ts",
-  "scripts": {
-    "build": "siroc build",
-    "dev": "npm run build -- --watch",
-    "format": "prettier --write src/**",
-    "lint": "eslint src/** test/**",
-    "test": "npm run lint && nyc --reporter=lcovonly --reporter=text --exclude-after-remap=false ava"
-  },
-  "simple-git-hooks": {
-    "commit-msg": "npx commitlint --edit"
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
-  "prettier": {
-    "printWidth": 80,
-    "proseWrap": "always",
-    "semi": false,
-    "singleQuote": true,
-    "trailingComma": "all"
-  },
-  "ava": {
-    "extensions": [
-      "ts"
-    ],
-    "files": [
-      "./test/**/*.test.ts"
-    ],
-    "require": [
-      "ts-eager/register"
-    ],
-    "verbose": true
-  },
-  "devDependencies": {
-    "@commitlint/cli": "^12.1.4",
-    "@commitlint/config-conventional": "^12.1.4",
-    "@prismicio/types": "^0.0.6",
-    "@types/node-fetch": "^2.5.10",
-    "@types/sinon": "^10.0.0",
-    "@typescript-eslint/eslint-plugin": "^4.24.0",
-    "@typescript-eslint/parser": "^4.24.0",
-    "ava": "^3.15.0",
-    "eslint": "^7.26.0",
-    "msw": "^0.28.2",
-    "node-fetch": "^2.6.1",
-    "nyc": "^15.1.0",
-    "prettier": "^2.3.0",
-    "simple-git-hooks": "^2.4.1",
-    "sinon": "^10.0.0",
-    "siroc": "^0.10.1",
-    "ts-eager": "^2.0.2",
-    "type-fest": "^1.1.3",
-    "typescript": "^4.2.4"
-  },
-  "engines": {
-    "node": ">=12.13.0"
-  },
-  "publishConfig": {
-    "access": "public"
-  }
+	"name": "@prismicio/client",
+	"version": "5.0.0-alpha.0",
+	"private": true,
+	"description": "JavaScript development kit for prismic.io",
+	"keywords": [
+		"prismic",
+		"prismic.io",
+		"cms",
+		"content",
+		"api"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:prismicio/prismic-javascript.git"
+	},
+	"license": "Apache-2.0",
+	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
+	"type": "module",
+	"exports": {
+		".": {
+			"require": "./dist/index.js",
+			"import": "./dist/index.es.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"types": "./dist/index.d.ts",
+	"scripts": {
+		"build": "siroc build",
+		"dev": "npm run build -- --watch",
+		"format": "prettier --write README.md .eslintrc.cjs ava.config.js package.json tsconfig.json src/** examples/**",
+		"lint": "eslint src/** test/**",
+		"test": "npm run lint && nyc --reporter=lcovonly --reporter=text --exclude-after-remap=false ava"
+	},
+	"simple-git-hooks": {
+		"commit-msg": "npx commitlint --edit"
+	},
+	"commitlint": {
+		"extends": [
+			"@commitlint/config-conventional"
+		]
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^12.1.4",
+		"@commitlint/config-conventional": "^12.1.4",
+		"@prismicio/types": "^0.0.6",
+		"@types/node-fetch": "^2.5.10",
+		"@types/sinon": "^10.0.0",
+		"@typescript-eslint/eslint-plugin": "^4.24.0",
+		"@typescript-eslint/parser": "^4.24.0",
+		"ava": "^3.15.0",
+		"eslint": "^7.26.0",
+		"msw": "^0.28.2",
+		"node-fetch": "^2.6.1",
+		"nyc": "^15.1.0",
+		"prettier": "^2.3.0",
+		"simple-git-hooks": "^2.4.1",
+		"sinon": "^10.0.0",
+		"siroc": "^0.10.1",
+		"ts-eager": "^2.0.2",
+		"type-fest": "^1.1.3",
+		"typescript": "^4.2.4"
+	},
+	"engines": {
+		"node": ">=12.13.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
 }
