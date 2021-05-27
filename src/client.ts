@@ -130,17 +130,6 @@ const findRef = (refs: Ref[], predicate: (ref: Ref) => boolean): Ref => {
 };
 
 /**
- * Returns a copy of an array of refs without the master ref, is present.
- *
- * @param refs A list of refs.
- *
- * @returns `refs` without the master ref, is present.
- */
-const onlyReleaseRefs = (refs: Ref[]): Ref[] => {
-	return refs.filter(ref => !ref.isMasterRef);
-};
-
-/**
  * Creates a Prismic client that can be used to query a repository.
  *
  * @param endpoint The Prismic REST API V2 endpoint for the repository (use `prismic.getEndpoint` for the default endpoint).
@@ -718,7 +707,9 @@ export class Client {
 	 * @returns A list of all Releases for the Prismic repository.
 	 */
 	async getReleases(): Promise<Ref[]> {
-		return onlyReleaseRefs(await this.getRefs());
+		const refs = await this.getRefs();
+
+		return refs.filter(ref => !ref.isMasterRef);
 	}
 
 	/**
