@@ -82,9 +82,9 @@ specific language governing permissions and limitations under the License.
 [prismic-docs]: https://prismic.io/docs/technologies/javascript
 [changelog]: /CHANGELOG.md
 [forum-question]: https://community.prismic.io/c/kits-and-dev-languages/javascript/14
-[repo-bug-report]: https://github.com/prismicio/prismic-client/issues/new?assignees=&labels=bug&template=bug_report.md&title=
-[repo-feature-request]: https://github.com/prismicio/prismic-client/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=
-[repo-pull-requests]: https://github.com/prismicio/prismic-client/pulls
+[repo-bug-report]: https://github.com/prismicio/prismic-javascript/issues/new?assignees=&labels=bug&template=bug_report.md&title=
+[repo-feature-request]: https://github.com/prismicio/prismic-javascript/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=
+[repo-pull-requests]: https://github.com/prismicio/prismic-javascript/pulls
 
 <!-- Badges -->
 
@@ -92,10 +92,10 @@ specific language governing permissions and limitations under the License.
 [npm-version-href]: https://npmjs.com/package/@prismicio/client
 [npm-downloads-src]: https://img.shields.io/npm/dm/@prismicio/client.svg
 [npm-downloads-href]: https://npmjs.com/package/@prismicio/client
-[github-actions-ci-src]: https://github.com/prismicio/prismic-client/workflows/ci/badge.svg
-[github-actions-ci-href]: https://github.com/prismicio/prismic-client/actions?query=workflow%3Aci
-[codecov-src]: https://img.shields.io/codecov/c/github/prismicio/prismic-client.svg
-[codecov-href]: https://codecov.io/gh/prismicio/prismic-client
+[github-actions-ci-src]: https://github.com/prismicio/prismic-javascript/workflows/ci/badge.svg
+[github-actions-ci-href]: https://github.com/prismicio/prismic-javascript/actions?query=workflow%3Aci
+[codecov-src]: https://img.shields.io/codecov/c/github/prismicio/prismic-javascript.svg
+[codecov-href]: https://codecov.io/gh/prismicio/prismic-javascript
 [conventional-commits-src]: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg
 [conventional-commits-href]: https://conventionalcommits.org
 [license-src]: https://img.shields.io/npm/l/@prismicio/client.svg
