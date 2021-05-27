@@ -20,7 +20,7 @@ lerna-debug.log*
 
 # npm
 npm-debug.log*
-package-lock.json
+# package-lock.json # version package lock for now
 
 # tests
 coverage

@@ -2,8 +2,7 @@ module.exports = {
 	root: true,
 	env: {
 		browser: true,
-		node: true,
-		es6: true
+		node: true
 	},
 	parserOptions: {
 		parser: "@typescript-eslint/parser",
@@ -11,8 +10,10 @@ module.exports = {
 	},
 	extends: [
 		"plugin:@typescript-eslint/eslint-recommended",
-		"plugin:@typescript-eslint/recommended"
+		"plugin:@typescript-eslint/recommended",
+		"plugin:prettier/recommended"
 	],
+	plugins: [],
 	rules: {
 		"no-console": ["warn", { allow: ["info", "warn", "error"] }],
 		"no-debugger": "warn",
@@ -21,11 +22,7 @@ module.exports = {
 		"prefer-const": "error",
 		"padding-line-between-statements": [
 			"error",
-			{
-				blankLine: "always",
-				prev: "*",
-				next: "return"
-			}
+			{ blankLine: "always", prev: "*", next: "return" }
 		],
 		"@typescript-eslint/no-unused-vars": [
 			"error",
