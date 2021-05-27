@@ -130,6 +130,17 @@ const findRef = (refs: Ref[], predicate: (ref: Ref) => boolean): Ref => {
 }
 
 /**
+ * Returns a copy of an array of refs without the master ref, is present.
+ *
+ * @param refs A list of refs.
+ *
+ * @returns `refs` without the master ref, is present.
+ */
+const onlyReleaseRefs = (refs: Ref[]): Ref[] => {
+  return refs.filter((ref) => !ref.isMasterRef)
+}
+
+/**
  * Creates a Prismic client that can be used to query a repository.
  *
  * @param endpoint The Prismic REST API V2 endpoint for the repository (use `prismic.getEndpoint` for the default endpoint).
@@ -652,16 +663,62 @@ export class Client {
   }
 
   /**
-   * Returns a list of all Releases for the Prismic repository. Releases are used to group content changes.
+   * Returns a list of all refs for the Prismic repository.
    *
-   * All repositories will have at least one Release pointing to the latest published content called the "master ref".
+   * Refs are used to identify which version of the repository's content should be queried. All repositories will have at least one ref pointing to the latest published content called the "master ref".
+   *
+   * @returns A list of all refs for the Prismic repository.
+   */
+  async getRefs(): Promise<Ref[]> {
+    const res = await this.fetch<Repository>(this.endpoint)
+
+    return res.refs
+  }
+
+  /**
+   * Returns a ref for the Prismic repository with a matching ID.
+   *
+   * @param id ID of the ref.
+   *
+   * @returns The ref with a matching ID, if it exists.
+   */
+  async getRefById(id: string): Promise<Ref> {
+    const refs = await this.getRefs()
+
+    return findRef(refs, (ref) => ref.id === id)
+  }
+
+  /**
+   * Returns a ref for the Prismic repository with a matching label.
+   *
+   * @param label Label of the ref.
+   *
+   * @returns The ref with a matching label, if it exists.
+   */
+  async getRefByLabel(label: string): Promise<Ref> {
+    const refs = await this.getRefs()
+
+    return findRef(refs, (ref) => ref.label === label)
+  }
+
+  /**
+   * Returns the master ref for the Prismic repository. The master ref points to the repository's latest published content.
+   *
+   * @returns The repository's master ref.
+   */
+  async getMasterRef(): Promise<Ref> {
+    const refs = await this.getRefs()
+
+    return findRef(refs, (ref) => ref.isMasterRef)
+  }
+
+  /**
+   * Returns a list of all Releases for the Prismic repository. Releases are used to group content changes before publishing.
    *
    * @returns A list of all Releases for the Prismic repository.
    */
   async getReleases(): Promise<Ref[]> {
-    const res = await this.fetch<Repository>(this.endpoint)
-
-    return res.refs
+    return onlyReleaseRefs(await this.getRefs())
   }
 
   /**
@@ -688,17 +745,6 @@ export class Client {
     const releases = await this.getReleases()
 
     return findRef(releases, (ref) => ref.label === label)
-  }
-
-  /**
-   * Returns the master ref for the Prismic repository. The master ref points to the repository's latest published content.
-   *
-   * @returns The repository's master ref.
-   */
-  async getMasterRef(): Promise<Ref> {
-    const releases = await this.getReleases()
-
-    return findRef(releases, (ref) => ref.isMasterRef)
   }
 
   /**

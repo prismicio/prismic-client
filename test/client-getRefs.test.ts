@@ -9,15 +9,12 @@ const server = mswNode.setupServer()
 test.before(() => server.listen({ onUnhandledRequest: 'error' }))
 test.after(() => server.close())
 
-test('returns all Releases', async (t) => {
+test('returns all refs', async (t) => {
   const response = createRepositoryResponse()
   server.use(createMockRepositoryHandler(t, response))
 
   const client = createTestClient(t)
-  const res = await client.getReleases()
+  const res = await client.getRefs()
 
-  t.deepEqual(
-    res,
-    response.refs.filter((ref) => !ref.isMasterRef),
-  )
+  t.deepEqual(res, response.refs)
 })
