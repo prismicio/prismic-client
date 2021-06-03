@@ -1,7 +1,7 @@
 import { Document } from './documents';
 import { RequestCallback } from './request';
 import { Experiment, Experiments } from './experiments';
-import { SearchForm, Form } from './form';
+import { SearchForm, FormData } from './form';
 import Predicates from './Predicates';
 import Cookies from './Cookies';
 import ApiSearchResponse from './ApiSearchResponse';
@@ -31,7 +31,7 @@ export interface ApiData {
   languages: Language[];
   types: { [key: string]: string };
   tags: string[];
-  forms: { [key: string]: Form };
+  forms: { [key: string]: FormData };
   experiments: any;
   oauth_initiate: string;
   oauth_token: string;

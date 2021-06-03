@@ -6,7 +6,7 @@ import { RequestCallback } from './request';
 
 export type Fields = { [key: string]: any };
 
-export interface Form {
+export interface FormData {
   fields: Fields;
   action: string;
   name: string;
@@ -106,10 +106,10 @@ export class LazySearchForm {
 
 export class SearchForm {
   httpClient: HttpClient;
-  form: Form;
+  form: FormData;
   data: any;
 
-  constructor(form: Form, httpClient: HttpClient) {
+  constructor(form: FormData, httpClient: HttpClient) {
     this.httpClient = httpClient;
     this.form = form;
 
