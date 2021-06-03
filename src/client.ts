@@ -65,6 +65,10 @@ export class DefaultClient implements Client {
     return this.getApi().then(api => api.getBookmark(bookmark, options, cb));
   }
 
+  getTags(): Promise<string[]> {
+    return this.getApi().then(api => api.getTags());
+  }
+
   getPreviewResolver(token: string, documentId?: string): PreviewResolver {
     const getDocById = (documentId: string, maybeOptions?: QueryOptions) => this.getApi().then((api) => {
       return api.getByID(documentId, maybeOptions);

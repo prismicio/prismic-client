@@ -1,36 +1,17 @@
-import { FormData } from './form';
-import { RequestCallback } from './request';
-import ApiSearchResponse from './ApiSearchResponse';
+import { FormData, Form } from './form';
 import HttpClient from './HttpClient';
 
-export default class SearchForm {
+export default class SearchForm extends Form {
   httpClient: HttpClient;
   form: FormData;
   data: any;
 
   constructor(form: FormData, httpClient: HttpClient) {
-    this.httpClient = httpClient;
-    this.form = form;
-
-    this.data = {};
-    for (const field in form.fields) {
-      if (form.fields[field]['default']) {
-        this.data[field] = [form.fields[field]['default']];
-      }
-    }
+    super(form, httpClient);
   }
 
   set(field: string, value: any): SearchForm {
-    const fieldDesc = this.form.fields[field];
-    if (!fieldDesc) throw new Error('Unknown field ' + field);
-    const checkedValue = value === '' || value === undefined ? null : value;
-    let values = this.data[field] || [];
-    if (fieldDesc.multiple) {
-      values = checkedValue ? values.concat([checkedValue]) : values;
-    } else {
-      values = checkedValue ? [checkedValue] : values;
-    }
-    this.data[field] = values;
+    super.set(field, value);
     return this;
   }
 
@@ -104,40 +85,5 @@ export default class SearchForm {
     } else {
       return this.set('orderings', `[${orderings.join(',')}]`);
     }
-  }
-
-  /**
-   * Build the URL to query
-   */
-  url(): string {
-    let url = this.form.action;
-    if (this.data) {
-      let sep = (url.indexOf('?') > -1 ? '&' : '?');
-      for (const key in this.data) {
-        if  (Object.prototype.hasOwnProperty.call(this.data, key)) {
-          const values = this.data[key];
-          if (values) {
-            for (let i = 0; i < values.length; i++) {
-              url += sep + key + '=' + encodeURIComponent(values[i]);
-              sep = '&';
-            }
-          }
-        }
-      }
-    }
-    return url;
-  }
-
-  /**
-   * Submits the query, and calls the callback function.
-   */
-  submit(cb: RequestCallback<ApiSearchResponse>): Promise<ApiSearchResponse> {
-    return this.httpClient.cachedRequest<ApiSearchResponse>(this.url()).then((response) => {
-      cb && cb(null, response);
-      return response;
-    }).catch((error) => {
-      cb && cb(error);
-      throw error;
-    });
   }
 }

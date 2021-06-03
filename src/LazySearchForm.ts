@@ -66,9 +66,9 @@ export default class LazySearchForm {
   }
 
   static toSearchForm(lazyForm: LazySearchForm, api: ResolvedApi): SearchForm {
-    const form = api.form(lazyForm.id);
+    const form = api.searchForm(lazyForm.id);
     if (form) {
-      return Object.keys(lazyForm.fields).reduce((form, fieldKey) => {
+      return Object.keys(lazyForm.fields).reduce<SearchForm>((form, fieldKey) => {
         const fieldValue = lazyForm.fields[fieldKey];
         if (fieldKey === 'q') {
           return form.query(fieldValue);

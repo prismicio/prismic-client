@@ -114,6 +114,13 @@
         "pro"
     ],
     "forms": {
+        "tags": {
+            "method": "GET",
+            "enctype": "application/x-www-form-urlencoded",
+            "action": "http://localhost:3000/api/tags",
+            "fields": {
+            }
+        },
         "documentation": {
             "name": "Documentation - all",
             "method": "GET",

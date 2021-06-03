@@ -1,6 +1,7 @@
 var path = require('path');
 var chai = require('chai');
 var assert = chai.assert;
+var expect = chai.expect;
 var Prismic = require(path.join(__dirname, '../', 'cjs', '@prismicio/client.js'));
 var fs = require('fs');
 var querystring = require('querystring');
@@ -17,6 +18,8 @@ function getClient() {
           cb(null, fixtures('search.json'));
         } else if(url === 'http://localhost:3000/api') {
           cb(null, fixtures('api.json'));
+        } else if (url === 'http://localhost:3000/api/tags') {
+          cb(null, fixtures('tags.json'));
         }
       },
     },
@@ -69,6 +72,13 @@ describe('Prismic', function() {
   it('should query one document by bookmark', function(done) {
     client.getBookmark('faq').then(function(document) {
       assert.strictEqual(document.id, 'WW4bKScAAMAqmluX');
+      done();
+    }).catch(done);
+  });
+
+  it('should get tags', function(done) {
+    client.getTags().then(function(tags) {
+      expect(tags).to.eql(['foo', 'bar']);
       done();
     }).catch(done);
   });
