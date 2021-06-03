@@ -1,7 +1,8 @@
 import { Document } from './documents';
 import { RequestCallback } from './request';
 import { Experiment, Experiments } from './experiments';
-import { SearchForm, FormData } from './form';
+import { FormData } from './form';
+import SearchForm from './SearchForm';
 import Predicates from './Predicates';
 import Cookies from './Cookies';
 import ApiSearchResponse from './ApiSearchResponse';
@@ -82,7 +83,7 @@ export default class ResolvedApi implements Client {
    * You can then chain the calls: api.form("everything").query('[[:d = at(document.id, "UkL0gMuvzYUANCpf")]]').ref(ref).submit()
    */
   form(formId: string): SearchForm | null {
-    const form = this.data.forms[formId];
+    const form: FormData = this.data.forms[formId];
     if (form) {
       return new SearchForm(form, this.httpClient);
     }
