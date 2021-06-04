@@ -37,9 +37,9 @@ test.serial("resolves a preview url in the browser", async t => {
 	);
 
 	const client = createTestClient(t);
-	const res = await client.resolvePreviewUrl({
+	const res = await client.resolvePreviewURL({
 		linkResolver: (document: prismicT.PrismicDocument) => `/${document.uid}`,
-		defaultUrl: "defaultUrl"
+		defaultURL: "defaultURL"
 	});
 
 	t.is(res, `/${document.uid}`);
@@ -66,9 +66,9 @@ test.serial("resolves a preview url using a server req object", async t => {
 
 	const client = createTestClient(t);
 	client.enableAutoPreviewsFromReq(req);
-	const res = await client.resolvePreviewUrl({
+	const res = await client.resolvePreviewURL({
 		linkResolver: (document: prismicT.PrismicDocument) => `/${document.uid}`,
-		defaultUrl: "defaultUrl"
+		defaultURL: "defaultURL"
 	});
 
 	t.is(res, `/${document.uid}`);
@@ -99,9 +99,9 @@ test.serial(
 
 		const client = createTestClient(t);
 		client.enableAutoPreviewsFromReq(req);
-		const res = await client.resolvePreviewUrl({
+		const res = await client.resolvePreviewURL({
 			linkResolver: (document: prismicT.PrismicDocument) => `/${document.uid}`,
-			defaultUrl: "defaultUrl",
+			defaultURL: "defaultURL",
 			documentId,
 			previewToken
 		});
@@ -111,21 +111,21 @@ test.serial(
 );
 
 test.serial(
-	"returns defaultUrl if current url does not contain preview params in browser",
+	"returns defaultURL if current url does not contain preview params in browser",
 	async t => {
-		const defaultUrl = "defaultUrl";
+		const defaultURL = "defaultURL";
 
 		// Set a global Location object without the parameters we need for automatic
 		// preview support.
 		globalThis.location = { ...globalThis.location, search: "" };
 
 		const client = createTestClient(t);
-		const res = await client.resolvePreviewUrl({
+		const res = await client.resolvePreviewURL({
 			linkResolver: (document: prismicT.PrismicDocument) => `/${document.uid}`,
-			defaultUrl
+			defaultURL
 		});
 
-		t.is(res, defaultUrl);
+		t.is(res, defaultURL);
 
 		// @ts-expect-error - Need to reset back to Node.js's default globalThis without `location`
 		globalThis.location = undefined;
@@ -133,33 +133,33 @@ test.serial(
 );
 
 test.serial(
-	"returns defaultUrl if req does not contain preview params in server req object",
+	"returns defaultURL if req does not contain preview params in server req object",
 	async t => {
-		const defaultUrl = "defaultUrl";
+		const defaultURL = "defaultURL";
 		const req = { query: {} };
 
 		const client = createTestClient(t);
 		client.enableAutoPreviewsFromReq(req);
-		const res = await client.resolvePreviewUrl({
+		const res = await client.resolvePreviewURL({
 			linkResolver: (document: prismicT.PrismicDocument) => `/${document.uid}`,
-			defaultUrl
+			defaultURL
 		});
 
-		t.is(res, defaultUrl);
+		t.is(res, defaultURL);
 	}
 );
 
 test.serial(
-	"returns defaultUrl if no preview context is available",
+	"returns defaultURL if no preview context is available",
 	async t => {
-		const defaultUrl = "defaultUrl";
+		const defaultURL = "defaultURL";
 
 		const client = createTestClient(t);
-		const res = await client.resolvePreviewUrl({
+		const res = await client.resolvePreviewURL({
 			linkResolver: (document: prismicT.PrismicDocument) => `/${document.uid}`,
-			defaultUrl
+			defaultURL
 		});
 
-		t.is(res, defaultUrl);
+		t.is(res, defaultURL);
 	}
 );

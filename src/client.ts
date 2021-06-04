@@ -5,6 +5,7 @@ import { getCookie } from "./lib/getCookie";
 
 import {
 	FetchLike,
+	Form,
 	HttpRequestLike,
 	LinkResolver,
 	Query,
@@ -16,6 +17,49 @@ import { buildQueryURL, BuildQueryURLArgs } from "./buildQueryURL";
 import { HTTPError } from "./HTTPError";
 import * as cookie from "./cookie";
 import * as predicate from "./predicate";
+
+type SimpleTTLCacheValueContainer<T = unknown> = {
+	cachedAt: Date;
+	ttl: number;
+	value: T;
+};
+
+interface SimpleTTLCache {
+	get<T>(key: string): T | undefined;
+	set<T>(key: string, value: T, ttl?: number): void;
+}
+
+const createSimpleTTLCache = (): SimpleTTLCache => {
+	const cache = new Map<string, SimpleTTLCacheValueContainer>();
+
+	return {
+		get<T>(key: string): T | undefined {
+			const cacheValue = cache.get(key);
+
+			if (cacheValue) {
+				if (
+					new Date().getTime() - cacheValue.cachedAt.getTime() <=
+					cacheValue.ttl
+				) {
+					return cacheValue.value as T;
+				}
+			}
+		},
+		set<T>(key: string, value: T, ttl = Infinity): void {
+			cache.set(key, { cachedAt: new Date(), ttl, value });
+		}
+	};
+};
+
+/**
+ * The largest page size allowed by the Prismic REST API V2. This value is used to minimize the number of requests required to query content.
+ */
+const MAX_PAGE_SIZE = 100;
+
+/**
+ * The number of milliseconds in which repository metadata is considered valid. A ref can be invalidated quickly depending on how frequently content is updated in the Prismic repository. As such, repository's metadata can only be considered valid for a short amount of time.
+ */
+const REPOSITORY_CACHE_TTL = 5000;
 
 /**
  * A ref or a function that returns a ref. If a static ref is known, one can be given. If the ref must be fetched on-demand, a function can be provided. This function can optionally be asynchronous.
@@ -71,7 +115,7 @@ type ResolvePreviewArgs = {
 	/**
 	 * A fallback URL if the Link Resolver does not return a value.
 	 */
-	defaultUrl: string;
+	defaultURL: string;
 
 	/**
 	 * The preview token (also known as a ref) that will be used to query preview content from the Prismic repository.
@@ -83,11 +127,6 @@ type ResolvePreviewArgs = {
 	 */
 	documentId?: string;
 };
-
-/**
- * The largest page size allowed by the Prismic REST API V2. This value is used to minimize the number of requests required to query content.
- */
-const MAX_PAGE_SIZE = 100;
 
 /**
  * Creates a predicate to filter content by document type.
@@ -182,6 +221,11 @@ export class Client {
 	defaultParams?: Omit<BuildQueryURLArgs, "ref">;
 
 	/**
+	 * Internal cache for low-level caching.
+	 */
+	private internalCache: SimpleTTLCache;
+
+	/**
 	 * Determines if queries will automatically point to a preview ref if available.
 	 */
 	private autoPreviewsEnabled: boolean;
@@ -201,6 +245,7 @@ export class Client {
 		this.accessToken = options.accessToken;
 		this.ref = options.ref;
 		this.defaultParams = options.defaultParams;
+		this.internalCache = createSimpleTTLCache();
 		this.autoPreviewsEnabled = true;
 
 		if (options.fetch) {
@@ -652,6 +697,15 @@ export class Client {
 	}
 
 	/**
+	 * Returns metadata about the Prismic repository, such as its refs, releases, and custom types.
+	 *
+	 * @returns Repository metadata.
+	 */
+	async getRepository(): Promise<Repository> {
+		return await this.fetch<Repository>(this.endpoint);
+	}
+
+	/**
 	 * Returns a list of all refs for the Prismic repository.
 	 *
 	 * Refs are used to identify which version of the repository's content should be queried. All repositories will have at least one ref pointing to the latest published content called the "master ref".
@@ -659,7 +713,7 @@ export class Client {
 	 * @returns A list of all refs for the Prismic repository.
 	 */
 	async getRefs(): Promise<Ref[]> {
-		const res = await this.fetch<Repository>(this.endpoint);
+		const res = await this.getRepository();
 
 		return res.refs;
 	}
@@ -744,9 +798,15 @@ export class Client {
 	 * @returns A list of all tags used in the repository.
 	 */
 	async getTags(): Promise<string[]> {
-		const res = await this.fetch<Repository>(this.endpoint);
+		try {
+			const tagsForm = await this.getCachedRepositoryForm("tags");
 
-		return res.tags;
+			return await this.fetch<string[]>(tagsForm.action);
+		} catch {
+			const res = await this.getRepository();
+
+			return res.tags;
+		}
 	}
 
 	/**
@@ -781,13 +841,13 @@ export class Client {
 	 *
 	 * @example
 	 * ```ts
-	 * const url = resolvePreviewUrl({
+	 * const url = resolvePreviewURL({
 	 *   linkResolver: (document) => `/${document.uid}`
-	 *   defaultUrl: '/'
+	 *   defaultURL: '/'
 	 * })
 	 * ```
 	 */
-	async resolvePreviewUrl(args: ResolvePreviewArgs): Promise<string> {
+	async resolvePreviewURL(args: ResolvePreviewArgs): Promise<string> {
 		let documentId = args.documentId;
 		let previewToken = args.previewToken;
 
@@ -811,57 +871,60 @@ export class Client {
 
 			return args.linkResolver(document);
 		} else {
-			return args.defaultUrl;
+			return args.defaultURL;
 		}
 	}
 
 	/**
-	 * Sets the client to query content from currently published documents for all future queries.
+	 * Returns a cached version of `getRepository` with a TTL.
 	 *
-	 * If the `ref` parameter is provided during a query, it takes priority for that query.
-	 *
-	 * @returns The repository's master Ref.
+	 * @returns Cached
 	 */
-	async queryCurrentContent(): Promise<Ref> {
-		const masterRef = await this.getMasterRef();
+	private async getCachedRepository(): Promise<Repository> {
+		const cacheKey = this.endpoint;
 
-		this.ref = masterRef.ref;
+		const cachedRepository = this.internalCache.get<Repository>(cacheKey);
 
-		return masterRef;
+		if (cachedRepository) {
+			return cachedRepository;
+		}
+
+		const repository = await this.getRepository();
+
+		this.internalCache.set(cacheKey, repository, REPOSITORY_CACHE_TTL);
+
+		return repository;
 	}
 
 	/**
-	 * Sets the client to query content from a specific Release identified by its ID for all future queries.
+	 * Returns a cached Prismic repository form. Forms are used to determine API endpoints for types of repository data.
 	 *
-	 * If the `ref` parameter is provided during a query, it takes priority for that query.
+	 * @throws If a matching form cannot be found.
 	 *
-	 * @param id The ID of the Release.
+	 * @param name Name of the form.
 	 *
-	 * @returns The Release with a matching ID, if it exists.
+	 * @returns The repository form.
 	 */
-	async queryContentFromReleaseByID(id: string): Promise<Ref> {
-		const releaseRef = await this.getReleaseById(id);
+	private async getCachedRepositoryForm(name: string): Promise<Form> {
+		const cachedRepository = await this.getCachedRepository();
+		const form = cachedRepository.forms[name];
 
-		this.ref = releaseRef.ref;
+		if (!form) {
+			throw new Error(`Form with name "${name}" could not be found`);
+		}
 
-		return releaseRef;
+		return form;
 	}
 
 	/**
-	 * Sets the client to query content from a specific Release identified by its label for all future queries.
+	 * Returns the cached master ref if it is valid (see `Client.prototype.isCachedMasterRefValid`). If it is invalid, or has not been cached, a network request is made to fetch the latest master ref. The result is cached and returned.
 	 *
-	 * If the `ref` parameter is provided during a query, it takes priority for that query.
-	 *
-	 * @param label The label of the Release.
-	 *
-	 * @returns The Release with a matching label, if it exists.
+	 * @returns The cached or latest master ref.
 	 */
-	async queryContentFromReleaseByLabel(label: string): Promise<Ref> {
-		const releaseRef = await this.getReleaseByLabel(label);
+	private async getCachedMasterRef(): Promise<Ref> {
+		const cachedRepository = await this.getCachedRepository();
 
-		this.ref = releaseRef.ref;
-
-		return releaseRef;
+		return findRef(cachedRepository.refs, ref => ref.isMasterRef);
 	}
 
 	/**
@@ -911,10 +974,7 @@ export class Client {
 			return thisRefStringOrFn;
 		}
 
-		const masterRef = await this.getMasterRef();
-
-		// We will persist the master ref to avoid refetching repository metadata.
-		this.ref = masterRef.ref;
+		const masterRef = await this.getCachedMasterRef();
 
 		return masterRef.ref;
 	}

@@ -8,18 +8,21 @@ import { createQueryResponse } from "./__testutils__/createQueryResponse";
 import { createTestClient } from "./__testutils__/createClient";
 
 import * as prismic from "../src";
+import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
+import { getMasterRef } from "./__testutils__/getMasterRef";
 
 const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
 test("resolves a query", async t => {
+	const repositoryResponse = createRepositoryResponse();
 	const queryResponse = createQueryResponse();
 
 	server.use(
-		createMockRepositoryHandler(t),
+		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: "masterRef"
+			ref: getMasterRef(repositoryResponse)
 		})
 	);
 
@@ -121,12 +124,13 @@ test("supports ref thunk param", async t => {
 });
 
 test("uses master ref if ref thunk param returns non-string value", async t => {
+	const repositoryResponse = createRepositoryResponse();
 	const queryResponse = createQueryResponse();
 
 	server.use(
-		createMockRepositoryHandler(t),
+		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: "masterRef"
+			ref: getMasterRef(repositoryResponse)
 		})
 	);
 
@@ -137,13 +141,13 @@ test("uses master ref if ref thunk param returns non-string value", async t => {
 });
 
 test("throws if access token is invalid", async t => {
+	const repositoryResponse = createRepositoryResponse();
 	const queryResponse = createQueryResponse();
+	const ref = getMasterRef(repositoryResponse);
 
 	server.use(
-		createMockRepositoryHandler(t),
-		createMockQueryHandler(t, [queryResponse], "accessToken", {
-			ref: "masterRef"
-		})
+		createMockRepositoryHandler(t, repositoryResponse),
+		createMockQueryHandler(t, [queryResponse], "accessToken", { ref })
 	);
 
 	const client = createTestClient(t);
@@ -152,18 +156,28 @@ test("throws if access token is invalid", async t => {
 		await client.get();
 	} catch (error) {
 		t.true(/invalid access token/i.test(error.message));
-		t.is(error.url, `${client.endpoint}/documents/search?ref=masterRef`);
+		t.is(error.url, `${client.endpoint}/documents/search?ref=${ref}`);
 		t.deepEqual(error.options, {});
 		t.true(error.response instanceof Response);
 		t.is(error.response.status, 401);
 	}
 });
 
+// TODO: CONVERT REMAINING TESTS TO USE GENERATIVE MASTER REFS (i.e. remove usage of "masterRef")
+//
+// THEN: TEST FOR THE CACHED REF
+// - This can be done by registering a response handler, making a query, registering a new response handler, and then making another request.
+// - The second request should be the original ref since it happened within the TTL
+//
+// THEN: Do another test where we wait the TTL (5 seconds). The second request should use the new, uncached ref.
+
 test("throws if a non-200 or non-401 network error occurs", async t => {
+	const repositoryResponse = createRepositoryResponse();
 	const queryResponse = createQueryResponse();
+	const ref = getMasterRef(repositoryResponse);
 
 	server.use(
-		createMockRepositoryHandler(t),
+		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(
 			t,
 			[queryResponse],
@@ -172,7 +186,7 @@ test("throws if a non-200 or non-401 network error occurs", async t => {
 				// We are forcing a 404 error by not matching the `ref` param.
 				ref: "non-existant-ref"
 			},
-			// We're turning off debug support since we are intentionally creating is
+			// We're turning off debug support since we are intentionally creating a
 			// mismatched handler.
 			false
 		)
@@ -184,7 +198,7 @@ test("throws if a non-200 or non-401 network error occurs", async t => {
 		await client.get();
 	} catch (error) {
 		t.true(/status code 404/i.test(error.message));
-		t.is(error.url, `${client.endpoint}/documents/search?ref=masterRef`);
+		t.is(error.url, `${client.endpoint}/documents/search?ref=${ref}`);
 		t.deepEqual(error.options, {});
 		t.true(error.response instanceof Response);
 		t.is(error.response.status, 404);

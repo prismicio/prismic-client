@@ -5,7 +5,7 @@ export const createRef = (
 	overrides?: Partial<prismic.Ref>
 ): prismic.Ref => {
 	const id = Math.random().toString();
-	const ref = isMasterRef ? "masterRef" : Math.random().toString();
+	const ref = Math.random().toString();
 	const label = Math.random().toString();
 
 	return {
