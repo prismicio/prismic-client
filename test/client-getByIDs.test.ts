@@ -5,7 +5,9 @@ import { createDocument } from "./__testutils__/createDocument";
 import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
 import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
 import { createQueryResponse } from "./__testutils__/createQueryResponse";
+import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
 import { createTestClient } from "./__testutils__/createClient";
+import { getMasterRef } from "./__testutils__/getMasterRef";
 
 import * as prismic from "../src";
 
@@ -14,14 +16,15 @@ test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
 test("queries for documents by id", async t => {
+	const repositoryResponse = createRepositoryResponse();
 	const documents = [createDocument(), createDocument()];
 	const documentIds = documents.map(doc => doc.id);
 	const queryResponse = createQueryResponse(documents);
 
 	server.use(
-		createMockRepositoryHandler(t),
+		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: "masterRef",
+			ref: getMasterRef(repositoryResponse),
 			q: `[[at(document.id, [${documentIds.map(id => `"${id}"`).join(", ")}])]]`
 		})
 	);

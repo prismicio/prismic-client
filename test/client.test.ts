@@ -2,12 +2,14 @@ import test from "ava";
 import * as mswNode from "msw/node";
 import * as sinon from "sinon";
 
+import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
+import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
+import { createQueryResponse } from "./__testutils__/createQueryResponse";
+import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
 import { createTestClient } from "./__testutils__/createClient";
+import { getMasterRef } from "./__testutils__/getMasterRef";
 
 import * as prismic from "../src";
-import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
-import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
-import { createQueryResponse } from "./__testutils__/createQueryResponse";
 
 const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
@@ -123,10 +125,11 @@ test.serial(
 			cookie: `io.prismic.preview=${previewRef}`
 		};
 
+		const repositoryResponse = createRepositoryResponse();
 		const queryResponseWithoutPreviews = createQueryResponse();
 		const queryResponseWithPreviews = createQueryResponse();
 
-		server.use(createMockRepositoryHandler(t));
+		server.use(createMockRepositoryHandler(t, repositoryResponse));
 
 		const client = createTestClient(t);
 
@@ -135,7 +138,7 @@ test.serial(
 		// ignored by the client.
 		server.use(
 			createMockQueryHandler(t, [queryResponseWithoutPreviews], undefined, {
-				ref: "masterRef"
+				ref: getMasterRef(repositoryResponse)
 			})
 		);
 		client.disableAutoPreviews();

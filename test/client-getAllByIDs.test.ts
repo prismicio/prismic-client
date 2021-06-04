@@ -3,8 +3,10 @@ import * as mswNode from "msw/node";
 
 import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
 import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
-import { createTestClient } from "./__testutils__/createClient";
 import { createQueryResponsePages } from "./__testutils__/createQueryResponsePages";
+import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
+import { createTestClient } from "./__testutils__/createClient";
+import { getMasterRef } from "./__testutils__/getMasterRef";
 
 import * as prismic from "../src";
 
@@ -13,6 +15,7 @@ test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
 test("returns all matching documents from paginated response", async t => {
+	const repositoryResponse = createRepositoryResponse();
 	const pagedResponses = createQueryResponsePages({
 		numPages: 2,
 		numDocsPerPage: 2
@@ -22,9 +25,9 @@ test("returns all matching documents from paginated response", async t => {
 	const allDocumentIds = allDocs.map(doc => doc.id);
 
 	server.use(
-		createMockRepositoryHandler(t),
+		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, pagedResponses, undefined, {
-			ref: "masterRef",
+			ref: getMasterRef(repositoryResponse),
 			q: `[[at(document.id, [${allDocumentIds
 				.map(id => `"${id}"`)
 				.join(", ")}])]]`,

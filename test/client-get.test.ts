@@ -108,6 +108,66 @@ test("merges params and default params if provided", async t => {
 	t.deepEqual(res, queryResponse);
 });
 
+test("uses the cached mastger ref within the ref's ttl", async t => {
+	const repositoryResponse1 = createRepositoryResponse();
+	const repositoryResponse2 = createRepositoryResponse();
+	const queryResponse = createQueryResponse();
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse1),
+		createMockQueryHandler(t, [queryResponse], undefined, {
+			ref: getMasterRef(repositoryResponse1)
+		})
+	);
+
+	const client = createTestClient(t);
+	const res1 = await client.get();
+
+	// We're setting the next repository metadata response to include a different ref.
+	// Notice that we aren't setting a new query handler. The next query should
+	// use the previous ref.
+	server.use(createMockRepositoryHandler(t, repositoryResponse2));
+
+	const res2 = await client.get();
+
+	t.deepEqual(res1, queryResponse);
+	t.deepEqual(res2, queryResponse);
+});
+
+test("uses a fresh master ref outside of the cached ref's ttl", async t => {
+	const repositoryResponse1 = createRepositoryResponse();
+	const repositoryResponse2 = createRepositoryResponse();
+	const queryResponse1 = createQueryResponse();
+	const queryResponse2 = createQueryResponse();
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse1),
+		createMockQueryHandler(t, [queryResponse1], undefined, {
+			ref: getMasterRef(repositoryResponse1)
+		})
+	);
+
+	const client = createTestClient(t);
+	const res1 = await client.get();
+
+	// We wait for the cached ref's TTL to expire.
+	await new Promise(res => setTimeout(() => res(undefined), 5000));
+
+	// We're setting the next repository metadata response to include a different ref.
+	// We're also using a new query handler using the new master ref.
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse2),
+		createMockQueryHandler(t, [queryResponse2], undefined, {
+			ref: getMasterRef(repositoryResponse2)
+		})
+	);
+
+	const res2 = await client.get();
+
+	t.deepEqual(res1, queryResponse1);
+	t.deepEqual(res2, queryResponse2);
+});
+
 test("supports ref thunk param", async t => {
 	const queryResponse = createQueryResponse();
 	const ref = "ref";
@@ -162,14 +222,6 @@ test("throws if access token is invalid", async t => {
 		t.is(error.response.status, 401);
 	}
 });
-
-// TODO: CONVERT REMAINING TESTS TO USE GENERATIVE MASTER REFS (i.e. remove usage of "masterRef")
-//
-// THEN: TEST FOR THE CACHED REF
-// - This can be done by registering a response handler, making a query, registering a new response handler, and then making another request.
-// - The second request should be the original ref since it happened within the TTL
-//
-// THEN: Do another test where we wait the TTL (5 seconds). The second request should use the new, uncached ref.
 
 test("throws if a non-200 or non-401 network error occurs", async t => {
 	const repositoryResponse = createRepositoryResponse();

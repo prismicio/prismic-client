@@ -5,7 +5,9 @@ import { createDocument } from "./__testutils__/createDocument";
 import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
 import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
 import { createQueryResponse } from "./__testutils__/createQueryResponse";
+import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
 import { createTestClient } from "./__testutils__/createClient";
+import { getMasterRef } from "./__testutils__/getMasterRef";
 
 import * as prismic from "../src";
 
@@ -14,6 +16,7 @@ test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
 test("queries for documents by tag", async t => {
+	const repositoryResponse = createRepositoryResponse();
 	const documentTag = "foo";
 	const queryResponse = createQueryResponse([
 		createDocument({ tags: [documentTag] }),
@@ -21,9 +24,9 @@ test("queries for documents by tag", async t => {
 	]);
 
 	server.use(
-		createMockRepositoryHandler(t),
+		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: "masterRef",
+			ref: getMasterRef(repositoryResponse),
 			q: `[[at(document.tags, "${documentTag}")]]`
 		})
 	);

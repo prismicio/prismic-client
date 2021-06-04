@@ -4,6 +4,7 @@ import * as mswNode from "msw/node";
 import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
 import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
 import { createTestClient } from "./__testutils__/createClient";
+import { getMasterRef } from "./__testutils__/getMasterRef";
 
 import * as prismic from "../src";
 
@@ -13,6 +14,7 @@ test.after(() => server.close());
 
 test("builds a query URL using the master ref", async t => {
 	const response = createRepositoryResponse();
+	const ref = getMasterRef(response);
 	server.use(createMockRepositoryHandler(t, response));
 
 	const client = createTestClient(t);
@@ -21,7 +23,7 @@ test("builds a query URL using the master ref", async t => {
 
 	t.is(url.host, new URL(client.endpoint).host);
 	t.is(url.pathname, "/api/v2/documents/search");
-	t.is(url.search, "?ref=masterRef");
+	t.is(url.search, `?ref=${ref}`);
 });
 
 test("includes params if provided", async t => {

@@ -45,7 +45,7 @@ const createSimpleTTLCache = (): SimpleTTLCache => {
 				}
 			}
 		},
-		set<T>(key: string, value: T, ttl = Infinity): void {
+		set<T>(key: string, value: T, ttl: number): void {
 			cache.set(key, { cachedAt: new Date(), ttl, value });
 		}
 	};

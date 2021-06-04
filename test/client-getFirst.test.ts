@@ -1,27 +1,30 @@
 import test from "ava";
 import * as mswNode from "msw/node";
 
+import { createDocument } from "./__testutils__/createDocument";
 import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
 import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
 import { createQueryResponse } from "./__testutils__/createQueryResponse";
+import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
 import { createTestClient } from "./__testutils__/createClient";
+import { getMasterRef } from "./__testutils__/getMasterRef";
 
 import * as prismic from "../src";
-import { createDocument } from "./__testutils__/createDocument";
 
 const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
 test("returns the first document from a response", async t => {
+	const repositoryResponse = createRepositoryResponse();
 	const doc1 = createDocument();
 	const doc2 = createDocument();
 	const queryResponse = createQueryResponse([doc1, doc2]);
 
 	server.use(
-		createMockRepositoryHandler(t),
+		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: "masterRef"
+			ref: getMasterRef(repositoryResponse)
 		})
 	);
 
@@ -114,12 +117,13 @@ test("merges params and default params if provided", async t => {
 });
 
 test("throws if no documents were returned", async t => {
+	const repositoryResponse = createRepositoryResponse();
 	const queryResponse = createQueryResponse([]);
 
 	server.use(
-		createMockRepositoryHandler(t),
+		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: "masterRef"
+			ref: getMasterRef(repositoryResponse)
 		})
 	);
 
