@@ -38,9 +38,7 @@ test("client has correct default state", t => {
 
 	t.is(client.endpoint, endpoint);
 	t.is(client.accessToken, options.accessToken);
-	t.is(client.ref, options.ref);
 	t.is(client.fetchFn, options.fetch);
-	t.is(client.httpRequest, undefined);
 	t.is(client.defaultParams, options.defaultParams);
 });
 
@@ -64,8 +62,71 @@ test("uses globalThis.fetch if available", t => {
 	globalThis.fetch = existingFetch;
 });
 
-// This test must be serial since it mutates globalThis.
-test.serial("uses browser preview ref if available", async t => {
+test("supports manual string ref", async t => {
+	const queryResponse = createQueryResponse();
+	const ref = "ref";
+
+	server.use(
+		createMockRepositoryHandler(t),
+		createMockQueryHandler(t, [queryResponse], undefined, { ref })
+	);
+
+	const client = createTestClient(t, { ref });
+	const res = await client.get();
+
+	t.deepEqual(res, queryResponse);
+});
+
+test("uses the master ref by default", async t => {
+	const repositoryResponse = createRepositoryResponse();
+	const queryResponse = createQueryResponse();
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse),
+		createMockQueryHandler(t, [queryResponse], undefined, {
+			ref: getMasterRef(repositoryResponse)
+		})
+	);
+
+	const client = createTestClient(t);
+	const res = await client.get();
+
+	t.deepEqual(res, queryResponse);
+});
+
+test("supports manual thunk ref", async t => {
+	const queryResponse = createQueryResponse();
+	const ref = "ref";
+
+	server.use(
+		createMockRepositoryHandler(t),
+		createMockQueryHandler(t, [queryResponse], undefined, { ref })
+	);
+
+	const client = createTestClient(t, { ref: () => ref });
+	const res = await client.get();
+
+	t.deepEqual(res, queryResponse);
+});
+
+test("uses master ref if ref thunk param returns non-string value", async t => {
+	const repositoryResponse = createRepositoryResponse();
+	const queryResponse = createQueryResponse();
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse),
+		createMockQueryHandler(t, [queryResponse], undefined, {
+			ref: getMasterRef(repositoryResponse)
+		})
+	);
+
+	const client = createTestClient(t, { ref: () => undefined });
+	const res = await client.get();
+
+	t.deepEqual(res, queryResponse);
+});
+
+test("uses browser preview ref if available", async t => {
 	const previewRef = "previewRef";
 	globalThis.document = {
 		...globalThis.document,

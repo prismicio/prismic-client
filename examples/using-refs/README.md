@@ -1,10 +1,11 @@
-# Releases
+# Using Refs
 
-This example shows how to query for content from Releases. Releases are used to
-group content changes within Prismic.
+This example shows how to query for content from different "refs". Refs are
+identifiers for different content versions of your repository. Each edit to a
+document and creation of a Release generates a new ref.
 
 The example demonstrates how to setup the client to point the client to a
-Release using its label. It also demonstrates how to revert it to the default
+specific ref using its label. It also demonstrates how to revert it to the default
 setting of querying the latest published content. Finally, it also demonstrates
 how to override this on a per-query basis.
 
@@ -21,7 +22,7 @@ the browser, you can remove `node-fetch` from the example.
 ```sh
 # Clone the repository to your computer
 git clone https://github.com/prismicio/prismic-javascript.git
-cd prismic-javascript/examples/releases
+cd prismic-javascript/examples/using-refs
 
 # Install the dependencies
 npm install

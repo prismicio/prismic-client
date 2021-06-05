@@ -14,7 +14,6 @@ the browser, you can remove `node-fetch` from the example.
 ```diff
    import * as prismic from '@prismicio/client'
 -  import fetch from 'node-fetch'
-   import QuickLRU from 'quick-lru'
 ```
 
 ## How to run the example

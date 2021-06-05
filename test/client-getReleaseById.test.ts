@@ -17,7 +17,7 @@ test("returns a Release by ID", async t => {
 	server.use(createMockRepositoryHandler(t, response));
 
 	const client = createTestClient(t);
-	const res = await client.getReleaseById(ref2.id);
+	const res = await client.getReleaseByID(ref2.id);
 
 	t.deepEqual(res, ref2);
 });
@@ -27,7 +27,7 @@ test("throws if Release could not be found", async t => {
 
 	const client = createTestClient(t);
 
-	await t.throwsAsync(async () => await client.getReleaseById("non-existant"), {
+	await t.throwsAsync(async () => await client.getReleaseByID("non-existant"), {
 		message: /could not be found/i
 	});
 });

@@ -59,7 +59,7 @@ const MAX_PAGE_SIZE = 100;
 /**
  * The number of milliseconds in which repository metadata is considered valid. A ref can be invalidated quickly depending on how frequently content is updated in the Prismic repository. As such, repository's metadata can only be considered valid for a short amount of time.
  */
-const REPOSITORY_CACHE_TTL = 5000;
+export const REPOSITORY_CACHE_TTL = 5000;
 
 /**
  * A ref or a function that returns a ref. If a static ref is known, one can be given. If the ref must be fetched on-demand, a function can be provided. This function can optionally be asynchronous.
@@ -67,6 +67,34 @@ const REPOSITORY_CACHE_TTL = 5000;
 type RefStringOrFn =
 	| string
 	| (() => string | undefined | Promise<string | undefined>);
+
+const enum RefModeType {
+	Master,
+	ReleaseByID,
+	ReleaseByLabel,
+	Manual
+}
+
+type RefMode = {
+	autoPreviewsEnabled: boolean;
+	httpRequest?: HttpRequestLike;
+} & (
+	| {
+			type: RefModeType.Master;
+	  }
+	| {
+			type: RefModeType.ReleaseByID;
+			payload: { releaseId: string };
+	  }
+	| {
+			type: RefModeType.ReleaseByLabel;
+			payload: { releaseLabel: string };
+	  }
+	| {
+			type: RefModeType.Manual;
+			payload: { refStringOrFn: RefStringOrFn };
+	  }
+);
 
 /**
  * Configuration for clients that determine how content is queried.
@@ -199,21 +227,9 @@ export class Client {
 	accessToken?: string;
 
 	/**
-	 * Ref used to query documents.
-	 *
-	 * {@link https://prismic.io/docs/technologies/introduction-to-the-content-query-api#prismic-api-ref}
-	 */
-	ref?: RefStringOrFn;
-
-	/**
 	 * The function used to make network requests to the Prismic REST API. In environments where a global `fetch` function does not exist, such as Node.js, this function must be provided.
 	 */
 	fetchFn: FetchLike;
-
-	/**
-	 * An HTTP server request object containing the request's cookies. In a server environment, the request is used to support automatic Prismic preview support when querying draft content.
-	 */
-	httpRequest?: HttpRequestLike;
 
 	/**
 	 * Default parameters that will be sent with each query. These parameters can be overridden on each query if needed.
@@ -221,14 +237,19 @@ export class Client {
 	defaultParams?: Omit<BuildQueryURLArgs, "ref">;
 
 	/**
+	 * The client's ref mode state. This determines which ref is used during queries.
+	 */
+	private refMode: RefMode;
+
+	/**
 	 * Internal cache for low-level caching.
 	 */
 	private internalCache: SimpleTTLCache;
 
-	/**
-	 * Determines if queries will automatically point to a preview ref if available.
-	 */
-	private autoPreviewsEnabled: boolean;
+	// /**
+	//  * Determines if queries will automatically point to a preview ref if available.
+	//  */
+	// private autoPreviewsEnabled: boolean;
 
 	/**
 	 * Creates a Prismic client that can be used to query a repository.
@@ -243,10 +264,16 @@ export class Client {
 	constructor(endpoint: string, options: ClientConfig = {}) {
 		this.endpoint = endpoint;
 		this.accessToken = options.accessToken;
-		this.ref = options.ref;
 		this.defaultParams = options.defaultParams;
 		this.internalCache = createSimpleTTLCache();
-		this.autoPreviewsEnabled = true;
+		this.refMode = {
+			type: RefModeType.Master,
+			autoPreviewsEnabled: true
+		};
+
+		if (options.ref) {
+			this.queryContentFromRef(options.ref);
+		}
 
 		if (options.fetch) {
 			this.fetchFn = options.fetch;
@@ -272,7 +299,7 @@ export class Client {
 	 * ```
 	 */
 	enableAutoPreviews(): void {
-		this.autoPreviewsEnabled = true;
+		this.refMode.autoPreviewsEnabled = true;
 	}
 
 	/**
@@ -291,8 +318,8 @@ export class Client {
 	 * ```
 	 */
 	enableAutoPreviewsFromReq<R extends HttpRequestLike>(req: R): void {
-		this.httpRequest = req;
-		this.autoPreviewsEnabled = true;
+		this.refMode.httpRequest = req;
+		this.refMode.autoPreviewsEnabled = true;
 	}
 
 	/**
@@ -306,7 +333,7 @@ export class Client {
 	 * ```
 	 */
 	disableAutoPreviews(): void {
-		this.autoPreviewsEnabled = false;
+		this.refMode.autoPreviewsEnabled = false;
 	}
 
 	/**
@@ -773,7 +800,7 @@ export class Client {
 	 *
 	 * @returns The Release with a matching ID, if it exists.
 	 */
-	async getReleaseById(id: string): Promise<Ref> {
+	async getReleaseByID(id: string): Promise<Ref> {
 		const releases = await this.getReleases();
 
 		return findRef(releases, ref => ref.id === id);
@@ -841,7 +868,7 @@ export class Client {
 	 *
 	 * @example
 	 * ```ts
-	 * const url = resolvePreviewURL({
+	 * const url = client.resolvePreviewURL({
 	 *   linkResolver: (document) => `/${document.uid}`
 	 *   defaultURL: '/'
 	 * })
@@ -855,12 +882,12 @@ export class Client {
 			const searchParams = new URLSearchParams(globalThis.location.search);
 			documentId = documentId || searchParams.get("documentId") || undefined;
 			previewToken = previewToken || searchParams.get("token") || undefined;
-		} else if (this.httpRequest?.query) {
-			if (typeof this.httpRequest.query.documentId === "string") {
-				documentId = documentId || this.httpRequest.query.documentId;
+		} else if (this.refMode.httpRequest?.query) {
+			if (typeof this.refMode.httpRequest.query.documentId === "string") {
+				documentId = documentId || this.refMode.httpRequest.query.documentId;
 			}
-			if (typeof this.httpRequest.query.token === "string") {
-				previewToken = previewToken || this.httpRequest.query.token;
+			if (typeof this.refMode.httpRequest.query.token === "string") {
+				previewToken = previewToken || this.refMode.httpRequest.query.token;
 			}
 		}
 
@@ -876,9 +903,90 @@ export class Client {
 	}
 
 	/**
+	 * Configures the client to query the latest published content for all future queries.
+	 *
+	 * If the `ref` parameter is provided during a query, it takes priority for that query.
+	 *
+	 * @example
+	 * ```ts
+	 * await client.queryLatestContent()
+	 * const document = await client.getByID('WW4bKScAAMAqmluX')
+	 * ```
+	 */
+	queryLatestContent(): void {
+		this.refMode = {
+			...this.refMode,
+			type: RefModeType.Master
+		};
+	}
+
+	/**
+	 * Configures the client to query content from a specific Release identified by its ID for all future queries.
+	 *
+	 * If the `ref` parameter is provided during a query, it takes priority for that query.
+	 *
+	 * @param id The ID of the Release.
+	 *
+	 * @example
+	 * ```ts
+	 * await client.queryContentFromReleaseByID('YLB7OBAAACMA7Cpa')
+	 * const document = await client.getByID('WW4bKScAAMAqmluX')
+	 * ```
+	 */
+	queryContentFromReleaseByID(releaseId: string): void {
+		this.refMode = {
+			...this.refMode,
+			type: RefModeType.ReleaseByID,
+			payload: { releaseId }
+		};
+	}
+
+	/**
+	 * Configures the client to query content from a specific Release identified by its label for all future queries.
+	 *
+	 * If the `ref` parameter is provided during a query, it takes priority for that query.
+	 *
+	 * @param label The label of the Release.
+	 *
+	 * @example
+	 * ```ts
+	 * await client.queryContentFromReleaseByLabel('My Release')
+	 * const document = await client.getByID('WW4bKScAAMAqmluX')
+	 * ```
+	 */
+	queryContentFromReleaseByLabel(releaseLabel: string): void {
+		this.refMode = {
+			...this.refMode,
+			type: RefModeType.ReleaseByLabel,
+			payload: { releaseLabel }
+		};
+	}
+
+	/**
+	 * Configures the client to query content from a specific ref. The ref can be provided as a string or a function.
+	 *
+	 * If a function is provided, the ref is fetched lazily before each query. The function may also be asynchronous.
+	 *
+	 * @param ref The ref or a function that returns the ref from which to query content.
+	 *
+	 * @example
+	 * ```ts
+	 * await client.queryContentFromRef('my-ref')
+	 * const document = await client.getByID('WW4bKScAAMAqmluX')
+	 * ```
+	 */
+	queryContentFromRef(ref: RefStringOrFn): void {
+		this.refMode = {
+			...this.refMode,
+			type: RefModeType.Manual,
+			payload: { refStringOrFn: ref }
+		};
+	}
+
+	/**
 	 * Returns a cached version of `getRepository` with a TTL.
 	 *
-	 * @returns Cached
+	 * @returns Cached repository metadata.
 	 */
 	private async getCachedRepository(): Promise<Repository> {
 		const cacheKey = this.endpoint;
@@ -917,17 +1025,6 @@ export class Client {
 	}
 
 	/**
-	 * Returns the cached master ref if it is valid (see `Client.prototype.isCachedMasterRefValid`). If it is invalid, or has not been cached, a network request is made to fetch the latest master ref. The result is cached and returned.
-	 *
-	 * @returns The cached or latest master ref.
-	 */
-	private async getCachedMasterRef(): Promise<Ref> {
-		const cachedRepository = await this.getCachedRepository();
-
-		return findRef(cachedRepository.refs, ref => ref.isMasterRef);
-	}
-
-	/**
 	 * Returns the preview ref for the client, if one exists.
 	 *
 	 * If this method is used in the browser, the browser's cookies will be read. If this method is used on the server, the cookies from the saved HTTP Request will be read, if an HTTP Request was given.
@@ -937,24 +1034,30 @@ export class Client {
 	private getPreviewRefString(): string | undefined {
 		if (globalThis.document?.cookie) {
 			return getCookie(cookie.preview, globalThis.document.cookie);
-		} else if (this.httpRequest?.headers?.cookie) {
-			return getCookie(cookie.preview, this.httpRequest.headers.cookie);
+		} else if (this.refMode.httpRequest?.headers?.cookie) {
+			return getCookie(cookie.preview, this.refMode.httpRequest.headers.cookie);
 		}
 	}
 
 	/**
-	 * Returns the ref needed to query based on the client's current state. This method may make a network request to resolve the users's ref getter function or fetch the repository's master ref.
+	 * Returns the ref needed to query based on the client's current state. This method may make a network request to fetch a ref or resolve the users's ref thunk.
 	 *
-	 * The following flow is used:
+	 * If auto previews are enabled, the preview ref takes priority if available.
 	 *
-	 * 1. If previews are enabled, it will return the preview ref if one is available.
+	 * The following strategies are used depending on the client's state:
 	 *
-	 * 2. If a ref or a function that returns a ref is given at client instantiation via the `ref` configuration option, it will be returned. If a function is provided, it will be resolved before returning.
+	 * - If the user called `queryLatestContent`: Use the repository's master ref. The ref is cached for 5 seconds. After 5 seconds, a new master ref is fetched.
 	 *
-	 * 3. If any of the above methods return a falsy value, the master ref will be used. If the master ref is used, it will be persisted for all future queries until overridden.
+	 * - If the user called `queryContentFromReleaseByID`: Use the release's ref. The ref is cached for 5 seconds. After 5 seconds, a new ref for the release is fetched.
+	 *
+	 * - If the user called `queryContentFromReleaseByLabel`: Use the release's ref. The ref is cached for 5 seconds. After 5 seconds, a new ref for the release is fetched.
+	 *
+	 * - If the user called `queryContentFromRef`: Use the provided ref. Fall back to the master ref if the ref is not a string.
+	 *
+	 * @returns The ref to use during a query.
 	 */
 	private async getResolvedRefString(): Promise<string> {
-		if (this.autoPreviewsEnabled) {
+		if (this.refMode.autoPreviewsEnabled) {
 			const previewRef = this.getPreviewRefString();
 
 			if (previewRef) {
@@ -962,21 +1065,45 @@ export class Client {
 			}
 		}
 
-		const thisRefStringOrFn = this.ref;
+		switch (this.refMode.type) {
+			case RefModeType.ReleaseByID: {
+				const releaseId = this.refMode.payload.releaseId;
+				const repository = await this.getCachedRepository();
+				const ref = findRef(repository.refs, ref => ref.id === releaseId);
 
-		if (typeof thisRefStringOrFn === "function") {
-			const res = await thisRefStringOrFn();
-
-			if (typeof res === "string") {
-				return res;
+				return ref.ref;
 			}
-		} else if (thisRefStringOrFn) {
-			return thisRefStringOrFn;
+
+			case RefModeType.ReleaseByLabel: {
+				const releaseLabel = this.refMode.payload.releaseLabel;
+				const repository = await this.getCachedRepository();
+				const ref = findRef(repository.refs, ref => ref.label === releaseLabel);
+
+				return ref.ref;
+			}
+
+			case RefModeType.Manual: {
+				const thisRefStringOrFn = this.refMode.payload.refStringOrFn;
+
+				if (typeof thisRefStringOrFn === "function") {
+					const res = await thisRefStringOrFn();
+
+					if (res != null) {
+						return res;
+					}
+				} else if (thisRefStringOrFn) {
+					return thisRefStringOrFn;
+				}
+			}
+
+			case RefModeType.Master:
+			default: {
+				const repository = await this.getCachedRepository();
+				const ref = findRef(repository.refs, ref => ref.isMasterRef);
+
+				return ref.ref;
+			}
 		}
-
-		const masterRef = await this.getCachedMasterRef();
-
-		return masterRef.ref;
 	}
 
 	/**
