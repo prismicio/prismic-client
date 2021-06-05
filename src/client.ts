@@ -68,31 +68,56 @@ type RefStringOrFn =
 	| string
 	| (() => string | undefined | Promise<string | undefined>);
 
-const enum RefModeType {
+/**
+ * State types for a client's ref strategy.
+ */
+const enum RefStateType {
+	/** Use the repository's master ref. */
 	Master,
+
+	/** Use a given Release identified by its ID. */
 	ReleaseByID,
+
+	/** Use a given Release identified by its label. */
 	ReleaseByLabel,
+
+	/** Use a given ref. */
 	Manual
 }
 
-type RefMode = {
+/**
+ * An object containing stateful information about a client's ref strategy.
+ */
+type RefState = {
+	/** Determines if automatic preview support is enabled. */
 	autoPreviewsEnabled: boolean;
+
+	/** An optional HTTP server request object used during previews if automatic previews are enabled. */
 	httpRequest?: HttpRequestLike;
 } & (
 	| {
-			type: RefModeType.Master;
+			type: RefStateType.Master;
 	  }
 	| {
-			type: RefModeType.ReleaseByID;
-			payload: { releaseId: string };
+			type: RefStateType.ReleaseByID;
+			payload: {
+				/** The ID of the Release. */
+				releaseId: string;
+			};
 	  }
 	| {
-			type: RefModeType.ReleaseByLabel;
-			payload: { releaseLabel: string };
+			type: RefStateType.ReleaseByLabel;
+			payload: {
+				/** The label of the Release. */
+				releaseLabel: string;
+			};
 	  }
 	| {
-			type: RefModeType.Manual;
-			payload: { refStringOrFn: RefStringOrFn };
+			type: RefStateType.Manual;
+			payload: {
+				/** The user-provided ref or ref thunk. */
+				refStringOrFn: RefStringOrFn;
+			};
 	  }
 );
 
@@ -239,17 +264,12 @@ export class Client {
 	/**
 	 * The client's ref mode state. This determines which ref is used during queries.
 	 */
-	private refMode: RefMode;
+	private refMode: RefState;
 
 	/**
 	 * Internal cache for low-level caching.
 	 */
 	private internalCache: SimpleTTLCache;
-
-	// /**
-	//  * Determines if queries will automatically point to a preview ref if available.
-	//  */
-	// private autoPreviewsEnabled: boolean;
 
 	/**
 	 * Creates a Prismic client that can be used to query a repository.
@@ -267,7 +287,7 @@ export class Client {
 		this.defaultParams = options.defaultParams;
 		this.internalCache = createSimpleTTLCache();
 		this.refMode = {
-			type: RefModeType.Master,
+			type: RefStateType.Master,
 			autoPreviewsEnabled: true
 		};
 
@@ -916,7 +936,7 @@ export class Client {
 	queryLatestContent(): void {
 		this.refMode = {
 			...this.refMode,
-			type: RefModeType.Master
+			type: RefStateType.Master
 		};
 	}
 
@@ -936,7 +956,7 @@ export class Client {
 	queryContentFromReleaseByID(releaseId: string): void {
 		this.refMode = {
 			...this.refMode,
-			type: RefModeType.ReleaseByID,
+			type: RefStateType.ReleaseByID,
 			payload: { releaseId }
 		};
 	}
@@ -957,7 +977,7 @@ export class Client {
 	queryContentFromReleaseByLabel(releaseLabel: string): void {
 		this.refMode = {
 			...this.refMode,
-			type: RefModeType.ReleaseByLabel,
+			type: RefStateType.ReleaseByLabel,
 			payload: { releaseLabel }
 		};
 	}
@@ -978,7 +998,7 @@ export class Client {
 	queryContentFromRef(ref: RefStringOrFn): void {
 		this.refMode = {
 			...this.refMode,
-			type: RefModeType.Manual,
+			type: RefStateType.Manual,
 			payload: { refStringOrFn: ref }
 		};
 	}
@@ -1066,7 +1086,7 @@ export class Client {
 		}
 
 		switch (this.refMode.type) {
-			case RefModeType.ReleaseByID: {
+			case RefStateType.ReleaseByID: {
 				const releaseId = this.refMode.payload.releaseId;
 				const repository = await this.getCachedRepository();
 				const ref = findRef(repository.refs, ref => ref.id === releaseId);
@@ -1074,7 +1094,7 @@ export class Client {
 				return ref.ref;
 			}
 
-			case RefModeType.ReleaseByLabel: {
+			case RefStateType.ReleaseByLabel: {
 				const releaseLabel = this.refMode.payload.releaseLabel;
 				const repository = await this.getCachedRepository();
 				const ref = findRef(repository.refs, ref => ref.label === releaseLabel);
@@ -1082,7 +1102,7 @@ export class Client {
 				return ref.ref;
 			}
 
-			case RefModeType.Manual: {
+			case RefStateType.Manual: {
 				const thisRefStringOrFn = this.refMode.payload.refStringOrFn;
 
 				if (typeof thisRefStringOrFn === "function") {
@@ -1096,7 +1116,7 @@ export class Client {
 				}
 			}
 
-			case RefModeType.Master:
+			case RefStateType.Master:
 			default: {
 				const repository = await this.getCachedRepository();
 				const ref = findRef(repository.refs, ref => ref.isMasterRef);
