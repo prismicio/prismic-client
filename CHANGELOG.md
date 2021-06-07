@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0-alpha.1](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.0...v6.0.0-alpha.1) (2021-06-07)
+
+
+### Features
+
+* [wip] cache master ref for a short period ([b73a7d0](https://github.com/prismicio/prismic-javascript/commit/b73a7d0ceb08d967f0552de7e1e38022243d3545))
+* support cached refs for releases ([7a46513](https://github.com/prismicio/prismic-javascript/commit/7a46513b3e8595395e8bc57414431ea01131c2f0))
+
+
+### Bug Fixes
+
+* use cjs export to support non-esm ([63219e8](https://github.com/prismicio/prismic-javascript/commit/63219e8343552bed78fe4bdcf65470ea7cb9e885))
+
+
+### Chore
+
+* add test dir format script ([e4594f5](https://github.com/prismicio/prismic-javascript/commit/e4594f575d6b50be32381a00ff3ce9426bb70194))
+
+
+### Documentation
+
+* add internal comments ([61d4c14](https://github.com/prismicio/prismic-javascript/commit/61d4c149d7c99871edd8e803f39e6586d366f210))
+
+## [5.0.0](https://github.com/prismicio/prismic-javascript/compare/v5.0.0-alpha.1...v5.0.0) (2021-05-27)
+
+
+### Chore
+
+* **release:** 5.0.0 fix ([ed15e96](https://github.com/prismicio/prismic-javascript/commit/ed15e963a0a05b7b8a276c14d0ff35c594ee36aa))
+
 ## [6.0.0-alpha.0](http://github.com/prismicio/prismic-javascript/compare/v5.0.0-alpha.1...v6.0.0-alpha.0) (2021-05-27)
 
 ## [5.0.0-alpha.1](http://github.com/prismicio/prismic-javascript/compare/v5.0.0-alpha.0...v5.0.0-alpha.1) (2021-05-27)
