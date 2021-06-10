@@ -1169,10 +1169,19 @@ export class Client {
 			// We can assume Prismic REST API responses will have a `application/json`
 			// Content Type.
 			return await res.json();
-		} else if (rawRes.status === 401) {
-			throw new HTTPError("Invalid access token", rawRes, url, options);
+		} else if (res.status === 401) {
+			throw new HTTPError("Invalid access token", res, url, options);
 		} else {
-			throw new HTTPError(undefined, rawRes, url, options);
+			let reason: string | undefined;
+
+			try {
+				const json = await res.json();
+				reason = json?.message;
+			} catch {
+				// Do nothing. We'll use the default HTTPError reason.
+			}
+
+			throw new HTTPError(reason, res, url, options);
 		}
 	}
 }
