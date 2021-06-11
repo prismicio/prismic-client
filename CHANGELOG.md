@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0-alpha.2](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.1...v6.0.0-alpha.2) (2021-06-11)
+
+
+### Features
+
+* add wrapper errors ([3dfba0f](https://github.com/prismicio/prismic-javascript/commit/3dfba0f4fb013421db58217cb02a810dab2b5fcc)), closes [#177](https://github.com/prismicio/prismic-javascript/issues/177)
+* return API error message on failed requests ([8de2873](https://github.com/prismicio/prismic-javascript/commit/8de287399fc919c097cd4d8a0bbc30f302092d51))
+
+
+### Chore
+
+* rename license file ([f496697](https://github.com/prismicio/prismic-javascript/commit/f4966979dbd02cd37a737ca982b1e6d2bb36ccc7))
+
 ## [6.0.0-alpha.1](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.0...v6.0.0-alpha.1) (2021-06-07)
 
 
