@@ -1,7 +1,9 @@
 import { Document } from './documents';
 import { RequestCallback } from './request';
 import { Experiment, Experiments } from './experiments';
-import { SearchForm, Form } from './form';
+import { FormData, Form } from './form';
+import SearchForm from './SearchForm';
+import TagsForm from './TagsForm';
 import Predicates from './Predicates';
 import Cookies from './Cookies';
 import ApiSearchResponse from './ApiSearchResponse';
@@ -31,7 +33,7 @@ export interface ApiData {
   languages: Language[];
   types: { [key: string]: string };
   tags: string[];
-  forms: { [key: string]: Form };
+  forms: { [key: string]: FormData };
   experiments: any;
   oauth_initiate: string;
   oauth_token: string;
@@ -81,16 +83,44 @@ export default class ResolvedApi implements Client {
    * For instance: api.form("everything") works on every repository (as "everything" exists by default)
    * You can then chain the calls: api.form("everything").query('[[:d = at(document.id, "UkL0gMuvzYUANCpf")]]').ref(ref).submit()
    */
-  form(formId: string): SearchForm | null {
-    const form = this.data.forms[formId];
-    if (form) {
-      return new SearchForm(form, this.httpClient);
+  form(formId: string): Form | null {
+    const form: FormData = this.data.forms[formId];
+
+    if (!form) {
+      return null;
+    }
+
+    if (formId === 'tags') {
+      return new TagsForm(form, this.httpClient);
+    }
+
+    return new SearchForm(form, this.httpClient);
+  }
+
+  searchForm(formId: string): SearchForm | null {
+    const f = this.form(formId);
+    if (f instanceof SearchForm) {
+      return f;
     }
     return null;
   }
 
+  tagsForm(): TagsForm {
+    const f = this.form('tags');
+
+    if (!f) {
+      throw new Error('Missing tags form');
+    }
+
+    if (f instanceof TagsForm) {
+      return f;
+    }
+
+    throw new Error('Unexpected error: tags form is not TagsForm');
+  }
+
   everything(): SearchForm {
-    const f = this.form('everything');
+    const f = this.searchForm('everything');
     if (!f) throw new Error('Missing everything form');
     return f;
   }
@@ -220,6 +250,13 @@ export default class ResolvedApi implements Client {
     } else {
       return Promise.reject('Error retrieving bookmarked id');
     }
+  }
+
+  /**
+   * Return all tags of your repository
+   */
+  getTags(cb?: RequestCallback<string[]>): Promise<string[]> {
+    return this.tagsForm().submit(cb);
   }
 
   getPreviewResolver(token: string, documentId?: string): PreviewResolver {
