@@ -34,7 +34,14 @@ export const createMockQueryHandler = <
 			req.headers.get("Authorization") !==
 				createAuthorizationHeader(accessToken)
 		) {
-			return res(ctx.status(401));
+			return res(
+				ctx.json({
+					error: "invalid access token",
+					oauth_initiate: "oauth_initiate",
+					oauth_token: "oauth_token"
+				}),
+				ctx.status(403)
+			);
 		}
 
 		const page = Number.parseInt(req.url.searchParams.get("page") ?? "1");

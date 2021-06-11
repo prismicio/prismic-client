@@ -14,7 +14,9 @@ import {
 	RequestInitLike
 } from "./types";
 import { buildQueryURL, BuildQueryURLArgs } from "./buildQueryURL";
-import { HTTPError } from "./HTTPError";
+import { ForbiddenError, isForbiddenErrorAPIResponse } from "./ForbiddenError";
+import { ParsingError, isParsingErrorAPIResponse } from "./ParsingError";
+import { PrismicError } from "./PrismicError";
 import * as cookie from "./cookie";
 import * as predicate from "./predicate";
 
@@ -1108,7 +1110,7 @@ export class Client {
 				if (typeof thisRefStringOrFn === "function") {
 					const res = await thisRefStringOrFn();
 
-					if (res != null) {
+					if (typeof res === "string") {
 						return res;
 					}
 				} else if (thisRefStringOrFn) {
@@ -1159,29 +1161,51 @@ export class Client {
 		params?: Partial<BuildQueryURLArgs>
 	): Promise<T> {
 		const options = this.buildRequestOptions(params);
-		const rawRes = await this.fetchFn(url, options);
+		const res = await this.fetchFn(url, options);
 
-		// We clone to response to avoid reading an already used Response object.
-		// This could happen if the user implements their own caching solution.
-		const res = rawRes.clone();
-
-		if (res.status === 200) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		let json: any;
+		try {
 			// We can assume Prismic REST API responses will have a `application/json`
-			// Content Type.
-			return await res.json();
-		} else if (res.status === 401) {
-			throw new HTTPError("Invalid access token", res, url, options);
-		} else {
-			let reason: string | undefined;
+			// Content Type. If not, this will throw, signaling an invalid response.
+			json = await res.json();
+		} catch {
+			throw new PrismicError(undefined, { url });
+		}
 
-			try {
-				const json = await res.json();
-				reason = json?.message;
-			} catch {
-				// Do nothing. We'll use the default HTTPError reason.
+		switch (res.status) {
+			// Successful
+			case 200: {
+				return json;
 			}
 
-			throw new HTTPError(reason, res, url, options);
+			// Bad Request
+			// - Invalid predicate syntax
+			// - Ref not provided (ignored)
+			case 400: {
+				if (isParsingErrorAPIResponse(json)) {
+					throw new ParsingError(json.message, {
+						url,
+						response: json
+					});
+				}
+
+				break;
+			}
+
+			// Forbidden
+			// - Missing access token
+			// - Incorrect access token
+			case 403: {
+				if (isForbiddenErrorAPIResponse(json)) {
+					throw new ForbiddenError(json.error, {
+						url,
+						response: json
+					});
+				}
+			}
 		}
+
+		throw new PrismicError(undefined, { url, response: json });
 	}
 }

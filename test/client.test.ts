@@ -1,4 +1,5 @@
 import test from "ava";
+import * as msw from "msw";
 import * as mswNode from "msw/node";
 import * as sinon from "sinon";
 
@@ -10,6 +11,7 @@ import { createTestClient } from "./__testutils__/createClient";
 import { getMasterRef } from "./__testutils__/getMasterRef";
 
 import * as prismic from "../src";
+import { createQueryEndpoint } from "./__testutils__/createQueryEndpoint";
 
 const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
@@ -221,3 +223,124 @@ test.serial(
 		globalThis.document.cookie = "";
 	}
 );
+
+test("throws ForbiddenError if access token is invalid", async t => {
+	const repositoryResponse = createRepositoryResponse();
+	const queryResponse = {
+		error: "invalid access token",
+		oauth_initiate: "oauth_initiate",
+		oauth_token: "oauth_token"
+	};
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse),
+		msw.rest.get(createQueryEndpoint(t), (_req, res, ctx) => {
+			return res(ctx.status(403), ctx.json(queryResponse));
+		})
+	);
+
+	const client = createTestClient(t);
+
+	await t.throwsAsync(async () => await client.get(), {
+		instanceOf: prismic.ForbiddenError,
+		message: /invalid access token/i
+	});
+});
+
+test("throws PrismicError if response code is 404 but is not an invalid access token error", async t => {
+	const repositoryResponse = createRepositoryResponse();
+	const queryResponse = {};
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse),
+		msw.rest.get(createQueryEndpoint(t), (_req, res, ctx) => {
+			return res(ctx.status(403), ctx.json(queryResponse));
+		})
+	);
+
+	const client = createTestClient(t);
+
+	await t.throwsAsync(async () => await client.get(), {
+		instanceOf: prismic.PrismicError
+	});
+});
+
+test("throws ParsingError if response code is 400 with parsing-error type", async t => {
+	const repositoryResponse = createRepositoryResponse();
+	const queryResponse = {
+		type: "parsing-error",
+		message: "message",
+		line: 0,
+		column: 1,
+		id: 2,
+		location: 3
+	};
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse),
+		msw.rest.get(createQueryEndpoint(t), (_req, res, ctx) => {
+			return res(ctx.status(400), ctx.json(queryResponse));
+		})
+	);
+
+	const client = createTestClient(t);
+
+	await t.throwsAsync(async () => await client.get(), {
+		instanceOf: prismic.ParsingError,
+		message: queryResponse.message
+	});
+});
+
+test("throws PrismicError if response code is 400 but is not a parsing error", async t => {
+	const repositoryResponse = createRepositoryResponse();
+	const queryResponse = {};
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse),
+		msw.rest.get(createQueryEndpoint(t), (_req, res, ctx) => {
+			return res(ctx.status(400), ctx.json(queryResponse));
+		})
+	);
+
+	const client = createTestClient(t);
+
+	await t.throwsAsync(async () => await client.get(), {
+		instanceOf: prismic.PrismicError
+	});
+});
+
+test("throws PrismicError if response is not 200, 400, or 403", async t => {
+	const repositoryResponse = createRepositoryResponse();
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse),
+		msw.rest.get(createQueryEndpoint(t), (_req, res, ctx) => {
+			return res(ctx.status(404), ctx.json({}));
+		})
+	);
+
+	const client = createTestClient(t);
+
+	await t.throwsAsync(async () => await client.get(), {
+		instanceOf: prismic.PrismicError,
+		message: /invalid api response/i
+	});
+});
+
+test("throws PrismicError if response is not JSON", async t => {
+	const repositoryResponse = createRepositoryResponse();
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse),
+		msw.rest.get(createQueryEndpoint(t), (_req, res, ctx) => {
+			return res(ctx.status(200));
+		})
+	);
+
+	const client = createTestClient(t);
+
+	await t.throwsAsync(async () => await client.get(), {
+		instanceOf: prismic.PrismicError,
+		message: /invalid api response/i
+	});
+});
