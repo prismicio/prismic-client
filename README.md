@@ -114,7 +114,7 @@ const Prismic = require('@prismicio/client');
 const options = {
   // see specifications below
 }
-const client = Prismic.client("http://your_repository_name.prismic.io/api", options)
+const client = Prismic.client("http://your_repository_name.cdn.prismic.io/api", options)
 ```
 
 Options:
@@ -137,7 +137,7 @@ To fetch documents from your repository, you need to instantiate the client firs
 ```javascript
 const Prismic = require('@prismicio/client');
 
-const client = Prismic.client("http://your_repository_name.prismic.io/api")
+const client = Prismic.client("http://your_repository_name.cdn.prismic.io/api")
 var options = {}; // In Node.js, pass the request as 'req' to read the reference from the cookies
 client.query("", options, function(err, response) { // An empty query will return all the documents
   if (err) {
@@ -152,7 +152,7 @@ All asynchronous calls return ES2015 promises, so alternatively you can use them
 ```javascript
 const Prismic = require('@prismicio/client');
 
-const client = Prismic.client("http://your_repository_name.prismic.io/api")
+const client = Prismic.client("http://your_repository_name.cdn.prismic.io/api")
 return client.query("") // An empty query will return all the documents
   .then(function(response) {
     console.log("Documents: ", response.results);
@@ -163,7 +163,7 @@ return client.query("") // An empty query will return all the documents
 
 If you included prismic through the script tag (CDN) there is a global variable PrismicJS:
 ```javascript
-const client = PrismicJS.client("http://your_repository_name.prismic.io/api")
+const client = PrismicJS.client("http://your_repository_name.cdn.prismic.io/api")
 const faq = PrismicJS.Predicates.at('document.type', 'faq');
 client.query(faq, { lang: 'en-en' }).then( response => {
   console.log("Documents: ", response.results);

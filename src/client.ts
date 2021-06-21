@@ -1,7 +1,7 @@
 import { Document } from "./documents";
 import ResolvedApi, { QueryOptions } from './ResolvedApi';
 import ApiSearchResponse from './ApiSearchResponse';
-import { LazySearchForm } from './form';
+import LazySearchForm from './LazySearchForm';
 import { RequestCallback } from './request';
 import Api, { ApiOptions } from './Api';
 import { PreviewResolver, createPreviewResolver } from './PreviewResolver';
@@ -63,6 +63,10 @@ export class DefaultClient implements Client {
 
   getBookmark(bookmark: string, options: QueryOptions, cb?: RequestCallback<Document>): Promise<Document> {
     return this.getApi().then(api => api.getBookmark(bookmark, options, cb));
+  }
+
+  getTags(): Promise<string[]> {
+    return this.getApi().then(api => api.getTags());
   }
 
   getPreviewResolver(token: string, documentId?: string): PreviewResolver {

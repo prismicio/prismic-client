@@ -10,9 +10,9 @@
     "content",
     "api"
   ],
-  "version": "4.0.0",
+  "version": "5.1.0",
   "engines": {
-    "node": ">=0.10.3 <15"
+    "node": ">=0.10.3"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^4.1.1",
