@@ -59,7 +59,9 @@ test("uses globalThis.fetch if available", t => {
 
 	globalThis.fetch = async () => new Response();
 
-	t.notThrows(() => prismic.createClient(endpoint));
+	const client = prismic.createClient(endpoint);
+
+	t.is(client.fetchFn, globalThis.fetch);
 
 	globalThis.fetch = existingFetch;
 });

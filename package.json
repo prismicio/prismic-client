@@ -20,12 +20,12 @@
   "exports": {
     ".": {
       "require": "./dist/index.cjs",
-      "import": "./dist/index.es.js"
+      "import": "./dist/index.mjs"
     },
     "./package.json": "./package.json"
   },
   "main": "dist/index.cjs",
-  "module": "dist/index.es.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
     "dist",

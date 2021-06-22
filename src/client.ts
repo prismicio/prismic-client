@@ -17,6 +17,7 @@ import { buildQueryURL, BuildQueryURLArgs } from "./buildQueryURL";
 import { ForbiddenError, isForbiddenErrorAPIResponse } from "./ForbiddenError";
 import { ParsingError, isParsingErrorAPIResponse } from "./ParsingError";
 import { PrismicError } from "./PrismicError";
+import { MissingFetchError } from "./MissingFetchError";
 import * as cookie from "./cookie";
 import * as predicate from "./predicate";
 
@@ -302,9 +303,7 @@ export class Client {
 		} else if (typeof globalThis.fetch === "function") {
 			this.fetchFn = globalThis.fetch;
 		} else {
-			throw new Error(
-				"A fetch implementation was not provided. In environments where fetch is not available (including Node.js), a fetch implementation must be provided via a polyfill or the `fetch` option."
-			);
+			throw new MissingFetchError();
 		}
 	}
 

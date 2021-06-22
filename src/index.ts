@@ -14,9 +14,20 @@ export { ParsingError } from "./ParsingError";
 // A collection of well-known cookie names shared between Prismic libraries and systems.
 export * as cookie from "./cookie";
 
+// Custom Types API.
+export {
+	createCustomTypesClient,
+	CustomTypesClient
+} from "./customTypesClient";
+
 // General types used throughout the project. These are made public to allow users to better type their projects.
 export type { ClientConfig } from "./client";
 export type {
+	CustomTypesClientConfig,
+	CustomTypesAPIParams
+} from "./customTypesClient";
+export type {
+	CustomTypeMetadata,
 	FetchLike,
 	Form,
 	FormField,
@@ -26,7 +37,9 @@ export type {
 	Ordering,
 	Query,
 	Ref,
+	Release,
 	Repository,
 	RequestInitLike,
-	ResponseLike
+	ResponseLike,
+	SliceSchema
 } from "./types";

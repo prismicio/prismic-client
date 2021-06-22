@@ -76,6 +76,8 @@ export type FetchLike = (
  * The minimum required properties from RequestInit.
  */
 export interface RequestInitLike {
+	method?: string;
+	body?: string;
 	headers?: Record<string, string>;
 }
 
@@ -107,3 +109,13 @@ export interface Ordering {
 	field: string;
 	direction?: "asc" | "desc";
 }
+
+export interface CustomTypeMetadata {
+	id: string;
+	label: string;
+	repeatable: boolean;
+	json: Record<string, unknown>;
+	status: boolean;
+}
+
+export type SliceSchema = Record<string, unknown>;
