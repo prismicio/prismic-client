@@ -21,35 +21,55 @@ import { MissingFetchError } from "./MissingFetchError";
 import * as cookie from "./cookie";
 import * as predicate from "./predicate";
 
+/**
+ * A container for items in a SimpleTTLCache.
+ */
 type SimpleTTLCacheValueContainer<T = unknown> = {
-	cachedAt: Date;
-	ttl: number;
+	expiresAt: number;
 	value: T;
 };
 
+/**
+ * A simple time-to-live cache where items are only valid for a given number of milliseconds.
+ */
 interface SimpleTTLCache {
 	get<T>(key: string): T | undefined;
 	set<T>(key: string, value: T, ttl?: number): void;
 }
 
+/**
+ * Creates a simple cache where each element has a given time to live (TTL). After the TTL has ellapsed, the value is considered stale and will not be returned if requested.
+ */
 const createSimpleTTLCache = (): SimpleTTLCache => {
 	const cache = new Map<string, SimpleTTLCacheValueContainer>();
 
 	return {
+		/**
+		 * Get a value from the cache. If the item's TTL has ellapsed, `undefined` will be returned.
+		 *
+		 * @param key Key for the item.
+		 *
+		 * @return The value for the key, if a value exists.
+		 */
 		get<T>(key: string): T | undefined {
 			const cacheValue = cache.get(key);
 
 			if (cacheValue) {
-				if (
-					new Date().getTime() - cacheValue.cachedAt.getTime() <=
-					cacheValue.ttl
-				) {
+				if (new Date().getTime() < cacheValue.expiresAt) {
 					return cacheValue.value as T;
 				}
 			}
 		},
+
+		/**
+		 * Set a value in the cache for a given key and TTL.
+		 *
+		 * @param key Key to identify the item.
+		 * @param value Value for the key.
+		 * @param ttl Number of milliseconds to consider the value fresh.
+		 */
 		set<T>(key: string, value: T, ttl: number): void {
-			cache.set(key, { cachedAt: new Date(), ttl, value });
+			cache.set(key, { expiresAt: new Date().getTime() + ttl, value });
 		}
 	};
 };
@@ -298,12 +318,17 @@ export class Client {
 			this.queryContentFromRef(options.ref);
 		}
 
-		if (options.fetch) {
+		if (typeof options.fetch === "function") {
 			this.fetchFn = options.fetch;
 		} else if (typeof globalThis.fetch === "function") {
 			this.fetchFn = globalThis.fetch;
 		} else {
 			throw new MissingFetchError();
+		}
+
+		// If the global fetch function is used, we must bind it to the global scope.
+		if (this.fetchFn === globalThis.fetch) {
+			this.fetchFn = this.fetchFn.bind(globalThis);
 		}
 	}
 

@@ -41,5 +41,6 @@ export type {
 	Repository,
 	RequestInitLike,
 	ResponseLike,
-	SliceSchema
+	SliceSchema,
+	Route
 } from "./types";

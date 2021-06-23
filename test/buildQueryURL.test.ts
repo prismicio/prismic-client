@@ -51,10 +51,11 @@ test("supports params", t => {
 				fetchLinks: "fetchLinks",
 				graphQuery: "graphQuery",
 				lang: "lang",
-				orderings: "orderings"
+				orderings: "orderings",
+				routes: "routes"
 			})
 		),
-		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&access_token=accessToken&pageSize=1&page=1&after=after&fetch=fetch&fetchLinks=fetchLinks&graphQuery=graphQuery&lang=lang&orderings=[orderings]"
+		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&access_token=accessToken&pageSize=1&page=1&after=after&fetch=fetch&fetchLinks=fetchLinks&graphQuery=graphQuery&lang=lang&orderings=[orderings]&routes=routes"
 	);
 });
 
@@ -155,5 +156,52 @@ test("supports setting direction of ordering param", t => {
 			})
 		),
 		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[page.title,page.subtitle+desc]"
+	);
+});
+
+test("supports single item routes param", t => {
+	const route = {
+		type: "type",
+		path: "path",
+		resolvers: { foo: "bar" }
+	};
+
+	t.is(
+		decodeURIComponent(
+			prismic.buildQueryURL(endpoint, {
+				ref: "ref",
+				routes: route
+			})
+		),
+		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&routes=[${JSON.stringify(
+			route
+		)}]`
+	);
+});
+
+test("supports array routes param", t => {
+	const routes: prismic.Route[] = [
+		{
+			type: "foo",
+			path: "foo-path",
+			resolvers: { foo: "bar" }
+		},
+		{
+			type: "bar",
+			path: "bar-path",
+			resolvers: { foo: "bar" }
+		}
+	];
+
+	t.is(
+		decodeURIComponent(
+			prismic.buildQueryURL(endpoint, {
+				ref: "ref",
+				routes: routes
+			})
+		),
+		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&routes=${JSON.stringify(
+			routes
+		)}`
 	);
 });
