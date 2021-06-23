@@ -52,6 +52,25 @@ test("constructor throws if fetch is unavailable", t => {
 	});
 });
 
+test("constructor throws if provided fetch is not a function", t => {
+	const endpoint = prismic.getEndpoint("qwerty");
+	const fetch = "not a function";
+
+	t.throws(
+		() =>
+			prismic.createClient(endpoint, {
+				// We wouldn't normally test for input types since TypeScript handles
+				// that for us at build time, but we want to provide a nicer DX for
+				// non-TypeScript users.
+				// @ts-expect-error - We are purposly providing an invalid type to test if it throws.
+				fetch
+			}),
+		{
+			message: /fetch implementation was not provided/
+		}
+	);
+});
+
 test("uses globalThis.fetch if available", t => {
 	const endpoint = prismic.getEndpoint("qwerty");
 

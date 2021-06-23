@@ -317,13 +317,13 @@ export class Client {
 			this.queryContentFromRef(options.ref);
 		}
 
-		if (options.fetch) {
+		if (typeof options.fetch === "function") {
 			this.fetchFn = options.fetch;
 		} else if (typeof globalThis.fetch === "function") {
 			this.fetchFn = globalThis.fetch;
 		} else {
 			throw new Error(
-				"A fetch implementation was not provided. In environments where fetch is not available (including Node.js), a fetch implementation must be provided via a polyfill or the `fetch` option."
+				"A valid fetch implementation was not provided. In environments where fetch is not available (including Node.js), a fetch implementation must be provided via a polyfill or the `fetch` option."
 			);
 		}
 	}
