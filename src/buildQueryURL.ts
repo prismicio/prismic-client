@@ -2,7 +2,7 @@ import { ValueOf } from "type-fest";
 
 import { castArray } from "./lib/castArray";
 
-import { Ordering } from "./types";
+import { Ordering, Route } from "./types";
 
 /**
  * Parameters for the Prismic REST API V2.
@@ -72,6 +72,13 @@ export interface QueryParams {
 	 * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#orderings}
 	 */
 	orderings?: Ordering | string | (Ordering | string)[];
+
+	/**
+	 * The `routes` option allows you to define how a document's `url` field is resolved.
+	 *
+	 * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
+	 */
+	routes?: Route | string | (Route | string)[];
 }
 
 /**
@@ -182,6 +189,10 @@ export const buildQueryURL = (
 					.join(",");
 
 				value = `[${v}]`;
+			}
+		} else if (name === "routes") {
+			if (typeof params[name] === "object") {
+				value = JSON.stringify(castArray(params[name]));
 			}
 		}
 

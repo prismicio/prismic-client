@@ -107,3 +107,17 @@ export interface Ordering {
 	field: string;
 	direction?: "asc" | "desc";
 }
+
+/**
+ * A `routes` parameter that determines how a document's URL field is resolved.
+ *
+ * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
+ */
+export interface Route {
+	/** The Custom Type of the document. */
+	type: string;
+	/** The resolved path of the document with optional placeholders. */
+	path: string;
+	/** An object that lists the API IDs of the Content Relationships in the route. */
+	resolvers: Record<string, string>;
+}
