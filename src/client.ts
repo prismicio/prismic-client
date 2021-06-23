@@ -320,11 +320,16 @@ export class Client {
 		if (typeof options.fetch === "function") {
 			this.fetchFn = options.fetch;
 		} else if (typeof globalThis.fetch === "function") {
-			this.fetchFn = globalThis.fetch.bind(globalThis);
+			this.fetchFn = globalThis.fetch;
 		} else {
 			throw new Error(
 				"A valid fetch implementation was not provided. In environments where fetch is not available (including Node.js), a fetch implementation must be provided via a polyfill or the `fetch` option."
 			);
+		}
+
+		// If the global fetch function is used, we must bind it to the global scope.
+		if (this.fetchFn === globalThis.fetch) {
+			this.fetchFn = this.fetchFn.bind(globalThis);
 		}
 	}
 
