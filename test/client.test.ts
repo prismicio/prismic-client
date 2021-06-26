@@ -2,6 +2,7 @@ import test from "ava";
 import * as msw from "msw";
 import * as mswNode from "msw/node";
 import * as sinon from "sinon";
+import { Response } from "node-fetch";
 
 import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
 import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
@@ -71,16 +72,21 @@ test("constructor throws if provided fetch is not a function", t => {
 	);
 });
 
-test("uses globalThis.fetch if available", t => {
+test("uses globalThis.fetch if available", async t => {
 	const endpoint = prismic.getEndpoint("qwerty");
+	const responseBody = { foo: "bar" };
 
 	const existingFetch = globalThis.fetch;
 
-	globalThis.fetch = async () => new Response();
+	globalThis.fetch = async () =>
+		// @ts-expect-error - node-fetch does not implement the full Response interface
+		new Response(JSON.stringify(responseBody));
 
 	const client = prismic.createClient(endpoint);
+	const fetchResponse = await client.fetchFn("");
+	const jsonResponse = await fetchResponse.json();
 
-	t.is(client.fetchFn, globalThis.fetch);
+	t.deepEqual(jsonResponse, responseBody);
 
 	globalThis.fetch = existingFetch;
 });

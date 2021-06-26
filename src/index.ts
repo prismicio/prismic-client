@@ -33,7 +33,6 @@ export type {
 	FormField,
 	HttpRequestLike,
 	Language,
-	LinkResolver,
 	Ordering,
 	Query,
 	Ref,

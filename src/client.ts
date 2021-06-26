@@ -1,4 +1,5 @@
 import * as prismicT from "@prismicio/types";
+import * as prismicH from "@prismicio/helpers";
 
 import { appendPredicates } from "./lib/appendPredicates";
 import { getCookie } from "./lib/getCookie";
@@ -7,7 +8,6 @@ import {
 	FetchLike,
 	Form,
 	HttpRequestLike,
-	LinkResolver,
 	Query,
 	Ref,
 	Repository,
@@ -186,7 +186,7 @@ type ResolvePreviewArgs = {
 	/**
 	 * A function that maps a Prismic document to a URL within your app.
 	 */
-	linkResolver: LinkResolver;
+	linkResolver: prismicH.LinkResolverFunction;
 
 	/**
 	 * A fallback URL if the Link Resolver does not return a value.
@@ -942,7 +942,12 @@ export class Client {
 				ref: previewToken
 			});
 
-			return args.linkResolver(document);
+			// We know we have a valid field to resolve since we are using prismicH.documentToLinkField
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			return prismicH.asLink(
+				prismicH.documentToLinkField(document),
+				args.linkResolver
+			)!;
 		} else {
 			return args.defaultURL;
 		}

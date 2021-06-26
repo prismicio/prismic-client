@@ -7,8 +7,6 @@ import { createMockRepositoryHandler } from "./__testutils__/createMockRepositor
 import { createQueryResponse } from "./__testutils__/createQueryResponse";
 import { createTestClient } from "./__testutils__/createClient";
 
-import * as prismicT from "@prismicio/types";
-
 const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
@@ -38,7 +36,7 @@ test.serial("resolves a preview url in the browser", async t => {
 
 	const client = createTestClient(t);
 	const res = await client.resolvePreviewURL({
-		linkResolver: (document: prismicT.PrismicDocument) => `/${document.uid}`,
+		linkResolver: document => `/${document.uid}`,
 		defaultURL: "defaultURL"
 	});
 
@@ -67,7 +65,7 @@ test.serial("resolves a preview url using a server req object", async t => {
 	const client = createTestClient(t);
 	client.enableAutoPreviewsFromReq(req);
 	const res = await client.resolvePreviewURL({
-		linkResolver: (document: prismicT.PrismicDocument) => `/${document.uid}`,
+		linkResolver: document => `/${document.uid}`,
 		defaultURL: "defaultURL"
 	});
 
@@ -100,7 +98,7 @@ test.serial(
 		const client = createTestClient(t);
 		client.enableAutoPreviewsFromReq(req);
 		const res = await client.resolvePreviewURL({
-			linkResolver: (document: prismicT.PrismicDocument) => `/${document.uid}`,
+			linkResolver: document => `/${document.uid}`,
 			defaultURL: "defaultURL",
 			documentId,
 			previewToken
@@ -121,7 +119,7 @@ test.serial(
 
 		const client = createTestClient(t);
 		const res = await client.resolvePreviewURL({
-			linkResolver: (document: prismicT.PrismicDocument) => `/${document.uid}`,
+			linkResolver: document => `/${document.uid}`,
 			defaultURL
 		});
 
@@ -141,7 +139,7 @@ test.serial(
 		const client = createTestClient(t);
 		client.enableAutoPreviewsFromReq(req);
 		const res = await client.resolvePreviewURL({
-			linkResolver: (document: prismicT.PrismicDocument) => `/${document.uid}`,
+			linkResolver: document => `/${document.uid}`,
 			defaultURL
 		});
 
@@ -156,7 +154,7 @@ test.serial(
 
 		const client = createTestClient(t);
 		const res = await client.resolvePreviewURL({
-			linkResolver: (document: prismicT.PrismicDocument) => `/${document.uid}`,
+			linkResolver: document => `/${document.uid}`,
 			defaultURL
 		});
 
