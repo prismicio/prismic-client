@@ -49,6 +49,13 @@ export type CustomTypesAPIParams = {
 	token?: string;
 };
 
+const createPostFetchRequestInit = <T>(body: T): RequestInitLike => {
+	return {
+		method: "post",
+		body: JSON.stringify(body)
+	};
+};
+
 export const createCustomTypesClient = (
 	...args: ConstructorParameters<typeof CustomTypesClient>
 ): CustomTypesClient => new CustomTypesClient(...args);
@@ -79,91 +86,100 @@ export class CustomTypesClient {
 		this.endpoint = options.endpoint || DEFAULT_CUSTOM_TYPES_API_ENDPOINT;
 		this.token = options.token;
 
-		if (options.fetch) {
+		if (typeof options.fetch === "function") {
 			this.fetchFn = options.fetch;
 		} else if (typeof globalThis.fetch === "function") {
 			this.fetchFn = globalThis.fetch;
 		} else {
 			throw new MissingFetchError();
 		}
+
+		// If the global fetch function is used, we must bind it to the global scope.
+		if (this.fetchFn === globalThis.fetch) {
+			this.fetchFn = this.fetchFn.bind(globalThis);
+		}
 	}
 
 	async getAll<TCustomType extends CustomTypeMetadata>(
-		params: CustomTypesAPIParams = {}
+		params?: CustomTypesAPIParams
 	): Promise<TCustomType[]> {
 		return await this.fetch<TCustomType[]>("", params);
 	}
 
 	async getByID<TCustomType extends CustomTypeMetadata>(
 		id: string,
-		params: CustomTypesAPIParams = {}
+		params?: CustomTypesAPIParams
 	): Promise<TCustomType> {
 		return await this.fetch<TCustomType>(id, params);
 	}
 
 	async insert<TCustomType extends CustomTypeMetadata>(
 		customType: TCustomType,
-		params: CustomTypesAPIParams = {}
+		params?: CustomTypesAPIParams
 	): Promise<TCustomType> {
-		return await this.fetch<TCustomType>("insert", params, {
-			method: "post",
-			body: JSON.stringify(customType)
-		});
+		return await this.fetch<TCustomType>(
+			"insert",
+			params,
+			createPostFetchRequestInit(customType)
+		);
 	}
 
 	async update<TCustomType extends CustomTypeMetadata>(
 		customType: TCustomType,
-		params: CustomTypesAPIParams = {}
+		params?: CustomTypesAPIParams
 	): Promise<TCustomType> {
-		return await this.fetch<TCustomType>("update", params, {
-			method: "post",
-			body: JSON.stringify(customType)
-		});
+		return await this.fetch<TCustomType>(
+			"update",
+			params,
+			createPostFetchRequestInit(customType)
+		);
 	}
 
 	async remove<TCustomType extends CustomTypeMetadata>(
 		id: string,
-		params: CustomTypesAPIParams = {}
+		params?: CustomTypesAPIParams
 	): Promise<TCustomType> {
 		return await this.fetch<TCustomType>(id, params, { method: "delete" });
 	}
 
 	async getAllSharedSlices<TSlice extends SliceSchema>(
-		params: CustomTypesAPIParams = {}
+		params?: CustomTypesAPIParams
 	): Promise<TSlice[]> {
 		return await this.fetch<TSlice[]>("slices", params);
 	}
 
 	async getSharedSliceByID<TSlice extends SliceSchema>(
 		id: string,
-		params: CustomTypesAPIParams = {}
+		params?: CustomTypesAPIParams
 	): Promise<TSlice> {
 		return await this.fetch<TSlice>(`slices/${id}`, params);
 	}
 
 	async insertSharedSlice<TSlice extends SliceSchema>(
 		slice: TSlice,
-		params: CustomTypesAPIParams = {}
+		params?: CustomTypesAPIParams
 	): Promise<TSlice> {
-		return await this.fetch<TSlice>("slices/insert", params, {
-			method: "post",
-			body: JSON.stringify(slice)
-		});
+		return await this.fetch<TSlice>(
+			"slices/insert",
+			params,
+			createPostFetchRequestInit(slice)
+		);
 	}
 
 	async updateSharedSlice<TSlice extends SliceSchema>(
 		slice: TSlice,
-		params: CustomTypesAPIParams = {}
+		params?: CustomTypesAPIParams
 	): Promise<TSlice> {
-		return await this.fetch<TSlice>("slices/update", params, {
-			method: "post",
-			body: JSON.stringify(slice)
-		});
+		return await this.fetch<TSlice>(
+			"slices/update",
+			params,
+			createPostFetchRequestInit(slice)
+		);
 	}
 
 	async removeSharedSlice<TSlice extends SliceSchema>(
 		id: string,
-		params: CustomTypesAPIParams = {}
+		params?: CustomTypesAPIParams
 	): Promise<TSlice> {
 		return await this.fetch<TSlice>(`slices/${id}`, params, {
 			method: "delete"
