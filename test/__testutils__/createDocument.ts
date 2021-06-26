@@ -1,9 +1,9 @@
 import * as prismicT from "@prismicio/types";
 
 export const createDocument = <
-	TDocument extends prismicT.PrismicDocument = prismicT.PrismicDocument,
+	TDocument extends prismicT.PrismicDocument = prismicT.PrismicDocument
 >(
-	fields?: Partial<TDocument>,
+	fields?: Partial<TDocument>
 ): TDocument & { uid: string } => {
 	const id = Math.random().toString();
 	const uid = Math.random().toString();
@@ -11,7 +11,6 @@ export const createDocument = <
 	return {
 		id,
 		uid,
-		url: "url",
 		type: "type",
 		href: "href",
 		tags: ["tag"],
@@ -23,7 +22,7 @@ export const createDocument = <
 		linked_documents: [],
 		...fields,
 		data: {
-			...fields?.data,
-		},
+			...fields?.data
+		}
 	} as TDocument & { uid: string };
 };
