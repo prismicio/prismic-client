@@ -11,7 +11,6 @@ export const createDocument = <
 	return {
 		id,
 		uid,
-		url: "url",
 		type: "type",
 		href: "href",
 		tags: ["tag"],
