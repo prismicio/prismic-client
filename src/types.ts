@@ -60,10 +60,6 @@ export interface FormField {
 	default?: string;
 }
 
-export type LinkResolver<
-	TDocument extends prismicT.PrismicDocument = prismicT.PrismicDocument
-> = (document: TDocument) => string;
-
 /**
  * A universal API to make network requests. A subset of the `fetch()` API.
  */
