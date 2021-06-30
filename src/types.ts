@@ -84,6 +84,8 @@ export interface ResponseLike {
 	status: number;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	json(): Promise<any>;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	text(): Promise<any>;
 }
 
 /**

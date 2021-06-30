@@ -7,6 +7,21 @@ import {
 import { MissingFetchError } from "./MissingFetchError";
 import { PrismicError } from "./PrismicError";
 
+const isForbiddenErrorAPIResponse = (
+	input: unknown
+): input is ForbiddenErrorAPIResponse => {
+	return typeof input === "object" && input !== null && "message" in input;
+};
+
+interface ForbiddenErrorAPIResponse {
+	message: string;
+}
+
+class ForbiddenError extends Error {}
+class ConflictError extends Error {}
+class NotFoundError extends Error {}
+class InvalidPayloadError extends Error {}
+
 const DEFAULT_CUSTOM_TYPES_API_ENDPOINT =
 	"https://customtypes.prismic.io/customtypes";
 
@@ -117,29 +132,27 @@ export class CustomTypesClient {
 		customType: TCustomType,
 		params?: CustomTypesAPIParams
 	): Promise<TCustomType> {
-		return await this.fetch<TCustomType>(
-			"insert",
-			params,
-			createPostFetchRequestInit(customType)
-		);
+		await this.fetch("insert", params, createPostFetchRequestInit(customType));
+
+		return customType;
 	}
 
 	async update<TCustomType extends CustomTypeMetadata>(
 		customType: TCustomType,
 		params?: CustomTypesAPIParams
 	): Promise<TCustomType> {
-		return await this.fetch<TCustomType>(
-			"update",
-			params,
-			createPostFetchRequestInit(customType)
-		);
+		await this.fetch("update", params, createPostFetchRequestInit(customType));
+
+		return customType;
 	}
 
-	async remove<TCustomType extends CustomTypeMetadata>(
-		id: string,
+	async remove<TCustomTypeID extends string>(
+		id: TCustomTypeID,
 		params?: CustomTypesAPIParams
-	): Promise<TCustomType> {
-		return await this.fetch<TCustomType>(id, params, { method: "delete" });
+	): Promise<TCustomTypeID> {
+		await this.fetch(id, params, { method: "delete" });
+
+		return id;
 	}
 
 	async getAllSharedSlices<TSlice extends SliceSchema>(
@@ -159,31 +172,37 @@ export class CustomTypesClient {
 		slice: TSlice,
 		params?: CustomTypesAPIParams
 	): Promise<TSlice> {
-		return await this.fetch<TSlice>(
+		await this.fetch(
 			"slices/insert",
 			params,
 			createPostFetchRequestInit(slice)
 		);
+
+		return slice;
 	}
 
 	async updateSharedSlice<TSlice extends SliceSchema>(
 		slice: TSlice,
 		params?: CustomTypesAPIParams
 	): Promise<TSlice> {
-		return await this.fetch<TSlice>(
+		await this.fetch(
 			"slices/update",
 			params,
 			createPostFetchRequestInit(slice)
 		);
+
+		return slice;
 	}
 
-	async removeSharedSlice<TSlice extends SliceSchema>(
-		id: string,
+	async removeSharedSlice<TSliceID extends string>(
+		id: TSliceID,
 		params?: CustomTypesAPIParams
-	): Promise<TSlice> {
-		return await this.fetch<TSlice>(`slices/${id}`, params, {
+	): Promise<TSliceID> {
+		await this.fetch(`slices/${id}`, params, {
 			method: "delete"
 		});
+
+		return id;
 	}
 
 	/**
@@ -214,53 +233,58 @@ export class CustomTypesClient {
 			...requestOptions
 		});
 
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		let json: any;
-		try {
-			// We can assume Prismic REST API responses will have a `application/json`
-			// Content Type. If not, this will throw, signaling an invalid response.
-			json = await res.json();
-		} catch {
-			throw new PrismicError(undefined, { url });
-		}
-
 		switch (res.status) {
 			// Successful
-			case 200:
-			case 201:
-			case 204: {
-				return json;
+			// - Get one or more Custom Types
+			// - Get one or more Shared Slices
+			case 200: {
+				return await res.json();
 			}
 
-			// // Bad Request
-			// // - Invalid predicate syntax
-			// // - Ref not provided (ignored)
-			// case 400: {
-			// 	break;
-			// }
+			case 201:
+			case 204: {
+				// We use `any` since we don't have a concrete value we can return. We
+				// let the call site define what the return type is with the `T` generic.
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				return undefined as any;
+			}
+
+			// Bad Request
+			// - Invalid body sent
+			case 400: {
+				throw new InvalidPayloadError(await res.text());
+			}
 
 			// Forbidden
 			// - Missing token
 			// - Incorrect token
 			case 403: {
-				// TODO
+				const json = await res.json();
+
+				if (isForbiddenErrorAPIResponse(json)) {
+					throw new ForbiddenError(json.message);
+				}
 			}
 
 			// Conflict
 			// - Insert a Custom Type with same ID as an existing Custom Type
 			// - Insert a Shared Slice with same ID as an existing Shared Slice
 			case 409: {
-				// TODO
+				throw new ConflictError(
+					"The provided ID is already used. A unique ID must be provided."
+				);
 			}
 
 			// Unprocessable Entity
-			// - Update a Custom Type with same ID as an existing Custom Type
-			// - Update a Shared Slice with same ID as an existing Shared Slice
+			// - Update a Custom Type with no matching ID
+			// - Update a Shared Slice with no matching ID
 			case 422: {
-				// TODO
+				throw new NotFoundError(
+					"An entity with a matching ID could not be found."
+				);
 			}
 		}
 
-		throw new PrismicError(undefined, { url, response: json });
+		throw new PrismicError(undefined, { url });
 	}
 }
