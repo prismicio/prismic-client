@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0-alpha.5](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.4...v6.0.0-alpha.5) (2021-06-27)
+
+
+### Bug Fixes
+
+* use @prismicio/helpers for resolvePreviewURL ([2db45d2](https://github.com/prismicio/prismic-javascript/commit/2db45d2eb67c335ea88838937f9e00696cd11b3a))
+
+## [5.1.0](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.2...v5.1.0) (2021-06-11)
+
 ## [6.0.0-alpha.4](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.3...v6.0.0-alpha.4) (2021-06-23)
 
 
