@@ -1,9 +1,6 @@
-import {
-	CustomTypeMetadata,
-	FetchLike,
-	RequestInitLike,
-	SliceSchema
-} from "./types";
+import * as prismicT from "@prismicio/types";
+
+import { CustomType, FetchLike, RequestInitLike } from "./types";
 import { MissingFetchError } from "./MissingFetchError";
 import { PrismicError } from "./PrismicError";
 
@@ -115,32 +112,32 @@ export class CustomTypesClient {
 		}
 	}
 
-	async getAll<TCustomType extends CustomTypeMetadata>(
+	async getAll<TCustomTypeModel extends prismicT.CustomTypeModel>(
 		params?: CustomTypesAPIParams
-	): Promise<TCustomType[]> {
-		return await this.fetch<TCustomType[]>("", params);
+	): Promise<CustomType<TCustomTypeModel>[]> {
+		return await this.fetch<CustomType<TCustomTypeModel>[]>("", params);
 	}
 
-	async getByID<TCustomType extends CustomTypeMetadata>(
+	async getByID<TCustomTypeModel extends prismicT.CustomTypeModel>(
 		id: string,
 		params?: CustomTypesAPIParams
-	): Promise<TCustomType> {
-		return await this.fetch<TCustomType>(id, params);
+	): Promise<CustomType<TCustomTypeModel>> {
+		return await this.fetch<CustomType<TCustomTypeModel>>(id, params);
 	}
 
-	async insert<TCustomType extends CustomTypeMetadata>(
-		customType: TCustomType,
+	async insert<TCustomTypeModel extends prismicT.CustomTypeModel>(
+		customType: CustomType<TCustomTypeModel>,
 		params?: CustomTypesAPIParams
-	): Promise<TCustomType> {
+	): Promise<CustomType<TCustomTypeModel>> {
 		await this.fetch("insert", params, createPostFetchRequestInit(customType));
 
 		return customType;
 	}
 
-	async update<TCustomType extends CustomTypeMetadata>(
-		customType: TCustomType,
+	async update<TCustomTypeModel extends prismicT.CustomTypeModel>(
+		customType: CustomType<TCustomTypeModel>,
 		params?: CustomTypesAPIParams
-	): Promise<TCustomType> {
+	): Promise<CustomType<TCustomTypeModel>> {
 		await this.fetch("update", params, createPostFetchRequestInit(customType));
 
 		return customType;
@@ -155,23 +152,23 @@ export class CustomTypesClient {
 		return id;
 	}
 
-	async getAllSharedSlices<TSlice extends SliceSchema>(
+	async getAllSharedSlices<TSharedSliceModel extends prismicT.SharedSliceModel>(
 		params?: CustomTypesAPIParams
-	): Promise<TSlice[]> {
-		return await this.fetch<TSlice[]>("slices", params);
+	): Promise<TSharedSliceModel[]> {
+		return await this.fetch<TSharedSliceModel[]>("slices", params);
 	}
 
-	async getSharedSliceByID<TSlice extends SliceSchema>(
+	async getSharedSliceByID<TSharedSliceModel extends prismicT.SharedSliceModel>(
 		id: string,
 		params?: CustomTypesAPIParams
-	): Promise<TSlice> {
-		return await this.fetch<TSlice>(`slices/${id}`, params);
+	): Promise<TSharedSliceModel> {
+		return await this.fetch<TSharedSliceModel>(`slices/${id}`, params);
 	}
 
-	async insertSharedSlice<TSlice extends SliceSchema>(
-		slice: TSlice,
+	async insertSharedSlice<TSharedSliceModel extends prismicT.SharedSliceModel>(
+		slice: TSharedSliceModel,
 		params?: CustomTypesAPIParams
-	): Promise<TSlice> {
+	): Promise<TSharedSliceModel> {
 		await this.fetch(
 			"slices/insert",
 			params,
@@ -181,10 +178,10 @@ export class CustomTypesClient {
 		return slice;
 	}
 
-	async updateSharedSlice<TSlice extends SliceSchema>(
-		slice: TSlice,
+	async updateSharedSlice<TSharedSliceModel extends prismicT.SharedSliceModel>(
+		slice: TSharedSliceModel,
 		params?: CustomTypesAPIParams
-	): Promise<TSlice> {
+	): Promise<TSharedSliceModel> {
 		await this.fetch(
 			"slices/update",
 			params,
@@ -194,10 +191,10 @@ export class CustomTypesClient {
 		return slice;
 	}
 
-	async removeSharedSlice<TSliceID extends string>(
-		id: TSliceID,
+	async removeSharedSlice<TSharedSliceID extends string>(
+		id: TSharedSliceID,
 		params?: CustomTypesAPIParams
-	): Promise<TSliceID> {
+	): Promise<TSharedSliceID> {
 		await this.fetch(`slices/${id}`, params, {
 			method: "delete"
 		});

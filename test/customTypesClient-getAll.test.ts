@@ -13,9 +13,7 @@ test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
 test("returns all custom types", async t => {
-	const queryResponse: prismic.CustomTypeMetadata[] = [
-		createCustomTypeMetadata()
-	];
+	const queryResponse = [createCustomTypeMetadata()];
 
 	const client = createCustomTypesClient(t);
 
@@ -44,9 +42,7 @@ test("includes params if provided", async t => {
 		token: "custom-token",
 		endpoint: "https://custom-endpoint.com/custom-path"
 	};
-	const queryResponse: prismic.CustomTypeMetadata[] = [
-		createCustomTypeMetadata()
-	];
+	const queryResponse = [createCustomTypeMetadata()];
 
 	server.use(
 		msw.rest.get(params.endpoint, (req, res, ctx) => {
@@ -73,9 +69,7 @@ test("merges params and default params if provided", async t => {
 		repositoryName: "custom-repositoryName",
 		token: "custom-token"
 	};
-	const queryResponse: prismic.CustomTypeMetadata[] = [
-		createCustomTypeMetadata()
-	];
+	const queryResponse = [createCustomTypeMetadata()];
 
 	const client = createCustomTypesClient(t);
 

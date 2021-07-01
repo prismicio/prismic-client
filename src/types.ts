@@ -122,12 +122,12 @@ export interface Route {
 	resolvers: Record<string, string>;
 }
 
-export interface CustomTypeMetadata {
+export interface CustomType<
+	TCustomTypeModel extends prismicT.CustomTypeModel = prismicT.CustomTypeModel
+> {
 	id: string;
 	label: string;
 	repeatable: boolean;
-	json: Record<string, unknown>;
+	json: TCustomTypeModel;
 	status: boolean;
 }
-
-export type SliceSchema = Record<string, unknown>;

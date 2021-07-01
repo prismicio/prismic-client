@@ -27,7 +27,7 @@ export type {
 	CustomTypesAPIParams
 } from "./customTypesClient";
 export type {
-	CustomTypeMetadata,
+	CustomType,
 	FetchLike,
 	Form,
 	FormField,
@@ -40,6 +40,5 @@ export type {
 	Repository,
 	RequestInitLike,
 	ResponseLike,
-	SliceSchema,
 	Route
 } from "./types";

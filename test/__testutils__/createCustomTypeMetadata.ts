@@ -1,8 +1,8 @@
 import * as prismic from "../../src";
 
 export const createCustomTypeMetadata = (
-	overrides?: Partial<prismic.CustomTypeMetadata>
-): prismic.CustomTypeMetadata => {
+	overrides?: Partial<prismic.CustomType>
+): prismic.CustomType => {
 	const id = Math.random().toString();
 	const label = Math.random().toString();
 
