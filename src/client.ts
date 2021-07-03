@@ -530,7 +530,7 @@ export class Client {
 		params?: Partial<BuildQueryURLArgs>
 	): Promise<Query<TDocument>> {
 		return await this.get<TDocument>(
-			appendPredicates(predicate.at("document.id", ids))(params)
+			appendPredicates(predicate.in("document.id", ids))(params)
 		);
 	}
 
@@ -559,7 +559,7 @@ export class Client {
 		params?: Partial<BuildQueryURLArgs>
 	): Promise<TDocument[]> {
 		return await this.getAll<TDocument>(
-			appendPredicates(predicate.at("document.id", ids))(params)
+			appendPredicates(predicate.in("document.id", ids))(params)
 		);
 	}
 
