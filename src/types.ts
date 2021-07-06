@@ -60,10 +60,6 @@ export interface FormField {
 	default?: string;
 }
 
-export type LinkResolver<
-	TDocument extends prismicT.PrismicDocument = prismicT.PrismicDocument
-> = (document: TDocument) => string;
-
 /**
  * A universal API to make network requests. A subset of the `fetch()` API.
  */
@@ -86,7 +82,6 @@ export interface ResponseLike {
 	status: number;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	json(): Promise<any>;
-	clone(): ResponseLike;
 }
 
 /**
@@ -107,4 +102,18 @@ export interface HttpRequestLike {
 export interface Ordering {
 	field: string;
 	direction?: "asc" | "desc";
+}
+
+/**
+ * A `routes` parameter that determines how a document's URL field is resolved.
+ *
+ * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
+ */
+export interface Route {
+	/** The Custom Type of the document. */
+	type: string;
+	/** The resolved path of the document with optional placeholders. */
+	path: string;
+	/** An object that lists the API IDs of the Content Relationships in the route. */
+	resolvers: Record<string, string>;
 }

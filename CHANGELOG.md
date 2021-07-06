@@ -2,6 +2,68 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0-alpha.7](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.6...v6.0.0-alpha.7) (2021-07-03)
+
+
+### Bug Fixes
+
+* use `in` predicate for getByIDs ([fc522a2](https://github.com/prismicio/prismic-javascript/commit/fc522a22665f0ba461884c30ad5fb032b7910724))
+
+## [6.0.0-alpha.6](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.5...v6.0.0-alpha.6) (2021-07-03)
+
+
+### Chore
+
+* update dependencies ([2a18d2e](https://github.com/prismicio/prismic-javascript/commit/2a18d2e52d78734dd2405f83677c6b221149910c))
+* update dependencies ([eb9b13e](https://github.com/prismicio/prismic-javascript/commit/eb9b13e81bb6754597fa8df8948d0fafcd1ea042))
+
+## [6.0.0-alpha.5](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.4...v6.0.0-alpha.5) (2021-06-27)
+
+
+### Bug Fixes
+
+* use @prismicio/helpers for resolvePreviewURL ([2db45d2](https://github.com/prismicio/prismic-javascript/commit/2db45d2eb67c335ea88838937f9e00696cd11b3a))
+
+## [5.1.0](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.2...v5.1.0) (2021-06-11)
+
+## [6.0.0-alpha.4](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.3...v6.0.0-alpha.4) (2021-06-23)
+
+
+### Bug Fixes
+
+* support global fetch if provided explicitly ([d22ae21](https://github.com/prismicio/prismic-javascript/commit/d22ae21483f967b4366d501f7e98934d6ee668bb))
+
+## [6.0.0-alpha.3](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.2...v6.0.0-alpha.3) (2021-06-23)
+
+
+### Features
+
+* support Route Resolver with routes param ([063b5ee](https://github.com/prismicio/prismic-javascript/commit/063b5eec0399efd834c4c6142586b1cd54f44054))
+
+
+### Bug Fixes
+
+* resolve issue using global fetch ([83c6290](https://github.com/prismicio/prismic-javascript/commit/83c6290ec79a4f5bbecc1d2d9308816300101138)), closes [#180](https://github.com/prismicio/prismic-javascript/issues/180)
+* throw if an invalid fetch function is given ([ec01c59](https://github.com/prismicio/prismic-javascript/commit/ec01c598c8a79049f843e9d47a3abd83043dd469))
+
+
+### Refactor
+
+* simplify SimpleTTLCache and add internal docs ([f255a27](https://github.com/prismicio/prismic-javascript/commit/f255a270ea1b7dc55979d2111ece9fedafb922c3))
+
+## [6.0.0-alpha.2](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.1...v6.0.0-alpha.2) (2021-06-11)
+
+
+### Features
+
+* add wrapper errors ([3dfba0f](https://github.com/prismicio/prismic-javascript/commit/3dfba0f4fb013421db58217cb02a810dab2b5fcc)), closes [#177](https://github.com/prismicio/prismic-javascript/issues/177)
+* return API error message on failed requests ([8de2873](https://github.com/prismicio/prismic-javascript/commit/8de287399fc919c097cd4d8a0bbc30f302092d51))
+
+
+### Chore
+
+* rename license file ([f496697](https://github.com/prismicio/prismic-javascript/commit/f4966979dbd02cd37a737ca982b1e6d2bb36ccc7))
+
 ## [6.0.0-alpha.1](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.0...v6.0.0-alpha.1) (2021-06-07)
 
 

@@ -1,15 +1,14 @@
 import test from "ava";
-import { Response } from "node-fetch";
 import * as mswNode from "msw/node";
 
 import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
 import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
 import { createQueryResponse } from "./__testutils__/createQueryResponse";
+import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
 import { createTestClient } from "./__testutils__/createClient";
+import { getMasterRef } from "./__testutils__/getMasterRef";
 
 import * as prismic from "../src";
-import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
-import { getMasterRef } from "./__testutils__/getMasterRef";
 
 const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
@@ -106,61 +105,4 @@ test("merges params and default params if provided", async t => {
 	const res = await client.get(params);
 
 	t.deepEqual(res, queryResponse);
-});
-
-test("throws if access token is invalid", async t => {
-	const repositoryResponse = createRepositoryResponse();
-	const queryResponse = createQueryResponse();
-	const ref = getMasterRef(repositoryResponse);
-
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(t, [queryResponse], "accessToken", { ref })
-	);
-
-	const client = createTestClient(t);
-
-	try {
-		await client.get();
-	} catch (error) {
-		t.true(/invalid access token/i.test(error.message));
-		t.is(error.url, `${client.endpoint}/documents/search?ref=${ref}`);
-		t.deepEqual(error.options, {});
-		t.true(error.response instanceof Response);
-		t.is(error.response.status, 401);
-	}
-});
-
-test("throws if a non-200 or non-401 network error occurs", async t => {
-	const repositoryResponse = createRepositoryResponse();
-	const queryResponse = createQueryResponse();
-	const ref = getMasterRef(repositoryResponse);
-
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(
-			t,
-			[queryResponse],
-			undefined,
-			{
-				// We are forcing a 404 error by not matching the `ref` param.
-				ref: "non-existant-ref"
-			},
-			// We're turning off debug support since we are intentionally creating a
-			// mismatched handler.
-			false
-		)
-	);
-
-	const client = createTestClient(t);
-
-	try {
-		await client.get();
-	} catch (error) {
-		t.true(/status code 404/i.test(error.message));
-		t.is(error.url, `${client.endpoint}/documents/search?ref=${ref}`);
-		t.deepEqual(error.options, {});
-		t.true(error.response instanceof Response);
-		t.is(error.response.status, 404);
-	}
 });

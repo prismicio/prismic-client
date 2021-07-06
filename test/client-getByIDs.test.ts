@@ -25,7 +25,7 @@ test("queries for documents by id", async t => {
 		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, [queryResponse], undefined, {
 			ref: getMasterRef(repositoryResponse),
-			q: `[[at(document.id, [${documentIds.map(id => `"${id}"`).join(", ")}])]]`
+			q: `[[in(document.id, [${documentIds.map(id => `"${id}"`).join(", ")}])]]`
 		})
 	);
 
@@ -50,7 +50,7 @@ test("includes params if provided", async t => {
 		createMockRepositoryHandler(t),
 		createMockQueryHandler(t, [queryResponse], params.accessToken, {
 			ref: params.ref as string,
-			q: `[[at(document.id, [${documentIds
+			q: `[[in(document.id, [${documentIds
 				.map(id => `"${id}"`)
 				.join(", ")}])]]`,
 			lang: params.lang

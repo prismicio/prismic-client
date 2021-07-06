@@ -28,7 +28,7 @@ test("returns all matching documents from paginated response", async t => {
 		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, pagedResponses, undefined, {
 			ref: getMasterRef(repositoryResponse),
-			q: `[[at(document.id, [${allDocumentIds
+			q: `[[in(document.id, [${allDocumentIds
 				.map(id => `"${id}"`)
 				.join(", ")}])]]`,
 			pageSize: 100
@@ -59,7 +59,7 @@ test("includes params if provided", async t => {
 		createMockRepositoryHandler(t),
 		createMockQueryHandler(t, pagedResponses, params.accessToken, {
 			ref: params.ref as string,
-			q: `[[at(document.id, [${allDocumentIds
+			q: `[[in(document.id, [${allDocumentIds
 				.map(id => `"${id}"`)
 				.join(", ")}])]]`,
 			pageSize: 100,
