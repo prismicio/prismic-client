@@ -10,8 +10,10 @@ import {
 	HttpRequestLike,
 	Query,
 	Ref,
-	Repository,
-	RequestInitLike
+	Repository
+	// TODO: Uncomment when the Authorization header can be used
+	// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
+	// RequestInitLike
 } from "./types";
 import { buildQueryURL, BuildQueryURLArgs } from "./buildQueryURL";
 import { ForbiddenError, isForbiddenErrorAPIResponse } from "./ForbiddenError";
@@ -416,7 +418,10 @@ export class Client {
 	): Promise<Query<TDocument>> {
 		const url = await this.buildQueryURL(params);
 
-		return await this.fetch<Query<TDocument>>(url, params);
+		// TODO: Uncomment when the Authorization header can be used
+		// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
+		// return await this.fetch<Query<TDocument>>(url, params);
+		return await this.fetch<Query<TDocument>>(url);
 	}
 
 	/**
@@ -893,15 +898,23 @@ export class Client {
 	async buildQueryURL(
 		params: Partial<BuildQueryURLArgs> = {}
 	): Promise<string> {
+		// TODO: Uncomment when the Authorization header can be used
+		// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
+		// const {
+		// 	ref = await this.getResolvedRefString(),
+		// 	accessToken: _accessToken,
+		// 	...actualParams
+		// } = params;
 		const {
 			ref = await this.getResolvedRefString(),
-			accessToken: _accessToken,
+			accessToken = this.accessToken,
 			...actualParams
 		} = params;
 
 		return buildQueryURL(this.endpoint, {
 			...this.defaultParams,
 			...actualParams,
+			accessToken,
 			ref
 		});
 	}
@@ -1167,15 +1180,17 @@ export class Client {
 	 *
 	 * @returns Request options that can be used to make a network request to query the repository.
 	 */
-	private buildRequestOptions(
-		params?: Partial<BuildQueryURLArgs>
-	): RequestInitLike {
-		const accessToken = params?.accessToken || this.accessToken;
+	// TODO: Uncomment when the Authorization header can be used
+	// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
+	// private buildRequestOptions(
+	// 	params?: Partial<BuildQueryURLArgs>
+	// ): RequestInitLike {
+	// 	const accessToken = params?.accessToken || this.accessToken;
 
-		return accessToken
-			? { headers: { Authorization: `Token ${accessToken}` } }
-			: {};
-	}
+	// 	return accessToken
+	// 		? { headers: { Authorization: `Token ${accessToken}` } }
+	// 		: {};
+	// }
 
 	/**
 	 * Performs a network request using the configured `fetch` function. It assumes all successful responses will have a JSON content type. It also normalizes unsuccessful network requests.
@@ -1187,11 +1202,16 @@ export class Client {
 	 * @returns The JSON response from the network request.
 	 */
 	private async fetch<T = unknown>(
-		url: string,
-		params?: Partial<BuildQueryURLArgs>
+		url: string
+		// TODO: Uncomment when the Authorization header can be used
+		// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
+		// params?: Partial<BuildQueryURLArgs>
 	): Promise<T> {
-		const options = this.buildRequestOptions(params);
-		const res = await this.fetchFn(url, options);
+		// TODO: Uncomment when the Authorization header can be used
+		// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
+		// const options = this.buildRequestOptions(params);
+		// const res = await this.fetchFn(url, options);
+		const res = await this.fetchFn(url);
 
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		let json: any;
