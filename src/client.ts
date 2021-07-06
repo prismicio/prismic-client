@@ -781,7 +781,17 @@ export class Client {
 	 * @returns Repository metadata.
 	 */
 	async getRepository(): Promise<Repository> {
-		return await this.fetch<Repository>(this.endpoint);
+		// TODO: Uncomment when the Authorization header can be used
+		// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
+		// return await this.fetch<Repository>(this.endpoint);
+
+		const url = new URL(this.endpoint);
+
+		if (this.accessToken) {
+			url.searchParams.set("access_token", this.accessToken);
+		}
+
+		return await this.fetch<Repository>(url.toString());
 	}
 
 	/**
