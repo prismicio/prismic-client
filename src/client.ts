@@ -1223,15 +1223,22 @@ export class Client {
 				break;
 			}
 
+			// Unauthorized
+			// - Missing access token for repository endpoint
+			// - Incorrect access token for repository endpoint
+			case 401:
 			// Forbidden
-			// - Missing access token
-			// - Incorrect access token
+			// - Missing access token for query endpoint
+			// - Incorrect access token for query endpoint
 			case 403: {
 				if (isForbiddenErrorAPIResponse(json)) {
-					throw new ForbiddenError(json.error, {
-						url,
-						response: json
-					});
+					throw new ForbiddenError(
+						"error" in json ? json.error : json.message,
+						{
+							url,
+							response: json
+						}
+					);
 				}
 			}
 		}

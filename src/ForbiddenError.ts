@@ -1,8 +1,19 @@
-interface ForbiddenErrorAPIResponse {
+interface ForbiddenErrorRepositoryAPIResponse {
+	type: string;
+	message: string;
+	oauth_initiate: string;
+	oauth_token: string;
+}
+
+interface ForbiddenErrorQueryAPIResponse {
 	error: string;
 	oauth_initiate: string;
 	oauth_token: string;
 }
+
+type ForbiddenErrorAPIResponse =
+	| ForbiddenErrorRepositoryAPIResponse
+	| ForbiddenErrorQueryAPIResponse;
 
 export const isForbiddenErrorAPIResponse = (
 	input: unknown
@@ -10,7 +21,7 @@ export const isForbiddenErrorAPIResponse = (
 	return (
 		typeof input === "object" &&
 		input !== null &&
-		"error" in input &&
+		("error" in input || "message" in input) &&
 		"oauth_initiate" in input &&
 		"oauth_token" in input
 	);

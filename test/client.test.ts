@@ -6,13 +6,14 @@ import { Response } from "node-fetch";
 
 import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
 import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
+import { createQueryEndpoint } from "./__testutils__/createQueryEndpoint";
 import { createQueryResponse } from "./__testutils__/createQueryResponse";
+import { createRepositoryEndpoint } from "./__testutils__/createRepositoryEndpoint";
 import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
 import { createTestClient } from "./__testutils__/createClient";
 import { getMasterRef } from "./__testutils__/getMasterRef";
 
 import * as prismic from "../src";
-import { createQueryEndpoint } from "./__testutils__/createQueryEndpoint";
 
 const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
@@ -251,7 +252,28 @@ test.serial(
 	}
 );
 
-test("throws ForbiddenError if access token is invalid", async t => {
+test("throws ForbiddenError if access token is invalid for repository metadata", async t => {
+	const repositoryResponse = {
+		message: "invalid access token",
+		oauth_initiate: "oauth_initiate",
+		oauth_token: "oauth_token"
+	};
+
+	server.use(
+		msw.rest.get(createRepositoryEndpoint(t), (_req, res, ctx) => {
+			return res(ctx.status(401), ctx.json(repositoryResponse));
+		})
+	);
+
+	const client = createTestClient(t);
+
+	await t.throwsAsync(async () => await client.getRepository(), {
+		instanceOf: prismic.ForbiddenError,
+		message: /invalid access token/i
+	});
+});
+
+test("throws ForbiddenError if access token is invalid for query", async t => {
 	const repositoryResponse = createRepositoryResponse();
 	const queryResponse = {
 		error: "invalid access token",
