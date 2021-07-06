@@ -5,7 +5,7 @@ import * as crypto from "crypto";
 
 import * as prismic from "../../src";
 
-import { createAuthorizationHeader } from "./createAuthorizationHeader";
+import { isValidAccessToken } from "./isValidAccessToken";
 import { createQueryResponse } from "./createQueryResponse";
 import * as prismicT from "@prismicio/types";
 
@@ -29,11 +29,7 @@ export const createMockQueryHandler = <
 	const endpoint = `https://${repositoryName}.cdn.prismic.io/api/v2/documents/search`;
 
 	return msw.rest.get(endpoint, (req, res, ctx) => {
-		if (
-			typeof accessToken === "string" &&
-			req.headers.get("Authorization") !==
-				createAuthorizationHeader(accessToken)
-		) {
+		if (!isValidAccessToken(accessToken, req)) {
 			return res(
 				ctx.json({
 					error: "invalid access token",
@@ -64,16 +60,29 @@ export const createMockQueryHandler = <
 				requiredSearchParamsInstance.append("page", page.toString());
 			}
 
+			// TODO: Remove when the Authorization header can be used
+			// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
+			const searchParamsWithoutAccessToken = new URLSearchParams(
+				req.url.searchParams
+			);
+			searchParamsWithoutAccessToken.delete("access_token");
+
 			if (debug) {
 				t.is(
 					requiredSearchParamsInstance.toString(),
-					req.url.searchParams.toString()
+					// TODO: Uncomment when the Authorization header can be used
+					// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
+					// req.url.searchParams.toString()
+					searchParamsWithoutAccessToken.toString()
 				);
 			}
 
 			requestMatches =
 				requiredSearchParamsInstance.toString() ===
-				req.url.searchParams.toString();
+				// TODO: Uncomment when the Authorization header can be used
+				// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
+				// req.url.searchParams.toString()
+				searchParamsWithoutAccessToken.toString();
 		}
 
 		if (requestMatches) {

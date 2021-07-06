@@ -2,8 +2,8 @@ import * as ava from "ava";
 import * as msw from "msw";
 import * as crypto from "crypto";
 
-import { createAuthorizationHeader } from "./createAuthorizationHeader";
 import { createRepositoryResponse } from "./createRepositoryResponse";
+import { isValidAccessToken } from "./isValidAccessToken";
 
 export const createMockRepositoryHandler = (
 	t: ava.ExecutionContext,
@@ -14,11 +14,7 @@ export const createMockRepositoryHandler = (
 	const endpoint = `https://${repositoryName}.cdn.prismic.io/api/v2`;
 
 	return msw.rest.get(endpoint, (req, res, ctx) => {
-		if (
-			typeof accessToken === "string" &&
-			req.headers.get("Authorization") !==
-				createAuthorizationHeader(accessToken)
-		) {
+		if (!isValidAccessToken(accessToken, req)) {
 			return res(ctx.status(401));
 		}
 

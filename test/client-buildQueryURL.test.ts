@@ -41,7 +41,10 @@ test("includes params if provided", async t => {
 
 	const expectedSearchParams = new URLSearchParams({
 		ref: params.ref,
-		lang: params.lang?.toString() ?? ""
+		lang: params.lang?.toString() ?? "",
+		// TODO: Remove when the Authorization header can be used
+		// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
+		access_token: params.accessToken ?? ""
 	});
 
 	t.is(url.host, new URL(client.endpoint).host);
@@ -64,7 +67,10 @@ test("includes default params if provided", async t => {
 
 	const expectedSearchParams = new URLSearchParams({
 		ref: clientOptions.ref?.toString() ?? "",
-		lang: clientOptions.defaultParams?.lang?.toString() ?? ""
+		lang: clientOptions.defaultParams?.lang?.toString() ?? "",
+		// TODO: Remove when the Authorization header can be used
+		// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
+		access_token: clientOptions.accessToken ?? ""
 	});
 
 	t.is(url.host, new URL(client.endpoint).host);
@@ -91,7 +97,10 @@ test("merges params and default params if provided", async t => {
 	const expectedSearchParams = new URLSearchParams({
 		ref: params.ref,
 		lang: clientOptions.defaultParams?.lang?.toString() ?? "",
-		page: clientOptions.defaultParams?.page?.toString() ?? ""
+		page: clientOptions.defaultParams?.page?.toString() ?? "",
+		// TODO: Remove when the Authorization header can be used
+		// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
+		access_token: clientOptions.accessToken ?? ""
 	});
 
 	t.is(url.host, new URL(client.endpoint).host);
