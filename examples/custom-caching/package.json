@@ -1,7 +1,7 @@
 {
 	"type": "module",
 	"dependencies": {
-		"@prismicio/client": "^5.0.0",
+		"@prismicio/client": "alpha",
 		"node-fetch": "^2.6.1",
 		"quick-lru": "^6.0.0"
 	}
