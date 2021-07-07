@@ -20,12 +20,12 @@
 	"exports": {
 		".": {
 			"require": "./dist/index.cjs",
-			"import": "./dist/index.es.js"
+			"import": "./dist/index.mjs"
 		},
 		"./package.json": "./package.json"
 	},
 	"main": "dist/index.cjs",
-	"module": "dist/index.es.js",
+	"module": "dist/index.mjs",
 	"types": "dist/index.d.ts",
 	"files": [
 		"dist",
@@ -44,21 +44,11 @@
 		"unit": "nyc --reporter=lcovonly --reporter=text --exclude-after-remap=false ava",
 		"test": "npm run lint && npm run unit"
 	},
-	"simple-git-hooks": {
-		"commit-msg": "npx commitlint --edit"
-	},
-	"commitlint": {
-		"extends": [
-			"@commitlint/config-conventional"
-		]
-	},
 	"dependencies": {
-		"@prismicio/helpers": "^2.0.0-alpha.3"
+		"@prismicio/helpers": "^2.0.0-alpha.3",
+		"@prismicio/types": "^0.1.1"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "^12.1.4",
-		"@commitlint/config-conventional": "^12.1.4",
-		"@prismicio/types": "^0.1.1",
 		"@types/node-fetch": "^2.5.10",
 		"@types/sinon": "^10.0.1",
 		"@typescript-eslint/eslint-plugin": "^4.25.0",
@@ -71,7 +61,6 @@
 		"node-fetch": "^2.6.1",
 		"nyc": "^15.1.0",
 		"prettier": "^2.3.0",
-		"simple-git-hooks": "^2.4.1",
 		"sinon": "^11.1.1",
 		"siroc": "^0.11.1",
 		"standard-version": "^9.3.0",
