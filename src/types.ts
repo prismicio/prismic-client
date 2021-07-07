@@ -33,7 +33,7 @@ export interface Repository {
 }
 
 export interface Query<
-	TDocument extends prismicT.PrismicDocument = prismicT.PrismicDocument
+	TDocument extends prismicT.PrismicDocument = prismicT.PrismicDocument,
 > {
 	page: number;
 	results_per_page: number;
@@ -65,7 +65,7 @@ export interface FormField {
  */
 export type FetchLike = (
 	input: string,
-	init?: RequestInitLike
+	init?: RequestInitLike,
 ) => Promise<ResponseLike>;
 
 /**

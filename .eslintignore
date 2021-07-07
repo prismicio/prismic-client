@@ -2,6 +2,7 @@
 
 # custom
 dist
+examples/**/package-lock.json
 
 # os
 .DS_Store
@@ -17,10 +18,10 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 .yarn-integrity
+yarn.lock
 
 # npm
 npm-debug.log*
-# package-lock.json # version package lock for now
 
 # tests
 coverage

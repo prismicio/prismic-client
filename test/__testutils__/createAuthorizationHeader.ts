@@ -1,5 +1,5 @@
 export const createAuthorizationHeader = (
-	accessToken?: string,
-	type = "Token"
+  accessToken?: string,
+  type = "Token"
 ): string | undefined =>
-	accessToken != null ? `${type} ${accessToken}` : undefined;
+  accessToken != null ? `${type} ${accessToken}` : undefined;

@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0-alpha.8](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.7...v6.0.0-alpha.8) (2021-07-06)
+
+
+### Bug Fixes
+
+* support unauthorized repository response ([022d278](https://github.com/prismicio/prismic-javascript/commit/022d278fcb89ecc098e9729b5bf67ef87a9f8259))
+* use access_token URL parameter over Authorization header ([#182](https://github.com/prismicio/prismic-javascript/issues/182)) ([4c44109](https://github.com/prismicio/prismic-javascript/commit/4c44109b8b4428341e6becc021b1888230e7e961))
+
+
+### Chore
+
+* **deps:** update examples dependencies ([1c8f2b2](https://github.com/prismicio/prismic-javascript/commit/1c8f2b2a73dc56aa055efdb7a0c8c10ada3e428f))
+
+## [6.0.0-alpha.7](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.6...v6.0.0-alpha.7) (2021-07-03)
+
+
+### Bug Fixes
+
+* use `in` predicate for getByIDs ([fc522a2](https://github.com/prismicio/prismic-javascript/commit/fc522a22665f0ba461884c30ad5fb032b7910724))
+
+## [6.0.0-alpha.6](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.5...v6.0.0-alpha.6) (2021-07-03)
+
+
+### Chore
+
+* update dependencies ([2a18d2e](https://github.com/prismicio/prismic-javascript/commit/2a18d2e52d78734dd2405f83677c6b221149910c))
+* update dependencies ([eb9b13e](https://github.com/prismicio/prismic-javascript/commit/eb9b13e81bb6754597fa8df8948d0fafcd1ea042))
+
 ## [6.0.0-alpha.5](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.4...v6.0.0-alpha.5) (2021-06-27)
 
 

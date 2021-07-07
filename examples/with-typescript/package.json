@@ -1,12 +1,12 @@
 {
 	"type": "module",
 	"dependencies": {
-		"@prismicio/client": "^5.0.0",
+		"@prismicio/client": "alpha",
 		"node-fetch": "^2.6.1"
 	},
 	"devDependencies": {
-		"@prismicio/types": "^0.0.6",
+		"@prismicio/types": "^0.1.1",
 		"ts-node": "^10.0.0",
-		"typescript": "^4.2.4"
+		"typescript": "^4.3.5"
 	}
 }

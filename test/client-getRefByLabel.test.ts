@@ -10,7 +10,7 @@ const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
-test("returns a ref by label", async t => {
+test("returns a ref by label", async (t) => {
 	const ref1 = createRef(true);
 	const ref2 = createRef(false);
 	const response = createRepositoryResponse({ refs: [ref1, ref2] });
@@ -22,12 +22,12 @@ test("returns a ref by label", async t => {
 	t.deepEqual(res, ref2);
 });
 
-test("throws if ref could not be found", async t => {
+test("throws if ref could not be found", async (t) => {
 	server.use(createMockRepositoryHandler(t));
 
 	const client = createTestClient(t);
 
 	await t.throwsAsync(async () => await client.getRefByLabel("non-existant"), {
-		message: /could not be found/i
+		message: /could not be found/i,
 	});
 });

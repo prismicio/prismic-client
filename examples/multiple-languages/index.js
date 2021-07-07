@@ -7,8 +7,8 @@ const client = prismic.createClient(endpoint, {
 	// A default language can be set here. If a `lang` option is not set, your
 	// repository's default language will be used.
 	defaultParams: {
-		lang: "en-us"
-	}
+		lang: "en-us",
+	},
 });
 
 // This will fetch Article documents with the `en-us` lang.
@@ -25,6 +25,6 @@ console.info("articlesFrench: ", articlesFrench);
 
 // This will fetch Article documents with any language.
 const articlesAllLanguages = await client.getAllByType("article", {
-	lang: "*"
+	lang: "*",
 });
 console.info("articlesAllLanguages: ", articlesAllLanguages);

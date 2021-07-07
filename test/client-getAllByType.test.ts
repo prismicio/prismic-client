@@ -14,23 +14,23 @@ const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
-test("returns all documents by type from paginated response", async t => {
+test("returns all documents by type from paginated response", async (t) => {
 	const repositoryResponse = createRepositoryResponse();
 	const documentType = "foo";
 	const pagedResponses = createQueryResponsePages({
 		numPages: 3,
 		numDocsPerPage: 3,
-		fields: { type: documentType }
+		fields: { type: documentType },
 	});
-	const allDocs = pagedResponses.flatMap(page => page.results);
+	const allDocs = pagedResponses.flatMap((page) => page.results);
 
 	server.use(
 		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, pagedResponses, undefined, {
 			ref: getMasterRef(repositoryResponse),
 			q: `[[at(document.type, "${documentType}")]]`,
-			pageSize: 100
-		})
+			pageSize: 100,
+		}),
 	);
 
 	const client = createTestClient(t);
@@ -40,19 +40,19 @@ test("returns all documents by type from paginated response", async t => {
 	t.is(res.length, 3 * 3);
 });
 
-test("includes params if provided", async t => {
+test("includes params if provided", async (t) => {
 	const params: prismic.BuildQueryURLArgs = {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
-		lang: "*"
+		lang: "*",
 	};
 	const documentType = "foo";
 	const pagedResponses = createQueryResponsePages({
 		numPages: 3,
 		numDocsPerPage: 3,
-		fields: { type: documentType }
+		fields: { type: documentType },
 	});
-	const allDocs = pagedResponses.flatMap(page => page.results);
+	const allDocs = pagedResponses.flatMap((page) => page.results);
 
 	server.use(
 		createMockRepositoryHandler(t),
@@ -60,8 +60,8 @@ test("includes params if provided", async t => {
 			ref: params.ref as string,
 			q: `[[at(document.type, "${documentType}")]]`,
 			pageSize: 100,
-			lang: params.lang
-		})
+			lang: params.lang,
+		}),
 	);
 
 	const client = createTestClient(t);

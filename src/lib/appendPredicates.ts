@@ -21,5 +21,5 @@ export const appendPredicates =
 	 */
 	(objWithPredicates: T = {} as T): T => ({
 		...objWithPredicates,
-		predicates: [objWithPredicates.predicates || [], ...predicates].flat()
+		predicates: [objWithPredicates.predicates || [], ...predicates].flat(),
 	});

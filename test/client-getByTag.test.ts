@@ -15,20 +15,20 @@ const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
-test("queries for documents by tag", async t => {
+test("queries for documents by tag", async (t) => {
 	const repositoryResponse = createRepositoryResponse();
 	const documentTag = "foo";
 	const queryResponse = createQueryResponse([
 		createDocument({ tags: [documentTag] }),
-		createDocument({ tags: [documentTag] })
+		createDocument({ tags: [documentTag] }),
 	]);
 
 	server.use(
 		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, [queryResponse], undefined, {
 			ref: getMasterRef(repositoryResponse),
-			q: `[[at(document.tags, "${documentTag}")]]`
-		})
+			q: `[[at(document.tags, "${documentTag}")]]`,
+		}),
 	);
 
 	const client = createTestClient(t);
@@ -37,17 +37,17 @@ test("queries for documents by tag", async t => {
 	t.deepEqual(res, queryResponse);
 });
 
-test("includes params if provided", async t => {
+test("includes params if provided", async (t) => {
 	const params: prismic.BuildQueryURLArgs = {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
-		lang: "*"
+		lang: "*",
 	};
 
 	const documentTag = "foo";
 	const queryResponse = createQueryResponse([
 		createDocument({ tags: [documentTag] }),
-		createDocument({ tags: [documentTag] })
+		createDocument({ tags: [documentTag] }),
 	]);
 
 	server.use(
@@ -55,8 +55,8 @@ test("includes params if provided", async t => {
 		createMockQueryHandler(t, [queryResponse], params.accessToken, {
 			ref: params.ref as string,
 			q: `[[at(document.tags, "${documentTag}")]]`,
-			lang: params.lang
-		})
+			lang: params.lang,
+		}),
 	);
 
 	const client = createTestClient(t);

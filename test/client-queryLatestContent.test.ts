@@ -15,9 +15,9 @@ test("uses the cached master ref within the ref's ttl", getWithinTTLMacro, {
 	server,
 	getContext: {
 		repositoryResponse: createRepositoryResponse(),
-		getRef: getMasterRef
+		getRef: getMasterRef,
 	},
-	beforeFirstGet: args => args.client.queryLatestContent()
+	beforeFirstGet: (args) => args.client.queryLatestContent(),
 });
 
 test(
@@ -27,12 +27,12 @@ test(
 		server,
 		getContext1: {
 			repositoryResponse: createRepositoryResponse(),
-			getRef: getMasterRef
+			getRef: getMasterRef,
 		},
 		getContext2: {
 			repositoryResponse: createRepositoryResponse(),
-			getRef: getMasterRef
+			getRef: getMasterRef,
 		},
-		beforeFirstGet: args => args.client.queryLatestContent()
-	}
+		beforeFirstGet: (args) => args.client.queryLatestContent(),
+	},
 );

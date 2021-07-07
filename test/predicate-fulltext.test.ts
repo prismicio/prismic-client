@@ -7,17 +7,17 @@ import * as prismic from "../src";
 test(
 	'[fulltext(document, "banana")]',
 	isTitleMacro,
-	prismic.predicate.fulltext("document", "banana")
+	prismic.predicate.fulltext("document", "banana"),
 );
 
 test(
 	'[fulltext(document, "banana apple")]',
 	isTitleMacro,
-	prismic.predicate.fulltext("document", "banana apple")
+	prismic.predicate.fulltext("document", "banana apple"),
 );
 
 test(
 	'[fulltext(my.product.title, "phone")]',
 	isTitleMacro,
-	prismic.predicate.fulltext("my.product.title", "phone")
+	prismic.predicate.fulltext("my.product.title", "phone"),
 );

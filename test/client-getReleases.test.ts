@@ -9,7 +9,7 @@ const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
-test("returns all Releases", async t => {
+test("returns all Releases", async (t) => {
 	const response = createRepositoryResponse();
 	server.use(createMockRepositoryHandler(t, response));
 
@@ -18,6 +18,6 @@ test("returns all Releases", async t => {
 
 	t.deepEqual(
 		res,
-		response.refs.filter(ref => !ref.isMasterRef)
+		response.refs.filter((ref) => !ref.isMasterRef),
 	);
 });

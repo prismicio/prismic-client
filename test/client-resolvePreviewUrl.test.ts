@@ -14,7 +14,7 @@ test.after(() => server.close());
 // Tests in this file must be serial because some test mutate globalThis which
 // could affect others.
 
-test.serial("resolves a preview url in the browser", async t => {
+test.serial("resolves a preview url in the browser", async (t) => {
 	const document = createDocument();
 	const queryResponse = createQueryResponse([document]);
 
@@ -23,21 +23,21 @@ test.serial("resolves a preview url in the browser", async t => {
 
 	globalThis.location = {
 		...globalThis.location,
-		search: `?documentId=${documentId}&token=${previewToken}`
+		search: `?documentId=${documentId}&token=${previewToken}`,
 	};
 
 	server.use(
 		createMockRepositoryHandler(t),
 		createMockQueryHandler(t, [queryResponse], undefined, {
 			ref: previewToken,
-			q: `[[at(document.id, "${documentId}")]]`
-		})
+			q: `[[at(document.id, "${documentId}")]]`,
+		}),
 	);
 
 	const client = createTestClient(t);
 	const res = await client.resolvePreviewURL({
-		linkResolver: document => `/${document.uid}`,
-		defaultURL: "defaultURL"
+		linkResolver: (document) => `/${document.uid}`,
+		defaultURL: "defaultURL",
 	});
 
 	t.is(res, `/${document.uid}`);
@@ -46,7 +46,7 @@ test.serial("resolves a preview url in the browser", async t => {
 	globalThis.location = undefined;
 });
 
-test.serial("resolves a preview url using a server req object", async t => {
+test.serial("resolves a preview url using a server req object", async (t) => {
 	const document = createDocument();
 	const queryResponse = createQueryResponse([document]);
 
@@ -58,15 +58,15 @@ test.serial("resolves a preview url using a server req object", async t => {
 		createMockRepositoryHandler(t),
 		createMockQueryHandler(t, [queryResponse], undefined, {
 			ref: previewToken,
-			q: `[[at(document.id, "${documentId}")]]`
-		})
+			q: `[[at(document.id, "${documentId}")]]`,
+		}),
 	);
 
 	const client = createTestClient(t);
 	client.enableAutoPreviewsFromReq(req);
 	const res = await client.resolvePreviewURL({
-		linkResolver: document => `/${document.uid}`,
-		defaultURL: "defaultURL"
+		linkResolver: (document) => `/${document.uid}`,
+		defaultURL: "defaultURL",
 	});
 
 	t.is(res, `/${document.uid}`);
@@ -74,7 +74,7 @@ test.serial("resolves a preview url using a server req object", async t => {
 
 test.serial(
 	"allows providing an explicit documentId and previewToken",
-	async t => {
+	async (t) => {
 		const document = createDocument();
 		const queryResponse = createQueryResponse([document]);
 
@@ -83,34 +83,34 @@ test.serial(
 		const req = {
 			query: {
 				documentId: "this will be unused",
-				token: "this will be unused"
-			}
+				token: "this will be unused",
+			},
 		};
 
 		server.use(
 			createMockRepositoryHandler(t),
 			createMockQueryHandler(t, [queryResponse], undefined, {
 				ref: previewToken,
-				q: `[[at(document.id, "${documentId}")]]`
-			})
+				q: `[[at(document.id, "${documentId}")]]`,
+			}),
 		);
 
 		const client = createTestClient(t);
 		client.enableAutoPreviewsFromReq(req);
 		const res = await client.resolvePreviewURL({
-			linkResolver: document => `/${document.uid}`,
+			linkResolver: (document) => `/${document.uid}`,
 			defaultURL: "defaultURL",
 			documentId,
-			previewToken
+			previewToken,
 		});
 
 		t.is(res, `/${document.uid}`);
-	}
+	},
 );
 
 test.serial(
 	"returns defaultURL if current url does not contain preview params in browser",
-	async t => {
+	async (t) => {
 		const defaultURL = "defaultURL";
 
 		// Set a global Location object without the parameters we need for automatic
@@ -119,45 +119,45 @@ test.serial(
 
 		const client = createTestClient(t);
 		const res = await client.resolvePreviewURL({
-			linkResolver: document => `/${document.uid}`,
-			defaultURL
+			linkResolver: (document) => `/${document.uid}`,
+			defaultURL,
 		});
 
 		t.is(res, defaultURL);
 
 		// @ts-expect-error - Need to reset back to Node.js's default globalThis without `location`
 		globalThis.location = undefined;
-	}
+	},
 );
 
 test.serial(
 	"returns defaultURL if req does not contain preview params in server req object",
-	async t => {
+	async (t) => {
 		const defaultURL = "defaultURL";
 		const req = { query: {} };
 
 		const client = createTestClient(t);
 		client.enableAutoPreviewsFromReq(req);
 		const res = await client.resolvePreviewURL({
-			linkResolver: document => `/${document.uid}`,
-			defaultURL
+			linkResolver: (document) => `/${document.uid}`,
+			defaultURL,
 		});
 
 		t.is(res, defaultURL);
-	}
+	},
 );
 
 test.serial(
 	"returns defaultURL if no preview context is available",
-	async t => {
+	async (t) => {
 		const defaultURL = "defaultURL";
 
 		const client = createTestClient(t);
 		const res = await client.resolvePreviewURL({
-			linkResolver: document => `/${document.uid}`,
-			defaultURL
+			linkResolver: (document) => `/${document.uid}`,
+			defaultURL,
 		});
 
 		t.is(res, defaultURL);
-	}
+	},
 );

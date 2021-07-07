@@ -2,13 +2,13 @@ import test from "ava";
 
 import * as prismic from "../src";
 
-test("contains the request url and error properties", t => {
+test("contains the request url and error properties", (t) => {
 	const message = "message";
 	const url = "url";
 	const response = {
 		error: "error",
 		oauth_initiate: "oauth_initiate",
-		oauth_token: "oauth_token"
+		oauth_token: "oauth_token",
 	} as const;
 	const error = new prismic.ForbiddenError(message, { url, response });
 

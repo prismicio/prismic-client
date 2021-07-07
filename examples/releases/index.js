@@ -3,7 +3,7 @@ import fetch from "node-fetch";
 
 const endpoint = prismic.getEndpoint("qwerty");
 const client = prismic.createClient(endpoint, {
-	fetch
+	fetch,
 });
 
 // By default, the client will fetch the latest published content from the repository.
@@ -31,7 +31,7 @@ console.info(aboutPage);
 // We can also override the release on a per-query basis.
 const otherRelease = await client.getReleaseByLabel("My Other Release");
 const contactPage = await client.getByUID("page", "contact", {
-	ref: otherRelease.ref
+	ref: otherRelease.ref,
 });
 console.info(contactPage);
 

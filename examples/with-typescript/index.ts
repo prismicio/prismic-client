@@ -80,7 +80,7 @@ const main = async () => {
 	console.info("nonExistantField: ", nonExistantField);
 
 	const blogPosts = await client.getAllByType<PrismicDocumentBlogPost>(
-		"blog_post"
+		"blog_post",
 	);
 	// => All Blog Post documents.
 	console.info("blogPosts: ", blogPosts);

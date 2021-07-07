@@ -2,7 +2,7 @@ import * as prismic from "../../src";
 
 export const createRef = (
 	isMasterRef = false,
-	overrides?: Partial<prismic.Ref>
+	overrides?: Partial<prismic.Ref>,
 ): prismic.Ref => {
 	const id = Math.random().toString();
 	const ref = Math.random().toString();
@@ -13,6 +13,6 @@ export const createRef = (
 		ref,
 		label,
 		isMasterRef,
-		...overrides
+		...overrides,
 	};
 };

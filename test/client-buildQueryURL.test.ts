@@ -12,7 +12,7 @@ const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
-test("builds a query URL using the master ref", async t => {
+test("builds a query URL using the master ref", async (t) => {
 	const response = createRepositoryResponse();
 	const ref = getMasterRef(response);
 	server.use(createMockRepositoryHandler(t, response));
@@ -26,11 +26,11 @@ test("builds a query URL using the master ref", async t => {
 	t.is(url.search, `?ref=${ref}`);
 });
 
-test("includes params if provided", async t => {
+test("includes params if provided", async (t) => {
 	const params: prismic.BuildQueryURLArgs = {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
-		lang: "*"
+		lang: "*",
 	};
 
 	server.use(createMockRepositoryHandler(t));
@@ -41,7 +41,10 @@ test("includes params if provided", async t => {
 
 	const expectedSearchParams = new URLSearchParams({
 		ref: params.ref,
-		lang: params.lang?.toString() ?? ""
+		lang: params.lang?.toString() ?? "",
+		// TODO: Remove when the Authorization header can be used
+		// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
+		access_token: params.accessToken ?? "",
 	});
 
 	t.is(url.host, new URL(client.endpoint).host);
@@ -49,11 +52,11 @@ test("includes params if provided", async t => {
 	t.is(url.searchParams.toString(), expectedSearchParams.toString());
 });
 
-test("includes default params if provided", async t => {
+test("includes default params if provided", async (t) => {
 	const clientOptions: prismic.ClientConfig = {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
-		defaultParams: { lang: "*" }
+		defaultParams: { lang: "*" },
 	};
 
 	server.use(createMockRepositoryHandler(t));
@@ -64,7 +67,10 @@ test("includes default params if provided", async t => {
 
 	const expectedSearchParams = new URLSearchParams({
 		ref: clientOptions.ref?.toString() ?? "",
-		lang: clientOptions.defaultParams?.lang?.toString() ?? ""
+		lang: clientOptions.defaultParams?.lang?.toString() ?? "",
+		// TODO: Remove when the Authorization header can be used
+		// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
+		access_token: clientOptions.accessToken ?? "",
 	});
 
 	t.is(url.host, new URL(client.endpoint).host);
@@ -72,14 +78,14 @@ test("includes default params if provided", async t => {
 	t.is(url.searchParams.toString(), expectedSearchParams.toString());
 });
 
-test("merges params and default params if provided", async t => {
+test("merges params and default params if provided", async (t) => {
 	const clientOptions: prismic.ClientConfig = {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
-		defaultParams: { lang: "*", page: 2 }
+		defaultParams: { lang: "*", page: 2 },
 	};
 	const params: prismic.BuildQueryURLArgs = {
-		ref: "overridden-ref"
+		ref: "overridden-ref",
 	};
 
 	server.use(createMockRepositoryHandler(t));
@@ -91,7 +97,10 @@ test("merges params and default params if provided", async t => {
 	const expectedSearchParams = new URLSearchParams({
 		ref: params.ref,
 		lang: clientOptions.defaultParams?.lang?.toString() ?? "",
-		page: clientOptions.defaultParams?.page?.toString() ?? ""
+		page: clientOptions.defaultParams?.page?.toString() ?? "",
+		// TODO: Remove when the Authorization header can be used
+		// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
+		access_token: clientOptions.accessToken ?? "",
 	});
 
 	t.is(url.host, new URL(client.endpoint).host);

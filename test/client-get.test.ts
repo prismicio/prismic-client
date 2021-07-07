@@ -14,15 +14,15 @@ const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
-test("resolves a query", async t => {
+test("resolves a query", async (t) => {
 	const repositoryResponse = createRepositoryResponse();
 	const queryResponse = createQueryResponse();
 
 	server.use(
 		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: getMasterRef(repositoryResponse)
-		})
+			ref: getMasterRef(repositoryResponse),
+		}),
 	);
 
 	const client = createTestClient(t);
@@ -31,11 +31,11 @@ test("resolves a query", async t => {
 	t.deepEqual(res, queryResponse);
 });
 
-test("includes params if provided", async t => {
+test("includes params if provided", async (t) => {
 	const params: prismic.BuildQueryURLArgs = {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
-		lang: "*"
+		lang: "*",
 	};
 	const queryResponse = createQueryResponse();
 
@@ -43,8 +43,8 @@ test("includes params if provided", async t => {
 		createMockRepositoryHandler(t),
 		createMockQueryHandler(t, [queryResponse], params.accessToken, {
 			ref: params.ref as string,
-			lang: params.lang
-		})
+			lang: params.lang,
+		}),
 	);
 
 	const client = createTestClient(t);
@@ -53,11 +53,11 @@ test("includes params if provided", async t => {
 	t.deepEqual(res, queryResponse);
 });
 
-test("includes default params if provided", async t => {
+test("includes default params if provided", async (t) => {
 	const clientOptions: prismic.ClientConfig = {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
-		defaultParams: { lang: "*" }
+		defaultParams: { lang: "*" },
 	};
 	const queryResponse = createQueryResponse();
 
@@ -65,8 +65,8 @@ test("includes default params if provided", async t => {
 		createMockRepositoryHandler(t),
 		createMockQueryHandler(t, [queryResponse], clientOptions.accessToken, {
 			ref: clientOptions.ref as string,
-			lang: clientOptions.defaultParams?.lang
-		})
+			lang: clientOptions.defaultParams?.lang,
+		}),
 	);
 
 	const client = createTestClient(t, clientOptions);
@@ -75,15 +75,15 @@ test("includes default params if provided", async t => {
 	t.deepEqual(res, queryResponse);
 });
 
-test("merges params and default params if provided", async t => {
+test("merges params and default params if provided", async (t) => {
 	const clientOptions: prismic.ClientConfig = {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
-		defaultParams: { lang: "*", page: 2 }
+		defaultParams: { lang: "*", page: 2 },
 	};
 	const params: prismic.BuildQueryURLArgs = {
 		ref: "overridden-ref",
-		lang: "fr-fr"
+		lang: "fr-fr",
 	};
 	const queryResponse = createQueryResponse();
 
@@ -96,9 +96,9 @@ test("merges params and default params if provided", async t => {
 			{
 				ref: params.ref,
 				lang: params.lang,
-				page: clientOptions.defaultParams?.page
-			}
-		)
+				page: clientOptions.defaultParams?.page,
+			},
+		),
 	);
 
 	const client = createTestClient(t, clientOptions);

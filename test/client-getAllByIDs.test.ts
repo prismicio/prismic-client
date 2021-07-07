@@ -14,25 +14,25 @@ const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
-test("returns all matching documents from paginated response", async t => {
+test("returns all matching documents from paginated response", async (t) => {
 	const repositoryResponse = createRepositoryResponse();
 	const pagedResponses = createQueryResponsePages({
 		numPages: 2,
-		numDocsPerPage: 2
+		numDocsPerPage: 2,
 	});
-	const allDocs = pagedResponses.flatMap(page => page.results);
+	const allDocs = pagedResponses.flatMap((page) => page.results);
 
-	const allDocumentIds = allDocs.map(doc => doc.id);
+	const allDocumentIds = allDocs.map((doc) => doc.id);
 
 	server.use(
 		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, pagedResponses, undefined, {
 			ref: getMasterRef(repositoryResponse),
-			q: `[[at(document.id, [${allDocumentIds
-				.map(id => `"${id}"`)
+			q: `[[in(document.id, [${allDocumentIds
+				.map((id) => `"${id}"`)
 				.join(", ")}])]]`,
-			pageSize: 100
-		})
+			pageSize: 100,
+		}),
 	);
 
 	const client = createTestClient(t);
@@ -42,29 +42,29 @@ test("returns all matching documents from paginated response", async t => {
 	t.is(res.length, 2 * 2);
 });
 
-test("includes params if provided", async t => {
+test("includes params if provided", async (t) => {
 	const params: prismic.BuildQueryURLArgs = {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
-		lang: "*"
+		lang: "*",
 	};
 	const pagedResponses = createQueryResponsePages({
 		numPages: 3,
-		numDocsPerPage: 3
+		numDocsPerPage: 3,
 	});
-	const allDocs = pagedResponses.flatMap(page => page.results);
-	const allDocumentIds = allDocs.map(doc => doc.id);
+	const allDocs = pagedResponses.flatMap((page) => page.results);
+	const allDocumentIds = allDocs.map((doc) => doc.id);
 
 	server.use(
 		createMockRepositoryHandler(t),
 		createMockQueryHandler(t, pagedResponses, params.accessToken, {
 			ref: params.ref as string,
-			q: `[[at(document.id, [${allDocumentIds
-				.map(id => `"${id}"`)
+			q: `[[in(document.id, [${allDocumentIds
+				.map((id) => `"${id}"`)
 				.join(", ")}])]]`,
 			pageSize: 100,
-			lang: params.lang
-		})
+			lang: params.lang,
+		}),
 	);
 
 	const client = createTestClient(t);

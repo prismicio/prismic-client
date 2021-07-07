@@ -7,7 +7,7 @@ import { createQueryResponse } from "./createQueryResponse";
 import * as prismicT from "@prismicio/types";
 
 type CreateQueryResponsePagesArgs<
-	TDocument extends prismicT.PrismicDocument = prismicT.PrismicDocument
+	TDocument extends prismicT.PrismicDocument = prismicT.PrismicDocument,
 > = {
 	numPages?: number;
 	numDocsPerPage?: number;
@@ -15,11 +15,11 @@ type CreateQueryResponsePagesArgs<
 };
 
 export const createQueryResponsePages = <
-	TDocument extends prismicT.PrismicDocument = prismicT.PrismicDocument
+	TDocument extends prismicT.PrismicDocument = prismicT.PrismicDocument,
 >({
 	numPages = 3,
 	numDocsPerPage = 3,
-	fields
+	fields,
 }: CreateQueryResponsePagesArgs<TDocument>): prismic.Query<
 	SetRequired<TDocument, "uid">
 >[] => {
@@ -32,7 +32,7 @@ export const createQueryResponsePages = <
 		.map((_, i, arr) =>
 			createQueryResponse(documents, {
 				page: i + 1,
-				total_pages: arr.length
-			})
+				total_pages: arr.length,
+			}),
 		);
 };

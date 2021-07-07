@@ -10,7 +10,7 @@ const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
-test("returns all tags", async t => {
+test("returns all tags", async (t) => {
 	const response = createRepositoryResponse();
 	server.use(createMockRepositoryHandler(t, response));
 
@@ -20,7 +20,7 @@ test("returns all tags", async t => {
 	t.deepEqual(res, response.tags);
 });
 
-test("uses form endpoint if available", async t => {
+test("uses form endpoint if available", async (t) => {
 	const tagsEndpoint = "https://example.com/tags-form-endpoint";
 	const tagsResponse = ["foo", "bar"];
 
@@ -30,15 +30,15 @@ test("uses form endpoint if available", async t => {
 				method: "GET",
 				action: tagsEndpoint,
 				enctype: "",
-				fields: {}
-			}
-		}
+				fields: {},
+			},
+		},
 	});
 	server.use(
 		createMockRepositoryHandler(t, repositoryResponse),
 		msw.rest.get(tagsEndpoint, (_req, res, ctx) => {
 			return res(ctx.json(tagsResponse));
-		})
+		}),
 	);
 
 	const client = createTestClient(t);
