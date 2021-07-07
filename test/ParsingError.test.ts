@@ -2,7 +2,7 @@ import test from "ava";
 
 import * as prismic from "../src";
 
-test("contains the request url and error properties", t => {
+test("contains the request url and error properties", (t) => {
 	const message = "message";
 	const url = "url";
 	const response = {
@@ -11,7 +11,7 @@ test("contains the request url and error properties", t => {
 		location: "location",
 		line: 0,
 		column: 0,
-		id: 0
+		id: 0,
 	} as const;
 	const error = new prismic.ParsingError(message, { url, response });
 

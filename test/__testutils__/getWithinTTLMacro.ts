@@ -15,7 +15,7 @@ export const getWithinTTLMacro = async (
 		server: mswNode.SetupServerApi;
 		getContext: GetContext;
 		beforeFirstGet?(args: { client: Client }): void;
-	}
+	},
 ): Promise<void> => {
 	const repositoryResponse1 = args.getContext.repositoryResponse;
 	const repositoryResponse2 = createRepositoryResponse();
@@ -26,8 +26,8 @@ export const getWithinTTLMacro = async (
 	args.server.use(
 		createMockRepositoryHandler(t, repositoryResponse1),
 		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref
-		})
+			ref,
+		}),
 	);
 
 	const client = createTestClient(t);

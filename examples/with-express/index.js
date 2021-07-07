@@ -6,7 +6,7 @@ import QuickLRU from "quick-lru";
 
 const endpoint = prismic.getEndpoint("qwerty");
 const cache = new QuickLRU({
-	maxSize: 1000 // 1000 entries
+	maxSize: 1000, // 1000 entries
 });
 
 const client = prismic.createClient(endpoint, {
@@ -28,7 +28,7 @@ const client = prismic.createClient(endpoint, {
 
 			return res;
 		}
-	}
+	},
 });
 
 /**
@@ -52,10 +52,10 @@ app.use(prismicAutoPreviewsMiddleware);
 app.get("/articles", async (_req, res) => {
 	const articles = await client.getAllByType("article");
 
-	const payload = articles.map(article => ({
+	const payload = articles.map((article) => ({
 		title: PrismicDOM.RichText.asText(article.data.title),
 		description: PrismicDOM.RichText.asText(article.data.shortlede),
-		content: PrismicDOM.RichText.asHtml(article.data.content)
+		content: PrismicDOM.RichText.asHtml(article.data.content),
 	}));
 
 	res.json(payload);

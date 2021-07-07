@@ -15,7 +15,7 @@ const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
-test("queries for document by ID", async t => {
+test("queries for document by ID", async (t) => {
 	const repositoryResponse = createRepositoryResponse();
 	const document = createDocument();
 	const queryResponse = createQueryResponse([document]);
@@ -24,8 +24,8 @@ test("queries for document by ID", async t => {
 		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, [queryResponse], undefined, {
 			ref: getMasterRef(repositoryResponse),
-			q: `[[at(document.id, "${document.id}")]]`
-		})
+			q: `[[at(document.id, "${document.id}")]]`,
+		}),
 	);
 
 	const client = createTestClient(t);
@@ -34,11 +34,11 @@ test("queries for document by ID", async t => {
 	t.deepEqual(res, document);
 });
 
-test("includes params if provided", async t => {
+test("includes params if provided", async (t) => {
 	const params: prismic.BuildQueryURLArgs = {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
-		lang: "*"
+		lang: "*",
 	};
 
 	const document = createDocument();
@@ -49,8 +49,8 @@ test("includes params if provided", async t => {
 		createMockQueryHandler(t, [queryResponse], params.accessToken, {
 			ref: params.ref as string,
 			q: `[[at(document.id, "${document.id}")]]`,
-			lang: params.lang
-		})
+			lang: params.lang,
+		}),
 	);
 
 	const client = createTestClient(t);

@@ -9,7 +9,7 @@ const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
-test("returns all refs", async t => {
+test("returns all refs", async (t) => {
 	const response = createRepositoryResponse();
 	server.use(createMockRepositoryHandler(t, response));
 

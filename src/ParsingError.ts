@@ -8,7 +8,7 @@ interface ParsingErrorAPIResponse {
 }
 
 export const isParsingErrorAPIResponse = (
-	input: unknown
+	input: unknown,
 ): input is ParsingErrorAPIResponse => {
 	return (
 		typeof input === "object" &&

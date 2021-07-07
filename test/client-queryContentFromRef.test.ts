@@ -12,13 +12,13 @@ const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
-test("supports manual string ref", async t => {
+test("supports manual string ref", async (t) => {
 	const queryResponse = createQueryResponse();
 	const ref = "ref";
 
 	server.use(
 		createMockRepositoryHandler(t),
-		createMockQueryHandler(t, [queryResponse], undefined, { ref })
+		createMockQueryHandler(t, [queryResponse], undefined, { ref }),
 	);
 
 	const client = createTestClient(t);
@@ -30,13 +30,13 @@ test("supports manual string ref", async t => {
 	t.deepEqual(res, queryResponse);
 });
 
-test("supports manual thunk ref", async t => {
+test("supports manual thunk ref", async (t) => {
 	const queryResponse = createQueryResponse();
 	const ref = "ref";
 
 	server.use(
 		createMockRepositoryHandler(t),
-		createMockQueryHandler(t, [queryResponse], undefined, { ref })
+		createMockQueryHandler(t, [queryResponse], undefined, { ref }),
 	);
 
 	const client = createTestClient(t);
@@ -48,15 +48,15 @@ test("supports manual thunk ref", async t => {
 	t.deepEqual(res, queryResponse);
 });
 
-test("uses master ref if manual thunk ref returns non-string value", async t => {
+test("uses master ref if manual thunk ref returns non-string value", async (t) => {
 	const repositoryResponse = createRepositoryResponse();
 	const queryResponse = createQueryResponse();
 
 	server.use(
 		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: getMasterRef(repositoryResponse)
-		})
+			ref: getMasterRef(repositoryResponse),
+		}),
 	);
 
 	const client = createTestClient(t);

@@ -6,10 +6,10 @@ import { createDocument } from "./createDocument";
 import * as prismicT from "@prismicio/types";
 
 export const createQueryResponse = <
-	TDocument extends prismicT.PrismicDocument = prismicT.PrismicDocument
+	TDocument extends prismicT.PrismicDocument = prismicT.PrismicDocument,
 >(
 	docs: SetRequired<TDocument, "uid">[] = [createDocument(), createDocument()],
-	overrides?: Partial<prismic.Query<TDocument>>
+	overrides?: Partial<prismic.Query<TDocument>>,
 ): prismic.Query<SetRequired<TDocument, "uid">> => ({
 	page: 1,
 	results_per_page: docs.length,
@@ -19,5 +19,5 @@ export const createQueryResponse = <
 	next_page: "",
 	prev_page: "",
 	results: docs,
-	...overrides
+	...overrides,
 });

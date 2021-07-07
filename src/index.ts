@@ -28,5 +28,5 @@ export type {
 	Repository,
 	RequestInitLike,
 	ResponseLike,
-	Route
+	Route,
 } from "./types";

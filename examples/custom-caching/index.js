@@ -4,7 +4,7 @@ import QuickLRU from "quick-lru";
 
 const endpoint = prismic.getEndpoint("qwerty");
 const cache = new QuickLRU({
-	maxSize: 1000 // 1000 entries
+	maxSize: 1000, // 1000 entries
 });
 
 const client = prismic.createClient(endpoint, {
@@ -26,7 +26,7 @@ const client = prismic.createClient(endpoint, {
 
 			return res;
 		}
-	}
+	},
 });
 
 const homepage = await client.getByUID("page", "home");

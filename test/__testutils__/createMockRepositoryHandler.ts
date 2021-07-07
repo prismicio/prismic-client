@@ -8,7 +8,7 @@ import { isValidAccessToken } from "./isValidAccessToken";
 export const createMockRepositoryHandler = (
 	t: ava.ExecutionContext,
 	response = createRepositoryResponse(),
-	accessToken?: string
+	accessToken?: string,
 ): msw.RestHandler => {
 	const repositoryName = crypto.createHash("md5").update(t.title).digest("hex");
 	const endpoint = `https://${repositoryName}.cdn.prismic.io/api/v2`;

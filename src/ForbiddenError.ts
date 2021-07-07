@@ -16,7 +16,7 @@ type ForbiddenErrorAPIResponse =
 	| ForbiddenErrorQueryAPIResponse;
 
 export const isForbiddenErrorAPIResponse = (
-	input: unknown
+	input: unknown,
 ): input is ForbiddenErrorAPIResponse => {
 	return (
 		typeof input === "object" &&

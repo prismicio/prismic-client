@@ -6,7 +6,7 @@ import * as msw from "msw";
 
 export const isValidAccessToken = (
 	accessToken: string | undefined,
-	req: msw.RestRequest
+	req: msw.RestRequest,
 ): boolean => {
 	// TODO: Uncomment when the Authorization header can be used
 	// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}

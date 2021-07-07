@@ -3,7 +3,7 @@ import * as prismic from "../../src";
 import { createRef } from "./createRef";
 
 export const createRepositoryResponse = (
-	overrides?: Partial<prismic.Repository>
+	overrides?: Partial<prismic.Repository>,
 ): prismic.Repository => {
 	return {
 		refs: [createRef(true)],
@@ -21,44 +21,44 @@ export const createRepositoryResponse = (
 			"wr-tour-with-features": "VBrVKjYAADMA1MiX",
 			"developers-home": "UjBJcsuvzdIHvE3_",
 			customers: "Vebi4x8AAB4AFXCd",
-			pricing: "UffVud_mqZR-3EGd"
+			pricing: "UffVud_mqZR-3EGd",
 		},
 		languages: [
 			{
 				id: "en-gb",
-				name: "English - Great Britain"
+				name: "English - Great Britain",
 			},
 			{
 				id: "fr-fr",
-				name: "French - France"
+				name: "French - France",
 			},
 			{
 				id: "de-de",
-				name: "German - Germany"
+				name: "German - Germany",
 			},
 			{
 				id: "de-ch",
-				name: "German - Switzerland"
+				name: "German - Switzerland",
 			},
 			{
 				id: "nl-nl",
-				name: "Dutch - Netherlands"
+				name: "Dutch - Netherlands",
 			},
 			{
 				id: "es-es",
-				name: "Spanish - Spain (Traditional)"
+				name: "Spanish - Spain (Traditional)",
 			},
 			{
 				id: "en-dk",
-				name: "English - Denmark"
+				name: "English - Denmark",
 			},
 			{
 				id: "en-se",
-				name: "English - Sweden"
-			}
+				name: "English - Sweden",
+			},
 		],
 		types: {
-			foo: "Foo"
+			foo: "Foo",
 		},
 		tags: ["foo", "bar"],
 		forms: {},
@@ -71,10 +71,10 @@ export const createRepositoryResponse = (
 						{
 							id: "WG-DPigAADIbct0f",
 							ref: "WG-DPigAADgAct0g~WYx9HB8AAB8AmX7z",
-							label: "Base"
-						}
-					]
-				}
+							label: "Base",
+						},
+					],
+				},
 			],
 			running: [
 				{
@@ -84,16 +84,16 @@ export const createRepositoryResponse = (
 						{
 							id: "WG-DPigAADIbct0X",
 							ref: "WG-DPigAADgAct0g~WYx9HB8AAB8AmX7X",
-							label: "variationA"
-						}
-					]
-				}
-			]
+							label: "variationA",
+						},
+					],
+				},
+			],
 		},
 		oauth_initiate: "oauth_initiate",
 		oauth_token: "oauth_token",
 		version: "version",
 		license: "All Rights Reserved",
-		...overrides
+		...overrides,
 	};
 };

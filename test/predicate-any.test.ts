@@ -7,5 +7,5 @@ import * as prismic from "../src";
 test(
 	'[any(document.type, ["product", "blog-post"])]',
 	isTitleMacro,
-	prismic.predicate.any("document.type", ["product", "blog-post"])
+	prismic.predicate.any("document.type", ["product", "blog-post"]),
 );

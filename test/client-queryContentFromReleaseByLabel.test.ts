@@ -18,15 +18,15 @@ test.after(() => server.close());
 const ref1 = createRef(false);
 const ref2 = createRef(false, { label: ref1.label });
 
-test("uses a releases ref by label", async t => {
+test("uses a releases ref by label", async (t) => {
 	const repositoryResponse = createRepositoryResponse({ refs: [ref1] });
 	const queryResponse = createQueryResponse();
 
 	server.use(
 		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: ref1.ref
-		})
+			ref: ref1.ref,
+		}),
 	);
 
 	const client = createTestClient(t);
@@ -42,9 +42,10 @@ test("uses the cached release ref within the ref's ttl", getWithinTTLMacro, {
 	server,
 	getContext: {
 		repositoryResponse: createRepositoryResponse({ refs: [ref1] }),
-		getRef: () => ref1.ref
+		getRef: () => ref1.ref,
 	},
-	beforeFirstGet: args => args.client.queryContentFromReleaseByLabel(ref1.label)
+	beforeFirstGet: (args) =>
+		args.client.queryContentFromReleaseByLabel(ref1.label),
 });
 
 test(
@@ -54,13 +55,13 @@ test(
 		server,
 		getContext1: {
 			repositoryResponse: createRepositoryResponse({ refs: [ref1] }),
-			getRef: () => ref1.ref
+			getRef: () => ref1.ref,
 		},
 		getContext2: {
 			repositoryResponse: createRepositoryResponse({ refs: [ref2] }),
-			getRef: () => ref2.ref
+			getRef: () => ref2.ref,
 		},
-		beforeFirstGet: args =>
-			args.client.queryContentFromReleaseByLabel(ref1.label)
-	}
+		beforeFirstGet: (args) =>
+			args.client.queryContentFromReleaseByLabel(ref1.label),
+	},
 );

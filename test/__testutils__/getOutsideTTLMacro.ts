@@ -16,7 +16,7 @@ export const getOutsideTTLMacro = async (
 		getContext1: GetContext;
 		getContext2: GetContext;
 		beforeFirstGet?(args: { client: Client }): void;
-	}
+	},
 ): Promise<void> => {
 	const repositoryResponse1 = args.getContext1.repositoryResponse;
 	const repositoryResponse2 = args.getContext2.repositoryResponse;
@@ -28,8 +28,8 @@ export const getOutsideTTLMacro = async (
 	args.server.use(
 		createMockRepositoryHandler(t, repositoryResponse1),
 		createMockQueryHandler(t, [queryResponse1], undefined, {
-			ref: ref1
-		})
+			ref: ref1,
+		}),
 	);
 
 	const client = createTestClient(t);
@@ -39,8 +39,8 @@ export const getOutsideTTLMacro = async (
 	const res1 = await client.get();
 
 	// We wait for the cached ref's TTL to expire.
-	await new Promise(res =>
-		setTimeout(() => res(undefined), REPOSITORY_CACHE_TTL + 1)
+	await new Promise((res) =>
+		setTimeout(() => res(undefined), REPOSITORY_CACHE_TTL + 1),
 	);
 
 	// We're setting the next repository metadata response to include a different ref.
@@ -48,8 +48,8 @@ export const getOutsideTTLMacro = async (
 	args.server.use(
 		createMockRepositoryHandler(t, repositoryResponse2),
 		createMockQueryHandler(t, [queryResponse2], undefined, {
-			ref: ref2
-		})
+			ref: ref2,
+		}),
 	);
 
 	const res2 = await client.get();

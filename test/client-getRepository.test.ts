@@ -11,7 +11,7 @@ const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
-test("returns repository metadata", async t => {
+test("returns repository metadata", async (t) => {
 	const response = createRepositoryResponse();
 	server.use(createMockRepositoryHandler(t, response));
 
@@ -23,9 +23,9 @@ test("returns repository metadata", async t => {
 
 // TODO: Remove when the Authorization header can be used
 // @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
-test("includes access token if configured", async t => {
+test("includes access token if configured", async (t) => {
 	const options: prismic.ClientConfig = {
-		accessToken: "accessToken"
+		accessToken: "accessToken",
 	};
 
 	const response = createRepositoryResponse();

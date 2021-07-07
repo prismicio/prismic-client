@@ -10,7 +10,7 @@ const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
-test("returns the master ref", async t => {
+test("returns the master ref", async (t) => {
 	const masterRef = createRef(true);
 	const ref2 = createRef(false);
 	const response = createRepositoryResponse({ refs: [ref2, masterRef] });

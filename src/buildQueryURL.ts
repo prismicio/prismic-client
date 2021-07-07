@@ -107,7 +107,7 @@ type BuildQueryURLParams = {
  * These parameters are renamed to their mapped value.
  */
 const RENAMED_PARAMS = {
-	accessToken: "access_token"
+	accessToken: "access_token",
 } as const;
 
 /**
@@ -133,7 +133,7 @@ const castOrderingToString = (ordering: Ordering | string): string =>
 		? ordering
 		: [
 				ordering.field,
-				ordering.direction === "desc" ? ordering.direction : undefined
+				ordering.direction === "desc" ? ordering.direction : undefined,
 		  ]
 				.filter(Boolean)
 				.join(" ");
@@ -159,7 +159,7 @@ export type BuildQueryURLArgs = QueryParams & BuildQueryURLParams;
  */
 export const buildQueryURL = (
 	endpoint: string,
-	args: BuildQueryURLArgs
+	args: BuildQueryURLArgs,
 ): string => {
 	const { ref, predicates, ...params } = args;
 
@@ -185,7 +185,7 @@ export const buildQueryURL = (
 
 			if (scopedValue != null) {
 				const v = castArray(scopedValue)
-					.map(ordering => castOrderingToString(ordering))
+					.map((ordering) => castOrderingToString(ordering))
 					.join(",");
 
 				value = `[${v}]`;

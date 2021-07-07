@@ -7,17 +7,17 @@ import * as prismic from "../src";
 test(
 	'[at(document.type, "product")]',
 	isTitleMacro,
-	prismic.predicate.at("document.type", "product")
+	prismic.predicate.at("document.type", "product"),
 );
 
 test(
 	'[at(document.tags, ["Macaron", "Cupcake"])]',
 	isTitleMacro,
-	prismic.predicate.at("document.tags", ["Macaron", "Cupcake"])
+	prismic.predicate.at("document.tags", ["Macaron", "Cupcake"]),
 );
 
 test(
 	"[at(my.product.price, 50)]",
 	isTitleMacro,
-	prismic.predicate.at("my.product.price", 50)
+	prismic.predicate.at("my.product.price", 50),
 );

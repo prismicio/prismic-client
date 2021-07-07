@@ -41,5 +41,5 @@ const getAll = (cookieStore: string): { [name: string]: string } =>
  */
 export const getCookie = (
 	name: string,
-	cookieStore: string
+	cookieStore: string,
 ): string | undefined => getAll(cookieStore)[name];

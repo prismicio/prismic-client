@@ -6,7 +6,12 @@
  * @returns `value` formatted for the Prismic REST API.
  */
 const formatValue = (
-	value: string | number | Date | unknown | (string | number | Date | unknown)[]
+	value:
+		| string
+		| number
+		| Date
+		| unknown
+		| (string | number | Date | unknown)[],
 ): string => {
 	if (Array.isArray(value)) {
 		return `[${value.map(formatValue).join(", ")}]`;
@@ -161,7 +166,7 @@ export const similar = argsPredicate<[id: string, value: number]>("similar");
  */
 export const geopointNear =
 	pathWithArgsPredicate<[latitude: number, longitude: number, radius: number]>(
-		"geopoint.near"
+		"geopoint.near",
 	);
 
 /**
@@ -187,7 +192,7 @@ export const numberGreaterThan =
  */
 export const numberInRange =
 	pathWithArgsPredicate<[lowerLimit: number, upperLimit: number]>(
-		"number.inRange"
+		"number.inRange",
 	);
 
 /**
@@ -230,7 +235,7 @@ export const dateDayOfMonth =
  * {@link https://prismic.io/docs/technologies/date-and-time-based-predicate-reference-rest-api#dayofmonthafter}
  */
 export const dateDayOfMonthAfter = pathWithArgsPredicate<[day: number]>(
-	"date.day-of-month-after"
+	"date.day-of-month-after",
 );
 
 /**
@@ -239,7 +244,7 @@ export const dateDayOfMonthAfter = pathWithArgsPredicate<[day: number]>(
  * {@link https://prismic.io/docs/technologies/date-and-time-based-predicate-reference-rest-api#dayofmonthbefore}
  */
 export const dateDayOfMonthBefore = pathWithArgsPredicate<[day: number]>(
-	"date.day-of-month-before"
+	"date.day-of-month-before",
 );
 
 /**
@@ -256,7 +261,7 @@ export const dateDayOfWeek =
  * {@link https://prismic.io/docs/technologies/date-and-time-based-predicate-reference-rest-api#dayofweekafter}
  */
 export const dateDayOfWeekAfter = pathWithArgsPredicate<[day: string | number]>(
-	"date.day-of-week-after"
+	"date.day-of-week-after",
 );
 
 /**

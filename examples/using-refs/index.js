@@ -3,7 +3,7 @@ import fetch from "node-fetch";
 
 const endpoint = prismic.getEndpoint("qwerty");
 const client = prismic.createClient(endpoint, {
-	fetch
+	fetch,
 });
 
 // By default, the client will fetch the latest published content from the repository.
@@ -30,7 +30,7 @@ console.info(aboutPage);
 // We can also override the ref on a per-query basis.
 const otherRef = await client.getRefByLabel("My Other Ref");
 const contactPage = await client.getByUID("page", "contact", {
-	ref: otherRef.ref
+	ref: otherRef.ref,
 });
 console.info(contactPage);
 
