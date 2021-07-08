@@ -187,7 +187,7 @@ type ResolvePreviewArgs = {
 	/**
 	 * A function that maps a Prismic document to a URL within your app.
 	 */
-	linkResolver: prismicH.LinkResolverFunction;
+	linkResolver?: prismicH.LinkResolverFunction;
 
 	/**
 	 * A fallback URL if the Link Resolver does not return a value.
