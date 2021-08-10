@@ -11,14 +11,16 @@ import { Ordering, Route } from "./types";
  */
 export interface QueryParams {
 	/**
-	 * The secure token for accessing the API (only needed if your repository is set to private).
+	 * The secure token for accessing the API (only needed if your repository is
+	 * set to private).
 	 *
 	 * {@link https://user-guides.prismic.io/en/articles/1036153-generating-an-access-token}
 	 */
 	accessToken?: string;
 
 	/**
-	 * The `pageSize` parameter defines the maximum number of documents that the API will return for your query.
+	 * The `pageSize` parameter defines the maximum number of documents that the
+	 * API will return for your query.
 	 *
 	 * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#pagesize}
 	 */
@@ -32,28 +34,32 @@ export interface QueryParams {
 	page?: number;
 
 	/**
-	 * The `after` parameter can be used along with the orderings option. It will remove all the documents except for those after the specified document in the list.
+	 * The `after` parameter can be used along with the orderings option. It will
+	 * remove all the documents except for those after the specified document in the list.
 	 *
 	 * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#after}
 	 */
 	after?: string;
 
 	/**
-	 * The `fetch` parameter is used to make queries faster by only retrieving the specified field(s).
+	 * The `fetch` parameter is used to make queries faster by only retrieving the
+	 * specified field(s).
 	 *
 	 * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#fetch}
 	 */
 	fetch?: string | string[];
 
 	/**
-	 * The `fetchLinks` parameter allows you to retrieve a specific content field from a linked document and add it to the document response object.
+	 * The `fetchLinks` parameter allows you to retrieve a specific content field
+	 * from a linked document and add it to the document response object.
 	 *
 	 * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#fetchlinks}
 	 */
 	fetchLinks?: string | string[];
 
 	/**
-	 * The `graphQuery` parameter allows you to specify which fields to retrieve and what content to retrieve from Linked Documents / Content Relationships.
+	 * The `graphQuery` parameter allows you to specify which fields to retrieve
+	 * and what content to retrieve from Linked Documents / Content Relationships.
 	 *
 	 * {@link https://prismic.io/docs/technologies/graphquery-rest-api}
 	 */
@@ -67,7 +73,8 @@ export interface QueryParams {
 	lang?: string;
 
 	/**
-	 * The `orderings` parameter orders the results by the specified field(s). You can specify as many fields as you want.
+	 * The `orderings` parameter orders the results by the specified field(s). You
+	 * can specify as many fields as you want.
 	 *
 	 * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#orderings}
 	 */
@@ -124,7 +131,7 @@ type ValidParamName =
  * Converts an Ordering to a string that is compatible with Prismic's REST API.
  * If the value provided is already a string, no conversion is performed.
  *
- * @param ordering Ordering to convert.
+ * @param ordering - Ordering to convert.
  *
  * @returns String representation of the Ordering.
  */
@@ -152,8 +159,8 @@ export type BuildQueryURLArgs = QueryParams & BuildQueryURLParams;
  * {@link https://prismic.io/docs/technologies/introduction-to-the-content-query-api#prismic-api-ref}
  * {@link https://prismic.io/docs/technologies/query-predicates-reference-rest-api}
  *
- * @param endpoint URL to the repository's REST API V2.
- * @param args Arguments to filter and scope the query.
+ * @param endpoint - URL to the repository's REST API V2.
+ * @param args - Arguments to filter and scope the query.
  *
  * @returns URL that can be used to request documents from the repository.
  */
