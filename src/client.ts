@@ -2,6 +2,7 @@ import * as prismicT from "@prismicio/types";
 import * as prismicH from "@prismicio/helpers";
 
 import { appendPredicates } from "./lib/appendPredicates";
+import { castThunk } from "./lib/castThunk";
 import { getCookie } from "./lib/getCookie";
 
 import {
@@ -192,6 +193,12 @@ export type ClientConfig = {
 	ref?: RefStringOrFn;
 
 	/**
+	 * A string representing a version of the Prismic repository's Integration
+	 * Fields content.
+	 */
+	integrationFieldsRef?: RefStringOrFn;
+
+	/**
 	 * Default parameters that will be sent with each query. These parameters can
 	 * be overridden on each query if needed.
 	 */
@@ -321,6 +328,13 @@ export class Client {
 	accessToken?: string;
 
 	/**
+	 * The client's Integration Fields ref for fetching the latest Integration Fields data.
+	 *
+	 * {@link https://prismic.io/docs/core-concepts/integration-fields}
+	 */
+	integrationFieldsRef?: RefStringOrFn;
+
+	/**
 	 * The function used to make network requests to the Prismic REST API. In
 	 * environments where a global `fetch` function does not exist, such as
 	 * Node.js, this function must be provided.
@@ -360,6 +374,7 @@ export class Client {
 	constructor(endpoint: string, options: ClientConfig = {}) {
 		this.endpoint = endpoint;
 		this.accessToken = options.accessToken;
+		this.integrationFieldsRef = options.integrationFieldsRef;
 		this.defaultParams = options.defaultParams;
 		this.internalCache = createSimpleTTLCache();
 		this.refMode = {
@@ -1009,6 +1024,7 @@ export class Client {
 		// } = params;
 		const {
 			ref = await this.getResolvedRefString(),
+			integrationFieldsRef = await this.getResolvedIntegrationFieldsRef(),
 			accessToken = this.accessToken,
 			...actualParams
 		} = params;
@@ -1018,6 +1034,7 @@ export class Client {
 			...actualParams,
 			accessToken,
 			ref,
+			integrationFieldsRef,
 		});
 	}
 
@@ -1221,8 +1238,39 @@ export class Client {
 	}
 
 	/**
+	 * Returns the Integration Fields ref for the client, if one exists. This ref
+	 * is used to fetch the latest content from a Integration Field's API.
+	 *
+	 * @returns The repository's Integration Fields ref.
+	 */
+	private async getIntegrationFieldsRef(): Promise<string | undefined> {
+		const repository = await this.getCachedRepository();
+
+		return repository.integrationFieldsRef || undefined;
+	}
+
+	/**
+	 * Returns the Integration Fields ref neeed to query based on the client's
+	 * configuration. This method may make a network request to fetch a ref or
+	 * resolve the user's Integration Field ref thunk.
+	 *
+	 * @returns The repository's Integration Fields ref, is one is available.
+	 */
+	private async getResolvedIntegrationFieldsRef(): Promise<string | undefined> {
+		const thisIntegrationFieldsRefThunk = castThunk(this.integrationFieldsRef);
+
+		const res = await thisIntegrationFieldsRefThunk();
+
+		if (typeof res === "string") {
+			return res;
+		} else {
+			return await this.getIntegrationFieldsRef();
+		}
+	}
+
+	/**
 	 * Returns the ref needed to query based on the client's current state. This
-	 * method may make a network request to fetch a ref or resolve the users's ref thunk.
+	 * method may make a network request to fetch a ref or resolve the user's ref thunk.
 	 *
 	 * If auto previews are enabled, the preview ref takes priority if available.
 	 *
@@ -1271,16 +1319,12 @@ export class Client {
 			}
 
 			case RefStateType.Manual: {
-				const thisRefStringOrFn = this.refMode.payload.refStringOrFn;
+				const thisRefThunk = castThunk(this.refMode.payload.refStringOrFn);
 
-				if (typeof thisRefStringOrFn === "function") {
-					const res = await thisRefStringOrFn();
+				const res = await thisRefThunk();
 
-					if (typeof res === "string") {
-						return res;
-					}
-				} else if (thisRefStringOrFn) {
-					return thisRefStringOrFn;
+				if (typeof res === "string") {
+					return res;
 				}
 			}
 

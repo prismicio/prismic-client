@@ -17,6 +17,7 @@ export interface Language {
 
 export interface Repository {
 	refs: Ref[];
+	integrationFieldsRef: string | null;
 	bookmarks: Record<string, string>;
 	languages: Language[];
 	types: Record<string, string>;

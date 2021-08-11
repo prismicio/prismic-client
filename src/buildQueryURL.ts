@@ -100,6 +100,13 @@ type BuildQueryURLParams = {
 	ref: string;
 
 	/**
+	 * Ref used to populate Integration Fields with the latest content.
+	 *
+	 * {@link https://prismic.io/docs/core-concepts/integration-fields}
+	 */
+	integrationFieldsRef?: string;
+
+	/**
 	 * One or more predicates to filter documents for the query.
 	 *
 	 * {@link https://prismic.io/docs/technologies/query-predicates-reference-rest-api}
@@ -168,10 +175,14 @@ export const buildQueryURL = (
 	endpoint: string,
 	args: BuildQueryURLArgs,
 ): string => {
-	const { ref, predicates, ...params } = args;
+	const { ref, integrationFieldsRef, predicates, ...params } = args;
 
 	const url = new URL(`documents/search`, `${endpoint}/`);
 	url.searchParams.set("ref", ref);
+
+	if (integrationFieldsRef) {
+		url.searchParams.set("integrationFieldsRef", integrationFieldsRef);
+	}
 
 	if (predicates) {
 		for (const predicate of castArray(predicates)) {

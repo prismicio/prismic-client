@@ -7,6 +7,7 @@ export const createRepositoryResponse = (
 ): prismic.Repository => {
 	return {
 		refs: [createRef(true)],
+		integrationFieldsRef: null,
 		bookmarks: {
 			faq: "UfkL59_mqdr73EGn",
 			contact: "UiYZpsuvzXwFMOzj",
