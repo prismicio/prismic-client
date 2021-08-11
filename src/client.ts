@@ -99,7 +99,7 @@ export const REPOSITORY_CACHE_TTL = 5000;
  * given. If the ref must be fetched on-demand, a function can be provided. This
  * function can optionally be asynchronous.
  */
-type RefStringOrFn =
+type RefStringOrThunk =
 	| string
 	| (() => string | undefined | Promise<string | undefined>);
 
@@ -170,7 +170,7 @@ type RefState = {
 				/**
 				 * The user-provided ref or ref thunk.
 				 */
-				refStringOrFn: RefStringOrFn;
+				refStringOrFn: RefStringOrThunk;
 			};
 	  }
 );
@@ -190,13 +190,13 @@ export type ClientConfig = {
 	 * may point to the latest version (called the "master ref"), or a preview
 	 * with draft content.
 	 */
-	ref?: RefStringOrFn;
+	ref?: RefStringOrThunk;
 
 	/**
 	 * A string representing a version of the Prismic repository's Integration
 	 * Fields content.
 	 */
-	integrationFieldsRef?: RefStringOrFn;
+	integrationFieldsRef?: RefStringOrThunk;
 
 	/**
 	 * Default parameters that will be sent with each query. These parameters can
@@ -332,7 +332,7 @@ export class Client {
 	 *
 	 * {@link https://prismic.io/docs/core-concepts/integration-fields}
 	 */
-	integrationFieldsRef?: RefStringOrFn;
+	integrationFieldsRef?: RefStringOrThunk;
 
 	/**
 	 * The function used to make network requests to the Prismic REST API. In
@@ -1171,7 +1171,7 @@ export class Client {
 	 *
 	 * @param ref - The ref or a function that returns the ref from which to query content.
 	 */
-	queryContentFromRef(ref: RefStringOrFn): void {
+	queryContentFromRef(ref: RefStringOrThunk): void {
 		this.refMode = {
 			...this.refMode,
 			type: RefStateType.Manual,
@@ -1254,7 +1254,7 @@ export class Client {
 	 * configuration. This method may make a network request to fetch a ref or
 	 * resolve the user's Integration Field ref thunk.
 	 *
-	 * @returns The repository's Integration Fields ref, is one is available.
+	 * @returns The repository's Integration Fields ref, if one is available.
 	 */
 	private async getResolvedIntegrationFieldsRef(): Promise<string | undefined> {
 		const thisIntegrationFieldsRefThunk = castThunk(this.integrationFieldsRef);
