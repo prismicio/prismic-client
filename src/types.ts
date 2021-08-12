@@ -1,4 +1,5 @@
 import * as prismicT from "@prismicio/types";
+import { Agent } from "http";
 
 export interface Ref {
 	ref: string;
@@ -67,6 +68,14 @@ export type FetchLike = (
 	input: string,
 	init?: RequestInitLike,
 ) => Promise<ResponseLike>;
+
+/**
+ * Http options we need to perform a request
+ * @link https://github.com/node-fetch/node-fetch/blob/main/%40types/index.d.ts#L76
+ */
+export interface HttpOptionsLike {
+	agent?: Agent | ((parsedUrl: URL) => Agent);
+}
 
 /**
  * The minimum required properties from RequestInit.

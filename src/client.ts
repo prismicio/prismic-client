@@ -7,6 +7,7 @@ import { getCookie } from "./lib/getCookie";
 import {
 	FetchLike,
 	Form,
+	HttpOptionsLike,
 	HttpRequestLike,
 	Query,
 	Ref,
@@ -168,6 +169,8 @@ export type ClientConfig = {
 	 * The function used to make network requests to the Prismic REST API. In environments where a global `fetch` function does not exist, such as Node.js, this function must be provided.
 	 */
 	fetch?: FetchLike;
+
+	httpOptions?: httpOptionsLike;
 };
 
 /**
@@ -280,6 +283,8 @@ export class Client {
 	 */
 	fetchFn: FetchLike;
 
+	httpOptions: HttpOptionsLike;
+
 	/**
 	 * Default parameters that will be sent with each query. These parameters can be overridden on each query if needed.
 	 */
@@ -309,6 +314,7 @@ export class Client {
 		this.endpoint = endpoint;
 		this.accessToken = options.accessToken;
 		this.defaultParams = options.defaultParams;
+		this.httpOptions = options.httpOptions;
 		this.internalCache = createSimpleTTLCache();
 		this.refMode = {
 			type: RefStateType.Master,
@@ -421,7 +427,7 @@ export class Client {
 		// TODO: Uncomment when the Authorization header can be used
 		// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
 		// return await this.fetch<Query<TDocument>>(url, params);
-		return await this.fetch<Query<TDocument>>(url);
+		return await this.fetch<Query<TDocument>>(url, this.httpOptions);
 	}
 
 	/**
@@ -791,7 +797,7 @@ export class Client {
 			url.searchParams.set("access_token", this.accessToken);
 		}
 
-		return await this.fetch<Repository>(url.toString());
+		return await this.fetch<Repository>(url.toString(), this.httpOptions);
 	}
 
 	/**
@@ -890,7 +896,7 @@ export class Client {
 		try {
 			const tagsForm = await this.getCachedRepositoryForm("tags");
 
-			return await this.fetch<string[]>(tagsForm.action);
+			return await this.fetch<string[]>(tagsForm.action, this.httpOptions);
 		} catch {
 			const res = await this.getRepository();
 
@@ -1224,7 +1230,7 @@ export class Client {
 		// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
 		// const options = this.buildRequestOptions(params);
 		// const res = await this.fetchFn(url, options);
-		const res = await this.fetchFn(url);
+		const res = await this.fetchFn(url, this.httpOptions);
 
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		let json: any;
