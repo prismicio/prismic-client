@@ -35,6 +35,7 @@ test("includes params if provided", async (t) => {
 	const params: prismic.BuildQueryURLArgs = {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
+		integrationFieldsRef: "custom-integration-fields-ref",
 		lang: "*",
 	};
 	const queryResponse = createQueryResponse();
@@ -43,6 +44,7 @@ test("includes params if provided", async (t) => {
 		createMockRepositoryHandler(t),
 		createMockQueryHandler(t, [queryResponse], params.accessToken, {
 			ref: params.ref as string,
+			integrationFieldsRef: params.integrationFieldsRef,
 			lang: params.lang,
 		}),
 	);

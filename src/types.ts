@@ -17,13 +17,14 @@ export interface Language {
 
 export interface Repository {
 	refs: Ref[];
+	integrationFieldsRef: string | null;
 	bookmarks: Record<string, string>;
 	languages: Language[];
 	types: Record<string, string>;
 	tags: string[];
 	forms: Record<string, Form>;
 	/**
-	 * @deprecated
+	 * @deprecated Experiments are no longer part of Prismic.
 	 */
 	experiments: unknown;
 	oauth_initiate: string;
@@ -85,7 +86,8 @@ export interface ResponseLike {
 }
 
 /**
- * The minimum required properties to treat as an HTTP Request for automatic Prismic preview support.
+ * The minimum required properties to treat as an HTTP Request for automatic
+ * Prismic preview support.
  */
 export interface HttpRequestLike {
 	headers?: {
@@ -110,10 +112,16 @@ export interface Ordering {
  * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
  */
 export interface Route {
-	/** The Custom Type of the document. */
+	/**
+	 * The Custom Type of the document.
+	 */
 	type: string;
-	/** The resolved path of the document with optional placeholders. */
+	/**
+	 * The resolved path of the document with optional placeholders.
+	 */
 	path: string;
-	/** An object that lists the API IDs of the Content Relationships in the route. */
+	/**
+	 * An object that lists the API IDs of the Content Relationships in the route.
+	 */
 	resolvers: Record<string, string>;
 }

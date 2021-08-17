@@ -21,7 +21,7 @@ export const createMockQueryHandler = <
 	accessToken?: string,
 	requiredSearchParams?: Record<
 		string,
-		string | number | (string | number)[] | undefined
+		string | number | (string | number)[] | null | undefined
 	>,
 	debug = true,
 ): msw.RestHandler => {
@@ -51,7 +51,7 @@ export const createMockQueryHandler = <
 					requiredSearchParams[k as keyof typeof requiredSearchParams],
 				).forEach(
 					(l) =>
-						l !== undefined &&
+						l != undefined &&
 						requiredSearchParamsInstance.append(k, l.toString()),
 				);
 			}
