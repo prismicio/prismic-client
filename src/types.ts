@@ -123,5 +123,5 @@ export interface Route {
 	/**
 	 * An object that lists the API IDs of the Content Relationships in the route.
 	 */
-	resolvers: Record<string, string>;
+	resolvers?: Record<string, string>;
 }
