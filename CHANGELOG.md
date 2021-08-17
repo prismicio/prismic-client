@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0-alpha.9](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.8...v6.0.0-alpha.9) (2021-08-17)
+
+
+### Bug Fixes
+
+* allow optional Link Resolver in resolvePreviewURL ([4321921](https://github.com/prismicio/prismic-javascript/commit/43219210fad1fadf57365a77c5c5bce34e28baa3)), closes [#183](https://github.com/prismicio/prismic-javascript/issues/183)
+* mark `resolvers` as optional in Routes ([d84658a](https://github.com/prismicio/prismic-javascript/commit/d84658aa3efd97b034b3cae6281f37b841d62f91))
+* use "main" as primary branch ([c4c02e6](https://github.com/prismicio/prismic-javascript/commit/c4c02e6538dd00ad7324cbffdfa92c6deafbf20d))
+
+
+### Chore
+
+* revert previous commit ([a0cf5cb](https://github.com/prismicio/prismic-javascript/commit/a0cf5cb27ccad10076625d549d6b410b5f9f8dac))
+* update dotfiles per standard template ([5f4dee0](https://github.com/prismicio/prismic-javascript/commit/5f4dee0a85ed64d20861c59abc6e6dce5a4a2933))
+* update pull request template ([f618d62](https://github.com/prismicio/prismic-javascript/commit/f618d626aa74272b7c5a4f4da51c808e30617741))
+
 ## [6.0.0-alpha.8](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.7...v6.0.0-alpha.8) (2021-07-06)
 
 
