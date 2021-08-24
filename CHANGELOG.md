@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0-alpha.11](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.10...v6.0.0-alpha.11) (2021-08-24)
+
+
+### Features
+
+* provide routes as top-level client options ([69f2002](https://github.com/prismicio/prismic-javascript/commit/69f2002a97c476bc7b7f9161ee81946f9e65a4c9))
+
+
+### Chore
+
+* update dependencies ([d70c228](https://github.com/prismicio/prismic-javascript/commit/d70c228a7902ea7a147e203d9c50a253ba6f033c))
+
 ## [6.0.0-alpha.10](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.9...v6.0.0-alpha.10) (2021-08-19)
 
 
