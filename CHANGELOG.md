@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0-alpha.10](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.9...v6.0.0-alpha.10) (2021-08-19)
+
+
+### Chore
+
+* update dependencies ([1d7723f](https://github.com/prismicio/prismic-javascript/commit/1d7723f1b102a4f5e77c38f596912a97df85e052))
+
 ## [6.0.0-alpha.9](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.8...v6.0.0-alpha.9) (2021-08-17)
 
 
