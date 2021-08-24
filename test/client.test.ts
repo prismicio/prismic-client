@@ -343,6 +343,34 @@ test.serial(
 	},
 );
 
+test.serial("uses client-provided routes in queries", async (t) => {
+	const repositoryResponse = createRepositoryResponse();
+	const queryResponse = createQueryResponse();
+
+	const routes = [
+		{
+			type: "page",
+			path: "/",
+		},
+	];
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse),
+		createMockQueryHandler(t, [queryResponse], undefined, {
+			ref: getMasterRef(repositoryResponse),
+			routes: JSON.stringify(routes),
+		}),
+	);
+
+	const client = createTestClient(t, {
+		integrationFieldsRef: () => undefined,
+		routes,
+	});
+	const res = await client.get();
+
+	t.deepEqual(res, queryResponse);
+});
+
 test.serial(
 	"throws ForbiddenError if access token is invalid for repository metadata",
 	async (t) => {

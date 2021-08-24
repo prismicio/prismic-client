@@ -199,10 +199,21 @@ export type ClientConfig = {
 	integrationFieldsRef?: RefStringOrThunk;
 
 	/**
+	 * A list of Route Resolver objects that define how a document's `url` field
+	 * is resolved.
+	 *
+	 * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
+	 */
+	routes?: NonNullable<BuildQueryURLArgs["routes"]>;
+
+	/**
 	 * Default parameters that will be sent with each query. These parameters can
 	 * be overridden on each query if needed.
 	 */
-	defaultParams?: Omit<BuildQueryURLArgs, "ref" | "accessToken">;
+	defaultParams?: Omit<
+		BuildQueryURLArgs,
+		"ref" | "integrationFieldsRef" | "accessToken" | "routes"
+	>;
 
 	/**
 	 * The function used to make network requests to the Prismic REST API. In
@@ -335,6 +346,14 @@ export class Client {
 	integrationFieldsRef?: RefStringOrThunk;
 
 	/**
+	 * A list of Route Resolver objects that define how a document's `url` field
+	 * is resolved.
+	 *
+	 * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
+	 */
+	routes?: NonNullable<BuildQueryURLArgs["routes"]>;
+
+	/**
 	 * The function used to make network requests to the Prismic REST API. In
 	 * environments where a global `fetch` function does not exist, such as
 	 * Node.js, this function must be provided.
@@ -345,7 +364,10 @@ export class Client {
 	 * Default parameters that will be sent with each query. These parameters can
 	 * be overridden on each query if needed.
 	 */
-	defaultParams?: Omit<BuildQueryURLArgs, "ref">;
+	defaultParams?: Omit<
+		BuildQueryURLArgs,
+		"ref" | "integrationFieldsRef" | "accessToken" | "routes"
+	>;
 
 	/**
 	 * The client's ref mode state. This determines which ref is used during queries.
@@ -375,6 +397,7 @@ export class Client {
 		this.endpoint = endpoint;
 		this.accessToken = options.accessToken;
 		this.integrationFieldsRef = options.integrationFieldsRef;
+		this.routes = options.routes;
 		this.defaultParams = options.defaultParams;
 		this.internalCache = createSimpleTTLCache();
 		this.refMode = {
@@ -1026,6 +1049,7 @@ export class Client {
 			ref = await this.getResolvedRefString(),
 			integrationFieldsRef = await this.getResolvedIntegrationFieldsRef(),
 			accessToken = this.accessToken,
+			routes = this.routes,
 			...actualParams
 		} = params;
 
@@ -1035,6 +1059,7 @@ export class Client {
 			accessToken,
 			ref,
 			integrationFieldsRef,
+			routes,
 		});
 	}
 
