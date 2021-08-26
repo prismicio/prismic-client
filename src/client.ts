@@ -7,7 +7,6 @@ import { getCookie } from "./lib/getCookie";
 
 import {
 	FetchLike,
-	Form,
 	HttpRequestLike,
 	// TODO: Uncomment when the Authorization header can be used
 	// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
@@ -1235,7 +1234,7 @@ export class Client {
 	 * @returns The repository form.
 	 * @throws If a matching form cannot be found.
 	 */
-	private async getCachedRepositoryForm(name: string): Promise<Form> {
+	private async getCachedRepositoryForm(name: string): Promise<prismicT.Form> {
 		const cachedRepository = await this.getCachedRepository();
 		const form = cachedRepository.forms[name];
 
