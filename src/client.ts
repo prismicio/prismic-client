@@ -9,9 +9,6 @@ import {
 	FetchLike,
 	Form,
 	HttpRequestLike,
-	Query,
-	Ref,
-	Repository,
 	// TODO: Uncomment when the Authorization header can be used
 	// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
 	// RequestInitLike
@@ -292,7 +289,10 @@ const tagsPredicate = (tags: string | string[]): string =>
  * @returns The first matching ref.
  * @throws If a matching ref cannot be found.
  */
-const findRef = (refs: Ref[], predicate: (ref: Ref) => boolean): Ref => {
+const findRef = (
+	refs: prismicT.Ref[],
+	predicate: (ref: prismicT.Ref) => boolean,
+): prismicT.Ref => {
 	const ref = refs.find((ref) => predicate(ref));
 
 	if (!ref) {
@@ -515,13 +515,13 @@ export class Client {
 	 */
 	async get<TDocument extends prismicT.PrismicDocument>(
 		params?: Partial<BuildQueryURLArgs>,
-	): Promise<Query<TDocument>> {
+	): Promise<prismicT.Query<TDocument>> {
 		const url = await this.buildQueryURL(params);
 
 		// TODO: Uncomment when the Authorization header can be used
 		// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
 		// return await this.fetch<Query<TDocument>>(url, params);
-		return await this.fetch<Query<TDocument>>(url);
+		return await this.fetch<prismicT.Query<TDocument>>(url);
 	}
 
 	/**
@@ -642,7 +642,7 @@ export class Client {
 	async getByIDs<TDocument extends prismicT.PrismicDocument>(
 		ids: string[],
 		params?: Partial<BuildQueryURLArgs>,
-	): Promise<Query<TDocument>> {
+	): Promise<prismicT.Query<TDocument>> {
 		return await this.get<TDocument>(
 			appendPredicates(predicate.in("document.id", ids))(params),
 		);
@@ -766,7 +766,7 @@ export class Client {
 	async getByType<TDocument extends prismicT.PrismicDocument>(
 		documentType: string,
 		params?: Partial<BuildQueryURLArgs>,
-	): Promise<Query<TDocument>> {
+	): Promise<prismicT.Query<TDocument>> {
 		return await this.get<TDocument>(
 			appendPredicates(typePredicate(documentType))(params),
 		);
@@ -818,7 +818,7 @@ export class Client {
 	async getByTag<TDocument extends prismicT.PrismicDocument>(
 		tag: string,
 		params?: Partial<BuildQueryURLArgs>,
-	): Promise<Query<TDocument>> {
+	): Promise<prismicT.Query<TDocument>> {
 		return await this.get<TDocument>(
 			appendPredicates(tagsPredicate(tag))(params),
 		);
@@ -868,7 +868,7 @@ export class Client {
 	async getByTags<TDocument extends prismicT.PrismicDocument>(
 		tags: string[],
 		params?: Partial<BuildQueryURLArgs>,
-	): Promise<Query<TDocument>> {
+	): Promise<prismicT.Query<TDocument>> {
 		return await this.get<TDocument>(
 			appendPredicates(tagsPredicate(tags))(params),
 		);
@@ -906,7 +906,7 @@ export class Client {
 	 *
 	 * @returns Repository metadata.
 	 */
-	async getRepository(): Promise<Repository> {
+	async getRepository(): Promise<prismicT.Repository> {
 		// TODO: Uncomment when the Authorization header can be used
 		// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
 		// return await this.fetch<Repository>(this.endpoint);
@@ -917,7 +917,7 @@ export class Client {
 			url.searchParams.set("access_token", this.accessToken);
 		}
 
-		return await this.fetch<Repository>(url.toString());
+		return await this.fetch<prismicT.Repository>(url.toString());
 	}
 
 	/**
@@ -929,7 +929,7 @@ export class Client {
 	 *
 	 * @returns A list of all refs for the Prismic repository.
 	 */
-	async getRefs(): Promise<Ref[]> {
+	async getRefs(): Promise<prismicT.Ref[]> {
 		const res = await this.getRepository();
 
 		return res.refs;
@@ -942,7 +942,7 @@ export class Client {
 	 *
 	 * @returns The ref with a matching ID, if it exists.
 	 */
-	async getRefById(id: string): Promise<Ref> {
+	async getRefById(id: string): Promise<prismicT.Ref> {
 		const refs = await this.getRefs();
 
 		return findRef(refs, (ref) => ref.id === id);
@@ -955,7 +955,7 @@ export class Client {
 	 *
 	 * @returns The ref with a matching label, if it exists.
 	 */
-	async getRefByLabel(label: string): Promise<Ref> {
+	async getRefByLabel(label: string): Promise<prismicT.Ref> {
 		const refs = await this.getRefs();
 
 		return findRef(refs, (ref) => ref.label === label);
@@ -967,7 +967,7 @@ export class Client {
 	 *
 	 * @returns The repository's master ref.
 	 */
-	async getMasterRef(): Promise<Ref> {
+	async getMasterRef(): Promise<prismicT.Ref> {
 		const refs = await this.getRefs();
 
 		return findRef(refs, (ref) => ref.isMasterRef);
@@ -979,7 +979,7 @@ export class Client {
 	 *
 	 * @returns A list of all Releases for the Prismic repository.
 	 */
-	async getReleases(): Promise<Ref[]> {
+	async getReleases(): Promise<prismicT.Ref[]> {
 		const refs = await this.getRefs();
 
 		return refs.filter((ref) => !ref.isMasterRef);
@@ -992,7 +992,7 @@ export class Client {
 	 *
 	 * @returns The Release with a matching ID, if it exists.
 	 */
-	async getReleaseByID(id: string): Promise<Ref> {
+	async getReleaseByID(id: string): Promise<prismicT.Ref> {
 		const releases = await this.getReleases();
 
 		return findRef(releases, (ref) => ref.id === id);
@@ -1005,7 +1005,7 @@ export class Client {
 	 *
 	 * @returns The ref with a matching label, if it exists.
 	 */
-	async getReleaseByLabel(label: string): Promise<Ref> {
+	async getReleaseByLabel(label: string): Promise<prismicT.Ref> {
 		const releases = await this.getReleases();
 
 		return findRef(releases, (ref) => ref.label === label);
@@ -1209,10 +1209,11 @@ export class Client {
 	 *
 	 * @returns Cached repository metadata.
 	 */
-	private async getCachedRepository(): Promise<Repository> {
+	private async getCachedRepository(): Promise<prismicT.Repository> {
 		const cacheKey = this.endpoint;
 
-		const cachedRepository = this.internalCache.get<Repository>(cacheKey);
+		const cachedRepository =
+			this.internalCache.get<prismicT.Repository>(cacheKey);
 
 		if (cachedRepository) {
 			return cachedRepository;

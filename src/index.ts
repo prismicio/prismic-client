@@ -18,14 +18,8 @@ export * as cookie from "./cookie";
 export type { ClientConfig } from "./client";
 export type {
 	FetchLike,
-	Form,
-	FormField,
 	HttpRequestLike,
-	Language,
 	Ordering,
-	Query,
-	Ref,
-	Repository,
 	RequestInitLike,
 	ResponseLike,
 	Route,
