@@ -78,7 +78,7 @@ test.serial(
 		const document = createDocument();
 		const queryResponse = createQueryResponse([document]);
 
-		const documentId = document.id;
+		const documentID = document.id;
 		const previewToken = "previewToken";
 		const req = {
 			query: {
@@ -91,7 +91,7 @@ test.serial(
 			createMockRepositoryHandler(t),
 			createMockQueryHandler(t, [queryResponse], undefined, {
 				ref: previewToken,
-				q: `[[at(document.id, "${documentId}")]]`,
+				q: `[[at(document.id, "${documentID}")]]`,
 			}),
 		);
 
@@ -100,7 +100,7 @@ test.serial(
 		const res = await client.resolvePreviewURL({
 			linkResolver: (document) => `/${document.uid}`,
 			defaultURL: "defaultURL",
-			documentId,
+			documentID,
 			previewToken,
 		});
 
