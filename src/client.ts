@@ -148,7 +148,7 @@ type RefState = {
 				/**
 				 * The ID of the Release.
 				 */
-				releaseId: string;
+				releaseID: string;
 			};
 	  }
 	| {
@@ -254,7 +254,7 @@ type ResolvePreviewArgs = {
 	/**
 	 * The previewed document that will be used to determine the destination URL.
 	 */
-	documentId?: string;
+	documentID?: string;
 };
 
 /**
@@ -941,7 +941,7 @@ export class Client {
 	 *
 	 * @returns The ref with a matching ID, if it exists.
 	 */
-	async getRefById(id: string): Promise<prismicT.Ref> {
+	async getRefByID(id: string): Promise<prismicT.Ref> {
 		const refs = await this.getRefs();
 
 		return findRef(refs, (ref) => ref.id === id);
@@ -1082,24 +1082,24 @@ export class Client {
 	 *   session. The user should be redirected to this URL.
 	 */
 	async resolvePreviewURL(args: ResolvePreviewArgs): Promise<string> {
-		let documentId = args.documentId;
+		let documentID = args.documentID;
 		let previewToken = args.previewToken;
 
 		if (typeof globalThis.location !== "undefined") {
 			const searchParams = new URLSearchParams(globalThis.location.search);
-			documentId = documentId || searchParams.get("documentId") || undefined;
+			documentID = documentID || searchParams.get("documentId") || undefined;
 			previewToken = previewToken || searchParams.get("token") || undefined;
 		} else if (this.refMode.httpRequest?.query) {
 			if (typeof this.refMode.httpRequest.query.documentId === "string") {
-				documentId = documentId || this.refMode.httpRequest.query.documentId;
+				documentID = documentID || this.refMode.httpRequest.query.documentId;
 			}
 			if (typeof this.refMode.httpRequest.query.token === "string") {
 				previewToken = previewToken || this.refMode.httpRequest.query.token;
 			}
 		}
 
-		if (documentId != null) {
-			const document = await this.getByID(documentId, {
+		if (documentID != null) {
+			const document = await this.getByID(documentID, {
 				ref: previewToken,
 			});
 
@@ -1148,11 +1148,11 @@ export class Client {
 	 *
 	 * @param id - The ID of the Release.
 	 */
-	queryContentFromReleaseByID(releaseId: string): void {
+	queryContentFromReleaseByID(releaseID: string): void {
 		this.refMode = {
 			...this.refMode,
 			type: RefStateType.ReleaseByID,
-			payload: { releaseId },
+			payload: { releaseID: releaseID },
 		};
 	}
 
@@ -1325,9 +1325,9 @@ export class Client {
 
 		switch (this.refMode.type) {
 			case RefStateType.ReleaseByID: {
-				const releaseId = this.refMode.payload.releaseId;
+				const releaseID = this.refMode.payload.releaseID;
 				const repository = await this.getCachedRepository();
-				const ref = findRef(repository.refs, (ref) => ref.id === releaseId);
+				const ref = findRef(repository.refs, (ref) => ref.id === releaseID);
 
 				return ref.ref;
 			}
