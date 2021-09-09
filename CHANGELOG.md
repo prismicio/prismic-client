@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0-alpha.12](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.11...v6.0.0-alpha.12) (2021-09-09)
+
+
+### Features
+
+* use API types from `@prismicio/types` ([632c2ae](https://github.com/prismicio/prismic-javascript/commit/632c2aeca484502546e880156e94600476f12314))
+
+
+### Bug Fixes
+
+* builds ([5f49827](https://github.com/prismicio/prismic-javascript/commit/5f49827d77b24cd0f0333e23c2306984ae821c94))
+* use "ID" over "Id" in method names ([2bcdabf](https://github.com/prismicio/prismic-javascript/commit/2bcdabf829f309f856b757a3401aacae6856bba4))
+
 ## [6.0.0-alpha.11](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.10...v6.0.0-alpha.11) (2021-08-24)
 
 
