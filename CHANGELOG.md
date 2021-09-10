@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0-alpha.13](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.12...v6.0.0-alpha.13) (2021-09-10)
+
+
+### Features
+
+* add `getByUIDs` and `getAllByUIDs` ([52a8cc9](https://github.com/prismicio/prismic-javascript/commit/52a8cc9d491f10737086bb796b98fa767cefa890)), closes [#191](https://github.com/prismicio/prismic-javascript/issues/191)
+
 ## [6.0.0-alpha.12](https://github.com/prismicio/prismic-javascript/compare/v6.0.0-alpha.11...v6.0.0-alpha.12) (2021-09-09)
 
 
