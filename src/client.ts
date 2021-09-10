@@ -669,8 +669,7 @@ export class Client {
 	 * @param ids - A list of document IDs.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
-	 * @returns A list of documents with IDs matching the `ids` parameter, if a
-	 *   matching document exists.
+	 * @returns A list of documents with IDs matching the `ids` parameter.
 	 */
 	async getAllByIDs<TDocument extends prismicT.PrismicDocument>(
 		ids: string[],
@@ -711,6 +710,81 @@ export class Client {
 			appendPredicates(
 				typePredicate(documentType),
 				predicate.at(`my.${documentType}.uid`, uid),
+			)(params),
+		);
+	}
+
+	/**
+	 * Queries document from the Prismic repository with specific UIDs and Custom Type.
+	 *
+	 * @remarks
+	 * A document's UID is different from its ID. An ID is automatically generated
+	 * for all documents and is made available on its `id` property. A UID is
+	 * provided in the Prismic editor and is unique among all documents of its Custom Type.
+	 * @example
+	 *
+	 * ```ts
+	 * const document = await client.getByUIDs("blog_post", [
+	 * 	"my-first-post",
+	 * 	"my-second-post",
+	 * ]);
+	 * ```
+	 *
+	 * @typeParam TDocument - Type of the Prismic document returned.
+	 * @param documentType - The API ID of the document's Custom Type.
+	 * @param uids - A list of document UIDs.
+	 * @param params - Parameters to filter, sort, and paginate the results.
+	 *
+	 * @returns A paginated response containing documents with UIDs matching the
+	 *   `uids` parameter.
+	 */
+	async getByUIDs<TDocument extends prismicT.PrismicDocument>(
+		documentType: string,
+		uids: string[],
+		params?: Partial<BuildQueryURLArgs>,
+	): Promise<prismicT.Query<TDocument>> {
+		return await this.get<TDocument>(
+			appendPredicates(
+				typePredicate(documentType),
+				predicate.in(`my.${documentType}.uid`, uids),
+			)(params),
+		);
+	}
+
+	/**
+	 * Queries all documents from the Prismic repository with specific UIDs and Custom Type.
+	 *
+	 * This method may make multiple network requests to query all matching content.
+	 *
+	 * @remarks
+	 * A document's UID is different from its ID. An ID is automatically generated
+	 * for all documents and is made available on its `id` property. A UID is
+	 * provided in the Prismic editor and is unique among all documents of its Custom Type.
+	 * @example
+	 *
+	 * ```ts
+	 * const response = await client.getAllByUIDs([
+	 * 	"my-first-post",
+	 * 	"my-second-post",
+	 * ]);
+	 * ```
+	 *
+	 * @typeParam TDocument - Type of Prismic documents returned.
+	 * @param documentType - The API ID of the document's Custom Type.
+	 * @param uids - A list of document UIDs.
+	 * @param params - Parameters to filter, sort, and paginate the results.
+	 *
+	 * @returns A list of documents with UIDs matching the `uids` parameter.
+	 */
+	async getAllByUIDs<TDocument extends prismicT.PrismicDocument>(
+		documentType: string,
+		uids: string[],
+		params?: Partial<BuildQueryURLArgs>,
+	): Promise<TDocument[]> {
+		return await this.getAll<TDocument>(
+			appendPredicates(
+				typePredicate(documentType),
+				predicate.in(`my.${documentType}.uid`, uids),
 			)(params),
 		);
 	}

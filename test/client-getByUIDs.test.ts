@@ -15,26 +15,30 @@ const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
-test("queries for document by UID", async (t) => {
+test("queries for documents by UID", async (t) => {
 	const repositoryResponse = createRepositoryResponse();
-	const document = createDocument();
-	const queryResponse = createQueryResponse([document]);
+	const documents = [createDocument(), createDocument()];
+	const documentUIDs = documents.map((doc) => doc.uid);
+	const documentType = documents[0].type;
+	const queryResponse = createQueryResponse(documents);
 
 	server.use(
 		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, [queryResponse], undefined, {
 			ref: getMasterRef(repositoryResponse),
 			q: [
-				`[[at(document.type, "${document.type}")]]`,
-				`[[at(my.${document.type}.uid, "${document.uid}")]]`,
+				`[[at(document.type, "${documentType}")]]`,
+				`[[in(my.${documentType}.uid, [${documentUIDs
+					.map((uid) => `"${uid}"`)
+					.join(", ")}])]]`,
 			],
 		}),
 	);
 
 	const client = createTestClient(t);
-	const res = await client.getByUID(document.type, document.uid);
+	const res = await client.getByUIDs(documentType, documentUIDs);
 
-	t.deepEqual(res, document);
+	t.deepEqual(res, queryResponse);
 });
 
 test("includes params if provided", async (t) => {
@@ -44,23 +48,27 @@ test("includes params if provided", async (t) => {
 		lang: "*",
 	};
 
-	const document = createDocument();
-	const queryResponse = createQueryResponse([document]);
+	const documents = [createDocument(), createDocument()];
+	const documentUIDs = documents.map((doc) => doc.uid);
+	const documentType = documents[0].type;
+	const queryResponse = createQueryResponse(documents);
 
 	server.use(
 		createMockRepositoryHandler(t),
 		createMockQueryHandler(t, [queryResponse], params.accessToken, {
 			ref: params.ref as string,
 			q: [
-				`[[at(document.type, "${document.type}")]]`,
-				`[[at(my.${document.type}.uid, "${document.uid}")]]`,
+				`[[at(document.type, "${documentType}")]]`,
+				`[[in(my.${documentType}.uid, [${documentUIDs
+					.map((uid) => `"${uid}"`)
+					.join(", ")}])]]`,
 			],
 			lang: params.lang,
 		}),
 	);
 
 	const client = createTestClient(t);
-	const res = await client.getByUID(document.type, document.uid, params);
+	const res = await client.getByUIDs(documentType, documentUIDs, params);
 
-	t.deepEqual(res, document);
+	t.deepEqual(res, queryResponse);
 });
