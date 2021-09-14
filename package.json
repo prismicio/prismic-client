@@ -45,8 +45,8 @@
 		"test": "npm run lint && npm run unit"
 	},
 	"dependencies": {
-		"@prismicio/helpers": "^2.0.0-alpha.3",
-		"@prismicio/types": "^0.1.11"
+		"@prismicio/helpers": "^2.0.0-alpha.8",
+		"@prismicio/types": "^0.1.12"
 	},
 	"devDependencies": {
 		"@types/node-fetch": "^2.5.12",
