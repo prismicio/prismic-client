@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0-beta.0](https://github.com/prismicio/prismic-client/compare/v6.0.0-alpha.15...v6.0.0-beta.0) (2021-09-29)
+
+
+### Chore
+
+* **deps:** maintain dependencies ([312ce48](https://github.com/prismicio/prismic-client/commit/312ce489434abafa9a8322d79dd083ac1e5afe1f))
+* update template config ([8dbc214](https://github.com/prismicio/prismic-client/commit/8dbc2148e72b861d701fa490910c47b25a96892a))
+
 ## [6.0.0-alpha.15](https://github.com/prismicio/prismic-client/compare/v6.0.0-alpha.14...v6.0.0-alpha.15) (2021-09-14)
 
 
