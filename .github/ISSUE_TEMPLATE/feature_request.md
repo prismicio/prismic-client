@@ -1,9 +1,9 @@
 ---
 name: 🙋‍♀️ Feature request
 about: Suggest an idea or enhancement for the package.
-title: ''
-labels: 'enhancement'
-assignees: ''
+title: ""
+labels: "enhancement"
+assignees: ""
 ---
 
 <!-- 💙 Thanks for your time to make this package better with your feedback 💙 -->

@@ -1,9 +1,9 @@
 ---
 name: 🚨 Bug report
-about: Report a bug report to help us improve the package.
-title: ''
-labels: 'bug'
-assignees: ''
+about: Report a bug report to help improve the package.
+title: ""
+labels: "bug"
+assignees: ""
 ---
 
 <!-- 💙 Thanks for your time to make this package better with your feedback 💙
@@ -16,12 +16,12 @@ assignees: ''
 
 ### Versions
 
-- @prismicio/helpers: <!-- ex: v0.1.0 -->
+- @prismicio/client: <!-- ex: v0.1.0 -->
 - node: <!-- ex: v12.14.0 -->
 
 ### Reproduction
 
-<!-- Link to a minimal test case, without a reproduction, it is so hard to address problem :( -->
+<!-- If possible link to a minimal test case, without a reproduction, it is so hard to address problems :( -->
 
 <details open>
 <summary>Additional Details</summary>
@@ -31,6 +31,6 @@ assignees: ''
 
 ### Steps to reproduce
 
-### What is Expected?
+### What is expected?
 
 ### What is actually happening?

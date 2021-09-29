@@ -19,8 +19,8 @@ a Prismic preview session.
 
 ```sh
 # Clone the repository to your computer
-git clone https://github.com/prismicio/prismic-javascript.git
-cd prismic-javascript/examples/server-usage
+git clone https://github.com/prismicio/prismic-client.git
+cd prismic-client/examples/server-usage
 
 # Install the dependencies
 npm install

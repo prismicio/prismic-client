@@ -23,8 +23,8 @@ the browser, you can remove `node-fetch` from the example.
 
 ```sh
 # Clone the repository to your computer
-git clone https://github.com/prismicio/prismic-javascript.git
-cd prismic-javascript/examples/multiple-languages
+git clone https://github.com/prismicio/prismic-client.git
+cd prismic-client/examples/multiple-languages
 
 # Install the dependencies
 npm install
