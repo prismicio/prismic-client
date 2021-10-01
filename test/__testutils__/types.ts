@@ -1,6 +1,6 @@
-import { Repository } from "../../src";
+import * as prismicT from "@prismicio/types";
 
 export type GetContext = {
-	repositoryResponse: Repository;
-	getRef(repository: Repository): string;
+	repositoryResponse: prismicT.Repository;
+	getRef(repository: prismicT.Repository): string;
 };

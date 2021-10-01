@@ -1,10 +1,8 @@
 import { SetRequired } from "type-fest";
-
-import * as prismic from "../../src";
+import * as prismicT from "@prismicio/types";
 
 import { createDocument } from "./createDocument";
 import { createQueryResponse } from "./createQueryResponse";
-import * as prismicT from "@prismicio/types";
 
 type CreateQueryResponsePagesArgs<
 	TDocument extends prismicT.PrismicDocument = prismicT.PrismicDocument,
@@ -20,7 +18,7 @@ export const createQueryResponsePages = <
 	numPages = 3,
 	numDocsPerPage = 3,
 	fields,
-}: CreateQueryResponsePagesArgs<TDocument>): prismic.Query<
+}: CreateQueryResponsePagesArgs<TDocument>): prismicT.Query<
 	SetRequired<TDocument, "uid">
 >[] => {
 	const documents = Array(numDocsPerPage)

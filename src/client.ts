@@ -5,13 +5,7 @@ import { appendPredicates } from "./lib/appendPredicates";
 import { castThunk } from "./lib/castThunk";
 import { getCookie } from "./lib/getCookie";
 
-import {
-	FetchLike,
-	HttpRequestLike,
-	// TODO: Uncomment when the Authorization header can be used
-	// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
-	// RequestInitLike
-} from "./types";
+import { FetchLike, HttpRequestLike, RequestInitLike } from "./types";
 import { buildQueryURL, BuildQueryURLArgs } from "./buildQueryURL";
 import { ForbiddenError, isForbiddenErrorAPIResponse } from "./ForbiddenError";
 import { ParsingError, isParsingErrorAPIResponse } from "./ParsingError";
@@ -517,10 +511,7 @@ export class Client {
 	): Promise<prismicT.Query<TDocument>> {
 		const url = await this.buildQueryURL(params);
 
-		// TODO: Uncomment when the Authorization header can be used
-		// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
-		// return await this.fetch<Query<TDocument>>(url, params);
-		return await this.fetch<prismicT.Query<TDocument>>(url);
+		return await this.fetch<prismicT.Query<TDocument>>(url, params);
 	}
 
 	/**
@@ -980,17 +971,7 @@ export class Client {
 	 * @returns Repository metadata.
 	 */
 	async getRepository(): Promise<prismicT.Repository> {
-		// TODO: Uncomment when the Authorization header can be used
-		// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
-		// return await this.fetch<Repository>(this.endpoint);
-
-		const url = new URL(this.endpoint);
-
-		if (this.accessToken) {
-			url.searchParams.set("access_token", this.accessToken);
-		}
-
-		return await this.fetch<prismicT.Repository>(url.toString());
+		return await this.fetch<prismicT.Repository>(this.endpoint);
 	}
 
 	/**
@@ -1111,17 +1092,10 @@ export class Client {
 	async buildQueryURL(
 		params: Partial<BuildQueryURLArgs> = {},
 	): Promise<string> {
-		// TODO: Uncomment when the Authorization header can be used
-		// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
-		// const {
-		// 	ref = await this.getResolvedRefString(),
-		// 	accessToken: _accessToken,
-		// 	...actualParams
-		// } = params;
 		const {
 			ref = await this.getResolvedRefString(),
 			integrationFieldsRef = await this.getResolvedIntegrationFieldsRef(),
-			accessToken = this.accessToken,
+			accessToken: _accessToken,
 			routes = this.routes,
 			...actualParams
 		} = params;
@@ -1129,7 +1103,6 @@ export class Client {
 		return buildQueryURL(this.endpoint, {
 			...this.defaultParams,
 			...actualParams,
-			accessToken,
 			ref,
 			integrationFieldsRef,
 			routes,
@@ -1447,17 +1420,15 @@ export class Client {
 	 * @returns Request options that can be used to make a network request to
 	 *   query the repository.
 	 */
-	// TODO: Uncomment when the Authorization header can be used
-	// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
-	// private buildRequestOptions(
-	// 	params?: Partial<BuildQueryURLArgs>
-	// ): RequestInitLike {
-	// 	const accessToken = params?.accessToken || this.accessToken;
+	private buildRequestOptions(
+		params?: Partial<BuildQueryURLArgs>,
+	): RequestInitLike {
+		const accessToken = params?.accessToken || this.accessToken;
 
-	// 	return accessToken
-	// 		? { headers: { Authorization: `Token ${accessToken}` } }
-	// 		: {};
-	// }
+		return accessToken
+			? { headers: { Authorization: `Token ${accessToken}` } }
+			: {};
+	}
 
 	/**
 	 * Performs a network request using the configured `fetch` function. It
@@ -1472,15 +1443,10 @@ export class Client {
 	 */
 	private async fetch<T = unknown>(
 		url: string,
-		// TODO: Uncomment when the Authorization header can be used
-		// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
-		// params?: Partial<BuildQueryURLArgs>
+		params?: Partial<BuildQueryURLArgs>,
 	): Promise<T> {
-		// TODO: Uncomment when the Authorization header can be used
-		// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
-		// const options = this.buildRequestOptions(params);
-		// const res = await this.fetchFn(url, options);
-		const res = await this.fetchFn(url);
+		const options = this.buildRequestOptions(params);
+		const res = await this.fetchFn(url, options);
 
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		let json: any;
