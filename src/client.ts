@@ -84,6 +84,8 @@ const MAX_PAGE_SIZE = 100;
  */
 export const REPOSITORY_CACHE_TTL = 5000;
 
+const GET_ALL_THROTTLE_DELTA_MS = 1000;
+
 /**
  * A ref or a function that returns a ref. If a static ref is known, one can be
  * given. If the ref must be fetched on-demand, a function can be provided. This
@@ -563,16 +565,36 @@ export class Client {
 		const { limit = Infinity, ...actualParams } = params;
 		const resolvedParams = { pageSize: MAX_PAGE_SIZE, ...actualParams };
 
-		const result = await this.get<TDocument>(resolvedParams);
+		let page = 0;
+		let documents: TDocument[] = [];
+		let latestRequestTimestamp = Date.now();
 
-		let page = result.page;
-		let documents = result.results;
+		const recursiveGet = async () => {
+			const now = Date.now();
 
-		while (page < result.total_pages && documents.length < limit) {
-			page += 1;
-			const result = await this.get<TDocument>({ ...resolvedParams, page });
-			documents = [...documents, ...result.results];
-		}
+			if (
+				page === 0 ||
+				now - latestRequestTimestamp >= GET_ALL_THROTTLE_DELTA_MS
+			) {
+				page += 1;
+				latestRequestTimestamp = Date.now();
+				const result = await this.get<TDocument>({ ...resolvedParams, page });
+				documents = [...documents, ...result.results];
+
+				if (page < result.total_pages && documents.length < limit) {
+					await recursiveGet();
+				}
+			} else {
+				await new Promise((res) =>
+					setTimeout(async () => {
+						await recursiveGet();
+						res(undefined);
+					}, GET_ALL_THROTTLE_DELTA_MS - (now - latestRequestTimestamp)),
+				);
+			}
+		};
+
+		await recursiveGet();
 
 		return documents.slice(0, limit);
 	}

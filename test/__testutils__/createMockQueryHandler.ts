@@ -54,7 +54,10 @@ export const createMockQueryHandler = <
 				);
 			}
 
-			if (!("page" in requiredSearchParams) && page > 1) {
+			if (
+				!("page" in requiredSearchParams) &&
+				req.url.searchParams.has("page")
+			) {
 				requiredSearchParamsInstance.append("page", page.toString());
 			}
 
