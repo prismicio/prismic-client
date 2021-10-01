@@ -1,10 +1,10 @@
-import * as prismic from "../../src";
+import * as prismicT from "@prismicio/types";
 
 import { createRef } from "./createRef";
 
 export const createRepositoryResponse = (
-	overrides?: Partial<prismic.Repository>,
-): prismic.Repository => {
+	overrides?: Partial<prismicT.Repository>,
+): prismicT.Repository => {
 	return {
 		refs: [createRef(true)],
 		integrationFieldsRef: null,

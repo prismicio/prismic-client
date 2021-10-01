@@ -2,12 +2,10 @@ import { SetRequired } from "type-fest";
 import * as ava from "ava";
 import * as msw from "msw";
 import * as crypto from "crypto";
-
-import * as prismic from "../../src";
+import * as prismicT from "@prismicio/types";
 
 import { isValidAccessToken } from "./isValidAccessToken";
 import { createQueryResponse } from "./createQueryResponse";
-import * as prismicT from "@prismicio/types";
 
 const castArray = <A>(a: A | A[]): A[] => (Array.isArray(a) ? a : [a]);
 
@@ -15,7 +13,7 @@ export const createMockQueryHandler = <
 	TDocument extends prismicT.PrismicDocument = prismicT.PrismicDocument,
 >(
 	t: ava.ExecutionContext,
-	pagedResponses: Partial<prismic.Query<SetRequired<TDocument, "uid">>>[] = [
+	pagedResponses: Partial<prismicT.Query<SetRequired<TDocument, "uid">>>[] = [
 		createQueryResponse(),
 	],
 	accessToken?: string,
@@ -60,29 +58,16 @@ export const createMockQueryHandler = <
 				requiredSearchParamsInstance.append("page", page.toString());
 			}
 
-			// TODO: Remove when the Authorization header can be used
-			// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
-			const searchParamsWithoutAccessToken = new URLSearchParams(
-				req.url.searchParams,
-			);
-			searchParamsWithoutAccessToken.delete("access_token");
-
 			if (debug) {
 				t.is(
 					requiredSearchParamsInstance.toString(),
-					// TODO: Uncomment when the Authorization header can be used
-					// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
-					// req.url.searchParams.toString()
-					searchParamsWithoutAccessToken.toString(),
+					req.url.searchParams.toString(),
 				);
 			}
 
 			requestMatches =
 				requiredSearchParamsInstance.toString() ===
-				// TODO: Uncomment when the Authorization header can be used
-				// @see Related issue - {@link https://github.com/prismicio/issue-tracker-wroom/issues/351}
-				// req.url.searchParams.toString()
-				searchParamsWithoutAccessToken.toString();
+				req.url.searchParams.toString();
 		}
 
 		if (requestMatches) {
