@@ -3,6 +3,7 @@ import * as mswNode from "msw/node";
 
 import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
 import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
+import { createQueryResponse } from "./__testutils__/createQueryResponse";
 import { createQueryResponsePages } from "./__testutils__/createQueryResponsePages";
 import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
 import { createTestClient } from "./__testutils__/createClient";
@@ -10,7 +11,6 @@ import { getMasterRef } from "./__testutils__/getMasterRef";
 
 import * as prismic from "../src";
 import { GET_ALL_THROTTLE_THRESHOLD } from "../src/client";
-import { createQueryResponse } from "./__testutils__/createQueryResponse";
 
 const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
