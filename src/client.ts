@@ -585,24 +585,24 @@ export class Client {
 		const { limit = Infinity, ...actualParams } = params;
 		const resolvedParams = { pageSize: MAX_PAGE_SIZE, ...actualParams };
 
-		let result: prismicT.Query<TDocument> | undefined;
 		const documents: TDocument[] = [];
+		let latestResult: prismicT.Query<TDocument> | undefined;
 
 		while (
-			(!result || result.page < result.total_pages) &&
+			(!latestResult || latestResult.page < latestResult.total_pages) &&
 			documents.length < limit
 		) {
 			const start = Date.now();
-			result = await this.get<TDocument>({
+			latestResult = await this.get<TDocument>({
 				...resolvedParams,
-				page: result ? result.page + 1 : undefined,
+				page: latestResult ? latestResult.page + 1 : undefined,
 			});
 			const end = Date.now();
 
-			documents.push(...result.results);
+			documents.push(...latestResult.results);
 
 			if (
-				result.page < result.total_pages &&
+				latestResult.page < latestResult.total_pages &&
 				end - start < GET_ALL_THROTTLE_THRESHOLD
 			) {
 				await new Promise((res) =>
