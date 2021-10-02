@@ -262,14 +262,26 @@ const typePredicate = (documentType: string): string =>
 	predicate.at("document.type", documentType);
 
 /**
- * Creates a predicate to filter content by document tags.
+ * Creates a predicate to filter content by document tags. All tags are required
+ * on the document.
  *
  * @param documentType - Document tags to filter queried content.
  *
  * @returns A predicate that can be used in a Prismic REST API V2 request.
  */
-const tagsPredicate = (tags: string | string[]): string =>
+const everyTagPredicate = (tags: string | string[]): string =>
 	predicate.at("document.tags", tags);
+
+/**
+ * Creates a predicate to filter content by document tags. At least one matching
+ * tag is required on the document.
+ *
+ * @param documentType - Document tags to filter queried content.
+ *
+ * @returns A predicate that can be used in a Prismic REST API V2 request.
+ */
+const someTagsPredicate = (tags: string | string[]): string =>
+	predicate.any("document.tags", tags);
 
 /**
  * Returns the first ref from a list that passes a predicate (a function that
@@ -884,7 +896,7 @@ export class Client {
 		params?: Partial<BuildQueryURLArgs>,
 	): Promise<prismicT.Query<TDocument>> {
 		return await this.get<TDocument>(
-			appendPredicates(tagsPredicate(tag))(params),
+			appendPredicates(everyTagPredicate(tag))(params),
 		);
 	}
 
@@ -910,57 +922,111 @@ export class Client {
 		params?: Partial<Omit<BuildQueryURLArgs, "page">>,
 	): Promise<TDocument[]> {
 		return await this.getAll<TDocument>(
-			appendPredicates(tagsPredicate(tag))(params),
+			appendPredicates(everyTagPredicate(tag))(params),
 		);
 	}
 
 	/**
-	 * Queries documents from the Prismic repository with a specific tag.
+	 * Queries documents from the Prismic repository with specific tags. A
+	 * document must be tagged with all of the queried tags to be included.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * const response = await client.getAllByTag("food");
+	 * const response = await client.getByEveryTag(["food", "fruit"]);
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of Prismic documents returned.
 	 * @param tags - A list of tags that must be included on a document.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
-	 * @returns A paginated response containing documents with the tag.
+	 * @returns A paginated response containing documents with the tags.
 	 */
-	async getByTags<TDocument extends prismicT.PrismicDocument>(
+	async getByEveryTag<TDocument extends prismicT.PrismicDocument>(
 		tags: string[],
 		params?: Partial<BuildQueryURLArgs>,
 	): Promise<prismicT.Query<TDocument>> {
 		return await this.get<TDocument>(
-			appendPredicates(tagsPredicate(tags))(params),
+			appendPredicates(everyTagPredicate(tags))(params),
 		);
 	}
 
 	/**
-	 * Queries all documents from the Prismic repository with a specific tag.
+	 * Queries documents from the Prismic repository with specific tags. A
+	 * document must be tagged with all of the queried tags to be included.
 	 *
 	 * This method may make multiple network requests to query all matching content.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * const response = await client.getAllByTag("food");
+	 * const response = await client.getAllByEveryTag(["food", "fruit"]);
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of Prismic documents returned.
 	 * @param tags - A list of tags that must be included on a document.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
-	 * @returns A list of all documents with the tag.
+	 * @returns A list of all documents with the tags.
 	 */
-	async getAllByTags<TDocument extends prismicT.PrismicDocument>(
+	async getAllByEveryTag<TDocument extends prismicT.PrismicDocument>(
 		tags: string[],
 		params?: Partial<Omit<BuildQueryURLArgs, "page">>,
 	): Promise<TDocument[]> {
 		return await this.getAll<TDocument>(
-			appendPredicates(tagsPredicate(tags))(params),
+			appendPredicates(everyTagPredicate(tags))(params),
+		);
+	}
+
+	/**
+	 * Queries documents from the Prismic repository with specific tags. A
+	 * document must be tagged with at least one of the queried tags to be included.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * const response = await client.getByEveryTag(["food", "fruit"]);
+	 * ```
+	 *
+	 * @typeParam TDocument - Type of Prismic documents returned.
+	 * @param tags - A list of tags that must be included on a document.
+	 * @param params - Parameters to filter, sort, and paginate the results.
+	 *
+	 * @returns A paginated response containing documents with at least one of the tags.
+	 */
+	async getBySomeTags<TDocument extends prismicT.PrismicDocument>(
+		tags: string[],
+		params?: Partial<BuildQueryURLArgs>,
+	): Promise<prismicT.Query<TDocument>> {
+		return await this.get<TDocument>(
+			appendPredicates(someTagsPredicate(tags))(params),
+		);
+	}
+
+	/**
+	 * Queries documents from the Prismic repository with specific tags. A
+	 * document must be tagged with at least one of the queried tags to be included.
+	 *
+	 * This method may make multiple network requests to query all matching content.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * const response = await client.getAllByEveryTag(["food", "fruit"]);
+	 * ```
+	 *
+	 * @typeParam TDocument - Type of Prismic documents returned.
+	 * @param tags - A list of tags that must be included on a document.
+	 * @param params - Parameters to filter, sort, and paginate the results.
+	 *
+	 * @returns A list of all documents with at least one of the tags.
+	 */
+	async getAllBySomeTags<TDocument extends prismicT.PrismicDocument>(
+		tags: string[],
+		params?: Partial<Omit<BuildQueryURLArgs, "page">>,
+	): Promise<TDocument[]> {
+		return await this.getAll<TDocument>(
+			appendPredicates(someTagsPredicate(tags))(params),
 		);
 	}
 

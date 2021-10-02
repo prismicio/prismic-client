@@ -28,7 +28,7 @@ test("returns all documents by tag from paginated response", async (t) => {
 		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, pagedResponses, undefined, {
 			ref: getMasterRef(repositoryResponse),
-			q: `[[at(document.tags, [${documentTags
+			q: `[[any(document.tags, [${documentTags
 				.map((tag) => `"${tag}"`)
 				.join(", ")}])]]`,
 			pageSize: 100,
@@ -36,7 +36,7 @@ test("returns all documents by tag from paginated response", async (t) => {
 	);
 
 	const client = createTestClient(t);
-	const res = await client.getAllByTags(documentTags);
+	const res = await client.getAllBySomeTags(documentTags);
 
 	t.deepEqual(res, allDocs);
 	t.is(res.length, 3 * 3);
@@ -60,7 +60,7 @@ test("includes params if provided", async (t) => {
 		createMockRepositoryHandler(t),
 		createMockQueryHandler(t, pagedResponses, params.accessToken, {
 			ref: params.ref as string,
-			q: `[[at(document.tags, [${documentTags
+			q: `[[any(document.tags, [${documentTags
 				.map((tag) => `"${tag}"`)
 				.join(", ")}])]]`,
 			pageSize: 100,
@@ -69,7 +69,7 @@ test("includes params if provided", async (t) => {
 	);
 
 	const client = createTestClient(t);
-	const res = await client.getAllByTags(documentTags, params);
+	const res = await client.getAllBySomeTags(documentTags, params);
 
 	t.deepEqual(res, allDocs);
 	t.is(res.length, 3 * 3);
