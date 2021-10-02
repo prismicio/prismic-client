@@ -10,6 +10,7 @@ import { getMasterRef } from "./__testutils__/getMasterRef";
 
 import * as prismic from "../src";
 import { GET_ALL_THROTTLE_THRESHOLD } from "../src/client";
+import { createQueryResponse } from "./__testutils__/createQueryResponse";
 
 const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
@@ -152,11 +153,41 @@ test("throttles requests past first page", async (t) => {
 	const maxTime = numPages * GET_ALL_THROTTLE_THRESHOLD;
 	const minTime = maxTime - GET_ALL_THROTTLE_THRESHOLD;
 
-	// The total time is between (# of pages - 1) and # of pages multiplied by
-	// the throttle threshold duration. This effectively checks that each request
-	// after page 1 is delayed by at least the threshold amount.
+	// The total time should be between (# of pages - 1) and # of pages
+	// multiplied by the throttle threshold duration. This effectively checks
+	// that each request after page 1 is delayed by at least the threshold
+	// amount.
 	t.true(
 		minTime <= totalTime && totalTime <= maxTime,
 		`Total time should be between ${minTime}ms and ${maxTime}ms (inclusive), but was ${totalTime}ms`,
+	);
+});
+
+test("does not throttle single page queries", async (t) => {
+	const repositoryResponse = createRepositoryResponse();
+	const queryResponse = createQueryResponse();
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse),
+		createMockQueryHandler(t, [queryResponse], undefined, {
+			ref: getMasterRef(repositoryResponse),
+			pageSize: 100,
+		}),
+	);
+
+	const client = createTestClient(t);
+
+	const startTime = Date.now();
+	await client.getAll();
+	const endTime = Date.now();
+
+	const totalTime = endTime - startTime;
+
+	// The total time should be less than throttle threshold duration. This
+	// effectively checks that the first request is called immediately and does
+	// not unnecessarily wait after the request is fulfilled.
+	t.true(
+		totalTime < GET_ALL_THROTTLE_THRESHOLD,
+		`Total time should be less than ${GET_ALL_THROTTLE_THRESHOLD}ms, but was ${totalTime}ms`,
 	);
 });

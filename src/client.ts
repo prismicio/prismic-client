@@ -585,18 +585,31 @@ export class Client {
 		const { limit = Infinity, ...actualParams } = params;
 		const resolvedParams = { pageSize: MAX_PAGE_SIZE, ...actualParams };
 
-		const result = await this.get<TDocument>(resolvedParams);
+		let totalPages = 1;
+		let page = 0;
+		const documents: TDocument[] = [];
 
-		let page = result.page;
-		let documents = result.results;
-
-		while (page < result.total_pages && documents.length < limit) {
+		while (page < totalPages && documents.length < limit) {
 			page += 1;
-			const [result] = await Promise.all([
-				this.get<TDocument>({ ...resolvedParams, page }),
-				new Promise((res) => setTimeout(res, GET_ALL_THROTTLE_THRESHOLD)),
-			]);
-			documents = [...documents, ...result.results];
+
+			const start = Date.now();
+			const paginatedResult = await this.get<TDocument>({
+				...resolvedParams,
+				page,
+			});
+			const end = Date.now();
+
+			totalPages = paginatedResult.total_pages;
+			documents.push(...paginatedResult.results);
+
+			if (
+				page < paginatedResult.total_pages &&
+				end - start < GET_ALL_THROTTLE_THRESHOLD
+			) {
+				await new Promise((res) =>
+					setTimeout(res, GET_ALL_THROTTLE_THRESHOLD - (end - start)),
+				);
+			}
 		}
 
 		return documents.slice(0, limit);
