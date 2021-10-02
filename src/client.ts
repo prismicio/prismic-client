@@ -7,8 +7,8 @@ import { getCookie } from "./lib/getCookie";
 
 import { FetchLike, HttpRequestLike, RequestInitLike } from "./types";
 import { buildQueryURL, BuildQueryURLArgs } from "./buildQueryURL";
-import { ForbiddenError, isForbiddenErrorAPIResponse } from "./ForbiddenError";
-import { ParsingError, isParsingErrorAPIResponse } from "./ParsingError";
+import { ForbiddenError } from "./ForbiddenError";
+import { ParsingError } from "./ParsingError";
 import { PrismicError } from "./PrismicError";
 import * as cookie from "./cookie";
 import * as predicate from "./predicate";
@@ -51,7 +51,7 @@ const createSimpleTTLCache = (): SimpleTTLCache => {
 			const cacheValue = cache.get(key);
 
 			if (cacheValue) {
-				if (new Date().getTime() < cacheValue.expiresAt) {
+				if (Date.now() < cacheValue.expiresAt) {
 					return cacheValue.value as T;
 				}
 			}
@@ -65,7 +65,7 @@ const createSimpleTTLCache = (): SimpleTTLCache => {
 		 * @param ttl - Number of milliseconds to consider the value fresh.
 		 */
 		set<T>(key: string, value: T, ttl: number): void {
-			cache.set(key, { expiresAt: new Date().getTime() + ttl, value });
+			cache.set(key, { expiresAt: Date.now() + ttl, value });
 		},
 	};
 };
@@ -1468,14 +1468,10 @@ export class Client {
 			// - Invalid predicate syntax
 			// - Ref not provided (ignored)
 			case 400: {
-				if (isParsingErrorAPIResponse(json)) {
-					throw new ParsingError(json.message, {
-						url,
-						response: json,
-					});
-				}
-
-				break;
+				throw new ParsingError(json.message, {
+					url,
+					response: json,
+				});
 			}
 
 			// Unauthorized
@@ -1486,15 +1482,10 @@ export class Client {
 			// - Missing access token for query endpoint
 			// - Incorrect access token for query endpoint
 			case 403: {
-				if (isForbiddenErrorAPIResponse(json)) {
-					throw new ForbiddenError(
-						"error" in json ? json.error : json.message,
-						{
-							url,
-							response: json,
-						},
-					);
-				}
+				throw new ForbiddenError("error" in json ? json.error : json.message, {
+					url,
+					response: json,
+				});
 			}
 		}
 

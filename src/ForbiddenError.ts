@@ -1,47 +1,29 @@
-interface ForbiddenErrorRepositoryAPIResponse {
+import { PrismicError } from "./PrismicError";
+
+type ForbiddenErrorRepositoryAPIResponse = {
 	type: string;
 	message: string;
-	oauth_initiate: string;
-	oauth_token: string;
-}
+};
 
-interface ForbiddenErrorQueryAPIResponse {
+type ForbiddenErrorQueryAPIResponse = {
 	error: string;
-	oauth_initiate: string;
-	oauth_token: string;
-}
-
-type ForbiddenErrorAPIResponse =
-	| ForbiddenErrorRepositoryAPIResponse
-	| ForbiddenErrorQueryAPIResponse;
-
-export const isForbiddenErrorAPIResponse = (
-	input: unknown,
-): input is ForbiddenErrorAPIResponse => {
-	return (
-		typeof input === "object" &&
-		input !== null &&
-		("error" in input || "message" in input) &&
-		"oauth_initiate" in input &&
-		"oauth_token" in input
-	);
 };
 
 type ForbiddenErrorArgs = {
 	url: string;
-	response: ForbiddenErrorAPIResponse;
+	response:
+		| ForbiddenErrorRepositoryAPIResponse
+		| ForbiddenErrorQueryAPIResponse;
 };
 
-export class ForbiddenError extends Error {
-	url: string;
-	oauth_initiate: string;
-	oauth_token: string;
+export class ForbiddenError extends PrismicError {
+	response:
+		| ForbiddenErrorRepositoryAPIResponse
+		| ForbiddenErrorQueryAPIResponse;
 
 	constructor(message: string, args: ForbiddenErrorArgs) {
-		super(message);
+		super(message, args);
 
-		this.url = args.url;
-		this.oauth_initiate = args.response.oauth_initiate;
-		this.oauth_token = args.response.oauth_token;
+		this.response = args.response;
 	}
 }

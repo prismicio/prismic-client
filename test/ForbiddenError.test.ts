@@ -14,6 +14,4 @@ test("contains the request url and error properties", (t) => {
 
 	t.is(error.url, url);
 	t.is(error.message, message);
-	t.is(error.oauth_initiate, response.oauth_initiate);
-	t.is(error.oauth_token, response.oauth_token);
 });
