@@ -9,6 +9,7 @@ import { createTestClient } from "./__testutils__/createClient";
 import { getMasterRef } from "./__testutils__/getMasterRef";
 
 import * as prismic from "../src";
+import { GET_ALL_THROTTLE_THRESHOLD } from "../src/client";
 
 const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
@@ -123,4 +124,39 @@ test("merges params and default params if provided", async (t) => {
 
 	t.deepEqual(res, allDocs);
 	t.is(res.length, 3 * 3);
+});
+
+test("throttles requests past first page", async (t) => {
+	const numPages = 3;
+	const repositoryResponse = createRepositoryResponse();
+	const pagedResponses = createQueryResponsePages({
+		numPages,
+		numDocsPerPage: 3,
+	});
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse),
+		createMockQueryHandler(t, pagedResponses, undefined, {
+			ref: getMasterRef(repositoryResponse),
+			pageSize: 100,
+		}),
+	);
+
+	const client = createTestClient(t);
+
+	const startTime = Date.now();
+	await client.getAll();
+	const endTime = Date.now();
+
+	const totalTime = endTime - startTime;
+	const maxTime = numPages * GET_ALL_THROTTLE_THRESHOLD;
+	const minTime = maxTime - GET_ALL_THROTTLE_THRESHOLD;
+
+	// The total time is between (# of pages - 1) and # of pages multiplied by
+	// the throttle threshold duration. This effectively checks that each request
+	// after page 1 is delayed by at least the threshold amount.
+	t.true(
+		minTime <= totalTime && totalTime <= maxTime,
+		`Total time should be between ${minTime}ms and ${maxTime}ms (inclusive), but was ${totalTime}ms`,
+	);
 });
