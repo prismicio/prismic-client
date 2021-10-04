@@ -62,8 +62,8 @@ test("includes params if provided", async (t) => {
 			q: `[[in(document.id, [${allDocumentIds
 				.map((id) => `"${id}"`)
 				.join(", ")}])]]`,
-			pageSize: 100,
 			lang: params.lang,
+			pageSize: 100,
 		}),
 	);
 

@@ -53,8 +53,8 @@ test("includes params if provided", async (t) => {
 		createMockRepositoryHandler(t),
 		createMockQueryHandler(t, pagedResponses, params.accessToken, {
 			ref: params.ref as string,
-			pageSize: 100,
 			lang: params.lang,
+			pageSize: 100,
 		}),
 	);
 
