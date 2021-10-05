@@ -72,8 +72,8 @@ test("includes params if provided", async (t) => {
 					.map((uid) => `"${uid}"`)
 					.join(", ")}])]]`,
 			],
-			pageSize: 100,
 			lang: params.lang,
+			pageSize: 100,
 		}),
 	);
 

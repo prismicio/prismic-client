@@ -573,7 +573,10 @@ export class Client {
 		params: Partial<Omit<BuildQueryURLArgs, "page">> & GetAllParams = {},
 	): Promise<TDocument[]> {
 		const { limit = Infinity, ...actualParams } = params;
-		const resolvedParams = { pageSize: MAX_PAGE_SIZE, ...actualParams };
+		const resolvedParams = {
+			...actualParams,
+			pageSize: actualParams.pageSize || MAX_PAGE_SIZE,
+		};
 
 		const result = await this.get<TDocument>(resolvedParams);
 
