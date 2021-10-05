@@ -10,7 +10,7 @@ import { createTestClient } from "./__testutils__/createClient";
 import { getMasterRef } from "./__testutils__/getMasterRef";
 
 import * as prismic from "../src";
-import { GET_ALL_THROTTLE_DELAY } from "../src/client";
+import { GET_ALL_QUERY_DELAY } from "../src/client";
 
 /**
  * Tolerance in number of milliseconds for the duration of a simulated network request.
@@ -165,7 +165,7 @@ test("throttles requests past first page", async (t) => {
 
 	const totalTime = endTime - startTime;
 	const minTime =
-		numPages * queryDuration + (numPages - 1) * GET_ALL_THROTTLE_DELAY;
+		numPages * queryDuration + (numPages - 1) * GET_ALL_QUERY_DELAY;
 	const maxTime = minTime + NETWORK_REQUEST_DURATION_TOLERANCE;
 
 	// The total time should be between (# of pages - 1) and # of pages
