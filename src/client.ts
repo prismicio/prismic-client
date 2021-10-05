@@ -86,13 +86,12 @@ export const REPOSITORY_CACHE_TTL = 5000;
 
 /**
  * The number of milliseconds in which a multi-page `getAll` (e.g. `getAll`,
- * `getAllByType`, `getAllByTag`) will throttle individual page requests. At
- * least this amount of time must elapse between page requests.
+ * `getAllByType`, `getAllByTag`) will wait between individual page requests.
  *
  * This is done to ensure API performance is sustainable and reduces the chance
  * of a failed API request due to overloading.
  */
-export const GET_ALL_THROTTLE_THRESHOLD = 1000;
+export const GET_ALL_QUERY_DELAY = 500;
 
 /**
  * A ref or a function that returns a ref. If a static ref is known, one can be
@@ -589,25 +588,16 @@ export class Client {
 		let latestResult: prismicT.Query<TDocument> | undefined;
 
 		while (
-			(!latestResult || latestResult.page < latestResult.total_pages) &&
+			(!latestResult || latestResult.next_page) &&
 			documents.length < limit
 		) {
-			const start = Date.now();
-			latestResult = await this.get<TDocument>({
-				...resolvedParams,
-				page: latestResult ? latestResult.page + 1 : undefined,
-			});
-			const end = Date.now();
+			const page = latestResult ? latestResult.page + 1 : undefined;
 
+			latestResult = await this.get<TDocument>({ ...resolvedParams, page });
 			documents.push(...latestResult.results);
 
-			if (
-				latestResult.page < latestResult.total_pages &&
-				end - start < GET_ALL_THROTTLE_THRESHOLD
-			) {
-				await new Promise((res) =>
-					setTimeout(res, GET_ALL_THROTTLE_THRESHOLD - (end - start)),
-				);
+			if (latestResult.next_page) {
+				await new Promise((res) => setTimeout(res, GET_ALL_QUERY_DELAY));
 			}
 		}
 

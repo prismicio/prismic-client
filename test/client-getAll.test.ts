@@ -10,7 +10,14 @@ import { createTestClient } from "./__testutils__/createClient";
 import { getMasterRef } from "./__testutils__/getMasterRef";
 
 import * as prismic from "../src";
-import { GET_ALL_THROTTLE_THRESHOLD } from "../src/client";
+import { GET_ALL_THROTTLE_DELAY } from "../src/client";
+
+/**
+ * Tolerance in number of milliseconds for the duration of a simulated network request.
+ *
+ * If tests are failing due to incorrect timed durations, increase the tolerance amount.
+ */
+const NETWORK_REQUEST_DURATION_TOLERANCE = 200;
 
 const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
@@ -134,13 +141,20 @@ test("throttles requests past first page", async (t) => {
 		numPages,
 		numDocsPerPage: 3,
 	});
+	const queryDuration = 200;
 
 	server.use(
 		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(t, pagedResponses, undefined, {
-			ref: getMasterRef(repositoryResponse),
-			pageSize: 100,
-		}),
+		createMockQueryHandler(
+			t,
+			pagedResponses,
+			undefined,
+			{
+				ref: getMasterRef(repositoryResponse),
+				pageSize: 100,
+			},
+			queryDuration,
+		),
 	);
 
 	const client = createTestClient(t);
@@ -150,8 +164,9 @@ test("throttles requests past first page", async (t) => {
 	const endTime = Date.now();
 
 	const totalTime = endTime - startTime;
-	const maxTime = numPages * GET_ALL_THROTTLE_THRESHOLD;
-	const minTime = maxTime - GET_ALL_THROTTLE_THRESHOLD;
+	const minTime =
+		numPages * queryDuration + (numPages - 1) * GET_ALL_THROTTLE_DELAY;
+	const maxTime = minTime + NETWORK_REQUEST_DURATION_TOLERANCE;
 
 	// The total time should be between (# of pages - 1) and # of pages
 	// multiplied by the throttle threshold duration. This effectively checks
@@ -166,13 +181,20 @@ test("throttles requests past first page", async (t) => {
 test("does not throttle single page queries", async (t) => {
 	const repositoryResponse = createRepositoryResponse();
 	const queryResponse = createQueryResponse();
+	const queryDuration = 200;
 
 	server.use(
 		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: getMasterRef(repositoryResponse),
-			pageSize: 100,
-		}),
+		createMockQueryHandler(
+			t,
+			[queryResponse],
+			undefined,
+			{
+				ref: getMasterRef(repositoryResponse),
+				pageSize: 100,
+			},
+			queryDuration,
+		),
 	);
 
 	const client = createTestClient(t);
@@ -187,7 +209,7 @@ test("does not throttle single page queries", async (t) => {
 	// effectively checks that the first request is called immediately and does
 	// not unnecessarily wait after the request is fulfilled.
 	t.true(
-		totalTime < GET_ALL_THROTTLE_THRESHOLD,
-		`Total time should be less than ${GET_ALL_THROTTLE_THRESHOLD}ms, but was ${totalTime}ms`,
+		totalTime < queryDuration + NETWORK_REQUEST_DURATION_TOLERANCE,
+		`Total time should be less than ${queryDuration}ms, but was ${totalTime}ms`,
 	);
 });
