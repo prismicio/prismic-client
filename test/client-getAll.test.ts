@@ -168,10 +168,9 @@ test("throttles requests past first page", async (t) => {
 		numPages * queryDuration + (numPages - 1) * GET_ALL_QUERY_DELAY;
 	const maxTime = minTime + NETWORK_REQUEST_DURATION_TOLERANCE;
 
-	// The total time should be between (# of pages - 1) and # of pages
-	// multiplied by the throttle threshold duration. This effectively checks
-	// that each request after page 1 is delayed by at least the threshold
-	// amount.
+	// The total time should be the amount of time it takes to resolve all
+	// network requests in addition to a delay between requests (accounting for
+	// some tolerance). The last request does not start an artificial delay.
 	t.true(
 		minTime <= totalTime && totalTime <= maxTime,
 		`Total time should be between ${minTime}ms and ${maxTime}ms (inclusive), but was ${totalTime}ms`,
@@ -204,12 +203,14 @@ test("does not throttle single page queries", async (t) => {
 	const endTime = Date.now();
 
 	const totalTime = endTime - startTime;
+	const minTime = queryDuration;
+	const maxTime = minTime + NETWORK_REQUEST_DURATION_TOLERANCE;
 
-	// The total time should be less than throttle threshold duration. This
-	// effectively checks that the first request is called immediately and does
-	// not unnecessarily wait after the request is fulfilled.
+	// The total time should only be the amount of time it takes to resolve the
+	// network request (accounting for some tolerance). In other words, there is
+	// no artificial delay in a single page `getAll` query.
 	t.true(
-		totalTime < queryDuration + NETWORK_REQUEST_DURATION_TOLERANCE,
-		`Total time should be less than ${queryDuration}ms, but was ${totalTime}ms`,
+		minTime <= totalTime && totalTime <= maxTime,
+		`Total time should be between ${minTime}ms and ${maxTime}ms (inclusive), but was ${totalTime}ms`,
 	);
 });
