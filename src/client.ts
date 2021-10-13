@@ -563,6 +563,10 @@ export class Client {
 	}
 
 	/**
+	 * **IMPORTANT**: Avoid using `dangerouslyGetAll` as it may be slower and
+	 * require more resources than other methods. Prefer using other methods that
+	 * filter by predicates such as `getAllByType`.
+	 *
 	 * Queries content from the Prismic repository and returns all matching
 	 * content. If no predicates are provided, all documents will be fetched.
 	 *
@@ -571,14 +575,15 @@ export class Client {
 	 * @example
 	 *
 	 * ```ts
-	 * const response = await client.getAll();
+	 * const response = await client.dangerouslyGetAll();
 	 * ```
 	 *
-	 * @typeParam TDocument - Type of Prismic documents returned. @param params -
-	 *   Parameters to filter, sort, and paginate results. @returns A list of
-	 *   documents matching the query.
+	 * @typeParam TDocument - Type of Prismic documents returned.
+	 * @param params - Parameters to filter, sort, and paginate results.
+	 *
+	 * @returns A list of documents matching the query.
 	 */
-	async getAll<TDocument extends prismicT.PrismicDocument>(
+	async dangerouslyGetAll<TDocument extends prismicT.PrismicDocument>(
 		params: Partial<Omit<BuildQueryURLArgs, "page">> & GetAllParams = {},
 	): Promise<TDocument[]> {
 		const { limit = Infinity, ...actualParams } = params;
@@ -693,7 +698,7 @@ export class Client {
 		ids: string[],
 		params?: Partial<BuildQueryURLArgs>,
 	): Promise<TDocument[]> {
-		return await this.getAll<TDocument>(
+		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(predicate.in("document.id", ids))(params),
 		);
 	}
@@ -799,7 +804,7 @@ export class Client {
 		uids: string[],
 		params?: Partial<BuildQueryURLArgs>,
 	): Promise<TDocument[]> {
-		return await this.getAll<TDocument>(
+		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(
 				typePredicate(documentType),
 				predicate.in(`my.${documentType}.uid`, uids),
@@ -884,7 +889,7 @@ export class Client {
 		documentType: string,
 		params?: Partial<Omit<BuildQueryURLArgs, "page">>,
 	): Promise<TDocument[]> {
-		return await this.getAll<TDocument>(
+		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(typePredicate(documentType))(params),
 		);
 	}
@@ -936,7 +941,7 @@ export class Client {
 		tag: string,
 		params?: Partial<Omit<BuildQueryURLArgs, "page">>,
 	): Promise<TDocument[]> {
-		return await this.getAll<TDocument>(
+		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(everyTagPredicate(tag))(params),
 		);
 	}
@@ -988,7 +993,7 @@ export class Client {
 		tags: string[],
 		params?: Partial<Omit<BuildQueryURLArgs, "page">>,
 	): Promise<TDocument[]> {
-		return await this.getAll<TDocument>(
+		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(everyTagPredicate(tags))(params),
 		);
 	}
@@ -1040,7 +1045,7 @@ export class Client {
 		tags: string[],
 		params?: Partial<Omit<BuildQueryURLArgs, "page">>,
 	): Promise<TDocument[]> {
-		return await this.getAll<TDocument>(
+		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(someTagsPredicate(tags))(params),
 		);
 	}

@@ -40,7 +40,7 @@ test("returns all documents from paginated response", async (t) => {
 	);
 
 	const client = createTestClient(t);
-	const res = await client.getAll();
+	const res = await client.dangerouslyGetAll();
 
 	t.deepEqual(res, allDocs);
 	t.is(res.length, 3 * 3);
@@ -68,7 +68,7 @@ test("includes params if provided", async (t) => {
 	);
 
 	const client = createTestClient(t);
-	const res = await client.getAll(params);
+	const res = await client.dangerouslyGetAll(params);
 
 	t.deepEqual(res, allDocs);
 	t.is(res.length, 3 * 3);
@@ -96,7 +96,7 @@ test("includes default params if provided", async (t) => {
 	);
 
 	const client = createTestClient(t, clientOptions);
-	const res = await client.getAll();
+	const res = await client.dangerouslyGetAll();
 
 	t.deepEqual(res, allDocs);
 	t.is(res.length, 3 * 3);
@@ -128,7 +128,7 @@ test("merges params and default params if provided", async (t) => {
 	);
 
 	const client = createTestClient(t, clientOptions);
-	const res = await client.getAll(params);
+	const res = await client.dangerouslyGetAll(params);
 
 	t.deepEqual(res, allDocs);
 	t.is(res.length, 3 * 3);
@@ -160,7 +160,7 @@ test("throttles requests past first page", async (t) => {
 	const client = createTestClient(t);
 
 	const startTime = Date.now();
-	await client.getAll();
+	await client.dangerouslyGetAll();
 	const endTime = Date.now();
 
 	const totalTime = endTime - startTime;
@@ -199,7 +199,7 @@ test("does not throttle single page queries", async (t) => {
 	const client = createTestClient(t);
 
 	const startTime = Date.now();
-	await client.getAll();
+	await client.dangerouslyGetAll();
 	const endTime = Date.now();
 
 	const totalTime = endTime - startTime;
