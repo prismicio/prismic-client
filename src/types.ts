@@ -30,7 +30,7 @@ export interface HttpRequestLike {
 	headers?: {
 		cookie?: string;
 	};
-	query?: Record<string, unknown>;
+	query?: Record<string, string>;
 }
 
 /**

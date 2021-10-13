@@ -6,6 +6,8 @@ import { createRepositoryResponse } from "./__testutils__/createRepositoryRespon
 import { createTestClient } from "./__testutils__/createClient";
 import { createRef } from "./__testutils__/createRef";
 
+import * as prismic from "../src";
+
 const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
@@ -30,6 +32,7 @@ test("throws if Release could not be found", async (t) => {
 	await t.throwsAsync(
 		async () => await client.getReleaseByLabel("non-existant"),
 		{
+			instanceOf: prismic.PrismicError,
 			message: /could not be found/i,
 		},
 	);
