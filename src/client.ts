@@ -1085,8 +1085,10 @@ export class Client {
 			documentID = documentID || searchParams.get("documentId") || undefined;
 			previewToken = previewToken || searchParams.get("token") || undefined;
 		} else if (this.refState.httpRequest?.query) {
-			documentID = documentID || this.refState.httpRequest.query.documentId;
-			previewToken = previewToken || this.refState.httpRequest.query.token;
+			documentID =
+				documentID || (this.refState.httpRequest.query.documentId as string);
+			previewToken =
+				previewToken || (this.refState.httpRequest.query.token as string);
 		}
 
 		if (documentID != null) {
