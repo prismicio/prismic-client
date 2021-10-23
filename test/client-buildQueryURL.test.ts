@@ -21,9 +21,16 @@ test("builds a query URL using the master ref", async (t) => {
 	const res = await client.buildQueryURL();
 	const url = new URL(res);
 
+	const expectedSearchParams = new URLSearchParams({
+		ref,
+	});
+
+	url.searchParams.sort();
+	expectedSearchParams.sort();
+
 	t.is(url.host, new URL(client.endpoint).host);
 	t.is(url.pathname, "/api/v2/documents/search");
-	t.is(url.search, `?ref=${ref}`);
+	t.is(url.searchParams.toString(), expectedSearchParams.toString());
 });
 
 test("includes params if provided", async (t) => {
@@ -43,6 +50,9 @@ test("includes params if provided", async (t) => {
 		ref: params.ref,
 		lang: params.lang?.toString() ?? "",
 	});
+
+	url.searchParams.sort();
+	expectedSearchParams.sort();
 
 	t.is(url.host, new URL(client.endpoint).host);
 	t.is(url.pathname, "/api/v2/documents/search");
@@ -66,6 +76,9 @@ test("includes default params if provided", async (t) => {
 		ref: clientOptions.ref?.toString() ?? "",
 		lang: clientOptions.defaultParams?.lang?.toString() ?? "",
 	});
+
+	url.searchParams.sort();
+	expectedSearchParams.sort();
 
 	t.is(url.host, new URL(client.endpoint).host);
 	t.is(url.pathname, "/api/v2/documents/search");
@@ -93,6 +106,9 @@ test("merges params and default params if provided", async (t) => {
 		lang: clientOptions.defaultParams?.lang?.toString() ?? "",
 		page: clientOptions.defaultParams?.page?.toString() ?? "",
 	});
+
+	url.searchParams.sort();
+	expectedSearchParams.sort();
 
 	t.is(url.host, new URL(client.endpoint).host);
 	t.is(url.pathname, "/api/v2/documents/search");
