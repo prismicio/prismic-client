@@ -31,13 +31,29 @@ const MAX_PAGE_SIZE = 100;
 export const REPOSITORY_CACHE_TTL = 5000;
 
 /**
- * A ref or a function that returns a ref. If a static ref is known, one can be
- * given. If the ref must be fetched on-demand, a function can be provided. This
- * function can optionally be asynchronous.
+ * Modes for client ref management.
  */
-type RefStringOrThunk =
-	| string
-	| (() => string | undefined | Promise<string | undefined>);
+enum RefStateMode {
+	/**
+	 * Use the repository's master ref.
+	 */
+	Master = "Master",
+
+	/**
+	 * Use a given Release identified by its ID.
+	 */
+	ReleaseID = "ReleaseID",
+
+	/**
+	 * Use a given Release identified by its label.
+	 */
+	ReleaseLabel = "ReleaseLabel",
+
+	/**
+	 * Use a given ref.
+	 */
+	Manual = "Manual",
+}
 
 /**
  * An object containing stateful information about a client's ref strategy.
@@ -55,33 +71,30 @@ type RefState = {
 	httpRequest?: HttpRequestLike;
 } & (
 	| {
-			/**
-			 * Use the repository's master ref.
-			 */
-			mode: "master";
+			mode: RefStateMode.Master;
 	  }
 	| {
-			/**
-			 * Use a given Release identified by its ID.
-			 */
-			mode: "releaseID";
+			mode: RefStateMode.ReleaseID;
 			releaseID: string;
 	  }
 	| {
-			/**
-			 * Use a given Release identified by its label.
-			 */
-			mode: "releaseLabel";
+			mode: RefStateMode.ReleaseLabel;
 			releaseLabel: string;
 	  }
 	| {
-			/**
-			 * Use a given ref.
-			 */
-			mode: "manual";
+			mode: RefStateMode.Manual;
 			ref: RefStringOrThunk;
 	  }
 );
+
+/**
+ * A ref or a function that returns a ref. If a static ref is known, one can be
+ * given. If the ref must be fetched on-demand, a function can be provided. This
+ * function can optionally be asynchronous.
+ */
+type RefStringOrThunk =
+	| string
+	| (() => string | undefined | Promise<string | undefined>);
 
 /**
  * Configuration for clients that determine how content is queried.
@@ -259,7 +272,7 @@ export class Client {
 	 * The client's ref mode state. This determines which ref is used during queries.
 	 */
 	private refState: RefState = {
-		mode: "master",
+		mode: RefStateMode.Master,
 		autoPreviewsEnabled: true,
 	};
 
@@ -949,7 +962,9 @@ export class Client {
 	 * @returns A list of all refs for the Prismic repository.
 	 */
 	async getRefs(): Promise<prismicT.Ref[]> {
-		return (await this.getRepository()).refs;
+		const repository = await this.getRepository();
+
+		return repository.refs;
 	}
 
 	/**
@@ -960,7 +975,9 @@ export class Client {
 	 * @returns The ref with a matching ID, if it exists.
 	 */
 	async getRefByID(id: string): Promise<prismicT.Ref> {
-		return findRefByID(await this.getRefs(), id);
+		const refs = await this.getRefs();
+
+		return findRefByID(refs, id);
 	}
 
 	/**
@@ -971,7 +988,9 @@ export class Client {
 	 * @returns The ref with a matching label, if it exists.
 	 */
 	async getRefByLabel(label: string): Promise<prismicT.Ref> {
-		return findRefByLabel(await this.getRefs(), label);
+		const refs = await this.getRefs();
+
+		return findRefByLabel(refs, label);
 	}
 
 	/**
@@ -981,7 +1000,9 @@ export class Client {
 	 * @returns The repository's master ref.
 	 */
 	async getMasterRef(): Promise<prismicT.Ref> {
-		return findMasterRef(await this.getRefs());
+		const refs = await this.getRefs();
+
+		return findMasterRef(refs);
 	}
 
 	/**
@@ -1004,7 +1025,9 @@ export class Client {
 	 * @returns The Release with a matching ID, if it exists.
 	 */
 	async getReleaseByID(id: string): Promise<prismicT.Ref> {
-		return findRefByID(await this.getReleases(), id);
+		const releases = await this.getReleases();
+
+		return findRefByID(releases, id);
 	}
 
 	/**
@@ -1015,7 +1038,9 @@ export class Client {
 	 * @returns The ref with a matching label, if it exists.
 	 */
 	async getReleaseByLabel(label: string): Promise<prismicT.Ref> {
-		return findRefByLabel(await this.getReleases(), label);
+		const releases = await this.getReleases();
+
+		return findRefByLabel(releases, label);
 	}
 
 	/**
@@ -1029,7 +1054,9 @@ export class Client {
 
 			return await this.fetch<string[]>(tagsForm.action);
 		} catch {
-			return (await this.getRepository()).tags;
+			const repository = await this.getRepository();
+
+			return repository.tags;
 		}
 	}
 
@@ -1043,14 +1070,17 @@ export class Client {
 	async buildQueryURL(
 		params: Partial<BuildQueryURLArgs> = {},
 	): Promise<string> {
+		const ref = params.ref || (await this.getResolvedRefString());
+		const integrationFieldsRef =
+			params.integrationFieldsRef ||
+			(await this.getCachedRepository()).integrationFieldsRef ||
+			undefined;
+
 		return buildQueryURL(this.endpoint, {
 			...this.defaultParams,
 			...params,
-			ref: params.ref || (await this.getResolvedRefString()),
-			integrationFieldsRef:
-				params.integrationFieldsRef ||
-				(await this.getCachedRepository()).integrationFieldsRef ||
-				undefined,
+			ref,
+			integrationFieldsRef,
 			routes: params.routes || this.routes,
 			accessToken: undefined,
 		});
@@ -1117,7 +1147,7 @@ export class Client {
 	 * ```
 	 */
 	queryLatestContent(): void {
-		this.refState.mode = "master";
+		this.refState.mode = RefStateMode.Master;
 	}
 
 	/**
@@ -1138,7 +1168,7 @@ export class Client {
 	queryContentFromReleaseByID(releaseID: string): void {
 		this.refState = {
 			...this.refState,
-			mode: "releaseID",
+			mode: RefStateMode.ReleaseID,
 			releaseID,
 		};
 	}
@@ -1161,7 +1191,7 @@ export class Client {
 	queryContentFromReleaseByLabel(releaseLabel: string): void {
 		this.refState = {
 			...this.refState,
-			mode: "releaseLabel",
+			mode: RefStateMode.ReleaseLabel,
 			releaseLabel,
 		};
 	}
@@ -1185,7 +1215,7 @@ export class Client {
 	queryContentFromRef(ref: RefStringOrThunk): void {
 		this.refState = {
 			...this.refState,
-			mode: "manual",
+			mode: RefStateMode.Manual,
 			ref,
 		};
 	}
@@ -1273,12 +1303,12 @@ export class Client {
 		const cachedRepository = await this.getCachedRepository();
 
 		const refModeType = this.refState.mode;
-		if (refModeType === "releaseID") {
+		if (refModeType === RefStateMode.ReleaseID) {
 			return findRefByID(cachedRepository.refs, this.refState.releaseID).ref;
-		} else if (refModeType === "releaseLabel") {
+		} else if (refModeType === RefStateMode.ReleaseLabel) {
 			return findRefByLabel(cachedRepository.refs, this.refState.releaseLabel)
 				.ref;
-		} else if (refModeType === "manual") {
+		} else if (refModeType === RefStateMode.Manual) {
 			const res = await castThunk(this.refState.ref)();
 
 			if (typeof res === "string") {
