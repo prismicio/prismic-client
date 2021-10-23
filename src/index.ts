@@ -4,7 +4,7 @@ export * from "./buildQueryURL";
 export { createClient, Client } from "./client";
 
 // Predicates API.
-export * as predicate from "./predicate";
+export { predicate } from "./predicate";
 
 // Custom errors used by Client.
 export { PrismicError } from "./PrismicError";

@@ -13,8 +13,8 @@ import { buildQueryURL, BuildQueryURLArgs } from "./buildQueryURL";
 import { ForbiddenError } from "./ForbiddenError";
 import { ParsingError } from "./ParsingError";
 import { PrismicError } from "./PrismicError";
+import { predicate } from "./predicate";
 import * as cookie from "./cookie";
-import * as predicate from "./predicate";
 
 /**
  * The largest page size allowed by the Prismic REST API V2. This value is used
