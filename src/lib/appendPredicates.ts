@@ -1,3 +1,5 @@
+import { castArray } from "./castArray";
+
 interface WithPredicates {
 	predicates?: string | string[];
 }
@@ -7,22 +9,20 @@ interface WithPredicates {
  * Appended predicates are added to the end of the existing list.
  *
  * @typeParam T - Object to which predicates will be append.
+ * @param objWithPredicates - Object to append predicates on the `predicates` property.
  * @param predicates - One or more predicates to append.
  *
- * @returns A function that accepts an object with a `predicates` property. The
- *   `predicates` list will be appended to that object.
+ * @returns The object with the appended predicates.
  */
-export const appendPredicates =
-	<T extends WithPredicates>(...predicates: string[]) =>
-	/**
-	 * Adds one or more predicates to an object with a `predicates` property.
-	 * Appended predicates are added to the end of the existing list.
-	 *
-	 * @param objWithPredicates - Object to append predicates on the `predicates` property.
-	 *
-	 * @returns The object with the appended predicates.
-	 */
-	(objWithPredicates: T = {} as T): T => ({
+export const appendPredicates = <T extends WithPredicates>(
+	objWithPredicates: T = {} as T,
+	predicates: string | string[],
+) => {
+	return {
 		...objWithPredicates,
-		predicates: [objWithPredicates.predicates || [], ...predicates].flat(),
-	});
+		predicates: [
+			...(objWithPredicates.predicates || []),
+			...castArray(predicates),
+		],
+	};
+};

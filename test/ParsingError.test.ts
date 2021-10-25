@@ -13,12 +13,9 @@ test("contains the request url and error properties", (t) => {
 		column: 0,
 		id: 0,
 	} as const;
-	const error = new prismic.ParsingError(message, { url, response });
+	const error = new prismic.ParsingError(message, url, response);
 
 	t.is(error.url, url);
 	t.is(error.message, message);
-	t.is(error.location, response.location);
-	t.is(error.line, response.line);
-	t.is(error.column, response.column);
-	t.is(error.id, response.id);
+	t.is(error.response, response);
 });

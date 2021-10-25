@@ -19,7 +19,7 @@ test("supports single predicate", (t) => {
 				predicates: prismic.predicate.has("my.document.title"),
 			}),
 		),
-		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&q=[[has(my.document.title)]]",
+		"https://qwerty.cdn.prismic.io/api/v2/documents/search?q=[[has(my.document.title)]]&ref=ref",
 	);
 });
 
@@ -34,7 +34,7 @@ test("supports multiple predicates", (t) => {
 				],
 			}),
 		),
-		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&q=[[has(my.document.title)]]&q=[[has(my.document.subtitle)]]",
+		"https://qwerty.cdn.prismic.io/api/v2/documents/search?q=[[has(my.document.title)]]&q=[[has(my.document.subtitle)]]&ref=ref",
 	);
 });
 

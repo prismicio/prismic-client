@@ -7,11 +7,12 @@ test("contains the request url and optional response", (t) => {
 	const url = "url";
 	const response = { foo: "bar" } as const;
 
-	const errorWithResponse = new prismic.PrismicError(message, {
+	const errorWithResponse = new prismic.PrismicError(message, url, response);
+	const errorWithoutResponse = new prismic.PrismicError(
+		message,
 		url,
-		response,
-	});
-	const errorWithoutResponse = new prismic.PrismicError(message, { url });
+		undefined,
+	);
 
 	t.is(errorWithResponse.url, url);
 	t.is(errorWithResponse.message, message);

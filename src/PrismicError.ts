@@ -1,16 +1,15 @@
-type PrismicErrorArgs = {
-	url: string;
-	response?: Record<string, unknown>;
-};
+export class PrismicError<Response> extends Error {
+	url?: string;
+	response: Response;
 
-export class PrismicError extends Error {
-	url: string;
-	response?: Record<string, unknown>;
+	constructor(
+		message = "An invalid API response was returned",
+		url: string | undefined,
+		response: Response,
+	) {
+		super(message);
 
-	constructor(message: string | undefined, args: PrismicErrorArgs) {
-		super(message || "An invalid API response was returned");
-
-		this.url = args.url;
-		this.response = args.response;
+		this.url = url;
+		this.response = response;
 	}
 }
