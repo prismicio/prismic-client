@@ -98,8 +98,8 @@ type DefaultPredicateArgs = [value: string | number | (string | number)[]];
 
 export const predicate = {
 	/**
-	 * The `at` predicate checks that the path matches the described value exactly.
-	 * It takes a single value for a field or an array (only for tags).
+	 * The `at` predicate checks that the path matches the described value
+	 * exactly. It takes a single value for a field or an array (only for tags).
 	 *
 	 * {@link https://prismic.io/docs/technologies/query-predicates-reference-rest-api#at}
 	 */
@@ -123,9 +123,9 @@ export const predicate = {
 	any: pathWithArgsPredicate<DefaultPredicateArgs>("any"),
 
 	/**
-	 * The `in` predicate is used specifically to retrieve an array of documents by
-	 * their IDs or UIDs. This predicate is much more efficient at this than the any
-	 * predicate.
+	 * The `in` predicate is used specifically to retrieve an array of documents
+	 * by their IDs or UIDs. This predicate is much more efficient at this than
+	 * the any predicate.
 	 *
 	 * {@link https://prismic.io/docs/technologies/query-predicates-reference-rest-api#in}
 	 */
@@ -134,18 +134,19 @@ export const predicate = {
 	/**
 	 * The `fulltext` predicate provides two capabilities:
 	 *
-	 * 1. Checking if a certain string is anywhere inside a document (this is what you
-	 *    should use to make your project's search engine feature)
-	 * 2. Checking if the string is contained inside a specific custom type’s Rich Text
-	 *    or Key Text fragment.
+	 * 1. Checking if a certain string is anywhere inside a document (this is what
+	 *    you should use to make your project's search engine feature)
+	 * 2. Checking if the string is contained inside a specific custom type’s Rich
+	 *    Text or Key Text fragment.
 	 *
 	 * {@link https://prismic.io/docs/technologies/query-predicates-reference-rest-api#fulltext}
 	 */
 	fulltext: pathWithArgsPredicate<DefaultPredicateArgs>("fulltext"),
 
 	/**
-	 * The `has` predicate checks whether a fragment has a value. It will return all
-	 * the documents of the specified type that contain a value for the specified field.
+	 * The `has` predicate checks whether a fragment has a value. It will return
+	 * all the documents of the specified type that contain a value for the
+	 * specified field.
 	 *
 	 * {@link https://prismic.io/docs/technologies/query-predicates-reference-rest-api#has}
 	 */
@@ -162,16 +163,16 @@ export const predicate = {
 
 	/**
 	 * The `similar` predicate takes the ID of a document, and returns a list of
-	 * documents with similar content. This allows you to build an automated content
-	 * discovery feature (for example, a "Related posts" section).
+	 * documents with similar content. This allows you to build an automated
+	 * content discovery feature (for example, a "Related posts" section).
 	 *
 	 * {@link https://prismic.io/docs/technologies/query-predicates-reference-rest-api#similar}
 	 */
 	similar: argsPredicate<[id: string, value: number]>("similar"),
 
 	/**
-	 * The `geopoint.near` predicate checks that the value in the path is within the
-	 * radius of the given coordinates.
+	 * The `geopoint.near` predicate checks that the value in the path is within
+	 * the radius of the given coordinates.
 	 *
 	 * This predicate will only work for a GeoPoint field.
 	 *
@@ -228,8 +229,8 @@ export const predicate = {
 		pathWithArgsPredicate<[date: string | number | Date]>("date.before"),
 
 	/**
-	 * The `date.between` predicate checks that the value in the path is within the
-	 * date values passed into the predicate.
+	 * The `date.between` predicate checks that the value in the path is within
+	 * the date values passed into the predicate.
 	 *
 	 * {@link https://prismic.io/docs/technologies/date-and-time-based-predicate-reference-rest-api#between}
 	 */
@@ -239,16 +240,16 @@ export const predicate = {
 		>("date.between"),
 
 	/**
-	 * The `date.day-of-month` predicate checks that the value in the path is equal
-	 * to the day of the month passed into the predicate.
+	 * The `date.day-of-month` predicate checks that the value in the path is
+	 * equal to the day of the month passed into the predicate.
 	 *
 	 * {@link https://prismic.io/docs/technologies/date-and-time-based-predicate-reference-rest-api#dayofmonth}
 	 */
 	dateDayOfMonth: pathWithArgsPredicate<[day: number]>("date.day-of-month"),
 
 	/**
-	 * The `date.day-of-month-after` predicate checks that the value in the path is
-	 * after the day of the month passed into the predicate.
+	 * The `date.day-of-month-after` predicate checks that the value in the path
+	 * is after the day of the month passed into the predicate.
 	 *
 	 * {@link https://prismic.io/docs/technologies/date-and-time-based-predicate-reference-rest-api#dayofmonthafter}
 	 */
@@ -257,8 +258,8 @@ export const predicate = {
 	),
 
 	/**
-	 * The `date.day-of-month-before` predicate checks that the value in the path is
-	 * before the day of the month passed into the predicate.
+	 * The `date.day-of-month-before` predicate checks that the value in the path
+	 * is before the day of the month passed into the predicate.
 	 *
 	 * {@link https://prismic.io/docs/technologies/date-and-time-based-predicate-reference-rest-api#dayofmonthbefore}
 	 */
@@ -304,8 +305,8 @@ export const predicate = {
 	dateMonth: pathWithArgsPredicate<[month: string | number]>("date.month"),
 
 	/**
-	 * The `date.month-after` predicate checks that the value in the path occurs in
-	 * any month after the value passed into the predicate.
+	 * The `date.month-after` predicate checks that the value in the path occurs
+	 * in any month after the value passed into the predicate.
 	 *
 	 * {@link https://prismic.io/docs/technologies/date-and-time-based-predicate-reference-rest-api#monthafter}
 	 */
@@ -313,8 +314,8 @@ export const predicate = {
 		pathWithArgsPredicate<[month: string | number]>("date.month-after"),
 
 	/**
-	 * The `date.month-before` predicate checks that the value in the path occurs in
-	 * any month before the value passed into the predicate.
+	 * The `date.month-before` predicate checks that the value in the path occurs
+	 * in any month before the value passed into the predicate.
 	 *
 	 * {@link https://prismic.io/docs/technologies/date-and-time-based-predicate-reference-rest-api#monthbefore}
 	 */
@@ -330,8 +331,8 @@ export const predicate = {
 	dateYear: pathWithArgsPredicate<[year: number]>("date.year"),
 
 	/**
-	 * The `date.hour` predicate checks that the value in the path occurs within the
-	 * hour value passed into the predicate.
+	 * The `date.hour` predicate checks that the value in the path occurs within
+	 * the hour value passed into the predicate.
 	 *
 	 * {@link https://prismic.io/docs/technologies/date-and-time-based-predicate-reference-rest-api#hour}
 	 */
