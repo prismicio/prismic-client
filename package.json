@@ -1,6 +1,6 @@
 {
 	"name": "@prismicio/client",
-	"version": "6.0.0-beta.0",
+	"version": "6.0.0-beta.1",
 	"description": "The official JavaScript + TypeScript client library for Prismic",
 	"keywords": [
 		"prismic",
@@ -16,6 +16,7 @@
 	},
 	"license": "Apache-2.0",
 	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
+	"sideEffects": false,
 	"type": "module",
 	"exports": {
 		".": {
@@ -45,16 +46,16 @@
 		"unit": "nyc --reporter=lcovonly --reporter=text --exclude-after-remap=false ava"
 	},
 	"dependencies": {
-		"@prismicio/helpers": "^2.0.0-alpha.9",
-		"@prismicio/types": "^0.1.13"
+		"@prismicio/helpers": "^2.0.0-beta.0",
+		"@prismicio/types": "^0.1.15"
 	},
 	"devDependencies": {
 		"@types/node-fetch": "^2.5.12",
 		"@types/sinon": "^10.0.4",
-		"@typescript-eslint/eslint-plugin": "^4.32.0",
-		"@typescript-eslint/parser": "^4.32.0",
+		"@typescript-eslint/eslint-plugin": "^5.0.0",
+		"@typescript-eslint/parser": "^5.0.0",
 		"ava": "^3.15.0",
-		"eslint": "^7.32.0",
+		"eslint": "^8.0.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-prettier": "^4.0.0",
 		"eslint-plugin-tsdoc": "^0.2.14",
@@ -67,8 +68,8 @@
 		"siroc": "^0.16.0",
 		"standard-version": "^9.3.1",
 		"ts-eager": "^2.0.2",
-		"type-fest": "^2.3.4",
-		"typescript": "^4.4.3"
+		"type-fest": "^2.5.0",
+		"typescript": "^4.4.4"
 	},
 	"engines": {
 		"node": ">=12.13.0"

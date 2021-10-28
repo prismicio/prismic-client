@@ -3,72 +3,18 @@ import * as prismicH from "@prismicio/helpers";
 
 import { appendPredicates } from "./lib/appendPredicates";
 import { castThunk } from "./lib/castThunk";
+import { findMasterRef } from "./lib/findMasterRef";
+import { findRefByID } from "./lib/findRefByID";
+import { findRefByLabel } from "./lib/findRefByLabel";
 import { getCookie } from "./lib/getCookie";
 
-import { FetchLike, HttpRequestLike, RequestInitLike } from "./types";
+import { FetchLike, HttpRequestLike } from "./types";
 import { buildQueryURL, BuildQueryURLArgs } from "./buildQueryURL";
 import { ForbiddenError } from "./ForbiddenError";
 import { ParsingError } from "./ParsingError";
 import { PrismicError } from "./PrismicError";
+import { predicate } from "./predicate";
 import * as cookie from "./cookie";
-import * as predicate from "./predicate";
-
-/**
- * A container for items in a SimpleTTLCache.
- */
-type SimpleTTLCacheValueContainer<T = unknown> = {
-	expiresAt: number;
-	value: T;
-};
-
-/**
- * A simple time-to-live cache where items are only valid for a given number of
- * milliseconds.
- */
-interface SimpleTTLCache {
-	get<T>(key: string): T | undefined;
-	set<T>(key: string, value: T, ttl?: number): void;
-}
-
-/**
- * Creates a simple cache where each element has a given time to live (TTL).
- * After the TTL has ellapsed, the value is considered stale and will not be
- * returned if requested.
- */
-const createSimpleTTLCache = (): SimpleTTLCache => {
-	const cache = new Map<string, SimpleTTLCacheValueContainer>();
-
-	return {
-		/**
-		 * Get a value from the cache. If the item's TTL has ellapsed, `undefined`
-		 * will be returned.
-		 *
-		 * @param key - Key for the item.
-		 *
-		 * @returns The value for the key, if a value exists.
-		 */
-		get<T>(key: string): T | undefined {
-			const cacheValue = cache.get(key);
-
-			if (cacheValue) {
-				if (Date.now() < cacheValue.expiresAt) {
-					return cacheValue.value as T;
-				}
-			}
-		},
-
-		/**
-		 * Set a value in the cache for a given key and TTL.
-		 *
-		 * @param key - Key to identify the item.
-		 * @param value - Value for the key.
-		 * @param ttl - Number of milliseconds to consider the value fresh.
-		 */
-		set<T>(key: string, value: T, ttl: number): void {
-			cache.set(key, { expiresAt: Date.now() + ttl, value });
-		},
-	};
-};
 
 /**
  * The largest page size allowed by the Prismic REST API V2. This value is used
@@ -103,28 +49,28 @@ type RefStringOrThunk =
 	| (() => string | undefined | Promise<string | undefined>);
 
 /**
- * State types for a client's ref strategy.
+ * Modes for client ref management.
  */
-const enum RefStateType {
+enum RefStateMode {
 	/**
 	 * Use the repository's master ref.
 	 */
-	Master,
+	Master = "Master",
 
 	/**
 	 * Use a given Release identified by its ID.
 	 */
-	ReleaseByID,
+	ReleaseID = "ReleaseID",
 
 	/**
 	 * Use a given Release identified by its label.
 	 */
-	ReleaseByLabel,
+	ReleaseLabel = "ReleaseLabel",
 
 	/**
 	 * Use a given ref.
 	 */
-	Manual,
+	Manual = "Manual",
 }
 
 /**
@@ -143,34 +89,19 @@ type RefState = {
 	httpRequest?: HttpRequestLike;
 } & (
 	| {
-			type: RefStateType.Master;
+			mode: RefStateMode.Master;
 	  }
 	| {
-			type: RefStateType.ReleaseByID;
-			payload: {
-				/**
-				 * The ID of the Release.
-				 */
-				releaseID: string;
-			};
+			mode: RefStateMode.ReleaseID;
+			releaseID: string;
 	  }
 	| {
-			type: RefStateType.ReleaseByLabel;
-			payload: {
-				/**
-				 * The label of the Release.
-				 */
-				releaseLabel: string;
-			};
+			mode: RefStateMode.ReleaseLabel;
+			releaseLabel: string;
 	  }
 	| {
-			type: RefStateType.Manual;
-			payload: {
-				/**
-				 * The user-provided ref or ref thunk.
-				 */
-				refStringOrFn: RefStringOrThunk;
-			};
+			mode: RefStateMode.Manual;
+			ref: RefStringOrThunk;
 	  }
 );
 
@@ -190,12 +121,6 @@ export type ClientConfig = {
 	 * with draft content.
 	 */
 	ref?: RefStringOrThunk;
-
-	/**
-	 * A string representing a version of the Prismic repository's Integration
-	 * Fields content.
-	 */
-	integrationFieldsRef?: RefStringOrThunk;
 
 	/**
 	 * A list of Route Resolver objects that define how a document's `url` field
@@ -293,30 +218,6 @@ const someTagsPredicate = (tags: string | string[]): string =>
 	predicate.any("document.tags", tags);
 
 /**
- * Returns the first ref from a list that passes a predicate (a function that
- * returns true).
- *
- * @param refs - A list of refs to search.
- * @param predicate - A function that determines if a ref from the list matches
- *   the criteria.
- *
- * @returns The first matching ref.
- * @throws If a matching ref cannot be found.
- */
-const findRef = (
-	refs: prismicT.Ref[],
-	predicate: (ref: prismicT.Ref) => boolean,
-): prismicT.Ref => {
-	const ref = refs.find((ref) => predicate(ref));
-
-	if (!ref) {
-		throw new Error("Ref could not be found.");
-	}
-
-	return ref;
-};
-
-/**
  * Creates a Prismic client that can be used to query a repository.
  *
  * @param endpoint - The Prismic REST API V2 endpoint for the repository (use
@@ -353,13 +254,6 @@ export class Client {
 	accessToken?: string;
 
 	/**
-	 * The client's Integration Fields ref for fetching the latest Integration Fields data.
-	 *
-	 * {@link https://prismic.io/docs/core-concepts/integration-fields}
-	 */
-	integrationFieldsRef?: RefStringOrThunk;
-
-	/**
 	 * A list of Route Resolver objects that define how a document's `url` field
 	 * is resolved.
 	 *
@@ -386,12 +280,20 @@ export class Client {
 	/**
 	 * The client's ref mode state. This determines which ref is used during queries.
 	 */
-	private refMode: RefState;
+	private refState: RefState = {
+		mode: RefStateMode.Master,
+		autoPreviewsEnabled: true,
+	};
 
 	/**
-	 * Internal cache for low-level caching.
+	 * Cached repository value.
 	 */
-	private internalCache: SimpleTTLCache;
+	private cachedRepository: prismicT.Repository | undefined;
+
+	/**
+	 * Timestamp at which the cached repository data is considered stale.
+	 */
+	private cachedRepositoryExpiration = 0;
 
 	/**
 	 * Creates a Prismic client that can be used to query a repository.
@@ -410,14 +312,8 @@ export class Client {
 	constructor(endpoint: string, options: ClientConfig = {}) {
 		this.endpoint = endpoint;
 		this.accessToken = options.accessToken;
-		this.integrationFieldsRef = options.integrationFieldsRef;
 		this.routes = options.routes;
 		this.defaultParams = options.defaultParams;
-		this.internalCache = createSimpleTTLCache();
-		this.refMode = {
-			type: RefStateType.Master,
-			autoPreviewsEnabled: true,
-		};
 
 		if (options.ref) {
 			this.queryContentFromRef(options.ref);
@@ -428,8 +324,10 @@ export class Client {
 		} else if (typeof globalThis.fetch === "function") {
 			this.fetchFn = globalThis.fetch;
 		} else {
-			throw new Error(
+			throw new PrismicError(
 				"A valid fetch implementation was not provided. In environments where fetch is not available (including Node.js), a fetch implementation must be provided via a polyfill or the `fetch` option.",
+				undefined,
+				undefined,
 			);
 		}
 
@@ -454,7 +352,7 @@ export class Client {
 	 * @see enableAutoPreviewsFromReq
 	 */
 	enableAutoPreviews(): void {
-		this.refMode.autoPreviewsEnabled = true;
+		this.refState.autoPreviewsEnabled = true;
 	}
 
 	/**
@@ -475,8 +373,8 @@ export class Client {
 	 * @param req - An HTTP server request object containing the request's cookies.
 	 */
 	enableAutoPreviewsFromReq<R extends HttpRequestLike>(req: R): void {
-		this.refMode.httpRequest = req;
-		this.refMode.autoPreviewsEnabled = true;
+		this.refState.httpRequest = req;
+		this.refState.autoPreviewsEnabled = true;
 	}
 
 	/**
@@ -493,7 +391,7 @@ export class Client {
 	 * ```
 	 */
 	disableAutoPreviews(): void {
-		this.refMode.autoPreviewsEnabled = false;
+		this.refState.autoPreviewsEnabled = false;
 	}
 
 	/**
@@ -503,7 +401,9 @@ export class Client {
 	 * @example
 	 *
 	 * ```ts
-	 * const response = await client.get();
+	 * const response = await client.query(
+	 * 	prismic.predicate.at("document.type", "page"),
+	 * );
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of Prismic documents returned.
@@ -511,7 +411,14 @@ export class Client {
 	 *
 	 * @returns A paginated response containing the result of the query.
 	 */
-	query = this.get.bind(this);
+	async query<TDocument extends prismicT.PrismicDocument>(
+		predicates: NonNullable<BuildQueryURLArgs["predicates"]>,
+		params?: Partial<Omit<BuildQueryURLArgs, "predicates">>,
+	): Promise<prismicT.Query<TDocument>> {
+		const url = await this.buildQueryURL({ ...params, predicates });
+
+		return await this.fetch<prismicT.Query<TDocument>>(url, params);
+	}
 
 	/**
 	 * Queries content from the Prismic repository.
@@ -552,14 +459,16 @@ export class Client {
 	async getFirst<TDocument extends prismicT.PrismicDocument>(
 		params?: Partial<BuildQueryURLArgs>,
 	): Promise<TDocument> {
-		const result = await this.get<TDocument>(params);
+		const url = await this.buildQueryURL(params);
+		const result = await this.fetch<prismicT.Query<TDocument>>(url, params);
+
 		const firstResult = result.results[0];
 
 		if (firstResult) {
 			return firstResult;
 		}
 
-		throw new Error("No documents were returned");
+		throw new PrismicError("No documents were returned", url, undefined);
 	}
 
 	/**
@@ -587,7 +496,10 @@ export class Client {
 		params: Partial<Omit<BuildQueryURLArgs, "page">> & GetAllParams = {},
 	): Promise<TDocument[]> {
 		const { limit = Infinity, ...actualParams } = params;
-		const resolvedParams = { pageSize: MAX_PAGE_SIZE, ...actualParams };
+		const resolvedParams = {
+			...actualParams,
+			pageSize: actualParams.pageSize || MAX_PAGE_SIZE,
+		};
 
 		const documents: TDocument[] = [];
 		let latestResult: prismicT.Query<TDocument> | undefined;
@@ -634,7 +546,7 @@ export class Client {
 		params?: Partial<BuildQueryURLArgs>,
 	): Promise<TDocument> {
 		return await this.getFirst<TDocument>(
-			appendPredicates(predicate.at("document.id", id))(params),
+			appendPredicates(params, predicate.at("document.id", id)),
 		);
 	}
 
@@ -666,7 +578,7 @@ export class Client {
 		params?: Partial<BuildQueryURLArgs>,
 	): Promise<prismicT.Query<TDocument>> {
 		return await this.get<TDocument>(
-			appendPredicates(predicate.in("document.id", ids))(params),
+			appendPredicates(params, predicate.in("document.id", ids)),
 		);
 	}
 
@@ -699,7 +611,7 @@ export class Client {
 		params?: Partial<BuildQueryURLArgs>,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
-			appendPredicates(predicate.in("document.id", ids))(params),
+			appendPredicates(params, predicate.in("document.id", ids)),
 		);
 	}
 
@@ -730,10 +642,10 @@ export class Client {
 		params?: Partial<BuildQueryURLArgs>,
 	): Promise<TDocument> {
 		return await this.getFirst<TDocument>(
-			appendPredicates(
+			appendPredicates(params, [
 				typePredicate(documentType),
 				predicate.at(`my.${documentType}.uid`, uid),
-			)(params),
+			]),
 		);
 	}
 
@@ -767,10 +679,10 @@ export class Client {
 		params?: Partial<BuildQueryURLArgs>,
 	): Promise<prismicT.Query<TDocument>> {
 		return await this.get<TDocument>(
-			appendPredicates(
+			appendPredicates(params, [
 				typePredicate(documentType),
 				predicate.in(`my.${documentType}.uid`, uids),
-			)(params),
+			]),
 		);
 	}
 
@@ -805,10 +717,10 @@ export class Client {
 		params?: Partial<BuildQueryURLArgs>,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
-			appendPredicates(
+			appendPredicates(params, [
 				typePredicate(documentType),
 				predicate.in(`my.${documentType}.uid`, uids),
-			)(params),
+			]),
 		);
 	}
 
@@ -837,7 +749,7 @@ export class Client {
 		params?: Partial<BuildQueryURLArgs>,
 	): Promise<TDocument> {
 		return await this.getFirst<TDocument>(
-			appendPredicates(typePredicate(documentType))(params),
+			appendPredicates(params, typePredicate(documentType)),
 		);
 	}
 
@@ -864,7 +776,7 @@ export class Client {
 		params?: Partial<BuildQueryURLArgs>,
 	): Promise<prismicT.Query<TDocument>> {
 		return await this.get<TDocument>(
-			appendPredicates(typePredicate(documentType))(params),
+			appendPredicates(params, typePredicate(documentType)),
 		);
 	}
 
@@ -890,7 +802,7 @@ export class Client {
 		params?: Partial<Omit<BuildQueryURLArgs, "page">>,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
-			appendPredicates(typePredicate(documentType))(params),
+			appendPredicates(params, typePredicate(documentType)),
 		);
 	}
 
@@ -916,7 +828,7 @@ export class Client {
 		params?: Partial<BuildQueryURLArgs>,
 	): Promise<prismicT.Query<TDocument>> {
 		return await this.get<TDocument>(
-			appendPredicates(everyTagPredicate(tag))(params),
+			appendPredicates(params, everyTagPredicate(tag)),
 		);
 	}
 
@@ -942,7 +854,7 @@ export class Client {
 		params?: Partial<Omit<BuildQueryURLArgs, "page">>,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
-			appendPredicates(everyTagPredicate(tag))(params),
+			appendPredicates(params, everyTagPredicate(tag)),
 		);
 	}
 
@@ -967,7 +879,7 @@ export class Client {
 		params?: Partial<BuildQueryURLArgs>,
 	): Promise<prismicT.Query<TDocument>> {
 		return await this.get<TDocument>(
-			appendPredicates(everyTagPredicate(tags))(params),
+			appendPredicates(params, everyTagPredicate(tags)),
 		);
 	}
 
@@ -994,7 +906,7 @@ export class Client {
 		params?: Partial<Omit<BuildQueryURLArgs, "page">>,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
-			appendPredicates(everyTagPredicate(tags))(params),
+			appendPredicates(params, everyTagPredicate(tags)),
 		);
 	}
 
@@ -1019,7 +931,7 @@ export class Client {
 		params?: Partial<BuildQueryURLArgs>,
 	): Promise<prismicT.Query<TDocument>> {
 		return await this.get<TDocument>(
-			appendPredicates(someTagsPredicate(tags))(params),
+			appendPredicates(params, someTagsPredicate(tags)),
 		);
 	}
 
@@ -1046,7 +958,7 @@ export class Client {
 		params?: Partial<Omit<BuildQueryURLArgs, "page">>,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
-			appendPredicates(someTagsPredicate(tags))(params),
+			appendPredicates(params, someTagsPredicate(tags)),
 		);
 	}
 
@@ -1070,9 +982,9 @@ export class Client {
 	 * @returns A list of all refs for the Prismic repository.
 	 */
 	async getRefs(): Promise<prismicT.Ref[]> {
-		const res = await this.getRepository();
+		const repository = await this.getRepository();
 
-		return res.refs;
+		return repository.refs;
 	}
 
 	/**
@@ -1085,7 +997,7 @@ export class Client {
 	async getRefByID(id: string): Promise<prismicT.Ref> {
 		const refs = await this.getRefs();
 
-		return findRef(refs, (ref) => ref.id === id);
+		return findRefByID(refs, id);
 	}
 
 	/**
@@ -1098,7 +1010,7 @@ export class Client {
 	async getRefByLabel(label: string): Promise<prismicT.Ref> {
 		const refs = await this.getRefs();
 
-		return findRef(refs, (ref) => ref.label === label);
+		return findRefByLabel(refs, label);
 	}
 
 	/**
@@ -1110,7 +1022,7 @@ export class Client {
 	async getMasterRef(): Promise<prismicT.Ref> {
 		const refs = await this.getRefs();
 
-		return findRef(refs, (ref) => ref.isMasterRef);
+		return findMasterRef(refs);
 	}
 
 	/**
@@ -1135,7 +1047,7 @@ export class Client {
 	async getReleaseByID(id: string): Promise<prismicT.Ref> {
 		const releases = await this.getReleases();
 
-		return findRef(releases, (ref) => ref.id === id);
+		return findRefByID(releases, id);
 	}
 
 	/**
@@ -1148,7 +1060,7 @@ export class Client {
 	async getReleaseByLabel(label: string): Promise<prismicT.Ref> {
 		const releases = await this.getReleases();
 
-		return findRef(releases, (ref) => ref.label === label);
+		return findRefByLabel(releases, label);
 	}
 
 	/**
@@ -1162,9 +1074,9 @@ export class Client {
 
 			return await this.fetch<string[]>(tagsForm.action);
 		} catch {
-			const res = await this.getRepository();
+			const repository = await this.getRepository();
 
-			return res.tags;
+			return repository.tags;
 		}
 	}
 
@@ -1178,20 +1090,19 @@ export class Client {
 	async buildQueryURL(
 		params: Partial<BuildQueryURLArgs> = {},
 	): Promise<string> {
-		const {
-			ref = await this.getResolvedRefString(),
-			integrationFieldsRef = await this.getResolvedIntegrationFieldsRef(),
-			accessToken: _accessToken,
-			routes = this.routes,
-			...actualParams
-		} = params;
+		const ref = params.ref || (await this.getResolvedRefString());
+		const integrationFieldsRef =
+			params.integrationFieldsRef ||
+			(await this.getCachedRepository()).integrationFieldsRef ||
+			undefined;
 
 		return buildQueryURL(this.endpoint, {
 			...this.defaultParams,
-			...actualParams,
+			...params,
 			ref,
 			integrationFieldsRef,
-			routes,
+			routes: params.routes || this.routes,
+			accessToken: undefined,
 		});
 	}
 
@@ -1220,15 +1131,14 @@ export class Client {
 
 		if (typeof globalThis.location !== "undefined") {
 			const searchParams = new URLSearchParams(globalThis.location.search);
+
 			documentID = documentID || searchParams.get("documentId") || undefined;
 			previewToken = previewToken || searchParams.get("token") || undefined;
-		} else if (this.refMode.httpRequest?.query) {
-			if (typeof this.refMode.httpRequest.query.documentId === "string") {
-				documentID = documentID || this.refMode.httpRequest.query.documentId;
-			}
-			if (typeof this.refMode.httpRequest.query.token === "string") {
-				previewToken = previewToken || this.refMode.httpRequest.query.token;
-			}
+		} else if (this.refState.httpRequest?.query) {
+			documentID =
+				documentID || (this.refState.httpRequest.query.documentId as string);
+			previewToken =
+				previewToken || (this.refState.httpRequest.query.token as string);
 		}
 
 		if (documentID != null) {
@@ -1238,10 +1148,7 @@ export class Client {
 
 			// We know we have a valid field to resolve since we are using prismicH.documentToLinkField
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			return prismicH.asLink(
-				prismicH.documentToLinkField(document),
-				args.linkResolver,
-			)!;
+			return prismicH.asLink(document, args.linkResolver)!;
 		} else {
 			return args.defaultURL;
 		}
@@ -1260,10 +1167,7 @@ export class Client {
 	 * ```
 	 */
 	queryLatestContent(): void {
-		this.refMode = {
-			...this.refMode,
-			type: RefStateType.Master,
-		};
+		this.refState.mode = RefStateMode.Master;
 	}
 
 	/**
@@ -1282,10 +1186,10 @@ export class Client {
 	 * @param id - The ID of the Release.
 	 */
 	queryContentFromReleaseByID(releaseID: string): void {
-		this.refMode = {
-			...this.refMode,
-			type: RefStateType.ReleaseByID,
-			payload: { releaseID: releaseID },
+		this.refState = {
+			...this.refState,
+			mode: RefStateMode.ReleaseID,
+			releaseID,
 		};
 	}
 
@@ -1305,10 +1209,10 @@ export class Client {
 	 * @param label - The label of the Release.
 	 */
 	queryContentFromReleaseByLabel(releaseLabel: string): void {
-		this.refMode = {
-			...this.refMode,
-			type: RefStateType.ReleaseByLabel,
-			payload: { releaseLabel },
+		this.refState = {
+			...this.refState,
+			mode: RefStateMode.ReleaseLabel,
+			releaseLabel,
 		};
 	}
 
@@ -1329,10 +1233,10 @@ export class Client {
 	 * @param ref - The ref or a function that returns the ref from which to query content.
 	 */
 	queryContentFromRef(ref: RefStringOrThunk): void {
-		this.refMode = {
-			...this.refMode,
-			type: RefStateType.Manual,
-			payload: { refStringOrFn: ref },
+		this.refState = {
+			...this.refState,
+			mode: RefStateMode.Manual,
+			ref,
 		};
 	}
 
@@ -1342,20 +1246,15 @@ export class Client {
 	 * @returns Cached repository metadata.
 	 */
 	private async getCachedRepository(): Promise<prismicT.Repository> {
-		const cacheKey = this.endpoint;
-
-		const cachedRepository =
-			this.internalCache.get<prismicT.Repository>(cacheKey);
-
-		if (cachedRepository) {
-			return cachedRepository;
+		if (
+			!this.cachedRepository ||
+			Date.now() >= this.cachedRepositoryExpiration
+		) {
+			this.cachedRepositoryExpiration = Date.now() + REPOSITORY_CACHE_TTL;
+			this.cachedRepository = await this.getRepository();
 		}
 
-		const repository = await this.getRepository();
-
-		this.internalCache.set(cacheKey, repository, REPOSITORY_CACHE_TTL);
-
-		return repository;
+		return this.cachedRepository;
 	}
 
 	/**
@@ -1372,58 +1271,14 @@ export class Client {
 		const form = cachedRepository.forms[name];
 
 		if (!form) {
-			throw new Error(`Form with name "${name}" could not be found`);
+			throw new PrismicError(
+				`Form with name "${name}" could not be found`,
+				undefined,
+				undefined,
+			);
 		}
 
 		return form;
-	}
-
-	/**
-	 * Returns the preview ref for the client, if one exists.
-	 *
-	 * If this method is used in the browser, the browser's cookies will be read.
-	 * If this method is used on the server, the cookies from the saved HTTP
-	 * Request will be read, if an HTTP Request was given.
-	 *
-	 * @returns The preview ref as a string, if one exists.
-	 */
-	private getPreviewRefString(): string | undefined {
-		if (globalThis.document?.cookie) {
-			return getCookie(cookie.preview, globalThis.document.cookie);
-		} else if (this.refMode.httpRequest?.headers?.cookie) {
-			return getCookie(cookie.preview, this.refMode.httpRequest.headers.cookie);
-		}
-	}
-
-	/**
-	 * Returns the Integration Fields ref for the client, if one exists. This ref
-	 * is used to fetch the latest content from a Integration Field's API.
-	 *
-	 * @returns The repository's Integration Fields ref.
-	 */
-	private async getIntegrationFieldsRef(): Promise<string | undefined> {
-		const repository = await this.getCachedRepository();
-
-		return repository.integrationFieldsRef || undefined;
-	}
-
-	/**
-	 * Returns the Integration Fields ref neeed to query based on the client's
-	 * configuration. This method may make a network request to fetch a ref or
-	 * resolve the user's Integration Field ref thunk.
-	 *
-	 * @returns The repository's Integration Fields ref, if one is available.
-	 */
-	private async getResolvedIntegrationFieldsRef(): Promise<string | undefined> {
-		const thisIntegrationFieldsRefThunk = castThunk(this.integrationFieldsRef);
-
-		const res = await thisIntegrationFieldsRefThunk();
-
-		if (typeof res === "string") {
-			return res;
-		} else {
-			return await this.getIntegrationFieldsRef();
-		}
 	}
 
 	/**
@@ -1448,72 +1303,40 @@ export class Client {
 	 * @returns The ref to use during a query.
 	 */
 	private async getResolvedRefString(): Promise<string> {
-		if (this.refMode.autoPreviewsEnabled) {
-			const previewRef = this.getPreviewRefString();
+		if (this.refState.autoPreviewsEnabled) {
+			let previewRef: string | undefined = undefined;
+
+			if (globalThis.document?.cookie) {
+				previewRef = getCookie(cookie.preview, globalThis.document.cookie);
+			} else if (this.refState.httpRequest?.headers?.cookie) {
+				previewRef = getCookie(
+					cookie.preview,
+					this.refState.httpRequest.headers.cookie,
+				);
+			}
 
 			if (previewRef) {
 				return previewRef;
 			}
 		}
 
-		switch (this.refMode.type) {
-			case RefStateType.ReleaseByID: {
-				const releaseID = this.refMode.payload.releaseID;
-				const repository = await this.getCachedRepository();
-				const ref = findRef(repository.refs, (ref) => ref.id === releaseID);
+		const cachedRepository = await this.getCachedRepository();
 
-				return ref.ref;
-			}
+		const refModeType = this.refState.mode;
+		if (refModeType === RefStateMode.ReleaseID) {
+			return findRefByID(cachedRepository.refs, this.refState.releaseID).ref;
+		} else if (refModeType === RefStateMode.ReleaseLabel) {
+			return findRefByLabel(cachedRepository.refs, this.refState.releaseLabel)
+				.ref;
+		} else if (refModeType === RefStateMode.Manual) {
+			const res = await castThunk(this.refState.ref)();
 
-			case RefStateType.ReleaseByLabel: {
-				const releaseLabel = this.refMode.payload.releaseLabel;
-				const repository = await this.getCachedRepository();
-				const ref = findRef(
-					repository.refs,
-					(ref) => ref.label === releaseLabel,
-				);
-
-				return ref.ref;
-			}
-
-			case RefStateType.Manual: {
-				const thisRefThunk = castThunk(this.refMode.payload.refStringOrFn);
-
-				const res = await thisRefThunk();
-
-				if (typeof res === "string") {
-					return res;
-				}
-			}
-
-			case RefStateType.Master:
-			default: {
-				const repository = await this.getCachedRepository();
-				const ref = findRef(repository.refs, (ref) => ref.isMasterRef);
-
-				return ref.ref;
+			if (typeof res === "string") {
+				return res;
 			}
 		}
-	}
 
-	/**
-	 * Returns the network request options required by the Prismic repository.
-	 *
-	 * It currently only includes an Authorization header if an access token is provided.
-	 *
-	 * @param params - Parameters for the query, including an access token.
-	 *
-	 * @returns Request options that can be used to make a network request to
-	 *   query the repository.
-	 */
-	private buildRequestOptions(
-		params?: Partial<BuildQueryURLArgs>,
-	): RequestInitLike {
-		const accessToken = params?.accessToken || this.accessToken;
-
-		return accessToken
-			? { headers: { Authorization: `Token ${accessToken}` } }
-			: {};
+		return findMasterRef(cachedRepository.refs).ref;
 	}
 
 	/**
@@ -1531,7 +1354,11 @@ export class Client {
 		url: string,
 		params?: Partial<BuildQueryURLArgs>,
 	): Promise<T> {
-		const options = this.buildRequestOptions(params);
+		const accessToken = (params && params.accessToken) || this.accessToken;
+		const options = accessToken
+			? { headers: { Authorization: `Token ${accessToken}` } }
+			: {};
+
 		const res = await this.fetchFn(url, options);
 
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -1541,7 +1368,7 @@ export class Client {
 			// Content Type. If not, this will throw, signaling an invalid response.
 			json = await res.json();
 		} catch {
-			throw new PrismicError(undefined, { url });
+			throw new PrismicError(undefined, url, undefined);
 		}
 
 		switch (res.status) {
@@ -1554,10 +1381,7 @@ export class Client {
 			// - Invalid predicate syntax
 			// - Ref not provided (ignored)
 			case 400: {
-				throw new ParsingError(json.message, {
-					url,
-					response: json,
-				});
+				throw new ParsingError(json.message, url, json);
 			}
 
 			// Unauthorized
@@ -1568,13 +1392,14 @@ export class Client {
 			// - Missing access token for query endpoint
 			// - Incorrect access token for query endpoint
 			case 403: {
-				throw new ForbiddenError("error" in json ? json.error : json.message, {
+				throw new ForbiddenError(
+					"error" in json ? json.error : json.message,
 					url,
-					response: json,
-				});
+					json,
+				);
 			}
 		}
 
-		throw new PrismicError(undefined, { url, response: json });
+		throw new PrismicError(undefined, url, json);
 	}
 }

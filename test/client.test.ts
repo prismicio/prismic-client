@@ -51,6 +51,7 @@ test.serial("constructor throws if fetch is unavailable", (t) => {
 	const endpoint = prismic.getEndpoint("qwerty");
 
 	t.throws(() => prismic.createClient(endpoint), {
+		instanceOf: prismic.PrismicError,
 		message: /fetch implementation was not provided/,
 	});
 });
@@ -69,6 +70,7 @@ test.serial("constructor throws if provided fetch is not a function", (t) => {
 				fetch,
 			}),
 		{
+			instanceOf: prismic.PrismicError,
 			message: /fetch implementation was not provided/,
 		},
 	);
@@ -278,71 +280,6 @@ test.serial(
 	},
 );
 
-test.serial("supports manual string integration fields ref", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-	const queryResponse = createQueryResponse();
-	const integrationFieldsRef = "integrationFieldsRef";
-
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: getMasterRef(repositoryResponse),
-			integrationFieldsRef,
-		}),
-	);
-
-	const client = createTestClient(t, { integrationFieldsRef });
-	const res = await client.get();
-
-	t.deepEqual(res, queryResponse);
-});
-
-test.serial("supports manual thunk integration field ref", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-	const queryResponse = createQueryResponse();
-	const integrationFieldsRef = "integrationFieldsRef";
-
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: getMasterRef(repositoryResponse),
-			integrationFieldsRef,
-		}),
-	);
-
-	const client = createTestClient(t, {
-		integrationFieldsRef: () => integrationFieldsRef,
-	});
-	const res = await client.get();
-
-	t.deepEqual(res, queryResponse);
-});
-
-test.serial(
-	"uses repository integration fields ref if integration fields ref thunk param returns non-string value",
-	async (t) => {
-		const repositoryResponse = createRepositoryResponse({
-			integrationFieldsRef: createRef().ref,
-		});
-		const queryResponse = createQueryResponse();
-
-		server.use(
-			createMockRepositoryHandler(t, repositoryResponse),
-			createMockQueryHandler(t, [queryResponse], undefined, {
-				ref: getMasterRef(repositoryResponse),
-				integrationFieldsRef: repositoryResponse.integrationFieldsRef,
-			}),
-		);
-
-		const client = createTestClient(t, {
-			integrationFieldsRef: () => undefined,
-		});
-		const res = await client.get();
-
-		t.deepEqual(res, queryResponse);
-	},
-);
-
 test.serial("uses client-provided routes in queries", async (t) => {
 	const repositoryResponse = createRepositoryResponse();
 	const queryResponse = createQueryResponse();
@@ -362,10 +299,7 @@ test.serial("uses client-provided routes in queries", async (t) => {
 		}),
 	);
 
-	const client = createTestClient(t, {
-		integrationFieldsRef: () => undefined,
-		routes,
-	});
+	const client = createTestClient(t, { routes });
 	const res = await client.get();
 
 	t.deepEqual(res, queryResponse);

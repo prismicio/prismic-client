@@ -62,8 +62,8 @@ test("includes params if provided", async (t) => {
 		createMockRepositoryHandler(t),
 		createMockQueryHandler(t, pagedResponses, params.accessToken, {
 			ref: params.ref as string,
-			pageSize: 100,
 			lang: params.lang,
+			pageSize: 100,
 		}),
 	);
 
@@ -132,6 +132,32 @@ test("merges params and default params if provided", async (t) => {
 
 	t.deepEqual(res, allDocs);
 	t.is(res.length, 3 * 3);
+});
+
+test("uses the default pageSize when given a falsey pageSize param", async (t) => {
+	const repositoryResponse = createRepositoryResponse();
+	const pagedResponses = createQueryResponsePages({
+		numPages: 1,
+		numDocsPerPage: 3,
+	});
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse),
+		createMockQueryHandler(t, pagedResponses, undefined, {
+			ref: getMasterRef(repositoryResponse),
+			pageSize: 100,
+		}),
+	);
+
+	const client = createTestClient(t);
+
+	// The following calls will implicitly fail the test if the
+	// `createMockQueryHandler` handler does not match the given `pageSize` of
+	// 100. This is handled within createMockQueryHandler (see the `debug` option).
+
+	await client.dangerouslyGetAll();
+	await client.dangerouslyGetAll({ pageSize: undefined });
+	await client.dangerouslyGetAll({ pageSize: 0 });
 });
 
 test("throttles requests past first page", async (t) => {

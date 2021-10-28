@@ -63,8 +63,8 @@ test("includes params if provided", async (t) => {
 			q: `[[at(document.tags, [${documentTags
 				.map((tag) => `"${tag}"`)
 				.join(", ")}])]]`,
-			pageSize: 100,
 			lang: params.lang,
+			pageSize: 100,
 		}),
 	);
 

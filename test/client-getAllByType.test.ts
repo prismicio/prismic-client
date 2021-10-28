@@ -59,8 +59,8 @@ test("includes params if provided", async (t) => {
 		createMockQueryHandler(t, pagedResponses, params.accessToken, {
 			ref: params.ref as string,
 			q: `[[at(document.type, "${documentType}")]]`,
-			pageSize: 100,
 			lang: params.lang,
+			pageSize: 100,
 		}),
 	);
 

@@ -175,14 +175,9 @@ export const buildQueryURL = (
 	endpoint: string,
 	args: BuildQueryURLArgs,
 ): string => {
-	const { ref, integrationFieldsRef, predicates, ...params } = args;
+	const { predicates, ...params } = args;
 
 	const url = new URL(`documents/search`, `${endpoint}/`);
-	url.searchParams.set("ref", ref);
-
-	if (integrationFieldsRef) {
-		url.searchParams.set("integrationFieldsRef", integrationFieldsRef);
-	}
 
 	if (predicates) {
 		for (const predicate of castArray(predicates)) {

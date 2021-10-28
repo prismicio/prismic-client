@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0-beta.1](https://github.com/prismicio/prismic-client/compare/v6.0.0-beta.0...v6.0.0-beta.1) (2021-10-25)
+
+
+### Features
+
+* add `getBySomeTags`, rename `getByTags` to `getByEveryTag` ([#194](https://github.com/prismicio/prismic-client/issues/194)) ([37385dc](https://github.com/prismicio/prismic-client/commit/37385dc3a4e7eebd21e9b66077878c74dbe06294))
+* extend all custom errors from PrismicError ([c4be6ce](https://github.com/prismicio/prismic-client/commit/c4be6ce17136361af79a1fca17c7c8fb3d258bcd))
+* use authorization header for access token ([#192](https://github.com/prismicio/prismic-client/issues/192)) ([42af240](https://github.com/prismicio/prismic-client/commit/42af2405bb68e1763b6508deb3b3d86000b28fb0))
+
+
+### Bug Fixes
+
+* on getAll methods, use MAX_PAGE_SIZE when pageSize param is falsey ([#195](https://github.com/prismicio/prismic-client/issues/195)) ([46b638a](https://github.com/prismicio/prismic-client/commit/46b638acfb8f658d7272418fc927c664c9e0b72a))
+
+
+### Chore
+
+* **deps:** update dependencies ([e7dbd7f](https://github.com/prismicio/prismic-client/commit/e7dbd7f80e8676ea11989ce1ccc33073ae6df13b))
+* mark package as side effect free ([dc02db7](https://github.com/prismicio/prismic-client/commit/dc02db7a3660e00473d59bb59e4e3926e98b4dcb))
+
+
+### Refactor
+
+* optimize code for bundle size ([#196](https://github.com/prismicio/prismic-client/issues/196)) ([9dc32e0](https://github.com/prismicio/prismic-client/commit/9dc32e0fa4ab47df222c328882517e041e8daad4))
+
 ## [6.0.0-beta.0](https://github.com/prismicio/prismic-client/compare/v6.0.0-alpha.15...v6.0.0-beta.0) (2021-09-29)
 
 

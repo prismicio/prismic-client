@@ -63,6 +63,9 @@ export const createMockQueryHandler = <
 			}
 
 			if (debug) {
+				requiredSearchParamsInstance.sort();
+				req.url.searchParams.sort();
+
 				t.is(
 					requiredSearchParamsInstance.toString(),
 					req.url.searchParams.toString(),
