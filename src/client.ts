@@ -40,15 +40,6 @@ export const REPOSITORY_CACHE_TTL = 5000;
 export const GET_ALL_QUERY_DELAY = 500;
 
 /**
- * A ref or a function that returns a ref. If a static ref is known, one can be
- * given. If the ref must be fetched on-demand, a function can be provided. This
- * function can optionally be asynchronous.
- */
-type RefStringOrThunk =
-	| string
-	| (() => string | undefined | Promise<string | undefined>);
-
-/**
  * Modes for client ref management.
  */
 enum RefStateMode {
@@ -104,6 +95,15 @@ type RefState = {
 			ref: RefStringOrThunk;
 	  }
 );
+
+/**
+ * A ref or a function that returns a ref. If a static ref is known, one can be
+ * given. If the ref must be fetched on-demand, a function can be provided. This
+ * function can optionally be asynchronous.
+ */
+type RefStringOrThunk =
+	| string
+	| (() => string | undefined | Promise<string | undefined>);
 
 /**
  * Configuration for clients that determine how content is queried.
