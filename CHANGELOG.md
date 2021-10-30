@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0-beta.2](https://github.com/prismicio/prismic-client/compare/v6.0.0-beta.1...v6.0.0-beta.2) (2021-10-30)
+
+
+### Bug Fixes
+
+* revert to providing access token via URL parameter ([7a5140e](https://github.com/prismicio/prismic-client/commit/7a5140e7be1fca2c1ddf1ad34b14e16604c491c6))
+
 ## [6.0.0-beta.1](https://github.com/prismicio/prismic-client/compare/v6.0.0-beta.0...v6.0.0-beta.1) (2021-10-25)
 
 
