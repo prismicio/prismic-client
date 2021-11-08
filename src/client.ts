@@ -31,6 +31,15 @@ const MAX_PAGE_SIZE = 100;
 export const REPOSITORY_CACHE_TTL = 5000;
 
 /**
+ * The number of milliseconds in which a multi-page `getAll` (e.g. `getAll`,
+ * `getAllByType`, `getAllByTag`) will wait between individual page requests.
+ *
+ * This is done to ensure API performance is sustainable and reduces the chance
+ * of a failed API request due to overloading.
+ */
+export const GET_ALL_QUERY_DELAY = 500;
+
+/**
  * Modes for client ref management.
  */
 enum RefStateMode {
@@ -463,6 +472,10 @@ export class Client {
 	}
 
 	/**
+	 * **IMPORTANT**: Avoid using `dangerouslyGetAll` as it may be slower and
+	 * require more resources than other methods. Prefer using other methods that
+	 * filter by predicates such as `getAllByType`.
+	 *
 	 * Queries content from the Prismic repository and returns all matching
 	 * content. If no predicates are provided, all documents will be fetched.
 	 *
@@ -471,14 +484,15 @@ export class Client {
 	 * @example
 	 *
 	 * ```ts
-	 * const response = await client.getAll();
+	 * const response = await client.dangerouslyGetAll();
 	 * ```
 	 *
-	 * @typeParam TDocument - Type of Prismic documents returned. @param params -
-	 *   Parameters to filter, sort, and paginate results. @returns A list of
-	 *   documents matching the query.
+	 * @typeParam TDocument - Type of Prismic documents returned.
+	 * @param params - Parameters to filter, sort, and paginate results.
+	 *
+	 * @returns A list of documents matching the query.
 	 */
-	async getAll<TDocument extends prismicT.PrismicDocument>(
+	async dangerouslyGetAll<TDocument extends prismicT.PrismicDocument>(
 		params: Partial<Omit<BuildQueryURLArgs, "page">> & GetAllParams = {},
 	): Promise<TDocument[]> {
 		const { limit = Infinity, ...actualParams } = params;
@@ -487,15 +501,21 @@ export class Client {
 			pageSize: actualParams.pageSize || MAX_PAGE_SIZE,
 		};
 
-		const result = await this.get<TDocument>(resolvedParams);
+		const documents: TDocument[] = [];
+		let latestResult: prismicT.Query<TDocument> | undefined;
 
-		let page = result.page;
-		let documents = result.results;
+		while (
+			(!latestResult || latestResult.next_page) &&
+			documents.length < limit
+		) {
+			const page = latestResult ? latestResult.page + 1 : undefined;
 
-		while (page < result.total_pages && documents.length < limit) {
-			page += 1;
-			const result = await this.get<TDocument>({ ...resolvedParams, page });
-			documents = [...documents, ...result.results];
+			latestResult = await this.get<TDocument>({ ...resolvedParams, page });
+			documents.push(...latestResult.results);
+
+			if (latestResult.next_page) {
+				await new Promise((res) => setTimeout(res, GET_ALL_QUERY_DELAY));
+			}
 		}
 
 		return documents.slice(0, limit);
@@ -590,7 +610,7 @@ export class Client {
 		ids: string[],
 		params?: Partial<BuildQueryURLArgs>,
 	): Promise<TDocument[]> {
-		return await this.getAll<TDocument>(
+		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(params, predicate.in("document.id", ids)),
 		);
 	}
@@ -696,7 +716,7 @@ export class Client {
 		uids: string[],
 		params?: Partial<BuildQueryURLArgs>,
 	): Promise<TDocument[]> {
-		return await this.getAll<TDocument>(
+		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(params, [
 				typePredicate(documentType),
 				predicate.in(`my.${documentType}.uid`, uids),
@@ -781,7 +801,7 @@ export class Client {
 		documentType: string,
 		params?: Partial<Omit<BuildQueryURLArgs, "page">>,
 	): Promise<TDocument[]> {
-		return await this.getAll<TDocument>(
+		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(params, typePredicate(documentType)),
 		);
 	}
@@ -833,7 +853,7 @@ export class Client {
 		tag: string,
 		params?: Partial<Omit<BuildQueryURLArgs, "page">>,
 	): Promise<TDocument[]> {
-		return await this.getAll<TDocument>(
+		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(params, everyTagPredicate(tag)),
 		);
 	}
@@ -885,7 +905,7 @@ export class Client {
 		tags: string[],
 		params?: Partial<Omit<BuildQueryURLArgs, "page">>,
 	): Promise<TDocument[]> {
-		return await this.getAll<TDocument>(
+		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(params, everyTagPredicate(tags)),
 		);
 	}
@@ -937,7 +957,7 @@ export class Client {
 		tags: string[],
 		params?: Partial<Omit<BuildQueryURLArgs, "page">>,
 	): Promise<TDocument[]> {
-		return await this.getAll<TDocument>(
+		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(params, someTagsPredicate(tags)),
 		);
 	}

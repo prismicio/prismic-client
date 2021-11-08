@@ -21,6 +21,7 @@ export const createMockQueryHandler = <
 		string,
 		string | number | (string | number)[] | null | undefined
 	>,
+	duration = 0,
 	debug = true,
 ): msw.RestHandler => {
 	const repositoryName = crypto.createHash("md5").update(t.title).digest("hex");
@@ -54,7 +55,10 @@ export const createMockQueryHandler = <
 				);
 			}
 
-			if (!("page" in requiredSearchParams) && page > 1) {
+			if (
+				!("page" in requiredSearchParams) &&
+				req.url.searchParams.has("page")
+			) {
 				requiredSearchParamsInstance.append("page", page.toString());
 			}
 
@@ -82,9 +86,9 @@ export const createMockQueryHandler = <
 		if (requestMatches) {
 			const response = pagedResponses[page - 1];
 
-			return res(ctx.json(response));
+			return res(ctx.delay(duration), ctx.json(response));
 		}
 
-		return res(ctx.status(404));
+		return res(ctx.delay(duration), ctx.status(404));
 	});
 };
