@@ -62,19 +62,25 @@ export const createMockQueryHandler = <
 				requiredSearchParamsInstance.append("page", page.toString());
 			}
 
+			// TODO: Remove when Authorization header support works in browsers with CORS.
+			const searchParamsWithoutAccessToken = new URLSearchParams(
+				req.url.searchParams,
+			);
+			searchParamsWithoutAccessToken.delete("access_token");
+
 			if (debug) {
 				requiredSearchParamsInstance.sort();
-				req.url.searchParams.sort();
+				searchParamsWithoutAccessToken.sort();
 
 				t.is(
 					requiredSearchParamsInstance.toString(),
-					req.url.searchParams.toString(),
+					searchParamsWithoutAccessToken.toString(),
 				);
 			}
 
 			requestMatches =
 				requiredSearchParamsInstance.toString() ===
-				req.url.searchParams.toString();
+				searchParamsWithoutAccessToken.toString();
 		}
 
 		if (requestMatches) {

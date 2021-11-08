@@ -49,6 +49,8 @@ test("includes params if provided", async (t) => {
 	const expectedSearchParams = new URLSearchParams({
 		ref: params.ref,
 		lang: params.lang?.toString() ?? "",
+		// TODO: Remove when Authorization header support works in browsers with CORS.
+		access_token: params.accessToken ?? "",
 	});
 
 	url.searchParams.sort();
@@ -75,6 +77,8 @@ test("includes default params if provided", async (t) => {
 	const expectedSearchParams = new URLSearchParams({
 		ref: clientOptions.ref?.toString() ?? "",
 		lang: clientOptions.defaultParams?.lang?.toString() ?? "",
+		// TODO: Remove when Authorization header support works in browsers with CORS.
+		access_token: clientOptions.accessToken ?? "",
 	});
 
 	url.searchParams.sort();
@@ -105,6 +109,8 @@ test("merges params and default params if provided", async (t) => {
 		ref: params.ref,
 		lang: clientOptions.defaultParams?.lang?.toString() ?? "",
 		page: clientOptions.defaultParams?.page?.toString() ?? "",
+		// TODO: Remove when Authorization header support works in browsers with CORS.
+		access_token: clientOptions.accessToken ?? "",
 	});
 
 	url.searchParams.sort();

@@ -969,7 +969,16 @@ export class Client {
 	 * @returns Repository metadata.
 	 */
 	async getRepository(): Promise<prismicT.Repository> {
-		return await this.fetch<prismicT.Repository>(this.endpoint);
+		// TODO: Restore when Authorization header support works in browsers with CORS.
+		// return await this.fetch<prismicT.Repository>(this.endpoint);
+
+		const url = new URL(this.endpoint);
+
+		if (this.accessToken) {
+			url.searchParams.set("access_token", this.accessToken);
+		}
+
+		return await this.fetch<prismicT.Repository>(url.toString());
 	}
 
 	/**
@@ -1102,7 +1111,7 @@ export class Client {
 			ref,
 			integrationFieldsRef,
 			routes: params.routes || this.routes,
-			accessToken: undefined,
+			accessToken: params.accessToken || this.accessToken,
 		});
 	}
 
@@ -1352,14 +1361,16 @@ export class Client {
 	 */
 	private async fetch<T = unknown>(
 		url: string,
-		params?: Partial<BuildQueryURLArgs>,
+		// TODO: Change to `params` when Authorization header support works in browsers with CORS.
+		_params?: Partial<BuildQueryURLArgs>,
 	): Promise<T> {
-		const accessToken = (params && params.accessToken) || this.accessToken;
-		const options = accessToken
-			? { headers: { Authorization: `Token ${accessToken}` } }
-			: {};
+		// TODO: Restore when Authorization header support works in browsers with CORS.
+		// const accessToken = (params && params.accessToken) || this.accessToken;
+		// const options = accessToken
+		// 	? { headers: { Authorization: `Token ${accessToken}` } }
+		// 	: {};
 
-		const res = await this.fetchFn(url, options);
+		const res = await this.fetchFn(url);
 
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		let json: any;
