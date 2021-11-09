@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0-beta.3](https://github.com/prismicio/prismic-client/compare/v6.0.0-beta.2...v6.0.0-beta.3) (2021-11-09)
+
+
+### Features
+
+* throttle getAll* methods and rename getAll to dangerouslyGetAll ([#193](https://github.com/prismicio/prismic-client/issues/193)) ([4efdfa0](https://github.com/prismicio/prismic-client/commit/4efdfa0383e448e2d09c50c42804803358438b05))
+
 ## [6.0.0-beta.2](https://github.com/prismicio/prismic-client/compare/v6.0.0-beta.1...v6.0.0-beta.2) (2021-10-30)
 
 
