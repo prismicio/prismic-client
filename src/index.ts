@@ -4,7 +4,18 @@ export * from "./buildQueryURL";
 export { createClient, Client } from "./client";
 
 // Predicates API.
-export { predicate } from "./predicate";
+import { predicate } from "./predicate";
+export { predicate };
+/**
+ * @deprecated Renamed to `predicate` (without an "s").
+ */
+// TODO: Remove in v3.
+export const predicates = predicate;
+/**
+ * @deprecated Renamed to `predicate` (lowercase and without an "s").
+ */
+// TODO: Remove in v3.
+export const Predicates = predicate;
 
 // Custom errors used by Client.
 export { PrismicError } from "./PrismicError";
