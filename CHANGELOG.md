@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0-beta.4](https://github.com/prismicio/prismic-client/compare/v6.0.0-beta.3...v6.0.0-beta.4) (2021-12-03)
+
+
+### Bug Fixes
+
+* add predicate aliases for smoother upgrade path ([4a1f49c](https://github.com/prismicio/prismic-client/commit/4a1f49c147c68ba450478725b34cd432be5e2012))
+
+
+### Chore
+
+* **deps:** maintain dependencies ([6250df3](https://github.com/prismicio/prismic-client/commit/6250df3ecf768f8135fc13ef582eb10ef26b3f4e))
+
 ## [6.0.0-beta.3](https://github.com/prismicio/prismic-client/compare/v6.0.0-beta.2...v6.0.0-beta.3) (2021-11-09)
 
 
