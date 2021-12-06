@@ -1,13 +1,3 @@
-<!--
-
-Replace all on all files (README.md, CONTRIBUTING.md, bug_report.md, package.json):
-- @prismicio/client
-- The official JavaScript + TypeScript client library for Prismic
-- prismicio/prismic-client
-- prismic-client
-
--->
-
 # @prismicio/client
 
 [![npm version][npm-version-src]][npm-version-href]
@@ -80,9 +70,9 @@ For more clarity on this project and its structure you can also check out the de
 <!-- Links -->
 
 [prismic]: https://prismic.io
-[prismic-predicates]: https://prismic.io/docs/technologies/query-predicate-reference-javascript
+[prismic-predicates]: https://prismic.io/docs/technologies/rest-api-technical-reference
 [prismic-previews]: https://prismic.io/docs/core-concepts/previews
-[prismic-docs]: https://prismic.io/docs/technologies/javascript
+[prismic-docs]: https://prismic.io/docs/technical-reference/prismicio-client?version=v6
 [changelog]: ./CHANGELOG.md
 [contributing]: ./CONTRIBUTING.md
 [forum-question]: https://community.prismic.io/c/kits-and-dev-languages/javascript/14
