@@ -1,5 +1,6 @@
 // Primary library API.
 export * from "./getEndpoint";
+export * from "./getGraphQLEndpoint";
 export * from "./buildQueryURL";
 export { createClient, Client } from "./client";
 

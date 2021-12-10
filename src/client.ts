@@ -347,6 +347,8 @@ export class Client {
 		if (this.fetchFn === globalThis.fetch) {
 			this.fetchFn = this.fetchFn.bind(globalThis);
 		}
+
+		this.graphqlFetch = this.graphqlFetch.bind(this);
 	}
 
 	/**
@@ -1259,6 +1261,38 @@ export class Client {
 			mode: RefStateMode.Manual,
 			ref,
 		};
+	}
+
+	async graphqlFetch(
+		input: RequestInfo,
+		init?: RequestInit,
+	): Promise<Response> {
+		const cachedRepository = await this.getCachedRepository();
+		const ref = await this.getResolvedRefString();
+
+		const url = typeof input === "object" ? input.url : input;
+		const headers = new Headers(init?.headers);
+
+		if (!headers.has("Prismic-ref")) {
+			headers.set("Prismic-ref", ref);
+		}
+		if (
+			!headers.has("Prismic-integration-field-ref") &&
+			cachedRepository.integrationFieldsRef
+		) {
+			headers.set(
+				"Prismic-integration-field-ref",
+				cachedRepository.integrationFieldsRef,
+			);
+		}
+		if (!headers.has("Authorization") && this.accessToken) {
+			headers.set("Authorization", `Token ${this.accessToken}`);
+		}
+
+		return (await this.fetchFn(url, {
+			...init,
+			headers: Object.fromEntries(headers),
+		})) as Response;
 	}
 
 	/**
