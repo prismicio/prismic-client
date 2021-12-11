@@ -1270,29 +1270,35 @@ export class Client {
 		const cachedRepository = await this.getCachedRepository();
 		const ref = await this.getResolvedRefString();
 
-		const url = typeof input === "object" ? input.url : input;
-		const headers = new Headers(init?.headers);
+		const unsanitizedHeaders: Record<string, string> = {
+			"Prismic-ref": ref,
+			"Prismic-integration-field-ref":
+				cachedRepository.integrationFieldsRef || "",
+			Authorization: this.accessToken ? `Token ${this.accessToken}` : "",
+			// Asserting `init.headers` is a Record since popular GraphQL
+			// libraries pass this as a Record. Header objects as input
+			// are unsupported.
+			...(init ? (init.headers as Record<string, string>) : {}),
+		};
 
-		if (!headers.has("Prismic-ref")) {
-			headers.set("Prismic-ref", ref);
-		}
-		if (
-			!headers.has("Prismic-integration-field-ref") &&
-			cachedRepository.integrationFieldsRef
-		) {
-			headers.set(
-				"Prismic-integration-field-ref",
-				cachedRepository.integrationFieldsRef,
-			);
-		}
-		if (!headers.has("Authorization") && this.accessToken) {
-			headers.set("Authorization", `Token ${this.accessToken}`);
+		const headers: Record<string, string> = {};
+		for (const key in unsanitizedHeaders) {
+			if (unsanitizedHeaders[key]) {
+				headers[key.toLowerCase()] =
+					unsanitizedHeaders[key as keyof typeof unsanitizedHeaders];
+			}
 		}
 
-		return (await this.fetchFn(url, {
-			...init,
-			headers: Object.fromEntries(headers),
-		})) as Response;
+		return (await this.fetchFn(
+			// Asserting `input` is a string since popular GraphQL
+			// libraries pass this as a string. Request objects as
+			// input are unsupported.
+			input as string,
+			{
+				...init,
+				headers,
+			},
+		)) as Response;
 	}
 
 	/**
