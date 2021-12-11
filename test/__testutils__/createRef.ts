@@ -1,9 +1,9 @@
-import * as prismic from "../../src";
+import * as prismicT from "@prismicio/types";
 
 export const createRef = (
 	isMasterRef = false,
-	overrides?: Partial<prismic.Ref>,
-): prismic.Ref => {
+	overrides?: Partial<prismicT.Ref>,
+): prismicT.Ref => {
 	const id = Math.random().toString();
 	const ref = Math.random().toString();
 	const label = Math.random().toString();
