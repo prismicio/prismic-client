@@ -468,14 +468,16 @@ test.serial("throws PrismicError if response is not JSON", async (t) => {
 test.serial(
 	"throws if a prismic.io endpoint is given that is not for Rest API V2",
 	(t) => {
-		const message = /only supports Prismic Rest API V2/;
 		const fetch = sinon.stub();
 
 		t.throws(
 			() => {
 				prismic.createClient("https://qwerty.cdn.prismic.io/api/v1", { fetch });
 			},
-			{ message, instanceOf: prismic.PrismicError },
+			{
+				message: /only supports Prismic Rest API V2/,
+				instanceOf: prismic.PrismicError,
+			},
 		);
 
 		t.notThrows(() => {
