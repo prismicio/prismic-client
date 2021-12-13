@@ -464,3 +464,30 @@ test.serial("throws PrismicError if response is not JSON", async (t) => {
 		message: /invalid api response/i,
 	});
 });
+
+test.serial(
+	"throws if a prismic.io endpoint is given that is not for Rest API V2",
+	(t) => {
+		const message = /only supports Prismic Rest API V2/;
+		const fetch = sinon.stub();
+
+		t.throws(
+			() => {
+				prismic.createClient("https://qwerty.cdn.prismic.io/api/v1", { fetch });
+			},
+			{ message, instanceOf: prismic.PrismicError },
+		);
+
+		t.notThrows(() => {
+			prismic.createClient("https://example.com/custom/endpoint", { fetch });
+		}, "Non-prismic.io endpoints are not checked");
+
+		t.notThrows(() => {
+			prismic.createClient("https://qwerty.cdn.prismic.io/api/v2", { fetch });
+		}, "A valid prismic.io V2 endpoint does not throw");
+
+		t.notThrows(() => {
+			prismic.createClient(prismic.getEndpoint("qwerty"), { fetch });
+		}, "An endpoint created with getEndpoint does not throw");
+	},
+);
