@@ -310,6 +310,17 @@ export class Client {
 	 * @returns A client that can query content from the repository.
 	 */
 	constructor(endpoint: string, options: ClientConfig = {}) {
+		if (
+			process.env.NODE_ENV === "development" &&
+			/\.prismic\.io\/(?!api\/v2\/?)/.test(endpoint)
+		) {
+			throw new PrismicError(
+				"@prismicio/client only supports Prismic Rest API V2. Please use the getEndpoint helper to generate a valid Rest API V2 endpoint URL.",
+				undefined,
+				undefined,
+			);
+		}
+
 		this.endpoint = endpoint;
 		this.accessToken = options.accessToken;
 		this.routes = options.routes;
