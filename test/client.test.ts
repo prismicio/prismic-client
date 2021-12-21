@@ -477,12 +477,6 @@ test.serial("throws NotFoundError if repository does not exist", async (t) => {
 
 	const client = createTestClient(t);
 
-	try {
-		await client.get();
-	} catch (e) {
-		t.log(e);
-	}
-
 	await t.throwsAsync(async () => await client.get(), {
 		instanceOf: prismic.NotFoundError,
 		message: /repository not found/i,
