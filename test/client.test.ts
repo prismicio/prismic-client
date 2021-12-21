@@ -356,7 +356,7 @@ test.serial(
 );
 
 test.serial(
-	"throws PrismicError if response code is 404 but is not an invalid access token error",
+	"throws PrismicError if response code is 403 but is not an invalid access token error",
 	async (t) => {
 		const repositoryResponse = createRepositoryResponse();
 		const queryResponse = {};
@@ -427,14 +427,14 @@ test.serial(
 );
 
 test.serial(
-	"throws PrismicError if response is not 200, 400, or 403",
+	"throws PrismicError if response is not 200, 400, 403, or 404",
 	async (t) => {
 		const repositoryResponse = createRepositoryResponse();
 
 		server.use(
 			createMockRepositoryHandler(t, repositoryResponse),
 			msw.rest.get(createQueryEndpoint(t), (_req, res, ctx) => {
-				return res(ctx.status(404), ctx.json({}));
+				return res(ctx.status(418), ctx.json({}));
 			}),
 		);
 
@@ -462,6 +462,30 @@ test.serial("throws PrismicError if response is not JSON", async (t) => {
 	await t.throwsAsync(async () => await client.get(), {
 		instanceOf: prismic.PrismicError,
 		message: /invalid api response/i,
+	});
+});
+
+test.serial("throws NotFoundError if repository does not exist", async (t) => {
+	server.use(
+		msw.rest.get(createRepositoryEndpoint(t), (_req, res, ctx) => {
+			return res(ctx.status(404));
+		}),
+		msw.rest.get(createQueryEndpoint(t), (_req, res, ctx) => {
+			return res(ctx.status(404));
+		}),
+	);
+
+	const client = createTestClient(t);
+
+	try {
+		await client.get();
+	} catch (e) {
+		t.log(e);
+	}
+
+	await t.throwsAsync(async () => await client.get(), {
+		instanceOf: prismic.NotFoundError,
+		message: /repository not found/i,
 	});
 });
 

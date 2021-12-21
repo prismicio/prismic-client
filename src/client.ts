@@ -15,6 +15,7 @@ import { ParsingError } from "./ParsingError";
 import { PrismicError } from "./PrismicError";
 import { predicate } from "./predicate";
 import * as cookie from "./cookie";
+import { NotFoundError } from "./NotFoundError";
 
 /**
  * The largest page size allowed by the Prismic REST API V2. This value is used
@@ -1390,7 +1391,17 @@ export class Client {
 			// Content Type. If not, this will throw, signaling an invalid response.
 			json = await res.json();
 		} catch {
-			throw new PrismicError(undefined, url, undefined);
+			// Not Found (this response has an empty body and throws on `.json()`)
+			// - Incorrect repository name
+			if (res.status === 404) {
+				throw new NotFoundError(
+					`Prismic repository not found. Check that "${this.endpoint}" is pointing to the correct repository.`,
+					url,
+					undefined,
+				);
+			} else {
+				throw new PrismicError(undefined, url, undefined);
+			}
 		}
 
 		switch (res.status) {
