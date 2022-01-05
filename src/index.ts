@@ -1,29 +1,38 @@
-import ResolvedApi, { EXPERIMENT_COOKIE as experimentCookie, PREVIEW_COOKIE as previewCookie } from './ResolvedApi';
-import Predicates from './Predicates';
-import { Experiments } from './experiments';
-import Api, { ApiOptions } from './Api';
-import { DefaultClient } from './client';
+// Primary library API.
+export * from "./getEndpoint";
+export * from "./buildQueryURL";
+export { createClient, Client } from "./client";
 
-export default {
-  experimentCookie,
-  previewCookie,
-  Predicates,
-  predicates: Predicates,
-  Experiments,
-  Api,
-  client,
-  getApi,
-  api,
-};
+// Predicates API.
+import { predicate } from "./predicate";
+export { predicate };
+/**
+ * @deprecated Renamed to `predicate` (without an "s").
+ */
+// TODO: Remove in v3.
+export const predicates = predicate;
+/**
+ * @deprecated Renamed to `predicate` (lowercase and without an "s").
+ */
+// TODO: Remove in v3.
+export const Predicates = predicate;
 
-function client(url: string, options?: ApiOptions): DefaultClient {
-  return new DefaultClient(url, options);
-}
+// Custom errors used by Client.
+export { PrismicError } from "./PrismicError";
+export { ForbiddenError } from "./ForbiddenError";
+export { ParsingError } from "./ParsingError";
+export { NotFoundError } from "./NotFoundError";
 
-function getApi(url: string, options?: ApiOptions): Promise<ResolvedApi> {
-  return DefaultClient.getApi(url, options);
-}
+// A collection of well-known cookie names shared between Prismic libraries and systems.
+export * as cookie from "./cookie";
 
-function api(url: string, options?: ApiOptions): Promise<ResolvedApi> {
-  return getApi(url, options);
-}
+// General types used throughout the project. These are made public to allow users to better type their projects.
+export type { ClientConfig } from "./client";
+export type {
+	FetchLike,
+	HttpRequestLike,
+	Ordering,
+	RequestInitLike,
+	ResponseLike,
+	Route,
+} from "./types";

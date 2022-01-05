@@ -1,59 +1,80 @@
 {
-  "name": "@prismicio/client",
-  "description": "JavaScript development kit for prismic.io",
-  "license": "Apache-2.0",
-  "url": "https://github.com/prismicio/prismic-javascript",
-  "keywords": [
-    "prismic",
-    "prismic.io",
-    "cms",
-    "content",
-    "api"
-  ],
-  "version": "5.1.1",
-  "engines": {
-    "node": ">=0.10.3"
-  },
-  "devDependencies": {
-    "@rollup/plugin-typescript": "^4.1.1",
-    "@typescript-eslint/eslint-plugin": "^2.29.0",
-    "@typescript-eslint/parser": "^2.29.0",
-    "chai": "^4.2.0",
-    "eslint": "^6.8.0",
-    "mocha": "^8.2.1",
-    "nock": "^11.6.0",
-    "rollup": "^2.1.0",
-    "rollup-plugin-terser": "^7.0.2",
-    "tslib": "^1.11.1",
-    "typedoc": "^0.17.6",
-    "typescript": "^3.8.3"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/prismicio/prismic-javascript.git"
-  },
-  "main": "cjs/@prismicio/client.js",
-  "module": "esm/@prismicio/client.mjs",
-  "unpkg": "umd/@prismicio/client.min.js",
-  "files": [
-    "cjs/",
-    "esm/",
-    "umd/",
-    "types/"
-  ],
-  "types": "./types/index.d.ts",
-  "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c -w",
-    "check": "tsc --pretty --noEmit --watch",
-    "test": "npm run build && mocha",
-    "prepare": "npm run build && npm run docs && npm run declarations",
-    "prepublishOnly": "npm run test",
-    "docs": "typedoc --mode file --out ./docs ./src/index.ts",
-    "declarations": "tsc --emitDeclarationOnly --declaration --declarationDir ./types",
-    "lint": "eslint src/**/*.ts"
-  },
-  "dependencies": {
-    "cross-fetch": "^3.0.6"
-  }
+	"name": "@prismicio/client",
+	"version": "6.0.0-beta.5",
+	"description": "The official JavaScript + TypeScript client library for Prismic",
+	"keywords": [
+		"prismic",
+		"prismic.io",
+		"cms",
+		"content",
+		"api",
+		"typescript"
+	],
+	"repository": {
+		"type": "git",
+		"url": "ssh://git@github.com/prismicio/prismic-client.git"
+	},
+	"license": "Apache-2.0",
+	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
+	"sideEffects": false,
+	"type": "module",
+	"exports": {
+		".": {
+			"require": "./dist/index.cjs",
+			"import": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"main": "dist/index.cjs",
+	"module": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist",
+		"src"
+	],
+	"scripts": {
+		"build": "siroc build",
+		"dev": "siroc build --watch",
+		"format": "prettier --write README.md .eslintrc.cjs ava.config.js package.json tsconfig.json {src,examples,test}/**",
+		"lint": "eslint --ext .js,.ts .",
+		"prepare": "npm run build",
+		"release": "npm run build && npm run test && standard-version && git push --follow-tags && npm run build && npm publish",
+		"release:beta": "npm run build && npm run test && standard-version --release-as major --prerelease beta && git push --follow-tags && npm run build && npm publish --tag beta",
+		"release:beta:dry": "standard-version --release-as major --prerelease beta --dry-run",
+		"release:dry": "standard-version --dry-run",
+		"test": "npm run lint && npm run unit",
+		"unit": "nyc --reporter=lcovonly --reporter=text --exclude-after-remap=false ava"
+	},
+	"dependencies": {
+		"@prismicio/helpers": "^2.0.0",
+		"@prismicio/types": "^0.1.21"
+	},
+	"devDependencies": {
+		"@types/node-fetch": "^3.0.3",
+		"@types/sinon": "^10.0.6",
+		"@typescript-eslint/eslint-plugin": "^5.8.0",
+		"@typescript-eslint/parser": "^5.8.0",
+		"ava": "^3.15.0",
+		"eslint": "^8.5.0",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-plugin-prettier": "^4.0.0",
+		"eslint-plugin-tsdoc": "^0.2.14",
+		"msw": "^0.36.3",
+		"node-fetch": "^2.6.5",
+		"nyc": "^15.1.0",
+		"prettier": "^2.5.1",
+		"prettier-plugin-jsdoc": "^0.3.30",
+		"sinon": "^12.0.1",
+		"siroc": "^0.16.0",
+		"standard-version": "^9.3.2",
+		"ts-eager": "^2.0.2",
+		"type-fest": "^2.8.0",
+		"typescript": "^4.5.4"
+	},
+	"engines": {
+		"node": ">=12.13.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
 }
