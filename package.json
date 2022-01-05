@@ -46,7 +46,7 @@
 		"unit": "nyc --reporter=lcovonly --reporter=text --exclude-after-remap=false ava"
 	},
 	"dependencies": {
-		"@prismicio/helpers": "^2.0.0-beta.6",
+		"@prismicio/helpers": "^2.0.0",
 		"@prismicio/types": "^0.1.21"
 	},
 	"devDependencies": {
