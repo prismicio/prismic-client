@@ -1263,6 +1263,32 @@ export class Client {
 		};
 	}
 
+	/**
+	 * A `fetch()` function to be used with GraphQL clients configured for
+	 * Prismic's GraphQL API. It automatically applies the necessary `prismic-ref`
+	 * and Authorization headers.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * const graphqlClient = new ApolloClient({
+	 * 	link: new HttpLink({
+	 * 		uri: prismic.getGraphQLEndpoint(repositoryName),
+	 * 		// Provide `client.graphqlFetch` as the fetch implementation.
+	 * 		fetch: client.graphqlFetch,
+	 * 		// Using GET is required.
+	 * 		useGETForQueries: true,
+	 * 	}),
+	 * 	cache: new InMemoryCache(),
+	 * });
+	 * ```
+	 *
+	 * @param input - The `fetch()` `input` parameter. Only strings are supported.
+	 * @param init - The `fetch()` `init` parameter. Only plain objects are supported.
+	 *
+	 * @returns The `fetch()` Response for the request.
+	 * @experimental
+	 */
 	async graphqlFetch(
 		input: RequestInfo,
 		init?: RequestInit,
