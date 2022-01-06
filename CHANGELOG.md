@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0](https://github.com/prismicio/prismic-client/compare/v5.1.1...v6.0.0) (2022-01-05)
+
+## [6.0.0-beta.5](https://github.com/prismicio/prismic-client/compare/v6.0.0-beta.4...v6.0.0-beta.5) (2021-12-21)
+
+
+### Features
+
+* ensure Prismic Rest API V2 endpoint is used ([#203](https://github.com/prismicio/prismic-client/issues/203)) ([18faf65](https://github.com/prismicio/prismic-client/commit/18faf65016de380838ed3ea74eb56cad201acf13))
+* throw NotFoundError if repository does not exist ([bf7b862](https://github.com/prismicio/prismic-client/commit/bf7b862e6d7b8cbb3a9bb5fa4ccf334e5c72bca0))
+
+
+### Documentation
+
+* update README links [skip ci] ([298e062](https://github.com/prismicio/prismic-client/commit/298e06214eae3de69d4b54022398dd0087c6951c))
+
+
+### Chore
+
+* **deps:** update dependencies ([3c8414d](https://github.com/prismicio/prismic-client/commit/3c8414dac01a2ccc482b9f5cf88135e51c25aaee))
+
 ## [6.0.0-beta.4](https://github.com/prismicio/prismic-client/compare/v6.0.0-beta.3...v6.0.0-beta.4) (2021-12-03)
 
 

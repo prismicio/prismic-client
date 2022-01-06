@@ -356,7 +356,7 @@ test.serial(
 );
 
 test.serial(
-	"throws PrismicError if response code is 404 but is not an invalid access token error",
+	"throws PrismicError if response code is 403 but is not an invalid access token error",
 	async (t) => {
 		const repositoryResponse = createRepositoryResponse();
 		const queryResponse = {};
@@ -427,14 +427,14 @@ test.serial(
 );
 
 test.serial(
-	"throws PrismicError if response is not 200, 400, or 403",
+	"throws PrismicError if response is not 200, 400, 403, or 404",
 	async (t) => {
 		const repositoryResponse = createRepositoryResponse();
 
 		server.use(
 			createMockRepositoryHandler(t, repositoryResponse),
 			msw.rest.get(createQueryEndpoint(t), (_req, res, ctx) => {
-				return res(ctx.status(404), ctx.json({}));
+				return res(ctx.status(418), ctx.json({}));
 			}),
 		);
 
@@ -464,3 +464,50 @@ test.serial("throws PrismicError if response is not JSON", async (t) => {
 		message: /invalid api response/i,
 	});
 });
+
+test.serial("throws NotFoundError if repository does not exist", async (t) => {
+	server.use(
+		msw.rest.get(createRepositoryEndpoint(t), (_req, res, ctx) => {
+			return res(ctx.status(404));
+		}),
+		msw.rest.get(createQueryEndpoint(t), (_req, res, ctx) => {
+			return res(ctx.status(404));
+		}),
+	);
+
+	const client = createTestClient(t);
+
+	await t.throwsAsync(async () => await client.get(), {
+		instanceOf: prismic.NotFoundError,
+		message: /repository not found/i,
+	});
+});
+
+test.serial(
+	"throws if a prismic.io endpoint is given that is not for Rest API V2",
+	(t) => {
+		const fetch = sinon.stub();
+
+		t.throws(
+			() => {
+				prismic.createClient("https://qwerty.cdn.prismic.io/api/v1", { fetch });
+			},
+			{
+				message: /only supports Prismic Rest API V2/,
+				instanceOf: prismic.PrismicError,
+			},
+		);
+
+		t.notThrows(() => {
+			prismic.createClient("https://example.com/custom/endpoint", { fetch });
+		}, "Non-prismic.io endpoints are not checked");
+
+		t.notThrows(() => {
+			prismic.createClient("https://qwerty.cdn.prismic.io/api/v2", { fetch });
+		}, "A valid prismic.io V2 endpoint does not throw");
+
+		t.notThrows(() => {
+			prismic.createClient(prismic.getEndpoint("qwerty"), { fetch });
+		}, "An endpoint created with getEndpoint does not throw");
+	},
+);

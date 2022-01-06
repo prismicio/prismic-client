@@ -15,6 +15,7 @@ import { ParsingError } from "./ParsingError";
 import { PrismicError } from "./PrismicError";
 import { predicate } from "./predicate";
 import * as cookie from "./cookie";
+import { NotFoundError } from "./NotFoundError";
 
 /**
  * The largest page size allowed by the Prismic REST API V2. This value is used
@@ -310,6 +311,17 @@ export class Client {
 	 * @returns A client that can query content from the repository.
 	 */
 	constructor(endpoint: string, options: ClientConfig = {}) {
+		if (
+			process.env.NODE_ENV === "development" &&
+			/\.prismic\.io\/(?!api\/v2\/?)/.test(endpoint)
+		) {
+			throw new PrismicError(
+				"@prismicio/client only supports Prismic Rest API V2. Please use the getEndpoint helper to generate a valid Rest API V2 endpoint URL.",
+				undefined,
+				undefined,
+			);
+		}
+
 		this.endpoint = endpoint;
 		this.accessToken = options.accessToken;
 		this.routes = options.routes;
@@ -1419,7 +1431,17 @@ export class Client {
 			// Content Type. If not, this will throw, signaling an invalid response.
 			json = await res.json();
 		} catch {
-			throw new PrismicError(undefined, url, undefined);
+			// Not Found (this response has an empty body and throws on `.json()`)
+			// - Incorrect repository name
+			if (res.status === 404) {
+				throw new NotFoundError(
+					`Prismic repository not found. Check that "${this.endpoint}" is pointing to the correct repository.`,
+					url,
+					undefined,
+				);
+			} else {
+				throw new PrismicError(undefined, url, undefined);
+			}
 		}
 
 		switch (res.status) {

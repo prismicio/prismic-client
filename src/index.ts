@@ -22,6 +22,7 @@ export const Predicates = predicate;
 export { PrismicError } from "./PrismicError";
 export { ForbiddenError } from "./ForbiddenError";
 export { ParsingError } from "./ParsingError";
+export { NotFoundError } from "./NotFoundError";
 
 // A collection of well-known cookie names shared between Prismic libraries and systems.
 export * as cookie from "./cookie";

@@ -1,6 +1,6 @@
 {
 	"name": "@prismicio/client",
-	"version": "6.0.0-beta.4",
+	"version": "6.0.0",
 	"description": "The official JavaScript + TypeScript client library for Prismic",
 	"keywords": [
 		"prismic",
@@ -42,34 +42,37 @@
 		"release:beta": "npm run build && npm run test && standard-version --release-as major --prerelease beta && git push --follow-tags && npm run build && npm publish --tag beta",
 		"release:beta:dry": "standard-version --release-as major --prerelease beta --dry-run",
 		"release:dry": "standard-version --dry-run",
-		"test": "npm run lint && npm run unit",
+		"size": "size-limit",
+		"test": "npm run lint && npm run unit && npm run build && npm run size",
 		"unit": "nyc --reporter=lcovonly --reporter=text --exclude-after-remap=false ava"
 	},
 	"dependencies": {
-		"@prismicio/helpers": "^2.0.0-beta.6",
-		"@prismicio/types": "^0.1.19"
+		"@prismicio/helpers": "^2.0.0",
+		"@prismicio/types": "^0.1.21"
 	},
 	"devDependencies": {
-		"@types/node-fetch": "^2.5.12",
+		"@size-limit/preset-small-lib": "^7.0.5",
+		"@types/node-fetch": "^3.0.3",
 		"@types/sinon": "^10.0.6",
-		"@typescript-eslint/eslint-plugin": "^5.5.0",
-		"@typescript-eslint/parser": "^5.5.0",
+		"@typescript-eslint/eslint-plugin": "^5.9.0",
+		"@typescript-eslint/parser": "^5.9.0",
 		"ava": "^3.15.0",
-		"eslint": "^8.3.0",
+		"eslint": "^8.6.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-prettier": "^4.0.0",
 		"eslint-plugin-tsdoc": "^0.2.14",
-		"msw": "^0.35.0",
+		"msw": "^0.36.3",
 		"node-fetch": "^2.6.5",
 		"nyc": "^15.1.0",
-		"prettier": "^2.5.0",
+		"prettier": "^2.5.1",
 		"prettier-plugin-jsdoc": "^0.3.30",
 		"sinon": "^12.0.1",
 		"siroc": "^0.16.0",
+		"size-limit": "^7.0.5",
 		"standard-version": "^9.3.2",
 		"ts-eager": "^2.0.2",
 		"type-fest": "^2.8.0",
-		"typescript": "^4.5.2"
+		"typescript": "^4.5.4"
 	},
 	"engines": {
 		"node": ">=12.13.0"
