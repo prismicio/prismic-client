@@ -393,7 +393,7 @@ The project's package definition file.
 - `lint`: Runs ESLint on the project;
 - `unit`: Runs AVA on the project;
 - `size`: Runs Size Limit on the project;
-- `test`: Runs the `lint`, `unit`, and `size` scripts.
+- `test`: Runs the `lint`, `unit`, `build`, and `size` scripts.
 
 **Minimum Node version supported (`engines.node`)**
 
