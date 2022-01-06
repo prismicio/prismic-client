@@ -45,4 +45,11 @@ jobs:
         run: npm run build
 
       - name: Coverage
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 14
         uses: codecov/codecov-action@v1
+
+      - name: Size
+        if: github.event_name == 'pull_request' && matrix.os == 'ubuntu-latest' && matrix.node == 14
+        uses: andresz1/size-limit-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
