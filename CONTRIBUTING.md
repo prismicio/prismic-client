@@ -418,5 +418,5 @@ The minimum Node version supported by the project is stated under the `engines` 
 [template-issue]: https://github.com/prismicio/prismic-typescript-template/issues/new/choose
 [changelog]: ./CHANGELOG.md
 [forum-question]: https://community.prismic.io
-[repo-issue]: https://github.com/github_org_slash_github_repo/issues/new/choose
-[repo-pull-requests]: https://github.com/github_org_slash_github_repo/pulls
+[repo-issue]: https://github.com/prismicio/prismic-client/issues/new/choose
+[repo-pull-requests]: https://github.com/prismicio/prismic-client/pulls
