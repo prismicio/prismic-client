@@ -31,6 +31,7 @@ test.serial("resolves a preview url in the browser", async (t) => {
 		createMockQueryHandler(t, [queryResponse], undefined, {
 			ref: previewToken,
 			q: `[[at(document.id, "${documentId}")]]`,
+			lang: "*",
 		}),
 	);
 
@@ -59,6 +60,7 @@ test.serial("resolves a preview url using a server req object", async (t) => {
 		createMockQueryHandler(t, [queryResponse], undefined, {
 			ref: previewToken,
 			q: `[[at(document.id, "${documentId}")]]`,
+			lang: "*",
 		}),
 	);
 
@@ -92,6 +94,7 @@ test.serial(
 			createMockQueryHandler(t, [queryResponse], undefined, {
 				ref: previewToken,
 				q: `[[at(document.id, "${documentID}")]]`,
+				lang: "*",
 			}),
 		);
 
