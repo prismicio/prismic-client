@@ -1167,6 +1167,7 @@ export class Client {
 		if (documentID != null) {
 			const document = await this.getByID(documentID, {
 				ref: previewToken,
+				lang: "*",
 			});
 
 			// We know we have a valid field to resolve since we are using prismicH.documentToLinkField
