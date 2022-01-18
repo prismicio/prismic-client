@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.1.0](https://github.com/prismicio/prismic-client/compare/v6.0.0...v6.1.0) (2022-01-18)
+
+
+### Features
+
+* add `getGraphQLEndpoint` and `Client.prototype.graphqlFetch` ([9b5a126](https://github.com/prismicio/prismic-client/commit/9b5a12621e4ca5cf6e34338d1a99ac80383d399c))
+
+
+### Bug Fixes
+
+* resolve previewed document URL any language ([#208](https://github.com/prismicio/prismic-client/issues/208)) ([a7504be](https://github.com/prismicio/prismic-client/commit/a7504bef9e3563836a95ad20a8d052971d348426))
+
+
+### Refactor
+
+* simplify graphqlFetch by unsupporting `RequestInfo` and `RequestInit` ([580c4d5](https://github.com/prismicio/prismic-client/commit/580c4d59ad4826290d4eee9bc0d2c12f27c69ee7))
+
+
+### Documentation
+
+* add TSDoc to `Client.prototype.graphqlFetch` ([a883f7e](https://github.com/prismicio/prismic-client/commit/a883f7e41141090246d07b8f78f16ccd77dafd41))
+* fix links ([144b6bd](https://github.com/prismicio/prismic-client/commit/144b6bdc4d733093374d9d873b6d9b4944c1a02d))
+
+
+### Chore
+
+* add build step to test script ([1d0a8a7](https://github.com/prismicio/prismic-client/commit/1d0a8a78656e65d4f5ab98d0cba60e6c163751c5))
+* add custom-timeout example ([#205](https://github.com/prismicio/prismic-client/issues/205)) ([d4e55d4](https://github.com/prismicio/prismic-client/commit/d4e55d41fdb952c808d03066823e5ae77a39434f))
+* add size limit ([8eb5170](https://github.com/prismicio/prismic-client/commit/8eb5170eec9a2dc7b16c817fc9eff7288fda220f))
+* **deps:** maintain dependencies ([2f337a3](https://github.com/prismicio/prismic-client/commit/2f337a3a79d9b7b47dd2b9ee6688d1a4f16e9464))
+* **deps:** update dependencies ([7e1746a](https://github.com/prismicio/prismic-client/commit/7e1746a4f3c8932e344763cfd54ae193db987a09))
+
 ## [6.0.0](https://github.com/prismicio/prismic-client/compare/v5.1.1...v6.0.0) (2022-01-05)
 
 ## [6.0.0-beta.5](https://github.com/prismicio/prismic-client/compare/v6.0.0-beta.4...v6.0.0-beta.5) (2021-12-21)
