@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.1.1](https://github.com/prismicio/prismic-client/compare/v6.1.0...v6.1.1) (2022-01-28)
+
+
+### Chore
+
+* **deps:** update dependencies ([d35e2da](https://github.com/prismicio/prismic-client/commit/d35e2dac36f59c9561aae298f5fe0f156ec1b3ee))
+* support React Native's Metro bundler ([9c5a38b](https://github.com/prismicio/prismic-client/commit/9c5a38bbf104b0ea8791f955b6dfbcbc2a615e72))
+
 ## [6.1.0](https://github.com/prismicio/prismic-client/compare/v6.0.0...v6.1.0) (2022-01-18)
 
 
