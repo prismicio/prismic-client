@@ -16,6 +16,7 @@ import { PrismicError } from "./PrismicError";
 import { predicate } from "./predicate";
 import * as cookie from "./cookie";
 import { NotFoundError } from "./NotFoundError";
+import { removeGraphQLQueryWhitespace } from "./lib/removeGraphQLQueryWhitespace";
 
 /**
  * The largest page size allowed by the Prismic REST API V2. This value is used
@@ -1308,6 +1309,9 @@ export class Client {
 			...(init ? (init.headers as Record<string, string>) : {}),
 		};
 
+		// Normalize header keys to lowercase. This prevents header
+		// conflicts between the Prismic client and the GraphQL
+		// client.
 		const headers: Record<string, string> = {};
 		for (const key in unsanitizedHeaders) {
 			if (unsanitizedHeaders[key]) {
@@ -1316,16 +1320,24 @@ export class Client {
 			}
 		}
 
-		return (await this.fetchFn(
+		// Compress the GraphQL query (if it exists) by removing
+		// whitespace. This is done to optimize the query size and avoid hitting the
+		// upper limit of GET requests (2048 characters).
+		const url = new URL(
 			// Asserting `input` is a string since popular GraphQL
 			// libraries pass this as a string. Request objects as
 			// input are unsupported.
 			input as string,
-			{
-				...init,
-				headers,
-			},
-		)) as Response;
+		);
+		const query = url.searchParams.get("query");
+		if (query) {
+			url.searchParams.set("query", removeGraphQLQueryWhitespace(query));
+		}
+
+		return (await this.fetchFn(url.toString(), {
+			...init,
+			headers,
+		})) as Response;
 	}
 
 	/**

@@ -1,6 +1,7 @@
 import test from "ava";
 import * as msw from "msw";
 import * as mswNode from "msw/node";
+import * as crypto from "crypto";
 
 import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
 import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
@@ -127,4 +128,54 @@ test("includes Integration Fields header if ref is available", async (t) => {
 	const json = await res.json();
 
 	t.deepEqual(json, graphqlResponse);
+});
+
+test("optimizes queries by removing whitespace", async (t) => {
+	const repositoryResponse = createRepositoryResponse();
+
+	const repositoryName = crypto.createHash("md5").update(t.title).digest("hex");
+	const graphQLEndpoint = `https://${repositoryName}.cdn.prismic.io/graphql`;
+
+	const graphqlURLWithUncompressedQuery = new URL(graphQLEndpoint);
+	graphqlURLWithUncompressedQuery.searchParams.set(
+		"query",
+		`query {
+  allPage {
+    edges {
+      node {
+        _meta {
+          uid
+        }
+      }
+    }
+  }
+}`,
+	);
+
+	const graphqlURLWithCompressedQuery = new URL(graphQLEndpoint);
+	graphqlURLWithCompressedQuery.searchParams.set(
+		"query",
+		"query{allPage{edges{node{_meta{uid}}}}}",
+	);
+
+	const graphqlResponse = { foo: "bar" };
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse),
+		msw.rest.get(graphQLEndpoint, (req, res, ctx) => {
+			if (
+				req.url.toString() === graphqlURLWithCompressedQuery.toString() &&
+				req.headers.get("Prismic-Ref") === getMasterRef(repositoryResponse)
+			) {
+				t.pass();
+
+				return res(ctx.json(graphqlResponse));
+			}
+		}),
+	);
+
+	const client = createTestClient(t);
+	await client.graphqlFetch(graphqlURLWithUncompressedQuery.toString());
+
+	t.plan(1);
 });
