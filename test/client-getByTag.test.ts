@@ -27,7 +27,7 @@ test("queries for documents by tag", async (t) => {
 		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, [queryResponse], undefined, {
 			ref: getMasterRef(repositoryResponse),
-			q: `[[at(document.tags, "${documentTag}")]]`,
+			q: `[[any(document.tags, ["${documentTag}"])]]`,
 		}),
 	);
 
@@ -54,7 +54,7 @@ test("includes params if provided", async (t) => {
 		createMockRepositoryHandler(t),
 		createMockQueryHandler(t, [queryResponse], params.accessToken, {
 			ref: params.ref as string,
-			q: `[[at(document.tags, "${documentTag}")]]`,
+			q: `[[any(document.tags, ["${documentTag}"])]]`,
 			lang: params.lang,
 		}),
 	);

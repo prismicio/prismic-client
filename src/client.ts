@@ -2,6 +2,7 @@ import * as prismicT from "@prismicio/types";
 import * as prismicH from "@prismicio/helpers";
 
 import { appendPredicates } from "./lib/appendPredicates";
+import { castArray } from "./lib/castArray";
 import { castThunk } from "./lib/castThunk";
 import { findMasterRef } from "./lib/findMasterRef";
 import { findRefByID } from "./lib/findRefByID";
@@ -205,7 +206,7 @@ const typePredicate = (documentType: string): string =>
  * @returns A predicate that can be used in a Prismic REST API V2 request.
  */
 const everyTagPredicate = (tags: string | string[]): string =>
-	predicate.at("document.tags", tags);
+	predicate.at("document.tags", castArray(tags));
 
 /**
  * Creates a predicate to filter content by document tags. At least one matching
@@ -216,7 +217,7 @@ const everyTagPredicate = (tags: string | string[]): string =>
  * @returns A predicate that can be used in a Prismic REST API V2 request.
  */
 const someTagsPredicate = (tags: string | string[]): string =>
-	predicate.any("document.tags", tags);
+	predicate.any("document.tags", castArray(tags));
 
 /**
  * Creates a Prismic client that can be used to query a repository.
@@ -842,7 +843,7 @@ export class Client {
 		params?: Partial<BuildQueryURLArgs>,
 	): Promise<prismicT.Query<TDocument>> {
 		return await this.get<TDocument>(
-			appendPredicates(params, everyTagPredicate(tag)),
+			appendPredicates(params, someTagsPredicate(tag)),
 		);
 	}
 
@@ -868,7 +869,7 @@ export class Client {
 		params?: Partial<Omit<BuildQueryURLArgs, "page">>,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
-			appendPredicates(params, everyTagPredicate(tag)),
+			appendPredicates(params, someTagsPredicate(tag)),
 		);
 	}
 

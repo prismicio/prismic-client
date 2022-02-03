@@ -28,7 +28,7 @@ test("returns all documents by tag from paginated response", async (t) => {
 		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, pagedResponses, undefined, {
 			ref: getMasterRef(repositoryResponse),
-			q: `[[at(document.tags, "${documentTag}")]]`,
+			q: `[[any(document.tags, ["${documentTag}"])]]`,
 			pageSize: 100,
 		}),
 	);
@@ -58,7 +58,7 @@ test("includes params if provided", async (t) => {
 		createMockRepositoryHandler(t),
 		createMockQueryHandler(t, pagedResponses, params.accessToken, {
 			ref: params.ref as string,
-			q: `[[at(document.tags, "${documentTag}")]]`,
+			q: `[[any(document.tags, ["${documentTag}"])]]`,
 			lang: params.lang,
 			pageSize: 100,
 		}),
