@@ -1268,7 +1268,8 @@ export class Client {
 	/**
 	 * A `fetch()` function to be used with GraphQL clients configured for
 	 * Prismic's GraphQL API. It automatically applies the necessary `prismic-ref`
-	 * and Authorization headers.
+	 * and Authorization headers. Queries will automatically be minified by
+	 * removing whitespace where possible.
 	 *
 	 * @example
 	 *
