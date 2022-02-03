@@ -7,6 +7,7 @@ import { findMasterRef } from "./lib/findMasterRef";
 import { findRefByID } from "./lib/findRefByID";
 import { findRefByLabel } from "./lib/findRefByLabel";
 import { getCookie } from "./lib/getCookie";
+import { minifyGraphQLQuery } from "./lib/minifyGraphQLQuery";
 
 import { FetchLike, HttpRequestLike } from "./types";
 import { buildQueryURL, BuildQueryURLArgs } from "./buildQueryURL";
@@ -16,7 +17,6 @@ import { PrismicError } from "./PrismicError";
 import { predicate } from "./predicate";
 import * as cookie from "./cookie";
 import { NotFoundError } from "./NotFoundError";
-import { removeGraphQLQueryWhitespace } from "./lib/removeGraphQLQueryWhitespace";
 
 /**
  * The largest page size allowed by the Prismic REST API V2. This value is used
@@ -1332,7 +1332,7 @@ export class Client {
 		);
 		const query = url.searchParams.get("query");
 		if (query) {
-			url.searchParams.set("query", removeGraphQLQueryWhitespace(query));
+			url.searchParams.set("query", minifyGraphQLQuery(query));
 		}
 
 		return (await this.fetchFn(url.toString(), {
