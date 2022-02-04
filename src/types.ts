@@ -1,5 +1,7 @@
 /**
  * A universal API to make network requests. A subset of the `fetch()` API.
+ *
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/fetch}
  */
 export type FetchLike = (
 	input: string,
@@ -7,10 +9,34 @@ export type FetchLike = (
 ) => Promise<ResponseLike>;
 
 /**
+ * An object that allows you to abort a `fetch()` request if needed via an
+ * `AbortController` object
+ *
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal}
+ */
+// `any` is used often here to ensure this type is universally valid amond
+// different AbortSignal implementations. The types of each property are not
+// important to validate since it is blindly passed to a given `fetch()`
+// function.
+export type AbortSignalLike = {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	aborted: any;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	addEventListener: any;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	removeEventListener: any;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	dispatchEvent: any;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	onabort: any;
+};
+
+/**
  * The minimum required properties from RequestInit.
  */
 export interface RequestInitLike {
 	headers?: Record<string, string>;
+	signal?: AbortSignalLike | null;
 }
 
 /**
