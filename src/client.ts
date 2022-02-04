@@ -8,6 +8,7 @@ import { findMasterRef } from "./lib/findMasterRef";
 import { findRefByID } from "./lib/findRefByID";
 import { findRefByLabel } from "./lib/findRefByLabel";
 import { getCookie } from "./lib/getCookie";
+import { minifyGraphQLQuery } from "./lib/minifyGraphQLQuery";
 
 import { FetchLike, HttpRequestLike } from "./types";
 import { buildQueryURL, BuildQueryURLArgs } from "./buildQueryURL";
@@ -1268,7 +1269,8 @@ export class Client {
 	/**
 	 * A `fetch()` function to be used with GraphQL clients configured for
 	 * Prismic's GraphQL API. It automatically applies the necessary `prismic-ref`
-	 * and Authorization headers.
+	 * and Authorization headers. Queries will automatically be minified by
+	 * removing whitespace where possible.
 	 *
 	 * @example
 	 *
@@ -1309,6 +1311,9 @@ export class Client {
 			...(init ? (init.headers as Record<string, string>) : {}),
 		};
 
+		// Normalize header keys to lowercase. This prevents header
+		// conflicts between the Prismic client and the GraphQL
+		// client.
 		const headers: Record<string, string> = {};
 		for (const key in unsanitizedHeaders) {
 			if (unsanitizedHeaders[key]) {
@@ -1317,16 +1322,24 @@ export class Client {
 			}
 		}
 
-		return (await this.fetchFn(
+		// Compress the GraphQL query (if it exists) by removing
+		// whitespace. This is done to optimize the query size and avoid hitting the
+		// upper limit of GET requests (2048 characters).
+		const url = new URL(
 			// Asserting `input` is a string since popular GraphQL
 			// libraries pass this as a string. Request objects as
 			// input are unsupported.
 			input as string,
-			{
-				...init,
-				headers,
-			},
-		)) as Response;
+		);
+		const query = url.searchParams.get("query");
+		if (query) {
+			url.searchParams.set("query", minifyGraphQLQuery(query));
+		}
+
+		return (await this.fetchFn(url.toString(), {
+			...init,
+			headers,
+		})) as Response;
 	}
 
 	/**
