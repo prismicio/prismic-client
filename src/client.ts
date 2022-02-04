@@ -10,14 +10,14 @@ import { findRefByLabel } from "./lib/findRefByLabel";
 import { getCookie } from "./lib/getCookie";
 import { minifyGraphQLQuery } from "./lib/minifyGraphQLQuery";
 
-import { FetchLike, HttpRequestLike } from "./types";
-import { buildQueryURL, BuildQueryURLArgs } from "./buildQueryURL";
+import * as cookie from "./cookie";
+import { AbortSignalLike, FetchLike, HttpRequestLike } from "./types";
 import { ForbiddenError } from "./ForbiddenError";
+import { NotFoundError } from "./NotFoundError";
 import { ParsingError } from "./ParsingError";
 import { PrismicError } from "./PrismicError";
+import { buildQueryURL, BuildQueryURLArgs } from "./buildQueryURL";
 import { predicate } from "./predicate";
-import * as cookie from "./cookie";
-import { NotFoundError } from "./NotFoundError";
 
 /**
  * The largest page size allowed by the Prismic REST API V2. This value is used
@@ -148,6 +148,20 @@ export type ClientConfig = {
 	 * Node.js, this function must be provided.
 	 */
 	fetch?: FetchLike;
+};
+
+/**
+ * Parameters for any client method that use `fetch()`. Only a subset of
+ * `fetch()` parameters are exposed.
+ */
+type FetchParams = {
+	/**
+	 * An `AbortSignal` provided by an `AbortController`. This allows the network
+	 * request to be cancelled if necessary.
+	 *
+	 * {@link https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal}
+	 */
+	signal?: AbortSignalLike;
 };
 
 /**
@@ -429,7 +443,7 @@ export class Client {
 	 */
 	async query<TDocument extends prismicT.PrismicDocument>(
 		predicates: NonNullable<BuildQueryURLArgs["predicates"]>,
-		params?: Partial<Omit<BuildQueryURLArgs, "predicates">>,
+		params?: Partial<Omit<BuildQueryURLArgs, "predicates">> & FetchParams,
 	): Promise<prismicT.Query<TDocument>> {
 		const url = await this.buildQueryURL({ ...params, predicates });
 
@@ -451,7 +465,7 @@ export class Client {
 	 * @returns A paginated response containing the result of the query.
 	 */
 	async get<TDocument extends prismicT.PrismicDocument>(
-		params?: Partial<BuildQueryURLArgs>,
+		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<prismicT.Query<TDocument>> {
 		const url = await this.buildQueryURL(params);
 
@@ -473,7 +487,7 @@ export class Client {
 	 *   The first result of the query, if any.
 	 */
 	async getFirst<TDocument extends prismicT.PrismicDocument>(
-		params?: Partial<BuildQueryURLArgs>,
+		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<TDocument> {
 		const url = await this.buildQueryURL(params);
 		const result = await this.fetch<prismicT.Query<TDocument>>(url, params);
@@ -509,7 +523,9 @@ export class Client {
 	 * @returns A list of documents matching the query.
 	 */
 	async dangerouslyGetAll<TDocument extends prismicT.PrismicDocument>(
-		params: Partial<Omit<BuildQueryURLArgs, "page">> & GetAllParams = {},
+		params: Partial<Omit<BuildQueryURLArgs, "page">> &
+			GetAllParams &
+			FetchParams = {},
 	): Promise<TDocument[]> {
 		const { limit = Infinity, ...actualParams } = params;
 		const resolvedParams = {
@@ -559,7 +575,7 @@ export class Client {
 	 */
 	async getByID<TDocument extends prismicT.PrismicDocument>(
 		id: string,
-		params?: Partial<BuildQueryURLArgs>,
+		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<TDocument> {
 		return await this.getFirst<TDocument>(
 			appendPredicates(params, predicate.at("document.id", id)),
@@ -591,7 +607,7 @@ export class Client {
 	 */
 	async getByIDs<TDocument extends prismicT.PrismicDocument>(
 		ids: string[],
-		params?: Partial<BuildQueryURLArgs>,
+		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<prismicT.Query<TDocument>> {
 		return await this.get<TDocument>(
 			appendPredicates(params, predicate.in("document.id", ids)),
@@ -624,7 +640,7 @@ export class Client {
 	 */
 	async getAllByIDs<TDocument extends prismicT.PrismicDocument>(
 		ids: string[],
-		params?: Partial<BuildQueryURLArgs>,
+		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(params, predicate.in("document.id", ids)),
@@ -655,7 +671,7 @@ export class Client {
 	async getByUID<TDocument extends prismicT.PrismicDocument>(
 		documentType: string,
 		uid: string,
-		params?: Partial<BuildQueryURLArgs>,
+		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<TDocument> {
 		return await this.getFirst<TDocument>(
 			appendPredicates(params, [
@@ -692,7 +708,7 @@ export class Client {
 	async getByUIDs<TDocument extends prismicT.PrismicDocument>(
 		documentType: string,
 		uids: string[],
-		params?: Partial<BuildQueryURLArgs>,
+		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<prismicT.Query<TDocument>> {
 		return await this.get<TDocument>(
 			appendPredicates(params, [
@@ -730,7 +746,7 @@ export class Client {
 	async getAllByUIDs<TDocument extends prismicT.PrismicDocument>(
 		documentType: string,
 		uids: string[],
-		params?: Partial<BuildQueryURLArgs>,
+		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(params, [
@@ -762,7 +778,7 @@ export class Client {
 	 */
 	async getSingle<TDocument extends prismicT.PrismicDocument>(
 		documentType: string,
-		params?: Partial<BuildQueryURLArgs>,
+		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<TDocument> {
 		return await this.getFirst<TDocument>(
 			appendPredicates(params, typePredicate(documentType)),
@@ -789,7 +805,7 @@ export class Client {
 	 */
 	async getByType<TDocument extends prismicT.PrismicDocument>(
 		documentType: string,
-		params?: Partial<BuildQueryURLArgs>,
+		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<prismicT.Query<TDocument>> {
 		return await this.get<TDocument>(
 			appendPredicates(params, typePredicate(documentType)),
@@ -815,7 +831,7 @@ export class Client {
 	 */
 	async getAllByType<TDocument extends prismicT.PrismicDocument>(
 		documentType: string,
-		params?: Partial<Omit<BuildQueryURLArgs, "page">>,
+		params?: Partial<Omit<BuildQueryURLArgs, "page">> & FetchParams,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(params, typePredicate(documentType)),
@@ -841,7 +857,7 @@ export class Client {
 	 */
 	async getByTag<TDocument extends prismicT.PrismicDocument>(
 		tag: string,
-		params?: Partial<BuildQueryURLArgs>,
+		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<prismicT.Query<TDocument>> {
 		return await this.get<TDocument>(
 			appendPredicates(params, someTagsPredicate(tag)),
@@ -867,7 +883,7 @@ export class Client {
 	 */
 	async getAllByTag<TDocument extends prismicT.PrismicDocument>(
 		tag: string,
-		params?: Partial<Omit<BuildQueryURLArgs, "page">>,
+		params?: Partial<Omit<BuildQueryURLArgs, "page">> & FetchParams,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(params, someTagsPredicate(tag)),
@@ -892,7 +908,7 @@ export class Client {
 	 */
 	async getByEveryTag<TDocument extends prismicT.PrismicDocument>(
 		tags: string[],
-		params?: Partial<BuildQueryURLArgs>,
+		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<prismicT.Query<TDocument>> {
 		return await this.get<TDocument>(
 			appendPredicates(params, everyTagPredicate(tags)),
@@ -919,7 +935,7 @@ export class Client {
 	 */
 	async getAllByEveryTag<TDocument extends prismicT.PrismicDocument>(
 		tags: string[],
-		params?: Partial<Omit<BuildQueryURLArgs, "page">>,
+		params?: Partial<Omit<BuildQueryURLArgs, "page">> & FetchParams,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(params, everyTagPredicate(tags)),
@@ -944,7 +960,7 @@ export class Client {
 	 */
 	async getBySomeTags<TDocument extends prismicT.PrismicDocument>(
 		tags: string[],
-		params?: Partial<BuildQueryURLArgs>,
+		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<prismicT.Query<TDocument>> {
 		return await this.get<TDocument>(
 			appendPredicates(params, someTagsPredicate(tags)),
@@ -971,7 +987,7 @@ export class Client {
 	 */
 	async getAllBySomeTags<TDocument extends prismicT.PrismicDocument>(
 		tags: string[],
-		params?: Partial<Omit<BuildQueryURLArgs, "page">>,
+		params?: Partial<Omit<BuildQueryURLArgs, "page">> & FetchParams,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(params, someTagsPredicate(tags)),
@@ -984,7 +1000,7 @@ export class Client {
 	 *
 	 * @returns Repository metadata.
 	 */
-	async getRepository(): Promise<prismicT.Repository> {
+	async getRepository(params?: FetchParams): Promise<prismicT.Repository> {
 		// TODO: Restore when Authorization header support works in browsers with CORS.
 		// return await this.fetch<prismicT.Repository>(this.endpoint);
 
@@ -994,7 +1010,7 @@ export class Client {
 			url.searchParams.set("access_token", this.accessToken);
 		}
 
-		return await this.fetch<prismicT.Repository>(url.toString());
+		return await this.fetch<prismicT.Repository>(url.toString(), params);
 	}
 
 	/**
@@ -1006,8 +1022,8 @@ export class Client {
 	 *
 	 * @returns A list of all refs for the Prismic repository.
 	 */
-	async getRefs(): Promise<prismicT.Ref[]> {
-		const repository = await this.getRepository();
+	async getRefs(params?: FetchParams): Promise<prismicT.Ref[]> {
+		const repository = await this.getRepository(params);
 
 		return repository.refs;
 	}
@@ -1019,8 +1035,8 @@ export class Client {
 	 *
 	 * @returns The ref with a matching ID, if it exists.
 	 */
-	async getRefByID(id: string): Promise<prismicT.Ref> {
-		const refs = await this.getRefs();
+	async getRefByID(id: string, params?: FetchParams): Promise<prismicT.Ref> {
+		const refs = await this.getRefs(params);
 
 		return findRefByID(refs, id);
 	}
@@ -1032,8 +1048,11 @@ export class Client {
 	 *
 	 * @returns The ref with a matching label, if it exists.
 	 */
-	async getRefByLabel(label: string): Promise<prismicT.Ref> {
-		const refs = await this.getRefs();
+	async getRefByLabel(
+		label: string,
+		params?: FetchParams,
+	): Promise<prismicT.Ref> {
+		const refs = await this.getRefs(params);
 
 		return findRefByLabel(refs, label);
 	}
@@ -1044,8 +1063,8 @@ export class Client {
 	 *
 	 * @returns The repository's master ref.
 	 */
-	async getMasterRef(): Promise<prismicT.Ref> {
-		const refs = await this.getRefs();
+	async getMasterRef(params?: FetchParams): Promise<prismicT.Ref> {
+		const refs = await this.getRefs(params);
 
 		return findMasterRef(refs);
 	}
@@ -1056,8 +1075,8 @@ export class Client {
 	 *
 	 * @returns A list of all Releases for the Prismic repository.
 	 */
-	async getReleases(): Promise<prismicT.Ref[]> {
-		const refs = await this.getRefs();
+	async getReleases(params?: FetchParams): Promise<prismicT.Ref[]> {
+		const refs = await this.getRefs(params);
 
 		return refs.filter((ref) => !ref.isMasterRef);
 	}
@@ -1069,8 +1088,11 @@ export class Client {
 	 *
 	 * @returns The Release with a matching ID, if it exists.
 	 */
-	async getReleaseByID(id: string): Promise<prismicT.Ref> {
-		const releases = await this.getReleases();
+	async getReleaseByID(
+		id: string,
+		params?: FetchParams,
+	): Promise<prismicT.Ref> {
+		const releases = await this.getReleases(params);
 
 		return findRefByID(releases, id);
 	}
@@ -1082,8 +1104,11 @@ export class Client {
 	 *
 	 * @returns The ref with a matching label, if it exists.
 	 */
-	async getReleaseByLabel(label: string): Promise<prismicT.Ref> {
-		const releases = await this.getReleases();
+	async getReleaseByLabel(
+		label: string,
+		params?: FetchParams,
+	): Promise<prismicT.Ref> {
+		const releases = await this.getReleases(params);
 
 		return findRefByLabel(releases, label);
 	}
@@ -1093,13 +1118,13 @@ export class Client {
 	 *
 	 * @returns A list of all tags used in the repository.
 	 */
-	async getTags(): Promise<string[]> {
+	async getTags(params?: FetchParams): Promise<string[]> {
 		try {
-			const tagsForm = await this.getCachedRepositoryForm("tags");
+			const tagsForm = await this.getCachedRepositoryForm("tags", params);
 
 			return await this.fetch<string[]>(tagsForm.action);
 		} catch {
-			const repository = await this.getRepository();
+			const repository = await this.getRepository(params);
 
 			return repository.tags;
 		}
@@ -1112,13 +1137,14 @@ export class Client {
 	 *
 	 * @returns A URL string that can be requested to query content.
 	 */
-	async buildQueryURL(
-		params: Partial<BuildQueryURLArgs> = {},
-	): Promise<string> {
+	async buildQueryURL({
+		signal,
+		...params
+	}: Partial<BuildQueryURLArgs> & FetchParams = {}): Promise<string> {
 		const ref = params.ref || (await this.getResolvedRefString());
 		const integrationFieldsRef =
 			params.integrationFieldsRef ||
-			(await this.getCachedRepository()).integrationFieldsRef ||
+			(await this.getCachedRepository({ signal })).integrationFieldsRef ||
 			undefined;
 
 		return buildQueryURL(this.endpoint, {
@@ -1150,7 +1176,9 @@ export class Client {
 	 * @returns The URL for the previewed document during an active preview
 	 *   session. The user should be redirected to this URL.
 	 */
-	async resolvePreviewURL(args: ResolvePreviewArgs): Promise<string> {
+	async resolvePreviewURL(
+		args: ResolvePreviewArgs & FetchParams,
+	): Promise<string> {
 		let documentID = args.documentID;
 		let previewToken = args.previewToken;
 
@@ -1168,6 +1196,7 @@ export class Client {
 
 		if (documentID != null) {
 			const document = await this.getByID(documentID, {
+				signal: args.signal,
 				ref: previewToken,
 				lang: "*",
 			});
@@ -1347,13 +1376,15 @@ export class Client {
 	 *
 	 * @returns Cached repository metadata.
 	 */
-	private async getCachedRepository(): Promise<prismicT.Repository> {
+	private async getCachedRepository(
+		params?: FetchParams,
+	): Promise<prismicT.Repository> {
 		if (
 			!this.cachedRepository ||
 			Date.now() >= this.cachedRepositoryExpiration
 		) {
 			this.cachedRepositoryExpiration = Date.now() + REPOSITORY_CACHE_TTL;
-			this.cachedRepository = await this.getRepository();
+			this.cachedRepository = await this.getRepository(params);
 		}
 
 		return this.cachedRepository;
@@ -1368,8 +1399,11 @@ export class Client {
 	 * @returns The repository form.
 	 * @throws If a matching form cannot be found.
 	 */
-	private async getCachedRepositoryForm(name: string): Promise<prismicT.Form> {
-		const cachedRepository = await this.getCachedRepository();
+	private async getCachedRepositoryForm(
+		name: string,
+		params?: FetchParams,
+	): Promise<prismicT.Form> {
+		const cachedRepository = await this.getCachedRepository(params);
 		const form = cachedRepository.forms[name];
 
 		if (!form) {
@@ -1404,7 +1438,7 @@ export class Client {
 	 *
 	 * @returns The ref to use during a query.
 	 */
-	private async getResolvedRefString(): Promise<string> {
+	private async getResolvedRefString(params?: FetchParams): Promise<string> {
 		if (this.refState.autoPreviewsEnabled) {
 			let previewRef: string | undefined = undefined;
 
@@ -1422,7 +1456,7 @@ export class Client {
 			}
 		}
 
-		const cachedRepository = await this.getCachedRepository();
+		const cachedRepository = await this.getCachedRepository(params);
 
 		const refModeType = this.refState.mode;
 		if (refModeType === RefStateMode.ReleaseID) {
@@ -1455,7 +1489,8 @@ export class Client {
 	private async fetch<T = unknown>(
 		url: string,
 		// TODO: Change to `params` when Authorization header support works in browsers with CORS.
-		_params?: Partial<BuildQueryURLArgs>,
+		// _params?: Partial<BuildQueryURLArgs>,
+		params: FetchParams = {},
 	): Promise<T> {
 		// TODO: Restore when Authorization header support works in browsers with CORS.
 		// const accessToken = (params && params.accessToken) || this.accessToken;
@@ -1463,7 +1498,9 @@ export class Client {
 		// 	? { headers: { Authorization: `Token ${accessToken}` } }
 		// 	: {};
 
-		const res = await this.fetchFn(url);
+		const res = await this.fetchFn(url, {
+			signal: params.signal,
+		});
 
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		let json: any;

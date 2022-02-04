@@ -6,6 +6,9 @@ import fetch, { AbortError } from "node-fetch";
 import { AbortController } from "abort-controller";
 
 const endpoint = prismic.getEndpoint("qwerty");
+
+// A global timeout can be implemented like the following. This timeout will
+// apply to all network requests made by the client.
 const client = prismic.createClient(endpoint, {
 	fetch: async (url, options) => {
 		// Create an AbortController. This will be used to cancel the
@@ -42,6 +45,23 @@ console.info(articles);
 // If you want to handle timeouts, you can check the error's type.
 try {
 	const articles = await client.getAllByType("article");
+	console.info(articles);
+} catch (error) {
+	if (error instanceof AbortError) {
+		console.error("The request timed out.");
+	} else {
+		throw error;
+	}
+}
+
+// You can also set timeouts for individual client methods by passing an
+// AbortController signal to the method.
+try {
+	const controller = new AbortController();
+	setTimeout(() => controller.abort(), 1);
+	const articles = await client.getAllByType("article", {
+		signal: controller.signal,
+	});
 	console.info(articles);
 } catch (error) {
 	if (error instanceof AbortError) {

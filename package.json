@@ -52,10 +52,11 @@
 	},
 	"devDependencies": {
 		"@size-limit/preset-small-lib": "^7.0.5",
-		"@types/node-fetch": "^3.0.3",
+		"@types/node-fetch": "^2.5.12",
 		"@types/sinon": "^10.0.9",
 		"@typescript-eslint/eslint-plugin": "^5.10.1",
 		"@typescript-eslint/parser": "^5.10.1",
+		"abort-controller": "^3.0.0",
 		"ava": "^4.0.1",
 		"eslint": "^8.7.0",
 		"eslint-config-prettier": "^8.3.0",

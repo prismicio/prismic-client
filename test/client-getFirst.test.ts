@@ -1,5 +1,6 @@
 import test from "ava";
 import * as mswNode from "msw/node";
+import AbortController from "abort-controller";
 
 import { createDocument } from "./__testutils__/createDocument";
 import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
@@ -133,4 +134,30 @@ test("throws if no documents were returned", async (t) => {
 		instanceOf: prismic.PrismicError,
 		message: /no documents were returned/i,
 	});
+});
+
+test("is abortable with an AbortController", async (t) => {
+	const repositoryResponse = createRepositoryResponse();
+	const queryResponse = createQueryResponse();
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse),
+		createMockQueryHandler(t, [queryResponse], undefined, {
+			ref: getMasterRef(repositoryResponse),
+		}),
+	);
+
+	const client = createTestClient(t);
+
+	await t.throwsAsync(
+		async () => {
+			const controller = new AbortController();
+			controller.abort();
+
+			await client.getFirst({
+				signal: controller.signal,
+			});
+		},
+		{ name: "AbortError" },
+	);
 });

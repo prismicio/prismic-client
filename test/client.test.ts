@@ -43,7 +43,7 @@ test.serial("client has correct default state", (t) => {
 
 	t.is(client.endpoint, endpoint);
 	t.is(client.accessToken, options.accessToken);
-	t.is(client.fetchFn, options.fetch);
+	t.is(client.fetchFn, options.fetch as prismic.FetchLike);
 	t.is(client.defaultParams, options.defaultParams);
 });
 

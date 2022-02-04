@@ -1,5 +1,6 @@
 import test from "ava";
 import * as mswNode from "msw/node";
+import AbortController from "abort-controller";
 
 import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
 import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
@@ -33,4 +34,24 @@ test("throws if ref could not be found", async (t) => {
 		instanceOf: prismic.PrismicError,
 		message: /could not be found/i,
 	});
+});
+
+test("is abortable with an AbortController", async (t) => {
+	const repositoryResponse = createRepositoryResponse();
+
+	server.use(createMockRepositoryHandler(t, repositoryResponse));
+
+	const client = createTestClient(t);
+
+	await t.throwsAsync(
+		async () => {
+			const controller = new AbortController();
+			controller.abort();
+
+			await client.getRefByID("id", {
+				signal: controller.signal,
+			});
+		},
+		{ name: "AbortError" },
+	);
 });

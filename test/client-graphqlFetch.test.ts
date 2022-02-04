@@ -2,6 +2,7 @@ import test from "ava";
 import * as msw from "msw";
 import * as mswNode from "msw/node";
 import * as crypto from "crypto";
+import AbortController from "abort-controller";
 
 import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
 import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
@@ -178,4 +179,24 @@ test("optimizes queries by removing whitespace", async (t) => {
 	await client.graphqlFetch(graphqlURLWithUncompressedQuery.toString());
 
 	t.plan(1);
+});
+
+test("is abortable with an AbortController", async (t) => {
+	const repositoryResponse = createRepositoryResponse();
+
+	server.use(createMockRepositoryHandler(t, repositoryResponse));
+
+	const client = createTestClient(t);
+
+	await t.throwsAsync(
+		async () => {
+			const controller = new AbortController();
+			controller.abort();
+
+			await client.graphqlFetch("https://example.com", {
+				signal: controller.signal,
+			});
+		},
+		{ name: "AbortError" },
+	);
 });
