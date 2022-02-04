@@ -14,14 +14,14 @@ const client = prismic.createClient(endpoint, {
 
 		if (cache.has(key)) {
 			// If the cache contains a value for the key, return it
-			return cache.get(key);
+			return cache.get(key).clone();
 		} else {
 			// Otherwise, make the network request
 			const res = await fetch(url, options);
 
 			if (res.ok) {
 				// If the request was successful, save it to the cache
-				cache.set(key, res);
+				cache.set(key, res.clone());
 			}
 
 			return res;
