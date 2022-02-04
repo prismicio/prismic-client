@@ -1,8 +1,6 @@
-import { ValueOf } from "type-fest";
-
 import { castArray } from "./lib/castArray";
 
-import { Ordering, Route } from "./types";
+import { ValueOf, Ordering, Route } from "./types";
 
 /**
  * Parameters for the Prismic REST API V2.

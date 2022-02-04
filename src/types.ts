@@ -1,4 +1,18 @@
 /**
+ * Create a union of the given object's values, and optionally specify which
+ * keys to get the values from.
+ *
+ * Taken from the `type-fest` package.
+ *
+ * See:
+ * https://github.com/sindresorhus/type-fest/blob/61c35052f09caa23de5eef96d95196375d8ed498/source/value-of.d.ts
+ */
+export type ValueOf<
+	ObjectType,
+	ValueType extends keyof ObjectType = keyof ObjectType,
+> = ObjectType[ValueType];
+
+/**
  * A universal API to make network requests. A subset of the `fetch()` API.
  *
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/fetch}
