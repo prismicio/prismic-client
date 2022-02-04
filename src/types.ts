@@ -36,6 +36,8 @@ export type AbortSignalLike = {
  */
 export interface RequestInitLike {
 	headers?: Record<string, string>;
+	// `null` is included to match TypeScript's `fetch()` type in `lib.dom.d.ts`.
+	// See: https://github.com/microsoft/TypeScript/blob/3328feb7991f358e245088d48b64ad9da8f015e2/lib/lib.dom.d.ts#L1515-L1518
 	signal?: AbortSignalLike | null;
 }
 
