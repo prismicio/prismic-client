@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.2.0](https://github.com/prismicio/prismic-client/compare/v6.1.1...v6.2.0) (2022-02-04)
+
+
+### Features
+
+* support abortable requests via `AbortController` ([#221](https://github.com/prismicio/prismic-client/issues/221)) ([5891a83](https://github.com/prismicio/prismic-client/commit/5891a838d5a140fa5e28081071729b3a776bcde6))
+
+
+### Bug Fixes
+
+* minify GraphQL queries by removing whitespace ([#219](https://github.com/prismicio/prismic-client/issues/219)) ([96cad0b](https://github.com/prismicio/prismic-client/commit/96cad0beddc31a09bf7056a719b8e5d1a44a430c))
+* resolve `'document.tags' expected a [list] of 'string' literals` error when using tag methods with a single tag ([50c78f7](https://github.com/prismicio/prismic-client/commit/50c78f7033bd175e34a4aa2e54d85d6d9261425b))
+
+
+### Documentation
+
+* fix caching example by using `.clone()` method ([#218](https://github.com/prismicio/prismic-client/issues/218)) ([52b455c](https://github.com/prismicio/prismic-client/commit/52b455ca27fc2809fd8e07b077ac0278244ea01b))
+* remove version-specific docs link ([b141ba7](https://github.com/prismicio/prismic-client/commit/b141ba78c7f842b4c147419f6d7f26ac3b2bb125))
+
+
+### Chore
+
+* **deps:** update dependencies ([5452f87](https://github.com/prismicio/prismic-client/commit/5452f87c06f4f241980b152534f65b5f8947ac18))
+
+
+### Refactor
+
+* remove `type-fest` dependency ([f1d8124](https://github.com/prismicio/prismic-client/commit/f1d81247bd3bd95397108e66ec0ac3e586cf9976))
+
 ### [6.1.1](https://github.com/prismicio/prismic-client/compare/v6.1.0...v6.1.1) (2022-01-28)
 
 
