@@ -1,11 +1,13 @@
 import test from "ava";
 import * as mswNode from "msw/node";
+import AbortController from "abort-controller";
 
 import { createDocument } from "./__testutils__/createDocument";
 import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
 import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
 import { createQueryResponse } from "./__testutils__/createQueryResponse";
 import { createTestClient } from "./__testutils__/createClient";
+import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
 
 const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
@@ -164,3 +166,30 @@ test.serial(
 		t.is(res, defaultURL);
 	},
 );
+
+test("is abortable with an AbortController", async (t) => {
+	const repositoryResponse = createRepositoryResponse();
+	const document = createDocument();
+
+	const documentID = document.id;
+	const previewToken = "previewToken";
+
+	server.use(createMockRepositoryHandler(t, repositoryResponse));
+
+	const client = createTestClient(t);
+
+	await t.throwsAsync(
+		async () => {
+			const controller = new AbortController();
+			controller.abort();
+
+			await client.resolvePreviewURL({
+				signal: controller.signal,
+				defaultURL: "/",
+				documentID,
+				previewToken,
+			});
+		},
+		{ name: "AbortError" },
+	);
+});

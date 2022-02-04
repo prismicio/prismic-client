@@ -1,5 +1,6 @@
 import test from "ava";
 import * as mswNode from "msw/node";
+import AbortController from "abort-controller";
 
 import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
 import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
@@ -117,4 +118,24 @@ test("merges params and default params if provided", async (t) => {
 	);
 
 	t.deepEqual(res, queryResponse);
+});
+
+test("is abortable with an AbortController", async (t) => {
+	const repositoryResponse = createRepositoryResponse();
+
+	server.use(createMockRepositoryHandler(t, repositoryResponse));
+
+	const client = createTestClient(t);
+
+	await t.throwsAsync(
+		async () => {
+			const controller = new AbortController();
+			controller.abort();
+
+			await client.query([], {
+				signal: controller.signal,
+			});
+		},
+		{ name: "AbortError" },
+	);
 });
