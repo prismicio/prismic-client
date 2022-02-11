@@ -270,7 +270,7 @@ export const createClient = (
 export class Client {
 	/**
 	 * The Prismic REST API V2 endpoint for the repository (use
-	 * `prismic.getEndpoint` for the default endpoint).
+	 * `prismic.getRepositoryEndpoint` for the default endpoint).
 	 */
 	endpoint: string;
 
