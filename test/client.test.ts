@@ -21,12 +21,29 @@ test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
 test.serial("createClient creates a Client", (t) => {
+	const client = prismic.createClient("qwerty", {
+		fetch: sinon.stub(),
+	});
+
+	t.true(client instanceof prismic.Client);
+});
+
+test.serial("creates a client with a repository name", (t) => {
+	const repositoryName = "qwerty";
+	const client = prismic.createClient(repositoryName, {
+		fetch: sinon.stub(),
+	});
+
+	t.is(client.endpoint, prismic.getRepositoryEndpoint(repositoryName));
+});
+
+test.serial("creates a client with a Rest API V2 endpoint", (t) => {
 	const endpoint = prismic.getEndpoint("qwerty");
 	const client = prismic.createClient(endpoint, {
 		fetch: sinon.stub(),
 	});
 
-	t.true(client instanceof prismic.Client);
+	t.is(client.endpoint, endpoint);
 });
 
 test.serial("client has correct default state", (t) => {
@@ -46,6 +63,40 @@ test.serial("client has correct default state", (t) => {
 	t.is(client.fetchFn, options.fetch as prismic.FetchLike);
 	t.is(client.defaultParams, options.defaultParams);
 });
+
+test.serial(
+	"constructor throws if an invalid repository name is provided",
+	(t) => {
+		t.throws(
+			() => {
+				prismic.createClient("invalid repository name", {
+					fetch: sinon.stub(),
+				});
+			},
+			{
+				instanceOf: prismic.PrismicError,
+				message: /an invalid repository name was given/i,
+			},
+		);
+	},
+);
+
+test.serial(
+	"constructor throws if an invalid repository endpoint is provided",
+	(t) => {
+		t.throws(
+			() => {
+				prismic.createClient("https://invalid url.cdn.prismic.io/api/v2", {
+					fetch: sinon.stub(),
+				});
+			},
+			{
+				instanceOf: prismic.PrismicError,
+				message: /an invalid repository name was given/i,
+			},
+		);
+	},
+);
 
 test.serial("constructor throws if fetch is unavailable", (t) => {
 	const endpoint = prismic.getEndpoint("qwerty");
