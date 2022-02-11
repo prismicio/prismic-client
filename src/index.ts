@@ -1,6 +1,4 @@
 // Primary library API.
-export * from "./getEndpoint";
-export * from "./buildQueryURL";
 import { getRepositoryEndpoint } from "./getRepositoryEndpoint";
 export { getRepositoryEndpoint };
 /**
@@ -8,6 +6,11 @@ export { getRepositoryEndpoint };
  */
 // TODO: Remove in v3.
 export const getEndpoint = getRepositoryEndpoint;
+export { getRepositoryName } from "./getRepositoryName";
+export { getGraphQLEndpoint } from "./getGraphQLEndpoint";
+export { isRepositoryName } from "./isRepositoryName";
+export { isRepositoryEndpoint } from "./isRepositoryEndpoint";
+export { buildQueryURL } from "./buildQueryURL";
 export { createClient, Client } from "./client";
 
 // Predicates API.
@@ -35,6 +38,7 @@ export * as cookie from "./cookie";
 
 // General types used throughout the project. These are made public to allow users to better type their projects.
 export type { ClientConfig } from "./client";
+export type { QueryParams, BuildQueryURLArgs } from "./buildQueryURL";
 export type {
 	FetchLike,
 	HttpRequestLike,
