@@ -75,7 +75,7 @@ test.serial(
 			},
 			{
 				instanceOf: prismic.PrismicError,
-				message: /an invalid repository name was given/i,
+				message: /an invalid Prismic repository name was given/i,
 			},
 		);
 	},
@@ -92,7 +92,7 @@ test.serial(
 			},
 			{
 				instanceOf: prismic.PrismicError,
-				message: /an invalid repository name was given/i,
+				message: /an invalid Prismic repository name was given/i,
 			},
 		);
 	},
