@@ -14,6 +14,7 @@ test("throws if an invalid repository name is given", (t) => {
 			prismic.getRepositoryEndpoint("this is invalid");
 		},
 		{
+			instanceOf: prismic.PrismicError,
 			message: "An invalid Prismic repository name was given: this is invalid",
 		},
 	);

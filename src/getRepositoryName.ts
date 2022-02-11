@@ -1,3 +1,5 @@
+import { PrismicError } from "./PrismicError";
+
 /**
  * Get a Prismic repository's name from its standard Prismic Rest API V2 or
  * GraphQL endpoint.
@@ -12,8 +14,10 @@ export const getRepositoryName = (repositoryEndpoint: string): string => {
 	try {
 		return new URL(repositoryEndpoint).hostname.split(".")[0];
 	} catch {
-		throw new Error(
+		throw new PrismicError(
 			`An invalid Prismic Rest API V2 endpoint was provided: ${repositoryEndpoint}`,
+			undefined,
+			undefined,
 		);
 	}
 };
