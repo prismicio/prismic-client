@@ -54,7 +54,7 @@ type PrismicDocumentBlogPost = prismicT.PrismicDocument<
 >;
 
 const main = async () => {
-	const endpoint = prismic.getEndpoint("qwerty");
+	const endpoint = prismic.getRepositoryEndpoint("qwerty");
 	const client = prismic.createClient(endpoint, { fetch });
 
 	// We can pass a type to client methods that return documents.

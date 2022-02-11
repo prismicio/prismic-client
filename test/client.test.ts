@@ -21,7 +21,7 @@ test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
 test.serial("createClient creates a Client", (t) => {
-	const endpoint = prismic.getEndpoint("qwerty");
+	const endpoint = prismic.getRepositoryEndpoint("qwerty");
 	const client = prismic.createClient(endpoint, {
 		fetch: sinon.stub(),
 	});
@@ -30,7 +30,7 @@ test.serial("createClient creates a Client", (t) => {
 });
 
 test.serial("client has correct default state", (t) => {
-	const endpoint = prismic.getEndpoint("qwerty");
+	const endpoint = prismic.getRepositoryEndpoint("qwerty");
 	const options: prismic.ClientConfig = {
 		accessToken: "accessToken",
 		ref: "ref",
@@ -48,7 +48,7 @@ test.serial("client has correct default state", (t) => {
 });
 
 test.serial("constructor throws if fetch is unavailable", (t) => {
-	const endpoint = prismic.getEndpoint("qwerty");
+	const endpoint = prismic.getRepositoryEndpoint("qwerty");
 
 	t.throws(() => prismic.createClient(endpoint), {
 		instanceOf: prismic.PrismicError,
@@ -57,7 +57,7 @@ test.serial("constructor throws if fetch is unavailable", (t) => {
 });
 
 test.serial("constructor throws if provided fetch is not a function", (t) => {
-	const endpoint = prismic.getEndpoint("qwerty");
+	const endpoint = prismic.getRepositoryEndpoint("qwerty");
 	const fetch = "not a function";
 
 	t.throws(
@@ -77,7 +77,7 @@ test.serial("constructor throws if provided fetch is not a function", (t) => {
 });
 
 test.serial("uses globalThis.fetch if available", async (t) => {
-	const endpoint = prismic.getEndpoint("qwerty");
+	const endpoint = prismic.getRepositoryEndpoint("qwerty");
 	const responseBody = { foo: "bar" };
 
 	const existingFetch = globalThis.fetch;
@@ -507,7 +507,7 @@ test.serial(
 		}, "A valid prismic.io V2 endpoint does not throw");
 
 		t.notThrows(() => {
-			prismic.createClient(prismic.getEndpoint("qwerty"), { fetch });
-		}, "An endpoint created with getEndpoint does not throw");
+			prismic.createClient(prismic.getRepositoryEndpoint("qwerty"), { fetch });
+		}, "An endpoint created with getRepositoryEndpoint does not throw");
 	},
 );

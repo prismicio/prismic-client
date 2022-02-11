@@ -2,7 +2,7 @@ import * as prismic from "@prismicio/client";
 import fetch from "node-fetch";
 import QuickLRU from "quick-lru";
 
-const endpoint = prismic.getEndpoint("qwerty");
+const endpoint = prismic.getRepositoryEndpoint("qwerty");
 const cache = new QuickLRU({
 	maxSize: 1000, // 1000 entries
 });

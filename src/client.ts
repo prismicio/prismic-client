@@ -238,7 +238,7 @@ const someTagsPredicate = (tags: string | string[]): string =>
  * Creates a Prismic client that can be used to query a repository.
  *
  * @param endpoint - The Prismic REST API V2 endpoint for the repository (use
- *   `prismic.getEndpoint` for the default endpoint).
+ *   `prismic.getRepositoryEndpoint` for the default endpoint).
  * @param options - Configuration that determines how content will be queried
  *   from the Prismic repository.
  *
@@ -258,7 +258,7 @@ export const createClient = (
 export class Client {
 	/**
 	 * The Prismic REST API V2 endpoint for the repository (use
-	 * `prismic.getEndpoint` for the default endpoint).
+	 * `prismic.getRepositoryEndpoint` for the default endpoint).
 	 */
 	endpoint: string;
 
@@ -320,7 +320,7 @@ export class Client {
 	 * `options` parameter.
 	 *
 	 * @param endpoint - The Prismic REST API V2 endpoint for the repository (use
-	 *   `prismic.getEndpoint` to get the default endpoint).
+	 *   `prismic.getRepositoryEndpoint` to get the default endpoint).
 	 * @param options - Configuration that determines how content will be queried
 	 *   from the Prismic repository.
 	 *
@@ -332,7 +332,7 @@ export class Client {
 			/\.prismic\.io\/(?!api\/v2\/?)/.test(endpoint)
 		) {
 			throw new PrismicError(
-				"@prismicio/client only supports Prismic Rest API V2. Please use the getEndpoint helper to generate a valid Rest API V2 endpoint URL.",
+				"@prismicio/client only supports Prismic Rest API V2. Please use the getRepositoryEndpoint helper to generate a valid Rest API V2 endpoint URL.",
 				undefined,
 				undefined,
 			);

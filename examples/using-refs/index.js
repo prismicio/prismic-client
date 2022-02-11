@@ -1,7 +1,7 @@
 import * as prismic from "@prismicio/client";
 import fetch from "node-fetch";
 
-const endpoint = prismic.getEndpoint("qwerty");
+const endpoint = prismic.getRepositoryEndpoint("qwerty");
 const client = prismic.createClient(endpoint, {
 	fetch,
 });
