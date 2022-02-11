@@ -16,7 +16,8 @@ test("throws if the input is not a valid URL", (t) => {
 			prismic.getRepositoryName("qwerty");
 		},
 		{
-			message: /an invalid Prismic Rest API V2 endpoint was provided/i,
+			instanceOf: prismic.PrismicError,
+			message: "An invalid Prismic Rest API V2 endpoint was provided: qwerty",
 		},
 	);
 });

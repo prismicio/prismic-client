@@ -1,4 +1,5 @@
 import { isRepositoryName } from "./isRepositoryName";
+import { PrismicError } from "./PrismicError";
 
 /**
  * Get a repository's Prismic Rest API V2 endpoint.
@@ -15,8 +16,10 @@ export const getRepositoryEndpoint = <RepositoryName extends string>(
 	if (isRepositoryName(repositoryName)) {
 		return `https://${repositoryName}.cdn.prismic.io/api/v2` as const;
 	} else {
-		throw new Error(
+		throw new PrismicError(
 			`An invalid Prismic repository name was given: ${repositoryName}`,
+			undefined,
+			undefined,
 		);
 	}
 };

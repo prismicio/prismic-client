@@ -1,4 +1,5 @@
 import { isRepositoryName } from "./isRepositoryName";
+import { PrismicError } from "./PrismicError";
 
 /**
  * Get a repository's Prismic GraphQL endpoint.
@@ -14,8 +15,10 @@ export const getGraphQLEndpoint = <RepositoryName extends string>(
 	if (isRepositoryName(repositoryName)) {
 		return `https://${repositoryName}.cdn.prismic.io/graphql` as const;
 	} else {
-		throw new Error(
+		throw new PrismicError(
 			`An invalid Prismic repository name was given: ${repositoryName}`,
+			undefined,
+			undefined,
 		);
 	}
 };
