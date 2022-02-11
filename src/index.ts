@@ -1,7 +1,13 @@
 // Primary library API.
 export * from "./getEndpoint";
-export * from "./getGraphQLEndpoint";
 export * from "./buildQueryURL";
+import { getRepositoryEndpoint } from "./getRepositoryEndpoint";
+export { getRepositoryEndpoint };
+/**
+ * @deprecated Renamed to `getRepositoryEndpoint`.
+ */
+// TODO: Remove in v3.
+export const getEndpoint = getRepositoryEndpoint;
 export { createClient, Client } from "./client";
 
 // Predicates API.
