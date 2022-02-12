@@ -17,7 +17,7 @@ import { GET_ALL_QUERY_DELAY } from "../src/client";
  *
  * If tests are failing due to incorrect timed durations, increase the tolerance amount.
  */
-const NETWORK_REQUEST_DURATION_TOLERANCE = 200;
+const NETWORK_REQUEST_DURATION_TOLERANCE = 300;
 
 const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));

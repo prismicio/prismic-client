@@ -13,6 +13,6 @@ test("predicates is a temporary alias for predicate", (t) => {
 });
 
 // TODO: Remove in v3.
-test("getRepositoryEndpoint is a temporary alias for getRepositoryEndpoint", (t) => {
+test("getEndpoint is a temporary alias for getRepositoryEndpoint", (t) => {
 	t.is(prismic.getEndpoint, prismic.getRepositoryEndpoint);
 });

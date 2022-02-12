@@ -539,6 +539,9 @@ test.serial(
 	(t) => {
 		const fetch = sinon.stub();
 
+		const originalNodeEnv = process.env.NODE_ENV;
+		process.env.NODE_ENV = "development";
+
 		t.throws(
 			() => {
 				prismic.createClient("https://qwerty.cdn.prismic.io/api/v1", { fetch });
@@ -560,5 +563,7 @@ test.serial(
 		t.notThrows(() => {
 			prismic.createClient(prismic.getRepositoryEndpoint("qwerty"), { fetch });
 		}, "An endpoint created with getRepositoryEndpoint does not throw");
+
+		process.env.NODE_ENV === originalNodeEnv;
 	},
 );
