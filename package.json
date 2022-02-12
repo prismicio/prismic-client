@@ -27,6 +27,7 @@
 	},
 	"main": "dist/index.cjs",
 	"module": "dist/index.js",
+	"react-native": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"files": [
 		"dist",
@@ -48,22 +49,22 @@
 	},
 	"dependencies": {
 		"@prismicio/helpers": "^2.1.1",
-		"@prismicio/types": "^0.1.23"
+		"@prismicio/types": "^0.1.24"
 	},
 	"devDependencies": {
 		"@size-limit/preset-small-lib": "^7.0.8",
-		"@types/node-fetch": "^2.5.12",
-		"@types/sinon": "^10.0.10",
-		"@typescript-eslint/eslint-plugin": "^5.10.2",
-		"@typescript-eslint/parser": "^5.10.2",
+		"@types/sinon": "^10.0.11",
+		"@typescript-eslint/eslint-plugin": "^5.11.0",
+		"@typescript-eslint/parser": "^5.11.0",
 		"abort-controller": "^3.0.0",
 		"ava": "^4.0.1",
-		"eslint": "^8.8.0",
+		"esbuild-register": "^3.3.2",
+		"eslint": "^8.9.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-prettier": "^4.0.0",
 		"eslint-plugin-tsdoc": "^0.2.14",
 		"msw": "^0.36.8",
-		"node-fetch": "^2.6.7",
+		"node-fetch": "^3.2.0",
 		"nyc": "^15.1.0",
 		"prettier": "^2.5.1",
 		"prettier-plugin-jsdoc": "^0.3.30",
@@ -71,7 +72,6 @@
 		"siroc": "^0.16.0",
 		"size-limit": "^7.0.8",
 		"standard-version": "^9.3.2",
-		"ts-eager": "^2.0.2",
 		"typescript": "^4.5.5"
 	},
 	"engines": {
@@ -79,6 +79,5 @@
 	},
 	"publishConfig": {
 		"access": "public"
-	},
-	"react-native": "dist/index.js"
+	}
 }
