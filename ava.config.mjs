@@ -1,7 +1,7 @@
 export default {
 	extensions: ["ts"],
 	files: ["./test/**/*.test.ts"],
-	require: ["ts-eager/register"],
+	require: ["esbuild-register"],
 	verbose: true,
 	timeout: "60s",
 };
