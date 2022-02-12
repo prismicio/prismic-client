@@ -339,18 +339,18 @@ export class Client {
 	 * @returns A client that can query content from the repository.
 	 */
 	constructor(repositoryNameOrEndpoint: string, options: ClientConfig = {}) {
-		if (
-			process.env.NODE_ENV === "development" &&
-			/\.prismic\.io\/(?!api\/v2\/?)/.test(repositoryNameOrEndpoint)
-		) {
-			throw new PrismicError(
-				"@prismicio/client only supports Prismic Rest API V2. Please use the getRepositoryEndpoint helper to generate a valid Rest API V2 endpoint URL.",
-				undefined,
-				undefined,
-			);
-		}
-
 		if (isRepositoryEndpoint(repositoryNameOrEndpoint)) {
+			if (
+				process.env.NODE_ENV === "development" &&
+				/\.prismic\.io\/(?!api\/v2\/?)/.test(repositoryNameOrEndpoint)
+			) {
+				throw new PrismicError(
+					"@prismicio/client only supports Prismic Rest API V2. Please provide only the repository name to the first createClient() parameter or use the getRepositoryEndpoint() helper to generate a valid Rest API V2 endpoint URL.",
+					undefined,
+					undefined,
+				);
+			}
+
 			this.endpoint = repositoryNameOrEndpoint;
 		} else {
 			this.endpoint = getRepositoryEndpoint(repositoryNameOrEndpoint);
