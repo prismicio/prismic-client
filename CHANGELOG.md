@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.3.0](https://github.com/prismicio/prismic-client/compare/v6.2.0...v6.3.0) (2022-02-16)
+
+
+### Features
+
+* add `getRepositoryEndpoint()`, `getRepositoryName()`, `isRepositoryName()`, `isRepositoryEndpoint()`; deprecate `getEndpoint()` ([#222](https://github.com/prismicio/prismic-client/issues/222)) ([27bf0ee](https://github.com/prismicio/prismic-client/commit/27bf0ee5633cf85c6221918fea089d909705c1ed))
+* support providing a repository name to `createClient()` in place of an API endpoint ([#224](https://github.com/prismicio/prismic-client/issues/224)) ([8c88382](https://github.com/prismicio/prismic-client/commit/8c88382dbc31ff752f8742411700cbc7947558bc))
+
+
+### Chore
+
+* **deps:** update dependencies ([283d5f0](https://github.com/prismicio/prismic-client/commit/283d5f07703497b7ba1fb22fe30af7ba57c4cfdc))
+* update license ([91f1b61](https://github.com/prismicio/prismic-client/commit/91f1b612d8ec4e10e10714d4c44112748309e036))
+
 ## [6.2.0](https://github.com/prismicio/prismic-client/compare/v6.1.1...v6.2.0) (2022-02-04)
 
 
