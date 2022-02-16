@@ -2,7 +2,7 @@ import test from "ava";
 
 import * as prismic from "../src";
 
-const endpoint = prismic.getEndpoint("qwerty");
+const endpoint = prismic.getRepositoryEndpoint("qwerty");
 
 test("includes ref", (t) => {
 	t.is(

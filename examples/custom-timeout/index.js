@@ -5,7 +5,7 @@ import fetch, { AbortError } from "node-fetch";
 // version >=14.17.0, or are not in a node environment, remove this line.
 import { AbortController } from "abort-controller";
 
-const endpoint = prismic.getEndpoint("qwerty");
+const endpoint = prismic.getRepositoryEndpoint("qwerty");
 
 // A global timeout can be implemented like the following. This timeout will
 // apply to all network requests made by the client.
