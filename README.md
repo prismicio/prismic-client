@@ -18,8 +18,7 @@ The official JavaScript + TypeScript client library for [Prismic][prismic].
 import * as prismic from "@prismicio/client";
 
 // Create a client
-const endpoint = prismic.getRepositoryEndpoint("my-repository");
-const client = prismic.createClient(endpoint);
+const client = prismic.createClient("my-repository");
 
 // Then query for your content
 const blogPosts = await client.getAllByType("blog_post");

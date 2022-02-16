@@ -17,6 +17,8 @@ import { NotFoundError } from "./NotFoundError";
 import { ParsingError } from "./ParsingError";
 import { PrismicError } from "./PrismicError";
 import { buildQueryURL, BuildQueryURLArgs } from "./buildQueryURL";
+import { getRepositoryEndpoint } from "./getRepositoryEndpoint";
+import { isRepositoryEndpoint } from "./isRepositoryEndpoint";
 import { predicate } from "./predicate";
 
 /**
@@ -237,8 +239,18 @@ const someTagsPredicate = (tags: string | string[]): string =>
 /**
  * Creates a Prismic client that can be used to query a repository.
  *
- * @param endpoint - The Prismic REST API V2 endpoint for the repository (use
- *   `prismic.getRepositoryEndpoint` for the default endpoint).
+ * @example
+ *
+ * ```ts
+ * // With a repository name.
+ * createClient("qwerty");
+ *
+ * // Or with a full Prismic Rest API V2 endpoint.
+ * createClient("https://qwerty.cdn.prismic.io/api/v2");
+ * ```
+ *
+ * @param repositoryNameOrEndpoint - The Prismic repository name or full Rest
+ *   API V2 endpoint for the repository.
  * @param options - Configuration that determines how content will be queried
  *   from the Prismic repository.
  *
@@ -319,26 +331,31 @@ export class Client {
 	 * such as Node.js, the `fetch` option must be provided as part of the
 	 * `options` parameter.
 	 *
-	 * @param endpoint - The Prismic REST API V2 endpoint for the repository (use
-	 *   `prismic.getRepositoryEndpoint` to get the default endpoint).
+	 * @param repositoryNameOrEndpoint - The Prismic repository name or full Rest
+	 *   API V2 endpoint for the repository.
 	 * @param options - Configuration that determines how content will be queried
 	 *   from the Prismic repository.
 	 *
 	 * @returns A client that can query content from the repository.
 	 */
-	constructor(endpoint: string, options: ClientConfig = {}) {
-		if (
-			process.env.NODE_ENV === "development" &&
-			/\.prismic\.io\/(?!api\/v2\/?)/.test(endpoint)
-		) {
-			throw new PrismicError(
-				"@prismicio/client only supports Prismic Rest API V2. Please use the getRepositoryEndpoint helper to generate a valid Rest API V2 endpoint URL.",
-				undefined,
-				undefined,
-			);
+	constructor(repositoryNameOrEndpoint: string, options: ClientConfig = {}) {
+		if (isRepositoryEndpoint(repositoryNameOrEndpoint)) {
+			if (
+				process.env.NODE_ENV === "development" &&
+				/\.prismic\.io\/(?!api\/v2\/?)/.test(repositoryNameOrEndpoint)
+			) {
+				throw new PrismicError(
+					"@prismicio/client only supports Prismic Rest API V2. Please provide only the repository name to the first createClient() parameter or use the getRepositoryEndpoint() helper to generate a valid Rest API V2 endpoint URL.",
+					undefined,
+					undefined,
+				);
+			}
+
+			this.endpoint = repositoryNameOrEndpoint;
+		} else {
+			this.endpoint = getRepositoryEndpoint(repositoryNameOrEndpoint);
 		}
 
-		this.endpoint = endpoint;
 		this.accessToken = options.accessToken;
 		this.routes = options.routes;
 		this.defaultParams = options.defaultParams;

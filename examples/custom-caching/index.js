@@ -2,12 +2,11 @@ import * as prismic from "@prismicio/client";
 import fetch from "node-fetch";
 import QuickLRU from "quick-lru";
 
-const endpoint = prismic.getRepositoryEndpoint("qwerty");
 const cache = new QuickLRU({
 	maxSize: 1000, // 1000 entries
 });
 
-const client = prismic.createClient(endpoint, {
+const client = prismic.createClient("qwerty", {
 	fetch: async (url, options) => {
 		// The cache key contains the requested URL and headers
 		const key = JSON.stringify({ url, options });
