@@ -381,7 +381,7 @@ export class Client {
 			this.fetchFn = this.fetchFn.bind(globalThis);
 		}
 
-		this.graphqlFetch = this.graphqlFetch.bind(this);
+		this.graphQLFetch = this.graphQLFetch.bind(this);
 	}
 
 	/**
@@ -1313,6 +1313,12 @@ export class Client {
 	}
 
 	/**
+	 * @deprecated Renamed to `graphQLFetch()` (note the capitalization of "QL").
+	 */
+	// TODO: Remove in v3
+	graphqlFetch = this.graphQLFetch;
+
+	/**
 	 * A `fetch()` function to be used with GraphQL clients configured for
 	 * Prismic's GraphQL API. It automatically applies the necessary `prismic-ref`
 	 * and Authorization headers. Queries will automatically be minified by
@@ -1339,7 +1345,7 @@ export class Client {
 	 * @returns The `fetch()` Response for the request.
 	 * @experimental
 	 */
-	async graphqlFetch(
+	async graphQLFetch(
 		input: RequestInfo,
 		init?: RequestInit,
 	): Promise<Response> {

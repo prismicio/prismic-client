@@ -15,6 +15,13 @@ const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
+// TODO: Remove in v3
+test("graphqlFetch() is a temporary alias to graphQLFetch()", (t) => {
+	const client = createTestClient(t);
+
+	t.deepEqual(client.graphqlFetch, client.graphQLFetch);
+});
+
 test("resolves a query", async (t) => {
 	const repositoryResponse = createRepositoryResponse();
 
@@ -34,7 +41,7 @@ test("resolves a query", async (t) => {
 	);
 
 	const client = createTestClient(t);
-	const res = await client.graphqlFetch(graphqlURL);
+	const res = await client.graphQLFetch(graphqlURL);
 	const json = await res.json();
 
 	t.deepEqual(json, graphqlResponse);
@@ -64,7 +71,7 @@ test("merges provided headers with defaults", async (t) => {
 	);
 
 	const client = createTestClient(t);
-	const res = await client.graphqlFetch(graphqlURL, {
+	const res = await client.graphQLFetch(graphqlURL, {
 		headers: {
 			"Prismic-Ref": ref,
 		},
@@ -97,7 +104,7 @@ test("includes Authorization header if access token is provided", async (t) => {
 	);
 
 	const client = createTestClient(t);
-	const res = await client.graphqlFetch(graphqlURL);
+	const res = await client.graphQLFetch(graphqlURL);
 	const json = await res.json();
 
 	t.deepEqual(json, graphqlResponse);
@@ -125,7 +132,7 @@ test("includes Integration Fields header if ref is available", async (t) => {
 	);
 
 	const client = createTestClient(t, { accessToken });
-	const res = await client.graphqlFetch(graphqlURL);
+	const res = await client.graphQLFetch(graphqlURL);
 	const json = await res.json();
 
 	t.deepEqual(json, graphqlResponse);
@@ -176,7 +183,7 @@ test("optimizes queries by removing whitespace", async (t) => {
 	);
 
 	const client = createTestClient(t);
-	await client.graphqlFetch(graphqlURLWithUncompressedQuery.toString());
+	await client.graphQLFetch(graphqlURLWithUncompressedQuery.toString());
 
 	t.plan(1);
 });
@@ -193,7 +200,7 @@ test("is abortable with an AbortController", async (t) => {
 			const controller = new AbortController();
 			controller.abort();
 
-			await client.graphqlFetch("https://example.com", {
+			await client.graphQLFetch("https://example.com", {
 				signal: controller.signal,
 			});
 		},
