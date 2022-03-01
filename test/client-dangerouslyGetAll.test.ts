@@ -106,7 +106,7 @@ test("merges params and default params if provided", async (t) => {
 	const clientOptions: prismic.ClientConfig = {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
-		defaultParams: { lang: "*" },
+		defaultParams: { lang: "*", pageSize: 1 },
 	};
 	const params: prismic.BuildQueryURLArgs = {
 		ref: "overridden-ref",
@@ -114,7 +114,7 @@ test("merges params and default params if provided", async (t) => {
 	};
 	const pagedResponses = createQueryResponsePages({
 		numPages: 3,
-		numDocsPerPage: 3,
+		numDocsPerPage: 1,
 	});
 	const allDocs = pagedResponses.flatMap((page) => page.results);
 
@@ -123,7 +123,7 @@ test("merges params and default params if provided", async (t) => {
 		createMockQueryHandler(t, pagedResponses, clientOptions.accessToken, {
 			ref: params.ref,
 			lang: params.lang,
-			pageSize: 100,
+			pageSize: 1,
 		}),
 	);
 
@@ -131,7 +131,7 @@ test("merges params and default params if provided", async (t) => {
 	const res = await client.dangerouslyGetAll(params);
 
 	t.deepEqual(res, allDocs);
-	t.is(res.length, 3 * 3);
+	t.is(res.length, 3);
 });
 
 test("uses the default pageSize when given a falsey pageSize param", async (t) => {

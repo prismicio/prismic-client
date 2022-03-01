@@ -547,7 +547,8 @@ export class Client {
 		const { limit = Infinity, ...actualParams } = params;
 		const resolvedParams = {
 			...actualParams,
-			pageSize: actualParams.pageSize || MAX_PAGE_SIZE,
+			pageSize:
+				actualParams.pageSize || this.defaultParams?.pageSize || MAX_PAGE_SIZE,
 		};
 
 		const documents: TDocument[] = [];
