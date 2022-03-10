@@ -181,11 +181,11 @@ type GetAllParams = {
 /**
  * Arguments to determine how the URL for a preview session is resolved.
  */
-type ResolvePreviewArgs = {
+type ResolvePreviewArgs<LinkResolverReturnType> = {
 	/**
 	 * A function that maps a Prismic document to a URL within your app.
 	 */
-	linkResolver?: prismicH.LinkResolverFunction;
+	linkResolver?: prismicH.LinkResolverFunction<LinkResolverReturnType>;
 
 	/**
 	 * A fallback URL if the Link Resolver does not return a value.
@@ -1194,8 +1194,8 @@ export class Client {
 	 * @returns The URL for the previewed document during an active preview
 	 *   session. The user should be redirected to this URL.
 	 */
-	async resolvePreviewURL(
-		args: ResolvePreviewArgs & FetchParams,
+	async resolvePreviewURL<LinkResolverReturnType>(
+		args: ResolvePreviewArgs<LinkResolverReturnType> & FetchParams,
 	): Promise<string> {
 		let documentID = args.documentID;
 		let previewToken = args.previewToken;
@@ -1212,19 +1212,21 @@ export class Client {
 				previewToken || (this.refState.httpRequest.query.token as string);
 		}
 
-		if (documentID != null) {
+		if (documentID != null && previewToken != null) {
 			const document = await this.getByID(documentID, {
 				signal: args.signal,
 				ref: previewToken,
 				lang: "*",
 			});
 
-			// We know we have a valid field to resolve since we are using prismicH.documentToLinkField
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			return prismicH.asLink(document, args.linkResolver)!;
-		} else {
-			return args.defaultURL;
+			const url = prismicH.asLink(document, args.linkResolver);
+
+			if (typeof url === "string") {
+				return url;
+			}
 		}
+
+		return args.defaultURL;
 	}
 
 	/**

@@ -167,6 +167,34 @@ test.serial(
 	},
 );
 
+test.serial("returns defaultURL if resolved URL is not a string", async (t) => {
+	const defaultURL = "defaultURL";
+	const document = createDocument();
+	const queryResponse = createQueryResponse([document]);
+
+	const documentID = document.id;
+	const previewToken = "previewToken";
+
+	server.use(
+		createMockRepositoryHandler(t),
+		createMockQueryHandler(t, [queryResponse], undefined, {
+			ref: previewToken,
+			q: `[[at(document.id, "${documentID}")]]`,
+			lang: "*",
+		}),
+	);
+
+	const client = createTestClient(t);
+	const res = await client.resolvePreviewURL({
+		linkResolver: () => null,
+		defaultURL,
+		documentID,
+		previewToken,
+	});
+
+	t.is(res, defaultURL);
+});
+
 test("is abortable with an AbortController", async (t) => {
 	const repositoryResponse = createRepositoryResponse();
 	const document = createDocument();
