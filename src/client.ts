@@ -1319,7 +1319,7 @@ export class Client {
 	 * @deprecated Renamed to `graphQLFetch()` (note the capitalization of "QL").
 	 */
 	// TODO: Remove in v3
-	graphqlFetch = this.graphQLFetch;
+	graphqlFetch = this.graphQLFetch.bind(this);
 
 	/**
 	 * A `fetch()` function to be used with GraphQL clients configured for
