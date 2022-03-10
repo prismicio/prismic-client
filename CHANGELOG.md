@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.4.0](https://github.com/prismicio/prismic-client/compare/v6.3.0...v6.4.0) (2022-03-10)
+
+
+### Features
+
+* rename `graphqlFetch()` to `graphQLFetch()` ([c1651ba](https://github.com/prismicio/prismic-client/commit/c1651ba2e3e05ca9d1ebf50b72cb2324f837b01a))
+
+
+### Bug Fixes
+
+* return default URL `resolvePreviewURL()` does not resolve a string URL ([#226](https://github.com/prismicio/prismic-client/issues/226)) ([8b5a689](https://github.com/prismicio/prismic-client/commit/8b5a689ac55c77d0e5900ca81c1014020b48928b))
+* use `pageSize` from `defaultParams` if given when calling `dangerouslyGetAll()` ([0787631](https://github.com/prismicio/prismic-client/commit/078763175374740b046870da437c533dd4aa8505))
+
 ## [6.3.0](https://github.com/prismicio/prismic-client/compare/v6.2.0...v6.3.0) (2022-02-16)
 
 
