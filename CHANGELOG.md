@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.4.1](https://github.com/prismicio/prismic-client/compare/v6.4.0...v6.4.1) (2022-03-10)
+
+
+### Bug Fixes
+
+* cache-bust GraphQL requests made with `graphQLFetch()` ([#227](https://github.com/prismicio/prismic-client/issues/227)) ([894e7a8](https://github.com/prismicio/prismic-client/commit/894e7a8b5bc57bf6b65ee23d4f3fb34959d6cbc2))
+
 ## [6.4.0](https://github.com/prismicio/prismic-client/compare/v6.3.0...v6.4.0) (2022-03-10)
 
 
