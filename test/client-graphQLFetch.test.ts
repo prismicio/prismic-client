@@ -25,16 +25,14 @@ test("graphqlFetch() is a temporary alias to graphQLFetch()", (t) => {
 test("resolves a query", async (t) => {
 	const repositoryResponse = createRepositoryResponse();
 
-	const graphqlURL = "https://example.com/";
+	const repositoryName = crypto.createHash("md5").update(t.title).digest("hex");
+	const graphqlURL = `https://${repositoryName}.cdn.prismic.io/graphql`;
 	const graphqlResponse = { foo: "bar" };
 
 	server.use(
 		createMockRepositoryHandler(t, repositoryResponse),
 		msw.rest.get(graphqlURL, (req, res, ctx) => {
-			if (
-				req.url.toString() === graphqlURL &&
-				req.headers.get("Prismic-Ref") === getMasterRef(repositoryResponse)
-			) {
+			if (req.headers.get("Prismic-Ref") === getMasterRef(repositoryResponse)) {
 				return res(ctx.json(graphqlResponse));
 			}
 		}),
@@ -53,14 +51,14 @@ test("merges provided headers with defaults", async (t) => {
 	});
 	const ref = "custom-ref";
 
-	const graphqlURL = "https://example.com/";
+	const repositoryName = crypto.createHash("md5").update(t.title).digest("hex");
+	const graphqlURL = `https://${repositoryName}.cdn.prismic.io/graphql`;
 	const graphqlResponse = { foo: "bar" };
 
 	server.use(
 		createMockRepositoryHandler(t, repositoryResponse),
 		msw.rest.get(graphqlURL, (req, res, ctx) => {
 			if (
-				req.url.toString() === graphqlURL &&
 				req.headers.get("Prismic-Ref") === ref &&
 				req.headers.get("Prismic-integration-field-ref") ===
 					repositoryResponse.integrationFieldsRef
@@ -86,14 +84,14 @@ test("includes Authorization header if access token is provided", async (t) => {
 		integrationFieldsRef: createRef(false).ref,
 	});
 
-	const graphqlURL = "https://example.com/";
+	const repositoryName = crypto.createHash("md5").update(t.title).digest("hex");
+	const graphqlURL = `https://${repositoryName}.cdn.prismic.io/graphql`;
 	const graphqlResponse = { foo: "bar" };
 
 	server.use(
 		createMockRepositoryHandler(t, repositoryResponse),
 		msw.rest.get(graphqlURL, (req, res, ctx) => {
 			if (
-				req.url.toString() === graphqlURL &&
 				req.headers.get("Prismic-Ref") === getMasterRef(repositoryResponse) &&
 				req.headers.get("Prismic-integration-field-ref") ===
 					repositoryResponse.integrationFieldsRef
@@ -114,14 +112,14 @@ test("includes Integration Fields header if ref is available", async (t) => {
 	const repositoryResponse = createRepositoryResponse();
 	const accessToken = "accessToken";
 
-	const graphqlURL = "https://example.com/";
+	const repositoryName = crypto.createHash("md5").update(t.title).digest("hex");
+	const graphqlURL = `https://${repositoryName}.cdn.prismic.io/graphql`;
 	const graphqlResponse = { foo: "bar" };
 
 	server.use(
 		createMockRepositoryHandler(t, repositoryResponse),
 		msw.rest.get(graphqlURL, (req, res, ctx) => {
 			if (
-				req.url.toString() === graphqlURL &&
 				req.headers.get("Prismic-Ref") === getMasterRef(repositoryResponse) &&
 				req.headers.get("Authorization") ===
 					createAuthorizationHeader(accessToken)
@@ -160,19 +158,14 @@ test("optimizes queries by removing whitespace", async (t) => {
 }`,
 	);
 
-	const graphqlURLWithCompressedQuery = new URL(graphQLEndpoint);
-	graphqlURLWithCompressedQuery.searchParams.set(
-		"query",
-		"query{allPage{edges{node{_meta{uid}}}}}",
-	);
-
 	const graphqlResponse = { foo: "bar" };
 
 	server.use(
 		createMockRepositoryHandler(t, repositoryResponse),
 		msw.rest.get(graphQLEndpoint, (req, res, ctx) => {
 			if (
-				req.url.toString() === graphqlURLWithCompressedQuery.toString() &&
+				req.url.searchParams.get("query") ===
+					"query{allPage{edges{node{_meta{uid}}}}}" &&
 				req.headers.get("Prismic-Ref") === getMasterRef(repositoryResponse)
 			) {
 				t.pass();
@@ -188,10 +181,40 @@ test("optimizes queries by removing whitespace", async (t) => {
 	t.plan(1);
 });
 
+test("includes a ref URL parameter to cache-bust", async (t) => {
+	const repositoryResponse = createRepositoryResponse();
+	const ref = getMasterRef(repositoryResponse);
+
+	const repositoryName = crypto.createHash("md5").update(t.title).digest("hex");
+	const graphQLEndpoint = `https://${repositoryName}.cdn.prismic.io/graphql`;
+	const graphqlResponse = { foo: "bar" };
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse),
+		msw.rest.get(graphQLEndpoint, (req, res, ctx) => {
+			if (
+				req.url.searchParams.get("ref") === ref &&
+				req.headers.get("Prismic-Ref") === ref
+			) {
+				return res(ctx.json(graphqlResponse));
+			}
+		}),
+	);
+
+	const client = createTestClient(t);
+	const res = await client.graphQLFetch(graphQLEndpoint);
+	const json = await res.json();
+
+	t.deepEqual(json, graphqlResponse);
+});
+
 test("is abortable with an AbortController", async (t) => {
 	const repositoryResponse = createRepositoryResponse();
 
 	server.use(createMockRepositoryHandler(t, repositoryResponse));
+
+	const repositoryName = crypto.createHash("md5").update(t.title).digest("hex");
+	const graphqlURL = `https://${repositoryName}.cdn.prismic.io/graphql`;
 
 	const client = createTestClient(t);
 
@@ -200,7 +223,7 @@ test("is abortable with an AbortController", async (t) => {
 			const controller = new AbortController();
 			controller.abort();
 
-			await client.graphQLFetch("https://example.com", {
+			await client.graphQLFetch(graphqlURL, {
 				signal: controller.signal,
 			});
 		},

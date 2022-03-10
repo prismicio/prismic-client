@@ -1377,18 +1377,34 @@ export class Client {
 			}
 		}
 
-		// Compress the GraphQL query (if it exists) by removing
-		// whitespace. This is done to optimize the query size and avoid hitting the
-		// upper limit of GET requests (2048 characters).
 		const url = new URL(
 			// Asserting `input` is a string since popular GraphQL
 			// libraries pass this as a string. Request objects as
 			// input are unsupported.
 			input as string,
 		);
+
+		// This prevents the request from being cached unnecessarily.
+		// Without adding this `ref` param, re-running a query
+		// could return a locally cached response, even if the
+		// `ref` changed. This happens because the URL is
+		// identical when the `ref` is not included. Caches may ignore
+		// headers.
+		//
+		// The Prismic GraphQL API ignores the `ref` param.
+		url.searchParams.set("ref", ref);
+
 		const query = url.searchParams.get("query");
 		if (query) {
-			url.searchParams.set("query", minifyGraphQLQuery(query));
+			url.searchParams.set(
+				"query",
+				// Compress the GraphQL query (if it exists) by
+				// removing whitespace. This is done to
+				// optimize the query size and avoid
+				// hitting the upper limit of GET requests
+				// (2048 characters).
+				minifyGraphQLQuery(query),
+			);
 		}
 
 		return (await this.fetchFn(url.toString(), {
