@@ -11,9 +11,11 @@ compatible function via
 [`node-fetch`](https://github.com/node-fetch/node-fetch). We also implement
 client caching using [`quick-lru`](https://github.com/sindresorhus/quick-lru).
 
-We also create and register a `prismicAutoPreviewsMiddleware` Express
-middleware. This automatically enables the client to fetch draft content during
-a Prismic preview session.
+Note that a client is created using a special `createClient()` function defined
+in the app. A new client is needed for each request since a client can be
+stateful. If you enable previews for a specific request, for example, you don't
+want that same client to return preview content for a different, non-preview
+request.
 
 ## How to run the example
 
