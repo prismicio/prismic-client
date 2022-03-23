@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.4.2](https://github.com/prismicio/prismic-client/compare/v6.4.1...v6.4.2) (2022-03-23)
+
+
+### Bug Fixes
+
+* support boolean and dates in basic predicates, closes [#229](https://github.com/prismicio/prismic-client/issues/229) ([f15f606](https://github.com/prismicio/prismic-client/commit/f15f6061bcaafaef4e0a775da6a1167344e830dd))
+
+
+### Documentation
+
+* update `with-express` example to use a per-request client ([#228](https://github.com/prismicio/prismic-client/issues/228)) ([edc8280](https://github.com/prismicio/prismic-client/commit/edc82802efef741395b4f19e6f4776ad5fcb2a96))
+
+
+### Chore
+
+* add issues workflow ([5541a06](https://github.com/prismicio/prismic-client/commit/5541a065d794335c5e7cf00e886983fef869b876))
+* **deps:** maintain dependencies ([a03704a](https://github.com/prismicio/prismic-client/commit/a03704ab2adaef9d9ca6df5fd418af375e2b9a7a))
+
 ### [6.4.1](https://github.com/prismicio/prismic-client/compare/v6.4.0...v6.4.1) (2022-03-10)
 
 
