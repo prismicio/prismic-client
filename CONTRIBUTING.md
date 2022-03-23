@@ -155,13 +155,37 @@ Those scripts will:
 - Publish a new version tag to GitHub;
 - Publish build artifacts to [npm][npm].
 
+Once a script has been run successfully, a new version of the package should have been published to npm. To complete the publishing process you only need to head to the repository's releases tab on GitHub to publish the new version tag that was created.
+
 If you ran any of those commands but happen not to have access to the related npm package, you can still ask a collaborator of the said package to publish it for you.
 
 Appending `:dry` (e.g. `release:dry`) to any of the above commands will dry-run the targeted release script and output the new changelog to the console.
 
-We consider [maintaining](#maintaining) project dependencies before publishing a new version a best practice.
+We consider maintaining project dependencies before publishing a new version a best practice.
 
 ### Maintaining
+
+Anyone can, and is welcome to, contribute to the project by opening bug reports and submitting feature requests. To remain focused and ensure we are able to respond to each contribution, we have adopted the following framework to maintain this package:
+
+**🚨 &nbsp;Bug reports**
+
+> **Note**: An automated reply is posted when a bug report is opened to explain our maintenance schedule.
+Every Wednesday is _bug squashing day_. During this day, we respond to and/or fix bug reports.
+
+At the end of each Wednesday (assuming there were issues to fix), or later during the week if reviews are required, a _patch_ version is [released](#publishing) containing any fixes that were needed. Releasing multiple patches during the same week should be avoided.
+
+Ideally, all opened bug reports are addressed each Wednesday. If a particular bug report is not able to be resolved in that timeframe, maintainers are free to continue working on the issue or to report back to it next Wednesday. Overall, while most issues should be closed within _7 days_, we consider up to _14 days_ to get back to and address an issue a reasonable delay. Beyond that threshold, an issue is considered problematic and will be given more attention.
+
+**🙋‍♀️ &nbsp;Feature requests**
+
+> **Note**: An automated message gets sent to people creating feature requests about this process.
+Every last week of a month is _feature week_. During this week, we implement new features. Discussing and coming up with implementation proposals can happen before that week, but implementations are targeted for the last week.
+
+At the end of the week (assuming there were features to implement), a _minor_ version is [released](#publishing) containing the new features. Releasing multiple minors during the same week should be avoided.
+
+Ideally, all opened feature requests are discussed each month and implemented if consensus was reached. Unlike bug reports, we do not consider delays to address feature requests as good or bad. Instead, those should essentially be driven by the community's demand on a per-request basis.
+
+**🏗 &nbsp;Updating the project structure**
 
 We actively maintain a [TypeScript template][template] with Prismic's latest open-source standards. Keeping every project in sync with this template is nearly impossible so we're not trying to immediately reflect changes to the template in every project. Instead we consider a best practice to manually pull changes from the template into the project whenever someone is doing project maintenance and has time for it, or wants to enjoy the latest standards from it.
 

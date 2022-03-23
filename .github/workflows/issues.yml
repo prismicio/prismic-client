@@ -1,0 +1,29 @@
+name: issues
+
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  issues:
+    if: github.event.issue.author_association == 'NONE'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Reply bug report
+        if: contains(github.event.issue.labels.*.name, 'bug')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+        run: gh issue comment $ISSUE_URL --body-file ./.github/workflows/issues--bug_report.md
+
+      - name: Reply feature request
+        if: contains(github.event.issue.labels.*.name, 'enhancement')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+        run: gh issue comment $ISSUE_URL --body-file ./.github/workflows/issues--feature_request.md
