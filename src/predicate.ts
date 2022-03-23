@@ -91,11 +91,6 @@ const argsPredicate = <Args extends unknown[]>(name: string) => {
 	return fn;
 };
 
-/**
- * The default arguments allowed by predicates.
- */
-type DefaultPredicateArgs = [value: string | number | (string | number)[]];
-
 export const predicate = {
 	/**
 	 * The `at` predicate checks that the path matches the described value
@@ -103,7 +98,9 @@ export const predicate = {
 	 *
 	 * {@link https://prismic.io/docs/technologies/query-predicates-reference-rest-api#at}
 	 */
-	at: pathWithArgsPredicate<DefaultPredicateArgs>("at"),
+	at: pathWithArgsPredicate<
+		[value: string | number | boolean | Date | string[]]
+	>("at"),
 
 	/**
 	 * The `not` predicate checks that the path doesn't match the provided value
@@ -111,7 +108,7 @@ export const predicate = {
 	 *
 	 * {@link https://prismic.io/docs/technologies/query-predicates-reference-rest-api#not}
 	 */
-	not: pathWithArgsPredicate<DefaultPredicateArgs>("not"),
+	not: pathWithArgsPredicate<[value: string | number | boolean | Date]>("not"),
 
 	/**
 	 * The `any` predicate takes an array of values. It works exactly the same way
@@ -120,7 +117,9 @@ export const predicate = {
 	 *
 	 * {@link https://prismic.io/docs/technologies/query-predicates-reference-rest-api#any}
 	 */
-	any: pathWithArgsPredicate<DefaultPredicateArgs>("any"),
+	any: pathWithArgsPredicate<[values: (string | number | boolean | Date)[]]>(
+		"any",
+	),
 
 	/**
 	 * The `in` predicate is used specifically to retrieve an array of documents
@@ -129,7 +128,7 @@ export const predicate = {
 	 *
 	 * {@link https://prismic.io/docs/technologies/query-predicates-reference-rest-api#in}
 	 */
-	in: pathWithArgsPredicate<DefaultPredicateArgs>("in"),
+	in: pathWithArgsPredicate<[values: string[]]>("in"),
 
 	/**
 	 * The `fulltext` predicate provides two capabilities:
@@ -141,7 +140,7 @@ export const predicate = {
 	 *
 	 * {@link https://prismic.io/docs/technologies/query-predicates-reference-rest-api#fulltext}
 	 */
-	fulltext: pathWithArgsPredicate<DefaultPredicateArgs>("fulltext"),
+	fulltext: pathWithArgsPredicate<[searchTerms: string]>("fulltext"),
 
 	/**
 	 * The `has` predicate checks whether a fragment has a value. It will return
