@@ -185,7 +185,7 @@ test("optimizes pageSize when limit is below the pageSize", async (t) => {
 	await client.dangerouslyGetAll({ limit: 3 });
 });
 
-test("does not optimize pageSize when limit above the pageSize", async (t) => {
+test("does not optimize pageSize when limit is above the pageSize", async (t) => {
 	const repositoryResponse = createRepositoryResponse();
 	const pagedResponses = createQueryResponsePages({
 		numPages: 1,
