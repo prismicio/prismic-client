@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.4.3](https://github.com/prismicio/prismic-client/compare/v6.4.2...v6.4.3) (2022-04-15)
+
+
+### Bug Fixes
+
+* add `limit` to all `getAll*()` methods (fixes [#233](https://github.com/prismicio/prismic-client/issues/233)) ([#234](https://github.com/prismicio/prismic-client/issues/234)) ([7d3e4c3](https://github.com/prismicio/prismic-client/commit/7d3e4c3b0759cfb368c4251538681d148f88a430))
+* optimize `pageSize` when a `limit` less than `pageSize` is given ([#236](https://github.com/prismicio/prismic-client/issues/236)) ([3bec394](https://github.com/prismicio/prismic-client/commit/3bec394084db84625fbbbdd56264693d60ef0322))
+* throw when given a non-V2 Prismic Rest API in all non-production environments ([#235](https://github.com/prismicio/prismic-client/issues/235)) ([0b56b54](https://github.com/prismicio/prismic-client/commit/0b56b547b3219f9f526e7e85cd075caf5694979d))
+
+
+### Chore
+
+* **deps:** upgrade dependencies ([8e27a71](https://github.com/prismicio/prismic-client/commit/8e27a71485921d18a55b99c8b3df1a1b53604234))
+* fix coverage ([933200a](https://github.com/prismicio/prismic-client/commit/933200ab3810ee1dd51bf269efff1fc2d45453ee))
+
 ### [6.4.2](https://github.com/prismicio/prismic-client/compare/v6.4.1...v6.4.2) (2022-03-23)
 
 
