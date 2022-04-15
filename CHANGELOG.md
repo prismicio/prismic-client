@@ -9,7 +9,6 @@ All notable changes to this project will be documented in this file. See [standa
 
 * add `limit` to all `getAll*()` methods (fixes [#233](https://github.com/prismicio/prismic-client/issues/233)) ([#234](https://github.com/prismicio/prismic-client/issues/234)) ([7d3e4c3](https://github.com/prismicio/prismic-client/commit/7d3e4c3b0759cfb368c4251538681d148f88a430))
 * optimize `pageSize` when a `limit` less than `pageSize` is given ([#236](https://github.com/prismicio/prismic-client/issues/236)) ([3bec394](https://github.com/prismicio/prismic-client/commit/3bec394084db84625fbbbdd56264693d60ef0322))
-* throw when given a non-V2 Prismic Rest API in all non-production environments ([#235](https://github.com/prismicio/prismic-client/issues/235)) ([0b56b54](https://github.com/prismicio/prismic-client/commit/0b56b547b3219f9f526e7e85cd075caf5694979d))
 
 
 ### Chore
