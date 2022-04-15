@@ -341,7 +341,7 @@ export class Client {
 	constructor(repositoryNameOrEndpoint: string, options: ClientConfig = {}) {
 		if (isRepositoryEndpoint(repositoryNameOrEndpoint)) {
 			if (
-				process.env.NODE_ENV !== "production" &&
+				process.env.NODE_ENV === "development" &&
 				/\.prismic\.io\/(?!api\/v2\/?)/.test(repositoryNameOrEndpoint)
 			) {
 				throw new PrismicError(

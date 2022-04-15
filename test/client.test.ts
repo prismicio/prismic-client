@@ -98,23 +98,6 @@ test.serial(
 	},
 );
 
-test.serial(
-	"constructor throws if a non-V2 Prismic Rest API endpoint is provided",
-	(t) => {
-		t.throws(
-			() => {
-				prismic.createClient("https://qwerty.cdn.prismic.io/api/v1", {
-					fetch: sinon.stub(),
-				});
-			},
-			{
-				instanceOf: prismic.PrismicError,
-				message: /only supports prismic rest api v2/i,
-			},
-		);
-	},
-);
-
 test.serial("constructor throws if fetch is unavailable", (t) => {
 	const endpoint = prismic.getRepositoryEndpoint("qwerty");
 
