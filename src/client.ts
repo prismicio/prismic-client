@@ -218,7 +218,7 @@ const typePredicate = (documentType: string): string =>
  * Creates a predicate to filter content by document tags. All tags are required
  * on the document.
  *
- * @param documentType - Document tags to filter queried content.
+ * @param tags - Document tags to filter queried content.
  *
  * @returns A predicate that can be used in a Prismic REST API V2 request.
  */
@@ -229,7 +229,7 @@ const everyTagPredicate = (tags: string | string[]): string =>
  * Creates a predicate to filter content by document tags. At least one matching
  * tag is required on the document.
  *
- * @param documentType - Document tags to filter queried content.
+ * @param tags - Document tags to filter queried content.
  *
  * @returns A predicate that can be used in a Prismic REST API V2 request.
  */
@@ -257,8 +257,9 @@ const someTagsPredicate = (tags: string | string[]): string =>
  * @returns A client that can query content from the repository.
  */
 export const createClient = (
-	...args: ConstructorParameters<typeof Client>
-): Client => new Client(...args);
+	repositoryNameOrEndpoint: ConstructorParameters<typeof Client>[0],
+	options: ConstructorParameters<typeof Client>[1] = {},
+): Client => new Client(repositoryNameOrEndpoint, options);
 
 /**
  * A client that allows querying content from a Prismic repository.
@@ -658,7 +659,7 @@ export class Client {
 	 */
 	async getAllByIDs<TDocument extends prismicT.PrismicDocument>(
 		ids: string[],
-		params?: Partial<BuildQueryURLArgs> & FetchParams,
+		params?: Partial<BuildQueryURLArgs> & GetAllParams & FetchParams,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(params, predicate.in("document.id", ids)),
@@ -764,7 +765,7 @@ export class Client {
 	async getAllByUIDs<TDocument extends prismicT.PrismicDocument>(
 		documentType: string,
 		uids: string[],
-		params?: Partial<BuildQueryURLArgs> & FetchParams,
+		params?: Partial<BuildQueryURLArgs> & GetAllParams & FetchParams,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(params, [
@@ -849,7 +850,9 @@ export class Client {
 	 */
 	async getAllByType<TDocument extends prismicT.PrismicDocument>(
 		documentType: string,
-		params?: Partial<Omit<BuildQueryURLArgs, "page">> & FetchParams,
+		params?: Partial<Omit<BuildQueryURLArgs, "page">> &
+			GetAllParams &
+			FetchParams,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(params, typePredicate(documentType)),
@@ -901,7 +904,9 @@ export class Client {
 	 */
 	async getAllByTag<TDocument extends prismicT.PrismicDocument>(
 		tag: string,
-		params?: Partial<Omit<BuildQueryURLArgs, "page">> & FetchParams,
+		params?: Partial<Omit<BuildQueryURLArgs, "page">> &
+			GetAllParams &
+			FetchParams,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(params, someTagsPredicate(tag)),
@@ -953,7 +958,9 @@ export class Client {
 	 */
 	async getAllByEveryTag<TDocument extends prismicT.PrismicDocument>(
 		tags: string[],
-		params?: Partial<Omit<BuildQueryURLArgs, "page">> & FetchParams,
+		params?: Partial<Omit<BuildQueryURLArgs, "page">> &
+			GetAllParams &
+			FetchParams,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(params, everyTagPredicate(tags)),
@@ -1005,7 +1012,9 @@ export class Client {
 	 */
 	async getAllBySomeTags<TDocument extends prismicT.PrismicDocument>(
 		tags: string[],
-		params?: Partial<Omit<BuildQueryURLArgs, "page">> & FetchParams,
+		params?: Partial<Omit<BuildQueryURLArgs, "page">> &
+			GetAllParams &
+			FetchParams,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
 			appendPredicates(params, someTagsPredicate(tags)),
@@ -1258,7 +1267,7 @@ export class Client {
 	 * const document = await client.getByID("WW4bKScAAMAqmluX");
 	 * ```
 	 *
-	 * @param id - The ID of the Release.
+	 * @param releaseID - The ID of the Release.
 	 */
 	queryContentFromReleaseByID(releaseID: string): void {
 		this.refState = {
@@ -1281,7 +1290,7 @@ export class Client {
 	 * const document = await client.getByID("WW4bKScAAMAqmluX");
 	 * ```
 	 *
-	 * @param label - The label of the Release.
+	 * @param releaseLabel - The label of the Release.
 	 */
 	queryContentFromReleaseByLabel(releaseLabel: string): void {
 		this.refState = {
