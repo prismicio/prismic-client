@@ -160,6 +160,56 @@ test("uses the default pageSize when given a falsey pageSize param", async (t) =
 	await client.dangerouslyGetAll({ pageSize: 0 });
 });
 
+test("optimizes pageSize when limit is below the pageSize", async (t) => {
+	const repositoryResponse = createRepositoryResponse();
+	const pagedResponses = createQueryResponsePages({
+		numPages: 1,
+		numDocsPerPage: 3,
+	});
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse),
+		createMockQueryHandler(t, pagedResponses, undefined, {
+			ref: getMasterRef(repositoryResponse),
+			pageSize: 3,
+		}),
+	);
+
+	const client = createTestClient(t);
+
+	// The following calls will implicitly fail the test if the
+	// `createMockQueryHandler` handler does not match the given `pageSize`
+	// of 3. This is handled within createMockQueryHandler (see the `debug`
+	// option).
+
+	await client.dangerouslyGetAll({ limit: 3 });
+});
+
+test("does not optimize pageSize when limit above the pageSize", async (t) => {
+	const repositoryResponse = createRepositoryResponse();
+	const pagedResponses = createQueryResponsePages({
+		numPages: 1,
+		numDocsPerPage: 3,
+	});
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse),
+		createMockQueryHandler(t, pagedResponses, undefined, {
+			ref: getMasterRef(repositoryResponse),
+			pageSize: 100,
+		}),
+	);
+
+	const client = createTestClient(t);
+
+	// The following calls will implicitly fail the test if the
+	// `createMockQueryHandler` handler does not match the given `pageSize`
+	// of 100. This is handled within createMockQueryHandler (see the
+	// `debug` option).
+
+	await client.dangerouslyGetAll({ limit: 150 });
+});
+
 test("throttles requests past first page", async (t) => {
 	const numPages = 3;
 	const repositoryResponse = createRepositoryResponse();
