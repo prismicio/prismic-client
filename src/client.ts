@@ -257,9 +257,8 @@ const someTagsPredicate = (tags: string | string[]): string =>
  * @returns A client that can query content from the repository.
  */
 export const createClient = (
-	repositoryNameOrEndpoint: ConstructorParameters<typeof Client>[0],
-	options: ConstructorParameters<typeof Client>[1] = {},
-): Client => new Client(repositoryNameOrEndpoint, options);
+	...args: ConstructorParameters<typeof Client>
+): Client => new Client(...args);
 
 /**
  * A client that allows querying content from a Prismic repository.
