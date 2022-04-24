@@ -486,7 +486,7 @@ export class Client<
 	 *
 	 * @returns A paginated response containing the result of the query.
 	 */
-	async query<TDocument extends prismicT.PrismicDocument>(
+	async query<TDocument extends DocumentTypeMap[keyof DocumentTypeMap]>(
 		predicates: NonNullable<BuildQueryURLArgs["predicates"]>,
 		params?: Partial<Omit<BuildQueryURLArgs, "predicates">> & FetchParams,
 	): Promise<prismicT.Query<TDocument>> {
@@ -509,7 +509,7 @@ export class Client<
 	 *
 	 * @returns A paginated response containing the result of the query.
 	 */
-	async get<TDocument extends prismicT.PrismicDocument>(
+	async get<TDocument extends DocumentTypeMap[keyof DocumentTypeMap]>(
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<prismicT.Query<TDocument>> {
 		const url = await this.buildQueryURL(params);
@@ -531,7 +531,7 @@ export class Client<
 	 * @param params - Parameters to filter, sort, and paginate results. @returns
 	 *   The first result of the query, if any.
 	 */
-	async getFirst<TDocument extends prismicT.PrismicDocument>(
+	async getFirst<TDocument extends DocumentTypeMap[keyof DocumentTypeMap]>(
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<TDocument> {
 		const url = await this.buildQueryURL(params);
@@ -567,7 +567,9 @@ export class Client<
 	 *
 	 * @returns A list of documents matching the query.
 	 */
-	async dangerouslyGetAll<TDocument extends prismicT.PrismicDocument>(
+	async dangerouslyGetAll<
+		TDocument extends DocumentTypeMap[keyof DocumentTypeMap],
+	>(
 		params: Partial<Omit<BuildQueryURLArgs, "page">> &
 			GetAllParams &
 			FetchParams = {},
@@ -621,7 +623,7 @@ export class Client<
 	 * @returns The document with an ID matching the `id` parameter, if a matching
 	 *   document exists.
 	 */
-	async getByID<TDocument extends prismicT.PrismicDocument>(
+	async getByID<TDocument extends DocumentTypeMap[keyof DocumentTypeMap]>(
 		id: string,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<TDocument> {
@@ -653,7 +655,7 @@ export class Client<
 	 * @returns A paginated response containing documents with IDs matching the
 	 *   `ids` parameter.
 	 */
-	async getByIDs<TDocument extends prismicT.PrismicDocument>(
+	async getByIDs<TDocument extends DocumentTypeMap[keyof DocumentTypeMap]>(
 		ids: string[],
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<prismicT.Query<TDocument>> {
@@ -686,7 +688,7 @@ export class Client<
 	 *
 	 * @returns A list of documents with IDs matching the `ids` parameter.
 	 */
-	async getAllByIDs<TDocument extends prismicT.PrismicDocument>(
+	async getAllByIDs<TDocument extends DocumentTypeMap[keyof DocumentTypeMap]>(
 		ids: string[],
 		params?: Partial<BuildQueryURLArgs> & GetAllParams & FetchParams,
 	): Promise<TDocument[]> {
@@ -721,7 +723,7 @@ export class Client<
 		uid: string,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<DocumentTypeMap[DocumentType]>;
-	async getByUID<TDocument extends prismicT.PrismicDocument>(
+	async getByUID<TDocument extends DocumentTypeMap[keyof DocumentTypeMap]>(
 		documentType: string,
 		uid: string,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
@@ -763,7 +765,7 @@ export class Client<
 		uids: string[],
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<prismicT.Query<DocumentTypeMap[DocumentType]>>;
-	async getByUIDs<TDocument extends prismicT.PrismicDocument>(
+	async getByUIDs<TDocument extends DocumentTypeMap[keyof DocumentTypeMap]>(
 		documentType: string,
 		uids: string[],
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
@@ -806,7 +808,7 @@ export class Client<
 		uids: string[],
 		params?: Partial<BuildQueryURLArgs> & GetAllParams & FetchParams,
 	): Promise<DocumentTypeMap[DocumentType][]>;
-	async getAllByUIDs<TDocument extends prismicT.PrismicDocument>(
+	async getAllByUIDs<TDocument extends DocumentTypeMap[keyof DocumentTypeMap]>(
 		documentType: string,
 		uids: string[],
 		params?: Partial<BuildQueryURLArgs> & GetAllParams & FetchParams,
@@ -843,7 +845,7 @@ export class Client<
 		documentType: DocumentType,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<DocumentTypeMap[DocumentType]>;
-	async getSingle<TDocument extends prismicT.PrismicDocument>(
+	async getSingle<TDocument extends DocumentTypeMap[keyof DocumentTypeMap]>(
 		documentType: string,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<TDocument> {
@@ -874,7 +876,7 @@ export class Client<
 		documentType: DocumentType,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<prismicT.Query<DocumentTypeMap[DocumentType]>>;
-	async getByType<TDocument extends prismicT.PrismicDocument>(
+	async getByType<TDocument extends DocumentTypeMap[keyof DocumentTypeMap]>(
 		documentType: string,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<prismicT.Query<TDocument>> {
@@ -906,7 +908,7 @@ export class Client<
 			GetAllParams &
 			FetchParams,
 	): Promise<DocumentTypeMap[DocumentType][]>;
-	async getAllByType<TDocument extends prismicT.PrismicDocument>(
+	async getAllByType<TDocument extends DocumentTypeMap[keyof DocumentTypeMap]>(
 		documentType: string,
 		params?: Partial<Omit<BuildQueryURLArgs, "page">> &
 			GetAllParams &
@@ -934,7 +936,7 @@ export class Client<
 	 *
 	 * @returns A paginated response containing documents with the tag.
 	 */
-	async getByTag<TDocument extends prismicT.PrismicDocument>(
+	async getByTag<TDocument extends DocumentTypeMap[keyof DocumentTypeMap]>(
 		tag: string,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<prismicT.Query<TDocument>> {
@@ -960,7 +962,7 @@ export class Client<
 	 *
 	 * @returns A list of all documents with the tag.
 	 */
-	async getAllByTag<TDocument extends prismicT.PrismicDocument>(
+	async getAllByTag<TDocument extends DocumentTypeMap[keyof DocumentTypeMap]>(
 		tag: string,
 		params?: Partial<Omit<BuildQueryURLArgs, "page">> &
 			GetAllParams &
@@ -987,7 +989,7 @@ export class Client<
 	 *
 	 * @returns A paginated response containing documents with the tags.
 	 */
-	async getByEveryTag<TDocument extends prismicT.PrismicDocument>(
+	async getByEveryTag<TDocument extends DocumentTypeMap[keyof DocumentTypeMap]>(
 		tags: string[],
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<prismicT.Query<TDocument>> {
@@ -1014,7 +1016,9 @@ export class Client<
 	 *
 	 * @returns A list of all documents with the tags.
 	 */
-	async getAllByEveryTag<TDocument extends prismicT.PrismicDocument>(
+	async getAllByEveryTag<
+		TDocument extends DocumentTypeMap[keyof DocumentTypeMap],
+	>(
 		tags: string[],
 		params?: Partial<Omit<BuildQueryURLArgs, "page">> &
 			GetAllParams &
@@ -1041,7 +1045,7 @@ export class Client<
 	 *
 	 * @returns A paginated response containing documents with at least one of the tags.
 	 */
-	async getBySomeTags<TDocument extends prismicT.PrismicDocument>(
+	async getBySomeTags<TDocument extends DocumentTypeMap[keyof DocumentTypeMap]>(
 		tags: string[],
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<prismicT.Query<TDocument>> {
@@ -1068,7 +1072,9 @@ export class Client<
 	 *
 	 * @returns A list of all documents with at least one of the tags.
 	 */
-	async getAllBySomeTags<TDocument extends prismicT.PrismicDocument>(
+	async getAllBySomeTags<
+		TDocument extends DocumentTypeMap[keyof DocumentTypeMap],
+	>(
 		tags: string[],
 		params?: Partial<Omit<BuildQueryURLArgs, "page">> &
 			GetAllParams &
