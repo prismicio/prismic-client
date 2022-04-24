@@ -264,6 +264,8 @@ export interface CreateClient {
  * createClient("https://qwerty.cdn.prismic.io/api/v2");
  * ```
  *
+ * @typeParam DocumentTypeMap - A map of Prismic document type IDs mapped to
+ *   their TypeScript type.
  * @param repositoryNameOrEndpoint - The Prismic repository name or full Rest
  *   API V2 endpoint for the repository.
  * @param options - Configuration that determines how content will be queried
@@ -284,6 +286,9 @@ export const createClient: CreateClient = <
  * If used in an environment where a global `fetch` function is unavailable,
  * such as Node.js, the `fetch` option must be provided as part of the `options`
  * parameter.
+ *
+ * @typeParam DocumentTypeMap - A map of Prismic document type IDs mapped to
+ *   their TypeScript type.
  */
 export class Client<
 	DocumentTypeMap extends Record<string, prismicT.PrismicDocument> = Record<
