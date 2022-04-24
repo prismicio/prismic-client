@@ -275,7 +275,7 @@ export const createClient: CreateClient = <
 	DocumentTypeMap extends Record<string, prismicT.PrismicDocument>,
 >(
 	repositoryNameOrEndpoint: string,
-	options: ClientConfig = {},
+	options?: ClientConfig,
 ) => new Client<DocumentTypeMap>(repositoryNameOrEndpoint, options);
 
 /**
