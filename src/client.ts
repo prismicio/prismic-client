@@ -237,6 +237,21 @@ const someTagsPredicate = (tags: string | string[]): string =>
 	predicate.any("document.tags", castArray(tags));
 
 /**
+ * Type definitions for the `createClient()` function. May be augmented by
+ * third-party libraries.
+ */
+export interface CreateClient {
+	<
+		DocumentTypeMap extends Record<string, prismicT.PrismicDocument> = Record<
+			string,
+			prismicT.PrismicDocument
+		>,
+	>(
+		...args: ConstructorParameters<typeof Client>
+	): Client<DocumentTypeMap>;
+}
+
+/**
  * Creates a Prismic client that can be used to query a repository.
  *
  * @example
@@ -256,9 +271,12 @@ const someTagsPredicate = (tags: string | string[]): string =>
  *
  * @returns A client that can query content from the repository.
  */
-export const createClient = (
-	...args: ConstructorParameters<typeof Client>
-): Client => new Client(...args);
+export const createClient: CreateClient = <
+	DocumentTypeMap extends Record<string, prismicT.PrismicDocument>,
+>(
+	repositoryNameOrEndpoint: string,
+	options: ClientConfig = {},
+) => new Client<DocumentTypeMap>(repositoryNameOrEndpoint, options);
 
 /**
  * A client that allows querying content from a Prismic repository.
@@ -267,7 +285,12 @@ export const createClient = (
  * such as Node.js, the `fetch` option must be provided as part of the `options`
  * parameter.
  */
-export class Client {
+export class Client<
+	DocumentTypeMap extends Record<string, prismicT.PrismicDocument> = Record<
+		string,
+		prismicT.PrismicDocument
+	>,
+> {
 	/**
 	 * The Prismic REST API V2 endpoint for the repository (use
 	 * `prismic.getRepositoryEndpoint` for the default endpoint).
@@ -688,6 +711,11 @@ export class Client {
 	 * @returns The document with a UID matching the `uid` parameter, if a
 	 *   matching document exists.
 	 */
+	getByUID<DocumentType extends keyof DocumentTypeMap>(
+		documentType: DocumentType,
+		uid: string,
+		params?: Partial<BuildQueryURLArgs> & FetchParams,
+	): Promise<DocumentTypeMap[DocumentType]>;
 	async getByUID<TDocument extends prismicT.PrismicDocument>(
 		documentType: string,
 		uid: string,
@@ -725,6 +753,11 @@ export class Client {
 	 * @returns A paginated response containing documents with UIDs matching the
 	 *   `uids` parameter.
 	 */
+	getByUIDs<DocumentType extends keyof DocumentTypeMap>(
+		documentType: DocumentType,
+		uids: string[],
+		params?: Partial<BuildQueryURLArgs> & FetchParams,
+	): Promise<prismicT.Query<DocumentTypeMap[DocumentType]>>;
 	async getByUIDs<TDocument extends prismicT.PrismicDocument>(
 		documentType: string,
 		uids: string[],
@@ -763,6 +796,11 @@ export class Client {
 	 *
 	 * @returns A list of documents with UIDs matching the `uids` parameter.
 	 */
+	getAllByUIDs<DocumentType extends keyof DocumentTypeMap>(
+		documentType: DocumentType,
+		uids: string[],
+		params?: Partial<BuildQueryURLArgs> & GetAllParams & FetchParams,
+	): Promise<DocumentTypeMap[DocumentType][]>;
 	async getAllByUIDs<TDocument extends prismicT.PrismicDocument>(
 		documentType: string,
 		uids: string[],
@@ -796,6 +834,10 @@ export class Client {
 	 *
 	 * @returns The singleton document for the Custom Type, if a matching document exists.
 	 */
+	getSingle<DocumentType extends keyof DocumentTypeMap>(
+		documentType: DocumentType,
+		params?: Partial<BuildQueryURLArgs> & FetchParams,
+	): Promise<DocumentTypeMap[DocumentType]>;
 	async getSingle<TDocument extends prismicT.PrismicDocument>(
 		documentType: string,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
@@ -823,6 +865,10 @@ export class Client {
 	 *
 	 * @returns A paginated response containing documents of the Custom Type.
 	 */
+	getByType<DocumentType extends keyof DocumentTypeMap>(
+		documentType: DocumentType,
+		params?: Partial<BuildQueryURLArgs> & FetchParams,
+	): Promise<prismicT.Query<DocumentTypeMap[DocumentType]>>;
 	async getByType<TDocument extends prismicT.PrismicDocument>(
 		documentType: string,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
@@ -849,6 +895,12 @@ export class Client {
 	 *
 	 * @returns A list of all documents of the Custom Type.
 	 */
+	getAllByType<DocumentType extends keyof DocumentTypeMap>(
+		documentType: DocumentType,
+		params?: Partial<Omit<BuildQueryURLArgs, "page">> &
+			GetAllParams &
+			FetchParams,
+	): Promise<DocumentTypeMap[DocumentType][]>;
 	async getAllByType<TDocument extends prismicT.PrismicDocument>(
 		documentType: string,
 		params?: Partial<Omit<BuildQueryURLArgs, "page">> &
