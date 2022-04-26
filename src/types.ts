@@ -13,6 +13,27 @@ export type ValueOf<
 > = ObjectType[ValueType];
 
 /**
+ * Functions like TypeScript's native `Extract` utility type with added support
+ * to fall back to a value if the resulting union is `never`.
+ *
+ * @example
+ *
+ * ```ts
+ * WeakExtract<"a" | "b", "a"> // => "a"
+ * WeakExtract<"a" | "b", "c"> // => "a" | "b"
+ * WeakExtract<"a" | "b", "c", "foo"> // => "foo"
+ * ```
+ *
+ * @typeParam T - The union from which values will be extracted.
+ * @typeParam U - The extraction condition.
+ * @typeParam Fallback - The value to return if the resulting union is `never`.
+ *   Defaults to `T`.
+ */
+export type WeakExtract<T, U, Fallback = T> = Extract<T, U> extends never
+	? Fallback
+	: Extract<T, U>;
+
+/**
  * A universal API to make network requests. A subset of the `fetch()` API.
  *
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/fetch}
