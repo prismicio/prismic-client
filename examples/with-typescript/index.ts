@@ -26,14 +26,18 @@ const main = async () => {
 	//                          ^ Typed as `string | null`
 	console.info("title: ", title);
 
-	// @ts-expect-error - non_existant_field does not exist in `data`
-	const nonExistantField = homepage.data.non_existant_field;
-	// TypeScript Error: Property `non_existant_field` does not exist on type `PageDocument['data']`
-	console.info("nonExistantField: ", nonExistantField);
+	// @ts-expect-error - non_existent_field does not exist in `data`
+	const nonExistentField = homepage.data.non_existent_field;
+	// TypeScript Error: Property 'non_existent_field' does not exist on type 'PageDocument['data']'.
+	console.info("nonExistentField: ", nonExistentField);
 
 	const blogPosts = await client.getAllByType("blog_post");
 	//    ^ Typed as BlogPostDocument[]
 	console.info("blogPosts: ", blogPosts);
+
+	// @ts-expect-error - "settings" is a not a valid document type.
+	await client.getAllByType("settings");
+	// TypeScript Error: Argument of type '"settings"' is not assignable to parameter of type '"page" | "blog_post"'.
 };
 
 main();
