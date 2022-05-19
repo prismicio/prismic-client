@@ -65,20 +65,34 @@ export interface ResponseLike {
 }
 
 /**
+ * The minimum required properties to treat as a Express-style Request for
+ * automatic Prismic preview support.
+ */
+type HttpRequestLikeExpress = {
+	headers?: {
+		cookie?: string;
+	};
+	query?: Record<string, unknown>;
+};
+
+/**
+ * The minimum required properties to treat as a Web API Request for automatic
+ * Prismic preview support.
+ *
+ * @see http://developer.mozilla.org/en-US/docs/Web/API/Request
+ */
+type HttpRequestLikeWebAPI = {
+	headers: {
+		get(name: string): string | null;
+	};
+	url: string;
+};
+
+/**
  * The minimum required properties to treat as an HTTP Request for automatic
  * Prismic preview support.
  */
-export interface HttpRequestLike {
-	headers?: // Web API Headers
-	| {
-				get(name: string): string | null;
-		  }
-		// Express-style headers (pre-parsed)
-		| {
-				cookie?: string;
-		  };
-	query?: Record<string, unknown>;
-}
+export type HttpRequestLike = HttpRequestLikeExpress | HttpRequestLikeWebAPI;
 
 /**
  * An `orderings` parameter that orders the results by the specified field.

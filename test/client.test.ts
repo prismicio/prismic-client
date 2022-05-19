@@ -267,6 +267,7 @@ test.serial("supports req with Web APIs", async (t) => {
 	headers.set("cookie", `io.prismic.preview=${previewRef}`);
 	const req = {
 		headers,
+		url: "https://example.com",
 	};
 
 	const queryResponse = createQueryResponse();

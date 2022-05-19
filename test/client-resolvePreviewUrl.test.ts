@@ -1,5 +1,6 @@
 import test from "ava";
 import * as mswNode from "msw/node";
+import { Headers } from "node-fetch";
 import AbortController from "abort-controller";
 
 import { createDocument } from "./__testutils__/createDocument";
@@ -75,6 +76,44 @@ test.serial("resolves a preview url using a server req object", async (t) => {
 
 	t.is(res, `/${document.uid}`);
 });
+
+test.serial(
+	"resolves a preview url using a Web API-based server req object",
+	async (t) => {
+		const document = createDocument();
+		const queryResponse = createQueryResponse([document]);
+
+		const documentId = document.id;
+		const previewToken = "previewToken";
+
+		const headers = new Headers();
+		const url = new URL("https://example.com");
+		url.searchParams.set("documentId", documentId);
+		url.searchParams.set("token", previewToken);
+		const req = {
+			headers,
+			url: url.toString(),
+		};
+
+		server.use(
+			createMockRepositoryHandler(t),
+			createMockQueryHandler(t, [queryResponse], undefined, {
+				ref: previewToken,
+				q: `[[at(document.id, "${documentId}")]]`,
+				lang: "*",
+			}),
+		);
+
+		const client = createTestClient(t);
+		client.enableAutoPreviewsFromReq(req);
+		const res = await client.resolvePreviewURL({
+			linkResolver: (document) => `/${document.uid}`,
+			defaultURL: "defaultURL",
+		});
+
+		t.is(res, `/${document.uid}`);
+	},
+);
 
 test.serial(
 	"allows providing an explicit documentId and previewToken",
