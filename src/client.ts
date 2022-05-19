@@ -1216,7 +1216,7 @@ export class Client {
 			documentID = documentID || searchParams.get("documentId");
 			previewToken = previewToken || searchParams.get("token");
 		} else if (this.refState.httpRequest) {
-			if ("url" in this.refState.httpRequest) {
+			if (this.refState.httpRequest.url) {
 				const searchParams = new URL(this.refState.httpRequest.url)
 					.searchParams;
 
