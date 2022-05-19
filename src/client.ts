@@ -1492,15 +1492,24 @@ export class Client {
 	 */
 	private async getResolvedRefString(params?: FetchParams): Promise<string> {
 		if (this.refState.autoPreviewsEnabled) {
-			let previewRef: string | undefined = undefined;
+			let previewRef: string | undefined;
+
+			let cookieJar: string | null | undefined;
 
 			if (globalThis.document?.cookie) {
-				previewRef = getCookie(cookie.preview, globalThis.document.cookie);
-			} else if (this.refState.httpRequest?.headers?.cookie) {
-				previewRef = getCookie(
-					cookie.preview,
-					this.refState.httpRequest.headers.cookie,
-				);
+				cookieJar = globalThis.document.cookie;
+			} else if (this.refState.httpRequest?.headers) {
+				if ("get" in this.refState.httpRequest?.headers) {
+					// Web API Headers
+					cookieJar = this.refState.httpRequest.headers.get("cookie");
+				} else {
+					// Express-style headers
+					cookieJar = this.refState.httpRequest.headers.cookie;
+				}
+			}
+
+			if (cookieJar) {
+				previewRef = getCookie(cookie.preview, cookieJar);
 			}
 
 			if (previewRef) {

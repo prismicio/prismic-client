@@ -69,9 +69,14 @@ export interface ResponseLike {
  * Prismic preview support.
  */
 export interface HttpRequestLike {
-	headers?: {
-		cookie?: string;
-	};
+	headers?: // Web API Headers
+	| {
+				get(name: string): string | null;
+		  }
+		// Express-style headers (pre-parsed)
+		| {
+				cookie?: string;
+		  };
 	query?: Record<string, unknown>;
 }
 
