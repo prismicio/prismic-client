@@ -11,6 +11,12 @@ test(
 );
 
 test(
+	'[not(document.tags, ["Macaron", "Cupcake"])]',
+	isTitleMacro,
+	prismic.predicate.not("document.tags", ["Macaron", "Cupcake"]),
+);
+
+test(
 	"[not(my.product.price, 50)]",
 	isTitleMacro,
 	prismic.predicate.not("my.product.price", 50),
