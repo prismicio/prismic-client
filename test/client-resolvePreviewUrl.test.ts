@@ -178,7 +178,7 @@ test.serial(
 	"returns defaultURL if req does not contain preview params in server req object",
 	async (t) => {
 		const defaultURL = "defaultURL";
-		const req = { query: {} };
+		const req = {};
 
 		const client = createTestClient(t);
 		client.enableAutoPreviewsFromReq(req);
