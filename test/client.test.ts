@@ -286,6 +286,34 @@ test.serial("supports req with Web APIs", async (t) => {
 	t.deepEqual(res, queryResponse);
 });
 
+test.serial(
+	"correctly treats Express-style req with a Web API Headers-like shape",
+	async (t) => {
+		const previewRef = "previewRef";
+		const req = {
+			headers: {
+				get: "the get property also exists in the Web API Headers API",
+				cookie: `io.prismic.preview=${previewRef}`,
+			},
+		};
+
+		const queryResponse = createQueryResponse();
+
+		server.use(
+			createMockRepositoryHandler(t),
+			createMockQueryHandler(t, [queryResponse], undefined, {
+				ref: previewRef,
+			}),
+		);
+
+		const client = createTestClient(t);
+		client.enableAutoPreviewsFromReq(req);
+		const res = await client.get();
+
+		t.deepEqual(res, queryResponse);
+	},
+);
+
 test.serial("ignores req without cookies", async (t) => {
 	const req = {
 		headers: {},
