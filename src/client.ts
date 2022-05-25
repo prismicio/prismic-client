@@ -1507,10 +1507,13 @@ export class Client {
 			if (globalThis.document?.cookie) {
 				cookieJar = globalThis.document.cookie;
 			} else if (this.refState.httpRequest?.headers) {
-				if ("get" in this.refState.httpRequest?.headers) {
+				if (
+					"get" in this.refState.httpRequest?.headers &&
+					typeof this.refState.httpRequest.headers.get === "function"
+				) {
 					// Web API Headers
 					cookieJar = this.refState.httpRequest.headers.get("cookie");
-				} else {
+				} else if ("cookie" in this.refState.httpRequest.headers) {
 					// Express-style headers
 					cookieJar = this.refState.httpRequest.headers.cookie;
 				}

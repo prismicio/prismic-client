@@ -286,6 +286,28 @@ test.serial("supports req with Web APIs", async (t) => {
 	t.deepEqual(res, queryResponse);
 });
 
+test.serial("ignores req without cookies", async (t) => {
+	const req = {
+		headers: {},
+	};
+
+	const repositoryResponse = createRepositoryResponse();
+	const queryResponse = createQueryResponse();
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse),
+		createMockQueryHandler(t, [queryResponse], undefined, {
+			ref: getMasterRef(repositoryResponse),
+		}),
+	);
+
+	const client = createTestClient(t);
+	client.enableAutoPreviewsFromReq(req);
+	const res = await client.get();
+
+	t.deepEqual(res, queryResponse);
+});
+
 test.serial(
 	"does not use preview ref if auto previews are disabled",
 	async (t) => {
