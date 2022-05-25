@@ -1508,7 +1508,7 @@ export class Client {
 				cookieJar = globalThis.document.cookie;
 			} else if (this.refState.httpRequest?.headers) {
 				if (
-					"get" in this.refState.httpRequest?.headers &&
+					"get" in this.refState.httpRequest.headers &&
 					typeof this.refState.httpRequest.headers.get === "function"
 				) {
 					// Web API Headers
