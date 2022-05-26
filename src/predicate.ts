@@ -104,11 +104,13 @@ export const predicate = {
 
 	/**
 	 * The `not` predicate checks that the path doesn't match the provided value
-	 * exactly. It takes a single value as the argument.
+	 * exactly. It takes a single value for a field or an array (only for tags).
 	 *
 	 * {@link https://prismic.io/docs/technologies/query-predicates-reference-rest-api#not}
 	 */
-	not: pathWithArgsPredicate<[value: string | number | boolean | Date]>("not"),
+	not: pathWithArgsPredicate<
+		[value: string | number | boolean | Date | string[]]
+	>("not"),
 
 	/**
 	 * The `any` predicate takes an array of values. It works exactly the same way
