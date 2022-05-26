@@ -64,6 +64,10 @@ export type AbortSignalLike = {
 	dispatchEvent: any;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	onabort: any;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	reason: any;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	throwIfAborted: any;
 };
 
 /**
@@ -89,12 +93,30 @@ export interface ResponseLike {
  * The minimum required properties to treat as an HTTP Request for automatic
  * Prismic preview support.
  */
-export interface HttpRequestLike {
-	headers?: {
-		cookie?: string;
-	};
-	query?: Record<string, unknown>;
-}
+export type HttpRequestLike =
+	| /**
+	 * Web API Request
+	 *
+	 * @see http://developer.mozilla.org/en-US/docs/Web/API/Request
+	 */
+	{
+			headers?: {
+				get(name: string): string | null;
+			};
+			url?: string;
+			query?: never;
+	  }
+
+	/**
+	 * Express-style Request
+	 */
+	| {
+			headers?: {
+				cookie?: string;
+			};
+			query?: Record<string, unknown>;
+			url?: never;
+	  };
 
 /**
  * An `orderings` parameter that orders the results by the specified field.

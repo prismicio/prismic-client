@@ -1261,19 +1261,27 @@ export class Client<
 	async resolvePreviewURL<LinkResolverReturnType>(
 		args: ResolvePreviewArgs<LinkResolverReturnType> & FetchParams,
 	): Promise<string> {
-		let documentID = args.documentID;
-		let previewToken = args.previewToken;
+		let documentID: string | undefined | null = args.documentID;
+		let previewToken: string | undefined | null = args.previewToken;
 
 		if (typeof globalThis.location !== "undefined") {
 			const searchParams = new URLSearchParams(globalThis.location.search);
 
-			documentID = documentID || searchParams.get("documentId") || undefined;
-			previewToken = previewToken || searchParams.get("token") || undefined;
-		} else if (this.refState.httpRequest?.query) {
-			documentID =
-				documentID || (this.refState.httpRequest.query.documentId as string);
-			previewToken =
-				previewToken || (this.refState.httpRequest.query.token as string);
+			documentID = documentID || searchParams.get("documentId");
+			previewToken = previewToken || searchParams.get("token");
+		} else if (this.refState.httpRequest) {
+			if (this.refState.httpRequest.url) {
+				const searchParams = new URL(this.refState.httpRequest.url)
+					.searchParams;
+
+				documentID = documentID || searchParams.get("documentId");
+				previewToken = previewToken || searchParams.get("token");
+			} else {
+				documentID =
+					documentID || (this.refState.httpRequest.query?.documentId as string);
+				previewToken =
+					previewToken || (this.refState.httpRequest.query?.token as string);
+			}
 		}
 
 		if (documentID != null && previewToken != null) {
@@ -1546,15 +1554,27 @@ export class Client<
 	 */
 	private async getResolvedRefString(params?: FetchParams): Promise<string> {
 		if (this.refState.autoPreviewsEnabled) {
-			let previewRef: string | undefined = undefined;
+			let previewRef: string | undefined;
+
+			let cookieJar: string | null | undefined;
 
 			if (globalThis.document?.cookie) {
-				previewRef = getCookie(cookie.preview, globalThis.document.cookie);
-			} else if (this.refState.httpRequest?.headers?.cookie) {
-				previewRef = getCookie(
-					cookie.preview,
-					this.refState.httpRequest.headers.cookie,
-				);
+				cookieJar = globalThis.document.cookie;
+			} else if (this.refState.httpRequest?.headers) {
+				if (
+					"get" in this.refState.httpRequest.headers &&
+					typeof this.refState.httpRequest.headers.get === "function"
+				) {
+					// Web API Headers
+					cookieJar = this.refState.httpRequest.headers.get("cookie");
+				} else if ("cookie" in this.refState.httpRequest.headers) {
+					// Express-style headers
+					cookieJar = this.refState.httpRequest.headers.cookie;
+				}
+			}
+
+			if (cookieJar) {
+				previewRef = getCookie(cookie.preview, cookieJar);
 			}
 
 			if (previewRef) {
