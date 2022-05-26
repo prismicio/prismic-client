@@ -43,6 +43,10 @@ export type AbortSignalLike = {
 	dispatchEvent: any;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	onabort: any;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	reason: any;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	throwIfAborted: any;
 };
 
 /**
