@@ -2,7 +2,7 @@ import test from "ava";
 import * as msw from "msw";
 import * as mswNode from "msw/node";
 import * as sinon from "sinon";
-import { Response } from "node-fetch";
+import { Response, Headers } from "node-fetch";
 
 import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
 import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
@@ -251,6 +251,53 @@ test.serial("uses req preview ref if available", async (t) => {
 		createMockRepositoryHandler(t),
 		createMockQueryHandler(t, [queryResponse], undefined, {
 			ref: previewRef,
+		}),
+	);
+
+	const client = createTestClient(t);
+	client.enableAutoPreviewsFromReq(req);
+	const res = await client.get();
+
+	t.deepEqual(res, queryResponse);
+});
+
+test.serial("supports req with Web APIs", async (t) => {
+	const previewRef = "previewRef";
+	const headers = new Headers();
+	headers.set("cookie", `io.prismic.preview=${previewRef}`);
+	const req = {
+		headers,
+		url: "https://example.com",
+	};
+
+	const queryResponse = createQueryResponse();
+
+	server.use(
+		createMockRepositoryHandler(t),
+		createMockQueryHandler(t, [queryResponse], undefined, {
+			ref: previewRef,
+		}),
+	);
+
+	const client = createTestClient(t);
+	client.enableAutoPreviewsFromReq(req);
+	const res = await client.get();
+
+	t.deepEqual(res, queryResponse);
+});
+
+test.serial("ignores req without cookies", async (t) => {
+	const req = {
+		headers: {},
+	};
+
+	const repositoryResponse = createRepositoryResponse();
+	const queryResponse = createQueryResponse();
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse),
+		createMockQueryHandler(t, [queryResponse], undefined, {
+			ref: getMasterRef(repositoryResponse),
 		}),
 	);
 
