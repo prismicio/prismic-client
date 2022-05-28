@@ -28,7 +28,7 @@ export type FetchLike = (
  *
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal}
  */
-// `any` is used often here to ensure this type is universally valid amond
+// `any` is used often here to ensure this type is universally valid among
 // different AbortSignal implementations. The types of each property are not
 // important to validate since it is blindly passed to a given `fetch()`
 // function.
@@ -43,10 +43,6 @@ export type AbortSignalLike = {
 	dispatchEvent: any;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	onabort: any;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	reason: any;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	throwIfAborted: any;
 };
 
 /**

@@ -5,5 +5,6 @@ export default defineSirocConfig({
 		output: {
 			sourcemap: true,
 		},
+		externals: [/^node:.*/],
 	},
 });
