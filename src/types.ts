@@ -83,7 +83,6 @@ export type HttpRequestLike =
 				get(name: string): string | null;
 			};
 			url?: string;
-			query?: never;
 	  }
 
 	/**
@@ -94,7 +93,6 @@ export type HttpRequestLike =
 				cookie?: string;
 			};
 			query?: Record<string, unknown>;
-			url?: never;
 	  };
 
 /**

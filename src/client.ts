@@ -1216,17 +1216,20 @@ export class Client {
 			documentID = documentID || searchParams.get("documentId");
 			previewToken = previewToken || searchParams.get("token");
 		} else if (this.refState.httpRequest) {
-			if (this.refState.httpRequest.url) {
+			if ("query" in this.refState.httpRequest) {
+				documentID =
+					documentID || (this.refState.httpRequest.query?.documentId as string);
+				previewToken =
+					previewToken || (this.refState.httpRequest.query?.token as string);
+			} else if (
+				"url" in this.refState.httpRequest &&
+				this.refState.httpRequest.url
+			) {
 				const searchParams = new URL(this.refState.httpRequest.url)
 					.searchParams;
 
 				documentID = documentID || searchParams.get("documentId");
 				previewToken = previewToken || searchParams.get("token");
-			} else {
-				documentID =
-					documentID || (this.refState.httpRequest.query?.documentId as string);
-				previewToken =
-					previewToken || (this.refState.httpRequest.query?.token as string);
 			}
 		}
 
