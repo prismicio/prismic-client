@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.5.1](https://github.com/prismicio/prismic-client/compare/v6.5.0...v6.5.1) (2022-05-31)
+
+
+### Bug Fixes
+
+* correctly detect HTTP requests with parsed queries ([#244](https://github.com/prismicio/prismic-client/issues/244)) ([d014bc8](https://github.com/prismicio/prismic-client/commit/d014bc8420eb6602f7548df48acf559cd00968a7))
+
 ## [6.5.0](https://github.com/prismicio/prismic-client/compare/v6.4.3...v6.5.0) (2022-05-26)
 
 
