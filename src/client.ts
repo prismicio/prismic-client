@@ -1150,7 +1150,13 @@ export class Client {
 		try {
 			const tagsForm = await this.getCachedRepositoryForm("tags", params);
 
-			return await this.fetch<string[]>(tagsForm.action);
+			const url = new URL(tagsForm.action);
+
+			if (this.accessToken) {
+				url.searchParams.set("access_token", this.accessToken);
+			}
+
+			return await this.fetch<string[]>(url.toString(), params);
 		} catch {
 			const repository = await this.getRepository(params);
 
