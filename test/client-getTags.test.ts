@@ -48,6 +48,36 @@ test("uses form endpoint if available", async (t) => {
 	t.deepEqual(res, tagsResponse);
 });
 
+test("sends access token if form endpoint is used", async (t) => {
+	const tagsEndpoint = "https://example.com/tags-form-endpoint";
+	const tagsResponse = ["foo", "bar"];
+	const accessToken = "accessToken";
+
+	const repositoryResponse = createRepositoryResponse({
+		forms: {
+			tags: {
+				method: "GET",
+				action: tagsEndpoint,
+				enctype: "",
+				fields: {},
+			},
+		},
+	});
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse),
+		msw.rest.get(tagsEndpoint, (req, res, ctx) => {
+			if (req.url.searchParams.get("access_token") === accessToken) {
+				return res(ctx.json(tagsResponse));
+			}
+		}),
+	);
+
+	const client = createTestClient(t, { accessToken });
+	const res = await client.getTags();
+
+	t.deepEqual(res, tagsResponse);
+});
+
 test("is abortable with an AbortController", async (t) => {
 	const repositoryResponse = createRepositoryResponse();
 
