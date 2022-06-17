@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.6.0](https://github.com/prismicio/prismic-client/compare/v6.5.1...v6.6.0) (2022-06-17)
+
+
+### Features
+
+* declare document TypeScript types in `createClient()` ([#238](https://github.com/prismicio/prismic-client/issues/238)) ([92d8f84](https://github.com/prismicio/prismic-client/commit/92d8f84e710986b9ff476436ca036e4891854144))
+
+
+### Bug Fixes
+
+* resolve issue where `getTags()` returned an empty array for secured repositories ([#245](https://github.com/prismicio/prismic-client/issues/245)) ([b073edc](https://github.com/prismicio/prismic-client/commit/b073edccab818a12632dac3f8ac69eebb5185d56))
+
+
+### Chore
+
+* **deps:** upgrade dependencies ([ed571d7](https://github.com/prismicio/prismic-client/commit/ed571d7a167160e61acccc6eca54618c11af1c16))
+
 ### [6.5.1](https://github.com/prismicio/prismic-client/compare/v6.5.0...v6.5.1) (2022-05-31)
 
 
