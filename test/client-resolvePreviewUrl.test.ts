@@ -56,7 +56,12 @@ test.serial("resolves a preview url using a server req object", async (t) => {
 
 	const documentId = document.id;
 	const previewToken = "previewToken";
-	const req = { query: { documentId, token: previewToken } };
+	const req = {
+		query: { documentId, token: previewToken },
+		// This `url` property simulates a Next.js request. It is a
+		// partial URL only containing the pathname + search params.
+		url: `/foo?bar=baz`,
+	};
 
 	server.use(
 		createMockRepositoryHandler(t),

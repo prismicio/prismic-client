@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.5.1](https://github.com/prismicio/prismic-client/compare/v6.5.0...v6.5.1) (2022-05-31)
+
+
+### Bug Fixes
+
+* correctly detect HTTP requests with parsed queries ([#244](https://github.com/prismicio/prismic-client/issues/244)) ([d014bc8](https://github.com/prismicio/prismic-client/commit/d014bc8420eb6602f7548df48acf559cd00968a7))
+
+## [6.5.0](https://github.com/prismicio/prismic-client/compare/v6.4.3...v6.5.0) (2022-05-26)
+
+
+### Features
+
+* accept Web API Request object in `enableAutoPreviewsFromReq()` ([#240](https://github.com/prismicio/prismic-client/issues/240)) ([66e01b9](https://github.com/prismicio/prismic-client/commit/66e01b96e377881e796ec5c034bd3e045bba43b6))
+
+
+### Bug Fixes
+
+* accept `not` predicate type ([#241](https://github.com/prismicio/prismic-client/issues/241)) ([a1812fd](https://github.com/prismicio/prismic-client/commit/a1812fdcd15fae7fc660ee3667e183f8c7f407d4))
+
+
+### Chore
+
+* **deps:** upgrade dependencies ([c3bd66c](https://github.com/prismicio/prismic-client/commit/c3bd66c15d7580ec0326737ed8538e2d04d8117e))
+* remove reverted CHANGELOG entry ([f93af08](https://github.com/prismicio/prismic-client/commit/f93af0897860aec910e1149354753e07448cf0b4))
+
 ### [6.4.3](https://github.com/prismicio/prismic-client/compare/v6.4.2...v6.4.3) (2022-04-15)
 
 
