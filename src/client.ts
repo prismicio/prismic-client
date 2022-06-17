@@ -15,7 +15,7 @@ import {
 	AbortSignalLike,
 	FetchLike,
 	HttpRequestLike,
-	WeakExtract,
+	ExtractDocumentType,
 } from "./types";
 import { ForbiddenError } from "./ForbiddenError";
 import { NotFoundError } from "./NotFoundError";
@@ -713,17 +713,15 @@ export class Client<
 	 * @returns The document with a UID matching the `uid` parameter, if a
 	 *   matching document exists.
 	 */
-	getByUID<DocumentType extends TDocuments["type"]>(
-		documentType: DocumentType,
+	async getByUID<
+		TDocument extends TDocuments,
+		TDocumentType extends TDocument["type"] = TDocument["type"],
+	>(
+		documentType: TDocumentType,
 		uid: string,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
-	): Promise<WeakExtract<TDocuments, { type: DocumentType }>>;
-	async getByUID<TDocument extends TDocuments>(
-		documentType: TDocument["type"],
-		uid: string,
-		params?: Partial<BuildQueryURLArgs> & FetchParams,
-	): Promise<TDocument> {
-		return await this.getFirst<TDocument>(
+	): Promise<ExtractDocumentType<TDocuments, TDocumentType>> {
+		return await this.getFirst<ExtractDocumentType<TDocuments, TDocumentType>>(
 			appendPredicates(params, [
 				typePredicate(documentType),
 				predicate.at(`my.${documentType}.uid`, uid),
@@ -755,17 +753,15 @@ export class Client<
 	 * @returns A paginated response containing documents with UIDs matching the
 	 *   `uids` parameter.
 	 */
-	getByUIDs<DocumentType extends TDocuments["type"]>(
-		documentType: DocumentType,
+	async getByUIDs<
+		TDocument extends TDocuments,
+		TDocumentType extends TDocument["type"] = TDocument["type"],
+	>(
+		documentType: TDocumentType,
 		uids: string[],
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
-	): Promise<prismicT.Query<WeakExtract<TDocuments, { type: DocumentType }>>>;
-	async getByUIDs<TDocument extends TDocuments>(
-		documentType: TDocuments["type"],
-		uids: string[],
-		params?: Partial<BuildQueryURLArgs> & FetchParams,
-	): Promise<prismicT.Query<TDocument>> {
-		return await this.get<TDocument>(
+	): Promise<prismicT.Query<ExtractDocumentType<TDocuments, TDocumentType>>> {
+		return await this.get<ExtractDocumentType<TDocuments, TDocumentType>>(
 			appendPredicates(params, [
 				typePredicate(documentType),
 				predicate.in(`my.${documentType}.uid`, uids),
@@ -798,17 +794,17 @@ export class Client<
 	 *
 	 * @returns A list of documents with UIDs matching the `uids` parameter.
 	 */
-	getAllByUIDs<DocumentType extends TDocuments["type"]>(
-		documentType: DocumentType,
+	async getAllByUIDs<
+		TDocument extends TDocuments,
+		TDocumentType extends TDocument["type"] = TDocument["type"],
+	>(
+		documentType: TDocumentType,
 		uids: string[],
 		params?: Partial<BuildQueryURLArgs> & GetAllParams & FetchParams,
-	): Promise<WeakExtract<TDocuments, { type: DocumentType }>[]>;
-	async getAllByUIDs<TDocument extends TDocuments>(
-		documentType: TDocuments["type"],
-		uids: string[],
-		params?: Partial<BuildQueryURLArgs> & GetAllParams & FetchParams,
-	): Promise<TDocument[]> {
-		return await this.dangerouslyGetAll<TDocument>(
+	): Promise<ExtractDocumentType<TDocuments, TDocumentType>[]> {
+		return await this.dangerouslyGetAll<
+			ExtractDocumentType<TDocuments, TDocumentType>
+		>(
 			appendPredicates(params, [
 				typePredicate(documentType),
 				predicate.in(`my.${documentType}.uid`, uids),
@@ -836,15 +832,14 @@ export class Client<
 	 *
 	 * @returns The singleton document for the Custom Type, if a matching document exists.
 	 */
-	getSingle<DocumentType extends TDocuments["type"]>(
-		documentType: DocumentType,
+	async getSingle<
+		TDocument extends TDocuments,
+		TDocumentType extends TDocument["type"] = TDocument["type"],
+	>(
+		documentType: TDocumentType,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
-	): Promise<WeakExtract<TDocuments, { type: DocumentType }>>;
-	async getSingle<TDocument extends TDocuments>(
-		documentType: TDocuments["type"],
-		params?: Partial<BuildQueryURLArgs> & FetchParams,
-	): Promise<TDocument> {
-		return await this.getFirst<TDocument>(
+	): Promise<ExtractDocumentType<TDocuments, TDocumentType>> {
+		return await this.getFirst<ExtractDocumentType<TDocuments, TDocumentType>>(
 			appendPredicates(params, typePredicate(documentType)),
 		);
 	}
@@ -867,15 +862,14 @@ export class Client<
 	 *
 	 * @returns A paginated response containing documents of the Custom Type.
 	 */
-	getByType<DocumentType extends TDocuments["type"]>(
-		documentType: DocumentType,
+	async getByType<
+		TDocument extends TDocuments,
+		TDocumentType extends TDocument["type"] = TDocument["type"],
+	>(
+		documentType: TDocumentType,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
-	): Promise<prismicT.Query<WeakExtract<TDocuments, { type: DocumentType }>>>;
-	async getByType<TDocument extends TDocuments>(
-		documentType: TDocuments["type"],
-		params?: Partial<BuildQueryURLArgs> & FetchParams,
-	): Promise<prismicT.Query<TDocument>> {
-		return await this.get<TDocument>(
+	): Promise<prismicT.Query<ExtractDocumentType<TDocuments, TDocumentType>>> {
+		return await this.get<ExtractDocumentType<TDocuments, TDocumentType>>(
 			appendPredicates(params, typePredicate(documentType)),
 		);
 	}
@@ -897,21 +891,18 @@ export class Client<
 	 *
 	 * @returns A list of all documents of the Custom Type.
 	 */
-	getAllByType<DocumentType extends TDocuments["type"]>(
-		documentType: DocumentType,
+	async getAllByType<
+		TDocument extends TDocuments,
+		TDocumentType extends TDocument["type"] = TDocument["type"],
+	>(
+		documentType: TDocumentType,
 		params?: Partial<Omit<BuildQueryURLArgs, "page">> &
 			GetAllParams &
 			FetchParams,
-	): Promise<WeakExtract<TDocuments, { type: DocumentType }>[]>;
-	async getAllByType<TDocument extends TDocuments>(
-		documentType: TDocuments["type"],
-		params?: Partial<Omit<BuildQueryURLArgs, "page">> &
-			GetAllParams &
-			FetchParams,
-	): Promise<TDocument[]> {
-		return await this.dangerouslyGetAll<TDocument>(
-			appendPredicates(params, typePredicate(documentType)),
-		);
+	): Promise<ExtractDocumentType<TDocuments, TDocumentType>[]> {
+		return await this.dangerouslyGetAll<
+			ExtractDocumentType<TDocuments, TDocumentType>
+		>(appendPredicates(params, typePredicate(documentType)));
 	}
 
 	/**

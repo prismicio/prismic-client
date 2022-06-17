@@ -1,3 +1,5 @@
+import * as prismicT from "@prismicio/types";
+
 /**
  * Create a union of the given object's values, and optionally specify which
  * keys to get the values from.
@@ -19,9 +21,9 @@ export type ValueOf<
  * @example
  *
  * ```ts
- * WeakExtract<"a" | "b", "a"> // => "a"
- * WeakExtract<"a" | "b", "c"> // => "a" | "b"
- * WeakExtract<"a" | "b", "c", "foo"> // => "foo"
+ * ExtractOrFallback<"a" | "b", "a"> // => "a"
+ * ExtractOrFallback<"a" | "b", "c"> // => "a" | "b"
+ * ExtractOrFallback<"a" | "b", "c", "foo"> // => "foo"
  * ```
  *
  * @typeParam T - The union from which values will be extracted.
@@ -29,9 +31,22 @@ export type ValueOf<
  * @typeParam Fallback - The value to return if the resulting union is `never`.
  *   Defaults to `T`.
  */
-export type WeakExtract<T, U, Fallback = T> = Extract<T, U> extends never
+type ExtractOrFallback<T, U, Fallback = T> = Extract<T, U> extends never
 	? Fallback
 	: Extract<T, U>;
+
+/**
+ * Extracts one or more Prismic document types that match a given Prismic
+ * document type. If no matches are found, no extraction is performed and the
+ * union of all provided Prismic document types are returned.
+ *
+ * @typeParam TDocuments - Prismic document types from which to extract.
+ * @typeParam TDocumentType - Type(s) to match `TDocuments` against.
+ */
+export type ExtractDocumentType<
+	TDocuments extends prismicT.PrismicDocument,
+	TDocumentType extends TDocuments["type"],
+> = ExtractOrFallback<TDocuments, { type: TDocumentType }>;
 
 /**
  * A universal API to make network requests. A subset of the `fetch()` API.
