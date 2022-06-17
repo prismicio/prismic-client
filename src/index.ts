@@ -37,7 +37,7 @@ export { NotFoundError } from "./NotFoundError";
 export * as cookie from "./cookie";
 
 // General types used throughout the project. These are made public to allow users to better type their projects.
-export type { ClientConfig } from "./client";
+export type { CreateClient, ClientConfig } from "./client";
 export type { QueryParams, BuildQueryURLArgs } from "./buildQueryURL";
 export type {
 	FetchLike,
