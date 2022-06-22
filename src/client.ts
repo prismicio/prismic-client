@@ -720,8 +720,8 @@ export class Client<
 		documentType: TDocumentType,
 		uid: string,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
-	): Promise<ExtractDocumentType<TDocuments, TDocumentType>> {
-		return await this.getFirst<ExtractDocumentType<TDocuments, TDocumentType>>(
+	): Promise<ExtractDocumentType<TDocument, TDocumentType>> {
+		return await this.getFirst<ExtractDocumentType<TDocument, TDocumentType>>(
 			appendPredicates(params, [
 				typePredicate(documentType),
 				predicate.at(`my.${documentType}.uid`, uid),
@@ -760,8 +760,8 @@ export class Client<
 		documentType: TDocumentType,
 		uids: string[],
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
-	): Promise<prismicT.Query<ExtractDocumentType<TDocuments, TDocumentType>>> {
-		return await this.get<ExtractDocumentType<TDocuments, TDocumentType>>(
+	): Promise<prismicT.Query<ExtractDocumentType<TDocument, TDocumentType>>> {
+		return await this.get<ExtractDocumentType<TDocument, TDocumentType>>(
 			appendPredicates(params, [
 				typePredicate(documentType),
 				predicate.in(`my.${documentType}.uid`, uids),
@@ -801,9 +801,9 @@ export class Client<
 		documentType: TDocumentType,
 		uids: string[],
 		params?: Partial<BuildQueryURLArgs> & GetAllParams & FetchParams,
-	): Promise<ExtractDocumentType<TDocuments, TDocumentType>[]> {
+	): Promise<ExtractDocumentType<TDocument, TDocumentType>[]> {
 		return await this.dangerouslyGetAll<
-			ExtractDocumentType<TDocuments, TDocumentType>
+			ExtractDocumentType<TDocument, TDocumentType>
 		>(
 			appendPredicates(params, [
 				typePredicate(documentType),
@@ -838,8 +838,8 @@ export class Client<
 	>(
 		documentType: TDocumentType,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
-	): Promise<ExtractDocumentType<TDocuments, TDocumentType>> {
-		return await this.getFirst<ExtractDocumentType<TDocuments, TDocumentType>>(
+	): Promise<ExtractDocumentType<TDocument, TDocumentType>> {
+		return await this.getFirst<ExtractDocumentType<TDocument, TDocumentType>>(
 			appendPredicates(params, typePredicate(documentType)),
 		);
 	}
@@ -868,8 +868,8 @@ export class Client<
 	>(
 		documentType: TDocumentType,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
-	): Promise<prismicT.Query<ExtractDocumentType<TDocuments, TDocumentType>>> {
-		return await this.get<ExtractDocumentType<TDocuments, TDocumentType>>(
+	): Promise<prismicT.Query<ExtractDocumentType<TDocument, TDocumentType>>> {
+		return await this.get<ExtractDocumentType<TDocument, TDocumentType>>(
 			appendPredicates(params, typePredicate(documentType)),
 		);
 	}
@@ -899,9 +899,9 @@ export class Client<
 		params?: Partial<Omit<BuildQueryURLArgs, "page">> &
 			GetAllParams &
 			FetchParams,
-	): Promise<ExtractDocumentType<TDocuments, TDocumentType>[]> {
+	): Promise<ExtractDocumentType<TDocument, TDocumentType>[]> {
 		return await this.dangerouslyGetAll<
-			ExtractDocumentType<TDocuments, TDocumentType>
+			ExtractDocumentType<TDocument, TDocumentType>
 		>(appendPredicates(params, typePredicate(documentType)));
 	}
 
