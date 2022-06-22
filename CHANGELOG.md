@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.6.1](https://github.com/prismicio/prismic-client/compare/v6.6.0...v6.6.1) (2022-06-22)
+
+
+### Bug Fixes
+
+* restore previous explicit document type parameter handling (fixes [#246](https://github.com/prismicio/prismic-client/issues/246)) ([#247](https://github.com/prismicio/prismic-client/issues/247)) ([6a33564](https://github.com/prismicio/prismic-client/commit/6a33564244c1e38ad79d2514188bdc9a92d23e2b))
+
 ## [6.6.0](https://github.com/prismicio/prismic-client/compare/v6.5.1...v6.6.0) (2022-06-17)
 
 
