@@ -26,6 +26,7 @@ test("queries for document by ID", async (t) => {
 		createMockQueryHandler(t, [queryResponse], undefined, {
 			ref: getMasterRef(repositoryResponse),
 			q: `[[at(document.id, "${document.id}")]]`,
+			pageSize: 1,
 		}),
 	);
 
@@ -51,6 +52,7 @@ test("includes params if provided", async (t) => {
 			ref: params.ref as string,
 			q: `[[at(document.id, "${document.id}")]]`,
 			lang: params.lang,
+			pageSize: 1,
 		}),
 	);
 

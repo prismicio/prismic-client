@@ -531,7 +531,12 @@ export class Client<
 	async getFirst<TDocument extends TDocuments>(
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<TDocument> {
-		const url = await this.buildQueryURL(params);
+		const url = await this.buildQueryURL({
+			pageSize:
+				this.defaultParams?.pageSize ||
+				(params && "page" in params ? undefined : 1),
+			...params,
+		});
 		const result = await this.fetch<prismicT.Query<TDocument>>(url, params);
 
 		const firstResult = result.results[0];

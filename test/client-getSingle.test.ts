@@ -26,6 +26,7 @@ test("queries for singleton document", async (t) => {
 		createMockQueryHandler(t, [queryResponse], undefined, {
 			ref: getMasterRef(repositoryResponse),
 			q: `[[at(document.type, "${document.type}")]]`,
+			pageSize: 1,
 		}),
 	);
 
@@ -51,6 +52,7 @@ test("includes params if provided", async (t) => {
 			ref: params.ref as string,
 			q: `[[at(document.type, "${document.type}")]]`,
 			lang: params.lang,
+			pageSize: 1,
 		}),
 	);
 
