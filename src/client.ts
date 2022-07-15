@@ -392,7 +392,7 @@ export class Client<
 		if (typeof options.fetch === "function") {
 			this.fetchFn = options.fetch;
 		} else if (typeof globalThis.fetch === "function") {
-			this.fetchFn = globalThis.fetch;
+			this.fetchFn = globalThis.fetch as FetchLike;
 		} else {
 			throw new PrismicError(
 				"A valid fetch implementation was not provided. In environments where fetch is not available (including Node.js), a fetch implementation must be provided via a polyfill or the `fetch` option.",
