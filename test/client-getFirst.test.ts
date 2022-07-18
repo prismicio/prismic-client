@@ -26,6 +26,7 @@ test("returns the first document from a response", async (t) => {
 		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, [queryResponse], undefined, {
 			ref: getMasterRef(repositoryResponse),
+			pageSize: 1,
 		}),
 	);
 
@@ -50,6 +51,7 @@ test("includes params if provided", async (t) => {
 		createMockQueryHandler(t, [queryResponse], params.accessToken, {
 			ref: params.ref as string,
 			lang: params.lang,
+			pageSize: 1,
 		}),
 	);
 
@@ -74,6 +76,7 @@ test("includes default params if provided", async (t) => {
 		createMockQueryHandler(t, [queryResponse], clientOptions.accessToken, {
 			ref: clientOptions.ref as string,
 			lang: clientOptions.defaultParams?.lang,
+			pageSize: 1,
 		}),
 	);
 
@@ -87,7 +90,7 @@ test("merges params and default params if provided", async (t) => {
 	const clientOptions: prismic.ClientConfig = {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
-		defaultParams: { lang: "*", page: 2 },
+		defaultParams: { lang: "*", pageSize: 10 },
 	};
 	const params: prismic.BuildQueryURLArgs = {
 		ref: "overridden-ref",
@@ -106,13 +109,43 @@ test("merges params and default params if provided", async (t) => {
 			{
 				ref: params.ref,
 				lang: params.lang,
-				page: clientOptions.defaultParams?.page,
+				pageSize: clientOptions.defaultParams?.pageSize,
 			},
 		),
 	);
 
 	const client = createTestClient(t, clientOptions);
 	const res = await client.getFirst(params);
+
+	t.deepEqual(res, doc1);
+});
+
+test("ignores default pageSize=1 param if a page param is given", async (t) => {
+	const repositoryResponse = createRepositoryResponse();
+	const doc1 = createDocument();
+	const doc2 = createDocument();
+	const queryResponse = createQueryResponse([doc1, doc2]);
+
+	server.use(
+		createMockRepositoryHandler(t, repositoryResponse),
+		createMockQueryHandler(
+			t,
+			[
+				// The empty object represents the first page,
+				// which is not used in the query.
+				{},
+				queryResponse,
+			],
+			undefined,
+			{
+				ref: getMasterRef(repositoryResponse),
+				page: 2,
+			},
+		),
+	);
+
+	const client = createTestClient(t);
+	const res = await client.getFirst({ page: 2 });
 
 	t.deepEqual(res, doc1);
 });
@@ -125,6 +158,7 @@ test("throws if no documents were returned", async (t) => {
 		createMockRepositoryHandler(t, repositoryResponse),
 		createMockQueryHandler(t, [queryResponse], undefined, {
 			ref: getMasterRef(repositoryResponse),
+			pageSize: 1,
 		}),
 	);
 

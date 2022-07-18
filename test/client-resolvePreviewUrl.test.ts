@@ -35,6 +35,7 @@ test.serial("resolves a preview url in the browser", async (t) => {
 			ref: previewToken,
 			q: `[[at(document.id, "${documentId}")]]`,
 			lang: "*",
+			pageSize: 1,
 		}),
 	);
 
@@ -69,6 +70,7 @@ test.serial("resolves a preview url using a server req object", async (t) => {
 			ref: previewToken,
 			q: `[[at(document.id, "${documentId}")]]`,
 			lang: "*",
+			pageSize: 1,
 		}),
 	);
 
@@ -106,6 +108,7 @@ test.serial(
 				ref: previewToken,
 				q: `[[at(document.id, "${documentId}")]]`,
 				lang: "*",
+				pageSize: 1,
 			}),
 		);
 
@@ -141,6 +144,7 @@ test.serial(
 				ref: previewToken,
 				q: `[[at(document.id, "${documentID}")]]`,
 				lang: "*",
+				pageSize: 1,
 			}),
 		);
 
@@ -225,6 +229,7 @@ test.serial("returns defaultURL if resolved URL is not a string", async (t) => {
 			ref: previewToken,
 			q: `[[at(document.id, "${documentID}")]]`,
 			lang: "*",
+			pageSize: 1,
 		}),
 	);
 
