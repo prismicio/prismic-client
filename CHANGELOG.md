@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.6.2](https://github.com/prismicio/prismic-client/compare/v6.6.1...v6.6.2) (2022-07-21)
+
+
+### Bug Fixes
+
+* adjust `AbortSignalLike` to support native `AbortSignal` ([#250](https://github.com/prismicio/prismic-client/issues/250)) ([62fdae1](https://github.com/prismicio/prismic-client/commit/62fdae146912b2125691881a54595d124bcfdd02))
+
+
+### Refactor
+
+* optimize `getFirst()` and dependent methods ([#249](https://github.com/prismicio/prismic-client/issues/249)) ([ed06cec](https://github.com/prismicio/prismic-client/commit/ed06cec83e8b4d78bf73cf7a6dfce9311c586f6c))
+
 ### [6.6.1](https://github.com/prismicio/prismic-client/compare/v6.6.0...v6.6.1) (2022-06-22)
 
 
