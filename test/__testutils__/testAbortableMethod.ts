@@ -1,5 +1,6 @@
 import { it, expect } from "vitest";
 import * as mswNode from "msw/node";
+import AbortController from "abort-controller";
 
 import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2";
 import { createTestClient } from "./createClient";
