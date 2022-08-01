@@ -2,6 +2,56 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.6.3](https://github.com/prismicio/prismic-client/compare/v6.6.2...v6.6.3) (2022-07-26)
+
+
+### Chore
+
+* **deps:** upgrade dependencies ([#251](https://github.com/prismicio/prismic-client/issues/251)) ([25918ab](https://github.com/prismicio/prismic-client/commit/25918abf7eb453e0f45bb7d80f0e83a1244feaa9))
+
+### [6.6.2](https://github.com/prismicio/prismic-client/compare/v6.6.1...v6.6.2) (2022-07-21)
+
+
+### Bug Fixes
+
+* adjust `AbortSignalLike` to support native `AbortSignal` ([#250](https://github.com/prismicio/prismic-client/issues/250)) ([62fdae1](https://github.com/prismicio/prismic-client/commit/62fdae146912b2125691881a54595d124bcfdd02))
+
+
+### Refactor
+
+* optimize `getFirst()` and dependent methods ([#249](https://github.com/prismicio/prismic-client/issues/249)) ([ed06cec](https://github.com/prismicio/prismic-client/commit/ed06cec83e8b4d78bf73cf7a6dfce9311c586f6c))
+
+### [6.6.1](https://github.com/prismicio/prismic-client/compare/v6.6.0...v6.6.1) (2022-06-22)
+
+
+### Bug Fixes
+
+* restore previous explicit document type parameter handling (fixes [#246](https://github.com/prismicio/prismic-client/issues/246)) ([#247](https://github.com/prismicio/prismic-client/issues/247)) ([6a33564](https://github.com/prismicio/prismic-client/commit/6a33564244c1e38ad79d2514188bdc9a92d23e2b))
+
+## [6.6.0](https://github.com/prismicio/prismic-client/compare/v6.5.1...v6.6.0) (2022-06-17)
+
+
+### Features
+
+* declare document TypeScript types in `createClient()` ([#238](https://github.com/prismicio/prismic-client/issues/238)) ([92d8f84](https://github.com/prismicio/prismic-client/commit/92d8f84e710986b9ff476436ca036e4891854144))
+
+
+### Bug Fixes
+
+* resolve issue where `getTags()` returned an empty array for secured repositories ([#245](https://github.com/prismicio/prismic-client/issues/245)) ([b073edc](https://github.com/prismicio/prismic-client/commit/b073edccab818a12632dac3f8ac69eebb5185d56))
+
+
+### Chore
+
+* **deps:** upgrade dependencies ([ed571d7](https://github.com/prismicio/prismic-client/commit/ed571d7a167160e61acccc6eca54618c11af1c16))
+
+### [6.5.1](https://github.com/prismicio/prismic-client/compare/v6.5.0...v6.5.1) (2022-05-31)
+
+
+### Bug Fixes
+
+* correctly detect HTTP requests with parsed queries ([#244](https://github.com/prismicio/prismic-client/issues/244)) ([d014bc8](https://github.com/prismicio/prismic-client/commit/d014bc8420eb6602f7548df48acf559cd00968a7))
+
 ## [6.5.0](https://github.com/prismicio/prismic-client/compare/v6.4.3...v6.5.0) (2022-05-26)
 
 

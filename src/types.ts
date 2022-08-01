@@ -1,3 +1,5 @@
+import * as prismicT from "@prismicio/types";
+
 /**
  * Create a union of the given object's values, and optionally specify which
  * keys to get the values from.
@@ -11,6 +13,40 @@ export type ValueOf<
 	ObjectType,
 	ValueType extends keyof ObjectType = keyof ObjectType,
 > = ObjectType[ValueType];
+
+/**
+ * Functions like TypeScript's native `Extract` utility type with added support
+ * to fall back to a value if the resulting union is `never`.
+ *
+ * @example
+ *
+ * ```ts
+ * ExtractOrFallback<"a" | "b", "a"> // => "a"
+ * ExtractOrFallback<"a" | "b", "c"> // => "a" | "b"
+ * ExtractOrFallback<"a" | "b", "c", "foo"> // => "foo"
+ * ```
+ *
+ * @typeParam T - The union from which values will be extracted.
+ * @typeParam U - The extraction condition.
+ * @typeParam Fallback - The value to return if the resulting union is `never`.
+ *   Defaults to `T`.
+ */
+type ExtractOrFallback<T, U, Fallback = T> = Extract<T, U> extends never
+	? Fallback
+	: Extract<T, U>;
+
+/**
+ * Extracts one or more Prismic document types that match a given Prismic
+ * document type. If no matches are found, no extraction is performed and the
+ * union of all provided Prismic document types are returned.
+ *
+ * @typeParam TDocuments - Prismic document types from which to extract.
+ * @typeParam TDocumentType - Type(s) to match `TDocuments` against.
+ */
+export type ExtractDocumentType<
+	TDocuments extends prismicT.PrismicDocument,
+	TDocumentType extends TDocuments["type"],
+> = ExtractOrFallback<TDocuments, { type: TDocumentType }>;
 
 /**
  * A universal API to make network requests. A subset of the `fetch()` API.
@@ -79,7 +115,6 @@ export type HttpRequestLike =
 				get(name: string): string | null;
 			};
 			url?: string;
-			query?: never;
 	  }
 
 	/**
@@ -90,7 +125,6 @@ export type HttpRequestLike =
 				cookie?: string;
 			};
 			query?: Record<string, unknown>;
-			url?: never;
 	  };
 
 /**

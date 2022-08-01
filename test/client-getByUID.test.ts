@@ -29,6 +29,7 @@ test("queries for document by UID", async (t) => {
 				`[[at(document.type, "${document.type}")]]`,
 				`[[at(my.${document.type}.uid, "${document.uid}")]]`,
 			],
+			pageSize: 1,
 		}),
 	);
 
@@ -57,6 +58,7 @@ test("includes params if provided", async (t) => {
 				`[[at(my.${document.type}.uid, "${document.uid}")]]`,
 			],
 			lang: params.lang,
+			pageSize: 1,
 		}),
 	);
 
