@@ -1,11 +1,8 @@
-import test from "ava";
-
-import { isTitleMacro } from "./__testutils__/isTitleMacro";
+import { testPredicate } from "./__testutils__/testPredicate";
 
 import * as prismic from "../src";
 
-test(
+testPredicate(
 	'[similar("VkRmhykAAFA6PoBj", 10)]',
-	isTitleMacro,
 	prismic.predicate.similar("VkRmhykAAFA6PoBj", 10),
 );

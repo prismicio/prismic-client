@@ -1,57 +1,49 @@
-import test from "ava";
+import { it, expect, beforeAll, afterAll } from "vitest";
 import * as mswNode from "msw/node";
-import AbortController from "abort-controller";
 
-import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
-import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
-import { createTestClient } from "./__testutils__/createClient";
 import { createRef } from "./__testutils__/createRef";
+import { createTestClient } from "./__testutils__/createClient";
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
+import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 
 import * as prismic from "../src";
 
 const server = mswNode.setupServer();
-test.before(() => server.listen({ onUnhandledRequest: "error" }));
-test.after(() => server.close());
+beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
+afterAll(() => server.close());
 
-test("returns a ref by label", async (t) => {
+it("returns a ref by label", async () => {
 	const ref1 = createRef(true);
 	const ref2 = createRef(false);
 	const response = createRepositoryResponse({ refs: [ref1, ref2] });
-	server.use(createMockRepositoryHandler(t, response));
+	mockPrismicRestAPIV2({
+		repositoryHandler: () => response,
+		server,
+	});
 
-	const client = createTestClient(t);
+	const client = createTestClient();
 	const res = await client.getRefByLabel(ref2.label);
 
-	t.deepEqual(res, ref2);
+	expect(res).toStrictEqual(ref2);
 });
 
-test("throws if ref could not be found", async (t) => {
-	server.use(createMockRepositoryHandler(t));
-
-	const client = createTestClient(t);
-
-	await t.throwsAsync(async () => await client.getRefByLabel("non-existant"), {
-		instanceOf: prismic.PrismicError,
-		message: /could not be found/i,
+it("throws if ref could not be found", async () => {
+	mockPrismicRestAPIV2({
+		server,
 	});
+
+	const client = createTestClient();
+
+	await expect(() => client.getRefByLabel("non-existant")).rejects.toThrowError(
+		/could not be found/i,
+	);
+	await expect(() => client.getRefByLabel("non-existant")).rejects.toThrowError(
+		prismic.PrismicError,
+	);
 });
 
-test("is abortable with an AbortController", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-
-	server.use(createMockRepositoryHandler(t, repositoryResponse));
-
-	const client = createTestClient(t);
-
-	await t.throwsAsync(
-		async () => {
-			const controller = new AbortController();
-			controller.abort();
-
-			await client.getRefByLabel("label", {
-				signal: controller.signal,
-			});
-		},
-		{ name: "AbortError" },
-	);
+testAbortableMethod("is abortable with an AbortController", {
+	run: (client, signal) => client.getRefByLabel("label", { signal }),
+	server,
 });

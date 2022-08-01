@@ -1,30 +1,30 @@
-import test from "ava";
+import { it, expect } from "vitest";
 
 import * as prismic from "../src";
 
 const endpoint = prismic.getRepositoryEndpoint("qwerty");
 
-test("includes ref", (t) => {
-	t.is(
-		prismic.buildQueryURL(endpoint, { ref: "ref" }),
+it("includes ref", () => {
+	expect(prismic.buildQueryURL(endpoint, { ref: "ref" })).toBe(
 		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref",
 	);
 });
 
-test("supports single predicate", (t) => {
-	t.is(
+it("supports single predicate", () => {
+	expect(
 		decodeURIComponent(
 			prismic.buildQueryURL(endpoint, {
 				ref: "ref",
 				predicates: prismic.predicate.has("my.document.title"),
 			}),
 		),
+	).toBe(
 		"https://qwerty.cdn.prismic.io/api/v2/documents/search?q=[[has(my.document.title)]]&ref=ref",
 	);
 });
 
-test("supports multiple predicates", (t) => {
-	t.is(
+it("supports multiple predicates", () => {
+	expect(
 		decodeURIComponent(
 			prismic.buildQueryURL(endpoint, {
 				ref: "ref",
@@ -34,12 +34,13 @@ test("supports multiple predicates", (t) => {
 				],
 			}),
 		),
+	).toBe(
 		"https://qwerty.cdn.prismic.io/api/v2/documents/search?q=[[has(my.document.title)]]&q=[[has(my.document.subtitle)]]&ref=ref",
 	);
 });
 
-test("supports params", (t) => {
-	t.is(
+it("supports params", () => {
+	expect(
 		decodeURIComponent(
 			prismic.buildQueryURL(endpoint, {
 				ref: "ref",
@@ -55,12 +56,13 @@ test("supports params", (t) => {
 				routes: "routes",
 			}),
 		),
+	).toBe(
 		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&access_token=accessToken&pageSize=1&page=1&after=after&fetch=fetch&fetchLinks=fetchLinks&graphQuery=graphQuery&lang=lang&orderings=[orderings]&routes=routes",
 	);
 });
 
-test("ignores nullish params", (t) => {
-	t.is(
+it("ignores nullish params", () => {
+	expect(
 		decodeURIComponent(
 			prismic.buildQueryURL(endpoint, {
 				ref: "ref",
@@ -75,80 +77,85 @@ test("ignores nullish params", (t) => {
 				orderings: undefined,
 			}),
 		),
-		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref",
-	);
+	).toBe("https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref");
 });
 
-test("supports array fetch param", (t) => {
-	t.is(
+it("supports array fetch param", () => {
+	expect(
 		decodeURIComponent(
 			prismic.buildQueryURL(endpoint, {
 				ref: "ref",
 				fetch: ["title", "subtitle"],
 			}),
 		),
+	).toBe(
 		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&fetch=title,subtitle",
 	);
 });
 
-test("supports array fetchLinks param", (t) => {
-	t.is(
+it("supports array fetchLinks param", () => {
+	expect(
 		decodeURIComponent(
 			prismic.buildQueryURL(endpoint, {
 				ref: "ref",
 				fetchLinks: ["page.link", "page.second_link"],
 			}),
 		),
+	).toBe(
 		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&fetchLinks=page.link,page.second_link",
 	);
 });
 
-test("supports empty orderings param", (t) => {
-	t.is(
+it("supports empty orderings param", () => {
+	expect(
 		decodeURIComponent(
 			prismic.buildQueryURL(endpoint, {
 				ref: "ref",
 				orderings: "",
 			}),
 		),
+	).toBe(
 		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[]",
 	);
 
-	t.is(
+	expect(
 		decodeURIComponent(
 			prismic.buildQueryURL(endpoint, {
 				ref: "ref",
 				orderings: [],
 			}),
 		),
+	).toBe(
 		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[]",
 	);
 });
 
-test("supports array orderings param", (t) => {
-	t.is(
+it("supports array orderings param", () => {
+	expect(
 		decodeURIComponent(
 			prismic.buildQueryURL(endpoint, {
 				ref: "ref",
 				orderings: ["page.title", { field: "page.subtitle" }],
 			}),
 		),
+	).toBe(
 		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[page.title,page.subtitle]",
 	);
 });
 
-test("supports setting direction of ordering param", (t) => {
-	t.is(
+it("supports setting direction of ordering param", () => {
+	expect(
 		decodeURIComponent(
 			prismic.buildQueryURL(endpoint, {
 				ref: "ref",
 				orderings: ["page.title", { field: "page.subtitle", direction: "asc" }],
 			}),
 		),
+	).toBe(
 		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[page.title,page.subtitle]",
 	);
 
-	t.is(
+	expect(
 		decodeURIComponent(
 			prismic.buildQueryURL(endpoint, {
 				ref: "ref",
@@ -158,31 +165,33 @@ test("supports setting direction of ordering param", (t) => {
 				],
 			}),
 		),
+	).toBe(
 		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[page.title,page.subtitle+desc]",
 	);
 });
 
-test("supports single item routes param", (t) => {
+it("supports single item routes param", () => {
 	const route = {
 		type: "type",
 		path: "path",
 		resolvers: { foo: "bar" },
 	};
 
-	t.is(
+	expect(
 		decodeURIComponent(
 			prismic.buildQueryURL(endpoint, {
 				ref: "ref",
 				routes: route,
 			}),
 		),
+	).toBe(
 		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&routes=[${JSON.stringify(
 			route,
 		)}]`,
 	);
 });
 
-test("supports array routes param", (t) => {
+it("supports array routes param", () => {
 	const routes: prismic.Route[] = [
 		{
 			type: "foo",
@@ -196,13 +205,14 @@ test("supports array routes param", (t) => {
 		},
 	];
 
-	t.is(
+	expect(
 		decodeURIComponent(
 			prismic.buildQueryURL(endpoint, {
 				ref: "ref",
 				routes: routes,
 			}),
 		),
+	).toBe(
 		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&routes=${JSON.stringify(
 			routes,
 		)}`,

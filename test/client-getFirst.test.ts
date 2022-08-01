@@ -1,197 +1,108 @@
-import test from "ava";
+import { it, expect, beforeAll, afterAll } from "vitest";
 import * as mswNode from "msw/node";
-import AbortController from "abort-controller";
 
-import { createDocument } from "./__testutils__/createDocument";
-import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
-import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
-import { createQueryResponse } from "./__testutils__/createQueryResponse";
-import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
+import * as prismicM from "@prismicio/mock";
+
+import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod";
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createTestClient } from "./__testutils__/createClient";
-import { getMasterRef } from "./__testutils__/getMasterRef";
 
 import * as prismic from "../src";
 
 const server = mswNode.setupServer();
-test.before(() => server.listen({ onUnhandledRequest: "error" }));
-test.after(() => server.close());
+beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
+afterAll(() => server.close());
 
-test("returns the first document from a response", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-	const doc1 = createDocument();
-	const doc2 = createDocument();
-	const queryResponse = createQueryResponse([doc1, doc2]);
-
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: getMasterRef(repositoryResponse),
-			pageSize: 1,
-		}),
-	);
-
-	const client = createTestClient(t);
-	const res = await client.getFirst();
-
-	t.deepEqual(res, doc1);
+testGetFirstMethod("returns the first document from a response", {
+	run: (client) => client.getFirst(),
+	server,
 });
 
-test("includes params if provided", async (t) => {
-	const params: prismic.BuildQueryURLArgs = {
-		accessToken: "custom-accessToken",
+testGetFirstMethod("includes params if provided", {
+	run: (client) =>
+		client.getFirst({
+			accessToken: "custom-accessToken",
+			ref: "custom-ref",
+			lang: "*",
+		}),
+	requiredParams: {
+		access_token: "custom-accessToken",
 		ref: "custom-ref",
 		lang: "*",
-	};
-	const doc1 = createDocument();
-	const doc2 = createDocument();
-	const queryResponse = createQueryResponse([doc1, doc2]);
-
-	server.use(
-		createMockRepositoryHandler(t),
-		createMockQueryHandler(t, [queryResponse], params.accessToken, {
-			ref: params.ref as string,
-			lang: params.lang,
-			pageSize: 1,
-		}),
-	);
-
-	const client = createTestClient(t);
-	const res = await client.getFirst(params);
-
-	t.deepEqual(res, doc1);
+	},
+	server,
 });
 
-test("includes default params if provided", async (t) => {
-	const clientOptions: prismic.ClientConfig = {
-		accessToken: "custom-accessToken",
-		ref: "custom-ref",
-		defaultParams: { lang: "*" },
-	};
-	const doc1 = createDocument();
-	const doc2 = createDocument();
-	const queryResponse = createQueryResponse([doc1, doc2]);
-
-	server.use(
-		createMockRepositoryHandler(t),
-		createMockQueryHandler(t, [queryResponse], clientOptions.accessToken, {
-			ref: clientOptions.ref as string,
-			lang: clientOptions.defaultParams?.lang,
-			pageSize: 1,
-		}),
-	);
-
-	const client = createTestClient(t, clientOptions);
-	const res = await client.getFirst();
-
-	t.deepEqual(res, doc1);
+testGetFirstMethod("includes default params if provided", {
+	run: (client) => client.getFirst(),
+	clientConfig: {
+		defaultParams: {
+			lang: "*",
+		},
+	},
+	requiredParams: {
+		lang: "*",
+	},
+	server,
 });
 
-test("merges params and default params if provided", async (t) => {
-	const clientOptions: prismic.ClientConfig = {
+testGetFirstMethod("merges params and default params if provided", {
+	run: (client) =>
+		client.getFirst({
+			accessToken: "overridden-accessToken",
+			ref: "overridden-ref",
+			lang: "fr-fr",
+		}),
+	clientConfig: {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
-		defaultParams: { lang: "*", pageSize: 10 },
-	};
-	const params: prismic.BuildQueryURLArgs = {
+		defaultParams: {
+			lang: "*",
+		},
+	},
+	requiredParams: {
+		access_token: "overridden-accessToken",
 		ref: "overridden-ref",
 		lang: "fr-fr",
-	};
-	const doc1 = createDocument();
-	const doc2 = createDocument();
-	const queryResponse = createQueryResponse([doc1, doc2]);
-
-	server.use(
-		createMockRepositoryHandler(t),
-		createMockQueryHandler(
-			t,
-			[queryResponse, queryResponse],
-			clientOptions.accessToken,
-			{
-				ref: params.ref,
-				lang: params.lang,
-				pageSize: clientOptions.defaultParams?.pageSize,
-			},
-		),
-	);
-
-	const client = createTestClient(t, clientOptions);
-	const res = await client.getFirst(params);
-
-	t.deepEqual(res, doc1);
+	},
+	server,
 });
 
-test("ignores default pageSize=1 param if a page param is given", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-	const doc1 = createDocument();
-	const doc2 = createDocument();
-	const queryResponse = createQueryResponse([doc1, doc2]);
-
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(
-			t,
-			[
-				// The empty object represents the first page,
-				// which is not used in the query.
-				{},
-				queryResponse,
-			],
-			undefined,
-			{
-				ref: getMasterRef(repositoryResponse),
-				page: 2,
-			},
-		),
-	);
-
-	const client = createTestClient(t);
-	const res = await client.getFirst({ page: 2 });
-
-	t.deepEqual(res, doc1);
-});
-
-test("throws if no documents were returned", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-	const queryResponse = createQueryResponse([]);
-
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: getMasterRef(repositoryResponse),
-			pageSize: 1,
-		}),
-	);
-
-	const client = createTestClient(t);
-
-	await t.throwsAsync(async () => client.getFirst(), {
-		instanceOf: prismic.PrismicError,
-		message: /no documents were returned/i,
-	});
-});
-
-test("is abortable with an AbortController", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-	const queryResponse = createQueryResponse();
-
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: getMasterRef(repositoryResponse),
-		}),
-	);
-
-	const client = createTestClient(t);
-
-	await t.throwsAsync(
-		async () => {
-			const controller = new AbortController();
-			controller.abort();
-
-			await client.getFirst({
-				signal: controller.signal,
-			});
+testGetFirstMethod(
+	"ignores default pageSize=1 param if a page param is given",
+	{
+		run: (client) =>
+			client.getFirst({
+				pageSize: 2,
+			}),
+		requiredParams: {
+			pageSize: "2",
 		},
-		{ name: "AbortError" },
+		server,
+	},
+);
+
+it("throws if no documents were returned", async (ctx) => {
+	mockPrismicRestAPIV2({
+		server,
+		queryResponse: prismicM.api.query({
+			seed: ctx.meta.name,
+			documents: [],
+		}),
+	});
+
+	const client = createTestClient();
+
+	await expect(() => client.getFirst()).rejects.toThrowError(
+		/no documents were returned/i,
 	);
+	await expect(() => client.getFirst()).rejects.toThrowError(
+		prismic.PrismicError,
+	);
+});
+
+testAbortableMethod("is abortable with an AbortController", {
+	run: (client, signal) => client.getFirst({ signal }),
+	server,
 });

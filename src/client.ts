@@ -595,7 +595,7 @@ export class Client<
 			latestResult = await this.get<TDocument>({ ...resolvedParams, page });
 			documents.push(...latestResult.results);
 
-			if (latestResult.next_page && process.env.NODE_ENV !== "test") {
+			if (latestResult.next_page) {
 				await new Promise((res) => setTimeout(res, GET_ALL_QUERY_DELAY));
 			}
 		}
@@ -1395,7 +1395,7 @@ export class Client<
 	/**
 	 * @deprecated Renamed to `graphQLFetch()` (note the capitalization of "QL").
 	 */
-	// TODO: Remove in v3
+	// TODO: Remove in v7
 	graphqlFetch = this.graphQLFetch.bind(this);
 
 	/**

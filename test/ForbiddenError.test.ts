@@ -1,8 +1,8 @@
-import test from "ava";
+import { it, expect } from "vitest";
 
 import * as prismic from "../src";
 
-test("contains the request url and error properties", (t) => {
+it("contains the request url and error properties", () => {
 	const message = "message";
 	const url = "url";
 	const response = {
@@ -12,7 +12,7 @@ test("contains the request url and error properties", (t) => {
 	} as const;
 	const error = new prismic.ForbiddenError(message, url, response);
 
-	t.is(error.url, url);
-	t.is(error.message, message);
-	t.is(error.response, response);
+	expect(error.message).toBe(message);
+	expect(error.url).toBe(url);
+	expect(error.response).toStrictEqual(response);
 });

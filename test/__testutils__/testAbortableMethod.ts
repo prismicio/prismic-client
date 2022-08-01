@@ -1,4 +1,4 @@
-import { test, expect } from "vitest";
+import { it, expect } from "vitest";
 import * as mswNode from "msw/node";
 
 import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2";
@@ -15,7 +15,7 @@ export const testAbortableMethod = (
 	description: string,
 	args: TestAbortableMethodArgs,
 ) => {
-	test.concurrent(description, async () => {
+	it.concurrent(description, async () => {
 		const controller = new AbortController();
 		controller.abort();
 

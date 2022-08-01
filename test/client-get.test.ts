@@ -1,137 +1,69 @@
-import test from "ava";
+import { beforeAll, afterAll } from "vitest";
 import * as mswNode from "msw/node";
-import AbortController from "abort-controller";
 
-import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
-import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
-import { createQueryResponse } from "./__testutils__/createQueryResponse";
-import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
-import { createTestClient } from "./__testutils__/createClient";
-import { getMasterRef } from "./__testutils__/getMasterRef";
-
-import * as prismic from "../src";
+import { testGetMethod } from "./__testutils__/testAnyGetMethod";
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 
 const server = mswNode.setupServer();
-test.before(() => server.listen({ onUnhandledRequest: "error" }));
-test.after(() => server.close());
+beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
+afterAll(() => server.close());
 
-test("resolves a query", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-	const queryResponse = createQueryResponse();
-
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: getMasterRef(repositoryResponse),
-		}),
-	);
-
-	const client = createTestClient(t);
-	const res = await client.get();
-
-	t.deepEqual(res, queryResponse);
+testGetMethod("resolves a query", {
+	run: (client) => client.get(),
+	server,
 });
 
-test("includes params if provided", async (t) => {
-	const params: prismic.BuildQueryURLArgs = {
-		accessToken: "custom-accessToken",
+testGetMethod("includes params if provided", {
+	run: (client) =>
+		client.get({
+			accessToken: "custom-accessToken",
+			ref: "custom-ref",
+			lang: "*",
+		}),
+	requiredParams: {
+		access_token: "custom-accessToken",
 		ref: "custom-ref",
-		integrationFieldsRef: "custom-integration-fields-ref",
 		lang: "*",
-	};
-	const queryResponse = createQueryResponse();
-
-	server.use(
-		createMockRepositoryHandler(t),
-		createMockQueryHandler(t, [queryResponse], params.accessToken, {
-			ref: params.ref as string,
-			integrationFieldsRef: params.integrationFieldsRef,
-			lang: params.lang,
-		}),
-	);
-
-	const client = createTestClient(t);
-	const res = await client.get(params);
-
-	t.deepEqual(res, queryResponse);
+	},
+	server,
 });
 
-test("includes default params if provided", async (t) => {
-	const clientOptions: prismic.ClientConfig = {
-		accessToken: "custom-accessToken",
-		ref: "custom-ref",
-		defaultParams: { lang: "*" },
-	};
-	const queryResponse = createQueryResponse();
-
-	server.use(
-		createMockRepositoryHandler(t),
-		createMockQueryHandler(t, [queryResponse], clientOptions.accessToken, {
-			ref: clientOptions.ref as string,
-			lang: clientOptions.defaultParams?.lang,
-		}),
-	);
-
-	const client = createTestClient(t, clientOptions);
-	const res = await client.get();
-
-	t.deepEqual(res, queryResponse);
+testGetMethod("includes default params if provided", {
+	run: (client) => client.get(),
+	clientConfig: {
+		defaultParams: {
+			lang: "*",
+		},
+	},
+	requiredParams: {
+		lang: "*",
+	},
+	server,
 });
 
-test("merges params and default params if provided", async (t) => {
-	const clientOptions: prismic.ClientConfig = {
+testGetMethod("merges params and default params if provided", {
+	run: (client) =>
+		client.get({
+			accessToken: "overridden-accessToken",
+			ref: "overridden-ref",
+			lang: "fr-fr",
+		}),
+	clientConfig: {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
-		defaultParams: { lang: "*", page: 2 },
-	};
-	const params: prismic.BuildQueryURLArgs = {
+		defaultParams: {
+			lang: "*",
+		},
+	},
+	requiredParams: {
+		access_token: "overridden-accessToken",
 		ref: "overridden-ref",
 		lang: "fr-fr",
-	};
-	const queryResponse = createQueryResponse();
-
-	server.use(
-		createMockRepositoryHandler(t),
-		createMockQueryHandler(
-			t,
-			[queryResponse, queryResponse],
-			clientOptions.accessToken,
-			{
-				ref: params.ref,
-				lang: params.lang,
-				page: clientOptions.defaultParams?.page,
-			},
-		),
-	);
-
-	const client = createTestClient(t, clientOptions);
-	const res = await client.get(params);
-
-	t.deepEqual(res, queryResponse);
+	},
+	server,
 });
 
-test("is abortable with an AbortController", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-	const queryResponse = createQueryResponse();
-
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: getMasterRef(repositoryResponse),
-		}),
-	);
-
-	const client = createTestClient(t);
-
-	await t.throwsAsync(
-		async () => {
-			const controller = new AbortController();
-			controller.abort();
-
-			await client.get({
-				signal: controller.signal,
-			});
-		},
-		{ name: "AbortError" },
-	);
+testAbortableMethod("is abortable with an AbortController", {
+	run: (client, signal) => client.get({ signal }),
+	server,
 });

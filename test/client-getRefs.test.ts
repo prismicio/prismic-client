@@ -1,41 +1,29 @@
-import test from "ava";
+import { it, expect, beforeAll, afterAll } from "vitest";
 import * as mswNode from "msw/node";
-import AbortController from "abort-controller";
 
-import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
 import { createTestClient } from "./__testutils__/createClient";
 
 const server = mswNode.setupServer();
-test.before(() => server.listen({ onUnhandledRequest: "error" }));
-test.after(() => server.close());
+beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
+afterAll(() => server.close());
 
-test("returns all refs", async (t) => {
+it("returns all refs", async () => {
 	const response = createRepositoryResponse();
-	server.use(createMockRepositoryHandler(t, response));
+	mockPrismicRestAPIV2({
+		repositoryHandler: () => response,
+		server,
+	});
 
-	const client = createTestClient(t);
+	const client = createTestClient();
 	const res = await client.getRefs();
 
-	t.deepEqual(res, response.refs);
+	expect(res).toStrictEqual(response.refs);
 });
 
-test("is abortable with an AbortController", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-
-	server.use(createMockRepositoryHandler(t, repositoryResponse));
-
-	const client = createTestClient(t);
-
-	await t.throwsAsync(
-		async () => {
-			const controller = new AbortController();
-			controller.abort();
-
-			await client.getRefs({
-				signal: controller.signal,
-			});
-		},
-		{ name: "AbortError" },
-	);
+testAbortableMethod("is abortable with an AbortController", {
+	run: (client, signal) => client.getRefs({ signal }),
+	server,
 });

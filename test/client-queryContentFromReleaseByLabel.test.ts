@@ -1,44 +1,46 @@
-import test from "ava";
+import { it, expect, beforeAll, afterAll } from "vitest";
 import * as mswNode from "msw/node";
+import * as prismicM from "@prismicio/mock";
 
-import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
-import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
-import { createQueryResponse } from "./__testutils__/createQueryResponse";
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
 import { createTestClient } from "./__testutils__/createClient";
-
-import { getWithinTTLMacro } from "./__testutils__/getWithinTTLMacro";
-import { getOutsideTTLMacro } from "./__testutils__/getOutsideTTLMacro";
 import { createRef } from "./__testutils__/createRef";
+import {
+	testGetOutsideTTL,
+	testGetWithinTTL,
+} from "./__testutils__/testGetTTL";
 
 const server = mswNode.setupServer();
-test.before(() => server.listen({ onUnhandledRequest: "error" }));
-test.after(() => server.close());
+beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
+afterAll(() => server.close());
 
 const ref1 = createRef(false);
 const ref2 = createRef(false, { label: ref1.label });
 
-test("uses a releases ref by label", async (t) => {
+it("uses a releases ref by label", async (ctx) => {
 	const repositoryResponse = createRepositoryResponse({ refs: [ref1] });
-	const queryResponse = createQueryResponse();
+	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(t, [queryResponse], undefined, {
+	mockPrismicRestAPIV2({
+		repositoryHandler: () => repositoryResponse,
+		queryResponse,
+		queryRequiredParams: {
 			ref: ref1.ref,
-		}),
-	);
+		},
+		server,
+	});
 
-	const client = createTestClient(t);
+	const client = createTestClient();
 
 	client.queryContentFromReleaseByLabel(ref1.label);
 
 	const res = await client.get();
 
-	t.deepEqual(res, queryResponse);
+	expect(res).toStrictEqual(queryResponse);
 });
 
-test("uses the cached release ref within the ref's ttl", getWithinTTLMacro, {
+testGetWithinTTL("uses the cached release ref within the ref's TTL", {
 	server,
 	getContext: {
 		repositoryResponse: createRepositoryResponse({ refs: [ref1] }),
@@ -48,20 +50,16 @@ test("uses the cached release ref within the ref's ttl", getWithinTTLMacro, {
 		args.client.queryContentFromReleaseByLabel(ref1.label),
 });
 
-test(
-	"uses a fresh release ref outside of the cached ref's ttl",
-	getOutsideTTLMacro,
-	{
-		server,
-		getContext1: {
-			repositoryResponse: createRepositoryResponse({ refs: [ref1] }),
-			getRef: () => ref1.ref,
-		},
-		getContext2: {
-			repositoryResponse: createRepositoryResponse({ refs: [ref2] }),
-			getRef: () => ref2.ref,
-		},
-		beforeFirstGet: (args) =>
-			args.client.queryContentFromReleaseByLabel(ref1.label),
+testGetOutsideTTL("uses a fresh release ref outside of the cached ref's TTL", {
+	server,
+	getContext1: {
+		repositoryResponse: createRepositoryResponse({ refs: [ref1] }),
+		getRef: () => ref1.ref,
 	},
-);
+	getContext2: {
+		repositoryResponse: createRepositoryResponse({ refs: [ref2] }),
+		getRef: () => ref2.ref,
+	},
+	beforeFirstGet: (args) =>
+		args.client.queryContentFromReleaseByLabel(ref1.label),
+});

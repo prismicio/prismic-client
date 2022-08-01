@@ -1,20 +1,22 @@
-import test from "ava";
+import { it, expect } from "vitest";
 
 import * as prismic from "../src";
 
-test("returns true if the input is a repository endpoint", (t) => {
-	t.true(prismic.isRepositoryEndpoint("https://qwerty.cdn.prismic.io/api/v2"));
-	t.true(
+it("returns true if the input is a repository endpoint", () => {
+	expect(
+		prismic.isRepositoryEndpoint("https://qwerty.cdn.prismic.io/api/v2"),
+	).toBe(true);
+	expect(
 		prismic.isRepositoryEndpoint("https://example.com"),
 		"Any valid URL is a valid Prismic repository endpoint to support network proxies.",
-	);
+	).toBe(true);
 });
 
-test("returns false if the input is not a repository endpoint", (t) => {
-	t.false(prismic.isRepositoryEndpoint("qwerty"));
-	t.false(
+it("returns false if the input is not a repository endpoint", () => {
+	expect(prismic.isRepositoryEndpoint("qwerty")).toBe(false);
+	expect(
 		prismic.isRepositoryEndpoint(
 			"https://this is invalid.cdn.prismic.io/api/v2",
 		),
-	);
+	).toBe(false);
 });

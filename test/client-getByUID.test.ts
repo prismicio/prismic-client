@@ -1,95 +1,38 @@
-import test from "ava";
+import { beforeAll, afterAll } from "vitest";
 import * as mswNode from "msw/node";
-import AbortController from "abort-controller";
 
-import { createDocument } from "./__testutils__/createDocument";
-import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
-import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
-import { createQueryResponse } from "./__testutils__/createQueryResponse";
-import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
-import { createTestClient } from "./__testutils__/createClient";
-import { getMasterRef } from "./__testutils__/getMasterRef";
-
-import * as prismic from "../src";
+import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod";
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 
 const server = mswNode.setupServer();
-test.before(() => server.listen({ onUnhandledRequest: "error" }));
-test.after(() => server.close());
+beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
+afterAll(() => server.close());
 
-test("queries for document by UID", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-	const document = createDocument();
-	const queryResponse = createQueryResponse([document]);
-
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: getMasterRef(repositoryResponse),
-			q: [
-				`[[at(document.type, "${document.type}")]]`,
-				`[[at(my.${document.type}.uid, "${document.uid}")]]`,
-			],
-			pageSize: 1,
-		}),
-	);
-
-	const client = createTestClient(t);
-	const res = await client.getByUID(document.type, document.uid);
-
-	t.deepEqual(res, document);
+testGetFirstMethod("queries for document by UID", {
+	run: (client) => client.getByUID("type", "uid"),
+	requiredParams: {
+		q: [`[[at(document.type, "type")]]`, `[[at(my.type.uid, "uid")]]`],
+	},
+	server,
 });
 
-test("includes params if provided", async (t) => {
-	const params: prismic.BuildQueryURLArgs = {
-		accessToken: "custom-accessToken",
+testGetFirstMethod("includes params if provided", {
+	run: (client) =>
+		client.getByUID("type", "uid", {
+			accessToken: "custom-accessToken",
+			ref: "custom-ref",
+			lang: "*",
+		}),
+	requiredParams: {
+		access_token: "custom-accessToken",
 		ref: "custom-ref",
 		lang: "*",
-	};
-
-	const document = createDocument();
-	const queryResponse = createQueryResponse([document]);
-
-	server.use(
-		createMockRepositoryHandler(t),
-		createMockQueryHandler(t, [queryResponse], params.accessToken, {
-			ref: params.ref as string,
-			q: [
-				`[[at(document.type, "${document.type}")]]`,
-				`[[at(my.${document.type}.uid, "${document.uid}")]]`,
-			],
-			lang: params.lang,
-			pageSize: 1,
-		}),
-	);
-
-	const client = createTestClient(t);
-	const res = await client.getByUID(document.type, document.uid, params);
-
-	t.deepEqual(res, document);
+		q: [`[[at(document.type, "type")]]`, `[[at(my.type.uid, "uid")]]`],
+	},
+	server,
 });
 
-test("is abortable with an AbortController", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-	const queryResponse = createQueryResponse();
-
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: getMasterRef(repositoryResponse),
-		}),
-	);
-
-	const client = createTestClient(t);
-
-	await t.throwsAsync(
-		async () => {
-			const controller = new AbortController();
-			controller.abort();
-
-			await client.getByUID("type", "uid", {
-				signal: controller.signal,
-			});
-		},
-		{ name: "AbortError" },
-	);
+testAbortableMethod("is abortable with an AbortController", {
+	run: (client, signal) => client.getByUID("type", "uid", { signal }),
+	server,
 });

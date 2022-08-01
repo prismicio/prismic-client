@@ -1,35 +1,28 @@
-import test from "ava";
-
-import { isTitleMacro } from "./__testutils__/isTitleMacro";
+import { testPredicate } from "./__testutils__/testPredicate";
 
 import * as prismic from "../src";
 
-test(
+testPredicate(
 	'[not(document.type, "product")]',
-	isTitleMacro,
 	prismic.predicate.not("document.type", "product"),
 );
 
-test(
+testPredicate(
 	'[not(document.tags, ["Macaron", "Cupcake"])]',
-	isTitleMacro,
 	prismic.predicate.not("document.tags", ["Macaron", "Cupcake"]),
 );
 
-test(
+testPredicate(
 	"[not(my.product.price, 50)]",
-	isTitleMacro,
 	prismic.predicate.not("my.product.price", 50),
 );
 
-test(
+testPredicate(
 	"[not(my.product.out_of_stock, true)]",
-	isTitleMacro,
 	prismic.predicate.not("my.product.out_of_stock", true),
 );
 
-test(
+testPredicate(
 	"[not(my.product.restock_date, 1600000000000)]",
-	isTitleMacro,
 	prismic.predicate.not("my.product.restock_date", new Date(1600000000000)),
 );

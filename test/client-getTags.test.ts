@@ -1,27 +1,30 @@
-import test from "ava";
+import { it, expect, beforeAll, afterAll } from "vitest";
 import * as msw from "msw";
 import * as mswNode from "msw/node";
-import AbortController from "abort-controller";
 
-import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
 import { createTestClient } from "./__testutils__/createClient";
 
 const server = mswNode.setupServer();
-test.before(() => server.listen({ onUnhandledRequest: "error" }));
-test.after(() => server.close());
+beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
+afterAll(() => server.close());
 
-test("returns all tags", async (t) => {
+it("returns all tags", async () => {
 	const response = createRepositoryResponse();
-	server.use(createMockRepositoryHandler(t, response));
+	mockPrismicRestAPIV2({
+		repositoryHandler: () => response,
+		server,
+	});
 
-	const client = createTestClient(t);
+	const client = createTestClient();
 	const res = await client.getTags();
 
-	t.deepEqual(res, response.tags);
+	expect(res).toStrictEqual(response.tags);
 });
 
-test("uses form endpoint if available", async (t) => {
+it("uses form endpoint if available", async () => {
 	const tagsEndpoint = "https://example.com/tags-form-endpoint";
 	const tagsResponse = ["foo", "bar"];
 
@@ -35,20 +38,23 @@ test("uses form endpoint if available", async (t) => {
 			},
 		},
 	});
+	mockPrismicRestAPIV2({
+		repositoryHandler: () => repositoryResponse,
+		server,
+	});
 	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
 		msw.rest.get(tagsEndpoint, (_req, res, ctx) => {
 			return res(ctx.json(tagsResponse));
 		}),
 	);
 
-	const client = createTestClient(t);
+	const client = createTestClient();
 	const res = await client.getTags();
 
-	t.deepEqual(res, tagsResponse);
+	expect(res).toStrictEqual(tagsResponse);
 });
 
-test("sends access token if form endpoint is used", async (t) => {
+it("sends access token if form endpoint is used", async () => {
 	const tagsEndpoint = "https://example.com/tags-form-endpoint";
 	const tagsResponse = ["foo", "bar"];
 	const accessToken = "accessToken";
@@ -63,8 +69,11 @@ test("sends access token if form endpoint is used", async (t) => {
 			},
 		},
 	});
+	mockPrismicRestAPIV2({
+		repositoryHandler: () => repositoryResponse,
+		server,
+	});
 	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
 		msw.rest.get(tagsEndpoint, (req, res, ctx) => {
 			if (req.url.searchParams.get("access_token") === accessToken) {
 				return res(ctx.json(tagsResponse));
@@ -72,28 +81,13 @@ test("sends access token if form endpoint is used", async (t) => {
 		}),
 	);
 
-	const client = createTestClient(t, { accessToken });
+	const client = createTestClient({ clientConfig: { accessToken } });
 	const res = await client.getTags();
 
-	t.deepEqual(res, tagsResponse);
+	expect(res).toStrictEqual(tagsResponse);
 });
 
-test("is abortable with an AbortController", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-
-	server.use(createMockRepositoryHandler(t, repositoryResponse));
-
-	const client = createTestClient(t);
-
-	await t.throwsAsync(
-		async () => {
-			const controller = new AbortController();
-			controller.abort();
-
-			await client.getTags({
-				signal: controller.signal,
-			});
-		},
-		{ name: "AbortError" },
-	);
+testAbortableMethod("is abortable with an AbortController", {
+	run: (client, signal) => client.getTags({ signal }),
+	server,
 });
