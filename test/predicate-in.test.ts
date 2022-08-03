@@ -1,17 +1,13 @@
-import test from "ava";
-
-import { isTitleMacro } from "./__testutils__/isTitleMacro";
+import { testPredicate } from "./__testutils__/testPredicate";
 
 import * as prismic from "../src";
 
-test(
+testPredicate(
 	'[in(document.id, ["V9rIvCQAAB0ACq6y", "V9ZtvCcAALuRUzmO"])]',
-	isTitleMacro,
 	prismic.predicate.in("document.id", ["V9rIvCQAAB0ACq6y", "V9ZtvCcAALuRUzmO"]),
 );
 
-test(
+testPredicate(
 	'[in(my.page.uid, ["myuid1", "myuid2"])]',
-	isTitleMacro,
 	prismic.predicate.in("my.page.uid", ["myuid1", "myuid2"]),
 );

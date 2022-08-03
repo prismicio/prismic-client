@@ -1,15 +1,11 @@
-import test from "ava";
-import * as mswNode from "msw/node";
+import { it, expect } from "vitest";
 
-import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
-import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
-import { createQueryResponse } from "./__testutils__/createQueryResponse";
-import { createQueryResponsePages } from "./__testutils__/createQueryResponsePages";
-import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
 import { createTestClient } from "./__testutils__/createClient";
-import { getMasterRef } from "./__testutils__/getMasterRef";
+import { createPagedQueryResponses } from "./__testutils__/createPagedQueryResponses";
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { testGetAllMethod } from "./__testutils__/testAnyGetMethod";
 
-import * as prismic from "../src";
 import { GET_ALL_QUERY_DELAY } from "../src/client";
 
 /**
@@ -19,274 +15,167 @@ import { GET_ALL_QUERY_DELAY } from "../src/client";
  */
 const NETWORK_REQUEST_DURATION_TOLERANCE = 300;
 
-const server = mswNode.setupServer();
-test.before(() => server.listen({ onUnhandledRequest: "error" }));
-test.after(() => server.close());
-
-test("returns all documents from paginated response", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-	const pagedResponses = createQueryResponsePages({
-		numPages: 3,
-		numDocsPerPage: 3,
-	});
-	const allDocs = pagedResponses.flatMap((page) => page.results);
-
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(t, pagedResponses, undefined, {
-			ref: getMasterRef(repositoryResponse),
-			pageSize: 100,
-		}),
-	);
-
-	const client = createTestClient(t);
-	const res = await client.dangerouslyGetAll();
-
-	t.deepEqual(res, allDocs);
-	t.is(res.length, 3 * 3);
+testGetAllMethod("returns all documents from paginated response", {
+	run: (client) => client.dangerouslyGetAll(),
 });
 
-test("includes params if provided", async (t) => {
-	const params: prismic.BuildQueryURLArgs = {
-		accessToken: "custom-accessToken",
+testGetAllMethod("includes params if provided", {
+	run: (client) =>
+		client.dangerouslyGetAll({
+			accessToken: "custom-accessToken",
+			ref: "custom-ref",
+			lang: "*",
+		}),
+	requiredParams: {
+		access_token: "custom-accessToken",
 		ref: "custom-ref",
 		lang: "*",
-	};
-	const pagedResponses = createQueryResponsePages({
-		numPages: 3,
-		numDocsPerPage: 3,
-	});
-	const allDocs = pagedResponses.flatMap((page) => page.results);
-
-	server.use(
-		createMockRepositoryHandler(t),
-		createMockQueryHandler(t, pagedResponses, params.accessToken, {
-			ref: params.ref as string,
-			lang: params.lang,
-			pageSize: 100,
-		}),
-	);
-
-	const client = createTestClient(t);
-	const res = await client.dangerouslyGetAll(params);
-
-	t.deepEqual(res, allDocs);
-	t.is(res.length, 3 * 3);
+	},
 });
 
-test("includes default params if provided", async (t) => {
-	const clientOptions: prismic.ClientConfig = {
-		accessToken: "custom-accessToken",
-		ref: "custom-ref",
-		defaultParams: { lang: "*" },
-	};
-	const pagedResponses = createQueryResponsePages({
-		numPages: 3,
-		numDocsPerPage: 3,
-	});
-	const allDocs = pagedResponses.flatMap((page) => page.results);
-
-	server.use(
-		createMockRepositoryHandler(t),
-		createMockQueryHandler(t, pagedResponses, clientOptions.accessToken, {
-			ref: clientOptions.ref as string,
-			lang: clientOptions.defaultParams?.lang,
-			pageSize: 100,
-		}),
-	);
-
-	const client = createTestClient(t, clientOptions);
-	const res = await client.dangerouslyGetAll();
-
-	t.deepEqual(res, allDocs);
-	t.is(res.length, 3 * 3);
+testGetAllMethod("includes default params if provided", {
+	run: (client) => client.dangerouslyGetAll(),
+	clientConfig: {
+		defaultParams: {
+			lang: "*",
+		},
+	},
+	requiredParams: {
+		lang: "*",
+	},
 });
 
-test("merges params and default params if provided", async (t) => {
-	const clientOptions: prismic.ClientConfig = {
+testGetAllMethod("merges params and default params if provided", {
+	run: (client) =>
+		client.dangerouslyGetAll({
+			accessToken: "overridden-accessToken",
+			ref: "overridden-ref",
+			lang: "fr-fr",
+		}),
+	clientConfig: {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
-		defaultParams: { lang: "*", pageSize: 1 },
-	};
-	const params: prismic.BuildQueryURLArgs = {
+		defaultParams: {
+			lang: "*",
+		},
+	},
+	requiredParams: {
+		access_token: "overridden-accessToken",
 		ref: "overridden-ref",
 		lang: "fr-fr",
-	};
-	const pagedResponses = createQueryResponsePages({
-		numPages: 3,
-		numDocsPerPage: 1,
-	});
-	const allDocs = pagedResponses.flatMap((page) => page.results);
-
-	server.use(
-		createMockRepositoryHandler(t),
-		createMockQueryHandler(t, pagedResponses, clientOptions.accessToken, {
-			ref: params.ref,
-			lang: params.lang,
-			pageSize: 1,
-		}),
-	);
-
-	const client = createTestClient(t, clientOptions);
-	const res = await client.dangerouslyGetAll(params);
-
-	t.deepEqual(res, allDocs);
-	t.is(res.length, 3);
+	},
 });
 
-test("uses the default pageSize when given a falsey pageSize param", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-	const pagedResponses = createQueryResponsePages({
-		numPages: 1,
-		numDocsPerPage: 3,
-	});
+testGetAllMethod(
+	"uses the default pageSize when given a falsey pageSize param",
+	{
+		run: (client) =>
+			client.dangerouslyGetAll({
+				pageSize: 0,
+			}),
+		requiredParams: {
+			pageSize: "100",
+		},
+	},
+);
 
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(t, pagedResponses, undefined, {
-			ref: getMasterRef(repositoryResponse),
-			pageSize: 100,
+testGetAllMethod("optimizes pageSize when limit is below the pageSize", {
+	run: (client) =>
+		client.dangerouslyGetAll({
+			limit: 3,
 		}),
-	);
-
-	const client = createTestClient(t);
-
-	// The following calls will implicitly fail the test if the
-	// `createMockQueryHandler` handler does not match the given `pageSize` of
-	// 100. This is handled within createMockQueryHandler (see the `debug` option).
-
-	await client.dangerouslyGetAll();
-	await client.dangerouslyGetAll({ pageSize: undefined });
-	await client.dangerouslyGetAll({ pageSize: 0 });
+	resultLimit: 3,
+	requiredParams: {
+		pageSize: "3",
+	},
 });
 
-test("optimizes pageSize when limit is below the pageSize", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-	const pagedResponses = createQueryResponsePages({
-		numPages: 1,
-		numDocsPerPage: 3,
-	});
+testGetAllMethod(
+	"does not optimize pageSize when limit is above the pageSize",
+	{
+		run: (client) =>
+			client.dangerouslyGetAll({
+				limit: 150,
+			}),
+		resultLimit: 150,
+		requiredParams: {
+			pageSize: "100",
+		},
+	},
+);
 
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(t, pagedResponses, undefined, {
-			ref: getMasterRef(repositoryResponse),
-			pageSize: 3,
-		}),
-	);
-
-	const client = createTestClient(t);
-
-	// The following calls will implicitly fail the test if the
-	// `createMockQueryHandler` handler does not match the given `pageSize`
-	// of 3. This is handled within createMockQueryHandler (see the `debug`
-	// option).
-
-	await client.dangerouslyGetAll({ limit: 3 });
-});
-
-test("does not optimize pageSize when limit is above the pageSize", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-	const pagedResponses = createQueryResponsePages({
-		numPages: 1,
-		numDocsPerPage: 3,
-	});
-
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(t, pagedResponses, undefined, {
-			ref: getMasterRef(repositoryResponse),
-			pageSize: 100,
-		}),
-	);
-
-	const client = createTestClient(t);
-
-	// The following calls will implicitly fail the test if the
-	// `createMockQueryHandler` handler does not match the given `pageSize`
-	// of 100. This is handled within createMockQueryHandler (see the
-	// `debug` option).
-
-	await client.dangerouslyGetAll({ limit: 150 });
-});
-
-test("throttles requests past first page", async (t) => {
+it("throttles requests past first page", async (ctx) => {
 	const numPages = 3;
-	const repositoryResponse = createRepositoryResponse();
-	const pagedResponses = createQueryResponsePages({
-		numPages,
-		numDocsPerPage: 3,
+	const queryResponses = createPagedQueryResponses({
+		ctx,
+		pages: numPages,
 	});
-	const queryDuration = 200;
 
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(
-			t,
-			pagedResponses,
-			undefined,
-			{
-				ref: getMasterRef(repositoryResponse),
-				pageSize: 100,
-			},
-			queryDuration,
-		),
-	);
+	const queryDelay = 200;
 
-	const client = createTestClient(t);
+	mockPrismicRestAPIV2({
+		ctx,
+		queryResponse: queryResponses,
+		queryRequiredParams: {
+			pageSize: "100",
+		},
+		queryDelay,
+	});
+
+	const client = createTestClient();
 
 	const startTime = Date.now();
 	await client.dangerouslyGetAll();
 	const endTime = Date.now();
 
 	const totalTime = endTime - startTime;
-	const minTime =
-		numPages * queryDuration + (numPages - 1) * GET_ALL_QUERY_DELAY;
+	const minTime = numPages * queryDelay + (numPages - 1) * GET_ALL_QUERY_DELAY;
 	const maxTime = minTime + NETWORK_REQUEST_DURATION_TOLERANCE;
 
 	// The total time should be the amount of time it takes to resolve all
 	// network requests in addition to a delay between requests (accounting for
 	// some tolerance). The last request does not start an artificial delay.
-	t.true(
+	expect(
 		minTime <= totalTime && totalTime <= maxTime,
 		`Total time should be between ${minTime}ms and ${maxTime}ms (inclusive), but was ${totalTime}ms`,
-	);
+	).toBe(true);
 });
 
-test("does not throttle single page queries", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-	const queryResponse = createQueryResponse();
-	const queryDuration = 200;
+it("does not throttle single page queries", async (ctx) => {
+	const queryResponses = createPagedQueryResponses({
+		ctx,
+		pages: 1,
+	});
+	const queryDelay = 200;
 
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(
-			t,
-			[queryResponse],
-			undefined,
-			{
-				ref: getMasterRef(repositoryResponse),
-				pageSize: 100,
-			},
-			queryDuration,
-		),
-	);
+	mockPrismicRestAPIV2({
+		ctx,
+		queryResponse: queryResponses,
+		queryRequiredParams: {
+			pageSize: "100",
+		},
+		queryDelay,
+	});
 
-	const client = createTestClient(t);
+	const client = createTestClient();
 
 	const startTime = Date.now();
 	await client.dangerouslyGetAll();
 	const endTime = Date.now();
 
 	const totalTime = endTime - startTime;
-	const minTime = queryDuration;
+	const minTime = queryDelay;
 	const maxTime = minTime + NETWORK_REQUEST_DURATION_TOLERANCE;
 
 	// The total time should only be the amount of time it takes to resolve the
 	// network request (accounting for some tolerance). In other words, there is
 	// no artificial delay in a single page `getAll` query.
-	t.true(
+	expect(
 		minTime <= totalTime && totalTime <= maxTime,
 		`Total time should be between ${minTime}ms and ${maxTime}ms (inclusive), but was ${totalTime}ms`,
-	);
+	).toBe(true);
+});
+
+testAbortableMethod("is abortable with an AbortController", {
+	run: (client, signal) => client.dangerouslyGetAll({ signal }),
 });

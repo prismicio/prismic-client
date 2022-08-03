@@ -1,8 +1,8 @@
-import test from "ava";
+import { it, expect } from "vitest";
 
 import * as prismic from "../src";
 
-test("contains the request url and optional response", (t) => {
+it("contains the request url and optional response", () => {
 	const message = "message";
 	const url = "url";
 	const response = { foo: "bar" } as const;
@@ -14,11 +14,11 @@ test("contains the request url and optional response", (t) => {
 		undefined,
 	);
 
-	t.is(errorWithResponse.url, url);
-	t.is(errorWithResponse.message, message);
-	t.is(errorWithResponse.response, response);
+	expect(errorWithResponse.message).toBe(message);
+	expect(errorWithResponse.url).toBe(url);
+	expect(errorWithResponse.response).toStrictEqual(response);
 
-	t.is(errorWithoutResponse.url, url);
-	t.is(errorWithoutResponse.message, message);
-	t.is(errorWithoutResponse.response, undefined);
+	expect(errorWithoutResponse.message).toBe(message);
+	expect(errorWithoutResponse.url).toBe(url);
+	expect(errorWithoutResponse.response).toBeUndefined();
 });

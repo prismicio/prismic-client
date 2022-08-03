@@ -1,52 +1,41 @@
-import test from "ava";
-import * as msw from "msw";
-import * as mswNode from "msw/node";
-import * as sinon from "sinon";
+import { it, expect, vi } from "vitest";
 import { Response, Headers } from "node-fetch";
+import * as msw from "msw";
+import * as prismicM from "@prismicio/mock";
 
-import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
-import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
-import { createQueryEndpoint } from "./__testutils__/createQueryEndpoint";
-import { createQueryResponse } from "./__testutils__/createQueryResponse";
-import { createRef } from "./__testutils__/createRef";
-import { createRepositoryEndpoint } from "./__testutils__/createRepositoryEndpoint";
-import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createTestClient } from "./__testutils__/createClient";
 import { getMasterRef } from "./__testutils__/getMasterRef";
 
 import * as prismic from "../src";
 
-const server = mswNode.setupServer();
-test.before(() => server.listen({ onUnhandledRequest: "error" }));
-test.after(() => server.close());
-
-test.serial("createClient creates a Client", (t) => {
+it("createClient creates a Client", () => {
 	const client = prismic.createClient("qwerty", {
-		fetch: sinon.stub(),
+		fetch: vi.fn(),
 	});
 
-	t.true(client instanceof prismic.Client);
+	expect(client).toBeInstanceOf(prismic.Client);
 });
 
-test.serial("creates a client with a repository name", (t) => {
+it("creates a client with a repository name", () => {
 	const repositoryName = "qwerty";
 	const client = prismic.createClient(repositoryName, {
-		fetch: sinon.stub(),
+		fetch: vi.fn(),
 	});
 
-	t.is(client.endpoint, prismic.getRepositoryEndpoint(repositoryName));
+	expect(client.endpoint).toBe(prismic.getRepositoryEndpoint(repositoryName));
 });
 
-test.serial("creates a client with a Rest API V2 endpoint", (t) => {
+it("creates a client with a Rest API V2 endpoint", () => {
 	const endpoint = prismic.getRepositoryEndpoint("qwerty");
 	const client = prismic.createClient(endpoint, {
-		fetch: sinon.stub(),
+		fetch: vi.fn(),
 	});
 
-	t.is(client.endpoint, endpoint);
+	expect(client.endpoint).toBe(endpoint);
 });
 
-test.serial("client has correct default state", (t) => {
+it("client has correct default state", () => {
 	const endpoint = prismic.getRepositoryEndpoint("qwerty");
 	const options: prismic.ClientConfig = {
 		accessToken: "accessToken",
@@ -58,76 +47,87 @@ test.serial("client has correct default state", (t) => {
 	};
 	const client = prismic.createClient(endpoint, options);
 
-	t.is(client.endpoint, endpoint);
-	t.is(client.accessToken, options.accessToken);
-	t.is(client.fetchFn, options.fetch as prismic.FetchLike);
-	t.is(client.defaultParams, options.defaultParams);
+	expect(client.endpoint).toBe(endpoint);
+	expect(client.accessToken).toBe(options.accessToken);
+	expect(client.fetchFn).toBe(options.fetch as prismic.FetchLike);
+	expect(client.defaultParams).toBe(options.defaultParams);
 });
 
-test.serial(
-	"constructor throws if an invalid repository name is provided",
-	(t) => {
-		t.throws(
-			() => {
-				prismic.createClient("invalid repository name", {
-					fetch: sinon.stub(),
-				});
-			},
-			{
-				instanceOf: prismic.PrismicError,
-				message: /an invalid Prismic repository name was given/i,
-			},
-		);
-	},
-);
+it("constructor throws if an invalid repository name is provided", () => {
+	expect(() => {
+		prismic.createClient("invalid repository name", {
+			fetch: vi.fn(),
+		});
+	}).toThrowError(/an invalid Prismic repository name was given/i);
+	expect(() => {
+		prismic.createClient("invalid repository name", {
+			fetch: vi.fn(),
+		});
+	}).toThrowError(prismic.PrismicError);
+});
 
-test.serial(
-	"constructor throws if an invalid repository endpoint is provided",
-	(t) => {
-		t.throws(
-			() => {
-				prismic.createClient("https://invalid url.cdn.prismic.io/api/v2", {
-					fetch: sinon.stub(),
-				});
-			},
-			{
-				instanceOf: prismic.PrismicError,
-				message: /an invalid Prismic repository name was given/i,
-			},
-		);
-	},
-);
+it("constructor throws if an invalid repository endpoint is provided", () => {
+	expect(() => {
+		prismic.createClient("https://invalid url.cdn.prismic.io/api/v2", {
+			fetch: vi.fn(),
+		});
+	}).toThrowError(/an invalid Prismic repository name was given/i);
+	expect(() => {
+		prismic.createClient("https://invalid url.cdn.prismic.io/api/v2", {
+			fetch: vi.fn(),
+		});
+	}).toThrowError(prismic.PrismicError);
+});
 
-test.serial("constructor throws if fetch is unavailable", (t) => {
+it("constructor throws if fetch is unavailable", () => {
 	const endpoint = prismic.getRepositoryEndpoint("qwerty");
 
-	t.throws(() => prismic.createClient(endpoint), {
-		instanceOf: prismic.PrismicError,
-		message: /fetch implementation was not provided/,
-	});
+	const originalFetch = globalThis.fetch;
+	// @ts-expect-error - Forcing fetch to be undefined
+	delete globalThis.fetch;
+
+	expect(() => prismic.createClient(endpoint)).toThrowError(
+		/fetch implementation was not provided/i,
+	);
+	expect(() => prismic.createClient(endpoint)).toThrowError(
+		prismic.PrismicError,
+	);
+
+	globalThis.fetch = originalFetch;
 });
 
-test.serial("constructor throws if provided fetch is not a function", (t) => {
+it("constructor throws if provided fetch is not a function", () => {
 	const endpoint = prismic.getRepositoryEndpoint("qwerty");
 	const fetch = "not a function";
 
-	t.throws(
-		() =>
-			prismic.createClient(endpoint, {
-				// We wouldn't normally test for input types since TypeScript handles
-				// that for us at build time, but we want to provide a nicer DX for
-				// non-TypeScript users.
-				// @ts-expect-error - We are purposly providing an invalid type to test if it throws.
-				fetch,
-			}),
-		{
-			instanceOf: prismic.PrismicError,
-			message: /fetch implementation was not provided/,
-		},
-	);
+	// Unset global fetch to ensure the client won't fall back to the global implementation.
+	const originalFetch = globalThis.fetch;
+	// @ts-expect-error - Forcing fetch to be undefined
+	delete globalThis.fetch;
+
+	expect(() =>
+		prismic.createClient(endpoint, {
+			// We wouldn't normally test for input types since TypeScript handles
+			// that for us at build time, but we want to provide a nicer DX for
+			// non-TypeScript users.
+			// @ts-expect-error - We are purposly providing an invalid type to test if it throws.
+			fetch,
+		}),
+	).toThrowError(/fetch implementation was not provided/i);
+	expect(() =>
+		prismic.createClient(endpoint, {
+			// We wouldn't normally test for input types since TypeScript handles
+			// that for us at build time, but we want to provide a nicer DX for
+			// non-TypeScript users.
+			// @ts-expect-error - We are purposly providing an invalid type to test if it throws.
+			fetch,
+		}),
+	).toThrowError(prismic.PrismicError);
+
+	globalThis.fetch = originalFetch;
 });
 
-test.serial("uses globalThis.fetch if available", async (t) => {
+it("uses globalThis.fetch if available", async () => {
 	const endpoint = prismic.getRepositoryEndpoint("qwerty");
 	const responseBody = { foo: "bar" };
 
@@ -141,103 +141,98 @@ test.serial("uses globalThis.fetch if available", async (t) => {
 	const fetchResponse = await client.fetchFn("");
 	const jsonResponse = await fetchResponse.json();
 
-	t.deepEqual(jsonResponse, responseBody);
+	expect(jsonResponse).toStrictEqual(responseBody);
 
 	globalThis.fetch = existingFetch;
 });
 
-test.serial("uses the master ref by default", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-	const queryResponse = createQueryResponse();
+it("uses the master ref by default", async (ctx) => {
+	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: getMasterRef(repositoryResponse),
-		}),
-	);
+	mockPrismicRestAPIV2({
+		queryResponse,
+		ctx,
+	});
 
-	const client = createTestClient(t);
+	const client = createTestClient();
 	const res = await client.get();
 
-	t.deepEqual(res, queryResponse);
+	expect(res).toStrictEqual(queryResponse);
 });
 
-test.serial("supports manual string ref", async (t) => {
-	const queryResponse = createQueryResponse();
+it("supports manual string ref", async (ctx) => {
+	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 	const ref = "ref";
 
-	server.use(
-		createMockRepositoryHandler(t),
-		createMockQueryHandler(t, [queryResponse], undefined, { ref }),
-	);
+	mockPrismicRestAPIV2({
+		queryResponse,
+		queryRequiredParams: { ref },
+		ctx,
+	});
 
-	const client = createTestClient(t, { ref });
+	const client = createTestClient({ clientConfig: { ref } });
 	const res = await client.get();
 
-	t.deepEqual(res, queryResponse);
+	expect(res).toStrictEqual(queryResponse);
 });
 
-test.serial("supports manual thunk ref", async (t) => {
-	const queryResponse = createQueryResponse();
+it("supports manual thunk ref", async (ctx) => {
+	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 	const ref = "ref";
 
-	server.use(
-		createMockRepositoryHandler(t),
-		createMockQueryHandler(t, [queryResponse], undefined, { ref }),
-	);
+	mockPrismicRestAPIV2({
+		queryResponse,
+		queryRequiredParams: { ref },
+		ctx,
+	});
 
-	const client = createTestClient(t, { ref: () => ref });
+	const client = createTestClient({ clientConfig: { ref: () => ref } });
 	const res = await client.get();
 
-	t.deepEqual(res, queryResponse);
+	expect(res).toStrictEqual(queryResponse);
 });
 
-test.serial(
-	"uses master ref if ref thunk param returns non-string value",
-	async (t) => {
-		const repositoryResponse = createRepositoryResponse();
-		const queryResponse = createQueryResponse();
+it("uses master ref if ref thunk param returns non-string value", async (ctx) => {
+	const repositoryResponse = ctx.mock.api.repository();
+	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
-		server.use(
-			createMockRepositoryHandler(t, repositoryResponse),
-			createMockQueryHandler(t, [queryResponse], undefined, {
-				ref: getMasterRef(repositoryResponse),
-			}),
-		);
+	mockPrismicRestAPIV2({
+		repositoryResponse,
+		queryResponse,
+		queryRequiredParams: { ref: getMasterRef(repositoryResponse) },
+		ctx,
+	});
 
-		const client = createTestClient(t, { ref: () => undefined });
-		const res = await client.get();
+	const client = createTestClient({ clientConfig: { ref: () => undefined } });
+	const res = await client.get();
 
-		t.deepEqual(res, queryResponse);
-	},
-);
+	expect(res).toStrictEqual(queryResponse);
+});
 
-test.serial("uses browser preview ref if available", async (t) => {
+it("uses browser preview ref if available", async (ctx) => {
 	const previewRef = "previewRef";
 	globalThis.document = {
 		...globalThis.document,
 		cookie: `io.prismic.preview=${previewRef}`,
 	};
 
-	const queryResponse = createQueryResponse();
+	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
-	server.use(
-		createMockRepositoryHandler(t),
-		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: previewRef,
-		}),
-	);
+	mockPrismicRestAPIV2({
+		queryResponse,
+		queryRequiredParams: { ref: previewRef },
+		ctx,
+	});
 
-	const client = createTestClient(t);
+	const client = createTestClient();
 	const res = await client.get();
 
-	t.deepEqual(res, queryResponse);
+	expect(res).toStrictEqual(queryResponse);
 
 	globalThis.document.cookie = "";
 });
 
-test.serial("uses req preview ref if available", async (t) => {
+it("uses req preview ref if available", async (ctx) => {
 	const previewRef = "previewRef";
 	const req = {
 		headers: {
@@ -245,23 +240,22 @@ test.serial("uses req preview ref if available", async (t) => {
 		},
 	};
 
-	const queryResponse = createQueryResponse();
+	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
-	server.use(
-		createMockRepositoryHandler(t),
-		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: previewRef,
-		}),
-	);
+	mockPrismicRestAPIV2({
+		queryResponse,
+		queryRequiredParams: { ref: previewRef },
+		ctx,
+	});
 
-	const client = createTestClient(t);
+	const client = createTestClient();
 	client.enableAutoPreviewsFromReq(req);
 	const res = await client.get();
 
-	t.deepEqual(res, queryResponse);
+	expect(res).toStrictEqual(queryResponse);
 });
 
-test.serial("supports req with Web APIs", async (t) => {
+it("supports req with Web APIs", async (ctx) => {
 	const previewRef = "previewRef";
 	const headers = new Headers();
 	headers.set("cookie", `io.prismic.preview=${previewRef}`);
@@ -270,117 +264,130 @@ test.serial("supports req with Web APIs", async (t) => {
 		url: "https://example.com",
 	};
 
-	const queryResponse = createQueryResponse();
+	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
-	server.use(
-		createMockRepositoryHandler(t),
-		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: previewRef,
-		}),
-	);
+	mockPrismicRestAPIV2({
+		queryResponse,
+		queryRequiredParams: { ref: previewRef },
+		ctx,
+	});
 
-	const client = createTestClient(t);
+	const client = createTestClient();
 	client.enableAutoPreviewsFromReq(req);
 	const res = await client.get();
 
-	t.deepEqual(res, queryResponse);
+	expect(res).toStrictEqual(queryResponse);
 });
 
-test.serial("ignores req without cookies", async (t) => {
+it("ignores req without cookies", async (ctx) => {
 	const req = {
 		headers: {},
 	};
 
-	const repositoryResponse = createRepositoryResponse();
-	const queryResponse = createQueryResponse();
+	const repositoryResponse = ctx.mock.api.repository();
+	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: getMasterRef(repositoryResponse),
-		}),
-	);
+	mockPrismicRestAPIV2({
+		repositoryResponse,
+		queryResponse,
+		queryRequiredParams: { ref: getMasterRef(repositoryResponse) },
+		ctx,
+	});
 
-	const client = createTestClient(t);
+	const client = createTestClient();
 	client.enableAutoPreviewsFromReq(req);
 	const res = await client.get();
 
-	t.deepEqual(res, queryResponse);
+	expect(res).toStrictEqual(queryResponse);
 });
 
-test.serial(
-	"does not use preview ref if auto previews are disabled",
-	async (t) => {
-		const previewRef = "previewRef";
-		globalThis.document = {
-			...globalThis.document,
-			cookie: `io.prismic.preview=${previewRef}`,
-		};
+it("does not use preview ref if auto previews are disabled", async (ctx) => {
+	const previewRef = "previewRef";
+	globalThis.document = {
+		...globalThis.document,
+		cookie: `io.prismic.preview=${previewRef}`,
+	};
 
-		t.teardown(() => {
-			globalThis.document.cookie = "";
-		});
+	const repositoryResponse = ctx.mock.api.repository();
+	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
-		const repositoryResponse = createRepositoryResponse();
-		const queryResponseWithoutPreviews = createQueryResponse();
-		const queryResponseWithPreviews = createQueryResponse();
+	const client = createTestClient();
 
-		server.use(createMockRepositoryHandler(t, repositoryResponse));
+	// Disable auto previews and ensure the default ref is being used. Note that
+	// the global cookie has already been set by this point, which should be
+	// ignored by the client.
+	client.disableAutoPreviews();
+	mockPrismicRestAPIV2({
+		repositoryResponse,
+		queryResponse,
+		queryRequiredParams: { ref: getMasterRef(repositoryResponse) },
+		ctx,
+	});
 
-		const client = createTestClient(t);
+	const res1 = await client.get();
 
-		// Disable auto previews and ensure the default ref is being used. Note that
-		// the global cookie has already been set by this point, which should be
-		// ignored by the client.
-		server.use(
-			createMockQueryHandler(t, [queryResponseWithoutPreviews], undefined, {
-				ref: getMasterRef(repositoryResponse),
-			}),
-		);
-		client.disableAutoPreviews();
-		const resWithoutPreviews = await client.get();
+	expect(res1).toStrictEqual(queryResponse);
 
-		t.deepEqual(resWithoutPreviews, queryResponseWithoutPreviews);
+	// Enable previews and ensure the preview ref is being used.
+	client.enableAutoPreviews();
+	mockPrismicRestAPIV2({
+		repositoryResponse,
+		queryResponse,
+		queryRequiredParams: { ref: previewRef },
+		ctx,
+	});
 
-		// Enable previews and ensure the preview ref is being used.
-		server.use(
-			createMockQueryHandler(t, [queryResponseWithPreviews], undefined, {
-				ref: previewRef,
-			}),
-		);
-		client.enableAutoPreviews();
-		const resWithPreviews = await client.get();
+	const resWithPreviews = await client.get();
 
-		t.deepEqual(resWithPreviews, queryResponseWithPreviews);
-	},
-);
+	expect(resWithPreviews).toStrictEqual(queryResponse);
 
-test.serial(
-	"uses the integration fields ref if the repository provides it",
-	async (t) => {
-		const repositoryResponse = createRepositoryResponse({
-			integrationFieldsRef: createRef().ref,
-		});
-		const queryResponse = createQueryResponse();
+	globalThis.document.cookie = "";
+});
 
-		server.use(
-			createMockRepositoryHandler(t, repositoryResponse),
-			createMockQueryHandler(t, [queryResponse], undefined, {
-				ref: getMasterRef(repositoryResponse),
-				integrationFieldsRef: repositoryResponse.integrationFieldsRef,
-			}),
-		);
+it("uses the integration fields ref if the repository provides it", async (ctx) => {
+	const repositoryResponse = ctx.mock.api.repository();
+	repositoryResponse.integrationFieldsRef = ctx.mock.api.ref().ref;
+	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
-		const client = createTestClient(t);
-		const res = await client.get();
+	mockPrismicRestAPIV2({
+		repositoryResponse,
+		queryResponse,
+		queryRequiredParams: {
+			ref: getMasterRef(repositoryResponse),
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			integrationFieldsRef: repositoryResponse.integrationFieldsRef!,
+		},
+		ctx,
+	});
 
-		t.deepEqual(res, queryResponse);
-	},
-);
+	const client = createTestClient();
+	const res = await client.get();
 
-test.serial("uses client-provided routes in queries", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-	const queryResponse = createQueryResponse();
+	expect(res).toStrictEqual(queryResponse);
+});
+
+it("ignores the integration fields ref if the repository provides a null value", async (ctx) => {
+	const repositoryResponse = ctx.mock.api.repository();
+	repositoryResponse.integrationFieldsRef = null;
+	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
+
+	mockPrismicRestAPIV2({
+		repositoryResponse,
+		queryResponse,
+		queryRequiredParams: {
+			ref: getMasterRef(repositoryResponse),
+		},
+		ctx,
+	});
+
+	const client = createTestClient();
+	const res = await client.get();
+
+	expect(res).toStrictEqual(queryResponse);
+});
+
+it("uses client-provided routes in queries", async (ctx) => {
+	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
 	const routes = [
 		{
@@ -389,228 +396,219 @@ test.serial("uses client-provided routes in queries", async (t) => {
 		},
 	];
 
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(t, [queryResponse], undefined, {
-			ref: getMasterRef(repositoryResponse),
+	mockPrismicRestAPIV2({
+		queryResponse,
+		queryRequiredParams: {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			routes: JSON.stringify(routes),
+		},
+		ctx,
+	});
+
+	const client = createTestClient({ clientConfig: { routes } });
+	const res = await client.get();
+
+	expect(res).toStrictEqual(queryResponse);
+});
+
+it("throws ForbiddenError if access token is invalid for repository metadata", async (ctx) => {
+	mockPrismicRestAPIV2({
+		accessToken: "token",
+		ctx,
+	});
+
+	const client = createTestClient();
+
+	await expect(() => client.getRepository()).rejects.toThrowError(
+		/invalid access token/i,
+	);
+	await expect(() => client.getRepository()).rejects.toThrowError(
+		prismic.ForbiddenError,
+	);
+});
+
+it("throws ForbiddenError if access token is invalid for query", async (ctx) => {
+	mockPrismicRestAPIV2({
+		accessToken: "token",
+		ctx,
+	});
+
+	const client = createTestClient();
+
+	await expect(() => client.get()).rejects.toThrowError(
+		/invalid access token/i,
+	);
+	await expect(() => client.get()).rejects.toThrowError(prismic.ForbiddenError);
+});
+
+it("throws ForbiddenError if response code is 403", async (ctx) => {
+	const queryResponse = {
+		error: "Invalid access token",
+	};
+
+	mockPrismicRestAPIV2({ ctx });
+
+	const client = createTestClient();
+
+	const queryEndpoint = new URL(
+		"documents/search",
+		`${client.endpoint}/`,
+	).toString();
+
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
+			return res(ctx.status(403), ctx.json(queryResponse));
 		}),
 	);
 
-	const client = createTestClient(t, { routes });
-	const res = await client.get();
+	let error: prismic.ForbiddenError | undefined;
 
-	t.deepEqual(res, queryResponse);
+	try {
+		await client.get();
+	} catch (e) {
+		if (e instanceof prismic.ForbiddenError) {
+			error = e;
+		}
+	}
+
+	expect(error?.message).toBe(queryResponse.error);
 });
 
-test.serial(
-	"throws ForbiddenError if access token is invalid for repository metadata",
-	async (t) => {
-		const repositoryResponse = {
-			message: "invalid access token",
-			oauth_initiate: "oauth_initiate",
-			oauth_token: "oauth_token",
-		};
+it("throws ParsingError if response code is 400 with parsing-error type", async (ctx) => {
+	const queryResponse = {
+		type: "parsing-error",
+		message: "message",
+		line: 0,
+		column: 1,
+		id: 2,
+		location: 3,
+	};
 
-		server.use(
-			msw.rest.get(createRepositoryEndpoint(t), (_req, res, ctx) => {
-				return res(ctx.status(401), ctx.json(repositoryResponse));
-			}),
-		);
+	mockPrismicRestAPIV2({ ctx });
 
-		const client = createTestClient(t);
+	const client = createTestClient();
 
-		await t.throwsAsync(async () => await client.getRepository(), {
-			instanceOf: prismic.ForbiddenError,
-			message: /invalid access token/i,
-		});
-	},
-);
+	const queryEndpoint = new URL(
+		"documents/search",
+		`${client.endpoint}/`,
+	).toString();
 
-test.serial(
-	"throws ForbiddenError if access token is invalid for query",
-	async (t) => {
-		const repositoryResponse = createRepositoryResponse();
-		const queryResponse = {
-			error: "invalid access token",
-			oauth_initiate: "oauth_initiate",
-			oauth_token: "oauth_token",
-		};
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
+			return res(ctx.status(400), ctx.json(queryResponse));
+		}),
+	);
 
-		server.use(
-			createMockRepositoryHandler(t, repositoryResponse),
-			msw.rest.get(createQueryEndpoint(t), (_req, res, ctx) => {
-				return res(ctx.status(403), ctx.json(queryResponse));
-			}),
-		);
+	await expect(() => client.get()).rejects.toThrowError(queryResponse.message);
+	await expect(() => client.get()).rejects.toThrowError(prismic.ParsingError);
+});
 
-		const client = createTestClient(t);
+it("throws PrismicError if response code is 400 but is not a parsing error", async (ctx) => {
+	const queryResponse = {};
 
-		await t.throwsAsync(async () => await client.get(), {
-			instanceOf: prismic.ForbiddenError,
-			message: /invalid access token/i,
-		});
-	},
-);
+	mockPrismicRestAPIV2({ ctx });
 
-test.serial(
-	"throws PrismicError if response code is 403 but is not an invalid access token error",
-	async (t) => {
-		const repositoryResponse = createRepositoryResponse();
-		const queryResponse = {};
+	const client = createTestClient();
 
-		server.use(
-			createMockRepositoryHandler(t, repositoryResponse),
-			msw.rest.get(createQueryEndpoint(t), (_req, res, ctx) => {
-				return res(ctx.status(403), ctx.json(queryResponse));
-			}),
-		);
+	const queryEndpoint = new URL(
+		"documents/search",
+		`${client.endpoint}/`,
+	).toString();
 
-		const client = createTestClient(t);
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
+			return res(ctx.status(400), ctx.json(queryResponse));
+		}),
+	);
 
-		await t.throwsAsync(async () => await client.get(), {
-			instanceOf: prismic.PrismicError,
-		});
-	},
-);
+	await expect(() => client.get()).rejects.toThrowError(prismic.PrismicError);
+});
 
-test.serial(
-	"throws ParsingError if response code is 400 with parsing-error type",
-	async (t) => {
-		const repositoryResponse = createRepositoryResponse();
-		const queryResponse = {
-			type: "parsing-error",
-			message: "message",
-			line: 0,
-			column: 1,
-			id: 2,
-			location: 3,
-		};
+it("throws PrismicError if response is not 200, 400, 401, 403, or 404", async (ctx) => {
+	const queryResponse = {};
 
-		server.use(
-			createMockRepositoryHandler(t, repositoryResponse),
-			msw.rest.get(createQueryEndpoint(t), (_req, res, ctx) => {
-				return res(ctx.status(400), ctx.json(queryResponse));
-			}),
-		);
+	mockPrismicRestAPIV2({ ctx });
 
-		const client = createTestClient(t);
+	const client = createTestClient();
 
-		await t.throwsAsync(async () => await client.get(), {
-			instanceOf: prismic.ParsingError,
-			message: queryResponse.message,
-		});
-	},
-);
+	const queryEndpoint = new URL(
+		"documents/search",
+		`${client.endpoint}/`,
+	).toString();
 
-test.serial(
-	"throws PrismicError if response code is 400 but is not a parsing error",
-	async (t) => {
-		const repositoryResponse = createRepositoryResponse();
-		const queryResponse = {};
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
+			return res(ctx.status(418), ctx.json(queryResponse));
+		}),
+	);
 
-		server.use(
-			createMockRepositoryHandler(t, repositoryResponse),
-			msw.rest.get(createQueryEndpoint(t), (_req, res, ctx) => {
-				return res(ctx.status(400), ctx.json(queryResponse));
-			}),
-		);
+	await expect(() => client.get()).rejects.toThrowError(
+		/invalid api response/i,
+	);
+	await expect(() => client.get()).rejects.toThrowError(prismic.PrismicError);
+});
 
-		const client = createTestClient(t);
+it("throws PrismicError if response is not JSON", async (ctx) => {
+	mockPrismicRestAPIV2({ ctx });
 
-		await t.throwsAsync(async () => await client.get(), {
-			instanceOf: prismic.PrismicError,
-		});
-	},
-);
+	const client = createTestClient();
 
-test.serial(
-	"throws PrismicError if response is not 200, 400, 403, or 404",
-	async (t) => {
-		const repositoryResponse = createRepositoryResponse();
+	const queryEndpoint = new URL(
+		"documents/search",
+		`${client.endpoint}/`,
+	).toString();
 
-		server.use(
-			createMockRepositoryHandler(t, repositoryResponse),
-			msw.rest.get(createQueryEndpoint(t), (_req, res, ctx) => {
-				return res(ctx.status(418), ctx.json({}));
-			}),
-		);
-
-		const client = createTestClient(t);
-
-		await t.throwsAsync(async () => await client.get(), {
-			instanceOf: prismic.PrismicError,
-			message: /invalid api response/i,
-		});
-	},
-);
-
-test.serial("throws PrismicError if response is not JSON", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		msw.rest.get(createQueryEndpoint(t), (_req, res, ctx) => {
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
 			return res(ctx.status(200));
 		}),
 	);
 
-	const client = createTestClient(t);
-
-	await t.throwsAsync(async () => await client.get(), {
-		instanceOf: prismic.PrismicError,
-		message: /invalid api response/i,
-	});
+	await expect(() => client.get()).rejects.toThrowError(
+		/invalid api response/i,
+	);
+	await expect(() => client.get()).rejects.toThrowError(prismic.PrismicError);
 });
 
-test.serial("throws NotFoundError if repository does not exist", async (t) => {
-	server.use(
-		msw.rest.get(createRepositoryEndpoint(t), (_req, res, ctx) => {
-			return res(ctx.status(404));
-		}),
-		msw.rest.get(createQueryEndpoint(t), (_req, res, ctx) => {
+it("throws NotFoundError if repository does not exist", async (ctx) => {
+	const client = createTestClient();
+
+	ctx.server.use(
+		msw.rest.get(client.endpoint, (_req, res, ctx) => {
 			return res(ctx.status(404));
 		}),
 	);
 
-	const client = createTestClient(t);
-
-	await t.throwsAsync(async () => await client.get(), {
-		instanceOf: prismic.NotFoundError,
-		message: /repository not found/i,
-	});
+	await expect(() => client.get()).rejects.toThrowError(
+		/repository not found/i,
+	);
+	await expect(() => client.get()).rejects.toThrowError(prismic.NotFoundError);
 });
 
-test.serial(
-	"throws if a prismic.io endpoint is given that is not for Rest API V2",
-	(t) => {
-		const fetch = sinon.stub();
+it("throws if a prismic.io endpoint is given that is not for Rest API V2", () => {
+	const fetch = vi.fn();
 
-		const originalNodeEnv = process.env.NODE_ENV;
-		process.env.NODE_ENV = "development";
+	const originalNodeEnv = process.env.NODE_ENV;
+	process.env.NODE_ENV = "development";
 
-		t.throws(
-			() => {
-				prismic.createClient("https://qwerty.cdn.prismic.io/api/v1", { fetch });
-			},
-			{
-				message: /only supports Prismic Rest API V2/,
-				instanceOf: prismic.PrismicError,
-			},
-		);
+	expect(() => {
+		prismic.createClient("https://qwerty.cdn.prismic.io/api/v1", { fetch });
+	}).toThrowError(/only supports Prismic Rest API V2/i);
+	expect(() => {
+		prismic.createClient("https://qwerty.cdn.prismic.io/api/v1", { fetch });
+	}).toThrowError(prismic.PrismicError);
 
-		t.notThrows(() => {
-			prismic.createClient("https://example.com/custom/endpoint", { fetch });
-		}, "Non-prismic.io endpoints are not checked");
+	expect(() => {
+		prismic.createClient("https://example.com/custom/endpoint", { fetch });
+	}, "Non-prismic.io endpoints are not checked").not.toThrow();
 
-		t.notThrows(() => {
-			prismic.createClient("https://qwerty.cdn.prismic.io/api/v2", { fetch });
-		}, "A valid prismic.io V2 endpoint does not throw");
+	expect(() => {
+		prismic.createClient("https://qwerty.cdn.prismic.io/api/v2", { fetch });
+	}, "A valid prismic.io V2 endpoint does not throw").not.toThrow();
 
-		t.notThrows(() => {
-			prismic.createClient(prismic.getRepositoryEndpoint("qwerty"), { fetch });
-		}, "An endpoint created with getRepositoryEndpoint does not throw");
+	expect(() => {
+		prismic.createClient(prismic.getRepositoryEndpoint("qwerty"), { fetch });
+	}, "An endpoint created with getRepositoryEndpoint does not throw").not.toThrow();
 
-		process.env.NODE_ENV === originalNodeEnv;
-	},
-);
+	process.env.NODE_ENV === originalNodeEnv;
+});

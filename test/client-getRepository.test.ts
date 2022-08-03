@@ -1,58 +1,43 @@
-import test from "ava";
-import * as mswNode from "msw/node";
-import AbortController from "abort-controller";
+import { it, expect } from "vitest";
 
-import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
-import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createTestClient } from "./__testutils__/createClient";
 
 import * as prismic from "../src";
 
-const server = mswNode.setupServer();
-test.before(() => server.listen({ onUnhandledRequest: "error" }));
-test.after(() => server.close());
+it("returns repository metadata", async (ctx) => {
+	const repositoryResponse = ctx.mock.api.repository();
+	mockPrismicRestAPIV2({
+		repositoryResponse,
+		ctx,
+	});
 
-test("returns repository metadata", async (t) => {
-	const response = createRepositoryResponse();
-	server.use(createMockRepositoryHandler(t, response));
-
-	const client = createTestClient(t);
+	const client = createTestClient();
 	const res = await client.getRepository();
 
-	t.deepEqual(res, response);
+	expect(res).toStrictEqual(repositoryResponse);
 });
 
 // TODO: Remove when Authorization header support works in browsers with CORS.
-test("includes access token if configured", async (t) => {
-	const options: prismic.ClientConfig = {
+it("includes access token if configured", async (ctx) => {
+	const clientConfig: prismic.ClientConfig = {
 		accessToken: "accessToken",
 	};
 
-	const response = createRepositoryResponse();
-	server.use(createMockRepositoryHandler(t, response, options.accessToken));
+	const repositoryResponse = ctx.mock.api.repository();
+	mockPrismicRestAPIV2({
+		repositoryResponse,
+		accessToken: clientConfig.accessToken,
+		ctx,
+	});
 
-	const client = createTestClient(t, options);
+	const client = createTestClient({ clientConfig });
 	const res = await client.getRepository();
 
-	t.deepEqual(res, response);
+	expect(res).toStrictEqual(repositoryResponse);
 });
 
-test("is abortable with an AbortController", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-
-	server.use(createMockRepositoryHandler(t, repositoryResponse));
-
-	const client = createTestClient(t);
-
-	await t.throwsAsync(
-		async () => {
-			const controller = new AbortController();
-			controller.abort();
-
-			await client.getRepository({
-				signal: controller.signal,
-			});
-		},
-		{ name: "AbortError" },
-	);
+testAbortableMethod("is abortable with an AbortController", {
+	run: (client, signal) => client.getRepository({ signal }),
 });

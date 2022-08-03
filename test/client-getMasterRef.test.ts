@@ -1,44 +1,26 @@
-import test from "ava";
-import * as mswNode from "msw/node";
-import AbortController from "abort-controller";
+import { it, expect } from "vitest";
 
-import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
-import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
 import { createTestClient } from "./__testutils__/createClient";
-import { createRef } from "./__testutils__/createRef";
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 
-const server = mswNode.setupServer();
-test.before(() => server.listen({ onUnhandledRequest: "error" }));
-test.after(() => server.close());
+it("returns the master ref", async (ctx) => {
+	const masterRef = ctx.mock.api.ref({ isMasterRef: true });
+	const ref2 = ctx.mock.api.ref({ isMasterRef: false });
+	const repositoryResponse = ctx.mock.api.repository();
+	repositoryResponse.refs = [ref2, masterRef];
 
-test("returns the master ref", async (t) => {
-	const masterRef = createRef(true);
-	const ref2 = createRef(false);
-	const response = createRepositoryResponse({ refs: [ref2, masterRef] });
-	server.use(createMockRepositoryHandler(t, response));
+	mockPrismicRestAPIV2({
+		repositoryResponse,
+		ctx,
+	});
 
-	const client = createTestClient(t);
+	const client = createTestClient();
 	const res = await client.getMasterRef();
 
-	t.deepEqual(res, masterRef);
+	expect(res).toStrictEqual(masterRef);
 });
 
-test("is abortable with an AbortController", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-
-	server.use(createMockRepositoryHandler(t, repositoryResponse));
-
-	const client = createTestClient(t);
-
-	await t.throwsAsync(
-		async () => {
-			const controller = new AbortController();
-			controller.abort();
-
-			await client.getMasterRef({
-				signal: controller.signal,
-			});
-		},
-		{ name: "AbortError" },
-	);
+testAbortableMethod("is abortable with an AbortController", {
+	run: (client, signal) => client.getMasterRef({ signal }),
 });

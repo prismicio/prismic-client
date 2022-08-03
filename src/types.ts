@@ -64,7 +64,7 @@ export type FetchLike = (
  *
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal}
  */
-// `any` is used often here to ensure this type is universally valid amond
+// `any` is used often here to ensure this type is universally valid among
 // different AbortSignal implementations. The types of each property are not
 // important to validate since it is blindly passed to a given `fetch()`
 // function.

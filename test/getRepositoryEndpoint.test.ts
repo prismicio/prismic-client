@@ -1,21 +1,20 @@
-import test from "ava";
+import { it, expect } from "vitest";
 
 import * as prismic from "../src";
 
-test("returns default Rest API V2 CDN URL", (t) => {
+it("returns default Rest API V2 CDN URL", () => {
 	const endpoint = prismic.getRepositoryEndpoint("qwerty");
 
-	t.is(endpoint, "https://qwerty.cdn.prismic.io/api/v2");
+	expect(endpoint).toBe("https://qwerty.cdn.prismic.io/api/v2");
 });
 
-test("throws if an invalid repository name is given", (t) => {
-	t.throws(
-		() => {
-			prismic.getRepositoryEndpoint("this is invalid");
-		},
-		{
-			instanceOf: prismic.PrismicError,
-			message: "An invalid Prismic repository name was given: this is invalid",
-		},
+it("throws if an invalid repository name is given", () => {
+	expect(() => {
+		prismic.getRepositoryEndpoint("this is invalid");
+	}).toThrowError(
+		/An invalid Prismic repository name was given: this is invalid/i,
 	);
+	expect(() => {
+		prismic.getRepositoryEndpoint("this is invalid");
+	}).toThrowError(prismic.PrismicError);
 });

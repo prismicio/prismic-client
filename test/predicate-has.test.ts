@@ -1,11 +1,8 @@
-import test from "ava";
-
-import { isTitleMacro } from "./__testutils__/isTitleMacro";
+import { testPredicate } from "./__testutils__/testPredicate";
 
 import * as prismic from "../src";
 
-test(
+testPredicate(
 	"[has(my.product.price)]",
-	isTitleMacro,
 	prismic.predicate.has("my.product.price"),
 );

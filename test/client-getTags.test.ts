@@ -1,70 +1,71 @@
-import test from "ava";
+import { it, expect } from "vitest";
 import * as msw from "msw";
-import * as mswNode from "msw/node";
-import AbortController from "abort-controller";
 
-import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
-import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createTestClient } from "./__testutils__/createClient";
 
-const server = mswNode.setupServer();
-test.before(() => server.listen({ onUnhandledRequest: "error" }));
-test.after(() => server.close());
+it("returns all tags", async (ctx) => {
+	const repositoryResponse = ctx.mock.api.repository();
+	mockPrismicRestAPIV2({
+		repositoryResponse,
+		ctx,
+	});
 
-test("returns all tags", async (t) => {
-	const response = createRepositoryResponse();
-	server.use(createMockRepositoryHandler(t, response));
-
-	const client = createTestClient(t);
+	const client = createTestClient();
 	const res = await client.getTags();
 
-	t.deepEqual(res, response.tags);
+	expect(res).toStrictEqual(repositoryResponse.tags);
 });
 
-test("uses form endpoint if available", async (t) => {
+it("uses form endpoint if available", async (ctx) => {
 	const tagsEndpoint = "https://example.com/tags-form-endpoint";
 	const tagsResponse = ["foo", "bar"];
 
-	const repositoryResponse = createRepositoryResponse({
-		forms: {
-			tags: {
-				method: "GET",
-				action: tagsEndpoint,
-				enctype: "",
-				fields: {},
-			},
+	const repositoryResponse = ctx.mock.api.repository();
+	repositoryResponse.forms = {
+		tags: {
+			method: "GET",
+			action: tagsEndpoint,
+			enctype: "",
+			fields: {},
 		},
+	};
+	mockPrismicRestAPIV2({
+		repositoryResponse,
+		ctx,
 	});
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
+	ctx.server.use(
 		msw.rest.get(tagsEndpoint, (_req, res, ctx) => {
 			return res(ctx.json(tagsResponse));
 		}),
 	);
 
-	const client = createTestClient(t);
+	const client = createTestClient();
 	const res = await client.getTags();
 
-	t.deepEqual(res, tagsResponse);
+	expect(res).toStrictEqual(tagsResponse);
 });
 
-test("sends access token if form endpoint is used", async (t) => {
+it("sends access token if form endpoint is used", async (ctx) => {
 	const tagsEndpoint = "https://example.com/tags-form-endpoint";
 	const tagsResponse = ["foo", "bar"];
 	const accessToken = "accessToken";
 
-	const repositoryResponse = createRepositoryResponse({
-		forms: {
-			tags: {
-				method: "GET",
-				action: tagsEndpoint,
-				enctype: "",
-				fields: {},
-			},
+	const repositoryResponse = ctx.mock.api.repository();
+	repositoryResponse.forms = {
+		tags: {
+			method: "GET",
+			action: tagsEndpoint,
+			enctype: "",
+			fields: {},
 		},
+	};
+	mockPrismicRestAPIV2({
+		repositoryResponse,
+		ctx,
 	});
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
+	ctx.server.use(
 		msw.rest.get(tagsEndpoint, (req, res, ctx) => {
 			if (req.url.searchParams.get("access_token") === accessToken) {
 				return res(ctx.json(tagsResponse));
@@ -72,28 +73,12 @@ test("sends access token if form endpoint is used", async (t) => {
 		}),
 	);
 
-	const client = createTestClient(t, { accessToken });
+	const client = createTestClient({ clientConfig: { accessToken } });
 	const res = await client.getTags();
 
-	t.deepEqual(res, tagsResponse);
+	expect(res).toStrictEqual(tagsResponse);
 });
 
-test("is abortable with an AbortController", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-
-	server.use(createMockRepositoryHandler(t, repositoryResponse));
-
-	const client = createTestClient(t);
-
-	await t.throwsAsync(
-		async () => {
-			const controller = new AbortController();
-			controller.abort();
-
-			await client.getTags({
-				signal: controller.signal,
-			});
-		},
-		{ name: "AbortError" },
-	);
+testAbortableMethod("is abortable with an AbortController", {
+	run: (client, signal) => client.getTags({ signal }),
 });

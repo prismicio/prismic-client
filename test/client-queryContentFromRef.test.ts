@@ -1,69 +1,51 @@
-import test from "ava";
-import * as mswNode from "msw/node";
+import { it, expect } from "vitest";
+import * as prismicM from "@prismicio/mock";
 
-import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
-import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
-import { createQueryResponse } from "./__testutils__/createQueryResponse";
-import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
+import { testGetMethod } from "./__testutils__/testAnyGetMethod";
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createTestClient } from "./__testutils__/createClient";
 import { getMasterRef } from "./__testutils__/getMasterRef";
 
-const server = mswNode.setupServer();
-test.before(() => server.listen({ onUnhandledRequest: "error" }));
-test.after(() => server.close());
+testGetMethod("supports manual string ref", {
+	run: (client) => {
+		client.queryContentFromRef("ref");
 
-test("supports manual string ref", async (t) => {
-	const queryResponse = createQueryResponse();
-	const ref = "ref";
-
-	server.use(
-		createMockRepositoryHandler(t),
-		createMockQueryHandler(t, [queryResponse], undefined, { ref }),
-	);
-
-	const client = createTestClient(t);
-
-	client.queryContentFromRef(ref);
-
-	const res = await client.get();
-
-	t.deepEqual(res, queryResponse);
+		return client.get();
+	},
+	requiredParams: {
+		ref: "ref",
+	},
 });
 
-test("supports manual thunk ref", async (t) => {
-	const queryResponse = createQueryResponse();
-	const ref = "ref";
+testGetMethod("supports manual thunk ref", {
+	run: (client) => {
+		client.queryContentFromRef(async () => "thunk");
 
-	server.use(
-		createMockRepositoryHandler(t),
-		createMockQueryHandler(t, [queryResponse], undefined, { ref }),
-	);
-
-	const client = createTestClient(t);
-
-	client.queryContentFromRef(async () => ref);
-
-	const res = await client.get();
-
-	t.deepEqual(res, queryResponse);
+		return client.get();
+	},
+	requiredParams: {
+		ref: "thunk",
+	},
 });
 
-test("uses master ref if manual thunk ref returns non-string value", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-	const queryResponse = createQueryResponse();
+it("uses master ref if manual thunk ref returns non-string value", async (ctx) => {
+	const repositoryResponse = ctx.mock.api.repository();
+	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
-	server.use(
-		createMockRepositoryHandler(t, repositoryResponse),
-		createMockQueryHandler(t, [queryResponse], undefined, {
+	mockPrismicRestAPIV2({
+		repositoryResponse,
+		queryResponse,
+		queryRequiredParams: {
 			ref: getMasterRef(repositoryResponse),
-		}),
-	);
+		},
+		ctx,
+	});
 
-	const client = createTestClient(t);
+	const client = createTestClient();
 
 	client.queryContentFromRef(async () => undefined);
 
 	const res = await client.get();
 
-	t.deepEqual(res, queryResponse);
+	expect(res).toStrictEqual(queryResponse);
 });

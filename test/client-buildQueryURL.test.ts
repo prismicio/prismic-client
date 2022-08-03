@@ -1,48 +1,46 @@
-import test from "ava";
-import * as mswNode from "msw/node";
+import { it, expect } from "vitest";
 
-import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
-import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createTestClient } from "./__testutils__/createClient";
 import { getMasterRef } from "./__testutils__/getMasterRef";
 
 import * as prismic from "../src";
 
-const server = mswNode.setupServer();
-test.before(() => server.listen({ onUnhandledRequest: "error" }));
-test.after(() => server.close());
+it("builds a query URL using the master ref", async (ctx) => {
+	const repositoryResponse = ctx.mock.api.repository();
+	const ref = getMasterRef(repositoryResponse);
 
-test("builds a query URL using the master ref", async (t) => {
-	const response = createRepositoryResponse();
-	const ref = getMasterRef(response);
-	server.use(createMockRepositoryHandler(t, response));
+	mockPrismicRestAPIV2({
+		repositoryResponse,
+		ctx,
+	});
 
-	const client = createTestClient(t);
+	const client = createTestClient();
 	const res = await client.buildQueryURL();
 	const url = new URL(res);
 
 	const expectedSearchParams = new URLSearchParams({
 		ref,
 	});
-
+	url.searchParams.delete("integrationFieldsRef");
 	url.searchParams.sort();
 	expectedSearchParams.sort();
 
-	t.is(url.host, new URL(client.endpoint).host);
-	t.is(url.pathname, "/api/v2/documents/search");
-	t.is(url.searchParams.toString(), expectedSearchParams.toString());
+	expect(url.host).toBe(new URL(client.endpoint).host);
+	expect(url.pathname).toBe("/api/v2/documents/search");
+	expect(url.searchParams.toString()).toBe(expectedSearchParams.toString());
 });
 
-test("includes params if provided", async (t) => {
+it("includes params if provided", async (ctx) => {
 	const params: prismic.BuildQueryURLArgs = {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
 		lang: "*",
 	};
 
-	server.use(createMockRepositoryHandler(t));
+	mockPrismicRestAPIV2({ ctx });
 
-	const client = createTestClient(t);
+	const client = createTestClient();
 	const res = await client.buildQueryURL(params);
 	const url = new URL(res);
 
@@ -53,44 +51,46 @@ test("includes params if provided", async (t) => {
 		access_token: params.accessToken ?? "",
 	});
 
+	url.searchParams.delete("integrationFieldsRef");
 	url.searchParams.sort();
 	expectedSearchParams.sort();
 
-	t.is(url.host, new URL(client.endpoint).host);
-	t.is(url.pathname, "/api/v2/documents/search");
-	t.is(url.searchParams.toString(), expectedSearchParams.toString());
+	expect(url.host).toBe(new URL(client.endpoint).host);
+	expect(url.pathname).toBe("/api/v2/documents/search");
+	expect(url.searchParams.toString()).toBe(expectedSearchParams.toString());
 });
 
-test("includes default params if provided", async (t) => {
-	const clientOptions: prismic.ClientConfig = {
+it("includes default params if provided", async (ctx) => {
+	const clientConfig: prismic.ClientConfig = {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
 		defaultParams: { lang: "*" },
 	};
 
-	server.use(createMockRepositoryHandler(t));
+	mockPrismicRestAPIV2({ ctx });
 
-	const client = createTestClient(t, clientOptions);
+	const client = createTestClient({ clientConfig });
 	const res = await client.buildQueryURL();
 	const url = new URL(res);
 
 	const expectedSearchParams = new URLSearchParams({
-		ref: clientOptions.ref?.toString() ?? "",
-		lang: clientOptions.defaultParams?.lang?.toString() ?? "",
+		ref: clientConfig.ref?.toString() ?? "",
+		lang: clientConfig.defaultParams?.lang?.toString() ?? "",
 		// TODO: Remove when Authorization header support works in browsers with CORS.
-		access_token: clientOptions.accessToken ?? "",
+		access_token: clientConfig.accessToken ?? "",
 	});
 
+	url.searchParams.delete("integrationFieldsRef");
 	url.searchParams.sort();
 	expectedSearchParams.sort();
 
-	t.is(url.host, new URL(client.endpoint).host);
-	t.is(url.pathname, "/api/v2/documents/search");
-	t.is(url.searchParams.toString(), expectedSearchParams.toString());
+	expect(url.host).toBe(new URL(client.endpoint).host);
+	expect(url.pathname).toBe("/api/v2/documents/search");
+	expect(url.searchParams.toString()).toBe(expectedSearchParams.toString());
 });
 
-test("merges params and default params if provided", async (t) => {
-	const clientOptions: prismic.ClientConfig = {
+it("merges params and default params if provided", async (ctx) => {
+	const clientConfig: prismic.ClientConfig = {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
 		defaultParams: { lang: "*", page: 2 },
@@ -99,24 +99,25 @@ test("merges params and default params if provided", async (t) => {
 		ref: "overridden-ref",
 	};
 
-	server.use(createMockRepositoryHandler(t));
+	mockPrismicRestAPIV2({ ctx });
 
-	const client = createTestClient(t, clientOptions);
+	const client = createTestClient({ clientConfig });
 	const res = await client.buildQueryURL(params);
 	const url = new URL(res);
 
 	const expectedSearchParams = new URLSearchParams({
 		ref: params.ref,
-		lang: clientOptions.defaultParams?.lang?.toString() ?? "",
-		page: clientOptions.defaultParams?.page?.toString() ?? "",
+		lang: clientConfig.defaultParams?.lang?.toString() ?? "",
+		page: clientConfig.defaultParams?.page?.toString() ?? "",
 		// TODO: Remove when Authorization header support works in browsers with CORS.
-		access_token: clientOptions.accessToken ?? "",
+		access_token: clientConfig.accessToken ?? "",
 	});
 
+	url.searchParams.delete("integrationFieldsRef");
 	url.searchParams.sort();
 	expectedSearchParams.sort();
 
-	t.is(url.host, new URL(client.endpoint).host);
-	t.is(url.pathname, "/api/v2/documents/search");
-	t.is(url.searchParams.toString(), expectedSearchParams.toString());
+	expect(url.host).toBe(new URL(client.endpoint).host);
+	expect(url.pathname).toBe("/api/v2/documents/search");
+	expect(url.searchParams.toString()).toBe(expectedSearchParams.toString());
 });

@@ -1,272 +1,231 @@
-import test from "ava";
-import * as mswNode from "msw/node";
+import { it, expect } from "vitest";
 import { Headers } from "node-fetch";
-import AbortController from "abort-controller";
+import * as prismicM from "@prismicio/mock";
 
-import { createDocument } from "./__testutils__/createDocument";
-import { createMockQueryHandler } from "./__testutils__/createMockQueryHandler";
-import { createMockRepositoryHandler } from "./__testutils__/createMockRepositoryHandler";
-import { createQueryResponse } from "./__testutils__/createQueryResponse";
 import { createTestClient } from "./__testutils__/createClient";
-import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 
-const server = mswNode.setupServer();
-test.before(() => server.listen({ onUnhandledRequest: "error" }));
-test.after(() => server.close());
+const previewToken = "previewToken";
 
-// Tests in this file must be serial because some test mutate globalThis which
-// could affect others.
-
-test.serial("resolves a preview url in the browser", async (t) => {
-	const document = createDocument();
-	const queryResponse = createQueryResponse([document]);
-
-	const documentId = document.id;
-	const previewToken = "previewToken";
+it("resolves a preview url in the browser", async (ctx) => {
+	const seed = ctx.meta.name;
+	const document = { ...prismicM.value.document({ seed }), uid: seed };
+	const queryResponse = prismicM.api.query({ seed, documents: [document] });
 
 	globalThis.location = {
 		...globalThis.location,
-		search: `?documentId=${documentId}&token=${previewToken}`,
+		search: `?documentId=${document.id}&token=${previewToken}`,
 	};
 
-	server.use(
-		createMockRepositoryHandler(t),
-		createMockQueryHandler(t, [queryResponse], undefined, {
+	mockPrismicRestAPIV2({
+		queryResponse,
+		queryRequiredParams: {
 			ref: previewToken,
-			q: `[[at(document.id, "${documentId}")]]`,
 			lang: "*",
-			pageSize: 1,
-		}),
-	);
+			pageSize: "1",
+			q: `[[at(document.id, "${document.id}")]]`,
+		},
+		ctx,
+	});
 
-	const client = createTestClient(t);
+	const client = createTestClient();
 	const res = await client.resolvePreviewURL({
 		linkResolver: (document) => `/${document.uid}`,
 		defaultURL: "defaultURL",
 	});
 
-	t.is(res, `/${document.uid}`);
+	expect(res).toBe(`/${document.uid}`);
 
 	// @ts-expect-error - Need to reset back to Node.js's default globalThis without `location`
 	globalThis.location = undefined;
 });
 
-test.serial("resolves a preview url using a server req object", async (t) => {
-	const document = createDocument();
-	const queryResponse = createQueryResponse([document]);
+it("resolves a preview url using a server req object", async (ctx) => {
+	const seed = ctx.meta.name;
+	const document = { ...prismicM.value.document({ seed }), uid: seed };
+	const queryResponse = prismicM.api.query({ seed, documents: [document] });
 
-	const documentId = document.id;
-	const previewToken = "previewToken";
 	const req = {
-		query: { documentId, token: previewToken },
+		query: { documentId: document.id, token: previewToken },
 		// This `url` property simulates a Next.js request. It is a
 		// partial URL only containing the pathname + search params.
 		url: `/foo?bar=baz`,
 	};
 
-	server.use(
-		createMockRepositoryHandler(t),
-		createMockQueryHandler(t, [queryResponse], undefined, {
+	mockPrismicRestAPIV2({
+		queryResponse,
+		queryRequiredParams: {
 			ref: previewToken,
-			q: `[[at(document.id, "${documentId}")]]`,
 			lang: "*",
-			pageSize: 1,
-		}),
-	);
+			pageSize: "1",
+			q: `[[at(document.id, "${document.id}")]]`,
+		},
+		ctx,
+	});
 
-	const client = createTestClient(t);
+	const client = createTestClient();
 	client.enableAutoPreviewsFromReq(req);
 	const res = await client.resolvePreviewURL({
 		linkResolver: (document) => `/${document.uid}`,
 		defaultURL: "defaultURL",
 	});
 
-	t.is(res, `/${document.uid}`);
+	expect(res).toBe(`/${document.uid}`);
 });
 
-test.serial(
-	"resolves a preview url using a Web API-based server req object",
-	async (t) => {
-		const document = createDocument();
-		const queryResponse = createQueryResponse([document]);
+it("resolves a preview url using a Web API-based server req object", async (ctx) => {
+	const seed = ctx.meta.name;
+	const document = { ...prismicM.value.document({ seed }), uid: seed };
+	const queryResponse = prismicM.api.query({ seed, documents: [document] });
 
-		const documentId = document.id;
-		const previewToken = "previewToken";
+	const headers = new Headers();
+	const url = new URL("https://example.com");
+	url.searchParams.set("documentId", document.id);
+	url.searchParams.set("token", previewToken);
+	const req = {
+		headers,
+		url: url.toString(),
+	};
 
-		const headers = new Headers();
-		const url = new URL("https://example.com");
-		url.searchParams.set("documentId", documentId);
-		url.searchParams.set("token", previewToken);
-		const req = {
-			headers,
-			url: url.toString(),
-		};
-
-		server.use(
-			createMockRepositoryHandler(t),
-			createMockQueryHandler(t, [queryResponse], undefined, {
-				ref: previewToken,
-				q: `[[at(document.id, "${documentId}")]]`,
-				lang: "*",
-				pageSize: 1,
-			}),
-		);
-
-		const client = createTestClient(t);
-		client.enableAutoPreviewsFromReq(req);
-		const res = await client.resolvePreviewURL({
-			linkResolver: (document) => `/${document.uid}`,
-			defaultURL: "defaultURL",
-		});
-
-		t.is(res, `/${document.uid}`);
-	},
-);
-
-test.serial(
-	"allows providing an explicit documentId and previewToken",
-	async (t) => {
-		const document = createDocument();
-		const queryResponse = createQueryResponse([document]);
-
-		const documentID = document.id;
-		const previewToken = "previewToken";
-		const req = {
-			query: {
-				documentId: "this will be unused",
-				token: "this will be unused",
-			},
-		};
-
-		server.use(
-			createMockRepositoryHandler(t),
-			createMockQueryHandler(t, [queryResponse], undefined, {
-				ref: previewToken,
-				q: `[[at(document.id, "${documentID}")]]`,
-				lang: "*",
-				pageSize: 1,
-			}),
-		);
-
-		const client = createTestClient(t);
-		client.enableAutoPreviewsFromReq(req);
-		const res = await client.resolvePreviewURL({
-			linkResolver: (document) => `/${document.uid}`,
-			defaultURL: "defaultURL",
-			documentID,
-			previewToken,
-		});
-
-		t.is(res, `/${document.uid}`);
-	},
-);
-
-test.serial(
-	"returns defaultURL if current url does not contain preview params in browser",
-	async (t) => {
-		const defaultURL = "defaultURL";
-
-		// Set a global Location object without the parameters we need for automatic
-		// preview support.
-		globalThis.location = { ...globalThis.location, search: "" };
-
-		const client = createTestClient(t);
-		const res = await client.resolvePreviewURL({
-			linkResolver: (document) => `/${document.uid}`,
-			defaultURL,
-		});
-
-		t.is(res, defaultURL);
-
-		// @ts-expect-error - Need to reset back to Node.js's default globalThis without `location`
-		globalThis.location = undefined;
-	},
-);
-
-test.serial(
-	"returns defaultURL if req does not contain preview params in server req object",
-	async (t) => {
-		const defaultURL = "defaultURL";
-		const req = {};
-
-		const client = createTestClient(t);
-		client.enableAutoPreviewsFromReq(req);
-		const res = await client.resolvePreviewURL({
-			linkResolver: (document) => `/${document.uid}`,
-			defaultURL,
-		});
-
-		t.is(res, defaultURL);
-	},
-);
-
-test.serial(
-	"returns defaultURL if no preview context is available",
-	async (t) => {
-		const defaultURL = "defaultURL";
-
-		const client = createTestClient(t);
-		const res = await client.resolvePreviewURL({
-			linkResolver: (document) => `/${document.uid}`,
-			defaultURL,
-		});
-
-		t.is(res, defaultURL);
-	},
-);
-
-test.serial("returns defaultURL if resolved URL is not a string", async (t) => {
-	const defaultURL = "defaultURL";
-	const document = createDocument();
-	const queryResponse = createQueryResponse([document]);
-
-	const documentID = document.id;
-	const previewToken = "previewToken";
-
-	server.use(
-		createMockRepositoryHandler(t),
-		createMockQueryHandler(t, [queryResponse], undefined, {
+	mockPrismicRestAPIV2({
+		queryResponse,
+		queryRequiredParams: {
 			ref: previewToken,
-			q: `[[at(document.id, "${documentID}")]]`,
 			lang: "*",
-			pageSize: 1,
-		}),
-	);
+			pageSize: "1",
+			q: `[[at(document.id, "${document.id}")]]`,
+		},
+		ctx,
+	});
 
-	const client = createTestClient(t);
+	const client = createTestClient();
+	client.enableAutoPreviewsFromReq(req);
 	const res = await client.resolvePreviewURL({
-		linkResolver: () => null,
-		defaultURL,
-		documentID,
+		linkResolver: (document) => `/${document.uid}`,
+		defaultURL: "defaultURL",
+	});
+
+	expect(res).toBe(`/${document.uid}`);
+});
+
+it("allows providing an explicit documentId and previewToken", async (ctx) => {
+	const seed = ctx.meta.name;
+	const document = { ...prismicM.value.document({ seed }), uid: seed };
+	const queryResponse = prismicM.api.query({ seed, documents: [document] });
+
+	const req = {
+		query: {
+			documentId: "this will not be used",
+			token: "this will not be used",
+		},
+	};
+
+	mockPrismicRestAPIV2({
+		queryResponse,
+		queryRequiredParams: {
+			ref: previewToken,
+			lang: "*",
+			pageSize: "1",
+			q: `[[at(document.id, "${document.id}")]]`,
+		},
+		ctx,
+	});
+
+	const client = createTestClient();
+	client.enableAutoPreviewsFromReq(req);
+	const res = await client.resolvePreviewURL({
+		linkResolver: (document) => `/${document.uid}`,
+		defaultURL: "defaultURL",
+		documentID: document.id,
 		previewToken,
 	});
 
-	t.is(res, defaultURL);
+	expect(res).toBe(`/${document.uid}`);
 });
 
-test("is abortable with an AbortController", async (t) => {
-	const repositoryResponse = createRepositoryResponse();
-	const document = createDocument();
+it("returns defaultURL if current url does not contain preview params in browser", async () => {
+	const defaultURL = "defaultURL";
 
-	const documentID = document.id;
-	const previewToken = "previewToken";
+	// Set a global Location object without the parameters we need for automatic
+	// preview support.
+	globalThis.location = { ...globalThis.location, search: "" };
 
-	server.use(createMockRepositoryHandler(t, repositoryResponse));
+	const client = createTestClient();
+	const res = await client.resolvePreviewURL({
+		linkResolver: (document) => `/${document.uid}`,
+		defaultURL,
+	});
 
-	const client = createTestClient(t);
+	expect(res).toBe(defaultURL);
 
-	await t.throwsAsync(
-		async () => {
-			const controller = new AbortController();
-			controller.abort();
+	// @ts-expect-error - Need to reset back to Node.js's default globalThis without `location`
+	globalThis.location = undefined;
+});
 
-			await client.resolvePreviewURL({
-				signal: controller.signal,
-				defaultURL: "/",
-				documentID,
-				previewToken,
-			});
+it("returns defaultURL if req does not contain preview params in server req object", async () => {
+	const defaultURL = "defaultURL";
+	const req = {};
+
+	const client = createTestClient();
+	client.enableAutoPreviewsFromReq(req);
+	const res = await client.resolvePreviewURL({
+		linkResolver: (document) => `/${document.uid}`,
+		defaultURL,
+	});
+
+	expect(res).toBe(defaultURL);
+});
+
+it("returns defaultURL if no preview context is available", async () => {
+	const defaultURL = "defaultURL";
+
+	const client = createTestClient();
+	const res = await client.resolvePreviewURL({
+		linkResolver: (document) => `/${document.uid}`,
+		defaultURL,
+	});
+
+	expect(res).toBe(defaultURL);
+});
+
+it("returns defaultURL if resolved URL is not a string", async (ctx) => {
+	const seed = ctx.meta.name;
+	const document = {
+		...prismicM.value.document({ seed, withURL: false }),
+		uid: seed,
+	};
+	const queryResponse = prismicM.api.query({ seed, documents: [document] });
+	const defaultURL = "defaultURL";
+
+	mockPrismicRestAPIV2({
+		queryResponse,
+		queryRequiredParams: {
+			ref: previewToken,
+			lang: "*",
+			pageSize: "1",
+			q: `[[at(document.id, "${document.id}")]]`,
 		},
-		{ name: "AbortError" },
-	);
+		ctx,
+	});
+
+	const client = createTestClient();
+	const res = await client.resolvePreviewURL({
+		linkResolver: () => null,
+		defaultURL,
+		documentID: document.id,
+		previewToken,
+	});
+
+	expect(res).toBe(defaultURL);
+});
+
+testAbortableMethod("is abortable with an AbortController", {
+	run: (client, signal) =>
+		client.resolvePreviewURL({
+			signal,
+			defaultURL: "defaultURL",
+			documentID: "foo",
+			previewToken,
+		}),
 });
