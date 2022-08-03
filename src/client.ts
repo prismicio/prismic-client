@@ -7,7 +7,7 @@ import { castThunk } from "./lib/castThunk";
 import { findMasterRef } from "./lib/findMasterRef";
 import { findRefByID } from "./lib/findRefByID";
 import { findRefByLabel } from "./lib/findRefByLabel";
-import { getCookie } from "./lib/getCookie";
+import { getPreviewCookie } from "./lib/getPreviewCookie";
 import { minifyGraphQLQuery } from "./lib/minifyGraphQLQuery";
 
 import {
@@ -1580,7 +1580,7 @@ export class Client<
 			}
 
 			if (cookieJar) {
-				previewRef = getCookie(cookieJar);
+				previewRef = getPreviewCookie(cookieJar);
 			}
 
 			if (previewRef) {

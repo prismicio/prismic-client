@@ -11,7 +11,7 @@ const readValue = (value: string): string => {
  *
  * @returns The value of the cookie, if it exists.
  */
-export const getCookie = (cookieJar: string): string | undefined => {
+export const getPreviewCookie = (cookieJar: string): string | undefined => {
 	const cookies = cookieJar.split("; ");
 
 	let value: string | undefined;
