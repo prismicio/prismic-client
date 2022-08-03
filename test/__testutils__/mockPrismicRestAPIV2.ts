@@ -53,26 +53,22 @@ export const mockPrismicRestAPIV2 = (args: MockPrismicRestAPIV2Args) => {
 				}
 			}
 
-			const response = args.queryResponse || args.ctx.mock.api.query();
-
-			if (Array.isArray(response)) {
+			if (Array.isArray(args.queryResponse)) {
 				const page = Number.parseInt(req.url.searchParams.get("page") || "1");
 
-				const thisResponse = response[page - 1];
+				const response = args.queryResponse[page - 1];
 
-				if (!thisResponse) {
+				if (!response) {
 					throw new Error(
 						`A query response was not generated for \`page=${page}\`.`,
 					);
 				}
 
-				return res(ctx.delay(args.queryDelay), ctx.json(thisResponse));
+				return res(ctx.delay(args.queryDelay), ctx.json(response));
 			} else {
-				if ("status" in response) {
-					return response;
-				} else {
-					return res(ctx.delay(args.queryDelay), ctx.json(response));
-				}
+				const response = args.queryResponse || args.ctx.mock.api.query();
+
+				return res(ctx.delay(args.queryDelay), ctx.json(response));
 			}
 		}),
 	);
