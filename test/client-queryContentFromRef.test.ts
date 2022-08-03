@@ -1,5 +1,4 @@
-import { it, expect, beforeAll, afterAll } from "vitest";
-import * as mswNode from "msw/node";
+import { it, expect } from "vitest";
 import * as prismicM from "@prismicio/mock";
 
 import { testGetMethod } from "./__testutils__/testAnyGetMethod";
@@ -7,10 +6,6 @@ import { createRepositoryResponse } from "./__testutils__/createRepositoryRespon
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createTestClient } from "./__testutils__/createClient";
 import { getMasterRef } from "./__testutils__/getMasterRef";
-
-const server = mswNode.setupServer();
-beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
-afterAll(() => server.close());
 
 testGetMethod("supports manual string ref", {
 	run: (client) => {
@@ -21,7 +16,6 @@ testGetMethod("supports manual string ref", {
 	requiredParams: {
 		ref: "ref",
 	},
-	server,
 });
 
 testGetMethod("supports manual thunk ref", {
@@ -33,7 +27,6 @@ testGetMethod("supports manual thunk ref", {
 	requiredParams: {
 		ref: "thunk",
 	},
-	server,
 });
 
 it("uses master ref if manual thunk ref returns non-string value", async (ctx) => {
@@ -46,7 +39,7 @@ it("uses master ref if manual thunk ref returns non-string value", async (ctx) =
 		queryRequiredParams: {
 			ref: getMasterRef(repositoryResponse),
 		},
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient();

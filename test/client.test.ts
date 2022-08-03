@@ -1,7 +1,6 @@
-import { it, expect, beforeAll, afterAll, vi } from "vitest";
-import * as msw from "msw";
-import * as mswNode from "msw/node";
+import { it, expect, vi } from "vitest";
 import { Response, Headers } from "node-fetch";
+import * as msw from "msw";
 import * as prismicM from "@prismicio/mock";
 
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
@@ -11,10 +10,6 @@ import { createTestClient } from "./__testutils__/createClient";
 import { getMasterRef } from "./__testutils__/getMasterRef";
 
 import * as prismic from "../src";
-
-const server = mswNode.setupServer();
-beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
-afterAll(() => server.close());
 
 it("createClient creates a Client", () => {
 	const client = prismic.createClient("qwerty", {
@@ -89,17 +84,28 @@ it("constructor throws if an invalid repository endpoint is provided", () => {
 it("constructor throws if fetch is unavailable", () => {
 	const endpoint = prismic.getRepositoryEndpoint("qwerty");
 
+	const originalFetch = globalThis.fetch;
+	// @ts-expect-error - Forcing fetch to be undefined
+	delete globalThis.fetch;
+
 	expect(() => prismic.createClient(endpoint)).toThrowError(
 		/fetch implementation was not provided/i,
 	);
 	expect(() => prismic.createClient(endpoint)).toThrowError(
 		prismic.PrismicError,
 	);
+
+	globalThis.fetch = originalFetch;
 });
 
 it("constructor throws if provided fetch is not a function", () => {
 	const endpoint = prismic.getRepositoryEndpoint("qwerty");
 	const fetch = "not a function";
+
+	// Unset global fetch to ensure the client won't fall back to the global implementation.
+	const originalFetch = globalThis.fetch;
+	// @ts-expect-error - Forcing fetch to be undefined
+	delete globalThis.fetch;
 
 	expect(() =>
 		prismic.createClient(endpoint, {
@@ -119,6 +125,8 @@ it("constructor throws if provided fetch is not a function", () => {
 			fetch,
 		}),
 	).toThrowError(prismic.PrismicError);
+
+	globalThis.fetch = originalFetch;
 });
 
 it("uses globalThis.fetch if available", async () => {
@@ -143,7 +151,10 @@ it("uses globalThis.fetch if available", async () => {
 it("uses the master ref by default", async (ctx) => {
 	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
-	mockPrismicRestAPIV2({ queryResponse, server });
+	mockPrismicRestAPIV2({
+		queryResponse,
+		server: ctx.server,
+	});
 
 	const client = createTestClient();
 	const res = await client.get();
@@ -158,7 +169,7 @@ it("supports manual string ref", async (ctx) => {
 	mockPrismicRestAPIV2({
 		queryResponse,
 		queryRequiredParams: { ref },
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient({ clientConfig: { ref } });
@@ -174,7 +185,7 @@ it("supports manual thunk ref", async (ctx) => {
 	mockPrismicRestAPIV2({
 		queryResponse,
 		queryRequiredParams: { ref },
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient({ clientConfig: { ref: () => ref } });
@@ -191,7 +202,7 @@ it("uses master ref if ref thunk param returns non-string value", async (ctx) =>
 		repositoryHandler: () => repositoryResponse,
 		queryResponse,
 		queryRequiredParams: { ref: getMasterRef(repositoryResponse) },
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient({ clientConfig: { ref: () => undefined } });
@@ -212,7 +223,7 @@ it("uses browser preview ref if available", async (ctx) => {
 	mockPrismicRestAPIV2({
 		queryResponse,
 		queryRequiredParams: { ref: previewRef },
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient();
@@ -236,7 +247,7 @@ it("uses req preview ref if available", async (ctx) => {
 	mockPrismicRestAPIV2({
 		queryResponse,
 		queryRequiredParams: { ref: previewRef },
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient();
@@ -260,7 +271,7 @@ it("supports req with Web APIs", async (ctx) => {
 	mockPrismicRestAPIV2({
 		queryResponse,
 		queryRequiredParams: { ref: previewRef },
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient();
@@ -282,7 +293,7 @@ it("ignores req without cookies", async (ctx) => {
 		repositoryHandler: () => repositoryResponse,
 		queryResponse,
 		queryRequiredParams: { ref: getMasterRef(repositoryResponse) },
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient();
@@ -312,7 +323,7 @@ it("does not use preview ref if auto previews are disabled", async (ctx) => {
 		repositoryHandler: () => repositoryResponse,
 		queryResponse,
 		queryRequiredParams: { ref: getMasterRef(repositoryResponse) },
-		server,
+		server: ctx.server,
 	});
 
 	const res1 = await client.get();
@@ -325,7 +336,7 @@ it("does not use preview ref if auto previews are disabled", async (ctx) => {
 		repositoryHandler: () => repositoryResponse,
 		queryResponse,
 		queryRequiredParams: { ref: previewRef },
-		server,
+		server: ctx.server,
 	});
 
 	const resWithPreviews = await client.get();
@@ -349,7 +360,28 @@ it("uses the integration fields ref if the repository provides it", async (ctx) 
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			integrationFieldsRef: repositoryResponse.integrationFieldsRef!,
 		},
-		server,
+		server: ctx.server,
+	});
+
+	const client = createTestClient();
+	const res = await client.get();
+
+	expect(res).toStrictEqual(queryResponse);
+});
+
+it("ignores the integration fields ref if the repository provides a null value", async (ctx) => {
+	const repositoryResponse = createRepositoryResponse({
+		integrationFieldsRef: null,
+	});
+	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
+
+	mockPrismicRestAPIV2({
+		repositoryHandler: () => repositoryResponse,
+		queryResponse,
+		queryRequiredParams: {
+			ref: getMasterRef(repositoryResponse),
+		},
+		server: ctx.server,
 	});
 
 	const client = createTestClient();
@@ -374,7 +406,7 @@ it("uses client-provided routes in queries", async (ctx) => {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			routes: JSON.stringify(routes),
 		},
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient({ clientConfig: { routes } });
@@ -383,10 +415,10 @@ it("uses client-provided routes in queries", async (ctx) => {
 	expect(res).toStrictEqual(queryResponse);
 });
 
-it("throws ForbiddenError if access token is invalid for repository metadata", async () => {
+it("throws ForbiddenError if access token is invalid for repository metadata", async (ctx) => {
 	mockPrismicRestAPIV2({
 		accessToken: "token",
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient();
@@ -399,10 +431,10 @@ it("throws ForbiddenError if access token is invalid for repository metadata", a
 	);
 });
 
-it("throws ForbiddenError if access token is invalid for query", async () => {
+it("throws ForbiddenError if access token is invalid for query", async (ctx) => {
 	mockPrismicRestAPIV2({
 		accessToken: "token",
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient();
@@ -413,10 +445,12 @@ it("throws ForbiddenError if access token is invalid for query", async () => {
 	await expect(() => client.get()).rejects.toThrowError(prismic.ForbiddenError);
 });
 
-it("throws PrismicError if response code is 403 but is not an invalid access token error", async () => {
-	const queryResponse = {};
+it("throws ForbiddenError if response code is 403", async (ctx) => {
+	const queryResponse = {
+		error: "Invalid access token",
+	};
 
-	mockPrismicRestAPIV2({ server });
+	mockPrismicRestAPIV2({ server: ctx.server });
 
 	const client = createTestClient();
 
@@ -425,16 +459,26 @@ it("throws PrismicError if response code is 403 but is not an invalid access tok
 		`${client.endpoint}/`,
 	).toString();
 
-	server.use(
+	ctx.server.use(
 		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
 			return res(ctx.status(403), ctx.json(queryResponse));
 		}),
 	);
 
-	await expect(() => client.get()).rejects.toThrowError(prismic.PrismicError);
+	let error: prismic.ForbiddenError | undefined;
+
+	try {
+		await client.get();
+	} catch (e) {
+		if (e instanceof prismic.ForbiddenError) {
+			error = e;
+		}
+	}
+
+	expect(error?.message).toBe(queryResponse.error);
 });
 
-it("throws ParsingError if response code is 400 with parsing-error type", async () => {
+it("throws ParsingError if response code is 400 with parsing-error type", async (ctx) => {
 	const queryResponse = {
 		type: "parsing-error",
 		message: "message",
@@ -444,7 +488,7 @@ it("throws ParsingError if response code is 400 with parsing-error type", async 
 		location: 3,
 	};
 
-	mockPrismicRestAPIV2({ server });
+	mockPrismicRestAPIV2({ server: ctx.server });
 
 	const client = createTestClient();
 
@@ -453,7 +497,7 @@ it("throws ParsingError if response code is 400 with parsing-error type", async 
 		`${client.endpoint}/`,
 	).toString();
 
-	server.use(
+	ctx.server.use(
 		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
 			return res(ctx.status(400), ctx.json(queryResponse));
 		}),
@@ -463,10 +507,10 @@ it("throws ParsingError if response code is 400 with parsing-error type", async 
 	await expect(() => client.get()).rejects.toThrowError(prismic.ParsingError);
 });
 
-it("throws PrismicError if response code is 400 but is not a parsing error", async () => {
+it("throws PrismicError if response code is 400 but is not a parsing error", async (ctx) => {
 	const queryResponse = {};
 
-	mockPrismicRestAPIV2({ server });
+	mockPrismicRestAPIV2({ server: ctx.server });
 
 	const client = createTestClient();
 
@@ -475,7 +519,7 @@ it("throws PrismicError if response code is 400 but is not a parsing error", asy
 		`${client.endpoint}/`,
 	).toString();
 
-	server.use(
+	ctx.server.use(
 		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
 			return res(ctx.status(400), ctx.json(queryResponse));
 		}),
@@ -484,10 +528,10 @@ it("throws PrismicError if response code is 400 but is not a parsing error", asy
 	await expect(() => client.get()).rejects.toThrowError(prismic.PrismicError);
 });
 
-it("throws PrismicError if response is not 200, 400, 403, or 404", async () => {
+it("throws PrismicError if response is not 200, 400, 401, 403, or 404", async (ctx) => {
 	const queryResponse = {};
 
-	mockPrismicRestAPIV2({ server });
+	mockPrismicRestAPIV2({ server: ctx.server });
 
 	const client = createTestClient();
 
@@ -496,7 +540,7 @@ it("throws PrismicError if response is not 200, 400, 403, or 404", async () => {
 		`${client.endpoint}/`,
 	).toString();
 
-	server.use(
+	ctx.server.use(
 		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
 			return res(ctx.status(418), ctx.json(queryResponse));
 		}),
@@ -508,8 +552,8 @@ it("throws PrismicError if response is not 200, 400, 403, or 404", async () => {
 	await expect(() => client.get()).rejects.toThrowError(prismic.PrismicError);
 });
 
-it("throws PrismicError if response is not JSON", async () => {
-	mockPrismicRestAPIV2({ server });
+it("throws PrismicError if response is not JSON", async (ctx) => {
+	mockPrismicRestAPIV2({ server: ctx.server });
 
 	const client = createTestClient();
 
@@ -518,7 +562,7 @@ it("throws PrismicError if response is not JSON", async () => {
 		`${client.endpoint}/`,
 	).toString();
 
-	server.use(
+	ctx.server.use(
 		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
 			return res(ctx.status(200));
 		}),
@@ -530,10 +574,10 @@ it("throws PrismicError if response is not JSON", async () => {
 	await expect(() => client.get()).rejects.toThrowError(prismic.PrismicError);
 });
 
-it("throws NotFoundError if repository does not exist", async () => {
+it("throws NotFoundError if repository does not exist", async (ctx) => {
 	const client = createTestClient();
 
-	server.use(
+	ctx.server.use(
 		msw.rest.get(client.endpoint, (_req, res, ctx) => {
 			return res(ctx.status(404));
 		}),

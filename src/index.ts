@@ -40,6 +40,7 @@ export * as cookie from "./cookie";
 export type { CreateClient, ClientConfig } from "./client";
 export type { QueryParams, BuildQueryURLArgs } from "./buildQueryURL";
 export type {
+	AbortSignalLike,
 	FetchLike,
 	HttpRequestLike,
 	Ordering,

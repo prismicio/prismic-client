@@ -1,5 +1,4 @@
-import { it, expect, beforeAll, afterAll } from "vitest";
-import * as mswNode from "msw/node";
+import { it, expect } from "vitest";
 
 import { createTestClient } from "./__testutils__/createClient";
 import { createPagedQueryResponses } from "./__testutils__/createPagedQueryResponses";
@@ -16,13 +15,8 @@ import { GET_ALL_QUERY_DELAY } from "../src/client";
  */
 const NETWORK_REQUEST_DURATION_TOLERANCE = 300;
 
-const server = mswNode.setupServer();
-beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
-afterAll(() => server.close());
-
 testGetAllMethod("returns all documents from paginated response", {
 	run: (client) => client.dangerouslyGetAll(),
-	server,
 });
 
 testGetAllMethod("includes params if provided", {
@@ -37,7 +31,6 @@ testGetAllMethod("includes params if provided", {
 		ref: "custom-ref",
 		lang: "*",
 	},
-	server,
 });
 
 testGetAllMethod("includes default params if provided", {
@@ -50,7 +43,6 @@ testGetAllMethod("includes default params if provided", {
 	requiredParams: {
 		lang: "*",
 	},
-	server,
 });
 
 testGetAllMethod("merges params and default params if provided", {
@@ -72,7 +64,6 @@ testGetAllMethod("merges params and default params if provided", {
 		ref: "overridden-ref",
 		lang: "fr-fr",
 	},
-	server,
 });
 
 testGetAllMethod(
@@ -85,7 +76,6 @@ testGetAllMethod(
 		requiredParams: {
 			pageSize: "100",
 		},
-		server,
 	},
 );
 
@@ -94,11 +84,10 @@ testGetAllMethod("optimizes pageSize when limit is below the pageSize", {
 		client.dangerouslyGetAll({
 			limit: 3,
 		}),
+	resultLimit: 3,
 	requiredParams: {
-		limit: "3",
 		pageSize: "3",
 	},
-	server,
 });
 
 testGetAllMethod(
@@ -108,17 +97,17 @@ testGetAllMethod(
 			client.dangerouslyGetAll({
 				limit: 150,
 			}),
+		resultLimit: 150,
 		requiredParams: {
-			limit: "150",
 			pageSize: "100",
 		},
-		server,
 	},
 );
 
-it("throttles requests past first page", async () => {
+it("throttles requests past first page", async (ctx) => {
 	const numPages = 3;
 	const queryResponses = createPagedQueryResponses({
+		ctx,
 		pages: numPages,
 	});
 
@@ -130,7 +119,7 @@ it("throttles requests past first page", async () => {
 			pageSize: "100",
 		},
 		queryDuration,
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient();
@@ -153,8 +142,9 @@ it("throttles requests past first page", async () => {
 	).toBe(true);
 });
 
-it("does not throttle single page queries", async () => {
+it("does not throttle single page queries", async (ctx) => {
 	const queryResponses = createPagedQueryResponses({
+		ctx,
 		pages: 1,
 	});
 	const queryDuration = 200;
@@ -165,7 +155,7 @@ it("does not throttle single page queries", async () => {
 			pageSize: "100",
 		},
 		queryDuration,
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient();
@@ -189,5 +179,4 @@ it("does not throttle single page queries", async () => {
 
 testAbortableMethod("is abortable with an AbortController", {
 	run: (client, signal) => client.dangerouslyGetAll({ signal }),
-	server,
 });

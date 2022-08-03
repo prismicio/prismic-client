@@ -1,5 +1,4 @@
-import { it, expect, beforeAll, afterAll } from "vitest";
-import * as mswNode from "msw/node";
+import { it, expect } from "vitest";
 import * as prismicM from "@prismicio/mock";
 
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
@@ -10,10 +9,6 @@ import {
 	testGetOutsideTTL,
 	testGetWithinTTL,
 } from "./__testutils__/testGetTTL";
-
-const server = mswNode.setupServer();
-beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
-afterAll(() => server.close());
 
 const ref1 = createRef(false);
 const ref2 = createRef(false, { id: ref1.id });
@@ -28,7 +23,7 @@ it("uses a releases ref by ID", async (ctx) => {
 		queryRequiredParams: {
 			ref: ref1.ref,
 		},
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient();
@@ -46,7 +41,6 @@ testGetWithinTTL("uses the cached release ref within the ref's TTL", {
 		getRef: () => ref1.ref,
 	},
 	beforeFirstGet: (args) => args.client.queryContentFromReleaseByID(ref1.id),
-	server,
 });
 
 testGetOutsideTTL("uses a fresh release ref outside of the cached ref's TTL", {
@@ -59,5 +53,4 @@ testGetOutsideTTL("uses a fresh release ref outside of the cached ref's TTL", {
 		getRef: () => ref2.ref,
 	},
 	beforeFirstGet: (args) => args.client.queryContentFromReleaseByID(ref1.id),
-	server,
 });

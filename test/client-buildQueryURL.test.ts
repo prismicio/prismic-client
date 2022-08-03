@@ -1,6 +1,4 @@
-import { it, expect, beforeAll, afterAll } from "vitest";
-import * as mswNode from "msw/node";
-import * as prismicM from "@prismicio/mock";
+import { it, expect } from "vitest";
 
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createTestClient } from "./__testutils__/createClient";
@@ -8,19 +6,13 @@ import { getMasterRef } from "./__testutils__/getMasterRef";
 
 import * as prismic from "../src";
 
-const server = mswNode.setupServer();
-beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
-afterAll(() => server.close());
-
 it("builds a query URL using the master ref", async (ctx) => {
-	const response = prismicM.api.repository({
-		seed: ctx.meta.name,
-	});
+	const response = ctx.mock.api.repository();
 	const ref = getMasterRef(response);
 
 	mockPrismicRestAPIV2({
 		repositoryHandler: () => response,
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient();
@@ -39,14 +31,14 @@ it("builds a query URL using the master ref", async (ctx) => {
 	expect(url.searchParams.toString()).toBe(expectedSearchParams.toString());
 });
 
-it("includes params if provided", async () => {
+it("includes params if provided", async (ctx) => {
 	const params: prismic.BuildQueryURLArgs = {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
 		lang: "*",
 	};
 
-	mockPrismicRestAPIV2({ server });
+	mockPrismicRestAPIV2({ server: ctx.server });
 
 	const client = createTestClient();
 	const res = await client.buildQueryURL(params);
@@ -68,14 +60,14 @@ it("includes params if provided", async () => {
 	expect(url.searchParams.toString()).toBe(expectedSearchParams.toString());
 });
 
-it("includes default params if provided", async () => {
+it("includes default params if provided", async (ctx) => {
 	const clientConfig: prismic.ClientConfig = {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
 		defaultParams: { lang: "*" },
 	};
 
-	mockPrismicRestAPIV2({ server });
+	mockPrismicRestAPIV2({ server: ctx.server });
 
 	const client = createTestClient({ clientConfig });
 	const res = await client.buildQueryURL();
@@ -97,7 +89,7 @@ it("includes default params if provided", async () => {
 	expect(url.searchParams.toString()).toBe(expectedSearchParams.toString());
 });
 
-it("merges params and default params if provided", async () => {
+it("merges params and default params if provided", async (ctx) => {
 	const clientConfig: prismic.ClientConfig = {
 		accessToken: "custom-accessToken",
 		ref: "custom-ref",
@@ -107,7 +99,7 @@ it("merges params and default params if provided", async () => {
 		ref: "overridden-ref",
 	};
 
-	mockPrismicRestAPIV2({ server });
+	mockPrismicRestAPIV2({ server: ctx.server });
 
 	const client = createTestClient({ clientConfig });
 	const res = await client.buildQueryURL(params);

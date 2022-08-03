@@ -1,15 +1,10 @@
-import { it, expect, beforeAll, afterAll } from "vitest";
-import * as mswNode from "msw/node";
+import { it, expect } from "vitest";
 import { Headers } from "node-fetch";
 import * as prismicM from "@prismicio/mock";
 
 import { createTestClient } from "./__testutils__/createClient";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
-
-const server = mswNode.setupServer();
-beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
-afterAll(() => server.close());
 
 const previewToken = "previewToken";
 
@@ -31,7 +26,7 @@ it("resolves a preview url in the browser", async (ctx) => {
 			pageSize: "1",
 			q: `[[at(document.id, "${document.id}")]]`,
 		},
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient();
@@ -66,7 +61,7 @@ it("resolves a preview url using a server req object", async (ctx) => {
 			pageSize: "1",
 			q: `[[at(document.id, "${document.id}")]]`,
 		},
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient();
@@ -101,7 +96,7 @@ it("resolves a preview url using a Web API-based server req object", async (ctx)
 			pageSize: "1",
 			q: `[[at(document.id, "${document.id}")]]`,
 		},
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient();
@@ -134,7 +129,7 @@ it("allows providing an explicit documentId and previewToken", async (ctx) => {
 			pageSize: "1",
 			q: `[[at(document.id, "${document.id}")]]`,
 		},
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient();
@@ -211,7 +206,7 @@ it("returns defaultURL if resolved URL is not a string", async (ctx) => {
 			pageSize: "1",
 			q: `[[at(document.id, "${document.id}")]]`,
 		},
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient();
@@ -233,5 +228,4 @@ testAbortableMethod("is abortable with an AbortController", {
 			documentID: "foo",
 			previewToken,
 		}),
-	server,
 });

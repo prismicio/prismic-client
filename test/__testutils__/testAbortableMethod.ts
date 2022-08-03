@@ -1,6 +1,4 @@
 import { it, expect } from "vitest";
-import * as mswNode from "msw/node";
-import AbortController from "abort-controller";
 
 import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2";
 import { createTestClient } from "./createClient";
@@ -8,19 +6,21 @@ import { createTestClient } from "./createClient";
 import * as prismic from "../../src";
 
 type TestAbortableMethodArgs = {
-	run: (client: prismic.Client, signal: AbortSignal) => Promise<unknown>;
-	server: mswNode.SetupServerApi;
+	run: (
+		client: prismic.Client,
+		signal: prismic.AbortSignalLike,
+	) => Promise<unknown>;
 };
 
 export const testAbortableMethod = (
 	description: string,
 	args: TestAbortableMethodArgs,
 ) => {
-	it.concurrent(description, async () => {
+	it.concurrent(description, async (ctx) => {
 		const controller = new AbortController();
 		controller.abort();
 
-		mockPrismicRestAPIV2({ server: args.server });
+		mockPrismicRestAPIV2({ server: ctx.server });
 
 		const client = createTestClient();
 

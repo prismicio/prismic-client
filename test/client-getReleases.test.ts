@@ -1,20 +1,15 @@
-import { it, expect, beforeAll, afterAll } from "vitest";
-import * as mswNode from "msw/node";
+import { it, expect } from "vitest";
 
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
 import { createTestClient } from "./__testutils__/createClient";
 
-const server = mswNode.setupServer();
-beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
-afterAll(() => server.close());
-
-it("returns all Releases", async () => {
+it("returns all Releases", async (ctx) => {
 	const response = createRepositoryResponse();
 	mockPrismicRestAPIV2({
 		repositoryHandler: () => response,
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient();
@@ -25,5 +20,4 @@ it("returns all Releases", async () => {
 
 testAbortableMethod("is abortable with an AbortController", {
 	run: (client, signal) => client.getReleases({ signal }),
-	server,
 });

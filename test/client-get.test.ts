@@ -1,16 +1,8 @@
-import { beforeAll, afterAll } from "vitest";
-import * as mswNode from "msw/node";
-
 import { testGetMethod } from "./__testutils__/testAnyGetMethod";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 
-const server = mswNode.setupServer();
-beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
-afterAll(() => server.close());
-
 testGetMethod("resolves a query", {
 	run: (client) => client.get(),
-	server,
 });
 
 testGetMethod("includes params if provided", {
@@ -25,7 +17,6 @@ testGetMethod("includes params if provided", {
 		ref: "custom-ref",
 		lang: "*",
 	},
-	server,
 });
 
 testGetMethod("includes default params if provided", {
@@ -38,7 +29,6 @@ testGetMethod("includes default params if provided", {
 	requiredParams: {
 		lang: "*",
 	},
-	server,
 });
 
 testGetMethod("merges params and default params if provided", {
@@ -60,10 +50,8 @@ testGetMethod("merges params and default params if provided", {
 		ref: "overridden-ref",
 		lang: "fr-fr",
 	},
-	server,
 });
 
 testAbortableMethod("is abortable with an AbortController", {
 	run: (client, signal) => client.get({ signal }),
-	server,
 });

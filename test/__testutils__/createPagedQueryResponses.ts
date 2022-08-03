@@ -1,35 +1,27 @@
-import { expect } from "vitest";
+import { TestContext } from "vitest";
 import * as prismicT from "@prismicio/types";
-import * as prismicM from "@prismicio/mock";
 
 type CreatePagedQueryResponsesArgs = {
+	ctx: TestContext;
 	pages?: number;
 	pageSize?: number;
 };
 
 export const createPagedQueryResponses = ({
+	ctx,
 	pages = 2,
 	pageSize = 1,
-}: CreatePagedQueryResponsesArgs = {}): prismicT.Query[] => {
-	const seed = expect.getState().currentTestName;
-
-	if (!seed) {
-		throw new Error(
-			`createPagedQueryResponses() can only be called within a Vitest test.`,
-		);
-	}
-
+}: CreatePagedQueryResponsesArgs): prismicT.Query[] => {
 	const documents = [];
 	for (let i = 0; i < pages * pageSize; i++) {
-		documents.push(prismicM.value.document({ seed }));
+		documents.push(ctx.mock.value.document());
 	}
 
 	const responses = [];
 
 	for (let page = 1; page <= pages; page++) {
 		responses.push(
-			prismicM.api.query({
-				seed,
+			ctx.mock.api.query({
 				pageSize,
 				page,
 				documents,

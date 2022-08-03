@@ -1,6 +1,5 @@
-import { it, expect, beforeAll, afterAll } from "vitest";
+import { it, expect } from "vitest";
 import * as msw from "msw";
-import * as mswNode from "msw/node";
 
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
@@ -11,27 +10,16 @@ import { createRef } from "./__testutils__/createRef";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { createRepositoryName } from "./__testutils__/createRepositoryName";
 
-const server = mswNode.setupServer();
-beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
-afterAll(() => server.close());
-
-// TODO: Remove in v7
-it.fails("graphqlFetch() is a temporary alias to graphQLFetch()", () => {
-	const client = createTestClient();
-
-	expect(client.graphqlFetch).toBe(client.graphQLFetch);
-});
-
-it("resolves a query", async () => {
+it("resolves a query", async (ctx) => {
 	const repositoryResponse = createRepositoryResponse();
 	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`;
 	const graphqlResponse = { foo: "bar" };
 
 	mockPrismicRestAPIV2({
 		repositoryHandler: () => repositoryResponse,
-		server,
+		server: ctx.server,
 	});
-	server.use(
+	ctx.server.use(
 		msw.rest.get(graphqlURL, (req, res, ctx) => {
 			if (req.headers.get("Prismic-Ref") === getMasterRef(repositoryResponse)) {
 				return res(ctx.json(graphqlResponse));
@@ -46,7 +34,7 @@ it("resolves a query", async () => {
 	expect(json).toStrictEqual(graphqlResponse);
 });
 
-it("merges provided headers with defaults", async () => {
+it("merges provided headers with defaults", async (ctx) => {
 	const repositoryResponse = createRepositoryResponse({
 		integrationFieldsRef: createRef(false).ref,
 	});
@@ -57,9 +45,9 @@ it("merges provided headers with defaults", async () => {
 
 	mockPrismicRestAPIV2({
 		repositoryHandler: () => repositoryResponse,
-		server,
+		server: ctx.server,
 	});
-	server.use(
+	ctx.server.use(
 		msw.rest.get(graphqlURL, (req, res, ctx) => {
 			if (
 				req.headers.get("Prismic-Ref") === ref &&
@@ -82,7 +70,7 @@ it("merges provided headers with defaults", async () => {
 	expect(json).toStrictEqual(graphqlResponse);
 });
 
-it("includes Authorization header if access token is provided", async () => {
+it("includes Authorization header if access token is provided", async (ctx) => {
 	const repositoryResponse = createRepositoryResponse({
 		integrationFieldsRef: createRef(false).ref,
 	});
@@ -92,9 +80,9 @@ it("includes Authorization header if access token is provided", async () => {
 
 	mockPrismicRestAPIV2({
 		repositoryHandler: () => repositoryResponse,
-		server,
+		server: ctx.server,
 	});
-	server.use(
+	ctx.server.use(
 		msw.rest.get(graphqlURL, (req, res, ctx) => {
 			if (
 				req.headers.get("Prismic-Ref") === getMasterRef(repositoryResponse) &&
@@ -113,7 +101,7 @@ it("includes Authorization header if access token is provided", async () => {
 	expect(json).toStrictEqual(graphqlResponse);
 });
 
-it("includes Integration Fields header if ref is available", async () => {
+it("includes Integration Fields header if ref is available", async (ctx) => {
 	const repositoryResponse = createRepositoryResponse();
 	const accessToken = "accessToken";
 
@@ -122,9 +110,9 @@ it("includes Integration Fields header if ref is available", async () => {
 
 	mockPrismicRestAPIV2({
 		repositoryHandler: () => repositoryResponse,
-		server,
+		server: ctx.server,
 	});
-	server.use(
+	ctx.server.use(
 		msw.rest.get(graphqlURL, (req, res, ctx) => {
 			if (
 				req.headers.get("Prismic-Ref") === getMasterRef(repositoryResponse) &&
@@ -143,7 +131,7 @@ it("includes Integration Fields header if ref is available", async () => {
 	expect(json).toStrictEqual(graphqlResponse);
 });
 
-it("optimizes queries by removing whitespace", async () => {
+it("optimizes queries by removing whitespace", async (ctx) => {
 	const repositoryResponse = createRepositoryResponse();
 
 	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`;
@@ -167,9 +155,9 @@ it("optimizes queries by removing whitespace", async () => {
 
 	mockPrismicRestAPIV2({
 		repositoryHandler: () => repositoryResponse,
-		server,
+		server: ctx.server,
 	});
-	server.use(
+	ctx.server.use(
 		msw.rest.get(graphqlURL, (req, res, ctx) => {
 			if (
 				req.url.searchParams.get("query") ===
@@ -190,7 +178,7 @@ it("optimizes queries by removing whitespace", async () => {
 	expect(json).toStrictEqual(graphqlResponse);
 });
 
-it("includes a ref URL parameter to cache-bust", async () => {
+it("includes a ref URL parameter to cache-bust", async (ctx) => {
 	const repositoryResponse = createRepositoryResponse();
 	const ref = getMasterRef(repositoryResponse);
 
@@ -199,9 +187,9 @@ it("includes a ref URL parameter to cache-bust", async () => {
 
 	mockPrismicRestAPIV2({
 		repositoryHandler: () => repositoryResponse,
-		server,
+		server: ctx.server,
 	});
-	server.use(
+	ctx.server.use(
 		msw.rest.get(graphqlURL, (req, res, ctx) => {
 			if (
 				req.url.searchParams.get("ref") === ref &&
@@ -224,5 +212,4 @@ testAbortableMethod("is abortable with an AbortController", {
 		client.graphQLFetch("https://foo.cdn.prismic.io/graphql", {
 			signal,
 		}),
-	server,
 });

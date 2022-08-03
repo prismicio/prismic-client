@@ -10,7 +10,6 @@ import { findRefByLabel } from "./lib/findRefByLabel";
 import { getCookie } from "./lib/getCookie";
 import { minifyGraphQLQuery } from "./lib/minifyGraphQLQuery";
 
-import * as cookie from "./cookie";
 import {
 	AbortSignalLike,
 	FetchLike,
@@ -531,12 +530,11 @@ export class Client<
 	async getFirst<TDocument extends TDocuments>(
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<TDocument> {
-		const url = await this.buildQueryURL({
-			pageSize:
-				this.defaultParams?.pageSize ||
-				(params && "page" in params ? undefined : 1),
-			...params,
-		});
+		const actualParams = { ...params };
+		if (!(params && params.page) && !params?.pageSize) {
+			actualParams.pageSize = this.defaultParams?.pageSize ?? 1;
+		}
+		const url = await this.buildQueryURL(actualParams);
 		const result = await this.fetch<prismicT.Query<TDocument>>(url, params);
 
 		const firstResult = result.results[0];
@@ -1427,21 +1425,24 @@ export class Client<
 	 */
 	async graphQLFetch(
 		input: RequestInfo,
-		init?: RequestInit,
+		init?: Omit<RequestInit, "signal"> & { signal?: AbortSignalLike },
 	): Promise<Response> {
 		const cachedRepository = await this.getCachedRepository();
 		const ref = await this.getResolvedRefString();
 
 		const unsanitizedHeaders: Record<string, string> = {
 			"Prismic-ref": ref,
-			"Prismic-integration-field-ref":
-				cachedRepository.integrationFieldsRef || "",
 			Authorization: this.accessToken ? `Token ${this.accessToken}` : "",
 			// Asserting `init.headers` is a Record since popular GraphQL
 			// libraries pass this as a Record. Header objects as input
 			// are unsupported.
 			...(init ? (init.headers as Record<string, string>) : {}),
 		};
+
+		if (cachedRepository.integrationFieldsRef) {
+			unsanitizedHeaders["Prismic-integration-field-ref"] =
+				cachedRepository.integrationFieldsRef;
+		}
 
 		// Normalize header keys to lowercase. This prevents header
 		// conflicts between the Prismic client and the GraphQL
@@ -1563,9 +1564,7 @@ export class Client<
 
 			let cookieJar: string | null | undefined;
 
-			if (globalThis.document?.cookie) {
-				cookieJar = globalThis.document.cookie;
-			} else if (this.refState.httpRequest?.headers) {
+			if (this.refState.httpRequest?.headers) {
 				if (
 					"get" in this.refState.httpRequest.headers &&
 					typeof this.refState.httpRequest.headers.get === "function"
@@ -1576,10 +1575,12 @@ export class Client<
 					// Express-style headers
 					cookieJar = this.refState.httpRequest.headers.cookie;
 				}
+			} else if (globalThis.document?.cookie) {
+				cookieJar = globalThis.document.cookie;
 			}
 
 			if (cookieJar) {
-				previewRef = getCookie(cookie.preview, cookieJar);
+				previewRef = getCookie(cookieJar);
 			}
 
 			if (previewRef) {

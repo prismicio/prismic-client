@@ -1,8 +1,6 @@
 import { it, expect } from "vitest";
 import { rest } from "msw";
-import * as mswNode from "msw/node";
 import * as prismicT from "@prismicio/types";
-import * as prismicM from "@prismicio/mock";
 
 import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2";
 import { createTestClient } from "./createClient";
@@ -18,19 +16,16 @@ type GetContext = {
 type TestGetWithinTTLArgs = {
 	getContext: GetContext;
 	beforeFirstGet: (args: { client: prismic.Client }) => void;
-	server: mswNode.SetupServerApi;
 };
 
 export const testGetWithinTTL = (
 	description: string,
 	args: TestGetWithinTTLArgs,
 ) => {
-	it.concurrent(description, async (ctx) => {
-		const seed = ctx.meta.name;
-
+	it(description, async (ctx) => {
 		const repositoryResponse = args.getContext.repositoryResponse;
 		const ref = args.getContext.getRef(repositoryResponse);
-		const queryResponse = prismicM.api.query({ seed });
+		const queryResponse = ctx.mock.api.query();
 
 		mockPrismicRestAPIV2({
 			repositoryHandler: () => repositoryResponse,
@@ -38,7 +33,7 @@ export const testGetWithinTTL = (
 			queryRequiredParams: {
 				ref,
 			},
-			server: args.server,
+			server: ctx.server,
 		});
 
 		const client = createTestClient();
@@ -52,9 +47,9 @@ export const testGetWithinTTL = (
 		// We're setting the next repository metadata response to include a different ref.
 		// Notice that we aren't setting a new query handler. The next query should
 		// use the previous ref.
-		args.server.use(
-			rest.get(client.endpoint, (_req, res, ctx) => {
-				return res(ctx.json(prismicM.api.repository({ seed })));
+		ctx.server.use(
+			rest.get(client.endpoint, (_req, res, serverCtx) => {
+				return res(serverCtx.json(ctx.mock.api.repository()));
 			}),
 		);
 
@@ -69,7 +64,6 @@ type TestGetOutsideTTLArgs = {
 	getContext1: GetContext;
 	getContext2: GetContext;
 	beforeFirstGet: (args: { client: prismic.Client }) => void;
-	server: mswNode.SetupServerApi;
 };
 
 export const testGetOutsideTTL = (
@@ -79,15 +73,13 @@ export const testGetOutsideTTL = (
 	it.concurrent(
 		description,
 		async (ctx) => {
-			const seed = ctx.meta.name;
-
 			const repositoryResponse1 = args.getContext1.repositoryResponse;
 			const ref1 = args.getContext1.getRef(repositoryResponse1);
-			const queryResponse1 = prismicM.api.query({ seed });
+			const queryResponse1 = ctx.mock.api.query();
 
 			const repositoryResponse2 = args.getContext2.repositoryResponse;
 			const ref2 = args.getContext2.getRef(repositoryResponse2);
-			const queryResponse2 = prismicM.api.query({ seed });
+			const queryResponse2 = ctx.mock.api.query();
 
 			mockPrismicRestAPIV2({
 				repositoryHandler: () => repositoryResponse1,
@@ -95,7 +87,7 @@ export const testGetOutsideTTL = (
 				queryRequiredParams: {
 					ref: ref1,
 				},
-				server: args.server,
+				server: ctx.server,
 			});
 
 			const client = createTestClient();
@@ -119,7 +111,7 @@ export const testGetOutsideTTL = (
 				queryRequiredParams: {
 					ref: ref2,
 				},
-				server: args.server,
+				server: ctx.server,
 			});
 
 			const res2 = await client.get();

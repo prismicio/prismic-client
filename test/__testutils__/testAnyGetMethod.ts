@@ -1,5 +1,4 @@
 import { it, expect } from "vitest";
-import * as mswNode from "msw/node";
 import * as prismicT from "@prismicio/types";
 
 import { createPagedQueryResponses } from "./createPagedQueryResponses";
@@ -19,8 +18,10 @@ type TestGetAllMethodArgs<
 > = {
 	run: (client: prismic.Client) => Promise<TResponse>;
 	requiredParams?: Record<string, string | string[]>;
-	server: mswNode.SetupServerApi;
 	clientConfig?: prismic.ClientConfig;
+	resultLimit?: number;
+	mockedPages?: number;
+	mockedPageSize?: number;
 };
 
 export const testAnyGetMethodFactory = (
@@ -28,16 +29,15 @@ export const testAnyGetMethodFactory = (
 	args: TestGetAllMethodArgs,
 	mode: "get" | "getFirst" | "getAll",
 ) => {
-	it.concurrent(description, async () => {
-		const queryResponses = createPagedQueryResponses();
-
-		const maybeLimit = args.requiredParams?.limit
-			? Number(args.requiredParams.limit)
-			: undefined;
-		delete args.requiredParams?.limit;
+	it.concurrent(description, async (ctx) => {
+		const queryResponses = createPagedQueryResponses({
+			ctx,
+			pages: args.mockedPages,
+			pageSize: args.mockedPageSize,
+		});
 
 		mockPrismicRestAPIV2({
-			server: args.server,
+			server: ctx.server,
 			queryResponses,
 			queryRequiredParams: args.requiredParams,
 		});
@@ -62,7 +62,7 @@ export const testAnyGetMethodFactory = (
 					(page) => page.results,
 				);
 
-				expect(res).toStrictEqual(allDocs.slice(0, maybeLimit));
+				expect(res).toStrictEqual(allDocs.slice(0, args.resultLimit));
 				break;
 
 			default:

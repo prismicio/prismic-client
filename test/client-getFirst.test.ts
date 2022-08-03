@@ -1,5 +1,4 @@
-import { it, expect, beforeAll, afterAll } from "vitest";
-import * as mswNode from "msw/node";
+import { it, expect } from "vitest";
 
 import * as prismicM from "@prismicio/mock";
 
@@ -10,13 +9,8 @@ import { createTestClient } from "./__testutils__/createClient";
 
 import * as prismic from "../src";
 
-const server = mswNode.setupServer();
-beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
-afterAll(() => server.close());
-
 testGetFirstMethod("returns the first document from a response", {
 	run: (client) => client.getFirst(),
-	server,
 });
 
 testGetFirstMethod("includes params if provided", {
@@ -31,7 +25,6 @@ testGetFirstMethod("includes params if provided", {
 		ref: "custom-ref",
 		lang: "*",
 	},
-	server,
 });
 
 testGetFirstMethod("includes default params if provided", {
@@ -44,7 +37,6 @@ testGetFirstMethod("includes default params if provided", {
 	requiredParams: {
 		lang: "*",
 	},
-	server,
 });
 
 testGetFirstMethod("merges params and default params if provided", {
@@ -66,7 +58,6 @@ testGetFirstMethod("merges params and default params if provided", {
 		ref: "overridden-ref",
 		lang: "fr-fr",
 	},
-	server,
 });
 
 testGetFirstMethod(
@@ -79,17 +70,16 @@ testGetFirstMethod(
 		requiredParams: {
 			pageSize: "2",
 		},
-		server,
 	},
 );
 
 it("throws if no documents were returned", async (ctx) => {
 	mockPrismicRestAPIV2({
-		server,
 		queryResponse: prismicM.api.query({
 			seed: ctx.meta.name,
 			documents: [],
 		}),
+		server: ctx.server,
 	});
 
 	const client = createTestClient();
@@ -104,5 +94,4 @@ it("throws if no documents were returned", async (ctx) => {
 
 testAbortableMethod("is abortable with an AbortController", {
 	run: (client, signal) => client.getFirst({ signal }),
-	server,
 });

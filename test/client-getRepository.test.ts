@@ -1,5 +1,4 @@
-import { it, expect, beforeAll, afterAll } from "vitest";
-import * as mswNode from "msw/node";
+import { it, expect } from "vitest";
 
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
@@ -8,15 +7,11 @@ import { createTestClient } from "./__testutils__/createClient";
 
 import * as prismic from "../src";
 
-const server = mswNode.setupServer();
-beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
-afterAll(() => server.close());
-
-it("returns repository metadata", async () => {
+it("returns repository metadata", async (ctx) => {
 	const response = createRepositoryResponse();
 	mockPrismicRestAPIV2({
 		repositoryHandler: () => response,
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient();
@@ -26,7 +21,7 @@ it("returns repository metadata", async () => {
 });
 
 // TODO: Remove when Authorization header support works in browsers with CORS.
-it("includes access token if configured", async () => {
+it("includes access token if configured", async (ctx) => {
 	const clientConfig: prismic.ClientConfig = {
 		accessToken: "accessToken",
 	};
@@ -35,7 +30,7 @@ it("includes access token if configured", async () => {
 	mockPrismicRestAPIV2({
 		repositoryHandler: () => response,
 		accessToken: clientConfig.accessToken,
-		server,
+		server: ctx.server,
 	});
 
 	const client = createTestClient({ clientConfig });
@@ -46,5 +41,4 @@ it("includes access token if configured", async () => {
 
 testAbortableMethod("is abortable with an AbortController", {
 	run: (client, signal) => client.getRepository({ signal }),
-	server,
 });
