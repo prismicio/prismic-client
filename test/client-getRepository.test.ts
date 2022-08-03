@@ -2,22 +2,21 @@ import { it, expect } from "vitest";
 
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
-import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
 import { createTestClient } from "./__testutils__/createClient";
 
 import * as prismic from "../src";
 
 it("returns repository metadata", async (ctx) => {
-	const response = createRepositoryResponse();
+	const repositoryResponse = ctx.mock.api.repository();
 	mockPrismicRestAPIV2({
-		repositoryHandler: () => response,
-		server: ctx.server,
+		repositoryResponse,
+		ctx,
 	});
 
 	const client = createTestClient();
 	const res = await client.getRepository();
 
-	expect(res).toStrictEqual(response);
+	expect(res).toStrictEqual(repositoryResponse);
 });
 
 // TODO: Remove when Authorization header support works in browsers with CORS.
@@ -26,17 +25,17 @@ it("includes access token if configured", async (ctx) => {
 		accessToken: "accessToken",
 	};
 
-	const response = createRepositoryResponse();
+	const repositoryResponse = ctx.mock.api.repository();
 	mockPrismicRestAPIV2({
-		repositoryHandler: () => response,
+		repositoryResponse,
 		accessToken: clientConfig.accessToken,
-		server: ctx.server,
+		ctx,
 	});
 
 	const client = createTestClient({ clientConfig });
 	const res = await client.getRepository();
 
-	expect(res).toStrictEqual(response);
+	expect(res).toStrictEqual(repositoryResponse);
 });
 
 testAbortableMethod("is abortable with an AbortController", {

@@ -111,15 +111,15 @@ it("throttles requests past first page", async (ctx) => {
 		pages: numPages,
 	});
 
-	const queryDuration = 200;
+	const queryDelay = 200;
 
 	mockPrismicRestAPIV2({
-		queryResponses,
+		ctx,
+		queryResponse: queryResponses,
 		queryRequiredParams: {
 			pageSize: "100",
 		},
-		queryDuration,
-		server: ctx.server,
+		queryDelay,
 	});
 
 	const client = createTestClient();
@@ -129,8 +129,7 @@ it("throttles requests past first page", async (ctx) => {
 	const endTime = Date.now();
 
 	const totalTime = endTime - startTime;
-	const minTime =
-		numPages * queryDuration + (numPages - 1) * GET_ALL_QUERY_DELAY;
+	const minTime = numPages * queryDelay + (numPages - 1) * GET_ALL_QUERY_DELAY;
 	const maxTime = minTime + NETWORK_REQUEST_DURATION_TOLERANCE;
 
 	// The total time should be the amount of time it takes to resolve all
@@ -147,15 +146,15 @@ it("does not throttle single page queries", async (ctx) => {
 		ctx,
 		pages: 1,
 	});
-	const queryDuration = 200;
+	const queryDelay = 200;
 
 	mockPrismicRestAPIV2({
-		queryResponses,
+		ctx,
+		queryResponse: queryResponses,
 		queryRequiredParams: {
 			pageSize: "100",
 		},
-		queryDuration,
-		server: ctx.server,
+		queryDelay,
 	});
 
 	const client = createTestClient();
@@ -165,7 +164,7 @@ it("does not throttle single page queries", async (ctx) => {
 	const endTime = Date.now();
 
 	const totalTime = endTime - startTime;
-	const minTime = queryDuration;
+	const minTime = queryDelay;
 	const maxTime = minTime + NETWORK_REQUEST_DURATION_TOLERANCE;
 
 	// The total time should only be the amount of time it takes to resolve the

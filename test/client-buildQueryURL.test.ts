@@ -7,12 +7,12 @@ import { getMasterRef } from "./__testutils__/getMasterRef";
 import * as prismic from "../src";
 
 it("builds a query URL using the master ref", async (ctx) => {
-	const response = ctx.mock.api.repository();
-	const ref = getMasterRef(response);
+	const repositoryResponse = ctx.mock.api.repository();
+	const ref = getMasterRef(repositoryResponse);
 
 	mockPrismicRestAPIV2({
-		repositoryHandler: () => response,
-		server: ctx.server,
+		repositoryResponse,
+		ctx,
 	});
 
 	const client = createTestClient();
@@ -38,7 +38,7 @@ it("includes params if provided", async (ctx) => {
 		lang: "*",
 	};
 
-	mockPrismicRestAPIV2({ server: ctx.server });
+	mockPrismicRestAPIV2({ ctx });
 
 	const client = createTestClient();
 	const res = await client.buildQueryURL(params);
@@ -67,7 +67,7 @@ it("includes default params if provided", async (ctx) => {
 		defaultParams: { lang: "*" },
 	};
 
-	mockPrismicRestAPIV2({ server: ctx.server });
+	mockPrismicRestAPIV2({ ctx });
 
 	const client = createTestClient({ clientConfig });
 	const res = await client.buildQueryURL();
@@ -99,7 +99,7 @@ it("merges params and default params if provided", async (ctx) => {
 		ref: "overridden-ref",
 	};
 
-	mockPrismicRestAPIV2({ server: ctx.server });
+	mockPrismicRestAPIV2({ ctx });
 
 	const client = createTestClient({ clientConfig });
 	const res = await client.buildQueryURL(params);

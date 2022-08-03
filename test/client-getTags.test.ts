@@ -3,39 +3,37 @@ import * as msw from "msw";
 
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
-import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
 import { createTestClient } from "./__testutils__/createClient";
 
 it("returns all tags", async (ctx) => {
-	const response = createRepositoryResponse();
+	const repositoryResponse = ctx.mock.api.repository();
 	mockPrismicRestAPIV2({
-		repositoryHandler: () => response,
-		server: ctx.server,
+		repositoryResponse,
+		ctx,
 	});
 
 	const client = createTestClient();
 	const res = await client.getTags();
 
-	expect(res).toStrictEqual(response.tags);
+	expect(res).toStrictEqual(repositoryResponse.tags);
 });
 
 it("uses form endpoint if available", async (ctx) => {
 	const tagsEndpoint = "https://example.com/tags-form-endpoint";
 	const tagsResponse = ["foo", "bar"];
 
-	const repositoryResponse = createRepositoryResponse({
-		forms: {
-			tags: {
-				method: "GET",
-				action: tagsEndpoint,
-				enctype: "",
-				fields: {},
-			},
+	const repositoryResponse = ctx.mock.api.repository();
+	repositoryResponse.forms = {
+		tags: {
+			method: "GET",
+			action: tagsEndpoint,
+			enctype: "",
+			fields: {},
 		},
-	});
+	};
 	mockPrismicRestAPIV2({
-		repositoryHandler: () => repositoryResponse,
-		server: ctx.server,
+		repositoryResponse,
+		ctx,
 	});
 	ctx.server.use(
 		msw.rest.get(tagsEndpoint, (_req, res, ctx) => {
@@ -54,19 +52,18 @@ it("sends access token if form endpoint is used", async (ctx) => {
 	const tagsResponse = ["foo", "bar"];
 	const accessToken = "accessToken";
 
-	const repositoryResponse = createRepositoryResponse({
-		forms: {
-			tags: {
-				method: "GET",
-				action: tagsEndpoint,
-				enctype: "",
-				fields: {},
-			},
+	const repositoryResponse = ctx.mock.api.repository();
+	repositoryResponse.forms = {
+		tags: {
+			method: "GET",
+			action: tagsEndpoint,
+			enctype: "",
+			fields: {},
 		},
-	});
+	};
 	mockPrismicRestAPIV2({
-		repositoryHandler: () => repositoryResponse,
-		server: ctx.server,
+		repositoryResponse,
+		ctx,
 	});
 	ctx.server.use(
 		msw.rest.get(tagsEndpoint, (req, res, ctx) => {

@@ -20,7 +20,7 @@ export const testAbortableMethod = (
 		const controller = new AbortController();
 		controller.abort();
 
-		mockPrismicRestAPIV2({ server: ctx.server });
+		mockPrismicRestAPIV2({ ctx });
 
 		const client = createTestClient();
 

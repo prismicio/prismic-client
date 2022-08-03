@@ -37,8 +37,8 @@ export const testAnyGetMethodFactory = (
 		});
 
 		mockPrismicRestAPIV2({
-			server: ctx.server,
-			queryResponses,
+			ctx,
+			queryResponse: queryResponses,
 			queryRequiredParams: args.requiredParams,
 		});
 

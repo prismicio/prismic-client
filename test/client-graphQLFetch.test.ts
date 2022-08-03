@@ -2,22 +2,20 @@ import { it, expect } from "vitest";
 import * as msw from "msw";
 
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
-import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
 import { createTestClient } from "./__testutils__/createClient";
 import { getMasterRef } from "./__testutils__/getMasterRef";
 import { createAuthorizationHeader } from "./__testutils__/createAuthorizationHeader";
-import { createRef } from "./__testutils__/createRef";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { createRepositoryName } from "./__testutils__/createRepositoryName";
 
 it("resolves a query", async (ctx) => {
-	const repositoryResponse = createRepositoryResponse();
+	const repositoryResponse = ctx.mock.api.repository();
 	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`;
 	const graphqlResponse = { foo: "bar" };
 
 	mockPrismicRestAPIV2({
-		repositoryHandler: () => repositoryResponse,
-		server: ctx.server,
+		repositoryResponse,
+		ctx,
 	});
 	ctx.server.use(
 		msw.rest.get(graphqlURL, (req, res, ctx) => {
@@ -35,17 +33,16 @@ it("resolves a query", async (ctx) => {
 });
 
 it("merges provided headers with defaults", async (ctx) => {
-	const repositoryResponse = createRepositoryResponse({
-		integrationFieldsRef: createRef(false).ref,
-	});
+	const repositoryResponse = ctx.mock.api.repository();
+	repositoryResponse.integrationFieldsRef = ctx.mock.api.ref().ref;
 	const ref = "custom-ref";
 
 	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`;
 	const graphqlResponse = { foo: "bar" };
 
 	mockPrismicRestAPIV2({
-		repositoryHandler: () => repositoryResponse,
-		server: ctx.server,
+		repositoryResponse,
+		ctx,
 	});
 	ctx.server.use(
 		msw.rest.get(graphqlURL, (req, res, ctx) => {
@@ -71,16 +68,15 @@ it("merges provided headers with defaults", async (ctx) => {
 });
 
 it("includes Authorization header if access token is provided", async (ctx) => {
-	const repositoryResponse = createRepositoryResponse({
-		integrationFieldsRef: createRef(false).ref,
-	});
+	const repositoryResponse = ctx.mock.api.repository();
+	repositoryResponse.integrationFieldsRef = ctx.mock.api.ref().ref;
 
 	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`;
 	const graphqlResponse = { foo: "bar" };
 
 	mockPrismicRestAPIV2({
-		repositoryHandler: () => repositoryResponse,
-		server: ctx.server,
+		repositoryResponse,
+		ctx,
 	});
 	ctx.server.use(
 		msw.rest.get(graphqlURL, (req, res, ctx) => {
@@ -102,15 +98,15 @@ it("includes Authorization header if access token is provided", async (ctx) => {
 });
 
 it("includes Integration Fields header if ref is available", async (ctx) => {
-	const repositoryResponse = createRepositoryResponse();
+	const repositoryResponse = ctx.mock.api.repository();
 	const accessToken = "accessToken";
 
 	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`;
 	const graphqlResponse = { foo: "bar" };
 
 	mockPrismicRestAPIV2({
-		repositoryHandler: () => repositoryResponse,
-		server: ctx.server,
+		repositoryResponse,
+		ctx,
 	});
 	ctx.server.use(
 		msw.rest.get(graphqlURL, (req, res, ctx) => {
@@ -132,7 +128,7 @@ it("includes Integration Fields header if ref is available", async (ctx) => {
 });
 
 it("optimizes queries by removing whitespace", async (ctx) => {
-	const repositoryResponse = createRepositoryResponse();
+	const repositoryResponse = ctx.mock.api.repository();
 
 	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`;
 	const graphqlResponse = { foo: "bar" };
@@ -154,8 +150,8 @@ it("optimizes queries by removing whitespace", async (ctx) => {
 	);
 
 	mockPrismicRestAPIV2({
-		repositoryHandler: () => repositoryResponse,
-		server: ctx.server,
+		repositoryResponse,
+		ctx,
 	});
 	ctx.server.use(
 		msw.rest.get(graphqlURL, (req, res, ctx) => {
@@ -179,15 +175,15 @@ it("optimizes queries by removing whitespace", async (ctx) => {
 });
 
 it("includes a ref URL parameter to cache-bust", async (ctx) => {
-	const repositoryResponse = createRepositoryResponse();
+	const repositoryResponse = ctx.mock.api.repository();
 	const ref = getMasterRef(repositoryResponse);
 
 	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`;
 	const graphqlResponse = { foo: "bar" };
 
 	mockPrismicRestAPIV2({
-		repositoryHandler: () => repositoryResponse,
-		server: ctx.server,
+		repositoryResponse,
+		ctx,
 	});
 	ctx.server.use(
 		msw.rest.get(graphqlURL, (req, res, ctx) => {

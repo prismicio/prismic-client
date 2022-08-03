@@ -79,7 +79,7 @@ it("throws if no documents were returned", async (ctx) => {
 			seed: ctx.meta.name,
 			documents: [],
 		}),
-		server: ctx.server,
+		ctx,
 	});
 
 	const client = createTestClient();

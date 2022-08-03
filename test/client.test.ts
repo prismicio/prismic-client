@@ -4,8 +4,6 @@ import * as msw from "msw";
 import * as prismicM from "@prismicio/mock";
 
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
-import { createRef } from "./__testutils__/createRef";
-import { createRepositoryResponse } from "./__testutils__/createRepositoryResponse";
 import { createTestClient } from "./__testutils__/createClient";
 import { getMasterRef } from "./__testutils__/getMasterRef";
 
@@ -153,7 +151,7 @@ it("uses the master ref by default", async (ctx) => {
 
 	mockPrismicRestAPIV2({
 		queryResponse,
-		server: ctx.server,
+		ctx,
 	});
 
 	const client = createTestClient();
@@ -169,7 +167,7 @@ it("supports manual string ref", async (ctx) => {
 	mockPrismicRestAPIV2({
 		queryResponse,
 		queryRequiredParams: { ref },
-		server: ctx.server,
+		ctx,
 	});
 
 	const client = createTestClient({ clientConfig: { ref } });
@@ -185,7 +183,7 @@ it("supports manual thunk ref", async (ctx) => {
 	mockPrismicRestAPIV2({
 		queryResponse,
 		queryRequiredParams: { ref },
-		server: ctx.server,
+		ctx,
 	});
 
 	const client = createTestClient({ clientConfig: { ref: () => ref } });
@@ -195,14 +193,14 @@ it("supports manual thunk ref", async (ctx) => {
 });
 
 it("uses master ref if ref thunk param returns non-string value", async (ctx) => {
-	const repositoryResponse = createRepositoryResponse();
+	const repositoryResponse = ctx.mock.api.repository();
 	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
 	mockPrismicRestAPIV2({
-		repositoryHandler: () => repositoryResponse,
+		repositoryResponse,
 		queryResponse,
 		queryRequiredParams: { ref: getMasterRef(repositoryResponse) },
-		server: ctx.server,
+		ctx,
 	});
 
 	const client = createTestClient({ clientConfig: { ref: () => undefined } });
@@ -223,7 +221,7 @@ it("uses browser preview ref if available", async (ctx) => {
 	mockPrismicRestAPIV2({
 		queryResponse,
 		queryRequiredParams: { ref: previewRef },
-		server: ctx.server,
+		ctx,
 	});
 
 	const client = createTestClient();
@@ -247,7 +245,7 @@ it("uses req preview ref if available", async (ctx) => {
 	mockPrismicRestAPIV2({
 		queryResponse,
 		queryRequiredParams: { ref: previewRef },
-		server: ctx.server,
+		ctx,
 	});
 
 	const client = createTestClient();
@@ -271,7 +269,7 @@ it("supports req with Web APIs", async (ctx) => {
 	mockPrismicRestAPIV2({
 		queryResponse,
 		queryRequiredParams: { ref: previewRef },
-		server: ctx.server,
+		ctx,
 	});
 
 	const client = createTestClient();
@@ -286,14 +284,14 @@ it("ignores req without cookies", async (ctx) => {
 		headers: {},
 	};
 
-	const repositoryResponse = createRepositoryResponse();
+	const repositoryResponse = ctx.mock.api.repository();
 	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
 	mockPrismicRestAPIV2({
-		repositoryHandler: () => repositoryResponse,
+		repositoryResponse,
 		queryResponse,
 		queryRequiredParams: { ref: getMasterRef(repositoryResponse) },
-		server: ctx.server,
+		ctx,
 	});
 
 	const client = createTestClient();
@@ -310,7 +308,7 @@ it("does not use preview ref if auto previews are disabled", async (ctx) => {
 		cookie: `io.prismic.preview=${previewRef}`,
 	};
 
-	const repositoryResponse = createRepositoryResponse();
+	const repositoryResponse = ctx.mock.api.repository();
 	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
 	const client = createTestClient();
@@ -320,10 +318,10 @@ it("does not use preview ref if auto previews are disabled", async (ctx) => {
 	// ignored by the client.
 	client.disableAutoPreviews();
 	mockPrismicRestAPIV2({
-		repositoryHandler: () => repositoryResponse,
+		repositoryResponse,
 		queryResponse,
 		queryRequiredParams: { ref: getMasterRef(repositoryResponse) },
-		server: ctx.server,
+		ctx,
 	});
 
 	const res1 = await client.get();
@@ -333,10 +331,10 @@ it("does not use preview ref if auto previews are disabled", async (ctx) => {
 	// Enable previews and ensure the preview ref is being used.
 	client.enableAutoPreviews();
 	mockPrismicRestAPIV2({
-		repositoryHandler: () => repositoryResponse,
+		repositoryResponse,
 		queryResponse,
 		queryRequiredParams: { ref: previewRef },
-		server: ctx.server,
+		ctx,
 	});
 
 	const resWithPreviews = await client.get();
@@ -347,20 +345,19 @@ it("does not use preview ref if auto previews are disabled", async (ctx) => {
 });
 
 it("uses the integration fields ref if the repository provides it", async (ctx) => {
-	const repositoryResponse = createRepositoryResponse({
-		integrationFieldsRef: createRef().ref,
-	});
+	const repositoryResponse = ctx.mock.api.repository();
+	repositoryResponse.integrationFieldsRef = ctx.mock.api.ref().ref;
 	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
 	mockPrismicRestAPIV2({
-		repositoryHandler: () => repositoryResponse,
+		repositoryResponse,
 		queryResponse,
 		queryRequiredParams: {
 			ref: getMasterRef(repositoryResponse),
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			integrationFieldsRef: repositoryResponse.integrationFieldsRef!,
 		},
-		server: ctx.server,
+		ctx,
 	});
 
 	const client = createTestClient();
@@ -370,18 +367,17 @@ it("uses the integration fields ref if the repository provides it", async (ctx) 
 });
 
 it("ignores the integration fields ref if the repository provides a null value", async (ctx) => {
-	const repositoryResponse = createRepositoryResponse({
-		integrationFieldsRef: null,
-	});
+	const repositoryResponse = ctx.mock.api.repository();
+	repositoryResponse.integrationFieldsRef = null;
 	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
 	mockPrismicRestAPIV2({
-		repositoryHandler: () => repositoryResponse,
+		repositoryResponse,
 		queryResponse,
 		queryRequiredParams: {
 			ref: getMasterRef(repositoryResponse),
 		},
-		server: ctx.server,
+		ctx,
 	});
 
 	const client = createTestClient();
@@ -406,7 +402,7 @@ it("uses client-provided routes in queries", async (ctx) => {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			routes: JSON.stringify(routes),
 		},
-		server: ctx.server,
+		ctx,
 	});
 
 	const client = createTestClient({ clientConfig: { routes } });
@@ -418,7 +414,7 @@ it("uses client-provided routes in queries", async (ctx) => {
 it("throws ForbiddenError if access token is invalid for repository metadata", async (ctx) => {
 	mockPrismicRestAPIV2({
 		accessToken: "token",
-		server: ctx.server,
+		ctx,
 	});
 
 	const client = createTestClient();
@@ -434,7 +430,7 @@ it("throws ForbiddenError if access token is invalid for repository metadata", a
 it("throws ForbiddenError if access token is invalid for query", async (ctx) => {
 	mockPrismicRestAPIV2({
 		accessToken: "token",
-		server: ctx.server,
+		ctx,
 	});
 
 	const client = createTestClient();
@@ -450,7 +446,7 @@ it("throws ForbiddenError if response code is 403", async (ctx) => {
 		error: "Invalid access token",
 	};
 
-	mockPrismicRestAPIV2({ server: ctx.server });
+	mockPrismicRestAPIV2({ ctx });
 
 	const client = createTestClient();
 
@@ -488,7 +484,7 @@ it("throws ParsingError if response code is 400 with parsing-error type", async 
 		location: 3,
 	};
 
-	mockPrismicRestAPIV2({ server: ctx.server });
+	mockPrismicRestAPIV2({ ctx });
 
 	const client = createTestClient();
 
@@ -510,7 +506,7 @@ it("throws ParsingError if response code is 400 with parsing-error type", async 
 it("throws PrismicError if response code is 400 but is not a parsing error", async (ctx) => {
 	const queryResponse = {};
 
-	mockPrismicRestAPIV2({ server: ctx.server });
+	mockPrismicRestAPIV2({ ctx });
 
 	const client = createTestClient();
 
@@ -531,7 +527,7 @@ it("throws PrismicError if response code is 400 but is not a parsing error", asy
 it("throws PrismicError if response is not 200, 400, 401, 403, or 404", async (ctx) => {
 	const queryResponse = {};
 
-	mockPrismicRestAPIV2({ server: ctx.server });
+	mockPrismicRestAPIV2({ ctx });
 
 	const client = createTestClient();
 
@@ -553,7 +549,7 @@ it("throws PrismicError if response is not 200, 400, 401, 403, or 404", async (c
 });
 
 it("throws PrismicError if response is not JSON", async (ctx) => {
-	mockPrismicRestAPIV2({ server: ctx.server });
+	mockPrismicRestAPIV2({ ctx });
 
 	const client = createTestClient();
 

@@ -26,7 +26,7 @@ it("resolves a preview url in the browser", async (ctx) => {
 			pageSize: "1",
 			q: `[[at(document.id, "${document.id}")]]`,
 		},
-		server: ctx.server,
+		ctx,
 	});
 
 	const client = createTestClient();
@@ -61,7 +61,7 @@ it("resolves a preview url using a server req object", async (ctx) => {
 			pageSize: "1",
 			q: `[[at(document.id, "${document.id}")]]`,
 		},
-		server: ctx.server,
+		ctx,
 	});
 
 	const client = createTestClient();
@@ -96,7 +96,7 @@ it("resolves a preview url using a Web API-based server req object", async (ctx)
 			pageSize: "1",
 			q: `[[at(document.id, "${document.id}")]]`,
 		},
-		server: ctx.server,
+		ctx,
 	});
 
 	const client = createTestClient();
@@ -129,7 +129,7 @@ it("allows providing an explicit documentId and previewToken", async (ctx) => {
 			pageSize: "1",
 			q: `[[at(document.id, "${document.id}")]]`,
 		},
-		server: ctx.server,
+		ctx,
 	});
 
 	const client = createTestClient();
@@ -206,7 +206,7 @@ it("returns defaultURL if resolved URL is not a string", async (ctx) => {
 			pageSize: "1",
 			q: `[[at(document.id, "${document.id}")]]`,
 		},
-		server: ctx.server,
+		ctx,
 	});
 
 	const client = createTestClient();
