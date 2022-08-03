@@ -1,4 +1,5 @@
 import * as prismic from "../../src";
+import fetch from "node-fetch";
 
 import { createRepositoryName } from "./createRepositoryName";
 
@@ -21,8 +22,7 @@ export const createTestClient = (
 	const repositoryName = args.repositoryName || createRepositoryName();
 
 	return prismic.createClient(args.apiEndpoint || repositoryName, {
-		fetch: (...args) =>
-			import("node-fetch").then(({ default: fetch }) => fetch(...args)),
+		fetch,
 		...args.clientConfig,
 	});
 };
