@@ -142,17 +142,75 @@ export interface Ordering {
  *
  * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
  */
-export interface Route {
+export type Route = RouteDefinition | RouteBrokenDefinition;
+
+/**
+ * A `routes` parameter that determines how a document's URL field is resolved.
+ *
+ * @example With a document's UID field.
+ *
+ * ```ts
+ * {
+ * 	"type": "page",
+ * 	"path": "/:uid"
+ * }
+ * ```
+ *
+ * @example With a Content Relationship `parent` field.
+ *
+ * ```ts
+ * {
+ * 	"type": "page",
+ * 	"path": "/:parent?/:uid",
+ * 	"resolvers": {
+ * 		"parent": "parent"
+ * 	}
+ * }
+ * ```
+ *
+ * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
+ */
+export type RouteDefinition = {
 	/**
 	 * The Custom Type of the document.
 	 */
 	type: string;
+
+	/**
+	 * A specific UID to which this route definition is scoped. The route is only
+	 * defined for the given UID.
+	 */
+	uid?: string;
+
 	/**
 	 * The resolved path of the document with optional placeholders.
 	 */
 	path: string;
+
 	/**
 	 * An object that lists the API IDs of the Content Relationships in the route.
 	 */
 	resolvers?: Record<string, string>;
-}
+};
+
+/**
+ * A `routes` parameter that determines how a broken Link or Content
+ * Relationship field's URL is resolved. A broken link is a link whose linked
+ * document has been unpublished or deleted.
+ *
+ * @example
+ *
+ * ```ts
+ * {
+ * 	"brokenRoute": "/404"
+ * }
+ * ```
+ *
+ * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
+ */
+export type RouteBrokenDefinition = {
+	/**
+	 * The path to use when a document link is broken (i.e. the document no longer exists).
+	 */
+	brokenRoute: string;
+};

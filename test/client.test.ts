@@ -389,10 +389,18 @@ it("ignores the integration fields ref if the repository provides a null value",
 it("uses client-provided routes in queries", async (ctx) => {
 	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
-	const routes = [
+	const routes: prismic.Route[] = [
 		{
 			type: "page",
+			path: "/:uid",
+		},
+		{
+			type: "page",
+			uid: "home",
 			path: "/",
+		},
+		{
+			brokenRoute: "/404",
 		},
 	];
 
