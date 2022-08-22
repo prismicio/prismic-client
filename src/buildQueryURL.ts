@@ -84,6 +84,15 @@ export interface QueryParams {
 	 * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
 	 */
 	routes?: Route | string | (Route | string)[];
+
+	/**
+	 * The `brokenRoute` option allows you to define the default route broken Link
+	 * or content Relationship fields should use for their `url` field. A broken
+	 * link is a link whose linked document has been unpublished or deleted.
+	 *
+	 * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
+	 */
+	brokenRoute?: string;
 }
 
 /**

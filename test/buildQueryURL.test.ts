@@ -54,10 +54,11 @@ it("supports params", () => {
 				lang: "lang",
 				orderings: "orderings",
 				routes: "routes",
+				brokenRoute: "brokenRoute",
 			}),
 		),
 	).toBe(
-		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&access_token=accessToken&pageSize=1&page=1&after=after&fetch=fetch&fetchLinks=fetchLinks&graphQuery=graphQuery&lang=lang&orderings=[orderings]&routes=routes",
+		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&access_token=accessToken&pageSize=1&page=1&after=after&fetch=fetch&fetchLinks=fetchLinks&graphQuery=graphQuery&lang=lang&orderings=[orderings]&routes=routes&brokenRoute=brokenRoute",
 	);
 });
 

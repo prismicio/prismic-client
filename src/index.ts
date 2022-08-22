@@ -47,6 +47,4 @@ export type {
 	RequestInitLike,
 	ResponseLike,
 	Route,
-	RouteDefinition,
-	RouteBrokenDefinition,
 } from "./types";

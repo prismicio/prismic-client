@@ -400,20 +400,41 @@ it("uses client-provided routes in queries", async (ctx) => {
 			path: "/",
 		},
 		{
-			brokenRoute: "/404",
+			type: "page",
+			uid: "home",
+			lang: "it-it",
+			path: "/it",
 		},
 	];
 
 	mockPrismicRestAPIV2({
 		queryResponse,
 		queryRequiredParams: {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			routes: JSON.stringify(routes),
 		},
 		ctx,
 	});
 
 	const client = createTestClient({ clientConfig: { routes } });
+	const res = await client.get();
+
+	expect(res).toStrictEqual(queryResponse);
+});
+
+it("uses client-provided brokenRoute in queries", async (ctx) => {
+	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
+
+	const brokenRoute = "/404";
+
+	mockPrismicRestAPIV2({
+		queryResponse,
+		queryRequiredParams: {
+			brokenRoute,
+		},
+		ctx,
+	});
+
+	const client = createTestClient({ clientConfig: { brokenRoute } });
 	const res = await client.get();
 
 	expect(res).toStrictEqual(queryResponse);
