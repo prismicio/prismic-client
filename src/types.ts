@@ -140,6 +140,27 @@ export interface Ordering {
 /**
  * A `routes` parameter that determines how a document's URL field is resolved.
  *
+ * @example With a document's UID field.
+ *
+ * ```ts
+ * {
+ * 	"type": "page",
+ * 	"path": "/:uid"
+ * }
+ * ```
+ *
+ * @example With a Content Relationship `parent` field.
+ *
+ * ```ts
+ * {
+ * 	"type": "page",
+ * 	"path": "/:parent?/:uid",
+ * 	"resolvers": {
+ * 		"parent": "parent"
+ * 	}
+ * }
+ * ```
+ *
  * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
  */
 export interface Route {
@@ -147,10 +168,24 @@ export interface Route {
 	 * The Custom Type of the document.
 	 */
 	type: string;
+
+	/**
+	 * A specific UID to which this route definition is scoped. The route is only
+	 * defined for the document whose UID matches the given UID.
+	 */
+	uid?: string;
+
+	/**
+	 * A specific language to which this route definition is scoped. The route is
+	 * only defined for documents whose language matches the given language.
+	 */
+	lang?: string;
+
 	/**
 	 * The resolved path of the document with optional placeholders.
 	 */
 	path: string;
+
 	/**
 	 * An object that lists the API IDs of the Content Relationships in the route.
 	 */

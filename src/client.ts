@@ -140,12 +140,22 @@ export type ClientConfig = {
 	routes?: NonNullable<BuildQueryURLArgs["routes"]>;
 
 	/**
+	 * The `brokenRoute` option allows you to define the route populated in the
+	 * `url` property for broken Link or Content Relationship fields. A broken
+	 * link is a Link or Content Relationship field whose linked document has been
+	 * unpublished or deleted.
+	 *
+	 * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
+	 */
+	brokenRoute?: NonNullable<BuildQueryURLArgs["brokenRoute"]>;
+
+	/**
 	 * Default parameters that will be sent with each query. These parameters can
 	 * be overridden on each query if needed.
 	 */
 	defaultParams?: Omit<
 		BuildQueryURLArgs,
-		"ref" | "integrationFieldsRef" | "accessToken" | "routes"
+		"ref" | "integrationFieldsRef" | "accessToken" | "routes" | "brokenRoute"
 	>;
 
 	/**
@@ -315,6 +325,16 @@ export class Client<
 	routes?: NonNullable<BuildQueryURLArgs["routes"]>;
 
 	/**
+	 * The `brokenRoute` option allows you to define the route populated in the
+	 * `url` property for broken Link or Content Relationship fields. A broken
+	 * link is a Link or Content Relationship field whose linked document has been
+	 * unpublished or deleted.
+	 *
+	 * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
+	 */
+	brokenRoute?: NonNullable<BuildQueryURLArgs["brokenRoute"]>;
+
+	/**
 	 * The function used to make network requests to the Prismic REST API. In
 	 * environments where a global `fetch` function does not exist, such as
 	 * Node.js, this function must be provided.
@@ -382,6 +402,7 @@ export class Client<
 
 		this.accessToken = options.accessToken;
 		this.routes = options.routes;
+		this.brokenRoute = options.brokenRoute;
 		this.defaultParams = options.defaultParams;
 
 		if (options.ref) {
@@ -1235,6 +1256,7 @@ export class Client<
 			ref,
 			integrationFieldsRef,
 			routes: params.routes || this.routes,
+			brokenRoute: params.brokenRoute || this.brokenRoute,
 			accessToken: params.accessToken || this.accessToken,
 		});
 	}
