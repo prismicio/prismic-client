@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.7.0](https://github.com/prismicio/prismic-client/compare/v6.6.4...v6.7.0) (2022-08-23)
+
+
+### Features
+
+* support Route Resolver `uid`, `lang`, and `brokenRoute` options ([#258](https://github.com/prismicio/prismic-client/issues/258)) ([22f01c6](https://github.com/prismicio/prismic-client/commit/22f01c6cad671b908b568e2960d5434ca3a1b0fb))
+
+
+### Chore
+
+* **deps:** upgrade dependencies ([#259](https://github.com/prismicio/prismic-client/issues/259)) ([4d17090](https://github.com/prismicio/prismic-client/commit/4d170902f98c8022b876d8b46cec784b32a52a8c))
+
 ### [6.6.4](https://github.com/prismicio/prismic-client/compare/v6.6.3...v6.6.4) (2022-08-06)
 
 
