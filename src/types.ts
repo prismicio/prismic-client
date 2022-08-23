@@ -163,7 +163,7 @@ export interface Ordering {
  *
  * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
  */
-export type Route = {
+export interface Route {
 	/**
 	 * The Custom Type of the document.
 	 */
@@ -171,13 +171,13 @@ export type Route = {
 
 	/**
 	 * A specific UID to which this route definition is scoped. The route is only
-	 * defined for the document of type matching the given UID.
+	 * defined for the document whose UID matches the given UID.
 	 */
 	uid?: string;
 
 	/**
-	 * A specific lang to which this route definition is scoped. The route is only
-	 * defined for documents of type matching the given lang.
+	 * A specific language to which this route definition is scoped. The route is
+	 * only defined for documents whose language matches the given language.
 	 */
 	lang?: string;
 
@@ -190,4 +190,4 @@ export type Route = {
 	 * An object that lists the API IDs of the Content Relationships in the route.
 	 */
 	resolvers?: Record<string, string>;
-};
+}
