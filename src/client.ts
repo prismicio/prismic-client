@@ -219,6 +219,15 @@ type ResolvePreviewArgs<LinkResolverReturnType> = {
 };
 
 /**
+ * The result of a `fetch()` job.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type FetchJobResult<TJSON = any> = {
+	status: number;
+	json: TJSON;
+};
+
+/**
  * Creates a predicate to filter content by document type.
  *
  * @param documentType - The document type to filter queried content.
@@ -367,6 +376,14 @@ export class Client<
 	 * Timestamp at which the cached repository data is considered stale.
 	 */
 	private cachedRepositoryExpiration = 0;
+
+	/**
+	 * Active `fetch()` jobs keyed by URL and AbortSignal (if it exists).
+	 */
+	private fetchJobs: Record<
+		string,
+		Map<AbortSignalLike | undefined, Promise<FetchJobResult>>
+	> = {};
 
 	/**
 	 * Creates a Prismic client that can be used to query a repository.
@@ -1642,51 +1659,64 @@ export class Client<
 	 */
 	private async fetch<T = unknown>(
 		url: string,
-		// TODO: Change to `params` when Authorization header support works in browsers with CORS.
-		// _params?: Partial<BuildQueryURLArgs>,
 		params: FetchParams = {},
 	): Promise<T> {
-		// TODO: Restore when Authorization header support works in browsers with CORS.
-		// const accessToken = (params && params.accessToken) || this.accessToken;
-		// const options = accessToken
-		// 	? { headers: { Authorization: `Token ${accessToken}` } }
-		// 	: {};
+		let job: Promise<FetchJobResult>;
 
-		const res = await this.fetchFn(url, {
-			signal: params.signal,
-		});
+		if (this.fetchJobs[url] && this.fetchJobs[url].has(params.signal)) {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			job = this.fetchJobs[url].get(params.signal)!;
+		} else {
+			this.fetchJobs[url] ||= new Map();
 
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		let json: any;
-		try {
-			// We can assume Prismic REST API responses will have a `application/json`
-			// Content Type. If not, this will throw, signaling an invalid response.
-			json = await res.json();
-		} catch {
-			// Not Found (this response has an empty body and throws on `.json()`)
-			// - Incorrect repository name
-			if (res.status === 404) {
-				throw new NotFoundError(
-					`Prismic repository not found. Check that "${this.endpoint}" is pointing to the correct repository.`,
-					url,
-					undefined,
-				);
-			} else {
-				throw new PrismicError(undefined, url, undefined);
-			}
+			job = this.fetchFn(url, {
+				signal: params.signal,
+			}).then(async (res) => {
+				this.fetchJobs[url].delete(params.signal);
+
+				if (this.fetchJobs[url].size === 0) {
+					delete this.fetchJobs[url];
+				}
+
+				// We can assume Prismic REST API responses
+				// will have a `application/json`
+				// Content Type. If not, this will
+				// throw, signaling an invalid
+				// response.
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				let json: any = undefined;
+				try {
+					json = await res.json();
+				} catch {
+					// noop
+				}
+
+				return {
+					status: res.status,
+					json,
+				};
+			});
+
+			this.fetchJobs[url].set(params.signal, job);
+		}
+
+		const res = await job;
+
+		if (res.status !== 404 && res.json == null) {
+			throw new PrismicError(undefined, url, res.json);
 		}
 
 		switch (res.status) {
 			// Successful
 			case 200: {
-				return json;
+				return res.json;
 			}
 
 			// Bad Request
 			// - Invalid predicate syntax
 			// - Ref not provided (ignored)
 			case 400: {
-				throw new ParsingError(json.message, url, json);
+				throw new ParsingError(res.json.message, url, res.json);
 			}
 
 			// Unauthorized
@@ -1698,13 +1728,23 @@ export class Client<
 			// - Incorrect access token for query endpoint
 			case 403: {
 				throw new ForbiddenError(
-					"error" in json ? json.error : json.message,
+					"error" in res.json ? res.json.error : res.json.message,
 					url,
-					json,
+					res.json,
+				);
+			}
+
+			// Not Found (this response has an empty body)
+			// - Incorrect repository name
+			case 404: {
+				throw new NotFoundError(
+					`Prismic repository not found. Check that "${this.endpoint}" is pointing to the correct repository.`,
+					url,
+					undefined,
 				);
 			}
 		}
 
-		throw new PrismicError(undefined, url, json);
+		throw new PrismicError(undefined, url, res.json);
 	}
 }
