@@ -1667,7 +1667,7 @@ export class Client<
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			job = this.fetchJobs[url].get(params.signal)!;
 		} else {
-			this.fetchJobs[url] ||= new Map();
+			this.fetchJobs[url] = this.fetchJobs[url] || new Map();
 
 			job = this.fetchFn(url, {
 				signal: params.signal,
