@@ -68,27 +68,25 @@ export type FetchLike = (
 // different AbortSignal implementations. The types of each property are not
 // important to validate since it is blindly passed to a given `fetch()`
 // function.
-export type AbortSignalLike = {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	aborted: any;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	addEventListener: any;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	removeEventListener: any;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	dispatchEvent: any;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	onabort: any;
-};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AbortSignalLike = any;
 
 /**
  * The minimum required properties from RequestInit.
  */
 export interface RequestInitLike {
 	headers?: Record<string, string>;
-	// `null` is included to match TypeScript's `fetch()` type in `lib.dom.d.ts`.
-	// See: https://github.com/microsoft/TypeScript/blob/3328feb7991f358e245088d48b64ad9da8f015e2/lib/lib.dom.d.ts#L1515-L1518
-	signal?: AbortSignalLike | null;
+
+	/**
+	 * An object that allows you to abort a `fetch()` request if needed via an
+	 * `AbortController` object
+	 *
+	 * {@link https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal}
+	 */
+	// NOTE: `AbortSignalLike` is `any`! It is left as `AbortSignalLike`
+	// for backwards compatibility (the type is exported) and to signal to
+	// other readers that this should be an AbortSignal-like object.
+	signal?: AbortSignalLike;
 }
 
 /**
