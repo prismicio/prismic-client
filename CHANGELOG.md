@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.7.1](https://github.com/prismicio/prismic-client/compare/v6.7.0...v6.7.1) (2022-09-08)
+
+
+### Bug Fixes
+
+* widen `AbortSignal` for greater support of fetch implementations ([#263](https://github.com/prismicio/prismic-client/issues/263)) ([70a2eb4](https://github.com/prismicio/prismic-client/commit/70a2eb444a78e3fc63015c4d802b298948f5a758))
+
 ## [6.7.0](https://github.com/prismicio/prismic-client/compare/v6.6.4...v6.7.0) (2022-08-23)
 
 
