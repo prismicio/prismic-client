@@ -1,4 +1,4 @@
-import * as prismicT from "@prismicio/types";
+import { Ref } from "../types/api/ref";
 
 import { findRef } from "./findRef";
 
@@ -11,9 +11,6 @@ import { findRef } from "./findRef";
  * @returns The ref with a matching label from the list.
  * @throws If a matching ref cannot be found.
  */
-export const findRefByLabel = (
-	refs: prismicT.Ref[],
-	label: string,
-): prismicT.Ref => {
+export const findRefByLabel = (refs: Ref[], label: string): Ref => {
 	return findRef(refs, (ref) => ref.label === label);
 };

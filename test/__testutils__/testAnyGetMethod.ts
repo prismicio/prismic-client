@@ -1,5 +1,4 @@
 import { it, expect } from "vitest";
-import * as prismicT from "@prismicio/types";
 
 import { createPagedQueryResponses } from "./createPagedQueryResponses";
 import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2";
@@ -9,12 +8,12 @@ import * as prismic from "../../src";
 
 type TestGetAllMethodArgs<
 	TResponse extends
-		| prismicT.PrismicDocument
-		| prismicT.Query
-		| prismicT.PrismicDocument[] =
-		| prismicT.PrismicDocument
-		| prismicT.Query
-		| prismicT.PrismicDocument[],
+		| prismic.PrismicDocument
+		| prismic.Query
+		| prismic.PrismicDocument[] =
+		| prismic.PrismicDocument
+		| prismic.Query
+		| prismic.PrismicDocument[],
 > = {
 	run: (client: prismic.Client) => Promise<TResponse>;
 	requiredParams?: Record<string, string | string[]>;
@@ -73,14 +72,14 @@ export const testAnyGetMethodFactory = (
 
 export const testGetMethod = (
 	description: string,
-	args: TestGetAllMethodArgs<prismicT.Query>,
+	args: TestGetAllMethodArgs<prismic.Query>,
 ) => {
 	testAnyGetMethodFactory(description, args, "get");
 };
 
 export const testGetFirstMethod = (
 	description: string,
-	args: TestGetAllMethodArgs<prismicT.PrismicDocument>,
+	args: TestGetAllMethodArgs<prismic.PrismicDocument>,
 ) => {
 	testAnyGetMethodFactory(
 		description,
@@ -97,7 +96,7 @@ export const testGetFirstMethod = (
 
 export const testGetAllMethod = (
 	description: string,
-	args: TestGetAllMethodArgs<prismicT.PrismicDocument[]>,
+	args: TestGetAllMethodArgs<prismic.PrismicDocument[]>,
 ) => {
 	testAnyGetMethodFactory(
 		description,

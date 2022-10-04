@@ -1,14 +1,15 @@
 import { rest } from "msw";
 import { expect, TestContext } from "vitest";
-import * as prismicT from "@prismicio/types";
+
+import * as prismic from "../../src";
 
 import { createRepositoryName } from "./createRepositoryName";
 
 type MockPrismicRestAPIV2Args = {
 	ctx: TestContext;
 	accessToken?: string;
-	repositoryResponse?: prismicT.Repository;
-	queryResponse?: prismicT.Query | prismicT.Query[];
+	repositoryResponse?: prismic.Repository;
+	queryResponse?: prismic.Query | prismic.Query[];
 	queryRequiredParams?: Record<string, string | string[]>;
 	queryDelay?: number;
 };

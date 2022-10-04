@@ -1,6 +1,5 @@
 import { it, expect } from "vitest";
 import { rest } from "msw";
-import * as prismicT from "@prismicio/types";
 
 import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2";
 import { createTestClient } from "./createClient";
@@ -9,8 +8,8 @@ import * as prismic from "../../src";
 import { REPOSITORY_CACHE_TTL } from "../../src/client";
 
 type GetContext = {
-	repositoryResponse?: Partial<prismicT.Repository>;
-	getRef(repository: prismicT.Repository): string;
+	repositoryResponse?: Partial<prismic.Repository>;
+	getRef(repository: prismic.Repository): string;
 };
 
 type TestGetWithinTTLArgs = {

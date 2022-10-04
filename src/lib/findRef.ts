@@ -1,4 +1,4 @@
-import * as prismicT from "@prismicio/types";
+import { Ref } from "../types/api/ref";
 
 import { PrismicError } from "../PrismicError";
 
@@ -13,10 +13,7 @@ import { PrismicError } from "../PrismicError";
  * @returns The first matching ref.
  * @throws If a matching ref cannot be found.
  */
-export const findRef = (
-	refs: prismicT.Ref[],
-	predicate: (ref: prismicT.Ref) => boolean,
-): prismicT.Ref => {
+export const findRef = (refs: Ref[], predicate: (ref: Ref) => boolean): Ref => {
 	const ref = refs.find((ref) => predicate(ref));
 
 	if (!ref) {

@@ -1,0 +1,42 @@
+[
+	{
+		"type": "paragraph",
+		"text": "This is a link with XSS.",
+		"spans": [
+			{
+				"start": 10,
+				"end": 14,
+				"type": "hyperlink",
+				"data": {
+					"link_type": "Web",
+					"url": "https://example.org\" onmouseover=\"alert(document.cookie);"
+				}
+			}
+		]
+	},
+	{
+		"type": "paragraph",
+		"text": "This is a normal link.",
+		"spans": [
+			{
+				"start": 17,
+				"end": 21,
+				"type": "hyperlink",
+				"data": {
+					"link_type": "Web",
+					"url": "https://prismic.io"
+				}
+			}
+		]
+	},
+	{
+		"type": "image",
+		"url": "https://images.prismic.io/200629-sms-hoy/f0a757f6-770d-4eb8-a08b-f1727f1a58e4_guilherme-romano-KI2KaOeT670-unsplash.jpg?auto=compress,format",
+		"alt": "An \"Atlantic\" Puffin",
+		"copyright": "\"unsplash\"",
+		"dimensions": {
+			"width": 2400,
+			"height": 1602
+		}
+	}
+]

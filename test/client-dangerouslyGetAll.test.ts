@@ -9,9 +9,11 @@ import { testGetAllMethod } from "./__testutils__/testAnyGetMethod";
 import { GET_ALL_QUERY_DELAY } from "../src/client";
 
 /**
- * Tolerance in number of milliseconds for the duration of a simulated network request.
+ * Tolerance in number of milliseconds for the duration of a simulated network
+ * request.
  *
- * If tests are failing due to incorrect timed durations, increase the tolerance amount.
+ * If tests are failing due to incorrect timed durations, increase the tolerance
+ * amount.
  */
 const NETWORK_REQUEST_DURATION_TOLERANCE = 300;
 

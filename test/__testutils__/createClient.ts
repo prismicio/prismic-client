@@ -1,5 +1,6 @@
-import * as prismic from "../../src";
 import fetch from "node-fetch";
+
+import * as prismic from "../../src";
 
 import { createRepositoryName } from "./createRepositoryName";
 

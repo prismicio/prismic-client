@@ -1,6 +1,3 @@
-import * as prismicT from "@prismicio/types";
-import * as prismicH from "@prismicio/helpers";
-
 import { appendPredicates } from "./lib/appendPredicates";
 import { castArray } from "./lib/castArray";
 import { castThunk } from "./lib/castThunk";
@@ -10,12 +7,20 @@ import { findRefByLabel } from "./lib/findRefByLabel";
 import { getPreviewCookie } from "./lib/getPreviewCookie";
 import { minifyGraphQLQuery } from "./lib/minifyGraphQLQuery";
 
-import {
+import type {
 	AbortSignalLike,
 	FetchLike,
 	HttpRequestLike,
 	ExtractDocumentType,
-} from "./types";
+} from "./types/client";
+import type { LinkResolverFunction } from "./types/helpers";
+import type { PrismicDocument } from "./types/value/document";
+import type { Form, Repository } from "./types/api/repository";
+import type { Query } from "./types/api/query";
+import type { Ref } from "./types/api/ref";
+
+import { asLink } from "./helpers/asLink";
+
 import { ForbiddenError } from "./ForbiddenError";
 import { NotFoundError } from "./NotFoundError";
 import { ParsingError } from "./ParsingError";
@@ -199,7 +204,7 @@ type ResolvePreviewArgs<LinkResolverReturnType> = {
 	/**
 	 * A function that maps a Prismic document to a URL within your app.
 	 */
-	linkResolver?: prismicH.LinkResolverFunction<LinkResolverReturnType>;
+	linkResolver?: LinkResolverFunction<LinkResolverReturnType>;
 
 	/**
 	 * A fallback URL if the Link Resolver does not return a value.
@@ -255,7 +260,7 @@ const someTagsPredicate = (tags: string | string[]): string =>
  * third-party libraries.
  */
 export interface CreateClient {
-	<TDocuments extends prismicT.PrismicDocument>(
+	<TDocuments extends PrismicDocument>(
 		...args: ConstructorParameters<typeof Client>
 	): Client<TDocuments>;
 }
@@ -282,9 +287,7 @@ export interface CreateClient {
  *
  * @returns A client that can query content from the repository.
  */
-export const createClient: CreateClient = <
-	TDocuments extends prismicT.PrismicDocument,
->(
+export const createClient: CreateClient = <TDocuments extends PrismicDocument>(
 	repositoryNameOrEndpoint: string,
 	options?: ClientConfig,
 ) => new Client<TDocuments>(repositoryNameOrEndpoint, options);
@@ -299,9 +302,7 @@ export const createClient: CreateClient = <
  * @typeParam TDocuments - Document types that are registered for the Prismic
  *   repository. Query methods will automatically be typed based on this type.
  */
-export class Client<
-	TDocuments extends prismicT.PrismicDocument = prismicT.PrismicDocument,
-> {
+export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	/**
 	 * The Prismic REST API V2 endpoint for the repository (use
 	 * `prismic.getRepositoryEndpoint` for the default endpoint).
@@ -351,7 +352,8 @@ export class Client<
 	>;
 
 	/**
-	 * The client's ref mode state. This determines which ref is used during queries.
+	 * The client's ref mode state. This determines which ref is used during
+	 * queries.
 	 */
 	private refState: RefState = {
 		mode: RefStateMode.Master,
@@ -361,7 +363,7 @@ export class Client<
 	/**
 	 * Cached repository value.
 	 */
-	private cachedRepository: prismicT.Repository | undefined;
+	private cachedRepository: Repository | undefined;
 
 	/**
 	 * Timestamp at which the cached repository data is considered stale.
@@ -431,7 +433,8 @@ export class Client<
 
 	/**
 	 * Enables the client to automatically query content from a preview session if
-	 * one is active in browser environments. This is enabled by default in the browser.
+	 * one is active in browser environments. This is enabled by default in the
+	 * browser.
 	 *
 	 * For server environments, use `enableAutoPreviewsFromReq`.
 	 *
@@ -449,7 +452,8 @@ export class Client<
 
 	/**
 	 * Enables the client to automatically query content from a preview session if
-	 * one is active in server environments. This is disabled by default on the server.
+	 * one is active in server environments. This is disabled by default on the
+	 * server.
 	 *
 	 * For browser environments, use `enableAutoPreviews`.
 	 *
@@ -462,7 +466,8 @@ export class Client<
 	 * });
 	 * ```
 	 *
-	 * @param req - An HTTP server request object containing the request's cookies.
+	 * @param req - An HTTP server request object containing the request's
+	 *   cookies.
 	 */
 	enableAutoPreviewsFromReq<R extends HttpRequestLike>(req: R): void {
 		this.refState.httpRequest = req;
@@ -506,10 +511,10 @@ export class Client<
 	async query<TDocument extends TDocuments>(
 		predicates: NonNullable<BuildQueryURLArgs["predicates"]>,
 		params?: Partial<Omit<BuildQueryURLArgs, "predicates">> & FetchParams,
-	): Promise<prismicT.Query<TDocument>> {
+	): Promise<Query<TDocument>> {
 		const url = await this.buildQueryURL({ ...params, predicates });
 
-		return await this.fetch<prismicT.Query<TDocument>>(url, params);
+		return await this.fetch<Query<TDocument>>(url, params);
 	}
 
 	/**
@@ -528,10 +533,10 @@ export class Client<
 	 */
 	async get<TDocument extends TDocuments>(
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
-	): Promise<prismicT.Query<TDocument>> {
+	): Promise<Query<TDocument>> {
 		const url = await this.buildQueryURL(params);
 
-		return await this.fetch<prismicT.Query<TDocument>>(url, params);
+		return await this.fetch<Query<TDocument>>(url, params);
 	}
 
 	/**
@@ -556,7 +561,7 @@ export class Client<
 			actualParams.pageSize = this.defaultParams?.pageSize ?? 1;
 		}
 		const url = await this.buildQueryURL(actualParams);
-		const result = await this.fetch<prismicT.Query<TDocument>>(url, params);
+		const result = await this.fetch<Query<TDocument>>(url, params);
 
 		const firstResult = result.results[0];
 
@@ -575,7 +580,8 @@ export class Client<
 	 * Queries content from the Prismic repository and returns all matching
 	 * content. If no predicates are provided, all documents will be fetched.
 	 *
-	 * This method may make multiple network requests to query all matching content.
+	 * This method may make multiple network requests to query all matching
+	 * content.
 	 *
 	 * @example
 	 *
@@ -603,7 +609,7 @@ export class Client<
 		};
 
 		const documents: TDocument[] = [];
-		let latestResult: prismicT.Query<TDocument> | undefined;
+		let latestResult: Query<TDocument> | undefined;
 
 		while (
 			(!latestResult || latestResult.next_page) &&
@@ -628,7 +634,8 @@ export class Client<
 	 * @remarks
 	 * A document's UID is different from its ID. An ID is automatically generated
 	 * for all documents and is made available on its `id` property. A UID is
-	 * provided in the Prismic editor and is unique among all documents of its Custom Type.
+	 * provided in the Prismic editor and is unique among all documents of its
+	 * Custom Type.
 	 * @example
 	 *
 	 * ```ts
@@ -657,7 +664,8 @@ export class Client<
 	 * @remarks
 	 * A document's UID is different from its ID. An ID is automatically generated
 	 * for all documents and is made available on its `id` property. A UID is
-	 * provided in the Prismic editor and is unique among all documents of its Custom Type.
+	 * provided in the Prismic editor and is unique among all documents of its
+	 * Custom Type.
 	 * @example
 	 *
 	 * ```ts
@@ -677,7 +685,7 @@ export class Client<
 	async getByIDs<TDocument extends TDocuments>(
 		ids: string[],
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
-	): Promise<prismicT.Query<TDocument>> {
+	): Promise<Query<TDocument>> {
 		return await this.get<TDocument>(
 			appendPredicates(params, predicate.in("document.id", ids)),
 		);
@@ -686,12 +694,14 @@ export class Client<
 	/**
 	 * Queries all documents from the Prismic repository with specific IDs.
 	 *
-	 * This method may make multiple network requests to query all matching content.
+	 * This method may make multiple network requests to query all matching
+	 * content.
 	 *
 	 * @remarks
 	 * A document's UID is different from its ID. An ID is automatically generated
 	 * for all documents and is made available on its `id` property. A UID is
-	 * provided in the Prismic editor and is unique among all documents of its Custom Type.
+	 * provided in the Prismic editor and is unique among all documents of its
+	 * Custom Type.
 	 * @example
 	 *
 	 * ```ts
@@ -717,12 +727,14 @@ export class Client<
 	}
 
 	/**
-	 * Queries a document from the Prismic repository with a specific UID and Custom Type.
+	 * Queries a document from the Prismic repository with a specific UID and
+	 * Custom Type.
 	 *
 	 * @remarks
 	 * A document's UID is different from its ID. An ID is automatically generated
 	 * for all documents and is made available on its `id` property. A UID is
-	 * provided in the Prismic editor and is unique among all documents of its Custom Type.
+	 * provided in the Prismic editor and is unique among all documents of its
+	 * Custom Type.
 	 * @example
 	 *
 	 * ```ts
@@ -754,12 +766,14 @@ export class Client<
 	}
 
 	/**
-	 * Queries document from the Prismic repository with specific UIDs and Custom Type.
+	 * Queries document from the Prismic repository with specific UIDs and Custom
+	 * Type.
 	 *
 	 * @remarks
 	 * A document's UID is different from its ID. An ID is automatically generated
 	 * for all documents and is made available on its `id` property. A UID is
-	 * provided in the Prismic editor and is unique among all documents of its Custom Type.
+	 * provided in the Prismic editor and is unique among all documents of its
+	 * Custom Type.
 	 * @example
 	 *
 	 * ```ts
@@ -784,7 +798,7 @@ export class Client<
 		documentType: TDocumentType,
 		uids: string[],
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
-	): Promise<prismicT.Query<ExtractDocumentType<TDocument, TDocumentType>>> {
+	): Promise<Query<ExtractDocumentType<TDocument, TDocumentType>>> {
 		return await this.get<ExtractDocumentType<TDocument, TDocumentType>>(
 			appendPredicates(params, [
 				typePredicate(documentType),
@@ -794,14 +808,17 @@ export class Client<
 	}
 
 	/**
-	 * Queries all documents from the Prismic repository with specific UIDs and Custom Type.
+	 * Queries all documents from the Prismic repository with specific UIDs and
+	 * Custom Type.
 	 *
-	 * This method may make multiple network requests to query all matching content.
+	 * This method may make multiple network requests to query all matching
+	 * content.
 	 *
 	 * @remarks
 	 * A document's UID is different from its ID. An ID is automatically generated
 	 * for all documents and is made available on its `id` property. A UID is
-	 * provided in the Prismic editor and is unique among all documents of its Custom Type.
+	 * provided in the Prismic editor and is unique among all documents of its
+	 * Custom Type.
 	 * @example
 	 *
 	 * ```ts
@@ -837,7 +854,8 @@ export class Client<
 	}
 
 	/**
-	 * Queries a singleton document from the Prismic repository for a specific Custom Type.
+	 * Queries a singleton document from the Prismic repository for a specific
+	 * Custom Type.
 	 *
 	 * @remarks
 	 * A singleton document is one that is configured in Prismic to only allow one
@@ -854,7 +872,8 @@ export class Client<
 	 * @param documentType - The API ID of the singleton Custom Type.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
-	 * @returns The singleton document for the Custom Type, if a matching document exists.
+	 * @returns The singleton document for the Custom Type, if a matching document
+	 *   exists.
 	 */
 	async getSingle<
 		TDocument extends TDocuments,
@@ -892,16 +911,18 @@ export class Client<
 	>(
 		documentType: TDocumentType,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
-	): Promise<prismicT.Query<ExtractDocumentType<TDocument, TDocumentType>>> {
+	): Promise<Query<ExtractDocumentType<TDocument, TDocumentType>>> {
 		return await this.get<ExtractDocumentType<TDocument, TDocumentType>>(
 			appendPredicates(params, typePredicate(documentType)),
 		);
 	}
 
 	/**
-	 * Queries all documents from the Prismic repository for a specific Custom Type.
+	 * Queries all documents from the Prismic repository for a specific Custom
+	 * Type.
 	 *
-	 * This method may make multiple network requests to query all matching content.
+	 * This method may make multiple network requests to query all matching
+	 * content.
 	 *
 	 * @example
 	 *
@@ -932,7 +953,8 @@ export class Client<
 	/**
 	 * Queries documents from the Prismic repository with a specific tag.
 	 *
-	 * Use `getAllByTag` instead if you need to query all documents with a specific tag.
+	 * Use `getAllByTag` instead if you need to query all documents with a
+	 * specific tag.
 	 *
 	 * @example
 	 *
@@ -949,7 +971,7 @@ export class Client<
 	async getByTag<TDocument extends TDocuments>(
 		tag: string,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
-	): Promise<prismicT.Query<TDocument>> {
+	): Promise<Query<TDocument>> {
 		return await this.get<TDocument>(
 			appendPredicates(params, someTagsPredicate(tag)),
 		);
@@ -958,7 +980,8 @@ export class Client<
 	/**
 	 * Queries all documents from the Prismic repository with a specific tag.
 	 *
-	 * This method may make multiple network requests to query all matching content.
+	 * This method may make multiple network requests to query all matching
+	 * content.
 	 *
 	 * @example
 	 *
@@ -1002,7 +1025,7 @@ export class Client<
 	async getByEveryTag<TDocument extends TDocuments>(
 		tags: string[],
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
-	): Promise<prismicT.Query<TDocument>> {
+	): Promise<Query<TDocument>> {
 		return await this.get<TDocument>(
 			appendPredicates(params, everyTagPredicate(tags)),
 		);
@@ -1012,7 +1035,8 @@ export class Client<
 	 * Queries documents from the Prismic repository with specific tags. A
 	 * document must be tagged with all of the queried tags to be included.
 	 *
-	 * This method may make multiple network requests to query all matching content.
+	 * This method may make multiple network requests to query all matching
+	 * content.
 	 *
 	 * @example
 	 *
@@ -1039,7 +1063,8 @@ export class Client<
 
 	/**
 	 * Queries documents from the Prismic repository with specific tags. A
-	 * document must be tagged with at least one of the queried tags to be included.
+	 * document must be tagged with at least one of the queried tags to be
+	 * included.
 	 *
 	 * @example
 	 *
@@ -1051,12 +1076,13 @@ export class Client<
 	 * @param tags - A list of tags that must be included on a document.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
-	 * @returns A paginated response containing documents with at least one of the tags.
+	 * @returns A paginated response containing documents with at least one of the
+	 *   tags.
 	 */
 	async getBySomeTags<TDocument extends TDocuments>(
 		tags: string[],
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
-	): Promise<prismicT.Query<TDocument>> {
+	): Promise<Query<TDocument>> {
 		return await this.get<TDocument>(
 			appendPredicates(params, someTagsPredicate(tags)),
 		);
@@ -1064,9 +1090,11 @@ export class Client<
 
 	/**
 	 * Queries documents from the Prismic repository with specific tags. A
-	 * document must be tagged with at least one of the queried tags to be included.
+	 * document must be tagged with at least one of the queried tags to be
+	 * included.
 	 *
-	 * This method may make multiple network requests to query all matching content.
+	 * This method may make multiple network requests to query all matching
+	 * content.
 	 *
 	 * @example
 	 *
@@ -1097,9 +1125,9 @@ export class Client<
 	 *
 	 * @returns Repository metadata.
 	 */
-	async getRepository(params?: FetchParams): Promise<prismicT.Repository> {
+	async getRepository(params?: FetchParams): Promise<Repository> {
 		// TODO: Restore when Authorization header support works in browsers with CORS.
-		// return await this.fetch<prismicT.Repository>(this.endpoint);
+		// return await this.fetch<Repository>(this.endpoint);
 
 		const url = new URL(this.endpoint);
 
@@ -1107,7 +1135,7 @@ export class Client<
 			url.searchParams.set("access_token", this.accessToken);
 		}
 
-		return await this.fetch<prismicT.Repository>(url.toString(), params);
+		return await this.fetch<Repository>(url.toString(), params);
 	}
 
 	/**
@@ -1119,7 +1147,7 @@ export class Client<
 	 *
 	 * @returns A list of all refs for the Prismic repository.
 	 */
-	async getRefs(params?: FetchParams): Promise<prismicT.Ref[]> {
+	async getRefs(params?: FetchParams): Promise<Ref[]> {
 		const repository = await this.getRepository(params);
 
 		return repository.refs;
@@ -1132,7 +1160,7 @@ export class Client<
 	 *
 	 * @returns The ref with a matching ID, if it exists.
 	 */
-	async getRefByID(id: string, params?: FetchParams): Promise<prismicT.Ref> {
+	async getRefByID(id: string, params?: FetchParams): Promise<Ref> {
 		const refs = await this.getRefs(params);
 
 		return findRefByID(refs, id);
@@ -1145,10 +1173,7 @@ export class Client<
 	 *
 	 * @returns The ref with a matching label, if it exists.
 	 */
-	async getRefByLabel(
-		label: string,
-		params?: FetchParams,
-	): Promise<prismicT.Ref> {
+	async getRefByLabel(label: string, params?: FetchParams): Promise<Ref> {
 		const refs = await this.getRefs(params);
 
 		return findRefByLabel(refs, label);
@@ -1160,7 +1185,7 @@ export class Client<
 	 *
 	 * @returns The repository's master ref.
 	 */
-	async getMasterRef(params?: FetchParams): Promise<prismicT.Ref> {
+	async getMasterRef(params?: FetchParams): Promise<Ref> {
 		const refs = await this.getRefs(params);
 
 		return findMasterRef(refs);
@@ -1172,7 +1197,7 @@ export class Client<
 	 *
 	 * @returns A list of all Releases for the Prismic repository.
 	 */
-	async getReleases(params?: FetchParams): Promise<prismicT.Ref[]> {
+	async getReleases(params?: FetchParams): Promise<Ref[]> {
 		const refs = await this.getRefs(params);
 
 		return refs.filter((ref) => !ref.isMasterRef);
@@ -1185,10 +1210,7 @@ export class Client<
 	 *
 	 * @returns The Release with a matching ID, if it exists.
 	 */
-	async getReleaseByID(
-		id: string,
-		params?: FetchParams,
-	): Promise<prismicT.Ref> {
+	async getReleaseByID(id: string, params?: FetchParams): Promise<Ref> {
 		const releases = await this.getReleases(params);
 
 		return findRefByID(releases, id);
@@ -1201,10 +1223,7 @@ export class Client<
 	 *
 	 * @returns The ref with a matching label, if it exists.
 	 */
-	async getReleaseByLabel(
-		label: string,
-		params?: FetchParams,
-	): Promise<prismicT.Ref> {
+	async getReleaseByLabel(label: string, params?: FetchParams): Promise<Ref> {
 		const releases = await this.getReleases(params);
 
 		return findRefByLabel(releases, label);
@@ -1316,7 +1335,7 @@ export class Client<
 				lang: "*",
 			});
 
-			const url = prismicH.asLink(document, args.linkResolver);
+			const url = asLink(document, args.linkResolver);
 
 			if (typeof url === "string") {
 				return url;
@@ -1327,9 +1346,11 @@ export class Client<
 	}
 
 	/**
-	 * Configures the client to query the latest published content for all future queries.
+	 * Configures the client to query the latest published content for all future
+	 * queries.
 	 *
-	 * If the `ref` parameter is provided during a query, it takes priority for that query.
+	 * If the `ref` parameter is provided during a query, it takes priority for
+	 * that query.
 	 *
 	 * @example
 	 *
@@ -1346,7 +1367,8 @@ export class Client<
 	 * Configures the client to query content from a specific Release identified
 	 * by its ID for all future queries.
 	 *
-	 * If the `ref` parameter is provided during a query, it takes priority for that query.
+	 * If the `ref` parameter is provided during a query, it takes priority for
+	 * that query.
 	 *
 	 * @example
 	 *
@@ -1369,7 +1391,8 @@ export class Client<
 	 * Configures the client to query content from a specific Release identified
 	 * by its label for all future queries.
 	 *
-	 * If the `ref` parameter is provided during a query, it takes priority for that query.
+	 * If the `ref` parameter is provided during a query, it takes priority for
+	 * that query.
 	 *
 	 * @example
 	 *
@@ -1402,7 +1425,8 @@ export class Client<
 	 * const document = await client.getByID("WW4bKScAAMAqmluX");
 	 * ```
 	 *
-	 * @param ref - The ref or a function that returns the ref from which to query content.
+	 * @param ref - The ref or a function that returns the ref from which to query
+	 *   content.
 	 */
 	queryContentFromRef(ref: RefStringOrThunk): void {
 		this.refState = {
@@ -1440,7 +1464,8 @@ export class Client<
 	 * ```
 	 *
 	 * @param input - The `fetch()` `input` parameter. Only strings are supported.
-	 * @param init - The `fetch()` `init` parameter. Only plain objects are supported.
+	 * @param init - The `fetch()` `init` parameter. Only plain objects are
+	 *   supported.
 	 *
 	 * @returns The `fetch()` Response for the request.
 	 * @experimental
@@ -1518,9 +1543,7 @@ export class Client<
 	 *
 	 * @returns Cached repository metadata.
 	 */
-	private async getCachedRepository(
-		params?: FetchParams,
-	): Promise<prismicT.Repository> {
+	private async getCachedRepository(params?: FetchParams): Promise<Repository> {
 		if (
 			!this.cachedRepository ||
 			Date.now() >= this.cachedRepositoryExpiration
@@ -1544,7 +1567,7 @@ export class Client<
 	private async getCachedRepositoryForm(
 		name: string,
 		params?: FetchParams,
-	): Promise<prismicT.Form> {
+	): Promise<Form> {
 		const cachedRepository = await this.getCachedRepository(params);
 		const form = cachedRepository.forms[name];
 
@@ -1561,14 +1584,16 @@ export class Client<
 
 	/**
 	 * Returns the ref needed to query based on the client's current state. This
-	 * method may make a network request to fetch a ref or resolve the user's ref thunk.
+	 * method may make a network request to fetch a ref or resolve the user's ref
+	 * thunk.
 	 *
 	 * If auto previews are enabled, the preview ref takes priority if available.
 	 *
 	 * The following strategies are used depending on the client's state:
 	 *
 	 * - If the user called `queryLatestContent`: Use the repository's master ref.
-	 *   The ref is cached for 5 seconds. After 5 seconds, a new master ref is fetched.
+	 *   The ref is cached for 5 seconds. After 5 seconds, a new master ref is
+	 *   fetched.
 	 * - If the user called `queryContentFromReleaseByID`: Use the release's ref.
 	 *   The ref is cached for 5 seconds. After 5 seconds, a new ref for the
 	 *   release is fetched.
