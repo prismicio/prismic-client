@@ -1,5 +1,4 @@
 import * as prismic from "@prismicio/client";
-import PrismicDOM from "prismic-dom";
 import fetch from "node-fetch";
 import express from "express";
 import QuickLRU from "quick-lru";
@@ -56,9 +55,9 @@ app.get("/articles", async (req, res) => {
 	const articles = await client.getAllByType("article");
 
 	const payload = articles.map((article) => ({
-		title: PrismicDOM.RichText.asText(article.data.title),
-		description: PrismicDOM.RichText.asText(article.data.shortlede),
-		content: PrismicDOM.RichText.asHtml(article.data.content),
+		title: prismic.asText(article.data.title),
+		description: prismic.asText(article.data.shortlede),
+		content: prismic.asHTML(article.data.content),
 	}));
 
 	res.json(payload);

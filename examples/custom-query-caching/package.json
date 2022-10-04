@@ -2,7 +2,6 @@
 	"type": "module",
 	"dependencies": {
 		"@prismicio/client": "latest",
-		"express": "^4.18.1",
 		"node-fetch": "^2.6.7",
 		"quick-lru": "^6.1.1"
 	}
