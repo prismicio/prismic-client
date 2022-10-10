@@ -494,32 +494,6 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	/**
 	 * Queries content from the Prismic repository.
 	 *
-	 * @deprecated Use `get` instead.
-	 * @example
-	 *
-	 * ```ts
-	 * const response = await client.query(
-	 * 	prismic.predicate.at("document.type", "page"),
-	 * );
-	 * ```
-	 *
-	 * @typeParam TDocument - Type of Prismic documents returned.
-	 * @param params - Parameters to filter, sort, and paginate results.
-	 *
-	 * @returns A paginated response containing the result of the query.
-	 */
-	async query<TDocument extends TDocuments>(
-		predicates: NonNullable<BuildQueryURLArgs["predicates"]>,
-		params?: Partial<Omit<BuildQueryURLArgs, "predicates">> & FetchParams,
-	): Promise<Query<TDocument>> {
-		const url = await this.buildQueryURL({ ...params, predicates });
-
-		return await this.fetch<Query<TDocument>>(url, params);
-	}
-
-	/**
-	 * Queries content from the Prismic repository.
-	 *
 	 * @example
 	 *
 	 * ```ts
@@ -1437,12 +1411,6 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * @deprecated Renamed to `graphQLFetch()` (note the capitalization of "QL").
-	 */
-	// TODO: Remove in v7
-	graphqlFetch = this.graphQLFetch.bind(this);
-
-	/**
 	 * A `fetch()` function to be used with GraphQL clients configured for
 	 * Prismic's GraphQL API. It automatically applies the necessary `prismic-ref`
 	 * and Authorization headers. Queries will automatically be minified by
@@ -1451,11 +1419,11 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * @example
 	 *
 	 * ```ts
-	 * const graphqlClient = new ApolloClient({
+	 * const graphQLClient = new ApolloClient({
 	 * 	link: new HttpLink({
 	 * 		uri: prismic.getGraphQLEndpoint(repositoryName),
-	 * 		// Provide `client.graphqlFetch` as the fetch implementation.
-	 * 		fetch: client.graphqlFetch,
+	 * 		// Provide `client.graphQLFetch` as the fetch implementation.
+	 * 		fetch: client.graphQLFetch,
 	 * 		// Using GET is required.
 	 * 		useGETForQueries: true,
 	 * 	}),
