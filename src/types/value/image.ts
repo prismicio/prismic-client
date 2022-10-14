@@ -55,8 +55,8 @@ export type ImageField<
 		//
 		// Futhermore, duplicating rather than abstracting the type to
 		// a secondary "_ImageFieldImage"-like type is preferred. If the
-		// type were abstracted, TypeScript's language server would
-		// return the abstracted types name rather than the clearer
+		// type was abstracted, TypeScript's language server would
+		// return the abstracted type's name rather than the clearer
 		// version written below. This version leads to a better code
 		// editor experience.
 		State extends "filled"
