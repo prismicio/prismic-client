@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.0.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v6.7.1...v7.0.0-alpha.0) (2022-10-14)
+
+
+### Bug Fixes
+
+* refactor `ImageField` for better `isFilled.image()` compatibility ([44369fa](https://github.com/prismicio/prismic-client/commit/44369faf592e0dccffcc4ece93f5792f40217d2a))
+
+
+### Chore
+
+* merge `helpers` and `types`, remove deprecated APIs ([3201188](https://github.com/prismicio/prismic-client/commit/3201188db18fb311791e252088a284bdc3cd2b73))
+* remove deprecated APIs ([610ddbc](https://github.com/prismicio/prismic-client/commit/610ddbc6db08f49c90ba87a2fd24a54ca4450cfe))
+* update `.github` ([9600113](https://github.com/prismicio/prismic-client/commit/9600113b0bcc61f1de34f0901efbe132f37f0139))
+
+
+### Documentation
+
+* fix comment typos ([9b8aee0](https://github.com/prismicio/prismic-client/commit/9b8aee0ec33a4ad718e83167c107676a3e991e38))
+
+
+### Refactor
+
+* `examples` ([e37c9af](https://github.com/prismicio/prismic-client/commit/e37c9af607891f1f0ea900aa6c33d0cb91aadf91))
+* make `getPreviewCookie()` break early ([3d639a7](https://github.com/prismicio/prismic-client/commit/3d639a7d8096b71b0d17650af1663cdffd183a3d))
+* remove unused function ([9b6b3bd](https://github.com/prismicio/prismic-client/commit/9b6b3bd7d00f156c4903e2ab5ca6ae332b90a9dc))
+
 ### [6.7.1](https://github.com/prismicio/prismic-client/compare/v6.7.0...v6.7.1) (2022-09-08)
 
 
