@@ -44,10 +44,24 @@ export type ImageField<
 	// preferred.
 	ThumbnailNames extends string | null = never,
 	State extends FieldState = FieldState,
-> = Simplify<
-	ImageFieldImage<State> &
-		Record<
-			Exclude<Extract<ThumbnailNames, string>, keyof ImageFieldImage>,
-			ImageFieldImage<State>
-		>
->;
+> =
+	// Simplify is necessary. Without it, Group and Slice types break for
+	// unknown reasons. If you know why, please update this comment with an
+	// explanation. :)
+	Simplify<
+		// This `extends` and duplicated type is necessary. Without it,
+		// TypeScript cannot correct narrow "filled" and "empty" types with the
+		// `isFilled.image()` helper.
+		//
+		// Futhermore, duplicating rather than abstracting the type to
+		// a secondary "_ImageFieldImage"-like type is preferred. If the
+		// type were abstracted, TypeScript's language server would
+		// return the abstracted types name rather than the clearer
+		// version written below. This version leads to a better code
+		// editor experience.
+		State extends "filled"
+			? ImageFieldImage<State> &
+					Record<Extract<ThumbnailNames, string>, ImageFieldImage<State>>
+			: ImageFieldImage<State> &
+					Record<Extract<ThumbnailNames, string>, ImageFieldImage<State>>
+	>;
