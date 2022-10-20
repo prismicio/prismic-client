@@ -1,4 +1,4 @@
-import escapeHtml from "escape-html";
+import { escapeHTML } from "./escapeHTML";
 
 import {
 	RTBlockNode,
@@ -29,15 +29,15 @@ export const serializeStandardTag = (
 };
 
 export const serializePreFormatted = (node: RTPreformattedNode): string => {
-	return `<pre${getLabel(node)}>${escapeHtml(node.text)}</pre>`;
+	return `<pre${getLabel(node)}>${escapeHTML(node.text)}</pre>`;
 };
 
 export const serializeImage = (
 	linkResolver: LinkResolverFunction<string> | undefined | null,
 	node: RTImageNode,
 ): string => {
-	let imageTag = `<img src="${node.url}" alt="${escapeHtml(node.alt)}"${
-		node.copyright ? ` copyright="${escapeHtml(node.copyright)}"` : ""
+	let imageTag = `<img src="${node.url}" alt="${escapeHTML(node.alt)}"${
+		node.copyright ? ` copyright="${escapeHTML(node.copyright)}"` : ""
 	} />`;
 
 	// If the image has a link, we wrap it with an anchor tag
@@ -72,7 +72,7 @@ export const serializeHyperlink = (
 ): string => {
 	switch (node.data.link_type) {
 		case LinkType.Web: {
-			return `<a href="${escapeHtml(node.data.url)}" ${
+			return `<a href="${escapeHTML(node.data.url)}" ${
 				node.data.target ? `target="${node.data.target}" ` : ""
 			}rel="noopener noreferrer"${getLabel(node)}>${children.join("")}</a>`;
 		}
@@ -92,5 +92,5 @@ export const serializeHyperlink = (
 };
 
 export const serializeSpan = (content?: string): string => {
-	return content ? escapeHtml(content).replace(/\n/g, "<br />") : "";
+	return content ? escapeHTML(content).replace(/\n/g, "<br />") : "";
 };

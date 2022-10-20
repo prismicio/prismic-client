@@ -54,14 +54,12 @@
 	},
 	"dependencies": {
 		"@prismicio/richtext": "^2.1.1",
-		"escape-html": "^1.0.3",
 		"imgix-url-builder": "^0.0.3"
 	},
 	"devDependencies": {
 		"@prismicio/mock": "^0.1.1",
 		"@prismicio/types-internal": "^1.1.1",
 		"@size-limit/preset-small-lib": "^8.1.0",
-		"@types/escape-html": "^1.0.2",
 		"@typescript-eslint/eslint-plugin": "^5.40.1",
 		"@typescript-eslint/parser": "^5.40.1",
 		"@vitest/coverage-c8": "^0.24.3",

@@ -1,7 +1,7 @@
 [
 	{
 		"type": "paragraph",
-		"text": "This is a link with XSS.",
+		"text": "This is a link with XSS (\")",
 		"spans": [
 			{
 				"start": 10,
@@ -10,6 +10,36 @@
 				"data": {
 					"link_type": "Web",
 					"url": "https://example.org\" onmouseover=\"alert(document.cookie);"
+				}
+			}
+		]
+	},
+	{
+		"type": "paragraph",
+		"text": "This is a link with XSS (')",
+		"spans": [
+			{
+				"start": 10,
+				"end": 14,
+				"type": "hyperlink",
+				"data": {
+					"link_type": "Web",
+					"url": "https://example.org' onmouseover='alert(document.cookie);"
+				}
+			}
+		]
+	},
+	{
+		"type": "paragraph",
+		"text": "This is a link with XSS (&, <, >)",
+		"spans": [
+			{
+				"start": 10,
+				"end": 14,
+				"type": "hyperlink",
+				"data": {
+					"link_type": "Web",
+					"url": "https://example.org&<>"
 				}
 			}
 		]
