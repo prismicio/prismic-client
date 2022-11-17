@@ -15,10 +15,9 @@ import type { SliceZone } from "./sliceZone";
 export type ContentRelationshipField<
 	TypeEnum = string,
 	LangEnum = string,
-	DataInterface extends Record<
-		string,
-		AnyRegularField | GroupField | SliceZone
-	> = never,
+	DataInterface extends
+		| Record<string, AnyRegularField | GroupField | SliceZone>
+		| unknown = unknown,
 	State extends FieldState = FieldState,
 > = State extends "empty"
 	? EmptyLinkField<typeof LinkType.Document>
@@ -30,10 +29,9 @@ export type ContentRelationshipField<
 export interface FilledContentRelationshipField<
 	TypeEnum = string,
 	LangEnum = string,
-	DataInterface extends Record<
-		string,
-		AnyRegularField | GroupField | SliceZone
-	> = never,
+	DataInterface extends
+		| Record<string, AnyRegularField | GroupField | SliceZone>
+		| unknown = unknown,
 > {
 	link_type: typeof LinkType.Document;
 	id: string;

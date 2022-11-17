@@ -53,11 +53,15 @@ export const asLink = <
 	}
 
 	// Converts document to link field if needed
-	const linkField = (
-		"link_type" in linkFieldOrDocument
-			? linkFieldOrDocument
-			: documentToLinkField(linkFieldOrDocument)
-	) as LinkField;
+	const linkField =
+		// prettier-ignore
+		(
+			// @ts-expect-error - Bug in TypeScript 4.9: https://github.com/microsoft/TypeScript/issues/51501
+			// TODO: Remove the `prettier-ignore` comment when this bug is fixed.
+			"link_type" in linkFieldOrDocument
+				? linkFieldOrDocument
+				: documentToLinkField(linkFieldOrDocument)
+		) as LinkField;
 
 	switch (linkField.link_type) {
 		case LinkType.Media:

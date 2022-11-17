@@ -98,22 +98,28 @@ import * as prismic from "../../src";
 	if (prismic.isFilled.link(value)) {
 		expectType<
 			TypeEqual<
-				prismic.LinkField<string, string, never, "filled">,
+				prismic.LinkField<string, string, unknown, "filled">,
 				typeof value
 			>
 		>(true);
 		expectType<
-			TypeEqual<prismic.LinkField<string, string, never, "empty">, typeof value>
+			TypeEqual<
+				prismic.LinkField<string, string, unknown, "empty">,
+				typeof value
+			>
 		>(false);
 	} else {
 		expectType<
 			TypeEqual<
-				prismic.LinkField<string, string, never, "filled">,
+				prismic.LinkField<string, string, unknown, "filled">,
 				typeof value
 			>
 		>(false);
 		expectType<
-			TypeEqual<prismic.LinkField<string, string, never, "empty">, typeof value>
+			TypeEqual<
+				prismic.LinkField<string, string, unknown, "empty">,
+				typeof value
+			>
 		>(true);
 	}
 };
@@ -181,26 +187,26 @@ type LinkData = { baz: prismic.RichTextField };
 	if (prismic.isFilled.contentRelationship(value)) {
 		expectType<
 			TypeEqual<
-				prismic.ContentRelationshipField<string, string, never, "filled">,
+				prismic.ContentRelationshipField<string, string, unknown, "filled">,
 				typeof value
 			>
 		>(true);
 		expectType<
 			TypeEqual<
-				prismic.ContentRelationshipField<string, string, never, "empty">,
+				prismic.ContentRelationshipField<string, string, unknown, "empty">,
 				typeof value
 			>
 		>(false);
 	} else {
 		expectType<
 			TypeEqual<
-				prismic.ContentRelationshipField<string, string, never, "filled">,
+				prismic.ContentRelationshipField<string, string, unknown, "filled">,
 				typeof value
 			>
 		>(false);
 		expectType<
 			TypeEqual<
-				prismic.ContentRelationshipField<string, string, never, "empty">,
+				prismic.ContentRelationshipField<string, string, unknown, "empty">,
 				typeof value
 			>
 		>(true);

@@ -46,10 +46,9 @@ export interface FilledLinkToWebField {
 export type LinkField<
 	TypeEnum = string,
 	LangEnum = string,
-	DataInterface extends Record<
-		string,
-		AnyRegularField | GroupField | SliceZone
-	> = never,
+	DataInterface extends
+		| Record<string, AnyRegularField | GroupField | SliceZone>
+		| unknown = unknown,
 	State extends FieldState = FieldState,
 > = State extends "empty"
 	? EmptyLinkField<typeof LinkType.Any>

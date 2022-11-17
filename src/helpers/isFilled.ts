@@ -109,10 +109,9 @@ export const image = imageThumbnail as <
 export const link = <
 	TypeEnum = string,
 	LangEnum = string,
-	DataInterface extends Record<
-		string,
-		AnyRegularField | GroupField | SliceZone
-	> = never,
+	DataInterface extends
+		| Record<string, AnyRegularField | GroupField | SliceZone>
+		| unknown = unknown,
 >(
 	field: LinkField<TypeEnum, LangEnum, DataInterface> | null | undefined,
 ): field is LinkField<TypeEnum, LangEnum, DataInterface, "filled"> => {
@@ -140,10 +139,9 @@ export const linkToMedia = link as (
 export const contentRelationship = link as <
 	TypeEnum = string,
 	LangEnum = string,
-	DataInterface extends Record<
-		string,
-		AnyRegularField | GroupField | SliceZone
-	> = never,
+	DataInterface extends
+		| Record<string, AnyRegularField | GroupField | SliceZone>
+		| unknown = unknown,
 >(
 	field:
 		| ContentRelationshipField<TypeEnum, LangEnum, DataInterface>
