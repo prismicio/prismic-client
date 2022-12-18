@@ -1071,7 +1071,7 @@ export class Client<
 	 * @example
 	 *
 	 * ```ts
-	 * const response = await client.getAllByEveryTag(["food", "fruit"]);
+	 * const response = await client.getAllBySomeTags(["food", "fruit"]);
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of Prismic documents returned.
