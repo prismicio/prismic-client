@@ -33,7 +33,8 @@ export interface QueryParams {
 
 	/**
 	 * The `after` parameter can be used along with the orderings option. It will
-	 * remove all the documents except for those after the specified document in the list.
+	 * remove all the documents except for those after the specified document in
+	 * the list.
 	 *
 	 * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#after}
 	 */
@@ -57,7 +58,8 @@ export interface QueryParams {
 
 	/**
 	 * The `graphQuery` parameter allows you to specify which fields to retrieve
-	 * and what content to retrieve from Linked Documents / Content Relationships.
+	 * and what content to retrieve from Linked Documents / Content
+	 * Relationships.
 	 *
 	 * {@link https://prismic.io/docs/technologies/graphquery-rest-api}
 	 */
@@ -79,7 +81,8 @@ export interface QueryParams {
 	orderings?: Ordering | string | (Ordering | string)[];
 
 	/**
-	 * The `routes` option allows you to define how a document's `url` field is resolved.
+	 * The `routes` option allows you to define how a document's `url` field is
+	 * resolved.
 	 *
 	 * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
 	 */

@@ -21,9 +21,9 @@ export type ValueOf<
  * @example
  *
  * ```ts
- * ExtractOrFallback<"a" | "b", "a"> // => "a"
- * ExtractOrFallback<"a" | "b", "c"> // => "a" | "b"
- * ExtractOrFallback<"a" | "b", "c", "foo"> // => "foo"
+ * ExtractOrFallback<"a" | "b", "a">; // => "a"
+ * ExtractOrFallback<"a" | "b", "c">; // => "a" | "b"
+ * ExtractOrFallback<"a" | "b", "c", "foo">; // => "foo"
  * ```
  *
  * @typeParam T - The union from which values will be extracted.

@@ -30,7 +30,8 @@ const formatValue = (
 };
 
 /**
- * Creates a predicate builder function for predicates with a path and arguments.
+ * Creates a predicate builder function for predicates with a path and
+ * arguments.
  *
  * @typeParam Args - Arguments for the predicate.
  * @param name - Name of the predicate used in the resulting string.
@@ -72,7 +73,8 @@ const pathPredicate = (name: string) => {
 };
 
 /**
- * Creates a predicate builder function for predicates with only arguments and no path.
+ * Creates a predicate builder function for predicates with only arguments and
+ * no path.
  *
  * @param name - Name of the predicate used in the resulting string.
  *

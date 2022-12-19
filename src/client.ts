@@ -351,7 +351,8 @@ export class Client<
 	>;
 
 	/**
-	 * The client's ref mode state. This determines which ref is used during queries.
+	 * The client's ref mode state. This determines which ref is used during
+	 * queries.
 	 */
 	private refState: RefState = {
 		mode: RefStateMode.Master,
@@ -431,7 +432,8 @@ export class Client<
 
 	/**
 	 * Enables the client to automatically query content from a preview session if
-	 * one is active in browser environments. This is enabled by default in the browser.
+	 * one is active in browser environments. This is enabled by default in the
+	 * browser.
 	 *
 	 * For server environments, use `enableAutoPreviewsFromReq`.
 	 *
@@ -449,7 +451,8 @@ export class Client<
 
 	/**
 	 * Enables the client to automatically query content from a preview session if
-	 * one is active in server environments. This is disabled by default on the server.
+	 * one is active in server environments. This is disabled by default on the
+	 * server.
 	 *
 	 * For browser environments, use `enableAutoPreviews`.
 	 *
@@ -462,7 +465,8 @@ export class Client<
 	 * });
 	 * ```
 	 *
-	 * @param req - An HTTP server request object containing the request's cookies.
+	 * @param req - An HTTP server request object containing the request's
+	 *   cookies.
 	 */
 	enableAutoPreviewsFromReq<R extends HttpRequestLike>(req: R): void {
 		this.refState.httpRequest = req;
@@ -575,7 +579,8 @@ export class Client<
 	 * Queries content from the Prismic repository and returns all matching
 	 * content. If no predicates are provided, all documents will be fetched.
 	 *
-	 * This method may make multiple network requests to query all matching content.
+	 * This method may make multiple network requests to query all matching
+	 * content.
 	 *
 	 * @example
 	 *
@@ -628,7 +633,8 @@ export class Client<
 	 * @remarks
 	 * A document's UID is different from its ID. An ID is automatically generated
 	 * for all documents and is made available on its `id` property. A UID is
-	 * provided in the Prismic editor and is unique among all documents of its Custom Type.
+	 * provided in the Prismic editor and is unique among all documents of its
+	 * Custom Type.
 	 * @example
 	 *
 	 * ```ts
@@ -657,7 +663,8 @@ export class Client<
 	 * @remarks
 	 * A document's UID is different from its ID. An ID is automatically generated
 	 * for all documents and is made available on its `id` property. A UID is
-	 * provided in the Prismic editor and is unique among all documents of its Custom Type.
+	 * provided in the Prismic editor and is unique among all documents of its
+	 * Custom Type.
 	 * @example
 	 *
 	 * ```ts
@@ -686,12 +693,14 @@ export class Client<
 	/**
 	 * Queries all documents from the Prismic repository with specific IDs.
 	 *
-	 * This method may make multiple network requests to query all matching content.
+	 * This method may make multiple network requests to query all matching
+	 * content.
 	 *
 	 * @remarks
 	 * A document's UID is different from its ID. An ID is automatically generated
 	 * for all documents and is made available on its `id` property. A UID is
-	 * provided in the Prismic editor and is unique among all documents of its Custom Type.
+	 * provided in the Prismic editor and is unique among all documents of its
+	 * Custom Type.
 	 * @example
 	 *
 	 * ```ts
@@ -717,12 +726,14 @@ export class Client<
 	}
 
 	/**
-	 * Queries a document from the Prismic repository with a specific UID and Custom Type.
+	 * Queries a document from the Prismic repository with a specific UID and
+	 * Custom Type.
 	 *
 	 * @remarks
 	 * A document's UID is different from its ID. An ID is automatically generated
 	 * for all documents and is made available on its `id` property. A UID is
-	 * provided in the Prismic editor and is unique among all documents of its Custom Type.
+	 * provided in the Prismic editor and is unique among all documents of its
+	 * Custom Type.
 	 * @example
 	 *
 	 * ```ts
@@ -754,12 +765,14 @@ export class Client<
 	}
 
 	/**
-	 * Queries document from the Prismic repository with specific UIDs and Custom Type.
+	 * Queries document from the Prismic repository with specific UIDs and Custom
+	 * Type.
 	 *
 	 * @remarks
 	 * A document's UID is different from its ID. An ID is automatically generated
 	 * for all documents and is made available on its `id` property. A UID is
-	 * provided in the Prismic editor and is unique among all documents of its Custom Type.
+	 * provided in the Prismic editor and is unique among all documents of its
+	 * Custom Type.
 	 * @example
 	 *
 	 * ```ts
@@ -794,14 +807,17 @@ export class Client<
 	}
 
 	/**
-	 * Queries all documents from the Prismic repository with specific UIDs and Custom Type.
+	 * Queries all documents from the Prismic repository with specific UIDs and
+	 * Custom Type.
 	 *
-	 * This method may make multiple network requests to query all matching content.
+	 * This method may make multiple network requests to query all matching
+	 * content.
 	 *
 	 * @remarks
 	 * A document's UID is different from its ID. An ID is automatically generated
 	 * for all documents and is made available on its `id` property. A UID is
-	 * provided in the Prismic editor and is unique among all documents of its Custom Type.
+	 * provided in the Prismic editor and is unique among all documents of its
+	 * Custom Type.
 	 * @example
 	 *
 	 * ```ts
@@ -837,7 +853,8 @@ export class Client<
 	}
 
 	/**
-	 * Queries a singleton document from the Prismic repository for a specific Custom Type.
+	 * Queries a singleton document from the Prismic repository for a specific
+	 * Custom Type.
 	 *
 	 * @remarks
 	 * A singleton document is one that is configured in Prismic to only allow one
@@ -854,7 +871,8 @@ export class Client<
 	 * @param documentType - The API ID of the singleton Custom Type.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
-	 * @returns The singleton document for the Custom Type, if a matching document exists.
+	 * @returns The singleton document for the Custom Type, if a matching document
+	 *   exists.
 	 */
 	async getSingle<
 		TDocument extends TDocuments,
@@ -899,9 +917,11 @@ export class Client<
 	}
 
 	/**
-	 * Queries all documents from the Prismic repository for a specific Custom Type.
+	 * Queries all documents from the Prismic repository for a specific Custom
+	 * Type.
 	 *
-	 * This method may make multiple network requests to query all matching content.
+	 * This method may make multiple network requests to query all matching
+	 * content.
 	 *
 	 * @example
 	 *
@@ -932,7 +952,8 @@ export class Client<
 	/**
 	 * Queries documents from the Prismic repository with a specific tag.
 	 *
-	 * Use `getAllByTag` instead if you need to query all documents with a specific tag.
+	 * Use `getAllByTag` instead if you need to query all documents with a
+	 * specific tag.
 	 *
 	 * @example
 	 *
@@ -958,7 +979,8 @@ export class Client<
 	/**
 	 * Queries all documents from the Prismic repository with a specific tag.
 	 *
-	 * This method may make multiple network requests to query all matching content.
+	 * This method may make multiple network requests to query all matching
+	 * content.
 	 *
 	 * @example
 	 *
@@ -1012,7 +1034,8 @@ export class Client<
 	 * Queries documents from the Prismic repository with specific tags. A
 	 * document must be tagged with all of the queried tags to be included.
 	 *
-	 * This method may make multiple network requests to query all matching content.
+	 * This method may make multiple network requests to query all matching
+	 * content.
 	 *
 	 * @example
 	 *
@@ -1039,7 +1062,8 @@ export class Client<
 
 	/**
 	 * Queries documents from the Prismic repository with specific tags. A
-	 * document must be tagged with at least one of the queried tags to be included.
+	 * document must be tagged with at least one of the queried tags to be
+	 * included.
 	 *
 	 * @example
 	 *
@@ -1051,7 +1075,8 @@ export class Client<
 	 * @param tags - A list of tags that must be included on a document.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
-	 * @returns A paginated response containing documents with at least one of the tags.
+	 * @returns A paginated response containing documents with at least one of the
+	 *   tags.
 	 */
 	async getBySomeTags<TDocument extends TDocuments>(
 		tags: string[],
@@ -1064,9 +1089,11 @@ export class Client<
 
 	/**
 	 * Queries documents from the Prismic repository with specific tags. A
-	 * document must be tagged with at least one of the queried tags to be included.
+	 * document must be tagged with at least one of the queried tags to be
+	 * included.
 	 *
-	 * This method may make multiple network requests to query all matching content.
+	 * This method may make multiple network requests to query all matching
+	 * content.
 	 *
 	 * @example
 	 *
@@ -1327,9 +1354,11 @@ export class Client<
 	}
 
 	/**
-	 * Configures the client to query the latest published content for all future queries.
+	 * Configures the client to query the latest published content for all future
+	 * queries.
 	 *
-	 * If the `ref` parameter is provided during a query, it takes priority for that query.
+	 * If the `ref` parameter is provided during a query, it takes priority for
+	 * that query.
 	 *
 	 * @example
 	 *
@@ -1346,7 +1375,8 @@ export class Client<
 	 * Configures the client to query content from a specific Release identified
 	 * by its ID for all future queries.
 	 *
-	 * If the `ref` parameter is provided during a query, it takes priority for that query.
+	 * If the `ref` parameter is provided during a query, it takes priority for
+	 * that query.
 	 *
 	 * @example
 	 *
@@ -1369,7 +1399,8 @@ export class Client<
 	 * Configures the client to query content from a specific Release identified
 	 * by its label for all future queries.
 	 *
-	 * If the `ref` parameter is provided during a query, it takes priority for that query.
+	 * If the `ref` parameter is provided during a query, it takes priority for
+	 * that query.
 	 *
 	 * @example
 	 *
@@ -1402,7 +1433,8 @@ export class Client<
 	 * const document = await client.getByID("WW4bKScAAMAqmluX");
 	 * ```
 	 *
-	 * @param ref - The ref or a function that returns the ref from which to query content.
+	 * @param ref - The ref or a function that returns the ref from which to query
+	 *   content.
 	 */
 	queryContentFromRef(ref: RefStringOrThunk): void {
 		this.refState = {
@@ -1440,7 +1472,8 @@ export class Client<
 	 * ```
 	 *
 	 * @param input - The `fetch()` `input` parameter. Only strings are supported.
-	 * @param init - The `fetch()` `init` parameter. Only plain objects are supported.
+	 * @param init - The `fetch()` `init` parameter. Only plain objects are
+	 *   supported.
 	 *
 	 * @returns The `fetch()` Response for the request.
 	 * @experimental
@@ -1561,14 +1594,16 @@ export class Client<
 
 	/**
 	 * Returns the ref needed to query based on the client's current state. This
-	 * method may make a network request to fetch a ref or resolve the user's ref thunk.
+	 * method may make a network request to fetch a ref or resolve the user's ref
+	 * thunk.
 	 *
 	 * If auto previews are enabled, the preview ref takes priority if available.
 	 *
 	 * The following strategies are used depending on the client's state:
 	 *
 	 * - If the user called `queryLatestContent`: Use the repository's master ref.
-	 *   The ref is cached for 5 seconds. After 5 seconds, a new master ref is fetched.
+	 *   The ref is cached for 5 seconds. After 5 seconds, a new master ref is
+	 *   fetched.
 	 * - If the user called `queryContentFromReleaseByID`: Use the release's ref.
 	 *   The ref is cached for 5 seconds. After 5 seconds, a new ref for the
 	 *   release is fetched.
