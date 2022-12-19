@@ -34,9 +34,9 @@
 		"src"
 	],
 	"scripts": {
-		"build": "siroc build",
-		"dev": "siroc build --watch",
-		"format": "prettier --write README.md .eslintrc.cjs ava.config.js package.json tsconfig.json {src,examples,test}/**",
+		"build": "vite build",
+		"dev": "vite build --watch",
+		"format": "prettier --write .",
 		"lint": "eslint --ext .js,.ts .",
 		"prepare": "npm run build",
 		"release": "npm run build && npm run test && standard-version && git push --follow-tags && npm run build && npm publish",
@@ -70,8 +70,10 @@
 		"prettier-plugin-jsdoc": "^0.4.2",
 		"size-limit": "^8.1.0",
 		"standard-version": "^9.5.0",
-		"typescript": "^4.7.4",
-		"vitest": "^0.22.1"
+		"typescript": "^4.9.4",
+		"vite": "^4.0.2",
+		"vite-plugin-sdk": "^0.1.0",
+		"vitest": "^0.26.0"
 	},
 	"engines": {
 		"node": ">=12.13.0"
