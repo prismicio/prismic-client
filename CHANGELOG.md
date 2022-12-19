@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.7.3](https://github.com/prismicio/prismic-client/compare/v6.7.2...v6.7.3) (2022-12-19)
+
+
+### Chore
+
+* **deps:** maintain dependencies ([c821960](https://github.com/prismicio/prismic-client/commit/c82196076fe305d2f0a9aaf15167ba89da5cf8ed))
+
 ### [6.7.2](https://github.com/prismicio/prismic-client/compare/v6.7.1...v6.7.2) (2022-12-19)
 
 
