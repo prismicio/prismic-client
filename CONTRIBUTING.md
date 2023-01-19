@@ -170,7 +170,8 @@ Anyone can, and is welcome to, contribute to the project by opening bug reports 
 **🚨 &nbsp;Bug reports**
 
 > **Note**: An automated reply is posted when a bug report is opened to explain our maintenance schedule.
-> Every Wednesday is _bug squashing day_. During this day, we respond to and/or fix bug reports.
+
+Every Wednesday is _bug squashing day_. During this day, we respond to and/or fix bug reports.
 
 At the end of each Wednesday (assuming there were issues to fix), or later during the week if reviews are required, a _patch_ version is [released](#publishing) containing any fixes that were needed. Releasing multiple patches during the same week should be avoided.
 
@@ -179,7 +180,8 @@ Ideally, all opened bug reports are addressed each Wednesday. If a particular bu
 **🙋‍♀️ &nbsp;Feature requests**
 
 > **Note**: An automated message gets sent to people creating feature requests about this process.
-> Every last week of a month is _feature week_. During this week, we implement new features. Discussing and coming up with implementation proposals can happen before that week, but implementations are targeted for the last week.
+
+Every last week of a month is _feature week_. During this week, we implement new features. Discussing and coming up with implementation proposals can happen before that week, but implementations are targeted for the last week.
 
 At the end of the week (assuming there were features to implement), a _minor_ version is [released](#publishing) containing the new features. Releasing multiple minors during the same week should be avoided.
 
