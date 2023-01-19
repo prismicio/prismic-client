@@ -26,7 +26,6 @@ import { getRepositoryEndpoint } from "./getRepositoryEndpoint";
 import { isRepositoryEndpoint } from "./isRepositoryEndpoint";
 import { predicate } from "./predicate";
 
-
 /**
  * The largest page size allowed by the Prismic REST API V2. This value is used
  * to minimize the number of requests required to query content.
