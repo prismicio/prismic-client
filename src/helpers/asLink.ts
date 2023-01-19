@@ -2,9 +2,22 @@ import type { PrismicDocument } from "../types/value/document";
 import { FilledLinkToWebField, LinkField, LinkType } from "../types/value/link";
 import type { FilledLinkToMediaField } from "../types/value/linkToMedia";
 import type { FilledContentRelationshipField } from "../types/value/contentRelationship";
-import type { LinkResolverFunction } from "../types/helpers";
 
 import { documentToLinkField } from "./documentToLinkField";
+
+/**
+ * Resolves a link to a Prismic document to a URL
+ *
+ * @typeParam ReturnType - Return type of your link resolver function, useful if
+ *   you prefer to return a complex object
+ * @param linkToDocumentField - A document link field to resolve
+ *
+ * @returns Resolved URL
+ * @see Prismic link resolver documentation: {@link https://prismic.io/docs/technologies/link-resolver-javascript}
+ */
+export type LinkResolverFunction<ReturnType = string> = (
+	linkToDocumentField: FilledContentRelationshipField,
+) => ReturnType;
 
 /**
  * The return type of `asLink()`.

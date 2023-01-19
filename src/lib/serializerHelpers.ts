@@ -10,9 +10,8 @@ import {
 	RichTextNodeType,
 } from "../types/value/richText";
 import { LinkType } from "../types/value/link";
-import { LinkResolverFunction } from "../types/helpers";
 
-import { asLink } from "../helpers/asLink";
+import { asLink, LinkResolverFunction } from "../helpers/asLink";
 
 export const getLabel = (node: RTBlockNode | RTInlineNode): string => {
 	return "data" in node && "label" in node.data

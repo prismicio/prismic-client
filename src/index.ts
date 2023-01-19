@@ -1,43 +1,43 @@
 //=============================================================================
-// Client - Everything you need to query data from Prismic.
+// Client - Query content from Prismic.
 //=============================================================================
 
 // Primary Client API.
+export { createClient, Client } from "./createClient";
+
+// API endpoint helpers.
 export { getRepositoryEndpoint } from "./getRepositoryEndpoint";
 export { getRepositoryName } from "./getRepositoryName";
 export { getGraphQLEndpoint } from "./getGraphQLEndpoint";
 export { isRepositoryName } from "./isRepositoryName";
 export { isRepositoryEndpoint } from "./isRepositoryEndpoint";
 export { buildQueryURL } from "./buildQueryURL";
-export { createClient, Client } from "./client";
 
-// Predicates API.
+// Query predicates API.
 export { predicate } from "./predicate";
-
-// Custom errors used by Client.
-export { PrismicError } from "./PrismicError";
-export { ForbiddenError } from "./ForbiddenError";
-export { ParsingError } from "./ParsingError";
-export { NotFoundError } from "./NotFoundError";
 
 // A collection of well-known cookie names shared between Prismic libraries and systems.
 export * as cookie from "./cookie";
 
-// General types used throughout the project. These are made public to allow users to better type their projects.
-export type { CreateClient, ClientConfig } from "./client";
-export type { QueryParams, BuildQueryURLArgs } from "./buildQueryURL";
+// General types used to query content from Prismic. These are made public to allow users to better type their projects.
 export type {
 	AbortSignalLike,
+	ClientConfig,
+	CreateClient,
 	FetchLike,
 	HttpRequestLike,
-	Ordering,
 	RequestInitLike,
 	ResponseLike,
+} from "./createClient";
+export type {
+	BuildQueryURLArgs,
+	Ordering,
+	QueryParams,
 	Route,
-} from "./types/client";
+} from "./buildQueryURL";
 
 //=============================================================================
-// Helpers - Everything you need to template Prismic data.
+// Helpers - Manipulate content from Prismic.
 //=============================================================================
 
 // Primary Helpers API.
@@ -57,15 +57,25 @@ export { documentToLinkField } from "./helpers/documentToLinkField";
 export { Element } from "@prismicio/richtext";
 
 export type {
-	LinkResolverFunction,
 	HTMLFunctionSerializer,
 	HTMLMapSerializer,
-} from "./types/helpers";
+	LinkResolverFunction,
+} from "./helpers/types";
 
 //=============================================================================
-// Value - Types representing Prismic document and field values.
+// Errors - Custom errors for Prismic APIs.
 //=============================================================================
 
+export { PrismicError } from "./errors/PrismicError";
+export { ForbiddenError } from "./errors/ForbiddenError";
+export { NotFoundError } from "./errors/NotFoundError";
+export { ParsingError } from "./errors/ParsingError";
+
+//=============================================================================
+// Types - Types representing Prismic content, models, and API payloads.
+//=============================================================================
+
+// Values - Types representing Prismic content.
 export { RichTextNodeType } from "./types/value/richText";
 export { LinkType } from "./types/value/link";
 export { OEmbedType } from "./types/value/embed";
@@ -167,10 +177,7 @@ export type { SharedSliceVariation } from "./types/value/sharedSliceVariation";
 
 export type { FieldState, AnyRegularField } from "./types/value/types";
 
-//=============================================================================
-// Model - Types representing Prismic Custom Type and Shared Slice models.
-//=============================================================================
-
+// Models - Types representing Prismic content models.
 export { CustomTypeModelFieldType } from "./types/model/types";
 export { CustomTypeModelLinkSelectType } from "./types/model/link";
 export { CustomTypeModelSliceType } from "./types/model/sliceZone";
@@ -234,10 +241,7 @@ export type {
 	CustomTypeModelFieldForGroup,
 } from "./types/model/types";
 
-//=============================================================================
 // API - Types representing Prismic Rest API V2 responses.
-//=============================================================================
-
 export type { Query } from "./types/api/query";
 
 export type { Ref } from "./types/api/ref";
@@ -253,10 +257,7 @@ export type {
 
 export type { Tags } from "./types/api/tags";
 
-//=============================================================================
 // Webhook - Types representing Prismic webhooks.
-//=============================================================================
-
 export { WebhookType } from "./types/webhook/types";
 
 export type { WebhookBody } from "./types/webhook/types";

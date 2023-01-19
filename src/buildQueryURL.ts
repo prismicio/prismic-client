@@ -1,7 +1,83 @@
 import { castArray } from "./lib/castArray";
 
-import type { ValueOf } from "./types/utils";
-import type { Ordering, Route } from "./types/client";
+/**
+ * Create a union of the given object's values, and optionally specify which
+ * keys to get the values from.
+ *
+ * Taken from the `type-fest` package.
+ *
+ * See:
+ * https://github.com/sindresorhus/type-fest/blob/61c35052f09caa23de5eef96d95196375d8ed498/source/value-of.d.ts
+ */
+type ValueOf<
+	ObjectType,
+	ValueType extends keyof ObjectType = keyof ObjectType,
+> = ObjectType[ValueType];
+
+/**
+ * An `orderings` parameter that orders the results by the specified field.
+ *
+ * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#orderings}
+ */
+export interface Ordering {
+	field: string;
+	direction?: "asc" | "desc";
+}
+
+/**
+ * A `routes` parameter that determines how a document's URL field is resolved.
+ *
+ * @example With a document's UID field.
+ *
+ * ```ts
+ * {
+ * 	"type": "page",
+ * 	"path": "/:uid"
+ * }
+ * ```
+ *
+ * @example With a Content Relationship `parent` field.
+ *
+ * ```ts
+ * {
+ * 	"type": "page",
+ * 	"path": "/:parent?/:uid",
+ * 	"resolvers": {
+ * 		"parent": "parent"
+ * 	}
+ * }
+ * ```
+ *
+ * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
+ */
+export interface Route {
+	/**
+	 * The Custom Type of the document.
+	 */
+	type: string;
+
+	/**
+	 * A specific UID to which this route definition is scoped. The route is only
+	 * defined for the document whose UID matches the given UID.
+	 */
+	uid?: string;
+
+	/**
+	 * A specific language to which this route definition is scoped. The route is
+	 * only defined for documents whose language matches the given language.
+	 */
+	lang?: string;
+
+	/**
+	 * The resolved path of the document with optional placeholders.
+	 */
+	path: string;
+
+	/**
+	 * An object that lists the API IDs of the Content Relationships in the route.
+	 */
+	resolvers?: Record<string, string>;
+}
 
 /**
  * Parameters for the Prismic REST API V2.

@@ -1,34 +1,31 @@
 import { appendPredicates } from "./lib/appendPredicates";
-import { castArray } from "./lib/castArray";
 import { castThunk } from "./lib/castThunk";
+import { everyTagPredicate } from "./lib/everyTagPredicate";
 import { findMasterRef } from "./lib/findMasterRef";
 import { findRefByID } from "./lib/findRefByID";
 import { findRefByLabel } from "./lib/findRefByLabel";
 import { getPreviewCookie } from "./lib/getPreviewCookie";
 import { minifyGraphQLQuery } from "./lib/minifyGraphQLQuery";
+import { someTagsPredicate } from "./lib/someTagsPredicate";
+import { typePredicate } from "./lib/typePredicate";
 
-import type {
-	AbortSignalLike,
-	FetchLike,
-	HttpRequestLike,
-	ExtractDocumentType,
-} from "./types/client";
-import type { LinkResolverFunction } from "./types/helpers";
 import type { PrismicDocument } from "./types/value/document";
 import type { Form, Repository } from "./types/api/repository";
 import type { Query } from "./types/api/query";
 import type { Ref } from "./types/api/ref";
 
-import { asLink } from "./helpers/asLink";
+import { asLink, LinkResolverFunction } from "./helpers/asLink";
 
-import { ForbiddenError } from "./ForbiddenError";
-import { NotFoundError } from "./NotFoundError";
-import { ParsingError } from "./ParsingError";
-import { PrismicError } from "./PrismicError";
+import { ForbiddenError } from "./errors/ForbiddenError";
+import { NotFoundError } from "./errors/NotFoundError";
+import { ParsingError } from "./errors/ParsingError";
+import { PrismicError } from "./errors/PrismicError";
+
 import { buildQueryURL, BuildQueryURLArgs } from "./buildQueryURL";
 import { getRepositoryEndpoint } from "./getRepositoryEndpoint";
 import { isRepositoryEndpoint } from "./isRepositoryEndpoint";
 import { predicate } from "./predicate";
+
 
 /**
  * The largest page size allowed by the Prismic REST API V2. This value is used
@@ -52,6 +49,98 @@ export const REPOSITORY_CACHE_TTL = 5000;
  * of a failed API request due to overloading.
  */
 export const GET_ALL_QUERY_DELAY = 500;
+
+/**
+ * Extracts one or more Prismic document types that match a given Prismic
+ * document type. If no matches are found, no extraction is performed and the
+ * union of all provided Prismic document types are returned.
+ *
+ * @typeParam TDocuments - Prismic document types from which to extract.
+ * @typeParam TDocumentType - Type(s) to match `TDocuments` against.
+ */
+type ExtractDocumentType<
+	TDocuments extends PrismicDocument,
+	TDocumentType extends TDocuments["type"],
+> = Extract<TDocuments, { type: TDocumentType }> extends never
+	? TDocuments
+	: Extract<TDocuments, { type: TDocumentType }>;
+
+/**
+ * A universal API to make network requests. A subset of the `fetch()` API.
+ *
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/fetch}
+ */
+export type FetchLike = (
+	input: string,
+	init?: RequestInitLike,
+) => Promise<ResponseLike>;
+
+/**
+ * An object that allows you to abort a `fetch()` request if needed via an
+ * `AbortController` object
+ *
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal}
+ */
+// `any` is used often here to ensure this type is universally valid among
+// different AbortSignal implementations. The types of each property are not
+// important to validate since it is blindly passed to a given `fetch()`
+// function.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AbortSignalLike = any;
+
+/**
+ * The minimum required properties from RequestInit.
+ */
+export interface RequestInitLike {
+	headers?: Record<string, string>;
+
+	/**
+	 * An object that allows you to abort a `fetch()` request if needed via an
+	 * `AbortController` object
+	 *
+	 * {@link https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal}
+	 */
+	// NOTE: `AbortSignalLike` is `any`! It is left as `AbortSignalLike`
+	// for backwards compatibility (the type is exported) and to signal to
+	// other readers that this should be an AbortSignal-like object.
+	signal?: AbortSignalLike;
+}
+
+/**
+ * The minimum required properties from Response.
+ */
+export interface ResponseLike {
+	status: number;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	json(): Promise<any>;
+}
+
+/**
+ * The minimum required properties to treat as an HTTP Request for automatic
+ * Prismic preview support.
+ */
+export type HttpRequestLike =
+	| /**
+	 * Web API Request
+	 *
+	 * @see http://developer.mozilla.org/en-US/docs/Web/API/Request
+	 */
+	{
+			headers?: {
+				get(name: string): string | null;
+			};
+			url?: string;
+	  }
+
+	/**
+	 * Express-style Request
+	 */
+	| {
+			headers?: {
+				cookie?: string;
+			};
+			query?: Record<string, unknown>;
+	  };
 
 /**
  * Modes for client ref management.
@@ -223,37 +312,7 @@ type ResolvePreviewArgs<LinkResolverReturnType> = {
 	documentID?: string;
 };
 
-/**
- * Creates a predicate to filter content by document type.
- *
- * @param documentType - The document type to filter queried content.
- *
- * @returns A predicate that can be used in a Prismic REST API V2 request.
- */
-const typePredicate = (documentType: string): string =>
-	predicate.at("document.type", documentType);
 
-/**
- * Creates a predicate to filter content by document tags. All tags are required
- * on the document.
- *
- * @param tags - Document tags to filter queried content.
- *
- * @returns A predicate that can be used in a Prismic REST API V2 request.
- */
-const everyTagPredicate = (tags: string | string[]): string =>
-	predicate.at("document.tags", castArray(tags));
-
-/**
- * Creates a predicate to filter content by document tags. At least one matching
- * tag is required on the document.
- *
- * @param tags - Document tags to filter queried content.
- *
- * @returns A predicate that can be used in a Prismic REST API V2 request.
- */
-const someTagsPredicate = (tags: string | string[]): string =>
-	predicate.any("document.tags", castArray(tags));
 
 /**
  * Type definitions for the `createClient()` function. May be augmented by
