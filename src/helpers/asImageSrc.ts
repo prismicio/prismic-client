@@ -1,4 +1,4 @@
-import { buildURL, ImgixURLParams } from "imgix-url-builder";
+import { ImgixURLParams, buildURL } from "imgix-url-builder";
 
 import type { ImageFieldImage } from "../types/value/image";
 

@@ -1,4 +1,5 @@
 import type { CustomTypeModelFieldType } from "./types";
+
 import type { CustomTypeModelLinkSelectType } from "./link";
 
 /**

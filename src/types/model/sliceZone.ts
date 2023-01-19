@@ -1,4 +1,5 @@
 import type { CustomTypeModelFieldType } from "./types";
+
 import type { CustomTypeModelLegacySlice, CustomTypeModelSlice } from "./slice";
 
 /**

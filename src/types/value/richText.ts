@@ -1,8 +1,9 @@
-import type { EmbedField } from "./embed";
 import type { FieldState } from "./types";
+
 import type { FilledContentRelationshipField } from "./contentRelationship";
-import type { FilledLinkToMediaField } from "./linkToMedia";
+import type { EmbedField } from "./embed";
 import type { FilledLinkToWebField } from "./link";
+import type { FilledLinkToMediaField } from "./linkToMedia";
 
 /**
  * Types for RichTextNodes

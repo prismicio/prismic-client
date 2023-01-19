@@ -1,14 +1,14 @@
 import type { ColorField } from "../types/value/color";
+import type { ContentRelationshipField } from "../types/value/contentRelationship";
 import type { DateField } from "../types/value/date";
-import type { EmbedField, AnyOEmbed } from "../types/value/embed";
+import type { AnyOEmbed, EmbedField } from "../types/value/embed";
 import type { GeoPointField } from "../types/value/geoPoint";
 import type { GroupField } from "../types/value/group";
-import type { ImageFieldImage, ImageField } from "../types/value/image";
+import type { ImageField, ImageFieldImage } from "../types/value/image";
 import type { IntegrationFields } from "../types/value/integrationFields";
 import type { KeyTextField } from "../types/value/keyText";
 import type { LinkField } from "../types/value/link";
 import type { LinkToMediaField } from "../types/value/linkToMedia";
-import type { ContentRelationshipField } from "../types/value/contentRelationship";
 import type { NumberField } from "../types/value/number";
 import type { RichTextField } from "../types/value/richText";
 import type { SelectField } from "../types/value/select";

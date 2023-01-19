@@ -1,6 +1,6 @@
 import {
-	buildPixelDensitySrcSet,
 	BuildPixelDensitySrcSetParams,
+	buildPixelDensitySrcSet,
 	buildURL,
 } from "imgix-url-builder";
 

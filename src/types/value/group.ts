@@ -1,4 +1,4 @@
-import type { FieldState, AnyRegularField } from "./types";
+import type { AnyRegularField, FieldState } from "./types";
 
 /**
  * A Group field.

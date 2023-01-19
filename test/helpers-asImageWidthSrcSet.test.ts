@@ -1,6 +1,6 @@
-import { it, expect } from "vitest";
+import { expect, it } from "vitest";
 
-import { asImageWidthSrcSet, ImageField } from "../src";
+import { ImageField, asImageWidthSrcSet } from "../src";
 
 it("returns null for nullish inputs", () => {
 	expect(asImageWidthSrcSet(null)).toBeNull();

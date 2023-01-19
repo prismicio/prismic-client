@@ -1,8 +1,9 @@
-import type { FieldState, AnyRegularField } from "./types";
-import type { GroupField } from "./group";
-import type { SliceZone } from "./sliceZone";
+import type { AnyRegularField, FieldState } from "./types";
+
 import type { ContentRelationshipField } from "./contentRelationship";
+import type { GroupField } from "./group";
 import type { LinkToMediaField } from "./linkToMedia";
+import type { SliceZone } from "./sliceZone";
 
 /**
  * Link Types
@@ -20,7 +21,7 @@ export const LinkType = {
  * @typeParam Type - The type of link.
  */
 export type EmptyLinkField<
-	Type extends typeof LinkType[keyof typeof LinkType] = typeof LinkType.Any,
+	Type extends (typeof LinkType)[keyof typeof LinkType] = typeof LinkType.Any,
 > = {
 	link_type: Type | string;
 };

@@ -1,7 +1,7 @@
+import type { FilledContentRelationshipField } from "../types/value/contentRelationship";
 import type { PrismicDocument } from "../types/value/document";
 import { FilledLinkToWebField, LinkField, LinkType } from "../types/value/link";
 import type { FilledLinkToMediaField } from "../types/value/linkToMedia";
-import type { FilledContentRelationshipField } from "../types/value/contentRelationship";
 
 import { documentToLinkField } from "./documentToLinkField";
 

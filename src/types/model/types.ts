@@ -1,28 +1,24 @@
-import type { CustomTypeModelContentRelationshipField } from "./contentRelationship";
-import type { CustomTypeModelEmbedField } from "./embed";
-import type { CustomTypeModelImageField } from "./image";
-import type { CustomTypeModelLinkField } from "./link";
-import type { CustomTypeModelLinkToMediaField } from "./linkToMedia";
-import type { CustomTypeModelRichTextField } from "./richText";
-import type { CustomTypeModelTitleField } from "./title";
-
 import type { CustomTypeModelBooleanField } from "./boolean";
 import type { CustomTypeModelColorField } from "./color";
+import type { CustomTypeModelContentRelationshipField } from "./contentRelationship";
 import type { CustomTypeModelDateField } from "./date";
-import type { CustomTypeModelKeyTextField } from "./keyText";
-import type { CustomTypeModelNumberField } from "./number";
-import type { CustomTypeModelSelectField } from "./select";
-import type { CustomTypeModelTimestampField } from "./timestamp";
+import type { CustomTypeModelEmbedField } from "./embed";
 import type { CustomTypeModelGeoPointField } from "./geoPoint";
-
-import type { CustomTypeModelIntegrationFieldsField } from "./integrationFields";
 import type { CustomTypeModelGroupField } from "./group";
-import type { CustomTypeModelSliceZoneField } from "./sliceZone";
-
-import type { CustomTypeModelUIDField } from "./uid";
-
+import type { CustomTypeModelImageField } from "./image";
+import type { CustomTypeModelIntegrationFieldsField } from "./integrationFields";
+import type { CustomTypeModelKeyTextField } from "./keyText";
+import type { CustomTypeModelLinkField } from "./link";
+import type { CustomTypeModelLinkToMediaField } from "./linkToMedia";
+import type { CustomTypeModelNumberField } from "./number";
 import type { CustomTypeModelRangeField } from "./range";
+import type { CustomTypeModelRichTextField } from "./richText";
+import type { CustomTypeModelSelectField } from "./select";
 import type { CustomTypeModelSeparatorField } from "./separator";
+import type { CustomTypeModelSliceZoneField } from "./sliceZone";
+import type { CustomTypeModelTimestampField } from "./timestamp";
+import type { CustomTypeModelTitleField } from "./title";
+import type { CustomTypeModelUIDField } from "./uid";
 
 /**
  * Type identifier for a Custom Type field.

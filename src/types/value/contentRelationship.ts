@@ -1,6 +1,7 @@
 import type { AnyRegularField, FieldState } from "./types";
-import type { EmptyLinkField, LinkType } from "./link";
+
 import type { GroupField } from "./group";
+import type { EmptyLinkField, LinkType } from "./link";
 import type { SliceZone } from "./sliceZone";
 
 /**

@@ -18,7 +18,7 @@ export const OEmbedType = {
  *
  * @see oEmbed specification: {@link https://oembed.com}
  */
-type OEmbedBase<TType extends typeof OEmbedType[keyof typeof OEmbedType]> = {
+type OEmbedBase<TType extends (typeof OEmbedType)[keyof typeof OEmbedType]> = {
 	/**
 	 * oEmbed resource type.
 	 */

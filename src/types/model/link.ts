@@ -13,7 +13,7 @@ export interface CustomTypeModelLinkField {
 		placeholder?: string;
 		select?:
 			| null
-			| typeof CustomTypeModelLinkSelectType[keyof typeof CustomTypeModelLinkSelectType];
+			| (typeof CustomTypeModelLinkSelectType)[keyof typeof CustomTypeModelLinkSelectType];
 		allowTargetBlank?: boolean;
 	};
 }

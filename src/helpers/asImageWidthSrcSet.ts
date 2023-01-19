@@ -1,7 +1,7 @@
 import {
+	BuildWidthSrcSetParams,
 	buildURL,
 	buildWidthSrcSet,
-	BuildWidthSrcSetParams,
 } from "imgix-url-builder";
 
 import type { ImageFieldImage } from "../types/value/image";

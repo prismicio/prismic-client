@@ -1,5 +1,5 @@
-import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod";
 
 testGetFirstMethod("queries for singleton document", {
 	run: (client) => client.getSingle("type"),

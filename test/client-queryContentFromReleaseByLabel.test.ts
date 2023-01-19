@@ -1,8 +1,8 @@
-import { it, expect } from "vitest";
 import * as prismicM from "@prismicio/mock";
+import { expect, it } from "vitest";
 
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createTestClient } from "./__testutils__/createClient";
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import {
 	testGetOutsideTTL,
 	testGetWithinTTL,

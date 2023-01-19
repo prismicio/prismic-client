@@ -9,19 +9,19 @@ import { minifyGraphQLQuery } from "./lib/minifyGraphQLQuery";
 import { someTagsPredicate } from "./lib/someTagsPredicate";
 import { typePredicate } from "./lib/typePredicate";
 
-import type { PrismicDocument } from "./types/value/document";
-import type { Form, Repository } from "./types/api/repository";
 import type { Query } from "./types/api/query";
 import type { Ref } from "./types/api/ref";
-
-import { asLink, LinkResolverFunction } from "./helpers/asLink";
+import type { Form, Repository } from "./types/api/repository";
+import type { PrismicDocument } from "./types/value/document";
 
 import { ForbiddenError } from "./errors/ForbiddenError";
 import { NotFoundError } from "./errors/NotFoundError";
 import { ParsingError } from "./errors/ParsingError";
 import { PrismicError } from "./errors/PrismicError";
 
-import { buildQueryURL, BuildQueryURLArgs } from "./buildQueryURL";
+import { LinkResolverFunction, asLink } from "./helpers/asLink";
+
+import { BuildQueryURLArgs, buildQueryURL } from "./buildQueryURL";
 import { getRepositoryEndpoint } from "./getRepositoryEndpoint";
 import { isRepositoryEndpoint } from "./isRepositoryEndpoint";
 import { predicate } from "./predicate";
@@ -310,8 +310,6 @@ type ResolvePreviewArgs<LinkResolverReturnType> = {
 	 */
 	documentID?: string;
 };
-
-
 
 /**
  * Type definitions for the `createClient()` function. May be augmented by

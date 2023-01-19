@@ -1,6 +1,6 @@
-import { it, expect } from "vitest";
+import { expect, it } from "vitest";
 
-import { isFilled, GroupField, SliceZone } from "../src";
+import { GroupField, SliceZone, isFilled } from "../src";
 
 it("color", (ctx) => {
 	expect(isFilled.color(null)).toBe(false);

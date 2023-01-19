@@ -28,10 +28,10 @@
 		},
 		"./package.json": "./package.json"
 	},
-	"main": "dist/index.cjs",
-	"module": "dist/index.js",
-	"react-native": "dist/index.js",
-	"types": "dist/index.d.ts",
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"react-native": "./dist/index.js",
+	"types": "./dist/index.d.ts",
 	"files": [
 		"dist",
 		"src"
@@ -60,6 +60,7 @@
 		"@prismicio/mock": "^0.2.0",
 		"@prismicio/types-internal": "^1.5.3",
 		"@size-limit/preset-small-lib": "^8.1.2",
+		"@trivago/prettier-plugin-sort-imports": "^4.0.0",
 		"@typescript-eslint/eslint-plugin": "^5.48.2",
 		"@typescript-eslint/parser": "^5.48.2",
 		"@vitest/coverage-c8": "^0.27.2",

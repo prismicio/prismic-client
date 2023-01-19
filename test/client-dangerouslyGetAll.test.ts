@@ -1,4 +1,4 @@
-import { it, expect } from "vitest";
+import { expect, it } from "vitest";
 
 import { createTestClient } from "./__testutils__/createClient";
 import { createPagedQueryResponses } from "./__testutils__/createPagedQueryResponses";

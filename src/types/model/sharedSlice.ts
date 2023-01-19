@@ -1,5 +1,5 @@
-import type { CustomTypeModelSliceType } from "./sliceZone";
 import type { SharedSliceModelVariation } from "./sharedSliceVariation";
+import type { CustomTypeModelSliceType } from "./sliceZone";
 
 /**
  * A Prismic Shared Slice model.

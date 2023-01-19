@@ -1,9 +1,9 @@
-import { it, expect } from "vitest";
+import { expect, it } from "vitest";
 
 import { documentFixture } from "./__fixtures__/document";
 import { linkResolver } from "./__fixtures__/linkResolver";
 
-import { asLink, LinkType } from "../src";
+import { LinkType, asLink } from "../src";
 
 it("returns null for nullish inputs", () => {
 	expect(asLink(null, linkResolver)).toBeNull();
