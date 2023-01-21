@@ -56,11 +56,11 @@ export { documentToLinkField } from "./helpers/documentToLinkField";
 // RichText element types.
 export { Element } from "@prismicio/richtext";
 
+export type { LinkResolverFunction } from "./helpers/asLink";
 export type {
-	HTMLFunctionSerializer,
 	HTMLMapSerializer,
-	LinkResolverFunction,
-} from "./helpers/types";
+	HTMLFunctionSerializer,
+} from "./helpers/asHTML";
 
 //=============================================================================
 // Errors - Custom errors for Prismic APIs.
