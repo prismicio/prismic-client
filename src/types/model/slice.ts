@@ -1,6 +1,7 @@
+import type { CustomTypeModelFieldForGroup } from "./types";
+
 import type { CustomTypeModelGroupField } from "./group";
 import type { CustomTypeModelSliceType } from "./sliceZone";
-import type { CustomTypeModelFieldForGroup } from "./types";
 
 /**
  * A Slice for a Custom Type.
@@ -25,7 +26,7 @@ export interface CustomTypeModelSlice<
 	description?: string;
 	icon?: string;
 	display?:
-		| typeof CustomTypeModelSliceDisplay[keyof typeof CustomTypeModelSliceDisplay]
+		| (typeof CustomTypeModelSliceDisplay)[keyof typeof CustomTypeModelSliceDisplay]
 		| string;
 	"non-repeat"?: NonRepeatFields;
 	repeat?: RepeatFields;

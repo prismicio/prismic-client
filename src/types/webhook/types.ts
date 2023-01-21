@@ -14,7 +14,7 @@ export const WebhookType = {
 } as const;
 
 export interface WebhookBodyBase {
-	type: typeof WebhookType[keyof typeof WebhookType];
+	type: (typeof WebhookType)[keyof typeof WebhookType];
 	domain: string;
 	apiUrl: string;
 	secret: string | null;

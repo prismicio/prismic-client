@@ -1,5 +1,5 @@
-import { testGetAllMethod } from "./__testutils__/testAnyGetMethod";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { testGetAllMethod } from "./__testutils__/testAnyGetMethod";
 
 testGetAllMethod("returns all documents by some tags from paginated response", {
 	run: (client) => client.getAllBySomeTags(["foo", "bar"]),

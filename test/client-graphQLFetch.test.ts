@@ -1,12 +1,12 @@
-import { it, expect } from "vitest";
 import * as msw from "msw";
+import { expect, it } from "vitest";
 
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
-import { createTestClient } from "./__testutils__/createClient";
-import { getMasterRef } from "./__testutils__/getMasterRef";
 import { createAuthorizationHeader } from "./__testutils__/createAuthorizationHeader";
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { createTestClient } from "./__testutils__/createClient";
 import { createRepositoryName } from "./__testutils__/createRepositoryName";
+import { getMasterRef } from "./__testutils__/getMasterRef";
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 
 it("resolves a query", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository();

@@ -1,9 +1,8 @@
 import * as prismic from "@prismicio/client";
-import fetch, { AbortError } from "node-fetch";
-
 // AbortController was added in node v14.17.0 globally. If you are using a node
 // version >=14.17.0, or are not in a node environment, remove this line.
 import { AbortController } from "abort-controller";
+import fetch, { AbortError } from "node-fetch";
 
 // A global timeout can be implemented like the following. This timeout will
 // apply to all network requests made by the client.

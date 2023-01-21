@@ -1,5 +1,6 @@
+import { PrismicError } from "./errors/PrismicError";
+
 import { isRepositoryName } from "./isRepositoryName";
-import { PrismicError } from "./PrismicError";
 
 /**
  * Get a repository's Prismic GraphQL endpoint.

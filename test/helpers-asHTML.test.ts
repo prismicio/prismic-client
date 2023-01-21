@@ -1,11 +1,11 @@
-import { it, expect } from "vitest";
+import { expect, it } from "vitest";
 
-import { richTextFixture } from "./__fixtures__/richText";
-import { linkResolver } from "./__fixtures__/linkResolver";
 import { htmlFunctionSerializer } from "./__fixtures__/htmlFunctionSerializer";
 import { htmlMapSerializer } from "./__fixtures__/htmlMapSerializer";
+import { linkResolver } from "./__fixtures__/linkResolver";
+import { richTextFixture } from "./__fixtures__/richText";
 
-import { asHTML, RichTextField } from "../src";
+import { RichTextField, asHTML } from "../src";
 
 it("serializes with default serializer", () => {
 	expect(asHTML(richTextFixture.en, linkResolver)).toMatchSnapshot();

@@ -1,9 +1,9 @@
-import { it, expect } from "vitest";
 import * as msw from "msw";
+import { expect, it } from "vitest";
 
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createTestClient } from "./__testutils__/createClient";
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 
 it("returns all tags", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository();

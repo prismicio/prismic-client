@@ -1,4 +1,4 @@
-import { expectType, TypeOf } from "ts-expect";
+import { TypeOf, expectType } from "ts-expect";
 
 import * as prismic from "../../src";
 

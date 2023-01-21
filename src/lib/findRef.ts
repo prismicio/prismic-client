@@ -1,6 +1,6 @@
 import { Ref } from "../types/api/ref";
 
-import { PrismicError } from "../PrismicError";
+import { PrismicError } from "../errors/PrismicError";
 
 /**
  * Returns the first ref from a list that passes a predicate (a function that

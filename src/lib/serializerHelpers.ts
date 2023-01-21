@@ -1,18 +1,17 @@
-import { escapeHTML } from "./escapeHTML";
-
+import { LinkType } from "../types/value/link";
 import {
 	RTBlockNode,
-	RTInlineNode,
-	RTPreformattedNode,
-	RTImageNode,
 	RTEmbedNode,
+	RTImageNode,
+	RTInlineNode,
 	RTLinkNode,
+	RTPreformattedNode,
 	RichTextNodeType,
 } from "../types/value/richText";
-import { LinkType } from "../types/value/link";
-import { LinkResolverFunction } from "../types/helpers";
 
-import { asLink } from "../helpers/asLink";
+import { LinkResolverFunction, asLink } from "../helpers/asLink";
+
+import { escapeHTML } from "./escapeHTML";
 
 export const getLabel = (node: RTBlockNode | RTInlineNode): string => {
 	return "data" in node && "label" in node.data

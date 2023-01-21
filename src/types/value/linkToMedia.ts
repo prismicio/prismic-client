@@ -1,5 +1,6 @@
-import type { EmptyLinkField, LinkType } from "./link";
 import type { FieldState } from "./types";
+
+import type { EmptyLinkField, LinkType } from "./link";
 
 /**
  * Link field that points to media

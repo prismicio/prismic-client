@@ -1,9 +1,9 @@
 import { rest } from "msw";
-import { expect, TestContext } from "vitest";
-
-import * as prismic from "../../src";
+import { TestContext, expect } from "vitest";
 
 import { createRepositoryName } from "./createRepositoryName";
+
+import * as prismic from "../../src";
 
 type MockPrismicRestAPIV2Args = {
 	ctx: TestContext;

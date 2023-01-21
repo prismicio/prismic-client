@@ -1,5 +1,5 @@
-import { testGetMethod } from "./__testutils__/testAnyGetMethod";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { testGetMethod } from "./__testutils__/testAnyGetMethod";
 
 testGetMethod("resolves a query", {
 	run: (client) => client.get(),

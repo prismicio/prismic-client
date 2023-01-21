@@ -1,4 +1,5 @@
 import type { FieldState } from "./types";
+
 import type {
 	RTHeading1Node,
 	RTHeading2Node,

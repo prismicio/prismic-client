@@ -1,5 +1,5 @@
-import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod";
 
 testGetFirstMethod("queries for document by UID", {
 	run: (client) => client.getByUID("type", "uid"),

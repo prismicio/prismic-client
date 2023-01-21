@@ -1,6 +1,5 @@
-import { expectType, expectNever, TypeOf } from "ts-expect";
-
 import * as prismicTI from "@prismicio/types-internal";
+import { TypeOf, expectNever, expectType } from "ts-expect";
 
 import * as prismic from "../../src";
 

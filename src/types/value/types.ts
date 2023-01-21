@@ -1,21 +1,19 @@
-import type { RichTextField } from "./richText";
-import type { TitleField } from "./title";
-import type { ImageField } from "./image";
-import type { ContentRelationshipField } from "./contentRelationship";
-import type { LinkField } from "./link";
-import type { LinkToMediaField } from "./linkToMedia";
-import type { EmbedField } from "./embed";
-
 import type { BooleanField } from "./boolean";
 import type { ColorField } from "./color";
+import type { ContentRelationshipField } from "./contentRelationship";
 import type { DateField } from "./date";
+import type { EmbedField } from "./embed";
+import type { GeoPointField } from "./geoPoint";
+import type { ImageField } from "./image";
+import type { IntegrationFields } from "./integrationFields";
 import type { KeyTextField } from "./keyText";
+import type { LinkField } from "./link";
+import type { LinkToMediaField } from "./linkToMedia";
 import type { NumberField } from "./number";
+import type { RichTextField } from "./richText";
 import type { SelectField } from "./select";
 import type { TimestampField } from "./timestamp";
-import type { GeoPointField } from "./geoPoint";
-
-import type { IntegrationFields } from "./integrationFields";
+import type { TitleField } from "./title";
 
 /**
  * Empty state for object-shaped fields.

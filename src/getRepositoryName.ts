@@ -1,4 +1,4 @@
-import { PrismicError } from "./PrismicError";
+import { PrismicError } from "./errors/PrismicError";
 
 /**
  * Get a Prismic repository's name from its standard Prismic Rest API V2 or

@@ -1,6 +1,6 @@
 import * as prismic from "@prismicio/client";
-import fetch from "node-fetch";
 import express from "express";
+import fetch from "node-fetch";
 import QuickLRU from "quick-lru";
 
 const cache = new QuickLRU({

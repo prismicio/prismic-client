@@ -1,11 +1,10 @@
-import { it, expect } from "vitest";
-
 import * as prismicM from "@prismicio/mock";
+import { expect, it } from "vitest";
 
-import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod";
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createTestClient } from "./__testutils__/createClient";
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod";
 
 import * as prismic from "../src";
 

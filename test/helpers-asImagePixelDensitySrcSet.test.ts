@@ -1,6 +1,6 @@
-import { it, expect } from "vitest";
+import { expect, it } from "vitest";
 
-import { asImagePixelDensitySrcSet, ImageField } from "../src";
+import { ImageField, asImagePixelDensitySrcSet } from "../src";
 
 it("returns null for nullish inputs", () => {
 	expect(asImagePixelDensitySrcSet(null)).toBeNull();

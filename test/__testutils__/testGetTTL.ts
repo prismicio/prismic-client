@@ -1,11 +1,23 @@
-import { it, expect } from "vitest";
 import { rest } from "msw";
+import { expect, it } from "vitest";
 
-import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2";
 import { createTestClient } from "./createClient";
+import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2";
 
 import * as prismic from "../../src";
-import { REPOSITORY_CACHE_TTL } from "../../src/client";
+
+/**
+ * The number of milliseconds in which repository metadata is considered valid.
+ * A ref can be invalidated quickly depending on how frequently content is
+ * updated in the Prismic repository. As such, repository's metadata can only be
+ * considered valid for a short amount of time.
+ *
+ * IMPORTANT: This value is linked to `REPOSITORY_CACHE_TTL` used in
+ * `../src/createClient.ts`. The two values do not need to be kept in sync, but
+ * note that changing `REPOSITORY_CACHE_TTL` in the public code may have an
+ * effect on tests using this test-specific constant.
+ */
+export const REPOSITORY_CACHE_TTL = 5000;
 
 type GetContext = {
 	repositoryResponse?: Partial<prismic.Repository>;

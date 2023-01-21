@@ -1,5 +1,5 @@
-import { testGetMethod } from "./__testutils__/testAnyGetMethod";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { testGetMethod } from "./__testutils__/testAnyGetMethod";
 
 testGetMethod("queries for documents by some tags", {
 	run: (client) => client.getBySomeTags(["foo", "bar"]),

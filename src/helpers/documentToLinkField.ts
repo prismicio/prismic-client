@@ -1,6 +1,6 @@
+import type { FilledContentRelationshipField } from "../types/value/contentRelationship";
 import type { PrismicDocument } from "../types/value/document";
 import { LinkType } from "../types/value/link";
-import type { FilledContentRelationshipField } from "../types/value/contentRelationship";
 
 type SetOptional<T, Keys extends keyof T> = Omit<T, Keys> &
 	Partial<Pick<T, Keys>>;
