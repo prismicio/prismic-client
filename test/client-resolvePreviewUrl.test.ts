@@ -1,6 +1,7 @@
+import { expect, it } from "vitest";
+
 import * as prismicM from "@prismicio/mock";
 import { Headers } from "node-fetch";
-import { expect, it } from "vitest";
 
 import { createTestClient } from "./__testutils__/createClient";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";

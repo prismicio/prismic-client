@@ -1,7 +1,8 @@
+import { expect, it, vi } from "vitest";
+
 import * as prismicM from "@prismicio/mock";
 import * as msw from "msw";
 import { Headers, Response } from "node-fetch";
-import { expect, it, vi } from "vitest";
 
 import { createTestClient } from "./__testutils__/createClient";
 import { getMasterRef } from "./__testutils__/getMasterRef";

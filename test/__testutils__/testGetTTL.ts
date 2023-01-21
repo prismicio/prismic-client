@@ -1,5 +1,6 @@
-import { rest } from "msw";
 import { expect, it } from "vitest";
+
+import { rest } from "msw";
 
 import { createTestClient } from "./createClient";
 import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2";

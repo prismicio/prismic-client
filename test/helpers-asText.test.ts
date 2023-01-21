@@ -1,5 +1,6 @@
-import * as prismicR from "@prismicio/richtext";
 import { expect, it } from "vitest";
+
+import * as prismicR from "@prismicio/richtext";
 
 import { richTextFixture } from "./__fixtures__/richText";
 

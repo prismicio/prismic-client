@@ -1,5 +1,6 @@
-import { rest } from "msw";
 import { TestContext, expect } from "vitest";
+
+import { rest } from "msw";
 
 import { createRepositoryName } from "./createRepositoryName";
 

@@ -1,5 +1,6 @@
-import * as msw from "msw";
 import { expect, it } from "vitest";
+
+import * as msw from "msw";
 
 import { createAuthorizationHeader } from "./__testutils__/createAuthorizationHeader";
 import { createTestClient } from "./__testutils__/createClient";
