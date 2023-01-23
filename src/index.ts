@@ -4,6 +4,8 @@ import type {
 	HTMLRichTextMapSerializer,
 } from "./helpers/asHTML";
 
+import { filter } from "./filter";
+
 //=============================================================================
 // Client - Query content from Prismic.
 //=============================================================================
@@ -19,8 +21,13 @@ export { isRepositoryName } from "./isRepositoryName";
 export { isRepositoryEndpoint } from "./isRepositoryEndpoint";
 export { buildQueryURL } from "./buildQueryURL";
 
-// Query predicates API.
-export { predicate } from "./predicate";
+// Query filters API.
+/**
+ * @deprecated Renamed to `filter`
+ */
+// TODO: Remove when we remove support for deprecated `predicate` export.
+const predicate = filter;
+export { filter, predicate };
 
 // A collection of well-known cookie names shared between Prismic libraries and systems.
 export * as cookie from "./cookie";

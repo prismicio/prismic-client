@@ -1,20 +1,20 @@
-import { testPredicate } from "./__testutils__/testPredicate";
+import { testFilter } from "./__testutils__/testFilter";
 
 import * as prismic from "../src";
 
-testPredicate(
+testFilter(
 	'[any(document.type, ["product", "blog-post"])]',
-	prismic.predicate.any("document.type", ["product", "blog-post"]),
+	prismic.filter.any("document.type", ["product", "blog-post"]),
 );
 
-testPredicate(
+testFilter(
 	"[any(my.product.out_of_stock, [true, false])]",
-	prismic.predicate.any("my.product.out_of_stock", [true, false]),
+	prismic.filter.any("my.product.out_of_stock", [true, false]),
 );
 
-testPredicate(
+testFilter(
 	"[any(my.product.restock_date, [1600000000000, 1700000000000])]",
-	prismic.predicate.any("my.product.restock_date", [
+	prismic.filter.any("my.product.restock_date", [
 		new Date(1600000000000),
 		new Date(1700000000000),
 	]),

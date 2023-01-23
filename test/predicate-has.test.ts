@@ -1,8 +1,5 @@
-import { testPredicate } from "./__testutils__/testPredicate";
+import { testFilter } from "./__testutils__/testFilter";
 
 import * as prismic from "../src";
 
-testPredicate(
-	"[has(my.product.price)]",
-	prismic.predicate.has("my.product.price"),
-);
+testFilter("[has(my.product.price)]", prismic.filter.has("my.product.price"));

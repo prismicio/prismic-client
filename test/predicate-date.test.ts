@@ -1,310 +1,298 @@
-import { testPredicate } from "./__testutils__/testPredicate";
+import { testFilter } from "./__testutils__/testFilter";
 
 import * as prismic from "../src";
 
-testPredicate(
+testFilter(
 	'[date.after(document.first_publication_date, "2017-05-18T17:00:00-0500")]',
-	prismic.predicate.dateAfter(
+	prismic.filter.dateAfter(
 		"document.first_publication_date",
 		"2017-05-18T17:00:00-0500",
 	),
 );
 
-testPredicate(
+testFilter(
 	"[date.after(document.last_publication_date, 1495080000000)]",
-	prismic.predicate.dateAfter("document.last_publication_date", 1495080000000),
+	prismic.filter.dateAfter("document.last_publication_date", 1495080000000),
 );
 
-testPredicate(
+testFilter(
 	'[date.after(my.article.release-date, "2017-01-22")]',
-	prismic.predicate.dateAfter("my.article.release-date", "2017-01-22"),
+	prismic.filter.dateAfter("my.article.release-date", "2017-01-22"),
 );
 
-testPredicate(
+testFilter(
 	"[date.after(my.article.release-date, 1485043200000)]",
-	prismic.predicate.dateAfter(
-		"my.article.release-date",
-		Date.parse("2017-01-22"),
-	),
+	prismic.filter.dateAfter("my.article.release-date", Date.parse("2017-01-22")),
 );
 
-testPredicate(
+testFilter(
 	'[date.before(document.first_publication_date, "2016-09-19T14:00:00-0400")]',
-	prismic.predicate.dateBefore(
+	prismic.filter.dateBefore(
 		"document.first_publication_date",
 		"2016-09-19T14:00:00-0400",
 	),
 );
 
-testPredicate(
+testFilter(
 	"[date.before(document.last_publication_date, 1476504000000)]",
-	prismic.predicate.dateBefore("document.last_publication_date", 1476504000000),
+	prismic.filter.dateBefore("document.last_publication_date", 1476504000000),
 );
 
-testPredicate(
+testFilter(
 	'[date.before(my.post.date, "2017-02-24")]',
-	prismic.predicate.dateBefore("my.post.date", "2017-02-24"),
+	prismic.filter.dateBefore("my.post.date", "2017-02-24"),
 );
 
-testPredicate(
+testFilter(
 	"[date.before(my.post.date, 1487894400000)]",
-	prismic.predicate.dateBefore("my.post.date", Date.parse("2017-02-24")),
+	prismic.filter.dateBefore("my.post.date", Date.parse("2017-02-24")),
 );
 
-testPredicate(
+testFilter(
 	'[date.between(document.first_publication_date, "2017-01-16", "2017-01-20")]',
-	prismic.predicate.dateBetween(
+	prismic.filter.dateBetween(
 		"document.first_publication_date",
 		"2017-01-16",
 		"2017-01-20",
 	),
 );
 
-testPredicate(
+testFilter(
 	'[date.between(document.last_publication_date, "2016-09-15T05:30:00+0100", "2017-10-15T11:45:00+0100")]',
-	prismic.predicate.dateBetween(
+	prismic.filter.dateBetween(
 		"document.last_publication_date",
 		"2016-09-15T05:30:00+0100",
 		"2017-10-15T11:45:00+0100",
 	),
 );
 
-testPredicate(
+testFilter(
 	"[date.between(my.query-fields.date, 1483074000000, 1483333200000)]",
-	prismic.predicate.dateBetween(
+	prismic.filter.dateBetween(
 		"my.query-fields.date",
 		1483074000000,
 		1483333200000,
 	),
 );
 
-testPredicate(
+testFilter(
 	"[date.between(my.query-fields.date, 1583074000000, 1583333200000)]",
-	prismic.predicate.dateBetween(
+	prismic.filter.dateBetween(
 		"my.query-fields.date",
 		new Date(1583074000000),
 		new Date(1583333200000),
 	),
 );
 
-testPredicate(
+testFilter(
 	"[date.day-of-month(document.first_publication_date, 22)]",
-	prismic.predicate.dateDayOfMonth("document.first_publication_date", 22),
+	prismic.filter.dateDayOfMonth("document.first_publication_date", 22),
 );
 
-testPredicate(
+testFilter(
 	"[date.day-of-month(document.last_publication_date, 30)]",
-	prismic.predicate.dateDayOfMonth("document.last_publication_date", 30),
+	prismic.filter.dateDayOfMonth("document.last_publication_date", 30),
 );
 
-testPredicate(
+testFilter(
 	"[date.day-of-month(my.post.date, 14)]",
-	prismic.predicate.dateDayOfMonth("my.post.date", 14),
+	prismic.filter.dateDayOfMonth("my.post.date", 14),
 );
 
-testPredicate(
+testFilter(
 	"[date.day-of-month-after(document.first_publication_date, 22)]",
-	prismic.predicate.dateDayOfMonthAfter("document.first_publication_date", 22),
+	prismic.filter.dateDayOfMonthAfter("document.first_publication_date", 22),
 );
 
-testPredicate(
+testFilter(
 	"[date.day-of-month-after(document.last_publication_date, 10)]",
-	prismic.predicate.dateDayOfMonthAfter("document.last_publication_date", 10),
+	prismic.filter.dateDayOfMonthAfter("document.last_publication_date", 10),
 );
 
-testPredicate(
+testFilter(
 	"[date.day-of-month-after(my.event.date-and-time, 15)]",
-	prismic.predicate.dateDayOfMonthAfter("my.event.date-and-time", 15),
+	prismic.filter.dateDayOfMonthAfter("my.event.date-and-time", 15),
 );
 
-testPredicate(
+testFilter(
 	"[date.day-of-month-before(document.first_publication_date, 20)]",
-	prismic.predicate.dateDayOfMonthBefore("document.first_publication_date", 20),
+	prismic.filter.dateDayOfMonthBefore("document.first_publication_date", 20),
 );
 
-testPredicate(
+testFilter(
 	"[date.day-of-month-before(document.last_publication_date, 10)]",
-	prismic.predicate.dateDayOfMonthBefore("document.last_publication_date", 10),
+	prismic.filter.dateDayOfMonthBefore("document.last_publication_date", 10),
 );
 
-testPredicate(
+testFilter(
 	"[date.day-of-month-before(my.blog-post.release-date, 23)]",
-	prismic.predicate.dateDayOfMonthBefore("my.blog-post.release-date", 23),
+	prismic.filter.dateDayOfMonthBefore("my.blog-post.release-date", 23),
 );
 
-testPredicate(
+testFilter(
 	'[date.day-of-week(document.first_publication_date, "monday")]',
-	prismic.predicate.dateDayOfWeek("document.first_publication_date", "monday"),
+	prismic.filter.dateDayOfWeek("document.first_publication_date", "monday"),
 );
 
-testPredicate(
+testFilter(
 	'[date.day-of-week(document.last_publication_date, "sun")]',
-	prismic.predicate.dateDayOfWeek("document.last_publication_date", "sun"),
+	prismic.filter.dateDayOfWeek("document.last_publication_date", "sun"),
 );
 
-testPredicate(
+testFilter(
 	'[date.day-of-week(my.concert.show-date, "Friday")]',
-	prismic.predicate.dateDayOfWeek("my.concert.show-date", "Friday"),
+	prismic.filter.dateDayOfWeek("my.concert.show-date", "Friday"),
 );
 
-testPredicate(
+testFilter(
 	"[date.day-of-week(my.concert.show-date, 5)]",
-	prismic.predicate.dateDayOfWeek("my.concert.show-date", 5),
+	prismic.filter.dateDayOfWeek("my.concert.show-date", 5),
 );
 
-testPredicate(
+testFilter(
 	'[date.day-of-week-after(document.first_publication_date, "fri")]',
-	prismic.predicate.dateDayOfWeekAfter(
-		"document.first_publication_date",
-		"fri",
-	),
+	prismic.filter.dateDayOfWeekAfter("document.first_publication_date", "fri"),
 );
 
-testPredicate(
+testFilter(
 	'[date.day-of-week-after(document.last_publication_date, "Thu")]',
-	prismic.predicate.dateDayOfWeekAfter("document.last_publication_date", "Thu"),
+	prismic.filter.dateDayOfWeekAfter("document.last_publication_date", "Thu"),
 );
 
-testPredicate(
+testFilter(
 	'[date.day-of-week-after(my.blog-post.date, "tuesday")]',
-	prismic.predicate.dateDayOfWeekAfter("my.blog-post.date", "tuesday"),
+	prismic.filter.dateDayOfWeekAfter("my.blog-post.date", "tuesday"),
 );
 
-testPredicate(
+testFilter(
 	"[date.day-of-week-after(my.blog-post.date, 2)]",
-	prismic.predicate.dateDayOfWeekAfter("my.blog-post.date", 2),
+	prismic.filter.dateDayOfWeekAfter("my.blog-post.date", 2),
 );
 
-testPredicate(
+testFilter(
 	'[date.day-of-week-before(document.first_publication_date, "Wed")]',
-	prismic.predicate.dateDayOfWeekBefore(
-		"document.first_publication_date",
-		"Wed",
-	),
+	prismic.filter.dateDayOfWeekBefore("document.first_publication_date", "Wed"),
 );
 
-testPredicate(
+testFilter(
 	'[date.day-of-week-before(document.last_publication_date, "saturday")]',
-	prismic.predicate.dateDayOfWeekBefore(
+	prismic.filter.dateDayOfWeekBefore(
 		"document.last_publication_date",
 		"saturday",
 	),
 );
 
-testPredicate(
+testFilter(
 	'[date.day-of-week-before(my.page.release-date, "Saturday")]',
-	prismic.predicate.dateDayOfWeekBefore("my.page.release-date", "Saturday"),
+	prismic.filter.dateDayOfWeekBefore("my.page.release-date", "Saturday"),
 );
 
-testPredicate(
+testFilter(
 	"[date.day-of-week-before(my.page.release-date, 6)]",
-	prismic.predicate.dateDayOfWeekBefore("my.page.release-date", 6),
+	prismic.filter.dateDayOfWeekBefore("my.page.release-date", 6),
 );
 
-testPredicate(
+testFilter(
 	'[date.month(document.first_publication_date, "august")]',
-	prismic.predicate.dateMonth("document.first_publication_date", "august"),
+	prismic.filter.dateMonth("document.first_publication_date", "august"),
 );
 
-testPredicate(
+testFilter(
 	'[date.month(document.last_publication_date, "Sep")]',
-	prismic.predicate.dateMonth("document.last_publication_date", "Sep"),
+	prismic.filter.dateMonth("document.last_publication_date", "Sep"),
 );
 
-testPredicate(
+testFilter(
 	"[date.month(my.blog-post.date, 1)]",
-	prismic.predicate.dateMonth("my.blog-post.date", 1),
+	prismic.filter.dateMonth("my.blog-post.date", 1),
 );
 
-testPredicate(
+testFilter(
 	'[date.month-after(document.first_publication_date, "February")]',
-	prismic.predicate.dateMonthAfter(
-		"document.first_publication_date",
-		"February",
-	),
+	prismic.filter.dateMonthAfter("document.first_publication_date", "February"),
 );
 
-testPredicate(
+testFilter(
 	"[date.month-after(document.last_publication_date, 6)]",
-	prismic.predicate.dateMonthAfter("document.last_publication_date", 6),
+	prismic.filter.dateMonthAfter("document.last_publication_date", 6),
 );
 
-testPredicate(
+testFilter(
 	'[date.month-after(my.article.date, "oct")]',
-	prismic.predicate.dateMonthAfter("my.article.date", "oct"),
+	prismic.filter.dateMonthAfter("my.article.date", "oct"),
 );
 
-testPredicate(
+testFilter(
 	"[date.month-before(document.first_publication_date, 8)]",
-	prismic.predicate.dateMonthBefore("document.first_publication_date", 8),
+	prismic.filter.dateMonthBefore("document.first_publication_date", 8),
 );
 
-testPredicate(
+testFilter(
 	'[date.month-before(document.last_publication_date, "june")]',
-	prismic.predicate.dateMonthBefore("document.last_publication_date", "june"),
+	prismic.filter.dateMonthBefore("document.last_publication_date", "june"),
 );
 
-testPredicate(
+testFilter(
 	'[date.month-before(my.blog-post.release-date, "Sep")]',
-	prismic.predicate.dateMonthBefore("my.blog-post.release-date", "Sep"),
+	prismic.filter.dateMonthBefore("my.blog-post.release-date", "Sep"),
 );
 
-testPredicate(
+testFilter(
 	"[date.year(document.first_publication_date, 2016)]",
-	prismic.predicate.dateYear("document.first_publication_date", 2016),
+	prismic.filter.dateYear("document.first_publication_date", 2016),
 );
 
-testPredicate(
+testFilter(
 	"[date.year(document.last_publication_date, 2017)]",
-	prismic.predicate.dateYear("document.last_publication_date", 2017),
+	prismic.filter.dateYear("document.last_publication_date", 2017),
 );
 
-testPredicate(
+testFilter(
 	"[date.year(my.employee.birthday, 1986)]",
-	prismic.predicate.dateYear("my.employee.birthday", 1986),
+	prismic.filter.dateYear("my.employee.birthday", 1986),
 );
 
-testPredicate(
+testFilter(
 	"[date.hour(document.first_publication_date, 12)]",
-	prismic.predicate.dateHour("document.first_publication_date", 12),
+	prismic.filter.dateHour("document.first_publication_date", 12),
 );
 
-testPredicate(
+testFilter(
 	"[date.hour(document.last_publication_date, 8)]",
-	prismic.predicate.dateHour("document.last_publication_date", 8),
+	prismic.filter.dateHour("document.last_publication_date", 8),
 );
 
-testPredicate(
+testFilter(
 	"[date.hour(my.event.date-and-time, 19)]",
-	prismic.predicate.dateHour("my.event.date-and-time", 19),
+	prismic.filter.dateHour("my.event.date-and-time", 19),
 );
 
-testPredicate(
+testFilter(
 	"[date.hour-after(document.first_publication_date, 21)]",
-	prismic.predicate.dateHourAfter("document.first_publication_date", 21),
+	prismic.filter.dateHourAfter("document.first_publication_date", 21),
 );
 
-testPredicate(
+testFilter(
 	"[date.hour-after(document.last_publication_date, 8)]",
-	prismic.predicate.dateHourAfter("document.last_publication_date", 8),
+	prismic.filter.dateHourAfter("document.last_publication_date", 8),
 );
 
-testPredicate(
+testFilter(
 	"[date.hour-after(my.blog-post.releaseDate, 16)]",
-	prismic.predicate.dateHourAfter("my.blog-post.releaseDate", 16),
+	prismic.filter.dateHourAfter("my.blog-post.releaseDate", 16),
 );
 
-testPredicate(
+testFilter(
 	"[date.hour-before(document.first_publication_date, 10)]",
-	prismic.predicate.dateHourBefore("document.first_publication_date", 10),
+	prismic.filter.dateHourBefore("document.first_publication_date", 10),
 );
 
-testPredicate(
+testFilter(
 	"[date.hour-before(document.last_publication_date, 12)]",
-	prismic.predicate.dateHourBefore("document.last_publication_date", 12),
+	prismic.filter.dateHourBefore("document.last_publication_date", 12),
 );
 
-testPredicate(
+testFilter(
 	"[date.hour-before(my.event.dateAndTime, 12)]",
-	prismic.predicate.dateHourBefore("my.event.dateAndTime", 12),
+	prismic.filter.dateHourBefore("my.event.dateAndTime", 12),
 );

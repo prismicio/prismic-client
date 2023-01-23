@@ -1,13 +1,13 @@
-import { appendPredicates } from "./lib/appendPredicates";
+import { appendFilters } from "./lib/appendFilters";
 import { castThunk } from "./lib/castThunk";
-import { everyTagPredicate } from "./lib/everyTagPredicate";
+import { everyTagFilter } from "./lib/everyTagFilter";
 import { findMasterRef } from "./lib/findMasterRef";
 import { findRefByID } from "./lib/findRefByID";
 import { findRefByLabel } from "./lib/findRefByLabel";
 import { getPreviewCookie } from "./lib/getPreviewCookie";
 import { minifyGraphQLQuery } from "./lib/minifyGraphQLQuery";
-import { someTagsPredicate } from "./lib/someTagsPredicate";
-import { typePredicate } from "./lib/typePredicate";
+import { someTagsFilter } from "./lib/someTagsFilter";
+import { typeFilter } from "./lib/typeFilter";
 
 import type { Query } from "./types/api/query";
 import type { Ref } from "./types/api/ref";
@@ -22,9 +22,9 @@ import { PrismicError } from "./errors/PrismicError";
 import { LinkResolverFunction, asLink } from "./helpers/asLink";
 
 import { BuildQueryURLArgs, buildQueryURL } from "./buildQueryURL";
+import { filter } from "./filter";
 import { getRepositoryEndpoint } from "./getRepositoryEndpoint";
 import { isRepositoryEndpoint } from "./isRepositoryEndpoint";
-import { predicate } from "./predicate";
 
 /**
  * The largest page size allowed by the Prismic REST API V2. This value is used
@@ -605,10 +605,10 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	/**
 	 * **IMPORTANT**: Avoid using `dangerouslyGetAll` as it may be slower and
 	 * require more resources than other methods. Prefer using other methods that
-	 * filter by predicates such as `getAllByType`.
+	 * filter by filters such as `getAllByType`.
 	 *
 	 * Queries content from the Prismic repository and returns all matching
-	 * content. If no predicates are provided, all documents will be fetched.
+	 * content. If no filters are provided, all documents will be fetched.
 	 *
 	 * This method may make multiple network requests to query all matching
 	 * content.
@@ -684,7 +684,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<TDocument> {
 		return await this.getFirst<TDocument>(
-			appendPredicates(params, predicate.at("document.id", id)),
+			appendFilters(params, filter.at("document.id", id)),
 		);
 	}
 
@@ -717,7 +717,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<Query<TDocument>> {
 		return await this.get<TDocument>(
-			appendPredicates(params, predicate.in("document.id", ids)),
+			appendFilters(params, filter.in("document.id", ids)),
 		);
 	}
 
@@ -752,7 +752,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		params?: Partial<BuildQueryURLArgs> & GetAllParams & FetchParams,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
-			appendPredicates(params, predicate.in("document.id", ids)),
+			appendFilters(params, filter.in("document.id", ids)),
 		);
 	}
 
@@ -788,9 +788,9 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<ExtractDocumentType<TDocument, TDocumentType>> {
 		return await this.getFirst<ExtractDocumentType<TDocument, TDocumentType>>(
-			appendPredicates(params, [
-				typePredicate(documentType),
-				predicate.at(`my.${documentType}.uid`, uid),
+			appendFilters(params, [
+				typeFilter(documentType),
+				filter.at(`my.${documentType}.uid`, uid),
 			]),
 		);
 	}
@@ -830,9 +830,9 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<Query<ExtractDocumentType<TDocument, TDocumentType>>> {
 		return await this.get<ExtractDocumentType<TDocument, TDocumentType>>(
-			appendPredicates(params, [
-				typePredicate(documentType),
-				predicate.in(`my.${documentType}.uid`, uids),
+			appendFilters(params, [
+				typeFilter(documentType),
+				filter.in(`my.${documentType}.uid`, uids),
 			]),
 		);
 	}
@@ -876,9 +876,9 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		return await this.dangerouslyGetAll<
 			ExtractDocumentType<TDocument, TDocumentType>
 		>(
-			appendPredicates(params, [
-				typePredicate(documentType),
-				predicate.in(`my.${documentType}.uid`, uids),
+			appendFilters(params, [
+				typeFilter(documentType),
+				filter.in(`my.${documentType}.uid`, uids),
 			]),
 		);
 	}
@@ -913,7 +913,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<ExtractDocumentType<TDocument, TDocumentType>> {
 		return await this.getFirst<ExtractDocumentType<TDocument, TDocumentType>>(
-			appendPredicates(params, typePredicate(documentType)),
+			appendFilters(params, typeFilter(documentType)),
 		);
 	}
 
@@ -943,7 +943,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<Query<ExtractDocumentType<TDocument, TDocumentType>>> {
 		return await this.get<ExtractDocumentType<TDocument, TDocumentType>>(
-			appendPredicates(params, typePredicate(documentType)),
+			appendFilters(params, typeFilter(documentType)),
 		);
 	}
 
@@ -977,7 +977,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	): Promise<ExtractDocumentType<TDocument, TDocumentType>[]> {
 		return await this.dangerouslyGetAll<
 			ExtractDocumentType<TDocument, TDocumentType>
-		>(appendPredicates(params, typePredicate(documentType)));
+		>(appendFilters(params, typeFilter(documentType)));
 	}
 
 	/**
@@ -1003,7 +1003,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<Query<TDocument>> {
 		return await this.get<TDocument>(
-			appendPredicates(params, someTagsPredicate(tag)),
+			appendFilters(params, someTagsFilter(tag)),
 		);
 	}
 
@@ -1032,7 +1032,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			FetchParams,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
-			appendPredicates(params, someTagsPredicate(tag)),
+			appendFilters(params, someTagsFilter(tag)),
 		);
 	}
 
@@ -1057,7 +1057,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<Query<TDocument>> {
 		return await this.get<TDocument>(
-			appendPredicates(params, everyTagPredicate(tags)),
+			appendFilters(params, everyTagFilter(tags)),
 		);
 	}
 
@@ -1087,7 +1087,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			FetchParams,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
-			appendPredicates(params, everyTagPredicate(tags)),
+			appendFilters(params, everyTagFilter(tags)),
 		);
 	}
 
@@ -1114,7 +1114,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<Query<TDocument>> {
 		return await this.get<TDocument>(
-			appendPredicates(params, someTagsPredicate(tags)),
+			appendFilters(params, someTagsFilter(tags)),
 		);
 	}
 
@@ -1145,7 +1145,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			FetchParams,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
-			appendPredicates(params, someTagsPredicate(tags)),
+			appendFilters(params, someTagsFilter(tags)),
 		);
 	}
 
@@ -1732,7 +1732,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			}
 
 			// Bad Request
-			// - Invalid predicate syntax
+			// - Invalid filter syntax
 			// - Ref not provided (ignored)
 			case 400: {
 				throw new ParsingError(json.message, url, json);

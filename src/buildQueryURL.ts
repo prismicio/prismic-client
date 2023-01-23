@@ -183,21 +183,26 @@ type BuildQueryURLParams = {
 	/**
 	 * Ref used to query documents.
 	 *
-	 * {@link https://prismic.io/docs/technologies/introduction-to-the-content-query-api#prismic-api-ref}
+	 * {@link https://prismic.io/docs/api#prismic-api-ref}
 	 */
 	ref: string;
 
 	/**
 	 * Ref used to populate Integration Fields with the latest content.
 	 *
-	 * {@link https://prismic.io/docs/core-concepts/integration-fields}
+	 * {@link https://prismic.io/docs/integration-fields}
 	 */
 	integrationFieldsRef?: string;
 
 	/**
-	 * One or more predicates to filter documents for the query.
+	 * One or more filters to filter documents for the query.
 	 *
-	 * {@link https://prismic.io/docs/technologies/query-predicates-reference-rest-api}
+	 * {@link https://prismic.io/docs/rest-api-technical-reference}
+	 */
+	filters?: string | string[];
+
+	/**
+	 * @deprecated Renamed to `filters`
 	 */
 	predicates?: string | string[];
 };
@@ -251,8 +256,8 @@ export type BuildQueryURLArgs = QueryParams & BuildQueryURLParams;
  *
  * Type the JSON response with `Query`.
  *
- * {@link https://prismic.io/docs/technologies/introduction-to-the-content-query-api#prismic-api-ref}
- * {@link https://prismic.io/docs/technologies/query-predicates-reference-rest-api}
+ * {@link https://prismic.io/docs/api#prismic-api-ref}
+ * {@link https://prismic.io/docs/rest-api-technical-reference}
  *
  * @param endpoint - URL to the repository's REST API V2.
  * @param args - Arguments to filter and scope the query.
@@ -263,10 +268,17 @@ export const buildQueryURL = (
 	endpoint: string,
 	args: BuildQueryURLArgs,
 ): string => {
-	const { predicates, ...params } = args;
+	const { filters, predicates, ...params } = args;
 
 	const url = new URL(`documents/search`, `${endpoint}/`);
 
+	if (filters) {
+		for (const filter of castArray(filters)) {
+			url.searchParams.append("q", `[${filter}]`);
+		}
+	}
+
+	// TODO: Remove when we remove support for deprecated `predicates` argument.
 	if (predicates) {
 		for (const predicate of castArray(predicates)) {
 			url.searchParams.append("q", `[${predicate}]`);
