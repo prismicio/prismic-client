@@ -1,3 +1,9 @@
+// Use for deprecations.
+import type {
+	HTMLRichTextFunctionSerializer,
+	HTMLRichTextMapSerializer,
+} from "./helpers/asHTML";
+
 //=============================================================================
 // Client - Query content from Prismic.
 //=============================================================================
@@ -57,10 +63,21 @@ export { documentToLinkField } from "./helpers/documentToLinkField";
 export { Element } from "@prismicio/richtext";
 
 export type { LinkResolverFunction } from "./helpers/asLink";
+
+/**
+ * @deprecated Renamed to `HTMLRichTextMapSerializer`
+ */
+type HTMLMapSerializer = HTMLRichTextMapSerializer;
+/**
+ * @deprecated Renamed to `HTMLRichTextFunctionSerializer`
+ */
+type HTMLFunctionSerializer = HTMLRichTextFunctionSerializer;
 export type {
+	HTMLRichTextMapSerializer,
+	HTMLRichTextFunctionSerializer,
 	HTMLMapSerializer,
 	HTMLFunctionSerializer,
-} from "./helpers/asHTML";
+};
 
 //=============================================================================
 // Errors - Custom errors for Prismic APIs.

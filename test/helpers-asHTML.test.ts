@@ -1,7 +1,7 @@
 import { expect, it } from "vitest";
 
-import { htmlFunctionSerializer } from "./__fixtures__/htmlFunctionSerializer";
-import { htmlMapSerializer } from "./__fixtures__/htmlMapSerializer";
+import { htmlRichTextFunctionSerializer } from "./__fixtures__/htmlRichTextFunctionSerializer";
+import { htmlRichTextMapSerializer } from "./__fixtures__/htmlRichTextMapSerializer";
 import { linkResolver } from "./__fixtures__/linkResolver";
 import { richTextFixture } from "./__fixtures__/richText";
 
@@ -13,13 +13,13 @@ it("serializes with default serializer", () => {
 
 it("serializes with a custom function serializer", () => {
 	expect(
-		asHTML(richTextFixture.en, linkResolver, htmlFunctionSerializer),
+		asHTML(richTextFixture.en, linkResolver, htmlRichTextFunctionSerializer),
 	).toMatchSnapshot();
 });
 
 it("serializes with a custom map serializer", () => {
 	expect(
-		asHTML(richTextFixture.en, linkResolver, htmlMapSerializer),
+		asHTML(richTextFixture.en, linkResolver, htmlRichTextMapSerializer),
 	).toMatchSnapshot();
 });
 
