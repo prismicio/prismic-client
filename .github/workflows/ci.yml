@@ -1,10 +1,10 @@
 name: ci
 
-on: [push, pull_request]
+on: push
 
 jobs:
   prepare:
-    name: Prepare ({{ matrix.os}}, Node ${{ matrix.node }})
+    name: Prepare (${{ matrix.os}}, Node ${{ matrix.node }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -33,7 +33,7 @@ jobs:
 
   suite:
     needs: prepare
-    name: Suite ({{ matrix.os}}, Node ${{ matrix.node }})
+    name: Suite (${{ matrix.os}}, Node ${{ matrix.node }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -71,7 +71,7 @@ jobs:
 
   types:
     needs: prepare
-    name: Types ({{ matrix.os}}, Node ${{ matrix.node }}, TypeScript ${{ matrix.typescript }})
+    name: Types (${{ matrix.os}}, Node ${{ matrix.node }}, TS ${{ matrix.typescript }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -103,7 +103,7 @@ jobs:
 
   size:
     needs: prepare
-    name: Size ({{ matrix.os}}, Node ${{ matrix.node }})
+    name: Size (${{ matrix.os}}, Node ${{ matrix.node }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
