@@ -3,10 +3,78 @@ name: ci
 on: [push, pull_request]
 
 jobs:
-  ci:
+  prepare:
+    name: Prepare ({{ matrix.os}}, Node ${{ matrix.node }})
     runs-on: ${{ matrix.os }}
-
     strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [14]
+
+    steps:
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Cache node_modules
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/package-lock.json')) }}
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+  suite:
+    needs: prepare
+    name: Suite ({{ matrix.os}}, Node ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        node: [14]
+
+    steps:
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Retrieve node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/package-lock.json')) }}
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit
+        run: npm run unit
+
+      - name: Build
+        run: npm run build
+
+      - name: Coverage
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 14
+        uses: codecov/codecov-action@v3
+
+  types:
+    needs: prepare
+    name: Types ({{ matrix.os}}, Node ${{ matrix.node }}, TypeScript ${{ matrix.typescript }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest]
         node: [14]
@@ -21,37 +89,45 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
 
-      - name: Cache node_modules
-        uses: actions/cache@v2
+      - name: Retrieve node_modules
+        uses: actions/cache@v3
         with:
           path: node_modules
           key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/package-lock.json')) }}
 
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
-
-      - name: Lint
-        if: matrix.typescript == '4.9'
-        run: npm run lint
+      - name: Overwrite TypeScript
+        run: npm install --save-dev typescript@${{ matrix.typescript }}
 
       - name: Types
-        run: npm install --save-dev typescript@${{ matrix.typescript }} && npm run types
+        run: npm run types
 
-      - name: Unit
-        if: matrix.typescript == '4.9'
-        run: npm run unit
+  size:
+    needs: prepare
+    name: Size ({{ matrix.os}}, Node ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        node: [14]
 
-      - name: Build
-        if: matrix.typescript == '4.9'
-        run: npm run build
+    steps:
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
 
-      - name: Coverage
-        if: matrix.os == 'ubuntu-latest' && matrix.node == 14 && matrix.typescript == '4.9'
-        uses: codecov/codecov-action@v3
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Retrieve node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/package-lock.json')) }}
 
       - name: Size
-        if: github.event_name == 'pull_request' && matrix.os == 'ubuntu-latest' && matrix.node == 14 && matrix.typescript == '4.9'
+        if: github.event_name == 'pull_request' && matrix.os == 'ubuntu-latest' && matrix.node == 14
         uses: andresz1/size-limit-action@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
