@@ -65,7 +65,7 @@ export const testAnyGetMethodFactory = (
 				break;
 
 			default:
-				throw new Error("Unknown mode `%o`", mode);
+				throw new Error(`Unknown mode \`${mode}\``);
 		}
 	});
 };
