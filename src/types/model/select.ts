@@ -3,7 +3,7 @@ import type { CustomTypeModelFieldType } from "./types";
 /**
  * A Select Custom Type field.
  *
- * More details: {@link https://prismic.io/docs/core-concepts/select}
+ * More details: {@link https://prismic.io/docs/select}
  *
  * @typeParam Options - Options for the field.
  * @typeParam DefaultValue - Default value for the field.

@@ -13,7 +13,7 @@ import { documentToLinkField } from "./documentToLinkField";
  * @param linkToDocumentField - A document link field to resolve
  *
  * @returns Resolved URL
- * @see Prismic link resolver documentation: {@link https://prismic.io/docs/technologies/link-resolver-javascript}
+ * @see Prismic link resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
  */
 export type LinkResolverFunction<ReturnType = string> = (
 	linkToDocumentField: FilledContentRelationshipField,
@@ -47,8 +47,8 @@ type AsLinkReturnType<
  *   expected to use the `routes` options from the API
  *
  * @returns Resolved URL, null if provided link is empty
- * @see Prismic link resolver documentation: {@link https://prismic.io/docs/technologies/link-resolver-javascript}
- * @see Prismic API `routes` options documentation: {@link https://prismic.io/docs/technologies/route-resolver-nuxtjs}
+ * @see Prismic link resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
+ * @see Prismic API `routes` options documentation: {@link https://prismic.io/docs/route-resolver}
  */
 export const asLink = <
 	LinkResolverFunctionReturnType = string,

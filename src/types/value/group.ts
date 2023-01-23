@@ -3,7 +3,7 @@ import type { AnyRegularField, FieldState } from "./types";
 /**
  * A Group field.
  *
- * More details: {@link https://prismic.io/docs/core-concepts/group}
+ * More details: {@link https://prismic.io/docs/group}
  */
 export type GroupField<
 	Fields extends Record<string, AnyRegularField> = Record<

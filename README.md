@@ -69,8 +69,8 @@ For more clarity on this project and its structure you can also check out the de
 <!-- Links -->
 
 [prismic]: https://prismic.io
-[prismic-filters]: https://prismic.io/docs/technologies/rest-api-technical-reference
-[prismic-previews]: https://prismic.io/docs/core-concepts/previews
+[prismic-filters]: https://prismic.io/docs/rest-api-technical-reference#q
+[prismic-previews]: https://prismic.io/docs/guides/previews
 [prismic-docs]: https://prismic.io/docs/technical-reference/prismicio-client
 [changelog]: ./CHANGELOG.md
 [contributing]: ./CONTRIBUTING.md

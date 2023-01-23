@@ -28,7 +28,7 @@ import { LinkResolverFunction } from "./asLink";
  * converts the `children` argument to a single string rather than an array of
  * strings.
  *
- * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/technologies/templating-rich-text-and-title-fields-javascript}
+ * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
  */
 export type HTMLRichTextFunctionSerializer = (
 	type: Parameters<RichTextFunctionSerializer<string>>[0],
@@ -45,7 +45,7 @@ export type HTMLRichTextFunctionSerializer = (
  * converts the `children` property to a single string rather than an array of
  * strings.
  *
- * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/technologies/templating-rich-text-and-title-fields-javascript}
+ * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
  */
 export type HTMLRichTextMapSerializer = {
 	[P in keyof RichTextMapSerializer<string>]: (payload: {
@@ -206,7 +206,7 @@ type AsHTMLReturnType<Field extends RichTextField | null | undefined> =
  *   to the default serializer
  *
  * @returns HTML equivalent of the provided rich text or title field
- * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/technologies/templating-rich-text-and-title-fields-javascript}
+ * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
  */
 export const asHTML = <Field extends RichTextField | null | undefined>(
 	richTextField: Field,

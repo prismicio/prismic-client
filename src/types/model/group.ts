@@ -6,7 +6,7 @@ import type {
 /**
  * A Group Custom Type field.
  *
- * More details: {@link https://prismic.io/docs/core-concepts/group}
+ * More details: {@link https://prismic.io/docs/group}
  *
  * @typeParam Fields - A record of fields that can be repeated.
  */

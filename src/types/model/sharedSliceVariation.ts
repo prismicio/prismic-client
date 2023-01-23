@@ -3,10 +3,7 @@ import type { CustomTypeModelFieldForGroup } from "./types";
 /**
  * A Shared Slice variation.
  *
- * More details:
- *
- * - {@link https://prismic.io/docs/core-concepts/slices}
- * - {@link https://prismic.io/docs/core-concepts/reusing-slices}
+ * More details: {@link https://prismic.io/docs/slice}
  *
  * @typeParam PrimaryFields - A record of fields that cannnot be repeated.
  * @typeParam ItemFields - A record of fields that can be repeated.

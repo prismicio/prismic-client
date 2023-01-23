@@ -1,7 +1,7 @@
 /**
  * Metadata for a reference to a version of a repository's content.
  *
- * @see More details on refs: {@link https://prismic.io/docs/technologies/introduction-to-the-content-query-api#prismic-api-ref}
+ * @see More details on refs: {@link https://prismic.io/docs/api#refs-and-the-entry-api}
  */
 export interface Ref {
 	/**
@@ -30,7 +30,7 @@ export interface Ref {
 	 * If the ref is associated with a Release, this field contains the timestamp
 	 * at which the Release will be automatically published, if set.
 	 *
-	 * @see More details on Releases: {@link https://prismic.io/docs/core-concepts/draft-plan-and-schedule-content#releases}
+	 * @see More details on Releases: {@link https://prismic.io/docs/guides/draft-plan-and-schedule-content#releases}
 	 */
 	scheduledAt?: string;
 }

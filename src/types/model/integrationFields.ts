@@ -3,7 +3,7 @@ import type { CustomTypeModelFieldType } from "./types";
 /**
  * An Integration Fields Custom Type field.
  *
- * More details: {@link https://prismic.io/docs/core-concepts/integration-fields}
+ * More details: {@link https://prismic.io/docs/integration-fields}
  */
 export interface CustomTypeModelIntegrationFieldsField {
 	type: typeof CustomTypeModelFieldType.IntegrationFields;

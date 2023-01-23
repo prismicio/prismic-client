@@ -183,7 +183,7 @@ export type AnyOEmbed = PhotoOEmbed | VideoOEmbed | LinkOEmbed | RichOEmbed;
  *
  * @typeParam Data - Data provided by the URL's oEmbed provider.
  * @typeParam State - State of the field which determines its shape.
- * @see More details: {@link https://prismic.io/docs/core-concepts/embed}
+ * @see More details: {@link https://prismic.io/docs/embed}
  */
 export type EmbedField<
 	Data extends AnyOEmbed = AnyOEmbed & OEmbedExtra,

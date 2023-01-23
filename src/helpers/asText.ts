@@ -15,7 +15,7 @@ type AsTextReturnType<Field extends RichTextField | null | undefined> =
  * @param separator - Separator used to join each element, defaults to a space
  *
  * @returns Plain text equivalent of the provided rich text or title field
- * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/technologies/templating-rich-text-and-title-fields-javascript}
+ * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
  */
 export const asText = <Field extends RichTextField | null | undefined>(
 	richTextField: Field,

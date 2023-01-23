@@ -9,7 +9,7 @@ import type { Slice } from "./slice";
  * Slices to compose dynamic layouts for any page design, such as blog posts,
  * landing pages, case studies, and tutorials.
  *
- * @see More details: {@link https://prismic.io/docs/technologies/adding-the-slicezone-component-nextjs}
+ * @see More details: {@link https://prismic.io/docs/slice}
  */
 export type SliceZone<
 	Slices extends Slice | SharedSlice = Slice | SharedSlice,

@@ -228,7 +228,7 @@ export type ClientConfig = {
 	 * A list of Route Resolver objects that define how a document's `url` field
 	 * is resolved.
 	 *
-	 * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
+	 * {@link https://prismic.io/docs/route-resolver}
 	 */
 	routes?: NonNullable<BuildQueryURLArgs["routes"]>;
 
@@ -238,7 +238,7 @@ export type ClientConfig = {
 	 * link is a Link or Content Relationship field whose linked document has been
 	 * unpublished or deleted.
 	 *
-	 * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
+	 * {@link https://prismic.io/docs/route-resolver}
 	 */
 	brokenRoute?: NonNullable<BuildQueryURLArgs["brokenRoute"]>;
 
@@ -377,7 +377,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * A list of Route Resolver objects that define how a document's `url` field
 	 * is resolved.
 	 *
-	 * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
+	 * {@link https://prismic.io/docs/route-resolver}
 	 */
 	routes?: NonNullable<BuildQueryURLArgs["routes"]>;
 
@@ -387,7 +387,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * link is a Link or Content Relationship field whose linked document has been
 	 * unpublished or deleted.
 	 *
-	 * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
+	 * {@link https://prismic.io/docs/route-resolver}
 	 */
 	brokenRoute?: NonNullable<BuildQueryURLArgs["brokenRoute"]>;
 

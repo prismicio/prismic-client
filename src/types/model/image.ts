@@ -3,7 +3,7 @@ import type { CustomTypeModelFieldType } from "./types";
 /**
  * Dimension constraints for an Image Custom Type field.
  *
- * More details: {@link https://prismic.io/docs/core-concepts/image}
+ * More details: {@link https://prismic.io/docs/image}
  */
 export interface CustomTypeModelImageConstraint {
 	width?: number | null;
@@ -13,7 +13,7 @@ export interface CustomTypeModelImageConstraint {
 /**
  * A thumbnail for an Image Custom Type field.
  *
- * More details: {@link https://prismic.io/docs/core-concepts/image}
+ * More details: {@link https://prismic.io/docs/image}
  */
 export interface CustomTypeModelImageThumbnail<Name extends string = string>
 	extends CustomTypeModelImageConstraint {
@@ -23,7 +23,7 @@ export interface CustomTypeModelImageThumbnail<Name extends string = string>
 /**
  * An Image Custom Type field.
  *
- * More details: {@link https://prismic.io/docs/core-concepts/image}
+ * More details: {@link https://prismic.io/docs/image}
  */
 export interface CustomTypeModelImageField<
 	ThumbnailNames extends string = string,

@@ -4,10 +4,7 @@ import type { CustomTypeModelSliceType } from "./sliceZone";
 /**
  * A Prismic Shared Slice model.
  *
- * More details:
- *
- * - {@link https://prismic.io/docs/core-concepts/slices}
- * - {@link https://prismic.io/docs/core-concepts/reusing-slices}
+ * More details: {@link https://prismic.io/docs/slice}
  *
  * @typeParam Variation - A variation for the Shared Slice.
  */

@@ -5,7 +5,7 @@ import type { FieldState } from "./types";
  *
  * @typeParam Data - Data from the integrated API.
  * @typeParam State - State of the field which determines its shape.
- * @see More details: {@link https://prismic.io/docs/core-concepts/integration-fields-setup}
+ * @see More details: {@link https://prismic.io/docs/integration-fields}
  */
 export type IntegrationFields<
 	Data extends Record<string, unknown> = Record<string, unknown>,

@@ -5,7 +5,7 @@ import type { CustomTypeModelLegacySlice, CustomTypeModelSlice } from "./slice";
 /**
  * A Slice Zone Custom Type field.
  *
- * More details: {@link https://prismic.io/docs/core-concepts/slices}
+ * More details: {@link https://prismic.io/docs/slice}
  */
 export interface CustomTypeModelSliceZoneField<
 	Slices extends Record<
@@ -33,7 +33,7 @@ export interface CustomTypeModelSliceZoneField<
 /**
  * Label for a Slice.
  *
- * More details: {@link https://prismic.io/docs/core-concepts/slices}
+ * More details: {@link https://prismic.io/docs/slice}
  */
 export interface CustomTypeModelSliceLabel {
 	name: string;
@@ -43,7 +43,7 @@ export interface CustomTypeModelSliceLabel {
 /**
  * Type identifier for a Slice.
  *
- * More details: {@link https://prismic.io/docs/core-concepts/slices}
+ * More details: {@link https://prismic.io/docs/slice}
  */
 export const CustomTypeModelSliceType = {
 	Slice: "Slice",
@@ -53,10 +53,7 @@ export const CustomTypeModelSliceType = {
 /**
  * A Shared Slice for a Custom Type.
  *
- * More details:
- *
- * - {@link https://prismic.io/docs/core-concepts/slices}
- * - {@link https://prismic.io/docs/core-concepts/reusing-slices}
+ * More details: {@link https://prismic.io/docs/slice}
  */
 export interface CustomTypeModelSharedSlice {
 	type: typeof CustomTypeModelSliceType.SharedSlice;
