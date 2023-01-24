@@ -153,9 +153,14 @@ export interface QueryParams {
 	 * The `orderings` parameter orders the results by the specified field(s). You
 	 * can specify as many fields as you want.
 	 *
-	 * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#orderings}
+	 * {@link https://prismic.io/docs/rest-api-technical-reference#orderings}
+	 *
+	 * @remarks String and non-array values, while still working, are deprecated as
+	 * of `@prismicio/client@7.0.0`. Please migrate to the more explicit ordering
+	 * object array.
 	 */
-	orderings?: Ordering | string | (Ordering | string)[];
+	// TODO: Update TSDoc with deprecated API removal in v8
+	orderings?: Ordering[];
 
 	/**
 	 * The `routes` option allows you to define how a document's `url` field is
@@ -298,7 +303,10 @@ export const buildQueryURL = (
 		}
 
 		if (value != null) {
-			url.searchParams.set(name, castArray(value).join(","));
+			url.searchParams.set(
+				name,
+				castArray<string | number | Route | Ordering>(value).join(","),
+			);
 		}
 	}
 
