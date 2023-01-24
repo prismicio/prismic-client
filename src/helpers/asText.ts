@@ -9,13 +9,13 @@ type AsTextReturnType<Field extends RichTextField | null | undefined> =
 	Field extends RichTextField ? string : null;
 
 /**
- * Serializes a rich text or title field to a plain text string
+ * Serializes a Rich Text or Title field to a plain text string
  *
- * @param richTextField - A rich text or title field from Prismic
+ * @param richTextField - A Rich Text or Title field from Prismic
  * @param separator - Separator used to join each element, defaults to a space
  *
- * @returns Plain text equivalent of the provided rich text or title field
- * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
+ * @returns Plain text equivalent of the provided Rich Text or Title field
+ * @see Templating Rich Text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
  */
 export const asText = <Field extends RichTextField | null | undefined>(
 	richTextField: Field,
