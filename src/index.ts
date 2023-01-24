@@ -85,6 +85,7 @@ export type {
 	HTMLMapSerializer,
 	HTMLFunctionSerializer,
 };
+export type { HTMLRichTextSerializer } from "./helpers/asHTML";
 
 //=============================================================================
 // Errors - Custom errors for Prismic APIs.

@@ -106,6 +106,16 @@ type ExtractTextTypeGeneric<T> = T extends RichTextMapSerializerFunction<
 	: never;
 
 /**
+ * Serializes a node from a Rich Text or Title field with a map or a function to HTML
+ *
+ * @see {@link HTMLRichTextMapSerializer} and {@link HTMLRichTextFunctionSerializer}
+ * @see Templating Rich Text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
+ */
+export type HTMLRichTextSerializer =
+	| HTMLRichTextMapSerializer
+	| HTMLRichTextFunctionSerializer;
+
+/**
  * Creates a default HTML Rich Text Serializer with a given Link Resolver providing
  * sensible and safe defaults for every node type
  *
