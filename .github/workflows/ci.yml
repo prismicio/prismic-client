@@ -96,7 +96,7 @@ jobs:
           key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/package-lock.json')) }}
 
       - name: Overwrite TypeScript
-        run: npm install --save-dev typescript@${{ matrix.typescript }}
+        run: npm install --no-save typescript@${{ matrix.typescript }} && npx tsc --version
 
       - name: Types
         run: npm run types
