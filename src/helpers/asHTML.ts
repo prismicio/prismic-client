@@ -110,7 +110,10 @@ type ExtractTextTypeGeneric<T> = T extends RichTextMapSerializerFunction<
  * @internal
  */
 const createDefaultHTMLSerializer = (
-	linkResolver: LinkResolverFunction<string> | undefined | null,
+	linkResolver:
+		| LinkResolverFunction<string | null | undefined>
+		| undefined
+		| null,
 ): RichTextFunctionSerializer<string> => {
 	return (_type, node, text, children, _key) => {
 		switch (node.type) {
@@ -208,7 +211,7 @@ type AsHTMLReturnType<Field extends RichTextField | null | undefined> =
  */
 export const asHTML = <Field extends RichTextField | null | undefined>(
 	richTextField: Field,
-	linkResolver?: LinkResolverFunction<string> | null,
+	linkResolver?: LinkResolverFunction<string | null | undefined> | null,
 	htmlSerializer?: HTMLFunctionSerializer | HTMLMapSerializer | null,
 ): AsHTMLReturnType<Field> => {
 	if (richTextField) {

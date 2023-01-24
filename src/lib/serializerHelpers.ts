@@ -32,7 +32,10 @@ export const serializePreFormatted = (node: RTPreformattedNode): string => {
 };
 
 export const serializeImage = (
-	linkResolver: LinkResolverFunction<string> | undefined | null,
+	linkResolver:
+		| LinkResolverFunction<string | null | undefined>
+		| undefined
+		| null,
 	node: RTImageNode,
 ): string => {
 	let imageTag = `<img src="${node.url}" alt="${escapeHTML(node.alt)}"${
@@ -65,7 +68,10 @@ export const serializeEmbed = (node: RTEmbedNode): string => {
 };
 
 export const serializeHyperlink = (
-	linkResolver: LinkResolverFunction | undefined | null,
+	linkResolver:
+		| LinkResolverFunction<string | null | undefined>
+		| undefined
+		| null,
 	node: RTLinkNode,
 	children: string[],
 ): string => {
