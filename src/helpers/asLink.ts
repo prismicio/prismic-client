@@ -15,7 +15,7 @@ import { documentToLinkField } from "./documentToLinkField";
  * @returns Resolved URL
  * @see Prismic link resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
  */
-export type LinkResolverFunction<ReturnType = string> = (
+export type LinkResolverFunction<ReturnType = string | null | undefined> = (
 	linkToDocumentField: FilledContentRelationshipField,
 ) => ReturnType;
 
@@ -23,7 +23,7 @@ export type LinkResolverFunction<ReturnType = string> = (
  * The return type of `asLink()`.
  */
 type AsLinkReturnType<
-	LinkResolverFunctionReturnType = string,
+	LinkResolverFunctionReturnType = string | null | undefined,
 	Field extends LinkField | PrismicDocument | null | undefined =
 		| LinkField
 		| PrismicDocument
@@ -51,7 +51,7 @@ type AsLinkReturnType<
  * @see Prismic API `routes` options documentation: {@link https://prismic.io/docs/route-resolver}
  */
 export const asLink = <
-	LinkResolverFunctionReturnType = string,
+	LinkResolverFunctionReturnType = string | null | undefined,
 	Field extends LinkField | PrismicDocument | null | undefined =
 		| LinkField
 		| PrismicDocument

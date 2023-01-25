@@ -122,7 +122,10 @@ export type HTMLRichTextSerializer =
  * @internal
  */
 const createDefaultHTMLRichTextSerializer = (
-	linkResolver: LinkResolverFunction<string> | undefined | null,
+	linkResolver:
+		| LinkResolverFunction<string | null | undefined>
+		| undefined
+		| null,
 ): RichTextFunctionSerializer<string> => {
 	return (_type, node, text, children, _key) => {
 		switch (node.type) {
@@ -220,11 +223,8 @@ type AsHTMLReturnType<Field extends RichTextField | null | undefined> =
  */
 export const asHTML = <Field extends RichTextField | null | undefined>(
 	richTextField: Field,
-	linkResolver?: LinkResolverFunction<string> | null,
-	htmlRichTextSerializer?:
-		| HTMLRichTextFunctionSerializer
-		| HTMLRichTextMapSerializer
-		| null,
+	linkResolver?: LinkResolverFunction<string | null | undefined> | null,
+	htmlRichTextSerializer?: HTMLRichTextSerializer | null,
 ): AsHTMLReturnType<Field> => {
 	if (richTextField) {
 		let serializer: RichTextFunctionSerializer<string>;
