@@ -1,6 +1,6 @@
 import { expect, it } from "vitest";
 
-export const testPredicate = (
+export const testFilter = (
 	descriptionAndExpected: string,
 	actual: string,
 ): void => {

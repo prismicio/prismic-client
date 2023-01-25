@@ -9,12 +9,12 @@ type AsDateReturnType<
 > = Field extends DateField<"filled"> | TimestampField<"filled"> ? Date : null;
 
 /**
- * Transforms a date or timestamp field into a JavaScript Date object
+ * Transforms a Date or Timestamp field into a JavaScript Date object
  *
- * @param dateOrTimestampField - A date or timestamp field from Prismic
+ * @param dateOrTimestampField - A Date or Timestamp field from Prismic
  *
  * @returns A Date object, null if provided date is falsy
- * @see Templating date field from Prismic {@link https://prismic.io/docs/technologies/templating-date-field-javascript}
+ * @see Templating date field from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#date-and-timestamp}
  */
 export const asDate = <
 	Field extends DateField | TimestampField | null | undefined,

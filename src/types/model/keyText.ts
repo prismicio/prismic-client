@@ -3,7 +3,7 @@ import type { CustomTypeModelFieldType } from "./types";
 /**
  * A Key Text Custom Type field.
  *
- * More details: {@link https://prismic.io/docs/core-concepts/key-text}
+ * More details: {@link https://prismic.io/docs/key-text}
  */
 export interface CustomTypeModelKeyTextField {
 	type: typeof CustomTypeModelFieldType.Text;

@@ -3,7 +3,7 @@ import type { CustomTypeModelFieldType } from "./types";
 /**
  * A Date Custom Type field.
  *
- * More details: {@link https://prismic.io/docs/core-concepts/date}
+ * More details: {@link https://prismic.io/docs/date}
  */
 export interface CustomTypeModelDateField {
 	type: typeof CustomTypeModelFieldType.Date;

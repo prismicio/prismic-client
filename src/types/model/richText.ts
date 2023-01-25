@@ -3,7 +3,7 @@ import type { CustomTypeModelFieldType } from "./types";
 /**
  * A Rich Text Custom Type field.
  *
- * More details: {@link https://prismic.io/docs/core-concepts/rich-text-title}
+ * More details: {@link https://prismic.io/docs/rich-text-title}
  */
 export type CustomTypeModelRichTextField =
 	| CustomTypeModelRichTextMultiField
@@ -12,7 +12,7 @@ export type CustomTypeModelRichTextField =
 /**
  * A Rich Text Custom Type field which supports multiple blocks of content.
  *
- * More details: {@link https://prismic.io/docs/core-concepts/rich-text-title}
+ * More details: {@link https://prismic.io/docs/rich-text-title}
  */
 export interface CustomTypeModelRichTextMultiField {
 	type: typeof CustomTypeModelFieldType.StructuredText;
@@ -27,7 +27,7 @@ export interface CustomTypeModelRichTextMultiField {
 /**
  * A Rich Text Custom Type field which supports one block of content.
  *
- * More details: {@link https://prismic.io/docs/core-concepts/rich-text-title}
+ * More details: {@link https://prismic.io/docs/rich-text-title}
  */
 export interface CustomTypeModelRichTextSingleField {
 	type: typeof CustomTypeModelFieldType.StructuredText;

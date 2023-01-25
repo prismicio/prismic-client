@@ -4,7 +4,7 @@ import { Ref } from "./ref";
  * Repository metadata returned from the Prismic REST API V2. This data can be
  * fetched by sending a `GET` a request to a repository's `/api/v2` endpoint.
  *
- * @see More details on the `/api/v2` endpoint: {@link https://prismic.io/docs/technologies/introduction-to-the-content-query-api#the-api-endpoint-2}
+ * @see More details on the `/api/v2` endpoint: {@link https://prismic.io/docs/api#refs-and-the-entry-api}
  */
 export interface Repository {
 	/**

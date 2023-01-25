@@ -76,7 +76,7 @@ export interface PrismicDocumentHeader<TypeEnum = string, LangEnum = string> {
 /**
  * A Prismic document served through REST API v2.
  *
- * @see More details on Custom Types: {@link https://prismic.io/docs/technologies/introduction-to-the-content-query-api}
+ * @see More details on Custom Types: {@link https://prismic.io/docs/custom-types}
  */
 export interface PrismicDocument<
 	DataInterface extends Record<
@@ -97,8 +97,8 @@ export interface PrismicDocument<
  * A Prismic document served through REST API v2. Does not contain a UID (a
  * unique identifier).
  *
- * @see More details on Custom Types: {@link https://prismic.io/docs/technologies/introduction-to-the-content-query-api}
- * @see More details on the UID field: {@link https://prismic.io/docs/core-concepts/uid}
+ * @see More details on Custom Types: {@link https://prismic.io/docs/custom-types}
+ * @see More details on the UID field: {@link https://prismic.io/docs/uid}
  */
 export interface PrismicDocumentWithoutUID<
 	DataInterface extends Record<
@@ -123,8 +123,8 @@ export interface PrismicDocumentWithoutUID<
  * A Prismic document served through REST API v2. Contains a UID (a unique
  * identifier).
  *
- * @see More details on Custom Types: {@link https://prismic.io/docs/technologies/introduction-to-the-content-query-api}
- * @see More details on the UID field: {@link https://prismic.io/docs/core-concepts/uid}
+ * @see More details on Custom Types: {@link https://prismic.io/docs/custom-types}
+ * @see More details on the UID field: {@link https://prismic.io/docs/uid}
  */
 export interface PrismicDocumentWithUID<
 	DataInterface extends Record<

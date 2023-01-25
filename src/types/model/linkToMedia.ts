@@ -6,7 +6,7 @@ import type { CustomTypeModelLinkSelectType } from "./link";
  * A Link to Media Custom Type field.
  *
  * More details:
- * {@link https://prismic.io/docs/core-concepts/link-content-relationship}
+ * {@link https://prismic.io/docs/media}
  */
 export interface CustomTypeModelLinkToMediaField {
 	type: typeof CustomTypeModelFieldType.Link;

@@ -3,7 +3,7 @@ import type { AnyRegularField } from "./types";
 /**
  * Slice - Sections of your website
  *
- * @see More details: {@link https://prismic.io/docs/core-concepts/slices}
+ * @see More details: {@link https://prismic.io/docs/slice}
  */
 export interface Slice<
 	SliceType = string,

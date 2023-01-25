@@ -36,7 +36,7 @@ export interface EmptyImageFieldImage {
  * @typeParam ThumbnailNames - Names of thumbnails. If the field does not
  *   contain thumbnails, `never` can be used to "disable" thumbnail fields.
  * @typeParam State - State of the field which determines its shape.
- * @see Image field documentation: {@link https://prismic.io/docs/core-concepts/image}
+ * @see Image field documentation: {@link https://prismic.io/docs/image}
  */
 export type ImageField<
 	// `null` is included for backwards compatibility with older versions of

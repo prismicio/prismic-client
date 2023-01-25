@@ -3,7 +3,7 @@ import type { CustomTypeModelFieldType } from "./types";
 /**
  * A Number Custom Type field.
  *
- * More details: {@link https://prismic.io/docs/core-concepts/number}
+ * More details: {@link https://prismic.io/docs/number}
  */
 export interface CustomTypeModelNumberField {
 	type: typeof CustomTypeModelFieldType.Number;

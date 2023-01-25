@@ -1,28 +1,28 @@
-import { testPredicate } from "./__testutils__/testPredicate";
+import { testFilter } from "./__testutils__/testFilter";
 
 import * as prismic from "../src";
 
-testPredicate(
+testFilter(
 	'[not(document.type, "product")]',
-	prismic.predicate.not("document.type", "product"),
+	prismic.filter.not("document.type", "product"),
 );
 
-testPredicate(
+testFilter(
 	'[not(document.tags, ["Macaron", "Cupcake"])]',
-	prismic.predicate.not("document.tags", ["Macaron", "Cupcake"]),
+	prismic.filter.not("document.tags", ["Macaron", "Cupcake"]),
 );
 
-testPredicate(
+testFilter(
 	"[not(my.product.price, 50)]",
-	prismic.predicate.not("my.product.price", 50),
+	prismic.filter.not("my.product.price", 50),
 );
 
-testPredicate(
+testFilter(
 	"[not(my.product.out_of_stock, true)]",
-	prismic.predicate.not("my.product.out_of_stock", true),
+	prismic.filter.not("my.product.out_of_stock", true),
 );
 
-testPredicate(
+testFilter(
 	"[not(my.product.restock_date, 1600000000000)]",
-	prismic.predicate.not("my.product.restock_date", new Date(1600000000000)),
+	prismic.filter.not("my.product.restock_date", new Date(1600000000000)),
 );
