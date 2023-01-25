@@ -6,7 +6,7 @@ import type { CustomTypeModelSliceType } from "./sliceZone";
 /**
  * A Slice for a Custom Type.
  *
- * More details: {@link https://prismic.io/docs/core-concepts/slices}
+ * More details: {@link https://prismic.io/docs/slice}
  *
  * @typeParam NonRepeatFields - A record of fields that cannnot be repeated.
  * @typeParam RepeatFields - A record of fields that can be repeated.
@@ -35,7 +35,7 @@ export interface CustomTypeModelSlice<
 /**
  * Display type for a Slice.
  *
- * More details: {@link https://prismic.io/docs/core-concepts/slices}
+ * More details: {@link https://prismic.io/docs/slice}
  */
 export const CustomTypeModelSliceDisplay = {
 	List: "list",

@@ -6,14 +6,14 @@ import type { FilledLinkToMediaField } from "../types/value/linkToMedia";
 import { documentToLinkField } from "./documentToLinkField";
 
 /**
- * Resolves a link to a Prismic document to a URL
+ * Resolves a Link to a Prismic document to a URL
  *
  * @typeParam ReturnType - Return type of your link resolver function, useful if
  *   you prefer to return a complex object
- * @param linkToDocumentField - A document link field to resolve
+ * @param linkToDocumentField - A document Link Field to resolve
  *
  * @returns Resolved URL
- * @see Prismic link resolver documentation: {@link https://prismic.io/docs/technologies/link-resolver-javascript}
+ * @see Prismic link resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
  */
 export type LinkResolverFunction<ReturnType = string | null | undefined> = (
 	linkToDocumentField: FilledContentRelationshipField,
@@ -38,17 +38,17 @@ type AsLinkReturnType<
 	: null;
 
 /**
- * Resolves any type of link field or document to a URL
+ * Resolves any type of Link Field or document to a URL
  *
  * @typeParam LinkResolverFunctionReturnType - Link resolver function return
  *   type
- * @param linkFieldOrDocument - Any kind of link field or a document to resolve
+ * @param linkFieldOrDocument - Any kind of Link Field or a document to resolve
  * @param linkResolver - An optional link resolver function, without it you're
  *   expected to use the `routes` options from the API
  *
  * @returns Resolved URL, null if provided link is empty
- * @see Prismic link resolver documentation: {@link https://prismic.io/docs/technologies/link-resolver-javascript}
- * @see Prismic API `routes` options documentation: {@link https://prismic.io/docs/technologies/route-resolver-nuxtjs}
+ * @see Prismic link resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
+ * @see Prismic API `routes` options documentation: {@link https://prismic.io/docs/route-resolver}
  */
 export const asLink = <
 	LinkResolverFunctionReturnType = string | null | undefined,
@@ -65,7 +65,7 @@ export const asLink = <
 		return null as AsLinkReturnType<LinkResolverFunctionReturnType, Field>;
 	}
 
-	// Converts document to link field if needed
+	// Converts document to Link Field if needed
 	const linkField =
 		// prettier-ignore
 		(

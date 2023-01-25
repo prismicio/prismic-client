@@ -6,7 +6,7 @@ export type WebhookBody = WebhookBodyAPIUpdate | WebhookBodyTestTrigger;
 /**
  * Types of Prismic Webhooks.
  *
- * @see More details: {@link https://prismic.io/docs/core-concepts/webhooks}
+ * @see More details: {@link https://prismic.io/docs/webhooks}
  */
 export const WebhookType = {
 	APIUpdate: "api-update",

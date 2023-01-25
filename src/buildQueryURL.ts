@@ -17,7 +17,7 @@ type ValueOf<
 /**
  * An `orderings` parameter that orders the results by the specified field.
  *
- * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#orderings}
+ * {@link https://prismic.io/docs/rest-api-technical-reference#orderings}
  */
 export interface Ordering {
 	field: string;
@@ -26,6 +26,8 @@ export interface Ordering {
 
 /**
  * A `routes` parameter that determines how a document's URL field is resolved.
+ *
+ * {@link https://prismic.io/docs/route-resolver}
  *
  * @example With a document's UID field.
  *
@@ -47,8 +49,6 @@ export interface Ordering {
  * 	}
  * }
  * ```
- *
- * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
  */
 export interface Route {
 	/**
@@ -82,14 +82,14 @@ export interface Route {
 /**
  * Parameters for the Prismic REST API V2.
  *
- * {@link https://prismic.io/docs/technologies/introduction-to-the-content-query-api}
+ * {@link https://prismic.io/docs/api}
  */
 export interface QueryParams {
 	/**
 	 * The secure token for accessing the API (only needed if your repository is
 	 * set to private).
 	 *
-	 * {@link https://user-guides.prismic.io/en/articles/1036153-generating-an-access-token}
+	 * {@link https://prismic.io/docs/access-token}
 	 */
 	accessToken?: string;
 
@@ -97,14 +97,14 @@ export interface QueryParams {
 	 * The `pageSize` parameter defines the maximum number of documents that the
 	 * API will return for your query.
 	 *
-	 * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#pagesize}
+	 * {@link https://prismic.io/docs/rest-api-technical-reference#pagesize}
 	 */
 	pageSize?: number;
 
 	/**
 	 * The `page` parameter defines the pagination for the result of your query.
 	 *
-	 * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#page}
+	 * {@link https://prismic.io/docs/rest-api-technical-reference#page}
 	 */
 	page?: number;
 
@@ -113,7 +113,7 @@ export interface QueryParams {
 	 * remove all the documents except for those after the specified document in
 	 * the list.
 	 *
-	 * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#after}
+	 * {@link https://prismic.io/docs/rest-api-technical-reference#after}
 	 */
 	after?: string;
 
@@ -121,7 +121,7 @@ export interface QueryParams {
 	 * The `fetch` parameter is used to make queries faster by only retrieving the
 	 * specified field(s).
 	 *
-	 * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#fetch}
+	 * {@link https://prismic.io/docs/rest-api-technical-reference#fetch}
 	 */
 	fetch?: string | string[];
 
@@ -129,7 +129,7 @@ export interface QueryParams {
 	 * The `fetchLinks` parameter allows you to retrieve a specific content field
 	 * from a linked document and add it to the document response object.
 	 *
-	 * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#fetchlinks}
+	 * {@link https://prismic.io/docs/rest-api-technical-reference#fetchlinks}
 	 */
 	fetchLinks?: string | string[];
 
@@ -138,14 +138,14 @@ export interface QueryParams {
 	 * and what content to retrieve from Linked Documents / Content
 	 * Relationships.
 	 *
-	 * {@link https://prismic.io/docs/technologies/graphquery-rest-api}
+	 * {@link https://prismic.io/docs/graphquery-rest-api}
 	 */
 	graphQuery?: string;
 
 	/**
 	 * The `lang` option defines the language code for the results of your query.
 	 *
-	 * {@link https://prismic.io/docs/technologies/search-parameters-reference-rest-api#lang}
+	 * {@link https://prismic.io/docs/rest-api-technical-reference#lang}
 	 */
 	lang?: string;
 
@@ -166,7 +166,7 @@ export interface QueryParams {
 	 * The `routes` option allows you to define how a document's `url` field is
 	 * resolved.
 	 *
-	 * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
+	 * {@link https://prismic.io/docs/route-resolver}
 	 */
 	routes?: Route | string | (Route | string)[];
 
@@ -176,7 +176,7 @@ export interface QueryParams {
 	 * link is a Link or Content Relationship field whose linked document has been
 	 * unpublished or deleted.
 	 *
-	 * {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver#route-resolver}
+	 * {@link https://prismic.io/docs/route-resolver}
 	 */
 	brokenRoute?: string;
 }
@@ -188,21 +188,26 @@ type BuildQueryURLParams = {
 	/**
 	 * Ref used to query documents.
 	 *
-	 * {@link https://prismic.io/docs/technologies/introduction-to-the-content-query-api#prismic-api-ref}
+	 * {@link https://prismic.io/docs/api#refs-and-the-entry-api}
 	 */
 	ref: string;
 
 	/**
 	 * Ref used to populate Integration Fields with the latest content.
 	 *
-	 * {@link https://prismic.io/docs/core-concepts/integration-fields}
+	 * {@link https://prismic.io/docs/integration-fields}
 	 */
 	integrationFieldsRef?: string;
 
 	/**
-	 * One or more predicates to filter documents for the query.
+	 * One or more filters to filter documents for the query.
 	 *
-	 * {@link https://prismic.io/docs/technologies/query-predicates-reference-rest-api}
+	 * {@link https://prismic.io/docs/rest-api-technical-reference#q}
+	 */
+	filters?: string | string[];
+
+	/**
+	 * @deprecated Renamed to `filters`
 	 */
 	predicates?: string | string[];
 };
@@ -256,8 +261,8 @@ export type BuildQueryURLArgs = QueryParams & BuildQueryURLParams;
  *
  * Type the JSON response with `Query`.
  *
- * {@link https://prismic.io/docs/technologies/introduction-to-the-content-query-api#prismic-api-ref}
- * {@link https://prismic.io/docs/technologies/query-predicates-reference-rest-api}
+ * {@link https://prismic.io/docs/api#refs-and-the-entry-api}
+ * {@link https://prismic.io/docs/rest-api-technical-reference}
  *
  * @param endpoint - URL to the repository's REST API V2.
  * @param args - Arguments to filter and scope the query.
@@ -268,10 +273,17 @@ export const buildQueryURL = (
 	endpoint: string,
 	args: BuildQueryURLArgs,
 ): string => {
-	const { predicates, ...params } = args;
+	const { filters, predicates, ...params } = args;
 
 	const url = new URL(`documents/search`, `${endpoint}/`);
 
+	if (filters) {
+		for (const filter of castArray(filters)) {
+			url.searchParams.append("q", `[${filter}]`);
+		}
+	}
+
+	// TODO: Remove when we remove support for deprecated `predicates` argument.
 	if (predicates) {
 		for (const predicate of castArray(predicates)) {
 			url.searchParams.append("q", `[${predicate}]`);

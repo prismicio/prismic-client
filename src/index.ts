@@ -1,3 +1,11 @@
+// Use for deprecations.
+import type {
+	HTMLRichTextFunctionSerializer,
+	HTMLRichTextMapSerializer,
+} from "./helpers/asHTML";
+
+import { filter } from "./filter";
+
 //=============================================================================
 // Client - Query content from Prismic.
 //=============================================================================
@@ -13,8 +21,13 @@ export { isRepositoryName } from "./isRepositoryName";
 export { isRepositoryEndpoint } from "./isRepositoryEndpoint";
 export { buildQueryURL } from "./buildQueryURL";
 
-// Query predicates API.
-export { predicate } from "./predicate";
+// Query filters API.
+/**
+ * @deprecated Renamed to `filter`
+ */
+// TODO: Remove when we remove support for deprecated `predicate` export.
+const predicate = filter;
+export { filter, predicate };
 
 // A collection of well-known cookie names shared between Prismic libraries and systems.
 export * as cookie from "./cookie";
@@ -57,10 +70,22 @@ export { documentToLinkField } from "./helpers/documentToLinkField";
 export { Element } from "@prismicio/richtext";
 
 export type { LinkResolverFunction } from "./helpers/asLink";
+
+/**
+ * @deprecated Renamed to `HTMLRichTextMapSerializer`
+ */
+type HTMLMapSerializer = HTMLRichTextMapSerializer;
+/**
+ * @deprecated Renamed to `HTMLRichTextFunctionSerializer`
+ */
+type HTMLFunctionSerializer = HTMLRichTextFunctionSerializer;
 export type {
+	HTMLRichTextMapSerializer,
+	HTMLRichTextFunctionSerializer,
 	HTMLMapSerializer,
 	HTMLFunctionSerializer,
-} from "./helpers/asHTML";
+};
+export type { HTMLRichTextSerializer } from "./helpers/asHTML";
 
 //=============================================================================
 // Errors - Custom errors for Prismic APIs.

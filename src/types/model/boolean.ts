@@ -3,7 +3,7 @@ import type { CustomTypeModelFieldType } from "./types";
 /**
  * A Boolean Custom Type field.
  *
- * More details: {@link https://prismic.io/docs/core-concepts/boolean}
+ * More details: {@link https://prismic.io/docs/boolean}
  */
 export interface CustomTypeModelBooleanField {
 	type: typeof CustomTypeModelFieldType.Boolean;

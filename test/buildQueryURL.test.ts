@@ -10,7 +10,19 @@ it("includes ref", () => {
 	);
 });
 
-it("supports single predicate", () => {
+it("supports single filter", () => {
+	expect(
+		decodeURIComponent(
+			prismic.buildQueryURL(endpoint, {
+				ref: "ref",
+				filters: prismic.filter.has("my.document.title"),
+			}),
+		),
+	).toBe(
+		"https://qwerty.cdn.prismic.io/api/v2/documents/search?q=[[has(my.document.title)]]&ref=ref",
+	);
+
+	// TODO: Remove when we remove support for deprecated `predicates` argument.
 	expect(
 		decodeURIComponent(
 			prismic.buildQueryURL(endpoint, {
@@ -23,7 +35,22 @@ it("supports single predicate", () => {
 	);
 });
 
-it("supports multiple predicates", () => {
+it("supports multiple filters", () => {
+	expect(
+		decodeURIComponent(
+			prismic.buildQueryURL(endpoint, {
+				ref: "ref",
+				filters: [
+					prismic.filter.has("my.document.title"),
+					prismic.filter.has("my.document.subtitle"),
+				],
+			}),
+		),
+	).toBe(
+		"https://qwerty.cdn.prismic.io/api/v2/documents/search?q=[[has(my.document.title)]]&q=[[has(my.document.subtitle)]]&ref=ref",
+	);
+
+	// TODO: Remove when we remove support for deprecated `predicates` argument.
 	expect(
 		decodeURIComponent(
 			prismic.buildQueryURL(endpoint, {

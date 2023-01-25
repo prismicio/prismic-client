@@ -6,6 +6,6 @@ import { Ref } from "./ref";
  * @remarks
  * This is an alias for `Ref`.
  * @see {@link Ref}
- * @see More details on Releases: {@link https://prismic.io/docs/core-concepts/draft-plan-and-schedule-content#releases}
+ * @see More details on Releases: {@link https://prismic.io/docs/guides/draft-plan-and-schedule-content#releases}
  */
 export type Release = Ref;

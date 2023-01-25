@@ -1,6 +1,6 @@
 /**
  * A Boolean field.
  *
- * @see More details: {@link https://prismic.io/docs/core-concepts/boolean}
+ * @see More details: {@link https://prismic.io/docs/boolean}
  */
 export type BooleanField = boolean;

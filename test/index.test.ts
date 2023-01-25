@@ -92,3 +92,8 @@ it("webhook type mapping", () => {
 		TestTrigger: "test-trigger",
 	});
 });
+
+// TODO: Remove when we remove support for deprecated `predicate` export.
+it("predicate is a temporary alias for filter", () => {
+	expect(prismic.predicate).toStrictEqual(prismic.filter);
+});

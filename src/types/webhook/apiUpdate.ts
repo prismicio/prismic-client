@@ -3,7 +3,7 @@ import { WebhookBodyBase, WebhookType } from "./types";
 /**
  * Webhook payload sent when a Prismic repository content is updated.
  *
- * @see More details: {@link https://prismic.io/docs/core-concepts/webhooks}
+ * @see More details: {@link https://prismic.io/docs/webhooks}
  */
 export interface WebhookBodyAPIUpdate extends WebhookBodyBase {
 	type: typeof WebhookType.APIUpdate;
@@ -27,7 +27,7 @@ interface WebhookBodyAPIUpdateOperations<T> {
 /**
  * Metadata representing a mask (also called a Custom Type).
  *
- * @see More details: {@link https://prismic.io/docs/core-concepts/custom-types}
+ * @see More details: {@link https://prismic.io/docs/custom-types}
  */
 interface WebhookBodyAPIUpdateMask {
 	id: string;
@@ -37,7 +37,7 @@ interface WebhookBodyAPIUpdateMask {
 /**
  * Metadata representing a tag.
  *
- * @see More details: {@link https://prismic.io/docs/core-concepts/document-tags}
+ * @see More details: {@link https://prismic.io/docs/guides/document-tags}
  */
 interface WebhookBodyAPIUpdateTag {
 	id: string;
@@ -46,7 +46,7 @@ interface WebhookBodyAPIUpdateTag {
 /**
  * Metadata representing a Release.
  *
- * @see More details: {@link https://prismic.io/docs/core-concepts/draft-plan-and-schedule-content#releases}
+ * @see More details: {@link https://prismic.io/docs/guides/draft-plan-and-schedule-content#releases}
  */
 interface WebhookBodyAPIUpdateRelease {
 	id: string;

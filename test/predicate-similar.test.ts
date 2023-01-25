@@ -1,8 +1,8 @@
-import { testPredicate } from "./__testutils__/testPredicate";
+import { testFilter } from "./__testutils__/testFilter";
 
 import * as prismic from "../src";
 
-testPredicate(
+testFilter(
 	'[similar("VkRmhykAAFA6PoBj", 10)]',
-	prismic.predicate.similar("VkRmhykAAFA6PoBj", 10),
+	prismic.filter.similar("VkRmhykAAFA6PoBj", 10),
 );

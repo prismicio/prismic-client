@@ -8,7 +8,7 @@ import type { FilledLinkToMediaField } from "./linkToMedia";
 /**
  * Types for RichTextNodes
  *
- * @see More details: {@link https://prismic.io/docs/core-concepts/rich-text-title}
+ * @see More details: {@link https://prismic.io/docs/rich-text-title}
  */
 export const RichTextNodeType = {
 	heading1: "heading1",
@@ -179,7 +179,7 @@ export type RTEmbedNode = {
 /**
  * Rich Text `a` node
  *
- * @see More details: {@link https://prismic.io/docs/core-concepts/edit-rich-text#add-links}
+ * @see More details: {@link https://prismic.io/docs/rich-text-title#elements-and-styles}
  */
 export interface RTLinkNode extends RTSpanNodeBase {
 	type: typeof RichTextNodeType.hyperlink;
@@ -281,7 +281,7 @@ export type RTAnyNode = RTBlockNode | RTInlineNode | RTSpanNode;
 /**
  * Rich Text Field
  *
- * @see Rich Text field documentation: {@link https://prismic.io/docs/core-concepts/rich-text-title}
+ * @see Rich Text field documentation: {@link https://prismic.io/docs/rich-text-title}
  */
 export type RichTextField<State extends FieldState = FieldState> =
 	State extends "empty" ? [] : [RTNode, ...RTNode[]];

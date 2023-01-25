@@ -12,7 +12,7 @@ import type {
 /**
  * Title Field
  *
- * @see Title field documentation: {@link https://prismic.io/docs/core-concepts/rich-text-title}
+ * @see Title field documentation: {@link https://prismic.io/docs/rich-text-title}
  */
 export type TitleField<State extends FieldState = FieldState> =
 	State extends "empty"
