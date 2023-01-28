@@ -18,7 +18,7 @@ interface WithFilters {
 export const appendFilters = <T extends WithFilters>(
 	objWithFilters: T = {} as T,
 	filters: string | string[],
-) => {
+): T & { filters: string[] } => {
 	return {
 		...objWithFilters,
 		filters: [...(objWithFilters.filters || []), ...castArray(filters)],

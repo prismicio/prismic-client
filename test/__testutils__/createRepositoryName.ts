@@ -2,7 +2,7 @@ import { expect } from "vitest";
 
 import * as crypto from "node:crypto";
 
-export const createRepositoryName = () => {
+export const createRepositoryName = (): string => {
 	const seed = expect.getState().currentTestName;
 	if (!seed) {
 		throw new Error(

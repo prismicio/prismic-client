@@ -15,7 +15,7 @@ type TestAbortableMethodArgs = {
 export const testAbortableMethod = (
 	description: string,
 	args: TestAbortableMethodArgs,
-) => {
+): void => {
 	it.concurrent(description, async (ctx) => {
 		const controller = new AbortController();
 		controller.abort();

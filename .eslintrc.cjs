@@ -32,6 +32,7 @@ module.exports = {
 			},
 		],
 		"@typescript-eslint/no-var-requires": "off",
+		"@typescript-eslint/explicit-module-boundary-types": "error",
 		"tsdoc/syntax": "warn",
 	},
 };

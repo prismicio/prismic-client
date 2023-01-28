@@ -27,7 +27,7 @@ export const testAnyGetMethodFactory = (
 	description: string,
 	args: TestGetAllMethodArgs,
 	mode: "get" | "getFirst" | "getAll",
-) => {
+): void => {
 	it.concurrent(description, async (ctx) => {
 		const queryResponses = createPagedQueryResponses({
 			ctx,
@@ -73,14 +73,14 @@ export const testAnyGetMethodFactory = (
 export const testGetMethod = (
 	description: string,
 	args: TestGetAllMethodArgs<prismic.Query>,
-) => {
+): void => {
 	testAnyGetMethodFactory(description, args, "get");
 };
 
 export const testGetFirstMethod = (
 	description: string,
 	args: TestGetAllMethodArgs<prismic.PrismicDocument>,
-) => {
+): void => {
 	testAnyGetMethodFactory(
 		description,
 		{
@@ -97,7 +97,7 @@ export const testGetFirstMethod = (
 export const testGetAllMethod = (
 	description: string,
 	args: TestGetAllMethodArgs<prismic.PrismicDocument[]>,
-) => {
+): void => {
 	testAnyGetMethodFactory(
 		description,
 		{
