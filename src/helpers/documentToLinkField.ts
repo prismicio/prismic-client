@@ -27,11 +27,11 @@ export const documentToLinkField = <
 	return {
 		link_type: LinkType.Document,
 		id: prismicDocument.id,
-		uid: prismicDocument.uid ?? undefined,
+		uid: prismicDocument.uid || undefined,
 		type: prismicDocument.type,
 		tags: prismicDocument.tags,
 		lang: prismicDocument.lang,
-		url: prismicDocument.url ?? undefined,
+		url: prismicDocument.url == null ? undefined : prismicDocument.url,
 		slug: prismicDocument.slugs?.[0], // Slug field is not available with GraphQl
 		// The REST API does not include a `data` property if the data
 		// object is empty.
