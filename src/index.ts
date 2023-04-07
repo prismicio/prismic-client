@@ -21,6 +21,9 @@ export { isRepositoryName } from "./isRepositoryName";
 export { isRepositoryEndpoint } from "./isRepositoryEndpoint";
 export { buildQueryURL } from "./buildQueryURL";
 
+// Toolbar helpers.
+export { getToolbarSrc } from "./getToolbarSrc";
+
 // Query filters API.
 /**
  * @deprecated Renamed to `filter`
