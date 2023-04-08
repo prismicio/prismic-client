@@ -22,7 +22,7 @@ type AsLinkAttrsReturnType<
 	| FilledContentRelationshipField
 	| PrismicDocument
 	? {
-			href: LinkResolverFunctionReturnType | undefined;
+			href: NonNullable<LinkResolverFunctionReturnType> | undefined;
 			target?: string;
 			rel?: string;
 	  }
@@ -74,7 +74,9 @@ export const asLinkAttrs = <
 		const href = asLink(linkFieldOrDocument, linkResolver);
 
 		return {
-			href: href == null ? undefined : href,
+			href: (href == null
+				? undefined
+				: href) as AsLinkAttrsReturnType<LinkResolverFunctionReturnType>["href"],
 			target,
 			rel: target === "_blank" ? "noopener noreferrer" : undefined,
 		};

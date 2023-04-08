@@ -34,7 +34,7 @@ type AsLinkReturnType<
 	| FilledLinkToMediaField
 	| FilledContentRelationshipField
 	| PrismicDocument
-	? LinkResolverFunctionReturnType | null
+	? LinkResolverFunctionReturnType | string | null
 	: null;
 
 /**
