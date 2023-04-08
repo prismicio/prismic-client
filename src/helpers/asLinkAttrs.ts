@@ -6,6 +6,9 @@ import type { FilledLinkToMediaField } from "../types/value/linkToMedia";
 import { LinkResolverFunction, asLink } from "./asLink";
 import { link as isFilledLink } from "./isFilled";
 
+/**
+ * The return type of `asLinkAttrs()`.
+ */
 type AsLinkAttrsReturnType<
 	LinkResolverFunctionReturnType = ReturnType<LinkResolverFunction>,
 	Field extends LinkField | PrismicDocument | null | undefined =
@@ -29,6 +32,21 @@ type AsLinkAttrsReturnType<
 			rel?: undefined;
 	  };
 
+/**
+ * Resolves any type of Link field or Prismic document to a set of link attributes. The attributes are designed to be passed to link HTML elements, like `<a>`.
+ *
+ * If a Link field is configured to open its link in a new tab, `rel` is returned as `"noopener noreferrer"`.
+ *
+ * @typeParam LinkResolverFunctionReturnType - Link Resolver function return
+ *   type
+ * @param linkFieldOrDocument - Any kind of Link field or a document to resolve
+ * @param linkResolver - An optional Link Resolver function. Without it, you are
+ *   expected to use the `routes` options from the API
+ *
+ * @returns Resolved set of link attributes or, if the provided Link field or document is empty, and empty object
+ * @see Prismic Link Resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
+ * @see Prismic API `routes` options documentation: {@link https://prismic.io/docs/route-resolver}
+ */
 export const asLinkAttrs = <
 	LinkResolverFunctionReturnType = ReturnType<LinkResolverFunction>,
 	Field extends LinkField | PrismicDocument | null | undefined =
