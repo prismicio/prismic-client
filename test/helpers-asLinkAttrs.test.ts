@@ -5,12 +5,12 @@ import { linkResolver } from "./__fixtures__/linkResolver";
 
 import { LinkType, asLinkAttrs } from "../src";
 
-it("returns null for nullish inputs", () => {
+it("returns empty object for nullish inputs", () => {
 	expect(asLinkAttrs(null, linkResolver)).toEqual({});
 	expect(asLinkAttrs(undefined, linkResolver)).toEqual({});
 });
 
-it("returns null when link to document field is empty", () => {
+it("returns empty object when link to document field is empty", () => {
 	const field = {
 		link_type: LinkType.Document,
 	};
@@ -18,7 +18,7 @@ it("returns null when link to document field is empty", () => {
 	expect(asLinkAttrs(field, linkResolver)).toEqual({});
 });
 
-it("returns null when link to media field is empty", () => {
+it("returns empty object when link to media field is empty", () => {
 	const field = {
 		link_type: LinkType.Media,
 	};
@@ -26,7 +26,7 @@ it("returns null when link to media field is empty", () => {
 	expect(asLinkAttrs(field, linkResolver)).toEqual({});
 });
 
-it("returns null when link field is empty", () => {
+it("returns empty object when link field is empty", () => {
 	const field = {
 		link_type: LinkType.Any,
 	};
@@ -48,7 +48,7 @@ it("resolves a link to document field without Route Resolver", () => {
 
 	expect(
 		asLinkAttrs(field),
-		"returns null if both Link Resolver and Route Resolver are not used",
+		"returns empty object if both Link Resolver and Route Resolver are not used",
 	).toEqual({});
 	expect(
 		asLinkAttrs(field, linkResolver),
@@ -60,11 +60,11 @@ it("resolves a link to document field without Route Resolver", () => {
 	});
 	expect(
 		asLinkAttrs(field, () => undefined),
-		"returns null if Link Resolver returns undefined",
+		"returns empty object if Link Resolver returns undefined",
 	).toEqual({});
 	expect(
 		asLinkAttrs(field, () => null),
-		"returns null if Link Resolver returns null",
+		"returns empty object if Link Resolver returns null",
 	).toEqual({});
 });
 
@@ -115,7 +115,7 @@ it("resolves a link to document field with Route Resolver", () => {
 	});
 });
 
-it("returns null when given a document field and linkResolver is not provided ", () => {
+it("returns empty object when given a document field and linkResolver is not provided ", () => {
 	const field = {
 		id: "XvoFFREAAM0WGBng",
 		link_type: LinkType.Document,
