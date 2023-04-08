@@ -59,6 +59,7 @@ export type {
 // Primary Helpers API.
 export { asDate } from "./helpers/asDate";
 export { asLink } from "./helpers/asLink";
+export { asLinkAttrs } from "./helpers/asLinkAttrs";
 export { asText } from "./helpers/asText";
 export { asHTML } from "./helpers/asHTML";
 export { asImageSrc } from "./helpers/asImageSrc";
