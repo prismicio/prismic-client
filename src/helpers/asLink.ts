@@ -42,6 +42,7 @@ export type AsLinkReturnType<
  *
  * @typeParam LinkResolverFunctionReturnType - Link Resolver function return
  *   type
+ * @typeParam Field - Link field or Prismic document to resolve to a URL
  * @param linkFieldOrDocument - Any kind of Link field or a document to resolve
  * @param linkResolver - An optional Link Resolver function. Without it, you are
  *   expected to use the `routes` options from the API

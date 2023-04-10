@@ -68,10 +68,11 @@ type AsLinkAttrsReturnType<
 /**
  * Resolves any type of Link field or Prismic document to a set of link attributes. The attributes are designed to be passed to link HTML elements, like `<a>`.
  *
- * If a Link field is configured to open its link in a new tab, `rel` is returned as `"noopener noreferrer"`.
+ * If a resolved URL is external (i.e. starts with a protocol like `https://`), `rel` is returned as `"noreferrer"`.
  *
  * @typeParam LinkResolverFunctionReturnType - Link Resolver function return
  *   type
+ * @typeParam Field - Link field or Prismic document to resolve to link attributes
  * @param linkFieldOrDocument - Any kind of Link field or a document to resolve
  * @param config - Configuration that determines the output of `asLinkAttrs()`
  *
@@ -116,9 +117,7 @@ export const asLinkAttrs = <
 			: undefined;
 
 		return {
-			href: (href == null
-				? undefined
-				: href) as AsLinkAttrsReturnType<LinkResolverFunctionReturnType>["href"],
+			href,
 			target,
 			rel: rel == null ? undefined : rel,
 		};
