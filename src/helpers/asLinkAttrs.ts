@@ -1,10 +1,41 @@
+import { isInternalURL } from "../lib/isInternalURL";
+
 import type { FilledContentRelationshipField } from "../types/value/contentRelationship";
 import type { PrismicDocument } from "../types/value/document";
 import { FilledLinkToWebField, LinkField } from "../types/value/link";
 import type { FilledLinkToMediaField } from "../types/value/linkToMedia";
 
-import { LinkResolverFunction, asLink } from "./asLink";
+import { AsLinkReturnType, LinkResolverFunction, asLink } from "./asLink";
 import { link as isFilledLink } from "./isFilled";
+
+type AsLinkAttrsConfigRelArgs<
+	LinkResolverFunctionReturnType = ReturnType<LinkResolverFunction>,
+	Field extends LinkField | PrismicDocument | null | undefined =
+		| LinkField
+		| PrismicDocument
+		| null
+		| undefined,
+> = {
+	href:
+		| NonNullable<AsLinkReturnType<LinkResolverFunctionReturnType, Field>>
+		| undefined;
+	isExternal: boolean;
+	target?: string;
+};
+
+type AsLinkAttrsConfig<
+	LinkResolverFunctionReturnType = ReturnType<LinkResolverFunction>,
+	Field extends LinkField | PrismicDocument | null | undefined =
+		| LinkField
+		| PrismicDocument
+		| null
+		| undefined,
+> = {
+	linkResolver?: LinkResolverFunction<LinkResolverFunctionReturnType>;
+	rel?: (
+		args: AsLinkAttrsConfigRelArgs<LinkResolverFunctionReturnType, Field>,
+	) => string | undefined | void;
+};
 
 /**
  * The return type of `asLinkAttrs()`.
@@ -22,7 +53,9 @@ type AsLinkAttrsReturnType<
 	| FilledContentRelationshipField
 	| PrismicDocument
 	? {
-			href: NonNullable<LinkResolverFunctionReturnType> | undefined;
+			href:
+				| NonNullable<AsLinkReturnType<LinkResolverFunctionReturnType, Field>>
+				| undefined;
 			target?: string;
 			rel?: string;
 	  }
@@ -40,8 +73,7 @@ type AsLinkAttrsReturnType<
  * @typeParam LinkResolverFunctionReturnType - Link Resolver function return
  *   type
  * @param linkFieldOrDocument - Any kind of Link field or a document to resolve
- * @param linkResolver - An optional Link Resolver function. Without it, you are
- *   expected to use the `routes` options from the API
+ * @param config - Configuration that determines the output of `asLinkAttrs()`
  *
  * @returns Resolved set of link attributes or, if the provided Link field or document is empty, and empty object
  * @see Prismic Link Resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
@@ -56,7 +88,7 @@ export const asLinkAttrs = <
 		| undefined,
 >(
 	linkFieldOrDocument: Field,
-	linkResolver?: LinkResolverFunction<LinkResolverFunctionReturnType> | null,
+	config: AsLinkAttrsConfig<LinkResolverFunctionReturnType> = {},
 ): AsLinkAttrsReturnType<LinkResolverFunctionReturnType> => {
 	if (
 		linkFieldOrDocument &&
@@ -71,14 +103,24 @@ export const asLinkAttrs = <
 			// @ts-ignore - Bug in TypeScript 4.9: https://github.com/microsoft/TypeScript/issues/51501
 			"target" in linkFieldOrDocument ? linkFieldOrDocument.target : undefined;
 
-		const href = asLink(linkFieldOrDocument, linkResolver);
+		const rawHref = asLink(linkFieldOrDocument, config.linkResolver);
+		const href =
+			rawHref == null ? undefined : (rawHref as NonNullable<typeof rawHref>);
+
+		const isExternal = typeof href === "string" ? !isInternalURL(href) : false;
+
+		const rel = config.rel
+			? config.rel({ href, isExternal, target })
+			: isExternal
+			? "noreferrer"
+			: undefined;
 
 		return {
 			href: (href == null
 				? undefined
 				: href) as AsLinkAttrsReturnType<LinkResolverFunctionReturnType>["href"],
 			target,
-			rel: target === "_blank" ? "noopener noreferrer" : undefined,
+			rel: rel == null ? undefined : rel,
 		};
 	}
 

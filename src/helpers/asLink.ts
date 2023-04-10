@@ -22,7 +22,7 @@ export type LinkResolverFunction<ReturnType = string | null | undefined> = (
 /**
  * The return type of `asLink()`.
  */
-type AsLinkReturnType<
+export type AsLinkReturnType<
 	LinkResolverFunctionReturnType = string | null | undefined,
 	Field extends LinkField | PrismicDocument | null | undefined =
 		| LinkField

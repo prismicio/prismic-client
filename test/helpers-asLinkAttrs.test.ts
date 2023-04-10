@@ -1,186 +1,161 @@
-import { expect, it } from "vitest";
+import { expect, it, vi } from "vitest";
 
-import { documentFixture } from "./__fixtures__/document";
-import { linkResolver } from "./__fixtures__/linkResolver";
-
-import { LinkType, asLinkAttrs } from "../src";
+import { asLinkAttrs } from "../src";
 
 it("returns empty object for nullish inputs", () => {
-	expect(asLinkAttrs(null, linkResolver)).toEqual({});
-	expect(asLinkAttrs(undefined, linkResolver)).toEqual({});
+	expect(asLinkAttrs(null)).toEqual({});
+	expect(asLinkAttrs(undefined)).toEqual({});
 });
 
-it("returns empty object when link to document field is empty", () => {
-	const field = {
-		link_type: LinkType.Document,
-	};
-
-	expect(asLinkAttrs(field, linkResolver)).toEqual({});
-});
-
-it("returns empty object when link to media field is empty", () => {
-	const field = {
-		link_type: LinkType.Media,
-	};
-
-	expect(asLinkAttrs(field, linkResolver)).toEqual({});
-});
-
-it("returns empty object when link field is empty", () => {
-	const field = {
-		link_type: LinkType.Any,
-	};
-
-	expect(asLinkAttrs(field, linkResolver)).toEqual({});
-});
-
-it("resolves a link to document field without Route Resolver", () => {
-	const field = {
-		id: "XvoFFREAAM0WGBng",
-		type: "page",
-		tags: [],
-		slug: "slug",
-		lang: "en-us",
-		uid: "test",
-		link_type: LinkType.Document,
-		isBroken: false,
-	};
-
-	expect(
-		asLinkAttrs(field),
-		"returns empty object if both Link Resolver and Route Resolver are not used",
-	).toEqual({});
-	expect(
-		asLinkAttrs(field, linkResolver),
-		"uses Link Resolver URL if Link Resolver returns a non-nullish value",
-	).toEqual({
-		href: "/test",
-		target: undefined,
-		rel: undefined,
-	});
-	expect(
-		asLinkAttrs(field, () => undefined),
-		"returns empty object if Link Resolver returns undefined",
-	).toEqual({});
-	expect(
-		asLinkAttrs(field, () => null),
-		"returns empty object if Link Resolver returns null",
-	).toEqual({});
-});
-
-it("resolves a link to document field with Route Resolver", () => {
-	const field = {
-		id: "XvoFFREAAM0WGBng",
-		type: "page",
-		tags: [],
-		slug: "slug",
-		lang: "en-us",
-		uid: "uid",
-		url: "url",
-		link_type: LinkType.Document,
-		isBroken: false,
-	};
-
-	expect(
-		asLinkAttrs(field),
-		"uses Route Resolver URL if Link Resolver is not given",
-	).toEqual({
-		href: field.url,
-		target: undefined,
-		rel: undefined,
-	});
-	expect(
-		asLinkAttrs(field, () => "link-resolver-value"),
-		"uses Link Resolver URL if Link Resolver returns a non-nullish value",
-	).toEqual({
-		href: "link-resolver-value",
-		target: undefined,
-		rel: undefined,
-	});
-	expect(
-		asLinkAttrs(field, () => undefined),
-		"uses Route Resolver URL if Link Resolver returns undefined",
-	).toEqual({
-		href: field.url,
-		target: undefined,
-		rel: undefined,
-	});
-	expect(
-		asLinkAttrs(field, () => null),
-		"uses Route Resolver URL if Link Resolver returns null",
-	).toEqual({
-		href: field.url,
-		target: undefined,
-		rel: undefined,
-	});
-});
-
-it("returns empty object when given a document field and linkResolver is not provided ", () => {
-	const field = {
-		id: "XvoFFREAAM0WGBng",
-		link_type: LinkType.Document,
-	};
+it("returns empty object when link field is empty", (ctx) => {
+	const field = ctx.mock.value.link({ type: "Any", state: "empty" });
 
 	expect(asLinkAttrs(field)).toEqual({});
 });
 
-it("resolves a link to web field", () => {
-	const field = {
-		link_type: LinkType.Web,
-		url: "https://prismic.io",
-	};
+it("returns empty object when link to document field is empty", (ctx) => {
+	const field = ctx.mock.value.link({ type: "Document", state: "empty" });
 
-	expect(asLinkAttrs(field, linkResolver)).toEqual({
-		href: "https://prismic.io",
+	expect(asLinkAttrs(field)).toEqual({});
+});
+
+it("returns empty object when link to media field is empty", (ctx) => {
+	const field = ctx.mock.value.link({ type: "Media", state: "empty" });
+
+	expect(asLinkAttrs(field)).toEqual({});
+});
+
+it("returns empty object when link to web field is empty", (ctx) => {
+	const field = ctx.mock.value.link({ type: "Web", state: "empty" });
+
+	expect(asLinkAttrs(field)).toEqual({});
+});
+
+it("resolves a link to document field with Route Resolver", (ctx) => {
+	const field = ctx.mock.value.link({ type: "Document" });
+	field.url = "/url";
+
+	expect(asLinkAttrs(field)).toEqual({
+		href: field.url,
+		target: undefined,
+		rel: undefined,
+	});
+	expect(asLinkAttrs(field, { linkResolver: () => "/linkResolver" })).toEqual({
+		href: "/linkResolver",
 		target: undefined,
 		rel: undefined,
 	});
 });
 
-it("returns correct target when field has a target", () => {
-	const field = {
-		link_type: LinkType.Web,
-		url: "https://prismic.io",
-		target: "_blank",
-	};
+it("resolves a link to document field without Route Resolver", (ctx) => {
+	const field = ctx.mock.value.link({ type: "Document" });
+	field.url = undefined;
 
-	expect(asLinkAttrs(field, linkResolver).target).toBe(field.target);
-});
-
-it('returns "noopener noreferrer" rel value when the field\'s target is "_blank"', () => {
-	const field = {
-		link_type: LinkType.Web,
-		url: "https://prismic.io",
-		target: "_blank",
-	};
-
-	expect(asLinkAttrs(field, linkResolver).rel).toBe("noopener noreferrer");
-});
-
-it("resolves a link to media field", () => {
-	const field = {
-		link_type: LinkType.Media,
-		name: "test.jpg",
-		kind: "image",
-		url: "https://prismic.io",
-		size: "420",
-		height: "42",
-		width: "42",
-	};
-
-	expect(asLinkAttrs(field, linkResolver)).toEqual({
-		href: "https://prismic.io",
+	expect(asLinkAttrs(field)).toEqual({
+		href: undefined,
+		target: undefined,
+		rel: undefined,
+	});
+	expect(asLinkAttrs(field, { linkResolver: () => "/linkResolver" })).toEqual({
+		href: "/linkResolver",
 		target: undefined,
 		rel: undefined,
 	});
 });
 
-it("resolves a document", () => {
-	const document = { ...documentFixture.empty };
+it("resolves a link to web field", (ctx) => {
+	const field = ctx.mock.value.link({ type: "Web" });
 
-	expect(asLinkAttrs(document)).toEqual({
-		href: "/test",
+	expect(asLinkAttrs(field)).toEqual({
+		href: field.url,
+		target: undefined,
+		rel: "noreferrer",
+	});
+	expect(asLinkAttrs(field, { linkResolver: () => "/linkResolver" })).toEqual({
+		href: field.url,
+		target: undefined,
+		rel: "noreferrer",
+	});
+});
+
+it("returns correct target when field has a target", (ctx) => {
+	const field = ctx.mock.value.link({ type: "Web", withTargetBlank: true });
+
+	expect(asLinkAttrs(field)).toEqual({
+		href: field.url,
+		target: field.target,
+		rel: "noreferrer",
+	});
+	expect(asLinkAttrs(field, { linkResolver: () => "/linkResolver" })).toEqual({
+		href: field.url,
+		target: field.target,
+		rel: "noreferrer",
+	});
+});
+
+it("resolves a link to media field", (ctx) => {
+	const field = ctx.mock.value.link({ type: "Media" });
+
+	expect(asLinkAttrs(field)).toEqual({
+		href: field.url,
+		target: undefined,
+		rel: "noreferrer",
+	});
+	expect(asLinkAttrs(field, { linkResolver: () => "/linkResolver" })).toEqual({
+		href: field.url,
+		target: undefined,
+		rel: "noreferrer",
+	});
+});
+
+it("resolves a document", (ctx) => {
+	const doc = ctx.mock.value.document();
+	doc.url = "/foo";
+
+	expect(asLinkAttrs(doc)).toEqual({
+		href: doc.url,
 		target: undefined,
 		rel: undefined,
+	});
+	expect(asLinkAttrs(doc, { linkResolver: () => "/linkResolver" })).toEqual({
+		href: "/linkResolver",
+		target: undefined,
+		rel: undefined,
+	});
+});
+
+it('returns "noreferrer" `rel` value when the field\'s `href` is external', (ctx) => {
+	const field = ctx.mock.value.link({ type: "Web" });
+
+	expect(asLinkAttrs(field).rel).toBe("noreferrer");
+	expect(asLinkAttrs(field, { linkResolver: () => "/linkResolver" }).rel).toBe(
+		"noreferrer",
+	);
+});
+
+it("allows the `rel` value to be configured using `config.rel`", (ctx) => {
+	const internalField = ctx.mock.value.link({ type: "Document" });
+	internalField.url = "/foo";
+
+	const externalField = ctx.mock.value.link({ type: "Web" });
+	externalField.url = "https://prismic.io";
+	externalField.target = "_blank";
+
+	const relFn = vi.fn().mockImplementation(() => "bar");
+
+	const internalRes = asLinkAttrs(internalField, { rel: relFn });
+	expect(internalRes.rel).toBe("bar");
+	expect(relFn).toHaveBeenNthCalledWith(1, {
+		href: internalField.url,
+		target: undefined,
+		isExternal: false,
+	});
+
+	const externalRes = asLinkAttrs(externalField, { rel: relFn });
+	expect(externalRes.rel).toBe("bar");
+	expect(relFn).toHaveBeenNthCalledWith(2, {
+		href: externalField.url,
+		target: externalField.target,
+		isExternal: true,
 	});
 });
