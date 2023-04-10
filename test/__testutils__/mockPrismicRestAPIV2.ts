@@ -15,7 +15,7 @@ type MockPrismicRestAPIV2Args = {
 	queryDelay?: number;
 };
 
-export const mockPrismicRestAPIV2 = (args: MockPrismicRestAPIV2Args) => {
+export const mockPrismicRestAPIV2 = (args: MockPrismicRestAPIV2Args): void => {
 	const repositoryName = createRepositoryName();
 	const repositoryEndpoint = `https://${repositoryName}.cdn.prismic.io/api/v2`;
 	const queryEndpoint = new URL(

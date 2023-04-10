@@ -5,7 +5,7 @@
 
 const matchHtmlRegExp = /["'&<>]/;
 
-export const escapeHTML = (string?: string | null) => {
+export const escapeHTML = (string?: string | null): string => {
 	const str = "" + string;
 	const match = matchHtmlRegExp.exec(str);
 

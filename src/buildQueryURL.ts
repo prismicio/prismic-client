@@ -293,7 +293,7 @@ export const buildQueryURL = (
 	// Iterate over each parameter and add it to the URL. In some cases, the
 	// parameter value needs to be transformed to fit the REST API.
 	for (const k in params) {
-		const name = (RENAMED_PARAMS[k as keyof typeof RENAMED_PARAMS] ??
+		const name = (RENAMED_PARAMS[k as keyof typeof RENAMED_PARAMS] ||
 			k) as ValidParamName;
 
 		let value = params[k as keyof typeof params];

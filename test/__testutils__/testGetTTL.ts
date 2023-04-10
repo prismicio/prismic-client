@@ -33,7 +33,7 @@ type TestGetWithinTTLArgs = {
 export const testGetWithinTTL = (
 	description: string,
 	args: TestGetWithinTTLArgs,
-) => {
+): void => {
 	it(description, async (ctx) => {
 		const repositoryResponse = {
 			...ctx.mock.api.repository(),
@@ -84,7 +84,7 @@ type TestGetOutsideTTLArgs = {
 export const testGetOutsideTTL = (
 	description: string,
 	args: TestGetOutsideTTLArgs,
-) => {
+): void => {
 	it.concurrent(
 		description,
 		async (ctx) => {
