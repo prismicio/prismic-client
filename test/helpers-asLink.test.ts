@@ -110,7 +110,7 @@ it("resolves a link to web field", () => {
 		url: "https://prismic.io",
 	};
 
-	expect(asLink(field, linkResolver), "https://prismic.io");
+	expect(asLink(field, linkResolver)).toBe("https://prismic.io");
 });
 
 it("resolves a link to media field", () => {
@@ -124,11 +124,11 @@ it("resolves a link to media field", () => {
 		width: "42",
 	};
 
-	expect(asLink(field, linkResolver), "https://prismic.io");
+	expect(asLink(field, linkResolver)).toBe("https://prismic.io");
 });
 
 it("resolves a document", () => {
 	const document = { ...documentFixture.empty };
 
-	expect(asLink(document), "/test");
+	expect(asLink(document)).toBe("/test");
 });
