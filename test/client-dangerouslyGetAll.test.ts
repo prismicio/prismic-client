@@ -1,17 +1,32 @@
-import { it, expect } from "vitest";
+import { expect, it } from "vitest";
 
 import { createTestClient } from "./__testutils__/createClient";
 import { createPagedQueryResponses } from "./__testutils__/createPagedQueryResponses";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { testGetAllMethod } from "./__testutils__/testAnyGetMethod";
-
-import { GET_ALL_QUERY_DELAY } from "../src/client";
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
 
 /**
- * Tolerance in number of milliseconds for the duration of a simulated network request.
+ * The number of milliseconds in which a multi-page `getAll` (e.g. `getAll`,
+ * `getAllByType`, `getAllByTag`) will wait between individual page requests.
  *
- * If tests are failing due to incorrect timed durations, increase the tolerance amount.
+ * This is done to ensure API performance is sustainable and reduces the chance
+ * of a failed API request due to overloading.
+ *
+ * IMPORTANT: This value is linked to `GET_ALL_QUERY_DELAY` used in
+ * `../src/createClient.ts`. The two values do not need to be kept in sync, but
+ * note that changing `GET_ALL_QUERY_DELAY` in the public code may have an
+ * effect on tests using this test-specific constant.
+ */
+export const GET_ALL_QUERY_DELAY = 500;
+
+/**
+ * Tolerance in number of milliseconds for the duration of a simulated network
+ * request.
+ *
+ * If tests are failing due to incorrect timed durations, increase the tolerance
+ * amount.
  */
 const NETWORK_REQUEST_DURATION_TOLERANCE = 300;
 
@@ -129,7 +144,7 @@ it("throttles requests past first page", async (ctx) => {
 	const endTime = Date.now();
 
 	const totalTime = endTime - startTime;
-	const minTime = numPages * queryDelay + (numPages - 1) * GET_ALL_QUERY_DELAY;
+	const minTime = numPages * queryDelay + (numPages - 1) * 500;
 	const maxTime = minTime + NETWORK_REQUEST_DURATION_TOLERANCE;
 
 	// The total time should be the amount of time it takes to resolve all
@@ -178,4 +193,9 @@ it("does not throttle single page queries", async (ctx) => {
 
 testAbortableMethod("is abortable with an AbortController", {
 	run: (client, signal) => client.dangerouslyGetAll({ signal }),
+});
+
+testConcurrentMethod("shares concurrent equivalent network requests", {
+	run: (client, signal) => client.dangerouslyGetAll({ signal }),
+	mode: "getAll",
 });

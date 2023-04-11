@@ -4,7 +4,8 @@
  *
  * @param input - Input to test.
  *
- * @returns `true` if `input` is a valid Prismic Rest API V2 endpoint, `false` otherwise.
+ * @returns `true` if `input` is a valid Prismic Rest API V2 endpoint, `false`
+ *   otherwise.
  */
 export const isRepositoryEndpoint = (input: string): boolean => {
 	try {

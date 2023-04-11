@@ -1,0 +1,15 @@
+{
+	"id": "XvoFFREAAM0WGBng",
+	"uid": "test",
+	"url": "/test",
+	"type": "page",
+	"href": "https://example.cdn.prismic.io/api/v2/documents/search",
+	"tags": [],
+	"first_publication_date": "2020-06-29T15:13:27+0000",
+	"last_publication_date": "2021-05-18T15:44:01+0000",
+	"slugs": ["slug"],
+	"linked_documents": [],
+	"lang": "en-us",
+	"alternate_languages": [],
+	"data": {}
+}

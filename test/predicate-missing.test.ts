@@ -1,8 +1,8 @@
-import { testPredicate } from "./__testutils__/testPredicate";
+import { testFilter } from "./__testutils__/testFilter";
 
 import * as prismic from "../src";
 
-testPredicate(
+testFilter(
 	"[missing(my.product.price)]",
-	prismic.predicate.missing("my.product.price"),
+	prismic.filter.missing("my.product.price"),
 );

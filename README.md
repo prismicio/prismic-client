@@ -10,7 +10,7 @@
 The official JavaScript + TypeScript client library for [Prismic][prismic].
 
 - Query content from a Prismic repository.
-- Filter queries using [Predicates][prismic-predicates].
+- Refines queries using [Filters][prismic-filters].
 - Automatically query draft content during [preview sessions][prismic-previews].
 - Built for browser and server usage.
 
@@ -51,7 +51,7 @@ For more clarity on this project and its structure you can also check out the de
 ## License
 
 ```
-   Copyright 2013-2022 Prismic <contact@prismic.io> (https://prismic.io)
+   Copyright 2013-2023 Prismic <contact@prismic.io> (https://prismic.io)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -69,8 +69,8 @@ For more clarity on this project and its structure you can also check out the de
 <!-- Links -->
 
 [prismic]: https://prismic.io
-[prismic-predicates]: https://prismic.io/docs/technologies/rest-api-technical-reference
-[prismic-previews]: https://prismic.io/docs/core-concepts/previews
+[prismic-filters]: https://prismic.io/docs/rest-api-technical-reference#q
+[prismic-previews]: https://prismic.io/docs/guides/previews
 [prismic-docs]: https://prismic.io/docs/technical-reference/prismicio-client
 [changelog]: ./CHANGELOG.md
 [contributing]: ./CONTRIBUTING.md

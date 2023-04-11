@@ -1,8 +1,8 @@
-import { it, expect } from "vitest";
+import { expect, it } from "vitest";
 
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createTestClient } from "./__testutils__/createClient";
 import { getMasterRef } from "./__testutils__/getMasterRef";
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 
 import * as prismic from "../src";
 

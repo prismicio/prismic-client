@@ -7,7 +7,8 @@ const readValue = (value: string): string => {
 /**
  * Returns the value of a cookie from a given cookie store.
  *
- * @param cookieJar - The stringified cookie store from which to read the cookie.
+ * @param cookieJar - The stringified cookie store from which to read the
+ *   cookie.
  *
  * @returns The value of the cookie, if it exists.
  */
@@ -22,7 +23,7 @@ export const getPreviewCookie = (cookieJar: string): string | undefined => {
 
 		if (name === previewCookieName) {
 			value = readValue(parts.slice(1).join("="));
-			continue;
+			break;
 		}
 	}
 

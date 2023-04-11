@@ -1,20 +1,19 @@
-import { it, expect } from "vitest";
-import * as prismicT from "@prismicio/types";
+import { expect, it } from "vitest";
 
+import { createTestClient } from "./createClient";
 import { createPagedQueryResponses } from "./createPagedQueryResponses";
 import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2";
-import { createTestClient } from "./createClient";
 
 import * as prismic from "../../src";
 
 type TestGetAllMethodArgs<
 	TResponse extends
-		| prismicT.PrismicDocument
-		| prismicT.Query
-		| prismicT.PrismicDocument[] =
-		| prismicT.PrismicDocument
-		| prismicT.Query
-		| prismicT.PrismicDocument[],
+		| prismic.PrismicDocument
+		| prismic.Query
+		| prismic.PrismicDocument[] =
+		| prismic.PrismicDocument
+		| prismic.Query
+		| prismic.PrismicDocument[],
 > = {
 	run: (client: prismic.Client) => Promise<TResponse>;
 	requiredParams?: Record<string, string | string[]>;
@@ -28,7 +27,7 @@ export const testAnyGetMethodFactory = (
 	description: string,
 	args: TestGetAllMethodArgs,
 	mode: "get" | "getFirst" | "getAll",
-) => {
+): void => {
 	it.concurrent(description, async (ctx) => {
 		const queryResponses = createPagedQueryResponses({
 			ctx,
@@ -66,22 +65,22 @@ export const testAnyGetMethodFactory = (
 				break;
 
 			default:
-				throw new Error("Unknown mode `%o`", mode);
+				throw new Error(`Unknown mode \`${mode}\``);
 		}
 	});
 };
 
 export const testGetMethod = (
 	description: string,
-	args: TestGetAllMethodArgs<prismicT.Query>,
-) => {
+	args: TestGetAllMethodArgs<prismic.Query>,
+): void => {
 	testAnyGetMethodFactory(description, args, "get");
 };
 
 export const testGetFirstMethod = (
 	description: string,
-	args: TestGetAllMethodArgs<prismicT.PrismicDocument>,
-) => {
+	args: TestGetAllMethodArgs<prismic.PrismicDocument>,
+): void => {
 	testAnyGetMethodFactory(
 		description,
 		{
@@ -97,8 +96,8 @@ export const testGetFirstMethod = (
 
 export const testGetAllMethod = (
 	description: string,
-	args: TestGetAllMethodArgs<prismicT.PrismicDocument[]>,
-) => {
+	args: TestGetAllMethodArgs<prismic.PrismicDocument[]>,
+): void => {
 	testAnyGetMethodFactory(
 		description,
 		{

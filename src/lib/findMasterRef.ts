@@ -1,4 +1,4 @@
-import * as prismicT from "@prismicio/types";
+import { Ref } from "../types/api/ref";
 
 import { findRef } from "./findRef";
 
@@ -10,6 +10,6 @@ import { findRef } from "./findRef";
  * @returns The master ref from the list.
  * @throws If a matching ref cannot be found.
  */
-export const findMasterRef = (refs: prismicT.Ref[]): prismicT.Ref => {
+export const findMasterRef = (refs: Ref[]): Ref => {
 	return findRef(refs, (ref) => ref.isMasterRef);
 };

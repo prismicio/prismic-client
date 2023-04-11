@@ -1,0 +1,24 @@
+import { expectNever, expectType } from "ts-expect";
+
+import * as prismic from "../../src";
+
+(value: prismic.Language): true => {
+	switch (typeof value) {
+		case "object": {
+			if (value === null) {
+				expectNever(value);
+			}
+
+			return true;
+		}
+
+		default: {
+			return expectNever(value);
+		}
+	}
+};
+
+expectType<prismic.Language>({
+	id: "string",
+	name: "string",
+});

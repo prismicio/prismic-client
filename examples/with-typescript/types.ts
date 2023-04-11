@@ -1,4 +1,4 @@
-import * as prismicT from "@prismicio/types";
+import * as prismic from "@prismicio/client";
 
 /**
  * A union of all possible Prismic Document types.
@@ -8,10 +8,10 @@ export type AllDocumentTypes = PageDocument | BlogPostDocument;
 /**
  * A Page document from Prismic.
  */
-export type PageDocument = prismicT.PrismicDocument<
+export type PageDocument = prismic.PrismicDocument<
 	{
-		title: prismicT.KeyTextField;
-		footnotes: prismicT.RichTextField;
+		title: prismic.KeyTextField;
+		footnotes: prismic.RichTextField;
 	},
 	"page",
 	"en-us" | "fr-fr"
@@ -20,11 +20,11 @@ export type PageDocument = prismicT.PrismicDocument<
 /**
  * A Blog Post document from Prismic. This example contains Slices.
  */
-export type BlogPostDocument = prismicT.PrismicDocument<
+export type BlogPostDocument = prismic.PrismicDocument<
 	{
-		title: prismicT.KeyTextField;
-		description: prismicT.RichTextField;
-		body: prismicT.SliceZone<
+		title: prismic.KeyTextField;
+		description: prismic.RichTextField;
+		body: prismic.SliceZone<
 			| PrismicSliceBlogPostBodyText
 			| PrismicSliceBlogPostBodyImageGallery
 			| PrismicSliceBlogPostBodyQuote
@@ -33,25 +33,25 @@ export type BlogPostDocument = prismicT.PrismicDocument<
 	"blog_post",
 	"en-us" | "fr-fr"
 >;
-type PrismicSliceBlogPostBodyText = prismicT.Slice<
+type PrismicSliceBlogPostBodyText = prismic.Slice<
 	"text",
 	never,
 	{
-		text: prismicT.RichTextField;
+		text: prismic.RichTextField;
 	}
 >;
-type PrismicSliceBlogPostBodyImageGallery = prismicT.Slice<
+type PrismicSliceBlogPostBodyImageGallery = prismic.Slice<
 	"image_gallery",
 	never,
 	{
-		image: prismicT.ImageField;
-		caption: prismicT.KeyTextField;
+		image: prismic.ImageField;
+		caption: prismic.KeyTextField;
 	}
 >;
-type PrismicSliceBlogPostBodyQuote = prismicT.Slice<
+type PrismicSliceBlogPostBodyQuote = prismic.Slice<
 	"quote",
 	{
-		quote: prismicT.RichTextField;
-		quotee: prismicT.KeyTextField;
+		quote: prismic.RichTextField;
+		quotee: prismic.KeyTextField;
 	}
 >;

@@ -1,18 +1,18 @@
-import { testPredicate } from "./__testutils__/testPredicate";
+import { testFilter } from "./__testutils__/testFilter";
 
 import * as prismic from "../src";
 
-testPredicate(
+testFilter(
 	'[fulltext(document, "banana")]',
-	prismic.predicate.fulltext("document", "banana"),
+	prismic.filter.fulltext("document", "banana"),
 );
 
-testPredicate(
+testFilter(
 	'[fulltext(document, "banana apple")]',
-	prismic.predicate.fulltext("document", "banana apple"),
+	prismic.filter.fulltext("document", "banana apple"),
 );
 
-testPredicate(
+testFilter(
 	'[fulltext(my.product.title, "phone")]',
-	prismic.predicate.fulltext("my.product.title", "phone"),
+	prismic.filter.fulltext("my.product.title", "phone"),
 );

@@ -1,19 +1,23 @@
+import { TestContext, expect } from "vitest";
+
 import { rest } from "msw";
-import { expect, TestContext } from "vitest";
-import * as prismicT from "@prismicio/types";
 
 import { createRepositoryName } from "./createRepositoryName";
+
+import * as prismic from "../../src";
+
+const DEFAULT_DELAY = 0;
 
 type MockPrismicRestAPIV2Args = {
 	ctx: TestContext;
 	accessToken?: string;
-	repositoryResponse?: prismicT.Repository;
-	queryResponse?: prismicT.Query | prismicT.Query[];
+	repositoryResponse?: prismic.Repository;
+	queryResponse?: prismic.Query | prismic.Query[];
 	queryRequiredParams?: Record<string, string | string[]>;
 	queryDelay?: number;
 };
 
-export const mockPrismicRestAPIV2 = (args: MockPrismicRestAPIV2Args) => {
+export const mockPrismicRestAPIV2 = (args: MockPrismicRestAPIV2Args): void => {
 	const repositoryName = createRepositoryName();
 	const repositoryEndpoint = `https://${repositoryName}.cdn.prismic.io/api/v2`;
 	const queryEndpoint = new URL(
@@ -64,11 +68,17 @@ export const mockPrismicRestAPIV2 = (args: MockPrismicRestAPIV2Args) => {
 					);
 				}
 
-				return res(ctx.delay(args.queryDelay), ctx.json(response));
+				return res(
+					ctx.delay(args.queryDelay || DEFAULT_DELAY),
+					ctx.json(response),
+				);
 			} else {
 				const response = args.queryResponse || args.ctx.mock.api.query();
 
-				return res(ctx.delay(args.queryDelay), ctx.json(response));
+				return res(
+					ctx.delay(args.queryDelay || DEFAULT_DELAY),
+					ctx.json(response),
+				);
 			}
 		}),
 	);
