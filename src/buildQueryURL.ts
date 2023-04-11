@@ -219,7 +219,7 @@ type BuildQueryURLParams = {
 	filters?: string | string[];
 
 	/**
-	 * @deprecated Renamed to `filters`
+	 * @deprecated Renamed to `filters`. Ensure the value is an array of filters, not a single, non-array filter.
 	 */
 	predicates?: string | string[];
 };
@@ -265,7 +265,7 @@ const castOrderingToString = (ordering: Ordering | string): string => {
 
 			console.warn(
 				`[@prismicio/client] A string value was provided to the \`orderings\` query parameter. Strings are deprecated. Please convert it to the object form: ${objectForm}. For more details, see ${devMsg(
-					"orderings-as-array-of-objects",
+					"orderings-must-be-an-array-of-objects",
 				)}`,
 			);
 		}
@@ -305,10 +305,26 @@ export const buildQueryURL = (
 
 	const url = new URL(`documents/search`, `${endpoint}/`);
 
-	// TODO: Remove `predicates` when we remove support for deprecated `predicates` argument.
-	if (filters || predicates) {
-		for (const filter of [...castArray(predicates), ...castArray(filters)]) {
+	if (filters) {
+		// TODO: Remove warning when we remove support for string `filters` values.
+		if (process.env.NODE_ENV === "development" && !Array.isArray(filters)) {
+			console.warn(
+				`[@prismicio/client] A non-array value was provided to the \`filters\` query parameter (\`${filters}\`). Non-array values are deprecated. Please convert it to an array. For more details, see ${devMsg(
+					"filters-must-be-an-array",
+				)}`,
+			);
+		}
+
+		// TODO: Remove `castArray` when we remove support for string `filters` values.
+		for (const filter of castArray(filters)) {
 			url.searchParams.append("q", `[${filter}]`);
+		}
+	}
+
+	// TODO: Remove when we remove support for deprecated `predicates` argument.
+	if (predicates) {
+		for (const predicate of castArray(predicates)) {
+			url.searchParams.append("q", `[${predicate}]`);
 		}
 	}
 
@@ -331,7 +347,7 @@ export const buildQueryURL = (
 				) {
 					console.warn(
 						`[@prismicio/client] A string value was provided to the \`orderings\` query parameter. Strings are deprecated. Please convert it to an array of objects. For more details, see ${devMsg(
-							"orderings-as-array-of-objects",
+							"orderings-must-be-an-array-of-objects",
 						)}`,
 					);
 				}

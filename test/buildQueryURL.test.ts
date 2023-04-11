@@ -1,4 +1,4 @@
-import { expect, it } from "vitest";
+import { expect, it, vi } from "vitest";
 
 import * as prismic from "../src";
 
@@ -249,4 +249,73 @@ it("supports array routes param", () => {
 			routes,
 		)}`,
 	);
+});
+
+it("warns if NODE_ENV is development and a string is provided to `orderings`", () => {
+	const originalEnv = { ...process.env };
+
+	process.env.NODE_ENV = "development";
+
+	const consoleWarnSpy = vi
+		.spyOn(console, "warn")
+		.mockImplementation(() => void 0);
+
+	prismic.buildQueryURL(endpoint, {
+		ref: "ref",
+		orderings: "orderings",
+	});
+
+	expect(consoleWarnSpy).toHaveBeenCalledWith(
+		expect.stringMatching(/orderings-must-be-an-array-of-objects/i),
+	);
+
+	consoleWarnSpy.mockRestore();
+
+	process.env = originalEnv;
+});
+
+it("warns if NODE_ENV is development and an array of strings is provided to `orderings`", () => {
+	const originalEnv = { ...process.env };
+
+	process.env.NODE_ENV = "development";
+
+	const consoleWarnSpy = vi
+		.spyOn(console, "warn")
+		.mockImplementation(() => void 0);
+
+	prismic.buildQueryURL(endpoint, {
+		ref: "ref",
+		orderings: ["orderings"],
+	});
+
+	expect(consoleWarnSpy).toHaveBeenCalledWith(
+		expect.stringMatching(/orderings-must-be-an-array-of-objects/i),
+	);
+
+	consoleWarnSpy.mockRestore();
+
+	process.env = originalEnv;
+});
+
+it("warns if NODE_ENV is development and a string is provided to `filters`", () => {
+	const originalEnv = { ...process.env };
+
+	process.env.NODE_ENV = "development";
+
+	const consoleWarnSpy = vi
+		.spyOn(console, "warn")
+		.mockImplementation(() => void 0);
+
+	prismic.buildQueryURL(endpoint, {
+		ref: "ref",
+		filters: "filters",
+	});
+
+	expect(consoleWarnSpy).toHaveBeenCalledWith(
+		expect.stringMatching(/filters-must-be-an-array/i),
+	);
+
+	consoleWarnSpy.mockRestore();
+
+	process.env = originalEnv;
 });

@@ -1,4 +1,4 @@
-# `orderings` as an array of objects
+# `orderings` must be an array of objects
 
 Prismic's Rest API accepts an `orderings` parameter to determine the sort order of query results.
 
