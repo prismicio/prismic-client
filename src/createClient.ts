@@ -1713,6 +1713,11 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	): Promise<T> {
 		let job: Promise<FetchJobResult>;
 
+		// `fetchJobs` is keyed twice: first by the URL and again by is
+		// signal, if one exists.
+		//
+		// Using two keys allows us to reuse fetch requests for
+		// equivalent URLs, but eject when we detect unique signals.
 		if (this.fetchJobs[url] && this.fetchJobs[url].has(params.signal)) {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			job = this.fetchJobs[url].get(params.signal)!;
