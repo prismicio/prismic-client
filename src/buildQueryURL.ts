@@ -1,4 +1,5 @@
 import { castArray } from "./lib/castArray";
+import { devMsg } from "./lib/devMsg";
 
 /**
  * Create a union of the given object's values, and optionally specify which
@@ -155,12 +156,23 @@ export interface QueryParams {
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#orderings}
 	 *
-	 * @remarks String and non-array values, while still working, are deprecated as
-	 * of `@prismicio/client@7.0.0`. Please migrate to the more explicit ordering
-	 * object array.
+	 * @remarks Strings and arrays of strings are deprecated as of
+	 * `@prismicio/client@7.0.0`. Please migrate to the more explicit
+	 * array of objects.
+	 *
+	 * @example
+	 *
+	 * ```typescript
+	 * buildQueryURL(endpoint,{
+	 *   orderings: [
+	 *     { field: "my.product.price", direction: "desc" },
+	 *     { field: "my.product.title" },
+	 *   ],
+	 * });
+	 * ```
 	 */
 	// TODO: Update TSDoc with deprecated API removal in v8
-	orderings?: Ordering[];
+	orderings?: string | Ordering | (string | Ordering)[];
 
 	/**
 	 * The `routes` option allows you to define how a document's `url` field is
@@ -240,15 +252,31 @@ type ValidParamName =
  *
  * @returns String representation of the Ordering.
  */
-const castOrderingToString = (ordering: Ordering | string): string =>
-	typeof ordering === "string"
-		? ordering
-		: [
-				ordering.field,
-				ordering.direction === "desc" ? ordering.direction : undefined,
-		  ]
-				.filter(Boolean)
-				.join(" ");
+const castOrderingToString = (ordering: Ordering | string): string => {
+	// TODO: Remove the following when `orderings` strings are no longer supported.
+	if (typeof ordering === "string") {
+		if (process.env.NODE_ENV === "development") {
+			const [field, direction] = ordering.split(" ");
+
+			const objectForm =
+				direction === "desc"
+					? `{ field: "${field}", direction: "desc" }`
+					: `{ field: "${field}" }`;
+
+			console.warn(
+				`[@prismicio/client] A string value was provided to the \`orderings\` query parameter. Strings are deprecated. Please convert it to the object form: ${objectForm}. For more details, see ${devMsg(
+					"orderings-as-array-of-objects",
+				)}`,
+			);
+		}
+
+		return ordering;
+	}
+
+	return ordering.direction === "desc"
+		? `${ordering.field} desc`
+		: ordering.field;
+};
 
 export type BuildQueryURLArgs = QueryParams & BuildQueryURLParams;
 
@@ -277,16 +305,10 @@ export const buildQueryURL = (
 
 	const url = new URL(`documents/search`, `${endpoint}/`);
 
-	if (filters) {
-		for (const filter of castArray(filters)) {
+	// TODO: Remove `predicates` when we remove support for deprecated `predicates` argument.
+	if (filters || predicates) {
+		for (const filter of [...castArray(predicates), ...castArray(filters)]) {
 			url.searchParams.append("q", `[${filter}]`);
-		}
-	}
-
-	// TODO: Remove when we remove support for deprecated `predicates` argument.
-	if (predicates) {
-		for (const predicate of castArray(predicates)) {
-			url.searchParams.append("q", `[${predicate}]`);
 		}
 	}
 
@@ -302,6 +324,18 @@ export const buildQueryURL = (
 			const scopedValue = params[name];
 
 			if (scopedValue != null) {
+				// TODO: Remove the following warning when `orderings` strings are no longer supported.
+				if (
+					process.env.NODE_ENV === "development" &&
+					typeof scopedValue === "string"
+				) {
+					console.warn(
+						`[@prismicio/client] A string value was provided to the \`orderings\` query parameter. Strings are deprecated. Please convert it to an array of objects. For more details, see ${devMsg(
+							"orderings-as-array-of-objects",
+						)}`,
+					);
+				}
+
 				const v = castArray(scopedValue)
 					.map((ordering) => castOrderingToString(ordering))
 					.join(",");
