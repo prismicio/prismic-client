@@ -6,6 +6,7 @@ import { Headers } from "node-fetch";
 import { createTestClient } from "./__testutils__/createClient";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
 
 const previewToken = "previewToken";
 
@@ -229,4 +230,15 @@ testAbortableMethod("is abortable with an AbortController", {
 			documentID: "foo",
 			previewToken,
 		}),
+});
+
+testConcurrentMethod("shares concurrent equivalent network requests", {
+	run: (client, signal) =>
+		client.resolvePreviewURL({
+			signal,
+			defaultURL: "defaultURL",
+			documentID: "foo",
+			previewToken,
+		}),
+	mode: "resolvePreview",
 });

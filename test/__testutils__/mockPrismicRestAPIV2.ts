@@ -6,6 +6,8 @@ import { createRepositoryName } from "./createRepositoryName";
 
 import * as prismic from "../../src";
 
+const DEFAULT_DELAY = 0;
+
 type MockPrismicRestAPIV2Args = {
 	ctx: TestContext;
 	accessToken?: string;
@@ -66,11 +68,17 @@ export const mockPrismicRestAPIV2 = (args: MockPrismicRestAPIV2Args): void => {
 					);
 				}
 
-				return res(ctx.delay(args.queryDelay), ctx.json(response));
+				return res(
+					ctx.delay(args.queryDelay || DEFAULT_DELAY),
+					ctx.json(response),
+				);
 			} else {
 				const response = args.queryResponse || args.ctx.mock.api.query();
 
-				return res(ctx.delay(args.queryDelay), ctx.json(response));
+				return res(
+					ctx.delay(args.queryDelay || DEFAULT_DELAY),
+					ctx.json(response),
+				);
 			}
 		}),
 	);

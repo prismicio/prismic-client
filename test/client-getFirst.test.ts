@@ -6,6 +6,7 @@ import { createTestClient } from "./__testutils__/createClient";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod";
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
 
 import * as prismic from "../src";
 
@@ -94,4 +95,9 @@ it("throws if no documents were returned", async (ctx) => {
 
 testAbortableMethod("is abortable with an AbortController", {
 	run: (client, signal) => client.getFirst({ signal }),
+});
+
+testConcurrentMethod("shares concurrent equivalent network requests", {
+	run: (client, signal) => client.getFirst({ signal }),
+	mode: "get",
 });

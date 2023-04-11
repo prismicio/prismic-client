@@ -5,6 +5,7 @@ import { createPagedQueryResponses } from "./__testutils__/createPagedQueryRespo
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { testGetAllMethod } from "./__testutils__/testAnyGetMethod";
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
 
 /**
  * The number of milliseconds in which a multi-page `getAll` (e.g. `getAll`,
@@ -192,4 +193,9 @@ it("does not throttle single page queries", async (ctx) => {
 
 testAbortableMethod("is abortable with an AbortController", {
 	run: (client, signal) => client.dangerouslyGetAll({ signal }),
+});
+
+testConcurrentMethod("shares concurrent equivalent network requests", {
+	run: (client, signal) => client.dangerouslyGetAll({ signal }),
+	mode: "getAll",
 });

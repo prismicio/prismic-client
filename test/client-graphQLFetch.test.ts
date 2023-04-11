@@ -8,6 +8,7 @@ import { createRepositoryName } from "./__testutils__/createRepositoryName";
 import { getMasterRef } from "./__testutils__/getMasterRef";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
 
 it("resolves a query", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository();
@@ -209,4 +210,13 @@ testAbortableMethod("is abortable with an AbortController", {
 		client.graphQLFetch("https://foo.cdn.prismic.io/graphql", {
 			signal,
 		}),
+});
+
+testConcurrentMethod("does not share concurrent equivalent network requests", {
+	run: (client, signal) =>
+		client.graphQLFetch(
+			`https://${createRepositoryName()}.cdn.prismic.io/graphql`,
+			{ signal },
+		),
+	mode: "NOT-SHARED___graphQL",
 });

@@ -5,6 +5,7 @@ import * as msw from "msw";
 import { createTestClient } from "./__testutils__/createClient";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
 
 it("returns all tags", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository();
@@ -82,4 +83,9 @@ it("sends access token if form endpoint is used", async (ctx) => {
 
 testAbortableMethod("is abortable with an AbortController", {
 	run: (client, signal) => client.getTags({ signal }),
+});
+
+testConcurrentMethod("shares concurrent equivalent network requests", {
+	run: (client, signal) => client.getTags({ signal }),
+	mode: "tags",
 });

@@ -1,5 +1,6 @@
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { testGetMethod } from "./__testutils__/testAnyGetMethod";
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
 
 testGetMethod("queries for documents by some tags", {
 	run: (client) => client.getBySomeTags(["foo", "bar"]),
@@ -25,4 +26,9 @@ testGetMethod("includes params if provided", {
 
 testAbortableMethod("is abortable with an AbortController", {
 	run: (client, signal) => client.getBySomeTags(["foo", "bar"], { signal }),
+});
+
+testConcurrentMethod("shares concurrent equivalent network requests", {
+	run: (client, signal) => client.getBySomeTags(["foo", "bar"], { signal }),
+	mode: "get",
 });
