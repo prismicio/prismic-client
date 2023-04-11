@@ -1,4 +1,5 @@
 import { castArray } from "./lib/castArray";
+import { devMsg } from "./lib/devMsg";
 
 /**
  * Create a union of the given object's values, and optionally specify which
@@ -154,8 +155,24 @@ export interface QueryParams {
 	 * can specify as many fields as you want.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#orderings}
+	 *
+	 * @remarks Strings and arrays of strings are deprecated as of
+	 * `@prismicio/client@7.0.0`. Please migrate to the more explicit
+	 * array of objects.
+	 *
+	 * @example
+	 *
+	 * ```typescript
+	 * buildQueryURL(endpoint,{
+	 *   orderings: [
+	 *     { field: "my.product.price", direction: "desc" },
+	 *     { field: "my.product.title" },
+	 *   ],
+	 * });
+	 * ```
 	 */
-	orderings?: Ordering | string | (Ordering | string)[];
+	// TODO: Update TSDoc with deprecated API removal in v8
+	orderings?: string | Ordering | (string | Ordering)[];
 
 	/**
 	 * The `routes` option allows you to define how a document's `url` field is
@@ -202,7 +219,7 @@ type BuildQueryURLParams = {
 	filters?: string | string[];
 
 	/**
-	 * @deprecated Renamed to `filters`
+	 * @deprecated Renamed to `filters`. Ensure the value is an array of filters, not a single, non-array filter.
 	 */
 	predicates?: string | string[];
 };
@@ -235,15 +252,31 @@ type ValidParamName =
  *
  * @returns String representation of the Ordering.
  */
-const castOrderingToString = (ordering: Ordering | string): string =>
-	typeof ordering === "string"
-		? ordering
-		: [
-				ordering.field,
-				ordering.direction === "desc" ? ordering.direction : undefined,
-		  ]
-				.filter(Boolean)
-				.join(" ");
+const castOrderingToString = (ordering: Ordering | string): string => {
+	// TODO: Remove the following when `orderings` strings are no longer supported.
+	if (typeof ordering === "string") {
+		if (process.env.NODE_ENV === "development") {
+			const [field, direction] = ordering.split(" ");
+
+			const objectForm =
+				direction === "desc"
+					? `{ field: "${field}", direction: "desc" }`
+					: `{ field: "${field}" }`;
+
+			console.warn(
+				`[@prismicio/client] A string value was provided to the \`orderings\` query parameter. Strings are deprecated. Please convert it to the object form: ${objectForm}. For more details, see ${devMsg(
+					"orderings-must-be-an-array-of-objects",
+				)}`,
+			);
+		}
+
+		return ordering;
+	}
+
+	return ordering.direction === "desc"
+		? `${ordering.field} desc`
+		: ordering.field;
+};
 
 export type BuildQueryURLArgs = QueryParams & BuildQueryURLParams;
 
@@ -273,6 +306,16 @@ export const buildQueryURL = (
 	const url = new URL(`documents/search`, `${endpoint}/`);
 
 	if (filters) {
+		// TODO: Remove warning when we remove support for string `filters` values.
+		if (process.env.NODE_ENV === "development" && !Array.isArray(filters)) {
+			console.warn(
+				`[@prismicio/client] A non-array value was provided to the \`filters\` query parameter (\`${filters}\`). Non-array values are deprecated. Please convert it to an array. For more details, see ${devMsg(
+					"filters-must-be-an-array",
+				)}`,
+			);
+		}
+
+		// TODO: Remove `castArray` when we remove support for string `filters` values.
 		for (const filter of castArray(filters)) {
 			url.searchParams.append("q", `[${filter}]`);
 		}
@@ -297,6 +340,18 @@ export const buildQueryURL = (
 			const scopedValue = params[name];
 
 			if (scopedValue != null) {
+				// TODO: Remove the following warning when `orderings` strings are no longer supported.
+				if (
+					process.env.NODE_ENV === "development" &&
+					typeof scopedValue === "string"
+				) {
+					console.warn(
+						`[@prismicio/client] A string value was provided to the \`orderings\` query parameter. Strings are deprecated. Please convert it to an array of objects. For more details, see ${devMsg(
+							"orderings-must-be-an-array-of-objects",
+						)}`,
+					);
+				}
+
 				const v = castArray(scopedValue)
 					.map((ordering) => castOrderingToString(ordering))
 					.join(",");
@@ -310,7 +365,10 @@ export const buildQueryURL = (
 		}
 
 		if (value != null) {
-			url.searchParams.set(name, castArray(value).join(","));
+			url.searchParams.set(
+				name,
+				castArray<string | number | Route | Ordering>(value).join(","),
+			);
 		}
 	}
 
