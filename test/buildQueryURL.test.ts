@@ -140,7 +140,6 @@ it("supports empty orderings param", () => {
 			prismic.buildQueryURL(endpoint, {
 				ref: "ref",
 				// TODO: Remove test with deprecated API in v8
-				// @ts-expect-error `string` interface is deprecated
 				orderings: "",
 			}),
 		),
@@ -166,7 +165,6 @@ it("supports array orderings param", () => {
 			prismic.buildQueryURL(endpoint, {
 				ref: "ref",
 				// TODO: Remove test with deprecated API in v8
-				// @ts-expect-error `string[]` interface is deprecated
 				orderings: ["page.title", { field: "page.subtitle" }],
 			}),
 		),
@@ -181,7 +179,6 @@ it("supports setting direction of ordering param", () => {
 			prismic.buildQueryURL(endpoint, {
 				ref: "ref",
 				// TODO: Remove test with deprecated API in v8
-				// @ts-expect-error `string[]` interface is deprecated
 				orderings: ["page.title", { field: "page.subtitle", direction: "asc" }],
 			}),
 		),
@@ -195,7 +192,6 @@ it("supports setting direction of ordering param", () => {
 				ref: "ref",
 				orderings: [
 					// TODO: Remove test with deprecated API in v8
-					// @ts-expect-error `string[]` interface is deprecated
 					"page.title",
 					{ field: "page.subtitle", direction: "desc" },
 				],
