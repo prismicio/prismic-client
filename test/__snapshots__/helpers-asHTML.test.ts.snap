@@ -1,4 +1,4 @@
-// Vitest Snapshot v1
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`escapes external links to prevent XSS 1`] = `"<p>This is a <a href=\\"https://example.org&quot; onmouseover=&quot;alert(document.cookie);\\" rel=\\"noopener noreferrer\\">link</a> with XSS (&quot;)</p><p>This is a <a href=\\"https://example.org&#39; onmouseover=&#39;alert(document.cookie);\\" rel=\\"noopener noreferrer\\">link</a> with XSS (&#39;)</p><p>This is a <a href=\\"https://example.org&amp;&lt;&gt;\\" rel=\\"noopener noreferrer\\">link</a> with XSS (&amp;, &lt;, &gt;)</p><p>This is a normal <a href=\\"https://prismic.io\\" rel=\\"noopener noreferrer\\">link</a>.</p><p class=\\"block-img\\"><img src=\\"https://images.prismic.io/200629-sms-hoy/f0a757f6-770d-4eb8-a08b-f1727f1a58e4_guilherme-romano-KI2KaOeT670-unsplash.jpg?auto=compress,format\\" alt=\\"An &quot;Atlantic&quot; Puffin\\" copyright=\\"&quot;unsplash&quot;\\" /></p>"`;
 
