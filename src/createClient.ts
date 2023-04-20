@@ -1726,31 +1726,33 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 			job = this.fetchFn(url, {
 				signal: params.signal,
-			}).then(async (res) => {
-				this.fetchJobs[url].delete(params.signal);
+			})
+				.then(async (res) => {
+					// We can assume Prismic REST API responses
+					// will have a `application/json`
+					// Content Type. If not, this will
+					// throw, signaling an invalid
+					// response.
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					let json: any = undefined;
+					try {
+						json = await res.json();
+					} catch {
+						// noop
+					}
 
-				if (this.fetchJobs[url].size === 0) {
-					delete this.fetchJobs[url];
-				}
+					return {
+						status: res.status,
+						json,
+					};
+				})
+				.finally(() => {
+					this.fetchJobs[url].delete(params.signal);
 
-				// We can assume Prismic REST API responses
-				// will have a `application/json`
-				// Content Type. If not, this will
-				// throw, signaling an invalid
-				// response.
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				let json: any = undefined;
-				try {
-					json = await res.json();
-				} catch {
-					// noop
-				}
-
-				return {
-					status: res.status,
-					json,
-				};
-			});
+					if (this.fetchJobs[url].size === 0) {
+						delete this.fetchJobs[url];
+					}
+				});
 
 			this.fetchJobs[url].set(params.signal, job);
 		}
