@@ -74,6 +74,7 @@ export { documentToLinkField } from "./helpers/documentToLinkField";
 export { Element } from "@prismicio/richtext";
 
 export type { LinkResolverFunction } from "./helpers/asLink";
+export type { AsLinkAttrsConfig } from "./helpers/asLinkAttrs";
 
 /**
  * @deprecated Renamed to `HTMLRichTextMapSerializer`

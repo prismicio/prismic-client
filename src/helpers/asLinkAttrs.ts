@@ -23,7 +23,7 @@ type AsLinkAttrsConfigRelArgs<
 	target?: string;
 };
 
-type AsLinkAttrsConfig<
+export type AsLinkAttrsConfig<
 	LinkResolverFunctionReturnType = ReturnType<LinkResolverFunction>,
 	Field extends LinkField | PrismicDocument | null | undefined =
 		| LinkField
