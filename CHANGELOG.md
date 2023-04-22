@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.0.0-alpha.2](https://github.com/prismicio/prismic-client/compare/v7.0.0-alpha.1...v7.0.0-alpha.2) (2023-04-22)
+
+
+### Features
+
+* export `AsLinkAttrsConfig` ([3957ab5](https://github.com/prismicio/prismic-client/commit/3957ab57f1804cf948e48654df6ac6505333b8ba))
+
 ## [7.0.0-alpha.1](https://github.com/prismicio/prismic-client/compare/v7.0.0-alpha.0...v7.0.0-alpha.1) (2023-04-20)
 
 
