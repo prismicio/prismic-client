@@ -50,6 +50,13 @@ export const REPOSITORY_CACHE_TTL = 5000;
 export const GET_ALL_QUERY_DELAY = 500;
 
 /**
+ * The URL search parameter name used for optimizing `/api/v2` requests. The
+ * value of the parameter effectively cache-busts the request by providing a
+ * unique value on every request.
+ */
+const OPTIMIZE_REPOSITORY_REQUESTS_TIMESTAMP_PARAMETER_NAME = "x-optimize-ts";
+
+/**
  * Extracts one or more Prismic document types that match a given Prismic
  * document type. If no matches are found, no extraction is performed and the
  * union of all provided Prismic document types are returned.
@@ -257,7 +264,7 @@ export type ClientConfig = {
 	 * Node.js, this function must be provided.
 	 */
 	fetch?: FetchLike;
-};
+} & OptimizeParams;
 
 /**
  * Parameters for any client method that use `fetch()`. Only a subset of
@@ -271,6 +278,36 @@ type FetchParams = {
 	 * {@link https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal}
 	 */
 	signal?: AbortSignalLike;
+};
+
+/**
+ * Parameters that determine if or how the client is optimized.
+ */
+type OptimizeParams = {
+	/**
+	 * Options that determine if or how the client is optimized.
+	 */
+	optimize?: {
+		/**
+		 * Determines if fetching repository metadata should be optimized. The
+		 * optimizations result in faster queries, less network requests, and more
+		 * accurate cache-busting.
+		 *
+		 * Only opt out of this optimization if you know what you are doing.
+		 *
+		 * @defaultValue `true`
+		 */
+		repositoryRequests?: boolean;
+
+		/**
+		 * Determines if concurrent requests to the same URL should be optimized. The optimizations result in less network requests and quicker responses.
+		 *
+		 * Only opt out of this optimization if you know what you are doing.
+		 *
+		 * @defaultValue `true`
+		 */
+		concurentRequests?: boolean;
+	};
 };
 
 /**
@@ -417,6 +454,11 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	>;
 
 	/**
+	 * Options that determine if or how the client is optimized.
+	 */
+	optimize: NonNullable<OptimizeParams["optimize"]>;
+
+	/**
 	 * The client's ref mode state. This determines which ref is used during
 	 * queries.
 	 */
@@ -479,6 +521,16 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		this.routes = options.routes;
 		this.brokenRoute = options.brokenRoute;
 		this.defaultParams = options.defaultParams;
+		this.optimize = {
+			repositoryRequests:
+				options.optimize?.repositoryRequests == null
+					? true
+					: options.optimize?.repositoryRequests,
+			concurentRequests:
+				options.optimize?.concurentRequests == null
+					? true
+					: options.optimize?.concurentRequests,
+		};
 
 		if (options.ref) {
 			this.queryContentFromRef(options.ref);
@@ -1183,6 +1235,13 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			url.searchParams.set("access_token", this.accessToken);
 		}
 
+		if (this.optimize.repositoryRequests) {
+			url.searchParams.set(
+				OPTIMIZE_REPOSITORY_REQUESTS_TIMESTAMP_PARAMETER_NAME,
+				Date.now().toString(),
+			);
+		}
+
 		return await this.fetch<Repository>(url.toString(), params);
 	}
 
@@ -1586,15 +1645,19 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * @returns Cached repository metadata.
 	 */
 	private async getCachedRepository(params?: FetchParams): Promise<Repository> {
-		if (
-			!this.cachedRepository ||
-			Date.now() >= this.cachedRepositoryExpiration
-		) {
-			this.cachedRepositoryExpiration = Date.now() + REPOSITORY_CACHE_TTL;
-			this.cachedRepository = await this.getRepository(params);
-		}
+		if (this.optimize.repositoryRequests) {
+			if (
+				!this.cachedRepository ||
+				Date.now() >= this.cachedRepositoryExpiration
+			) {
+				this.cachedRepositoryExpiration = Date.now() + REPOSITORY_CACHE_TTL;
+				this.cachedRepository = await this.getRepository(params);
+			}
 
-		return this.cachedRepository;
+			return this.cachedRepository;
+		} else {
+			return await this.getRepository(params);
+		}
 	}
 
 	/**
@@ -1711,53 +1774,88 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		url: string,
 		params: FetchParams = {},
 	): Promise<T> {
-		let job: Promise<FetchJobResult>;
+		let res: FetchJobResult;
 
-		// `fetchJobs` is keyed twice: first by the URL and again by is
-		// signal, if one exists.
-		//
-		// Using two keys allows us to reuse fetch requests for
-		// equivalent URLs, but eject when we detect unique signals.
-		if (this.fetchJobs[url] && this.fetchJobs[url].has(params.signal)) {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			job = this.fetchJobs[url].get(params.signal)!;
-		} else {
-			this.fetchJobs[url] = this.fetchJobs[url] || new Map();
+		if (this.optimize.concurentRequests) {
+			let job: Promise<FetchJobResult>;
 
-			job = this.fetchFn(url, {
-				signal: params.signal,
-			})
-				.then(async (res) => {
-					// We can assume Prismic REST API responses
-					// will have a `application/json`
-					// Content Type. If not, this will
-					// throw, signaling an invalid
-					// response.
-					// eslint-disable-next-line @typescript-eslint/no-explicit-any
-					let json: any = undefined;
-					try {
-						json = await res.json();
-					} catch {
-						// noop
-					}
+			const fetchJobKeyInstance = new URL(url);
+			fetchJobKeyInstance.searchParams.delete(
+				OPTIMIZE_REPOSITORY_REQUESTS_TIMESTAMP_PARAMETER_NAME,
+			);
+			const fetchJobKey = fetchJobKeyInstance.toString();
 
-					return {
-						status: res.status,
-						json,
-					};
+			// `fetchJobs` is keyed twice: first by the URL and again by is
+			// signal, if one exists.
+			//
+			// Using two keys allows us to reuse fetch requests for
+			// equivalent URLs, but eject when we detect unique signals.
+			if (
+				this.fetchJobs[fetchJobKey] &&
+				this.fetchJobs[fetchJobKey].has(params.signal)
+			) {
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				job = this.fetchJobs[fetchJobKey].get(params.signal)!;
+			} else {
+				this.fetchJobs[fetchJobKey] = this.fetchJobs[fetchJobKey] || new Map();
+
+				job = this.fetchFn(url, {
+					signal: params.signal,
 				})
-				.finally(() => {
-					this.fetchJobs[url].delete(params.signal);
+					.then(async (res) => {
+						// We can assume Prismic REST API responses
+						// will have a `application/json`
+						// Content Type. If not, this will
+						// throw, signaling an invalid
+						// response.
+						// eslint-disable-next-line @typescript-eslint/no-explicit-any
+						let json: any = undefined;
+						try {
+							json = await res.json();
+						} catch {
+							// noop
+						}
 
-					if (this.fetchJobs[url].size === 0) {
-						delete this.fetchJobs[url];
-					}
-				});
+						return {
+							status: res.status,
+							json,
+						};
+					})
+					.finally(() => {
+						this.fetchJobs[fetchJobKey].delete(params.signal);
 
-			this.fetchJobs[url].set(params.signal, job);
+						if (this.fetchJobs[fetchJobKey].size === 0) {
+							delete this.fetchJobs[fetchJobKey];
+						}
+					});
+
+				this.fetchJobs[fetchJobKey].set(params.signal, job);
+			}
+
+			res = await job;
+		} else {
+			const job = await this.fetchFn(url, {
+				signal: params.signal,
+			});
+
+			// We can assume Prismic REST API responses
+			// will have a `application/json`
+			// Content Type. If not, this will
+			// throw, signaling an invalid
+			// response.
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			let json: any = undefined;
+			try {
+				json = await job.json();
+			} catch {
+				// noop
+			}
+
+			res = {
+				status: job.status,
+				json,
+			};
 		}
-
-		const res = await job;
 
 		if (res.status !== 404 && res.json == null) {
 			throw new PrismicError(undefined, url, res.json);
