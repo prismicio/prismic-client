@@ -29,6 +29,6 @@ testAbortableMethod("is abortable with an AbortController", {
 });
 
 testConcurrentMethod("shares concurrent equivalent network requests", {
-	run: (client, signal) => client.getAllBySomeTags(["foo", "bar"], { signal }),
+	run: (client, params) => client.getAllBySomeTags(["foo", "bar"], params),
 	mode: "getAll",
 });

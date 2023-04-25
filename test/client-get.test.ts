@@ -58,6 +58,6 @@ testAbortableMethod("is abortable with an AbortController", {
 });
 
 testConcurrentMethod("shares concurrent equivalent network requests", {
-	run: (client, signal) => client.get({ signal }),
+	run: (client, params) => client.get(params),
 	mode: "get",
 });

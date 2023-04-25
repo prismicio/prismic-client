@@ -233,9 +233,9 @@ testAbortableMethod("is abortable with an AbortController", {
 });
 
 testConcurrentMethod("shares concurrent equivalent network requests", {
-	run: (client, signal) =>
+	run: (client, params) =>
 		client.resolvePreviewURL({
-			signal,
+			...params,
 			defaultURL: "defaultURL",
 			documentID: "foo",
 			previewToken,

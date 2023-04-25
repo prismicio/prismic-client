@@ -41,6 +41,6 @@ testAbortableMethod("is abortable with an AbortController", {
 });
 
 testConcurrentMethod("shares concurrent equivalent network requests", {
-	run: (client, signal) => client.getReleaseByLabel("label", { signal }),
+	run: (client, params) => client.getReleaseByLabel("label", params),
 	mode: "repository",
 });
