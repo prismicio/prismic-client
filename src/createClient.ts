@@ -306,7 +306,7 @@ type OptimizeParams = {
 		 *
 		 * @defaultValue `true`
 		 */
-		concurentRequests?: boolean;
+		concurrentRequests?: boolean;
 	};
 };
 
@@ -523,7 +523,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		this.defaultParams = options.defaultParams;
 		this.optimize = {
 			repositoryRequests: options.optimize?.repositoryRequests ?? true,
-			concurentRequests: options.optimize?.concurentRequests ?? true,
+			concurrentRequests: options.optimize?.concurrentRequests ?? true,
 		};
 
 		if (options.ref) {
@@ -1389,14 +1389,17 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 */
 	async buildQueryURL({
 		signal,
+		optimize,
 		...params
 	}: Partial<BuildQueryURLArgs> &
 		FetchParams &
 		OptimizeParams = {}): Promise<string> {
-		const ref = params.ref || (await this.getResolvedRefString());
+		const ref =
+			params.ref || (await this.getResolvedRefString({ signal, optimize }));
 		const integrationFieldsRef =
 			params.integrationFieldsRef ||
-			(await this.getCachedRepository({ signal })).integrationFieldsRef ||
+			(await this.getCachedRepository({ signal, optimize }))
+				.integrationFieldsRef ||
 			undefined;
 
 		return buildQueryURL(this.endpoint, {
@@ -1809,7 +1812,10 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	): Promise<T> {
 		let res: FetchJobResult;
 
-		if (params.optimize?.concurentRequests ?? this.optimize.concurentRequests) {
+		if (
+			params.optimize?.concurrentRequests ??
+			this.optimize.concurrentRequests
+		) {
 			let job: Promise<FetchJobResult>;
 
 			const fetchJobKeyInstance = new URL(url);
