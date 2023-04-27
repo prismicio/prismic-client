@@ -10,10 +10,57 @@ import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2";
 
 import * as prismic from "../../src";
 
-type RunTestArgs = TestConcurrentMethodArgs & {
+type TestConcurrentMethodArgsMode =
+	| "get"
+	| "getAll"
+	| "repository"
+	| "tags"
+	| "resolvePreview"
+	| "NOT-SHARED___graphQL";
+
+const EXPECTED_REQUEST_COUNTS: Record<
+	TestConcurrentMethodArgsMode,
+	{
+		enabled: number;
+		enabledClient?: number;
+		enabledRequest?: number;
+		disabled: number;
+		disabledClient?: number;
+		disabledRequest?: number;
+	}
+> = {
+	get: {
+		enabled: 8,
+		disabled: 14,
+	},
+	getAll: {
+		enabled: 13,
+		disabled: 22,
+	},
+	repository: {
+		enabled: 5,
+		disabled: 8,
+	},
+	tags: {
+		enabled: 8,
+		disabled: 14,
+	},
+	resolvePreview: {
+		enabled: 8,
+		disabled: 14,
+	},
+	"NOT-SHARED___graphQL": {
+		enabled: 9,
+		disabled: 14,
+		disabledRequest: 9,
+	},
+};
+
+type RunTestArgs = Pick<TestConcurrentMethodArgs, "run"> & {
 	ctx: TestContext;
 	clientParams?: prismic.ClientConfig;
 	requestParams?: Parameters<prismic.Client["get"]>[0];
+	expectedNumberOfRequests: number;
 };
 
 const runTest = async (args: RunTestArgs) => {
@@ -47,10 +94,8 @@ const runTest = async (args: RunTestArgs) => {
 	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`;
 	const graphqlResponse = { foo: "bar" };
 	args.ctx.server.use(
-		rest.get(graphqlURL, (req, res, ctx) => {
-			if (req.headers.get("Prismic-Ref") === ref1.ref) {
-				return res(ctx.json(graphqlResponse));
-			}
+		rest.get(graphqlURL, (_req, res, ctx) => {
+			return res(ctx.json(graphqlResponse));
 		}),
 	);
 
@@ -72,71 +117,7 @@ const runTest = async (args: RunTestArgs) => {
 	await args.run(client, args.requestParams);
 	await args.run(client, args.requestParams);
 
-	// `get` methods use a total of 6 requests:
-	// - 1x /api/v2 (shared across all requests)
-	// - 5x /api/v2/documents/search
-
-	// `getAll` methods use a total of 11 requests:
-	// - 1x /api/v2 (shared across all requests)
-	// - 10x /api/v2/documents/search
-
-	const hasConcurrentRequestsEnabled =
-		args.requestParams?.optimize?.concurrentRequests ??
-		args.clientParams?.optimize?.concurrentRequests ??
-		true;
-
-	switch (args.mode) {
-		case "get": {
-			expect(fetchSpy.mock.calls.length).toBe(
-				hasConcurrentRequestsEnabled ? 6 : 8,
-			);
-
-			break;
-		}
-
-		case "getAll": {
-			expect(fetchSpy.mock.calls.length).toBe(
-				hasConcurrentRequestsEnabled ? 11 : 15,
-			);
-
-			break;
-		}
-
-		case "repository": {
-			expect(fetchSpy.mock.calls.length).toBe(
-				hasConcurrentRequestsEnabled ? 5 : 8,
-			);
-
-			break;
-		}
-
-		case "tags": {
-			expect(fetchSpy.mock.calls.length).toBe(
-				hasConcurrentRequestsEnabled ? 8 : 12,
-			);
-
-			break;
-		}
-
-		case "resolvePreview": {
-			expect(fetchSpy.mock.calls.length).toBe(
-				hasConcurrentRequestsEnabled ? 8 : 10,
-			);
-
-			break;
-		}
-
-		// GraphQL requests are not shared.
-		case "NOT-SHARED___graphQL": {
-			expect(fetchSpy.mock.calls.length).toBe(9);
-
-			break;
-		}
-
-		default: {
-			throw new Error(`Invalid mode: ${args.mode}`);
-		}
-	}
+	expect(fetchSpy.mock.calls.length).toBe(args.expectedNumberOfRequests);
 };
 
 type TestConcurrentMethodArgs = {
@@ -157,8 +138,14 @@ export const testConcurrentMethod = (
 	description: string,
 	args: TestConcurrentMethodArgs,
 ): void => {
+	const expectedRequestCounts = EXPECTED_REQUEST_COUNTS[args.mode];
+
 	it.concurrent(`${description} (default)`, async (ctx) => {
-		await runTest({ ctx, run: args.run, mode: args.mode });
+		await runTest({
+			ctx,
+			run: args.run,
+			expectedNumberOfRequests: expectedRequestCounts.enabled,
+		});
 	});
 
 	it.concurrent(
@@ -167,12 +154,13 @@ export const testConcurrentMethod = (
 			await runTest({
 				ctx,
 				run: args.run,
-				mode: args.mode,
 				clientParams: {
 					optimize: {
 						concurrentRequests: true,
 					},
 				},
+				expectedNumberOfRequests:
+					expectedRequestCounts.enabledClient ?? expectedRequestCounts.enabled,
 			});
 		},
 	);
@@ -183,18 +171,16 @@ export const testConcurrentMethod = (
 			await runTest({
 				ctx,
 				run: args.run,
-				mode: args.mode,
 				requestParams: {
 					optimize: {
 						concurrentRequests: true,
 					},
 				},
+				expectedNumberOfRequests:
+					expectedRequestCounts.enabledRequest ?? expectedRequestCounts.enabled,
 			});
 		},
 	);
-
-	// TODO: The following two requests should have the same number of
-	// requests, but they don't. Figure out why and fix the bug.
 
 	it.concurrent(
 		`${description} (client optimize.concurrentRequests = false)`,
@@ -202,28 +188,32 @@ export const testConcurrentMethod = (
 			await runTest({
 				ctx,
 				run: args.run,
-				mode: args.mode,
 				clientParams: {
 					optimize: {
 						concurrentRequests: false,
 					},
 				},
+				expectedNumberOfRequests:
+					expectedRequestCounts.disabledClient ??
+					expectedRequestCounts.disabled,
 			});
 		},
 	);
 
-	it.concurrent.only(
+	it.concurrent(
 		`${description} (request optimize.concurrentRequests = false)`,
 		async (ctx) => {
 			await runTest({
 				ctx,
 				run: args.run,
-				mode: args.mode,
 				requestParams: {
 					optimize: {
 						concurrentRequests: false,
 					},
 				},
+				expectedNumberOfRequests:
+					expectedRequestCounts.disabledRequest ??
+					expectedRequestCounts.disabled,
 			});
 		},
 	);
