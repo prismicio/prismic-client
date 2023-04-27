@@ -59,7 +59,7 @@ it("uses a cache-busting URL parameter by default", async (ctx) => {
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const url = new URL(call![0] as string);
 
-	expect(url.searchParams.has("x-optimize-ts")).toBe(true);
+	expect(url.searchParams.has("x-valid-until")).toBe(true);
 });
 
 it("uses a cache-busting URL parameter when `optimizeRepositoryRequest` is `true`", async (ctx) => {
@@ -83,7 +83,7 @@ it("uses a cache-busting URL parameter when `optimizeRepositoryRequest` is `true
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const url = new URL(call![0] as string);
 
-	expect(url.searchParams.has("x-optimize-ts")).toBe(true);
+	expect(url.searchParams.has("x-valid-until")).toBe(true);
 });
 
 it("does not use a cache-busting URL parameter when `optimizeRepositoryRequest` is `false`", async (ctx) => {
@@ -107,7 +107,7 @@ it("does not use a cache-busting URL parameter when `optimizeRepositoryRequest` 
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const url = new URL(call![0] as string);
 
-	expect(url.searchParams.has("x-optimize-ts")).toBe(false);
+	expect(url.searchParams.has("x-valid-until")).toBe(false);
 });
 
 testAbortableMethod("is abortable with an AbortController", {

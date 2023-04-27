@@ -51,10 +51,10 @@ export const GET_ALL_QUERY_DELAY = 500;
 
 /**
  * The URL search parameter name used for optimizing `/api/v2` requests. The
- * value of the parameter effectively cache-busts the request by providing a
- * unique value on every request.
+ * value of the parameter effectively forcibly cache-busts `/api/v2` requests
+ * after REPOSITORY_CACHE_TTL milliseconds have elapsed.
  */
-const OPTIMIZE_REPOSITORY_REQUESTS_TIMESTAMP_PARAMETER_NAME = "x-optimize-ts";
+const OPTIMIZE_REPOSITORY_REQUESTS_VALID_UNTIL_PARAMETER_NAME = "x-valid-until";
 
 /**
  * Extracts one or more Prismic document types that match a given Prismic
@@ -1245,9 +1245,21 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			params?.optimize?.repositoryRequests ??
 			this.optimize.repositoryRequests
 		) {
+			// Add a URL parameter to fingerprint the URL. The URL
+			// should be valid for the duration of
+			// REPOSITORY_CACHE_TTL.
+			//
+			// This fingerprint works as a second "cache" that
+			// works outside `getRepositoryCache()`. This is useful
+			// when multiple client instances exist with an
+			// external cache; all clients can share the same URL
+			// cache key for the duration of REPOSITORY_CACHE_TTL.
 			url.searchParams.set(
-				OPTIMIZE_REPOSITORY_REQUESTS_TIMESTAMP_PARAMETER_NAME,
-				Date.now().toString(),
+				OPTIMIZE_REPOSITORY_REQUESTS_VALID_UNTIL_PARAMETER_NAME,
+				(
+					Math.ceil(Math.floor(Date.now() / REPOSITORY_CACHE_TTL)) *
+					REPOSITORY_CACHE_TTL
+				).toString(),
 			);
 		}
 
@@ -1820,7 +1832,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 			const fetchJobKeyInstance = new URL(url);
 			fetchJobKeyInstance.searchParams.delete(
-				OPTIMIZE_REPOSITORY_REQUESTS_TIMESTAMP_PARAMETER_NAME,
+				OPTIMIZE_REPOSITORY_REQUESTS_VALID_UNTIL_PARAMETER_NAME,
 			);
 			const fetchJobKey = fetchJobKeyInstance.toString();
 
