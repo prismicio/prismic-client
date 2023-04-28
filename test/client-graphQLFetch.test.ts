@@ -213,10 +213,10 @@ testAbortableMethod("is abortable with an AbortController", {
 });
 
 testConcurrentMethod("does not share concurrent equivalent network requests", {
-	run: (client, signal) =>
+	run: (client, params) =>
 		client.graphQLFetch(
 			`https://${createRepositoryName()}.cdn.prismic.io/graphql`,
-			{ signal },
+			params,
 		),
 	mode: "NOT-SHARED___graphQL",
 });

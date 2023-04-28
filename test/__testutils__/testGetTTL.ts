@@ -28,6 +28,7 @@ type GetContext = {
 type TestGetWithinTTLArgs = {
 	getContext: GetContext;
 	beforeFirstGet: (args: { client: prismic.Client }) => void;
+	requestParams?: Parameters<prismic.Client["get"]>[0];
 };
 
 export const testGetWithinTTL = (

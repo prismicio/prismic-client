@@ -36,7 +36,6 @@ testAbortableMethod("is abortable with an AbortController", {
 });
 
 testConcurrentMethod("shares concurrent equivalent network requests", {
-	run: (client, signal) =>
-		client.getByUIDs("type", ["uid1", "uid2"], { signal }),
+	run: (client, params) => client.getByUIDs("type", ["uid1", "uid2"], params),
 	mode: "get",
 });

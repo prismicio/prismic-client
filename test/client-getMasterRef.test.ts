@@ -27,6 +27,6 @@ testAbortableMethod("is abortable with an AbortController", {
 });
 
 testConcurrentMethod("shares concurrent equivalent network requests", {
-	run: (client, signal) => client.getMasterRef({ signal }),
+	run: (client, params) => client.getMasterRef(params),
 	mode: "repository",
 });

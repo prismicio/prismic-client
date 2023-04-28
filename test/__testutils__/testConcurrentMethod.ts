@@ -1,4 +1,4 @@
-import { expect, it, vi } from "vitest";
+import { TestContext, expect, it, vi } from "vitest";
 
 import { rest } from "msw";
 import fetch from "node-fetch";
@@ -10,10 +10,120 @@ import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2";
 
 import * as prismic from "../../src";
 
+type TestConcurrentMethodArgsMode =
+	| "get"
+	| "getAll"
+	| "repository"
+	| "tags"
+	| "resolvePreview"
+	| "NOT-SHARED___graphQL";
+
+const EXPECTED_REQUEST_COUNTS: Record<
+	TestConcurrentMethodArgsMode,
+	{
+		enabled: number;
+		enabledClient?: number;
+		enabledRequest?: number;
+		disabled: number;
+		disabledClient?: number;
+		disabledRequest?: number;
+	}
+> = {
+	get: {
+		enabled: 8,
+		disabled: 14,
+	},
+	getAll: {
+		enabled: 13,
+		disabled: 22,
+	},
+	repository: {
+		enabled: 5,
+		disabled: 8,
+	},
+	tags: {
+		enabled: 8,
+		disabled: 14,
+	},
+	resolvePreview: {
+		enabled: 8,
+		disabled: 14,
+	},
+	"NOT-SHARED___graphQL": {
+		enabled: 9,
+		disabled: 14,
+		disabledRequest: 9,
+	},
+};
+
+type RunTestArgs = Pick<TestConcurrentMethodArgs, "run"> & {
+	ctx: TestContext;
+	clientParams?: prismic.ClientConfig;
+	requestParams?: Parameters<prismic.Client["get"]>[0];
+	expectedNumberOfRequests: number;
+};
+
+const runTest = async (args: RunTestArgs) => {
+	const fetchSpy = vi.fn(fetch);
+	const controller1 = new AbortController();
+	const controller2 = new AbortController();
+
+	const ref1 = args.ctx.mock.api.ref({ isMasterRef: true });
+	const ref2 = args.ctx.mock.api.ref({ isMasterRef: false });
+	ref2.id = "id";
+	ref2.label = "label";
+	const repositoryResponse = args.ctx.mock.api.repository();
+	repositoryResponse.refs = [ref1, ref2];
+
+	const queryResponse = createPagedQueryResponses({ ctx: args.ctx });
+
+	mockPrismicRestAPIV2({
+		ctx: args.ctx,
+		repositoryResponse,
+		queryResponse,
+		// A small delay is needed to simulate a real network
+		// request. Without the delay, network requests would
+		// not be shared.
+		queryDelay: 10,
+	});
+
+	const client = createTestClient({
+		clientConfig: { ...args.clientParams, fetch: fetchSpy },
+	});
+
+	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`;
+	const graphqlResponse = { foo: "bar" };
+	args.ctx.server.use(
+		rest.get(graphqlURL, (_req, res, ctx) => {
+			return res(ctx.json(graphqlResponse));
+		}),
+	);
+
+	await Promise.all([
+		// Shared
+		args.run(client, args.requestParams),
+		args.run(client, args.requestParams),
+
+		// Shared
+		args.run(client, { ...args.requestParams, signal: controller1.signal }),
+		args.run(client, { ...args.requestParams, signal: controller1.signal }),
+
+		// Shared
+		args.run(client, { ...args.requestParams, signal: controller2.signal }),
+		args.run(client, { ...args.requestParams, signal: controller2.signal }),
+	]);
+
+	// Not shared
+	await args.run(client, args.requestParams);
+	await args.run(client, args.requestParams);
+
+	expect(fetchSpy.mock.calls.length).toBe(args.expectedNumberOfRequests);
+};
+
 type TestConcurrentMethodArgs = {
 	run: (
 		client: prismic.Client,
-		signal?: prismic.AbortSignalLike,
+		params?: Parameters<prismic.Client["get"]>[0],
 	) => Promise<unknown>;
 	mode:
 		| "get"
@@ -28,109 +138,83 @@ export const testConcurrentMethod = (
 	description: string,
 	args: TestConcurrentMethodArgs,
 ): void => {
-	it.concurrent(description, async (ctx) => {
-		const fetchSpy = vi.fn(fetch);
-		const controller1 = new AbortController();
-		const controller2 = new AbortController();
+	const expectedRequestCounts = EXPECTED_REQUEST_COUNTS[args.mode];
 
-		const ref1 = ctx.mock.api.ref({ isMasterRef: true });
-		const ref2 = ctx.mock.api.ref({ isMasterRef: false });
-		ref2.id = "id";
-		ref2.label = "label";
-		const repositoryResponse = ctx.mock.api.repository();
-		repositoryResponse.refs = [ref1, ref2];
-
-		const queryResponse = createPagedQueryResponses({ ctx });
-
-		mockPrismicRestAPIV2({
+	it.concurrent(`${description} (default)`, async (ctx) => {
+		await runTest({
 			ctx,
-			repositoryResponse,
-			queryResponse,
-			// A small delay is needed to simulate a real network
-			// request. Without the delay, network requests would
-			// not be shared.
-			queryDelay: 10,
+			run: args.run,
+			expectedNumberOfRequests: expectedRequestCounts.enabled,
 		});
-
-		const client = createTestClient({ clientConfig: { fetch: fetchSpy } });
-
-		const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`;
-		const graphqlResponse = { foo: "bar" };
-		ctx.server.use(
-			rest.get(graphqlURL, (req, res, ctx) => {
-				if (req.headers.get("Prismic-Ref") === ref1.ref) {
-					return res(ctx.json(graphqlResponse));
-				}
-			}),
-		);
-
-		await Promise.all([
-			// Shared
-			args.run(client),
-			args.run(client),
-
-			// Shared
-			args.run(client, controller1.signal),
-			args.run(client, controller1.signal),
-
-			// Shared
-			args.run(client, controller2.signal),
-			args.run(client, controller2.signal),
-		]);
-
-		// Not shared
-		await args.run(client);
-		await args.run(client);
-
-		// `get` methods use a total of 6 requests:
-		// - 1x /api/v2 (shared across all requests)
-		// - 5x /api/v2/documents/search
-
-		// `getAll` methods use a total of 11 requests:
-		// - 1x /api/v2 (shared across all requests)
-		// - 10x /api/v2/documents/search
-
-		switch (args.mode) {
-			case "get": {
-				expect(fetchSpy.mock.calls.length).toBe(6);
-
-				break;
-			}
-
-			case "getAll": {
-				expect(fetchSpy.mock.calls.length).toBe(11);
-
-				break;
-			}
-
-			case "repository": {
-				expect(fetchSpy.mock.calls.length).toBe(5);
-
-				break;
-			}
-
-			case "tags": {
-				expect(fetchSpy.mock.calls.length).toBe(8);
-
-				break;
-			}
-
-			case "resolvePreview": {
-				expect(fetchSpy.mock.calls.length).toBe(8);
-
-				break;
-			}
-
-			// GraphQL requests are not shared.
-			case "NOT-SHARED___graphQL": {
-				expect(fetchSpy.mock.calls.length).toBe(9);
-
-				break;
-			}
-
-			default: {
-				throw new Error(`Invalid mode: ${args.mode}`);
-			}
-		}
 	});
+
+	it.concurrent(
+		`${description} (client optimize.concurrentRequests = true)`,
+		async (ctx) => {
+			await runTest({
+				ctx,
+				run: args.run,
+				clientParams: {
+					optimize: {
+						concurrentRequests: true,
+					},
+				},
+				expectedNumberOfRequests:
+					expectedRequestCounts.enabledClient ?? expectedRequestCounts.enabled,
+			});
+		},
+	);
+
+	it.concurrent(
+		`${description} (request optimize.concurrentRequests = true)`,
+		async (ctx) => {
+			await runTest({
+				ctx,
+				run: args.run,
+				requestParams: {
+					optimize: {
+						concurrentRequests: true,
+					},
+				},
+				expectedNumberOfRequests:
+					expectedRequestCounts.enabledRequest ?? expectedRequestCounts.enabled,
+			});
+		},
+	);
+
+	it.concurrent(
+		`${description} (client optimize.concurrentRequests = false)`,
+		async (ctx) => {
+			await runTest({
+				ctx,
+				run: args.run,
+				clientParams: {
+					optimize: {
+						concurrentRequests: false,
+					},
+				},
+				expectedNumberOfRequests:
+					expectedRequestCounts.disabledClient ??
+					expectedRequestCounts.disabled,
+			});
+		},
+	);
+
+	it.concurrent(
+		`${description} (request optimize.concurrentRequests = false)`,
+		async (ctx) => {
+			await runTest({
+				ctx,
+				run: args.run,
+				requestParams: {
+					optimize: {
+						concurrentRequests: false,
+					},
+				},
+				expectedNumberOfRequests:
+					expectedRequestCounts.disabledRequest ??
+					expectedRequestCounts.disabled,
+			});
+		},
+	);
 };

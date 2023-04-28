@@ -1,4 +1,6 @@
-import { expect, it } from "vitest";
+import { expect, it, vi } from "vitest";
+
+import fetch from "node-fetch";
 
 import { createTestClient } from "./__testutils__/createClient";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
@@ -39,11 +41,80 @@ it("includes access token if configured", async (ctx) => {
 	expect(res).toStrictEqual(repositoryResponse);
 });
 
+it("uses a cache-busting URL parameter by default", async (ctx) => {
+	mockPrismicRestAPIV2({ ctx });
+
+	const fetchSpy = vi.fn(fetch);
+	const client = createTestClient({
+		clientConfig: {
+			fetch: fetchSpy,
+		},
+	});
+
+	await client.getRepository();
+
+	const call = fetchSpy.mock.calls.find(
+		(call) => new URL(call[0] as string).pathname === "/api/v2",
+	);
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const url = new URL(call![0] as string);
+
+	expect(url.searchParams.has("x-valid-until")).toBe(true);
+});
+
+it("uses a cache-busting URL parameter when `optimizeRepositoryRequest` is `true`", async (ctx) => {
+	mockPrismicRestAPIV2({ ctx });
+
+	const fetchSpy = vi.fn(fetch);
+	const client = createTestClient({
+		clientConfig: {
+			optimize: {
+				repositoryRequests: true,
+			},
+			fetch: fetchSpy,
+		},
+	});
+
+	await client.getRepository();
+
+	const call = fetchSpy.mock.calls.find(
+		(call) => new URL(call[0] as string).pathname === "/api/v2",
+	);
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const url = new URL(call![0] as string);
+
+	expect(url.searchParams.has("x-valid-until")).toBe(true);
+});
+
+it("does not use a cache-busting URL parameter when `optimizeRepositoryRequest` is `false`", async (ctx) => {
+	mockPrismicRestAPIV2({ ctx });
+
+	const fetchSpy = vi.fn(fetch);
+	const client = createTestClient({
+		clientConfig: {
+			optimize: {
+				repositoryRequests: false,
+			},
+			fetch: fetchSpy,
+		},
+	});
+
+	await client.getRepository();
+
+	const call = fetchSpy.mock.calls.find(
+		(call) => new URL(call[0] as string).pathname === "/api/v2",
+	);
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const url = new URL(call![0] as string);
+
+	expect(url.searchParams.has("x-valid-until")).toBe(false);
+});
+
 testAbortableMethod("is abortable with an AbortController", {
 	run: (client, signal) => client.getRepository({ signal }),
 });
 
 testConcurrentMethod("shares concurrent equivalent network requests", {
-	run: (client, signal) => client.getRepository({ signal }),
+	run: (client, params) => client.getRepository(params),
 	mode: "repository",
 });
