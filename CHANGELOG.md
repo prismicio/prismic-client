@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.0.0-alpha.3](https://github.com/prismicio/prismic-client/compare/v7.0.0-alpha.2...v7.0.0-alpha.3) (2023-04-28)
+
+
+### Features
+
+* add `optimize` options ([#285](https://github.com/prismicio/prismic-client/issues/285)) ([ff5dc42](https://github.com/prismicio/prismic-client/commit/ff5dc42e295febc6d5679d3e8a3203df6c72e9c6))
+
 ## [7.0.0-alpha.2](https://github.com/prismicio/prismic-client/compare/v7.0.0-alpha.1...v7.0.0-alpha.2) (2023-04-22)
 
 
