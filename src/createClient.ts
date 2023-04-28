@@ -1257,8 +1257,8 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			url.searchParams.set(
 				OPTIMIZE_REPOSITORY_REQUESTS_VALID_UNTIL_PARAMETER_NAME,
 				(
-					Math.ceil(Math.floor(Date.now() / REPOSITORY_CACHE_TTL)) *
-					REPOSITORY_CACHE_TTL
+					Math.floor(Date.now() / REPOSITORY_CACHE_TTL) *
+					REPOSITORY_CACHE_TTL + REPOSITORY_CACHE_TTL
 				).toString(),
 			);
 		}
