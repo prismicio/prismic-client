@@ -111,6 +111,39 @@ it("resolves a preview url using a Web API-based server req object", async (ctx)
 	expect(res).toBe(`/${document.uid}`);
 });
 
+it("resolves a preview url using a Web API-based server req object containing a URL without a host", async (ctx) => {
+	const seed = ctx.meta.name;
+	const document = { ...prismicM.value.document({ seed }), uid: seed };
+	const queryResponse = prismicM.api.query({ seed, documents: [document] });
+
+	const headers = new Headers();
+	const url = `/foo?documentId=${document.id}&token=${previewToken}`;
+	const req = {
+		headers,
+		url: url.toString(),
+	};
+
+	mockPrismicRestAPIV2({
+		queryResponse,
+		queryRequiredParams: {
+			ref: previewToken,
+			lang: "*",
+			pageSize: "1",
+			q: `[[at(document.id, "${document.id}")]]`,
+		},
+		ctx,
+	});
+
+	const client = createTestClient();
+	client.enableAutoPreviewsFromReq(req);
+	const res = await client.resolvePreviewURL({
+		linkResolver: (document) => `/${document.uid}`,
+		defaultURL: "defaultURL",
+	});
+
+	expect(res).toBe(`/${document.uid}`);
+});
+
 it("allows providing an explicit documentId and previewToken", async (ctx) => {
 	const seed = ctx.meta.name;
 	const document = { ...prismicM.value.document({ seed }), uid: seed };

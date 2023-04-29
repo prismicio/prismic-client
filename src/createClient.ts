@@ -1467,8 +1467,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 				"url" in this.refState.httpRequest &&
 				this.refState.httpRequest.url
 			) {
-				const searchParams = new URL(this.refState.httpRequest.url)
-					.searchParams;
+				// Including "missing-host://" by default
+				// handles a case where Next.js Route Handlers
+				// only provide the pathname and search
+				// parameters in the `url` property
+				// (e.g. `/api/preview?foo=bar`).
+				const searchParams = new URL(
+					this.refState.httpRequest.url,
+					"missing-host://",
+				).searchParams;
 
 				documentID = documentID || searchParams.get("documentId");
 				previewToken = previewToken || searchParams.get("token");
