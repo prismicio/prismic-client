@@ -51,15 +51,20 @@ it("resolves a link to document field without Route Resolver", () => {
 		"returns null if both Link Resolver and Route Resolver are not used",
 	).toBeNull();
 	expect(
-		asLink(field, linkResolver),
+		asLink(field, { linkResolver }),
 		"uses Link Resolver URL if Link Resolver returns a non-nullish value",
 	).toBe("/test");
+	// TODO: Remove when we remove support for deprecated tuple-style configuration.
 	expect(
-		asLink(field, () => undefined),
+		asLink(field, linkResolver),
+		"uses Link Resolver URL if Link Resolver returns a non-nullish value (deprecated tuple configuration)",
+	).toBe("/test");
+	expect(
+		asLink(field, { linkResolver: () => undefined }),
 		"returns null if Link Resolver returns undefined",
 	).toBeNull();
 	expect(
-		asLink(field, () => null),
+		asLink(field, { linkResolver: () => null }),
 		"returns null if Link Resolver returns null",
 	).toBeNull();
 });
@@ -82,15 +87,15 @@ it("resolves a link to document field with Route Resolver", () => {
 		"uses Route Resolver URL if Link Resolver is not given",
 	).toBe(field.url);
 	expect(
-		asLink(field, () => "link-resolver-value"),
+		asLink(field, { linkResolver: () => "link-resolver-value" }),
 		"uses Link Resolver URL if Link Resolver returns a non-nullish value",
 	).toBe("link-resolver-value");
 	expect(
-		asLink(field, () => undefined),
+		asLink(field, { linkResolver: () => undefined }),
 		"uses Route Resolver URL if Link Resolver returns undefined",
 	).toBe(field.url);
 	expect(
-		asLink(field, () => null),
+		asLink(field, { linkResolver: () => null }),
 		"uses Route Resolver URL if Link Resolver returns null",
 	).toBe(field.url);
 });
@@ -110,7 +115,7 @@ it("resolves a link to web field", () => {
 		url: "https://prismic.io",
 	};
 
-	expect(asLink(field, linkResolver)).toBe("https://prismic.io");
+	expect(asLink(field, { linkResolver })).toBe("https://prismic.io");
 });
 
 it("resolves a link to media field", () => {
@@ -124,7 +129,7 @@ it("resolves a link to media field", () => {
 		width: "42",
 	};
 
-	expect(asLink(field, linkResolver)).toBe("https://prismic.io");
+	expect(asLink(field, { linkResolver })).toBe("https://prismic.io");
 });
 
 it("resolves a document", () => {
