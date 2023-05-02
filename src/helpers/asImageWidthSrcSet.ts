@@ -68,7 +68,7 @@ type AsImageWidthSrcSetConfig = Omit<BuildWidthSrcSetParams, "widths"> & {
  *
  * @param field - Image field (or one of its responsive views) from which to get
  *   an image URL.
- * @param params - An object of Imgix URL API parameters. The `widths` parameter
+ * @param config - An object of Imgix URL API parameters. The `widths` parameter
  *   defines the resulting `srcset` widths. Pass `"thumbnails"` to automatically
  *   use the field's responsive views.
  *
@@ -80,7 +80,7 @@ export const asImageWidthSrcSet = <
 	Field extends ImageFieldImage | null | undefined,
 >(
 	field: Field,
-	params: AsImageWidthSrcSetConfig = {},
+	config: AsImageWidthSrcSetConfig = {},
 ): AsImageWidthSrcSetReturnType<Field> => {
 	if (field && isFilled.imageThumbnail(field)) {
 		// We are using destructuring to omit `widths` from the object
@@ -89,7 +89,7 @@ export const asImageWidthSrcSet = <
 			widths = DEFAULT_WIDTHS,
 			// eslint-disable-next-line prefer-const
 			...imgixParams
-		} = params;
+		} = config;
 		const {
 			url,
 			dimensions,
