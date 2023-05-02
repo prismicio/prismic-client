@@ -192,13 +192,13 @@ it("supports setting direction of ordering param", () => {
 				ref: "ref",
 				orderings: [
 					// TODO: Remove test with deprecated API in v8
-					"page.title",
+					"page.title desc",
 					{ field: "page.subtitle", direction: "desc" },
 				],
 			}),
 		),
 	).toBe(
-		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[page.title,page.subtitle+desc]",
+		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[page.title+desc,page.subtitle+desc]",
 	);
 });
 
