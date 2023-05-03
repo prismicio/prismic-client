@@ -80,6 +80,75 @@ it("constructor throws if an invalid repository endpoint is provided", () => {
 	}).toThrowError(prismic.PrismicError);
 });
 
+it("constructor throws if a prismic.io endpoint is given that is not for Rest API V2", () => {
+	const fetch = vi.fn();
+
+	const originalNodeEnv = process.env.NODE_ENV;
+	process.env.NODE_ENV = "development";
+
+	expect(() => {
+		prismic.createClient("https://qwerty.cdn.prismic.io/api/v1", { fetch });
+	}).toThrowError(/only supports Prismic Rest API V2/i);
+	expect(() => {
+		prismic.createClient("https://qwerty.cdn.prismic.io/api/v1", { fetch });
+	}).toThrowError(prismic.PrismicError);
+
+	expect(() => {
+		prismic.createClient("https://example.com/custom/endpoint", { fetch });
+	}, "Non-prismic.io endpoints are not checked").not.toThrow();
+
+	expect(() => {
+		prismic.createClient("https://qwerty.cdn.prismic.io/api/v2", { fetch });
+	}, "A valid prismic.io V2 endpoint does not throw").not.toThrow();
+
+	expect(() => {
+		prismic.createClient(prismic.getRepositoryEndpoint("qwerty"), { fetch });
+	}, "An endpoint created with getRepositoryEndpoint does not throw").not.toThrow();
+
+	process.env.NODE_ENV = originalNodeEnv;
+});
+
+it("constructor warns if a non-.cdn prismic.io endpoint is given", () => {
+	const fetch = vi.fn();
+
+	const originalNodeEnv = process.env.NODE_ENV;
+	process.env.NODE_ENV = "development";
+
+	const consoleWarnSpy = vi
+		.spyOn(console, "warn")
+		.mockImplementation(() => void 0);
+
+	prismic.createClient("https://qwerty.prismic.io/api/v2", { fetch });
+	expect(consoleWarnSpy).toHaveBeenCalledWith(
+		expect.stringMatching(/endpoint-must-use-cdn/i),
+	);
+	consoleWarnSpy.mockClear();
+
+	prismic.createClient("https://example.com/custom/endpoint", { fetch });
+	expect(
+		consoleWarnSpy,
+		"Non-prismic.io endpoints are not checked",
+	).not.toHaveBeenCalledWith(expect.stringMatching(/endpoint-must-use-cdn/i));
+	consoleWarnSpy.mockClear();
+
+	prismic.createClient("https://qwerty.cdn.prismic.io/api/v2", { fetch });
+	expect(
+		consoleWarnSpy,
+		"A .cdn prismic.io endpoint does not warn",
+	).not.toHaveBeenCalledWith(expect.stringMatching(/endpoint-must-use-cdn/i));
+	consoleWarnSpy.mockClear();
+
+	prismic.createClient(prismic.getRepositoryEndpoint("qwerty"), { fetch });
+	expect(
+		consoleWarnSpy,
+		"An endpoint created with getRepositoryEndpoint does not warn",
+	).not.toHaveBeenCalledWith(expect.stringMatching(/endpoint-must-use-cdn/i));
+
+	consoleWarnSpy.mockRestore();
+
+	process.env.NODE_ENV = originalNodeEnv;
+});
+
 it("constructor throws if fetch is unavailable", () => {
 	const endpoint = prismic.getRepositoryEndpoint("qwerty");
 
@@ -613,32 +682,4 @@ it("throws NotFoundError if repository does not exist", async (ctx) => {
 		/repository not found/i,
 	);
 	await expect(() => client.get()).rejects.toThrowError(prismic.NotFoundError);
-});
-
-it("throws if a prismic.io endpoint is given that is not for Rest API V2", () => {
-	const fetch = vi.fn();
-
-	const originalNodeEnv = process.env.NODE_ENV;
-	process.env.NODE_ENV = "development";
-
-	expect(() => {
-		prismic.createClient("https://qwerty.cdn.prismic.io/api/v1", { fetch });
-	}).toThrowError(/only supports Prismic Rest API V2/i);
-	expect(() => {
-		prismic.createClient("https://qwerty.cdn.prismic.io/api/v1", { fetch });
-	}).toThrowError(prismic.PrismicError);
-
-	expect(() => {
-		prismic.createClient("https://example.com/custom/endpoint", { fetch });
-	}, "Non-prismic.io endpoints are not checked").not.toThrow();
-
-	expect(() => {
-		prismic.createClient("https://qwerty.cdn.prismic.io/api/v2", { fetch });
-	}, "A valid prismic.io V2 endpoint does not throw").not.toThrow();
-
-	expect(() => {
-		prismic.createClient(prismic.getRepositoryEndpoint("qwerty"), { fetch });
-	}, "An endpoint created with getRepositoryEndpoint does not throw").not.toThrow();
-
-	process.env.NODE_ENV === originalNodeEnv;
 });

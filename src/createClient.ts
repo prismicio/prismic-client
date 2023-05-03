@@ -1,5 +1,6 @@
 import { appendFilters } from "./lib/appendFilters";
 import { castThunk } from "./lib/castThunk";
+import { devMsg } from "./lib/devMsg";
 import { everyTagFilter } from "./lib/everyTagFilter";
 import { findMasterRef } from "./lib/findMasterRef";
 import { findRefByID } from "./lib/findRefByID";
@@ -24,6 +25,7 @@ import { LinkResolverFunction, asLink } from "./helpers/asLink";
 import { BuildQueryURLArgs, buildQueryURL } from "./buildQueryURL";
 import { filter } from "./filter";
 import { getRepositoryEndpoint } from "./getRepositoryEndpoint";
+import { getRepositoryName } from "./getRepositoryName";
 import { isRepositoryEndpoint } from "./isRepositoryEndpoint";
 
 /**
@@ -501,15 +503,33 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 */
 	constructor(repositoryNameOrEndpoint: string, options: ClientConfig = {}) {
 		if (isRepositoryEndpoint(repositoryNameOrEndpoint)) {
-			if (
-				process.env.NODE_ENV === "development" &&
-				/\.prismic\.io\/(?!api\/v2\/?)/.test(repositoryNameOrEndpoint)
-			) {
-				throw new PrismicError(
-					"@prismicio/client only supports Prismic Rest API V2. Please provide only the repository name to the first createClient() parameter or use the getRepositoryEndpoint() helper to generate a valid Rest API V2 endpoint URL.",
-					undefined,
-					undefined,
-				);
+			if (process.env.NODE_ENV === "development") {
+				// Matches non-API v2 `.prismic.io` endpoints, see: https://regex101.com/r/xRsavu/1
+				if (/\.prismic\.io\/(?!api\/v2\/?)/i.test(repositoryNameOrEndpoint)) {
+					throw new PrismicError(
+						"@prismicio/client only supports Prismic Rest API V2. Please provide only the repository name to the first createClient() parameter or use the getRepositoryEndpoint() helper to generate a valid Rest API V2 endpoint URL.",
+						undefined,
+						undefined,
+					);
+				}
+
+				const hostname = new URL(
+					repositoryNameOrEndpoint,
+				).hostname.toLowerCase();
+
+				// Matches non-.cdn `.prismic.io` endpoints
+				if (
+					hostname.endsWith(".prismic.io") &&
+					!hostname.endsWith(".cdn.prismic.io")
+				) {
+					const repositoryName = getRepositoryName(repositoryNameOrEndpoint);
+					const dotCDNEndpoint = getRepositoryEndpoint(repositoryName);
+					console.warn(
+						`[@prismicio/client] A non-.cdn endpoint was provided to create a client with (\`${repositoryNameOrEndpoint}\`). Non-.cdn endpoints can have unexpected side-effects and cause performance issues when querying Prismic. Please convert it to the \`.cdn\` alternative (\`${dotCDNEndpoint}\`) or use the repository name directly instead (\`${repositoryName}\`). For more details, see ${devMsg(
+							"endpoint-must-use-cdn",
+						)}`,
+					);
+				}
 			}
 
 			this.endpoint = repositoryNameOrEndpoint;
