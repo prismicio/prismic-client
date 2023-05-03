@@ -23,7 +23,7 @@ type AsImageSrcReturnType<Field extends ImageFieldImage | null | undefined> =
  *
  * @param field - Image field (or one of its responsive views) from which to get
  *   an image URL.
- * @param params - An object of Imgix URL API parameters to transform the image.
+ * @param config - An object of Imgix URL API parameters to transform the image.
  *
  * @returns The Image field's image URL with transformations applied (if given).
  *   If the Image field is empty, `null` is returned.
@@ -31,10 +31,10 @@ type AsImageSrcReturnType<Field extends ImageFieldImage | null | undefined> =
  */
 export const asImageSrc = <Field extends ImageFieldImage | null | undefined>(
 	field: Field,
-	params: ImgixURLParams = {},
+	config: ImgixURLParams = {},
 ): AsImageSrcReturnType<Field> => {
 	if (field && isImageThumbnailFilled(field)) {
-		return buildURL(field.url, params) as AsImageSrcReturnType<Field>;
+		return buildURL(field.url, config) as AsImageSrcReturnType<Field>;
 	} else {
 		return null as AsImageSrcReturnType<Field>;
 	}

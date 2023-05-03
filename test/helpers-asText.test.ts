@@ -14,3 +14,14 @@ it("returns null for nullish inputs", () => {
 	expect(asText(null)).toBeNull();
 	expect(asText(undefined)).toBeNull();
 });
+
+it("supports separator configuration", () => {
+	expect(asText(richTextFixture.en, { separator: "__separator__" })).toBe(
+		prismicR.asText(richTextFixture.en, "__separator__"),
+	);
+
+	// TODO: Remove when we remove support for deprecated tuple-style configuration.
+	expect(asText(richTextFixture.en, "__separator__")).toBe(
+		prismicR.asText(richTextFixture.en, "__separator__"),
+	);
+});

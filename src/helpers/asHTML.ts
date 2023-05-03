@@ -122,10 +122,7 @@ export type HTMLRichTextSerializer =
  * @internal
  */
 const createDefaultHTMLRichTextSerializer = (
-	linkResolver:
-		| LinkResolverFunction<string | null | undefined>
-		| undefined
-		| null,
+	linkResolver: LinkResolverFunction | undefined | null,
 ): RichTextFunctionSerializer<string> => {
 	return (_type, node, text, children, _key) => {
 		switch (node.type) {
@@ -204,40 +201,117 @@ const wrapMapSerializerWithStringChildren = (
 };
 
 /**
+ * Configuration that determines the output of `asHTML()`.
+ */
+type AsHTMLConfig = {
+	/**
+	 * An optional link resolver function to resolve links.
+	 * Without it you're expected to use the `routes` options from the API.
+	 */
+	linkResolver?: LinkResolverFunction | null;
+
+	/**
+	 * An optional Rich Text Serializer, unhandled cases will fallback to the default serializer
+	 */
+	htmlRichTextSerializer?: HTMLRichTextSerializer | null;
+};
+
+// TODO: Remove when we remove support for deprecated tuple-style configuration.
+/**
+ * @deprecated Use object-style configuration instead.
+ */
+type AsHTMLDeprecatedTupleConfig = [
+	linkResolver?: LinkResolverFunction | null,
+	htmlRichTextSerializer?: HTMLRichTextSerializer | null,
+];
+
+/**
  * The return type of `asHTML()`.
  */
 type AsHTMLReturnType<Field extends RichTextField | null | undefined> =
 	Field extends RichTextField ? string : null;
 
-/**
- * Serializes a Rich Text or Title field to an HTML string
- *
- * @param richTextField - A Rich Text or Title field from Prismic
- * @param linkResolver - An optional link resolver function to resolve links,
- *   without it you're expected to use the `routes` options from the API
- * @param htmlRichTextSerializer - An optional Rich Text Serializer, unhandled cases will fallback
- *   to the default serializer
- *
- * @returns HTML equivalent of the provided Rich Text or Title field
- * @see Templating Rich Text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
- */
-export const asHTML = <Field extends RichTextField | null | undefined>(
+// TODO: Remove overload when we remove support for deprecated tuple-style configuration.
+export const asHTML: {
+	/**
+	 * Serializes a Rich Text or Title field to an HTML string.
+	 *
+	 * @param richTextField - A Rich Text or Title field from Prismic
+	 * @param config - Configuration that determines the output of `asHTML()`
+	 *
+	 * @returns HTML equivalent of the provided Rich Text or Title field
+	 * @see Templating Rich Text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
+	 */
+	<Field extends RichTextField | null | undefined>(
+		richTextField: Field,
+		config?: AsHTMLConfig,
+	): AsHTMLReturnType<Field>;
+
+	/**
+	 * Serializes a Rich Text or Title field to an HTML string.
+	 *
+	 * @param richTextField - A Rich Text or Title field from Prismic
+	 * @param linkResolver - An optional link resolver function to resolve links,
+	 *   without it you're expected to use the `routes` options from the API
+	 * @param htmlRichTextSerializer - An optional Rich Text Serializer, unhandled cases will fallback
+	 *   to the default serializer
+	 *
+	 * @returns HTML equivalent of the provided Rich Text or Title field
+	 * @see Templating Rich Text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
+	 *
+	 * @deprecated Use object-style configuration instead.
+	 *
+	 * ```ts
+	 * asHTML(field);
+	 * asHTML(field, { linkResolver });
+	 * asHTML(field, { htmlRichTextSerializer });
+	 * asHTML(field, { linkResolver, htmlRichTextSerializer });
+	 * ```
+	 */
+	<Field extends RichTextField | null | undefined>(
+		richTextField: Field,
+		...config: AsHTMLDeprecatedTupleConfig
+	): AsHTMLReturnType<Field>;
+} = <Field extends RichTextField | null | undefined>(
 	richTextField: Field,
-	linkResolver?: LinkResolverFunction<string | null | undefined> | null,
-	htmlRichTextSerializer?: HTMLRichTextSerializer | null,
+	// TODO: Rename to `config` when we remove support for deprecated tuple-style configuration.
+	...configObjectOrTuple: [config?: AsHTMLConfig] | AsHTMLDeprecatedTupleConfig
 ): AsHTMLReturnType<Field> => {
 	if (richTextField) {
+		// TODO: Remove when we remove support for deprecated tuple-style configuration.
+		const [configObjectOrLinkResolver, maybeHTMLRichTextSerializer] =
+			configObjectOrTuple;
+		let config: AsHTMLConfig;
+		if (
+			typeof configObjectOrLinkResolver === "function" ||
+			configObjectOrLinkResolver == null
+		) {
+			config = {
+				linkResolver: configObjectOrLinkResolver,
+				htmlRichTextSerializer: maybeHTMLRichTextSerializer,
+			};
+		} else {
+			config = { ...configObjectOrLinkResolver };
+		}
+
 		let serializer: RichTextFunctionSerializer<string>;
-		if (htmlRichTextSerializer) {
+		if (config.htmlRichTextSerializer) {
 			serializer = composeSerializers(
-				typeof htmlRichTextSerializer === "object"
-					? wrapMapSerializerWithStringChildren(htmlRichTextSerializer)
+				typeof config.htmlRichTextSerializer === "object"
+					? wrapMapSerializerWithStringChildren(config.htmlRichTextSerializer)
 					: (type, node, text, children, key) =>
-							htmlRichTextSerializer(type, node, text, children.join(""), key),
-				createDefaultHTMLRichTextSerializer(linkResolver),
+							// TypeScript doesn't narrow the type correctly here since it is now in a callback function, so we have to cast it here.
+							(config.htmlRichTextSerializer as HTMLRichTextFunctionSerializer)(
+								type,
+								node,
+								text,
+								children.join(""),
+								key,
+							),
+				createDefaultHTMLRichTextSerializer(config.linkResolver),
 			);
 		} else {
-			serializer = createDefaultHTMLRichTextSerializer(linkResolver);
+			serializer = createDefaultHTMLRichTextSerializer(config.linkResolver);
 		}
 
 		return serialize(richTextField, serializer).join(

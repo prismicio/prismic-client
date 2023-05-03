@@ -65,7 +65,7 @@ type AsImagePixelDensitySrcSetReturnType<
  *
  * @param field - Image field (or one of its responsive views) from which to get
  *   an image URL.
- * @param params - An object of Imgix URL API parameters. The `pixelDensities`
+ * @param config - An object of Imgix URL API parameters. The `pixelDensities`
  *   parameter defines the resulting `srcset` widths.
  *
  * @returns A `srcset` attribute value for the Image field with Imgix URL
@@ -76,12 +76,12 @@ export const asImagePixelDensitySrcSet = <
 	Field extends ImageFieldImage | null | undefined,
 >(
 	field: Field,
-	params: AsImagePixelDensitySrcSetConfig = {},
+	config: AsImagePixelDensitySrcSetConfig = {},
 ): AsImagePixelDensitySrcSetReturnType<Field> => {
 	if (field && isImageThumbnailFilled(field)) {
 		// We are using destructuring to omit `pixelDensities` from the
 		// object we will pass to `buildURL()`.
-		const { pixelDensities = DEFAULT_PIXEL_DENSITIES, ...imgixParams } = params;
+		const { pixelDensities = DEFAULT_PIXEL_DENSITIES, ...imgixParams } = config;
 
 		return {
 			src: buildURL(field.url, imgixParams),
