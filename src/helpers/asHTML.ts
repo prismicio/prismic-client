@@ -122,10 +122,7 @@ export type HTMLRichTextSerializer =
  * @internal
  */
 const createDefaultHTMLRichTextSerializer = (
-	linkResolver:
-		| LinkResolverFunction<string | null | undefined>
-		| undefined
-		| null,
+	linkResolver: LinkResolverFunction | undefined | null,
 ): RichTextFunctionSerializer<string> => {
 	return (_type, node, text, children, _key) => {
 		switch (node.type) {
@@ -211,7 +208,7 @@ type AsHTMLConfig = {
 	 * An optional link resolver function to resolve links.
 	 * Without it you're expected to use the `routes` options from the API.
 	 */
-	linkResolver?: LinkResolverFunction<string | null | undefined> | null;
+	linkResolver?: LinkResolverFunction | null;
 
 	/**
 	 * An optional Rich Text Serializer, unhandled cases will fallback to the default serializer
@@ -224,7 +221,7 @@ type AsHTMLConfig = {
  * @deprecated Use object-style configuration instead.
  */
 type AsHTMLDeprecatedTupleConfig = [
-	linkResolver?: LinkResolverFunction<string | null | undefined> | null,
+	linkResolver?: LinkResolverFunction | null,
 	htmlRichTextSerializer?: HTMLRichTextSerializer | null,
 ];
 
@@ -234,16 +231,48 @@ type AsHTMLDeprecatedTupleConfig = [
 type AsHTMLReturnType<Field extends RichTextField | null | undefined> =
 	Field extends RichTextField ? string : null;
 
-/**
- * Serializes a Rich Text or Title field to an HTML string.
- *
- * @param richTextField - A Rich Text or Title field from Prismic
- * @param configObjectOrTuple - Configuration that determines the output of `asHTML()`
- *
- * @returns HTML equivalent of the provided Rich Text or Title field
- * @see Templating Rich Text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
- */
-export const asHTML = <Field extends RichTextField | null | undefined>(
+// TODO: Remove overload when we remove support for deprecated tuple-style configuration.
+export const asHTML: {
+	/**
+	 * Serializes a Rich Text or Title field to an HTML string.
+	 *
+	 * @param richTextField - A Rich Text or Title field from Prismic
+	 * @param config - Configuration that determines the output of `asHTML()`
+	 *
+	 * @returns HTML equivalent of the provided Rich Text or Title field
+	 * @see Templating Rich Text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
+	 */
+	<Field extends RichTextField | null | undefined>(
+		richTextField: Field,
+		config?: AsHTMLConfig,
+	): AsHTMLReturnType<Field>;
+
+	/**
+	 * Serializes a Rich Text or Title field to an HTML string.
+	 *
+	 * @param richTextField - A Rich Text or Title field from Prismic
+	 * @param linkResolver - An optional link resolver function to resolve links,
+	 *   without it you're expected to use the `routes` options from the API
+	 * @param htmlRichTextSerializer - An optional Rich Text Serializer, unhandled cases will fallback
+	 *   to the default serializer
+	 *
+	 * @returns HTML equivalent of the provided Rich Text or Title field
+	 * @see Templating Rich Text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
+	 *
+	 * @deprecated Use object-style configuration instead.
+	 *
+	 * ```ts
+	 * asHTML(field);
+	 * asHTML(field, { linkResolver });
+	 * asHTML(field, { htmlRichTextSerializer });
+	 * asHTML(field, { linkResolver, htmlRichTextSerializer });
+	 * ```
+	 */
+	<Field extends RichTextField | null | undefined>(
+		richTextField: Field,
+		...config: AsHTMLDeprecatedTupleConfig
+	): AsHTMLReturnType<Field>;
+} = <Field extends RichTextField | null | undefined>(
 	richTextField: Field,
 	// TODO: Rename to `config` when we remove support for deprecated tuple-style configuration.
 	...configObjectOrTuple: [config?: AsHTMLConfig] | AsHTMLDeprecatedTupleConfig

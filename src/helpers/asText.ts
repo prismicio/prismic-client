@@ -26,16 +26,42 @@ type AsTextDeprecatedTupleConfig = [separator?: string];
 type AsTextReturnType<Field extends RichTextField | null | undefined> =
 	Field extends RichTextField ? string : null;
 
-/**
- * Serializes a Rich Text or Title field to a plain text string.
- *
- * @param richTextField - A Rich Text or Title field from Prismic
- * @param configObjectOrTuple - Configuration that determines the output of `asText()`
- *
- * @returns Plain text equivalent of the provided Rich Text or Title field
- * @see Templating Rich Text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
- */
-export const asText = <Field extends RichTextField | null | undefined>(
+export const asText: {
+	/**
+	 * Serializes a Rich Text or Title field to a plain text string.
+	 *
+	 * @param richTextField - A Rich Text or Title field from Prismic
+	 * @param config - Configuration that determines the output of `asText()`
+	 *
+	 * @returns Plain text equivalent of the provided Rich Text or Title field
+	 * @see Templating Rich Text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
+	 */
+	<Field extends RichTextField | null | undefined>(
+		richTextField: Field,
+		config?: AsTextConfig,
+	): AsTextReturnType<Field>;
+
+	/**
+	 * Serializes a Rich Text or Title field to a plain text string.
+	 *
+	 * @param richTextField - A Rich Text or Title field from Prismic
+	 * @param separator - Separator used to join each element, defaults to a space
+	 *
+	 * @returns Plain text equivalent of the provided Rich Text or Title field
+	 * @see Templating Rich Text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
+	 *
+	 * @deprecated Use object-style configuration instead.
+	 *
+	 * ```ts
+	 * asText(field);
+	 * asText(field, { separator });
+	 * ```
+	 */
+	<Field extends RichTextField | null | undefined>(
+		richTextField: Field,
+		...config: AsTextDeprecatedTupleConfig
+	): AsTextReturnType<Field>;
+} = <Field extends RichTextField | null | undefined>(
 	richTextField: Field,
 	// TODO: Rename to `config` when we remove support for deprecated tuple-style configuration.
 	...configObjectOrTuple: [config?: AsTextConfig] | AsTextDeprecatedTupleConfig

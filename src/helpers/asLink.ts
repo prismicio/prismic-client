@@ -59,20 +59,66 @@ export type AsLinkReturnType<
 	? LinkResolverFunctionReturnType | string | null
 	: null;
 
-/**
- * Resolves any type of Link field or Prismic document to a URL.
- *
- * @typeParam LinkResolverFunctionReturnType - Link Resolver function return
- *   type
- * @typeParam Field - Link field or Prismic document to resolve to a URL
- * @param linkFieldOrDocument - Any kind of Link field or a document to resolve
- * @param configObjectOrTuple - Configuration that determines the output of `asLink()`
- *
- * @returns Resolved URL or, if the provided Link field or document is empty, `null`
- * @see Prismic Link Resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
- * @see Prismic API `routes` options documentation: {@link https://prismic.io/docs/route-resolver}
- */
-export const asLink = <
+// TODO: Remove overload when we remove support for deprecated tuple-style configuration.
+export const asLink: {
+	/**
+	 * Resolves any type of Link field or Prismic document to a URL.
+	 *
+	 * @typeParam LinkResolverFunctionReturnType - Link Resolver function return
+	 *   type
+	 * @typeParam Field - Link field or Prismic document to resolve to a URL
+	 * @param linkFieldOrDocument - Any kind of Link field or a document to resolve
+	 * @param config - Configuration that determines the output of `asLink()`
+	 *
+	 * @returns Resolved URL or, if the provided Link field or document is empty, `null`
+	 * @see Prismic Link Resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
+	 * @see Prismic API `routes` options documentation: {@link https://prismic.io/docs/route-resolver}
+	 */
+	<
+		LinkResolverFunctionReturnType = string | null | undefined,
+		Field extends LinkField | PrismicDocument | null | undefined =
+			| LinkField
+			| PrismicDocument
+			| null
+			| undefined,
+	>(
+		linkFieldOrDocument: Field,
+		config?: AsLinkConfig,
+	): AsLinkReturnType<LinkResolverFunctionReturnType, Field>;
+
+	/**
+	 * Resolves any type of Link field or Prismic document to a URL.
+	 *
+	 * @typeParam LinkResolverFunctionReturnType - Link Resolver function return
+	 *   type
+	 * @typeParam Field - Link field or Prismic document to resolve to a URL
+	 * @param linkFieldOrDocument - Any kind of Link field or a document to resolve
+	 * @param linkResolver - An optional Link Resolver function. Without it, you are
+	 *   expected to use the `routes` options from the API
+	 *
+	 * @returns Resolved URL or, if the provided Link field or document is empty, `null`
+	 * @see Prismic Link Resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
+	 * @see Prismic API `routes` options documentation: {@link https://prismic.io/docs/route-resolver}
+	 *
+	 * @deprecated Use object-style configuration instead.
+	 *
+	 * ```ts
+	 * asLink(field);
+	 * asLink(field, { linkResolver });
+	 * ```
+	 */
+	<
+		LinkResolverFunctionReturnType = string | null | undefined,
+		Field extends LinkField | PrismicDocument | null | undefined =
+			| LinkField
+			| PrismicDocument
+			| null
+			| undefined,
+	>(
+		linkFieldOrDocument: Field,
+		...config: AsLinkDeprecatedTupleConfig
+	): AsLinkReturnType<LinkResolverFunctionReturnType, Field>;
+} = <
 	LinkResolverFunctionReturnType = string | null | undefined,
 	Field extends LinkField | PrismicDocument | null | undefined =
 		| LinkField
