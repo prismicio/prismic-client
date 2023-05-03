@@ -288,6 +288,9 @@ type FetchParams = {
 type OptimizeParams = {
 	/**
 	 * Options that determine if or how the client is optimized.
+	 *
+	 * @experimental These options may change in the future. Please treat
+	 * `optimize` as an undocumented feature.
 	 */
 	optimize?: {
 		/**
@@ -302,7 +305,9 @@ type OptimizeParams = {
 		repositoryRequests?: boolean;
 
 		/**
-		 * Determines if concurrent requests to the same URL should be optimized. The optimizations result in less network requests and quicker responses.
+		 * Determines if concurrent requests to the same URL should be
+		 * optimized. The optimizations result in less network requests and quicker
+		 * responses.
 		 *
 		 * Only opt out of this optimization if you know what you are doing.
 		 *
