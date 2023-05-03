@@ -105,7 +105,7 @@ it("constructor throws if a prismic.io endpoint is given that is not for Rest AP
 		prismic.createClient(prismic.getRepositoryEndpoint("qwerty"), { fetch });
 	}, "An endpoint created with getRepositoryEndpoint does not throw").not.toThrow();
 
-	process.env.NODE_ENV === originalNodeEnv;
+	process.env.NODE_ENV = originalNodeEnv;
 });
 
 it("constructor warns if a non-.cdn prismic.io endpoint is given", () => {
@@ -146,7 +146,7 @@ it("constructor warns if a non-.cdn prismic.io endpoint is given", () => {
 
 	consoleWarnSpy.mockRestore();
 
-	process.env.NODE_ENV === originalNodeEnv;
+	process.env.NODE_ENV = originalNodeEnv;
 });
 
 it("constructor throws if fetch is unavailable", () => {

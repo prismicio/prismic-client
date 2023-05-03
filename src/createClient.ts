@@ -504,10 +504,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	constructor(repositoryNameOrEndpoint: string, options: ClientConfig = {}) {
 		if (isRepositoryEndpoint(repositoryNameOrEndpoint)) {
 			if (process.env.NODE_ENV === "development") {
-				/**
-				 * Matches non-API v2 `.prismic.io` endpoints
-				 * {@link https://regex101.com/r/xRsavu/1}
-				 */
+				// Matches non-API v2 `.prismic.io` endpoints, see: https://regex101.com/r/xRsavu/1
 				if (/\.prismic\.io\/(?!api\/v2\/?)/i.test(repositoryNameOrEndpoint)) {
 					throw new PrismicError(
 						"@prismicio/client only supports Prismic Rest API V2. Please provide only the repository name to the first createClient() parameter or use the getRepositoryEndpoint() helper to generate a valid Rest API V2 endpoint URL.",
@@ -519,9 +516,8 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 				const hostname = new URL(
 					repositoryNameOrEndpoint,
 				).hostname.toLowerCase();
-				/**
-				 * Matches non-.cdn `.prismic.io` endpoints
-				 */
+
+				// Matches non-.cdn `.prismic.io` endpoints
 				if (
 					hostname.endsWith(".prismic.io") &&
 					!hostname.endsWith(".cdn.prismic.io")
