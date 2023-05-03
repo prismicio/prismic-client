@@ -83,7 +83,7 @@ export const asLink: {
 			| undefined,
 	>(
 		linkFieldOrDocument: Field,
-		config?: AsLinkConfig,
+		config?: AsLinkConfig<LinkResolverFunctionReturnType>,
 	): AsLinkReturnType<LinkResolverFunctionReturnType, Field>;
 
 	/**
@@ -116,7 +116,7 @@ export const asLink: {
 			| undefined,
 	>(
 		linkFieldOrDocument: Field,
-		...config: AsLinkDeprecatedTupleConfig
+		...config: AsLinkDeprecatedTupleConfig<LinkResolverFunctionReturnType>
 	): AsLinkReturnType<LinkResolverFunctionReturnType, Field>;
 } = <
 	LinkResolverFunctionReturnType = string | null | undefined,
