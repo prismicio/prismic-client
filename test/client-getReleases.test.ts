@@ -21,7 +21,7 @@ it("returns all Releases", async (ctx) => {
 });
 
 testAbortableMethod("is abortable with an AbortController", {
-	run: (client, signal) => client.getReleases({ signal }),
+	run: (client, params) => client.getReleases(params),
 });
 
 testConcurrentMethod("shares concurrent equivalent network requests", {

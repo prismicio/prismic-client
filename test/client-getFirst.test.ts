@@ -94,7 +94,7 @@ it("throws if no documents were returned", async (ctx) => {
 });
 
 testAbortableMethod("is abortable with an AbortController", {
-	run: (client, signal) => client.getFirst({ signal }),
+	run: (client, params) => client.getFirst(params),
 });
 
 testConcurrentMethod("shares concurrent equivalent network requests", {

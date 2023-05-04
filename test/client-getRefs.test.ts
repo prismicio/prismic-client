@@ -19,7 +19,7 @@ it("returns all refs", async (ctx) => {
 });
 
 testAbortableMethod("is abortable with an AbortController", {
-	run: (client, signal) => client.getRefs({ signal }),
+	run: (client, params) => client.getRefs(params),
 });
 
 testConcurrentMethod("shares concurrent equivalent network requests", {

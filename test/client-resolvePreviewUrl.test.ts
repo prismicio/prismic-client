@@ -256,9 +256,9 @@ it("returns defaultURL if resolved URL is not a string", async (ctx) => {
 });
 
 testAbortableMethod("is abortable with an AbortController", {
-	run: (client, signal) =>
+	run: (client, params) =>
 		client.resolvePreviewURL({
-			signal,
+			...params,
 			defaultURL: "defaultURL",
 			documentID: "foo",
 			previewToken,

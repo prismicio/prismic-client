@@ -111,7 +111,7 @@ it("does not use a cache-busting URL parameter when `optimizeRepositoryRequest` 
 });
 
 testAbortableMethod("is abortable with an AbortController", {
-	run: (client, signal) => client.getRepository({ signal }),
+	run: (client, params) => client.getRepository(params),
 });
 
 testConcurrentMethod("shares concurrent equivalent network requests", {

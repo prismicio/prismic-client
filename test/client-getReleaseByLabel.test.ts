@@ -37,7 +37,7 @@ it("throws if Release could not be found", async (ctx) => {
 });
 
 testAbortableMethod("is abortable with an AbortController", {
-	run: (client, signal) => client.getReleaseByLabel("label", { signal }),
+	run: (client, params) => client.getReleaseByLabel("label", params),
 });
 
 testConcurrentMethod("shares concurrent equivalent network requests", {

@@ -25,7 +25,7 @@ testGetAllMethod("includes params if provided", {
 });
 
 testAbortableMethod("is abortable with an AbortController", {
-	run: (client, signal) => client.getAllByTag("tag", { signal }),
+	run: (client, params) => client.getAllByTag("tag", params),
 });
 
 testConcurrentMethod("shares concurrent equivalent network requests", {

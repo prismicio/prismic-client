@@ -39,7 +39,7 @@ it("throws if ref could not be found", async (ctx) => {
 });
 
 testAbortableMethod("is abortable with an AbortController", {
-	run: (client, signal) => client.getRefByID("id", { signal }),
+	run: (client, params) => client.getRefByID("id", params),
 });
 
 testConcurrentMethod("shares concurrent equivalent network requests", {

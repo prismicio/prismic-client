@@ -133,7 +133,7 @@ it("does not use the cached repository metadata within the client's repository c
 }, 10000);
 
 testAbortableMethod("is abortable with an AbortController", {
-	run: (client, signal) => client.get({ signal }),
+	run: (client, params) => client.get(params),
 });
 
 testConcurrentMethod("shares concurrent equivalent network requests", {
