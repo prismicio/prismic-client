@@ -1,6 +1,7 @@
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { testGetMethod } from "./__testutils__/testAnyGetMethod";
 import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 testGetMethod("queries for documents by some tags", {
 	run: (client) => client.getBySomeTags(["foo", "bar"]),
@@ -22,6 +23,10 @@ testGetMethod("includes params if provided", {
 		lang: "*",
 		q: `[[any(document.tags, ["foo", "bar"])]]`,
 	},
+});
+
+testFetchOptions("supports fetch options", {
+	run: (client, params) => client.getBySomeTags(["foo", "bar"], params),
 });
 
 testAbortableMethod("is abortable with an AbortController", {

@@ -7,6 +7,7 @@ import { createTestClient } from "./__testutils__/createClient";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 const previewToken = "previewToken";
 
@@ -253,6 +254,16 @@ it("returns defaultURL if resolved URL is not a string", async (ctx) => {
 	});
 
 	expect(res).toBe(defaultURL);
+});
+
+testFetchOptions("supports fetch options", {
+	run: (client, params) =>
+		client.resolvePreviewURL({
+			...params,
+			defaultURL: "defaultURL",
+			documentID: "foo",
+			previewToken,
+		}),
 });
 
 testAbortableMethod("is abortable with an AbortController", {

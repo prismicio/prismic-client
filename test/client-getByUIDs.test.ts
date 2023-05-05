@@ -1,6 +1,7 @@
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { testGetMethod } from "./__testutils__/testAnyGetMethod";
 import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 testGetMethod("queries for documents by UIDs", {
 	run: (client) => client.getByUIDs("type", ["uid1", "uid2"]),
@@ -28,6 +29,10 @@ testGetMethod("includes params if provided", {
 			`[[in(my.type.uid, ["uid1", "uid2"])]]`,
 		],
 	},
+});
+
+testFetchOptions("supports fetch options", {
+	run: (client, params) => client.getByUIDs("type", ["uid1", "uid2"], params),
 });
 
 testAbortableMethod("is abortable with an AbortController", {

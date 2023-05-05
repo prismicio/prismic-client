@@ -6,6 +6,7 @@ import { createTestClient } from "./__testutils__/createClient";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 import * as prismic from "../src";
 
@@ -108,6 +109,10 @@ it("does not use a cache-busting URL parameter when `optimizeRepositoryRequest` 
 	const url = new URL(call![0] as string);
 
 	expect(url.searchParams.has("x-valid-until")).toBe(false);
+});
+
+testFetchOptions("supports fetch options", {
+	run: (client, params) => client.getRepository(params),
 });
 
 testAbortableMethod("is abortable with an AbortController", {

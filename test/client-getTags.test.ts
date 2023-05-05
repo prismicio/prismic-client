@@ -6,6 +6,7 @@ import { createTestClient } from "./__testutils__/createClient";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 it("returns all tags", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository();
@@ -79,6 +80,10 @@ it("sends access token if form endpoint is used", async (ctx) => {
 	const res = await client.getTags();
 
 	expect(res).toStrictEqual(tagsResponse);
+});
+
+testFetchOptions("supports fetch options", {
+	run: (client, params) => client.getTags(params),
 });
 
 testAbortableMethod("is abortable with an AbortController", {

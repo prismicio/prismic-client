@@ -4,6 +4,7 @@ import { createTestClient } from "./__testutils__/createClient";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 import * as prismic from "../src";
 
@@ -36,6 +37,10 @@ it("throws if ref could not be found", async (ctx) => {
 	await expect(() => client.getRefByLabel("non-existant")).rejects.toThrowError(
 		prismic.PrismicError,
 	);
+});
+
+testFetchOptions("supports fetch options", {
+	run: (client, params) => client.getRefByLabel("label", params),
 });
 
 testAbortableMethod("is abortable with an AbortController", {

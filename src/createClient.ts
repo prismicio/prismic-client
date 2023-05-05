@@ -97,16 +97,23 @@ export type FetchLike = (
 export type AbortSignalLike = any;
 
 /**
- * The minimum required properties from RequestInit.
+ * A subset of RequestInit properties to configure a `fetch()` request.
  */
-export interface RequestInitLike {
+// Only options relevant to the client are included. Extending from the full
+// RequestInit would cause issues, such as accepting Header objects.
+//
+// An interface is used to allow other libraries to augment the type with
+// environment-specific types.
+export interface RequestInitLike extends Pick<RequestInit, "cache"> {
+	/**
+	 * An object literal to set the `fetch()` request's headers.
+	 */
 	headers?: Record<string, string>;
 
 	/**
-	 * An object that allows you to abort a `fetch()` request if needed via an
-	 * `AbortController` object
+	 * An AbortSignal to set the `fetch()` request's signal.
 	 *
-	 * {@link https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal}
+	 * See: \<https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal\>
 	 */
 	// NOTE: `AbortSignalLike` is `any`! It is left as `AbortSignalLike`
 	// for backwards compatibility (the type is exported) and to signal to
@@ -273,7 +280,7 @@ export type ClientConfig = {
 	 * can also be overriden on a per-query basis using the query's
 	 * `fetchOptions` parameter.
 	 */
-	fetchOptions?: RequestInit;
+	fetchOptions?: RequestInitLike;
 } & OptimizeParams;
 
 /**
@@ -286,7 +293,7 @@ type FetchParams = {
 	 * can also be overriden on a per-query basis using the query's
 	 * `fetchOptions` parameter.
 	 */
-	fetchOptions?: RequestInit;
+	fetchOptions?: RequestInitLike;
 
 	/**
 	 * An `AbortSignal` provided by an `AbortController`. This allows the network
@@ -474,6 +481,8 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 */
 	fetchFn: FetchLike;
 
+	fetchOptions?: RequestInitLike;
+
 	/**
 	 * Default parameters that will be sent with each query. These parameters can
 	 * be overridden on each query if needed.
@@ -568,6 +577,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		this.accessToken = options.accessToken;
 		this.routes = options.routes;
 		this.brokenRoute = options.brokenRoute;
+		this.fetchOptions = options.fetchOptions;
 		this.defaultParams = options.defaultParams;
 		this.optimize = {
 			repositoryRequests: options.optimize?.repositoryRequests ?? true,
@@ -1880,7 +1890,18 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		url: string,
 		params: FetchParams & OptimizeParams = {},
 	): Promise<T> {
-		const signal = params.fetchOptions?.signal || params.signal;
+		const requestInit: RequestInitLike = {
+			...this.fetchOptions,
+			...params.fetchOptions,
+			headers: {
+				...this.fetchOptions?.headers,
+				...params.fetchOptions?.headers,
+			},
+			signal:
+				params.fetchOptions?.signal ||
+				params.signal ||
+				this.fetchOptions?.signal,
+		};
 
 		let res: FetchJobResult;
 
@@ -1903,14 +1924,14 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			// equivalent URLs, but eject when we detect unique signals.
 			if (
 				this.fetchJobs[fetchJobKey] &&
-				this.fetchJobs[fetchJobKey].has(signal)
+				this.fetchJobs[fetchJobKey].has(requestInit.signal)
 			) {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				job = this.fetchJobs[fetchJobKey].get(signal)!;
+				job = this.fetchJobs[fetchJobKey].get(requestInit.signal)!;
 			} else {
 				this.fetchJobs[fetchJobKey] = this.fetchJobs[fetchJobKey] || new Map();
 
-				job = this.fetchFn(url, { signal })
+				job = this.fetchFn(url, requestInit)
 					.then(async (res) => {
 						// We can assume Prismic REST API responses
 						// will have a `application/json`
@@ -1931,19 +1952,19 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 						};
 					})
 					.finally(() => {
-						this.fetchJobs[fetchJobKey].delete(signal);
+						this.fetchJobs[fetchJobKey].delete(requestInit.signal);
 
 						if (this.fetchJobs[fetchJobKey].size === 0) {
 							delete this.fetchJobs[fetchJobKey];
 						}
 					});
 
-				this.fetchJobs[fetchJobKey].set(signal, job);
+				this.fetchJobs[fetchJobKey].set(requestInit.signal, job);
 			}
 
 			res = await job;
 		} else {
-			const job = await this.fetchFn(url, { signal });
+			const job = await this.fetchFn(url, requestInit);
 
 			// We can assume Prismic REST API responses
 			// will have a `application/json`

@@ -1,6 +1,7 @@
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { testGetAllMethod } from "./__testutils__/testAnyGetMethod";
 import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 testGetAllMethod("returns all documents by type from paginated response", {
 	run: (client) => client.getAllByType("type"),
@@ -22,6 +23,10 @@ testGetAllMethod("includes params if provided", {
 		lang: "*",
 		q: `[[at(document.type, "type")]]`,
 	},
+});
+
+testFetchOptions("supports fetch options", {
+	run: (client, params) => client.getAllByType("type", params),
 });
 
 testAbortableMethod("is abortable with an AbortController", {

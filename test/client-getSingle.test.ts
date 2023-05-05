@@ -1,6 +1,7 @@
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod";
 import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 testGetFirstMethod("queries for singleton document", {
 	run: (client) => client.getSingle("type"),
@@ -22,6 +23,10 @@ testGetFirstMethod("includes params if provided", {
 		lang: "*",
 		q: `[[at(document.type, "type")]]`,
 	},
+});
+
+testFetchOptions("supports fetch options", {
+	run: (client, params) => client.getSingle("type", params),
 });
 
 testAbortableMethod("is abortable with an AbortController", {

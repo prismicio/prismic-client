@@ -7,6 +7,7 @@ import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { testGetMethod } from "./__testutils__/testAnyGetMethod";
 import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 testGetMethod("resolves a query", {
 	run: (client) => client.get(),
@@ -131,6 +132,10 @@ it("does not use the cached repository metadata within the client's repository c
 		repositoryResponse2.refs[0].ref,
 	);
 }, 10000);
+
+testFetchOptions("supports fetch options", {
+	run: (client, params) => client.get(params),
+});
 
 testAbortableMethod("is abortable with an AbortController", {
 	run: (client, params) => client.get(params),
