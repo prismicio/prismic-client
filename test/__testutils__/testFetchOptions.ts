@@ -1,5 +1,7 @@
 import { expect, it, vi } from "vitest";
 
+import fetch from "node-fetch";
+
 import { createTestClient } from "./createClient";
 import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2";
 
