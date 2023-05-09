@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.0.0-alpha.4](https://github.com/prismicio/prismic-client/compare/v7.0.0-alpha.3...v7.0.0-alpha.4) (2023-05-09)
+
+
+### Features
+
+* add `fetchOptions` parameter to control `fetch()` ([#289](https://github.com/prismicio/prismic-client/issues/289)) ([88bb32d](https://github.com/prismicio/prismic-client/commit/88bb32d73ed0b3c521007307c5da19351943a9d6))
+* **client:** warn when non-.cdn endpoints are used [#284](https://github.com/prismicio/prismic-client/issues/284) ([81ab2bf](https://github.com/prismicio/prismic-client/commit/81ab2bf342c3d9fa2d83321914d4630d6e70d879))
+* support Web API `Request`s containing partial URLs ([#286](https://github.com/prismicio/prismic-client/issues/286)) ([f2e8895](https://github.com/prismicio/prismic-client/commit/f2e889502ac39ab9ebfb5b7a3cbc4b71e4bb74d8))
+
+
+### Refactor
+
+* **helpers:** standardize helpers interface ([#288](https://github.com/prismicio/prismic-client/issues/288)) ([59f84ed](https://github.com/prismicio/prismic-client/commit/59f84ed051a2ea058cf9eae618ce1a781e0014f9))
+* rename `predicate` tests to `filter` ([3100b3a](https://github.com/prismicio/prismic-client/commit/3100b3a1a51adcb8f656c8829664b099149ae0b3))
+
+
+### Documentation
+
+* mark `optimize` option as `[@experimental](https://github.com/experimental)` ([343534f](https://github.com/prismicio/prismic-client/commit/343534ff21ae74ecf319f5c91f8d251d181e76dc))
+* wording and style ([0801785](https://github.com/prismicio/prismic-client/commit/0801785653a28abfbe175337b5fe04295d3e0949))
+
 ## [7.0.0-alpha.3](https://github.com/prismicio/prismic-client/compare/v7.0.0-alpha.2...v7.0.0-alpha.3) (2023-04-28)
 
 
