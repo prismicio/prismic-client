@@ -3,7 +3,7 @@ import { expect, it } from "vitest";
 import { createTestClient } from "./__testutils__/createClient";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 import * as prismic from "../src";
 
@@ -39,11 +39,10 @@ it("includes access token if configured", async (ctx) => {
 	expect(res).toStrictEqual(repositoryResponse);
 });
 
-testAbortableMethod("is abortable with an AbortController", {
-	run: (client, signal) => client.getRepository({ signal }),
+testFetchOptions("supports fetch options", {
+	run: (client, params) => client.getRepository(params),
 });
 
-testConcurrentMethod("shares concurrent equivalent network requests", {
+testAbortableMethod("is abortable with an AbortController", {
 	run: (client, params) => client.getRepository(params),
-	mode: "repository",
 });

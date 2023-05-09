@@ -6,7 +6,7 @@ import { createTestClient } from "./__testutils__/createClient";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { testGetMethod } from "./__testutils__/testAnyGetMethod";
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 testGetMethod("resolves a query", {
 	run: (client) => client.get(),
@@ -92,11 +92,10 @@ it("uses cached repository metadata within the client's repository cache TTL", a
 	);
 });
 
-testAbortableMethod("is abortable with an AbortController", {
-	run: (client, signal) => client.get({ signal }),
+testFetchOptions("supports fetch options", {
+	run: (client, params) => client.get(params),
 });
 
-testConcurrentMethod("shares concurrent equivalent network requests", {
+testAbortableMethod("is abortable with an AbortController", {
 	run: (client, params) => client.get(params),
-	mode: "get",
 });

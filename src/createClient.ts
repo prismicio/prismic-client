@@ -90,16 +90,23 @@ export type FetchLike = (
 export type AbortSignalLike = any;
 
 /**
- * The minimum required properties from RequestInit.
+ * A subset of RequestInit properties to configure a `fetch()` request.
  */
-export interface RequestInitLike {
+// Only options relevant to the client are included. Extending from the full
+// RequestInit would cause issues, such as accepting Header objects.
+//
+// An interface is used to allow other libraries to augment the type with
+// environment-specific types.
+export interface RequestInitLike extends Pick<RequestInit, "cache"> {
+	/**
+	 * An object literal to set the `fetch()` request's headers.
+	 */
 	headers?: Record<string, string>;
 
 	/**
-	 * An object that allows you to abort a `fetch()` request if needed via an
-	 * `AbortController` object
+	 * An AbortSignal to set the `fetch()` request's signal.
 	 *
-	 * {@link https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal}
+	 * See: \<https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal\>
 	 */
 	// NOTE: `AbortSignalLike` is `any`! It is left as `AbortSignalLike`
 	// for backwards compatibility (the type is exported) and to signal to
@@ -259,18 +266,41 @@ export type ClientConfig = {
 	 * Node.js, this function must be provided.
 	 */
 	fetch?: FetchLike;
+
+	/**
+	 * Options provided to the client's `fetch()` on all network requests.
+	 * These options will be merged with internally required options. They
+	 * can also be overriden on a per-query basis using the query's
+	 * `fetchOptions` parameter.
+	 */
+	fetchOptions?: RequestInitLike;
 };
 
 /**
- * Parameters for any client method that use `fetch()`. Only a subset of
- * `fetch()` parameters are exposed.
+ * Parameters for any client method that use `fetch()`.
  */
 type FetchParams = {
+	/**
+	 * Options provided to the client's `fetch()` on all network requests.
+	 * These options will be merged with internally required options. They
+	 * can also be overriden on a per-query basis using the query's
+	 * `fetchOptions` parameter.
+	 */
+	fetchOptions?: RequestInitLike;
+
 	/**
 	 * An `AbortSignal` provided by an `AbortController`. This allows the network
 	 * request to be cancelled if necessary.
 	 *
 	 * {@link https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal}
+	 *
+	 * @deprecated Move the `signal` parameter into `fetchOptions.signal`:
+	 *
+	 * ```typescript
+	 * client.getByUID("page", "home",{
+	 * 	fetchOptions: { signal }
+	 * });
+	 * ```
 	 */
 	signal?: AbortSignalLike;
 };
@@ -409,6 +439,8 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 */
 	fetchFn: FetchLike;
 
+	fetchOptions?: RequestInitLike;
+
 	/**
 	 * Default parameters that will be sent with each query. These parameters can
 	 * be overridden on each query if needed.
@@ -498,6 +530,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		this.accessToken = options.accessToken;
 		this.routes = options.routes;
 		this.brokenRoute = options.brokenRoute;
+		this.fetchOptions = options.fetchOptions;
 		this.defaultParams = options.defaultParams;
 
 		if (options.ref) {
@@ -1328,12 +1361,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 */
 	async buildQueryURL({
 		signal,
+		fetchOptions,
 		...params
 	}: Partial<BuildQueryURLArgs> & FetchParams = {}): Promise<string> {
-		const ref = params.ref || (await this.getResolvedRefString({ signal }));
+		const ref =
+			params.ref || (await this.getResolvedRefString({ signal, fetchOptions }));
 		const integrationFieldsRef =
 			params.integrationFieldsRef ||
-			(await this.getCachedRepository({ signal })).integrationFieldsRef ||
+			(await this.getCachedRepository({ signal, fetchOptions }))
+				.integrationFieldsRef ||
 			undefined;
 
 		return buildQueryURL(this.endpoint, {
@@ -1404,12 +1440,13 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 		if (documentID != null && previewToken != null) {
 			const document = await this.getByID(documentID, {
-				signal: args.signal,
 				ref: previewToken,
 				lang: "*",
+				signal: args.signal,
+				fetchOptions: args.fetchOptions,
 			});
 
-			const url = asLink(document, args.linkResolver);
+			const url = asLink(document, { linkResolver: args.linkResolver });
 
 			if (typeof url === "string") {
 				return url;
@@ -1737,6 +1774,19 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		url: string,
 		params: FetchParams = {},
 	): Promise<T> {
+		const requestInit: RequestInitLike = {
+			...this.fetchOptions,
+			...params.fetchOptions,
+			headers: {
+				...this.fetchOptions?.headers,
+				...params.fetchOptions?.headers,
+			},
+			signal:
+				params.fetchOptions?.signal ||
+				params.signal ||
+				this.fetchOptions?.signal,
+		};
+
 		let job: Promise<FetchJobResult>;
 
 		// `fetchJobs` is keyed twice: first by the URL and again by is
@@ -1744,15 +1794,13 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		//
 		// Using two keys allows us to reuse fetch requests for
 		// equivalent URLs, but eject when we detect unique signals.
-		if (this.fetchJobs[url] && this.fetchJobs[url].has(params.signal)) {
+		if (this.fetchJobs[url] && this.fetchJobs[url].has(requestInit.signal)) {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			job = this.fetchJobs[url].get(params.signal)!;
+			job = this.fetchJobs[url].get(requestInit.signal)!;
 		} else {
 			this.fetchJobs[url] = this.fetchJobs[url] || new Map();
 
-			job = this.fetchFn(url, {
-				signal: params.signal,
-			})
+			job = this.fetchFn(url, requestInit)
 				.then(async (res) => {
 					// We can assume Prismic REST API responses
 					// will have a `application/json`
@@ -1773,14 +1821,14 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 					};
 				})
 				.finally(() => {
-					this.fetchJobs[url].delete(params.signal);
+					this.fetchJobs[url].delete(requestInit.signal);
 
 					if (this.fetchJobs[url].size === 0) {
 						delete this.fetchJobs[url];
 					}
 				});
 
-			this.fetchJobs[url].set(params.signal, job);
+			this.fetchJobs[url].set(requestInit.signal, job);
 		}
 
 		const res = await job;
