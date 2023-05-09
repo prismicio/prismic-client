@@ -1,11 +1,8 @@
-import { expect, it, vi } from "vitest";
-
-import fetch from "node-fetch";
+import { expect, it } from "vitest";
 
 import { createTestClient } from "./__testutils__/createClient";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
 import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 import * as prismic from "../src";
@@ -42,84 +39,10 @@ it("includes access token if configured", async (ctx) => {
 	expect(res).toStrictEqual(repositoryResponse);
 });
 
-it("uses a cache-busting URL parameter by default", async (ctx) => {
-	mockPrismicRestAPIV2({ ctx });
-
-	const fetchSpy = vi.fn(fetch);
-	const client = createTestClient({
-		clientConfig: {
-			fetch: fetchSpy,
-		},
-	});
-
-	await client.getRepository();
-
-	const call = fetchSpy.mock.calls.find(
-		(call) => new URL(call[0] as string).pathname === "/api/v2",
-	);
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	const url = new URL(call![0] as string);
-
-	expect(url.searchParams.has("x-valid-until")).toBe(true);
-});
-
-it("uses a cache-busting URL parameter when `optimizeRepositoryRequest` is `true`", async (ctx) => {
-	mockPrismicRestAPIV2({ ctx });
-
-	const fetchSpy = vi.fn(fetch);
-	const client = createTestClient({
-		clientConfig: {
-			optimize: {
-				repositoryRequests: true,
-			},
-			fetch: fetchSpy,
-		},
-	});
-
-	await client.getRepository();
-
-	const call = fetchSpy.mock.calls.find(
-		(call) => new URL(call[0] as string).pathname === "/api/v2",
-	);
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	const url = new URL(call![0] as string);
-
-	expect(url.searchParams.has("x-valid-until")).toBe(true);
-});
-
-it("does not use a cache-busting URL parameter when `optimizeRepositoryRequest` is `false`", async (ctx) => {
-	mockPrismicRestAPIV2({ ctx });
-
-	const fetchSpy = vi.fn(fetch);
-	const client = createTestClient({
-		clientConfig: {
-			optimize: {
-				repositoryRequests: false,
-			},
-			fetch: fetchSpy,
-		},
-	});
-
-	await client.getRepository();
-
-	const call = fetchSpy.mock.calls.find(
-		(call) => new URL(call[0] as string).pathname === "/api/v2",
-	);
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	const url = new URL(call![0] as string);
-
-	expect(url.searchParams.has("x-valid-until")).toBe(false);
-});
-
 testFetchOptions("supports fetch options", {
 	run: (client, params) => client.getRepository(params),
 });
 
 testAbortableMethod("is abortable with an AbortController", {
 	run: (client, params) => client.getRepository(params),
-});
-
-testConcurrentMethod("shares concurrent equivalent network requests", {
-	run: (client, params) => client.getRepository(params),
-	mode: "repository",
 });

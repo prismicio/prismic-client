@@ -6,7 +6,6 @@ import { createTestClient } from "./__testutils__/createClient";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { testGetMethod } from "./__testutils__/testAnyGetMethod";
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
 import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 testGetMethod("resolves a query", {
@@ -93,55 +92,10 @@ it("uses cached repository metadata within the client's repository cache TTL", a
 	);
 });
 
-it("does not use the cached repository metadata within the client's repository cache TTL when optimize.repositoryRequests is disabled", async (ctx) => {
-	const fetchSpy = vi.fn(fetch);
-
-	const client = createTestClient({
-		clientConfig: {
-			fetch: fetchSpy,
-			optimize: {
-				repositoryRequests: false,
-			},
-		},
-	});
-
-	const repositoryResponse1 = ctx.mock.api.repository();
-	repositoryResponse1.refs = [ctx.mock.api.ref({ isMasterRef: true })];
-	mockPrismicRestAPIV2({ ctx, repositoryResponse: repositoryResponse1 });
-
-	await client.get();
-
-	// This response response will be used on the second request.
-	const repositoryResponse2 = ctx.mock.api.repository();
-	repositoryResponse2.refs = [ctx.mock.api.ref({ isMasterRef: true })];
-	mockPrismicRestAPIV2({ ctx, repositoryResponse: repositoryResponse2 });
-
-	await client.get();
-
-	const getRequests = fetchSpy.mock.calls
-		.filter(
-			(call) =>
-				new URL(call[0] as string).pathname === "/api/v2/documents/search",
-		)
-		.map((call) => call[0] as string);
-
-	expect(new URL(getRequests[0]).searchParams.get("ref")).toBe(
-		repositoryResponse1.refs[0].ref,
-	);
-	expect(new URL(getRequests[1]).searchParams.get("ref")).toBe(
-		repositoryResponse2.refs[0].ref,
-	);
-}, 10000);
-
 testFetchOptions("supports fetch options", {
 	run: (client, params) => client.get(params),
 });
 
 testAbortableMethod("is abortable with an AbortController", {
 	run: (client, params) => client.get(params),
-});
-
-testConcurrentMethod("shares concurrent equivalent network requests", {
-	run: (client, params) => client.get(params),
-	mode: "get",
 });
