@@ -2,6 +2,7 @@ import { testGetMethod } from "./__testutils__/testAnyGetMethod";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 
 import * as prismic from "../src";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 const predicate = prismic.predicate.at("document.type", "page");
 const q = `[${predicate}]`;
@@ -63,6 +64,10 @@ testGetMethod("merges params and default params if provided", {
 	},
 });
 
+testFetchOptions("supports fetch options", {
+	run: (client, params) => client.query(predicate, params),
+});
+
 testAbortableMethod("is abortable with an AbortController", {
-	run: (client, signal) => client.query(predicate, { signal }),
+	run: (client, params) => client.query(predicate, params),
 });

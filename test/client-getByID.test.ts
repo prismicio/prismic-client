@@ -1,5 +1,6 @@
 import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 testGetFirstMethod("queries for document by ID", {
 	run: (client) => client.getByID("id"),
@@ -23,6 +24,10 @@ testGetFirstMethod("includes params if provided", {
 	},
 });
 
+testFetchOptions("supports fetch options", {
+	run: (client, params) => client.getByID("id", params),
+});
+
 testAbortableMethod("is abortable with an AbortController", {
-	run: (client, signal) => client.getByID("id", { signal }),
+	run: (client, params) => client.getByID("id", params),
 });

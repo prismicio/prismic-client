@@ -5,6 +5,7 @@ import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createTestClient } from "./__testutils__/createClient";
 
 import * as prismic from "../src";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 it("returns a Release by label", async (ctx) => {
 	const ref1 = ctx.mock.api.ref({ isMasterRef: true });
@@ -35,6 +36,10 @@ it("throws if Release could not be found", async (ctx) => {
 	).rejects.toThrowError(prismic.PrismicError);
 });
 
+testFetchOptions("supports fetch options", {
+	run: (client, params) => client.getReleaseByLabel("label", params),
+});
+
 testAbortableMethod("is abortable with an AbortController", {
-	run: (client, signal) => client.getReleaseByLabel("label", { signal }),
+	run: (client, params) => client.getReleaseByLabel("label", params),
 });

@@ -8,6 +8,7 @@ import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createTestClient } from "./__testutils__/createClient";
 
 import * as prismic from "../src";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 testGetFirstMethod("returns the first document from a response", {
 	run: (client) => client.getFirst(),
@@ -92,6 +93,10 @@ it("throws if no documents were returned", async (ctx) => {
 	);
 });
 
+testFetchOptions("supports fetch options", {
+	run: (client, params) => client.getFirst(params),
+});
+
 testAbortableMethod("is abortable with an AbortController", {
-	run: (client, signal) => client.getFirst({ signal }),
+	run: (client, params) => client.getFirst(params),
 });

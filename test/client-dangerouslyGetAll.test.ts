@@ -7,6 +7,7 @@ import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { testGetAllMethod } from "./__testutils__/testAnyGetMethod";
 
 import { GET_ALL_QUERY_DELAY } from "../src/client";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 /**
  * Tolerance in number of milliseconds for the duration of a simulated network
@@ -178,6 +179,10 @@ it("does not throttle single page queries", async (ctx) => {
 	).toBe(true);
 });
 
+testFetchOptions("supports fetch options", {
+	run: (client, params) => client.dangerouslyGetAll(params),
+});
+
 testAbortableMethod("is abortable with an AbortController", {
-	run: (client, signal) => client.dangerouslyGetAll({ signal }),
+	run: (client, params) => client.dangerouslyGetAll(params),
 });
