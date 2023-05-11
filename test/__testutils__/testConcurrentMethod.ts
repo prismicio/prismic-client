@@ -33,12 +33,12 @@ export const testConcurrentMethod = (
 		const controller1 = new AbortController();
 		const controller2 = new AbortController();
 
-		const ref1 = ctx.mock.api.ref({ isMasterRef: true });
-		const ref2 = ctx.mock.api.ref({ isMasterRef: false });
-		ref2.id = "id";
-		ref2.label = "label";
+		const masterRef = ctx.mock.api.ref({ isMasterRef: true });
+		const releaseRef = ctx.mock.api.ref({ isMasterRef: false });
+		releaseRef.id = "id"; // Referenced in ref-related tests.
+		releaseRef.label = "label"; // Referenced in ref-related tests.
 		const repositoryResponse = ctx.mock.api.repository();
-		repositoryResponse.refs = [ref1, ref2];
+		repositoryResponse.refs = [masterRef, releaseRef];
 
 		const queryResponse = createPagedQueryResponses({ ctx });
 
@@ -58,7 +58,7 @@ export const testConcurrentMethod = (
 		const graphqlResponse = { foo: "bar" };
 		ctx.server.use(
 			rest.get(graphqlURL, (req, res, ctx) => {
-				if (req.headers.get("Prismic-Ref") === ref1.ref) {
+				if (req.headers.get("Prismic-Ref") === masterRef.ref) {
 					return res(ctx.json(graphqlResponse));
 				}
 			}),

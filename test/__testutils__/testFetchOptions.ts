@@ -30,8 +30,16 @@ export const testFetchOptions = (
 			signal: abortController.signal,
 		};
 
+		const masterRef = ctx.mock.api.ref({ isMasterRef: true });
+		const releaseRef = ctx.mock.api.ref({ isMasterRef: false });
+		releaseRef.id = "id"; // Referenced in ref-related tests.
+		releaseRef.label = "label"; // Referenced in ref-related tests.
+		const repositoryResponse = ctx.mock.api.repository();
+		repositoryResponse.refs = [masterRef, releaseRef];
+
 		mockPrismicRestAPIV2({
 			ctx,
+			repositoryResponse,
 			queryResponse: ctx.mock.api.query({
 				documents: [ctx.mock.value.document()],
 			}),
@@ -63,8 +71,16 @@ export const testFetchOptions = (
 			signal: abortController.signal,
 		};
 
+		const masterRef = ctx.mock.api.ref({ isMasterRef: true });
+		const releaseRef = ctx.mock.api.ref({ isMasterRef: false });
+		releaseRef.id = "id"; // Referenced in ref-related tests.
+		releaseRef.label = "label"; // Referenced in ref-related tests.
+		const repositoryResponse = ctx.mock.api.repository();
+		repositoryResponse.refs = [masterRef, releaseRef];
+
 		mockPrismicRestAPIV2({
 			ctx,
+			repositoryResponse,
 			queryResponse: ctx.mock.api.query({
 				documents: [ctx.mock.value.document()],
 			}),
