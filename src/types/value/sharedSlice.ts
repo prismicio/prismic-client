@@ -1,7 +1,7 @@
 import type { SharedSliceVariation } from "./sharedSliceVariation";
 
 /**
- * Shared Slice
+ * A Shared Slice.
  *
  * @see More details: {@link https://prismic.io/docs/slice}
  */

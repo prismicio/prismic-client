@@ -1,7 +1,7 @@
 import type { FieldState } from "./types";
 
 /**
- * Integration Fields for Custom APIs
+ * An integration field.
  *
  * @typeParam Data - Data from the integrated API.
  * @typeParam State - State of the field which determines its shape.

@@ -1,7 +1,7 @@
 import type { AnyRegularField, FieldState } from "./types";
 
 /**
- * A Group field.
+ * A group field.
  *
  * More details: {@link https://prismic.io/docs/group}
  */

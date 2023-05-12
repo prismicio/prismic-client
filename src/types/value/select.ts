@@ -1,7 +1,7 @@
 import type { FieldState } from "./types";
 
 /**
- * A Select field
+ * A select field.
  *
  * @typeParam Enum - Selectable options for the field.
  * @typeParam State - State of the field which determines its shape.

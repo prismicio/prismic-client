@@ -1,7 +1,7 @@
 import type { CustomTypeModelFieldType } from "./types";
 
 /**
- * An Embed Custom Type field.
+ * An embed custom type field.
  *
  * More details: {@link https://prismic.io/docs/embed}
  */

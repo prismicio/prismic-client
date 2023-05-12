@@ -6,7 +6,7 @@ import type { LinkToMediaField } from "./linkToMedia";
 import type { SliceZone } from "./sliceZone";
 
 /**
- * Link Types
+ * Link types
  */
 export const LinkType = {
 	Any: "Any",
@@ -36,7 +36,7 @@ export interface FilledLinkToWebField {
 }
 
 /**
- * Link Field
+ * A link field.
  *
  * @typeParam TypeEnum - Type API ID of the document.
  * @typeParam LangEnum - Language API ID of the document.

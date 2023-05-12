@@ -4,7 +4,7 @@ import type {
 } from "./types";
 
 /**
- * A Group Custom Type field.
+ * A group custom type field.
  *
  * More details: {@link https://prismic.io/docs/group}
  *

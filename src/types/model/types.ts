@@ -21,7 +21,7 @@ import type { CustomTypeModelTitleField } from "./title";
 import type { CustomTypeModelUIDField } from "./uid";
 
 /**
- * Type identifier for a Custom Type field.
+ * Type identifier for a custom type field.
  */
 export const CustomTypeModelFieldType = {
 	Boolean: "Boolean",
@@ -31,7 +31,7 @@ export const CustomTypeModelFieldType = {
 	GeoPoint: "GeoPoint",
 	Group: "Group",
 	Image: "Image",
-	IntegrationFields: "IntegrationFields",
+	Integration: "IntegrationFields",
 	Link: "Link",
 	Number: "Number",
 	Select: "Select",
@@ -55,7 +55,7 @@ export const CustomTypeModelFieldType = {
 } as const;
 
 /**
- * A Custom Type field.
+ * A custom type field.
  */
 export type CustomTypeModelField =
 	| CustomTypeModelUIDField
@@ -64,7 +64,7 @@ export type CustomTypeModelField =
 	| CustomTypeModelFieldForGroup;
 
 /**
- * Any Custom Type field that is valid for a Group field.
+ * Any custom type field that is valid for a group field.
  */
 export type CustomTypeModelFieldForGroup =
 	| CustomTypeModelBooleanField

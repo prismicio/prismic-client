@@ -1,7 +1,7 @@
 import type { CustomTypeModelFieldType } from "./types";
 
 /**
- * A Date Custom Type field.
+ * A date custom type field.
  *
  * More details: {@link https://prismic.io/docs/date}
  */

@@ -10,7 +10,7 @@ import type {
 } from "./richText";
 
 /**
- * Title Field
+ * A title field.
  *
  * @see Title field documentation: {@link https://prismic.io/docs/rich-text-title}
  */

@@ -28,7 +28,7 @@ export interface Repository {
 	languages: Language[];
 
 	/**
-	 * A list of the repository's Custom Type API IDs mapped to their
+	 * A list of the repository's custom type API IDs mapped to their
 	 * human-readable name.
 	 */
 	types: Record<string, string>;

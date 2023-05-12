@@ -53,7 +53,7 @@ export interface Ordering {
  */
 export interface Route {
 	/**
-	 * The Custom Type of the document.
+	 * The custom type of the document.
 	 */
 	type: string;
 

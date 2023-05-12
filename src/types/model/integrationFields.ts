@@ -1,7 +1,7 @@
 import type { CustomTypeModelFieldType } from "./types";
 
 /**
- * An Integration Fields Custom Type field.
+ * An integration custom type field.
  *
  * More details: {@link https://prismic.io/docs/integration-fields}
  */

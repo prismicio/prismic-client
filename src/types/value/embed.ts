@@ -179,7 +179,7 @@ export type RichOEmbed = OEmbedBase<typeof OEmbedType.Rich> & {
 export type AnyOEmbed = PhotoOEmbed | VideoOEmbed | LinkOEmbed | RichOEmbed;
 
 /**
- * An Embed field.
+ * An embed field.
  *
  * @typeParam Data - Data provided by the URL's oEmbed provider.
  * @typeParam State - State of the field which determines its shape.

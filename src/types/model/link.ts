@@ -1,7 +1,7 @@
 import type { CustomTypeModelFieldType } from "./types";
 
 /**
- * A Link Custom Type field.
+ * A link custom type field.
  *
  * More details:
  * {@link https://prismic.io/docs/link}
@@ -19,7 +19,7 @@ export interface CustomTypeModelLinkField {
 }
 
 /**
- * Type of a Link Custom Type field.
+ * Type of a Link custom type field.
  *
  * More details:
  * {@link https://prismic.io/docs/link}

@@ -1,7 +1,7 @@
 import type { FieldState } from "./types";
 
 /**
- * A Color field.
+ * A color field.
  *
  * @typeParam State - State of the field which determines its shape.
  * @see More details: {@link https://prismic.io/docs/color}

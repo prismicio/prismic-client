@@ -1,11 +1,11 @@
 import type { FieldState, Simplify } from "./types";
 
 /**
- * An individual image within an Image field. The base image and each thumbnail
+ * An individual image within an image field. The base image and each thumbnail
  * uses this type.
  *
  * @typeParam State - State of the field which determines its shape.
- * @see {@link ImageField} for a full Image field type.
+ * @see {@link ImageField} for a full image field type.
  */
 export type ImageFieldImage<State extends FieldState = FieldState> =
 	State extends "empty" ? EmptyImageFieldImage : FilledImageFieldImage;
@@ -28,7 +28,7 @@ export interface EmptyImageFieldImage {
 }
 
 /**
- * Image Field
+ * An image field.
  *
  * **Note**: Passing `null` to the `ThumbnailNames` parameter is deprecated and
  * will be removed in a future version. Use `never` instead.
@@ -45,7 +45,7 @@ export type ImageField<
 	ThumbnailNames extends string | null = never,
 	State extends FieldState = FieldState,
 > =
-	// Simplify is necessary. Without it, Group and Slice types break for
+	// Simplify is necessary. Without it, group and Slice types break for
 	// unknown reasons. If you know why, please update this comment with an
 	// explanation. :)
 	Simplify<

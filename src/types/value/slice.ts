@@ -1,7 +1,7 @@
 import type { AnyRegularField } from "./types";
 
 /**
- * Slice - Sections of your website
+ * A Slice - sections of your website.
  *
  * @see More details: {@link https://prismic.io/docs/slice}
  */

@@ -3,7 +3,7 @@ import type { FieldState } from "./types";
 import type { EmptyLinkField, LinkType } from "./link";
 
 /**
- * Link field that points to media
+ * A link field that points to media.
  *
  * @typeParam State - State of the field which determines its shape.
  */
@@ -13,7 +13,7 @@ export type LinkToMediaField<State extends FieldState = FieldState> =
 		: FilledLinkToMediaField;
 
 /**
- * Link that points to media
+ * A link that points to media.
  */
 export interface FilledLinkToMediaField {
 	link_type: typeof LinkType.Media;

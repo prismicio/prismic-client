@@ -25,7 +25,7 @@ interface WebhookBodyAPIUpdateOperations<T> {
 }
 
 /**
- * Metadata representing a mask (also called a Custom Type).
+ * Metadata representing a mask (also called a custom type).
  *
  * @see More details: {@link https://prismic.io/docs/custom-types}
  */
