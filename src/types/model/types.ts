@@ -6,7 +6,7 @@ import type { CustomTypeModelEmbedField } from "./embed";
 import type { CustomTypeModelGeoPointField } from "./geoPoint";
 import type { CustomTypeModelGroupField } from "./group";
 import type { CustomTypeModelImageField } from "./image";
-import type { CustomTypeModelIntegrationField } from "./integrationFields";
+import type { CustomTypeModelIntegrationField } from "./integration";
 import type { CustomTypeModelKeyTextField } from "./keyText";
 import type { CustomTypeModelLinkField } from "./link";
 import type { CustomTypeModelLinkToMediaField } from "./linkToMedia";
@@ -40,6 +40,10 @@ export const CustomTypeModelFieldType = {
 	Text: "Text",
 	Timestamp: "Timestamp",
 	UID: "UID",
+	/**
+	 * @deprecated - Renamed to `Integration`.
+	 */
+	IntegrationFields: "IntegrationFields",
 	/**
 	 * @deprecated - Legacy field type. Use `Number` instead.
 	 */
