@@ -5,8 +5,8 @@ import type { CustomTypeModelFieldType } from "./types";
  *
  * More details: {@link https://prismic.io/docs/integration-fields}
  */
-export interface CustomTypeModelIntegrationFieldsField {
-	type: typeof CustomTypeModelFieldType.IntegrationFields;
+export interface CustomTypeModelIntegrationField {
+	type: typeof CustomTypeModelFieldType.Integration;
 	config?: {
 		label?: string | null;
 		placeholder?: string;

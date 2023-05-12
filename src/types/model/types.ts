@@ -6,7 +6,7 @@ import type { CustomTypeModelEmbedField } from "./embed";
 import type { CustomTypeModelGeoPointField } from "./geoPoint";
 import type { CustomTypeModelGroupField } from "./group";
 import type { CustomTypeModelImageField } from "./image";
-import type { CustomTypeModelIntegrationFieldsField } from "./integrationFields";
+import type { CustomTypeModelIntegrationField } from "./integrationFields";
 import type { CustomTypeModelKeyTextField } from "./keyText";
 import type { CustomTypeModelLinkField } from "./link";
 import type { CustomTypeModelLinkToMediaField } from "./linkToMedia";
@@ -73,7 +73,7 @@ export type CustomTypeModelFieldForGroup =
 	| CustomTypeModelEmbedField
 	| CustomTypeModelGeoPointField
 	| CustomTypeModelImageField
-	| CustomTypeModelIntegrationFieldsField
+	| CustomTypeModelIntegrationField
 	| CustomTypeModelContentRelationshipField
 	| CustomTypeModelLinkField
 	| CustomTypeModelLinkToMediaField

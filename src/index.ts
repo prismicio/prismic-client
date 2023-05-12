@@ -1,4 +1,7 @@
-// Use for deprecations.
+// Imports are used for deprecations.
+import type { CustomTypeModelIntegrationField } from "./types/model/integration";
+import type { IntegrationField } from "./types/value/integration";
+
 import type {
 	HTMLRichTextFunctionSerializer,
 	HTMLRichTextMapSerializer,
@@ -196,7 +199,12 @@ export type { SelectField } from "./types/value/select";
 export type { TimestampField } from "./types/value/timestamp";
 export type { GeoPointField } from "./types/value/geoPoint";
 
-export type { IntegrationFields } from "./types/value/integrationFields";
+/**
+ * @deprecated Renamed to `IntegrationField`
+ */
+// TODO: Remove when we remove support for deprecated `IntegrationFields` export.
+type IntegrationFields = IntegrationField;
+export { IntegrationField, IntegrationFields };
 
 export type { GroupField } from "./types/value/group";
 
@@ -247,7 +255,15 @@ export type { CustomTypeModelSelectField } from "./types/model/select";
 export type { CustomTypeModelTimestampField } from "./types/model/timestamp";
 export type { CustomTypeModelGeoPointField } from "./types/model/geoPoint";
 
-export type { CustomTypeModelIntegrationFieldsField } from "./types/model/integrationFields";
+/**
+ * @deprecated Renamed to `CustomTypeModelIntegrationField`.
+ */
+// TODO: Remove when we remove support for deprecated `CustomTypeModelIntegrationField` export.
+type CustomTypeModelIntegrationFieldsField = CustomTypeModelIntegrationField;
+export {
+	CustomTypeModelIntegrationField,
+	CustomTypeModelIntegrationFieldsField,
+};
 export type { CustomTypeModelGroupField } from "./types/model/group";
 export type {
 	CustomTypeModelSliceZoneField,

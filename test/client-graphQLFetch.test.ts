@@ -68,6 +68,7 @@ it("merges provided headers with defaults", async (ctx) => {
 	expect(json).toStrictEqual(graphqlResponse);
 });
 
+// TODO: This test doesn't seem to test what the description claims.
 it("includes Authorization header if access token is provided", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository();
 	repositoryResponse.integrationFieldsRef = ctx.mock.api.ref().ref;
@@ -98,7 +99,8 @@ it("includes Authorization header if access token is provided", async (ctx) => {
 	expect(json).toStrictEqual(graphqlResponse);
 });
 
-it("includes Integration Fields header if ref is available", async (ctx) => {
+// TODO: This test doesn't seem to test what the description claims.
+it("includes integration fields header if ref is available", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository();
 	const accessToken = "accessToken";
 

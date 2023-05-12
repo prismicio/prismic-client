@@ -15,7 +15,7 @@ export interface Repository {
 	refs: Ref[];
 
 	/**
-	 * An identifier used to query content with the latest Integration Fields
+	 * An identifier used to query content with the latest integration fields
 	 * data.
 	 */
 	integrationFieldsRef: string | null;

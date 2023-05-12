@@ -21,12 +21,12 @@ type AsImageWidthSrcSetReturnType<
 > = Field extends ImageFieldImage<"filled">
 	? {
 			/**
-			 * The Image field's image URL with Imgix URL parameters (if given).
+			 * The image field's image URL with Imgix URL parameters (if given).
 			 */
 			src: string;
 
 			/**
-			 * A width-based `srcset` attribute value for the Image field's image with
+			 * A width-based `srcset` attribute value for the image field's image with
 			 * Imgix URL parameters (if given).
 			 */
 			srcset: string;
@@ -41,13 +41,13 @@ type AsImageWidthSrcSetConfig = Omit<BuildWidthSrcSetParams, "widths"> & {
 };
 
 /**
- * Creates a width-based `srcset` from an Image field with optional image
+ * Creates a width-based `srcset` from an image field with optional image
  * transformations (via Imgix URL parameters).
  *
  * If a `widths` parameter is not given, the following widths will be used by
  * default: 640, 750, 828, 1080, 1200, 1920, 2048, 3840.
  *
- * If the Image field contains responsive views, each responsive view can be
+ * If the image field contains responsive views, each responsive view can be
  * used as a width in the resulting `srcset` by passing `"thumbnails"` as the
  * `widths` parameter.
  *
@@ -72,8 +72,8 @@ type AsImageWidthSrcSetConfig = Omit<BuildWidthSrcSetParams, "widths"> & {
  *   defines the resulting `srcset` widths. Pass `"thumbnails"` to automatically
  *   use the field's responsive views.
  *
- * @returns A `srcset` attribute value for the Image field with Imgix URL
- *   parameters (if given). If the Image field is empty, `null` is returned.
+ * @returns A `srcset` attribute value for the image field with Imgix URL
+ *   parameters (if given). If the image field is empty, `null` is returned.
  * @see Imgix URL parameters reference: https://docs.imgix.com/apis/rendering
  */
 export const asImageWidthSrcSet = <

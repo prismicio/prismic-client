@@ -53,7 +53,7 @@ it("custom type field type mapping", () => {
 		GeoPoint: "GeoPoint",
 		Group: "Group",
 		Image: "Image",
-		IntegrationFields: "IntegrationFields",
+		IntegrationField: "IntegrationField",
 		Link: "Link",
 		Number: "Number",
 		Select: "Select",

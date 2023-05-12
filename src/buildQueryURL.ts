@@ -205,7 +205,7 @@ type BuildQueryURLParams = {
 	ref: string;
 
 	/**
-	 * Ref used to populate Integration Fields with the latest content.
+	 * Ref used to populate integration fields with the latest content.
 	 *
 	 * {@link https://prismic.io/docs/integration-fields}
 	 */

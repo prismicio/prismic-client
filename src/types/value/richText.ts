@@ -35,7 +35,7 @@ export const RichTextNodeType = {
 // Text nodes
 
 /**
- * Base to be extended by other RT Nodes.
+ * Base to be extended by other rich text nodes.
  */
 export interface RTTextNodeBase {
 	text: string;
@@ -269,7 +269,7 @@ export type RTBlockNode =
 	| RTEmbedNode;
 
 /**
- * Inline rich text Nodes
+ * Inline rich text nodes
  */
 export type RTInlineNode = RTStrongNode | RTEmNode | RTLabelNode | RTLinkNode;
 
@@ -281,7 +281,7 @@ export type RTAnyNode = RTBlockNode | RTInlineNode | RTSpanNode;
 /**
  * A rich text field.
  *
- * @see Rich Text field documentation: {@link https://prismic.io/docs/rich-text-title}
+ * @see Rich text field documentation: {@link https://prismic.io/docs/rich-text-title}
  */
 export type RichTextField<State extends FieldState = FieldState> =
 	State extends "empty" ? [] : [RTNode, ...RTNode[]];
