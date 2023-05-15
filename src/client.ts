@@ -15,6 +15,7 @@ import {
 	FetchLike,
 	HttpRequestLike,
 	ExtractDocumentType,
+	RequestInitLike,
 } from "./types";
 import { ForbiddenError } from "./ForbiddenError";
 import { NotFoundError } from "./NotFoundError";
@@ -164,18 +165,33 @@ export type ClientConfig = {
 	 * Node.js, this function must be provided.
 	 */
 	fetch?: FetchLike;
+
+	/**
+	 * Options provided to the client's `fetch()` on all network requests. These
+	 * options will be merged with internally required options. They can also be
+	 * overriden on a per-query basis using the query's `fetchOptions` parameter.
+	 */
+	fetchOptions?: RequestInitLike;
 };
 
 /**
- * Parameters for any client method that use `fetch()`. Only a subset of
- * `fetch()` parameters are exposed.
+ * Parameters for any client method that use `fetch()`.
  */
 type FetchParams = {
+	/**
+	 * Options provided to the client's `fetch()` on all network requests. These
+	 * options will be merged with internally required options. They can also be
+	 * overriden on a per-query basis using the query's `fetchOptions` parameter.
+	 */
+	fetchOptions?: RequestInitLike;
+
 	/**
 	 * An `AbortSignal` provided by an `AbortController`. This allows the network
 	 * request to be cancelled if necessary.
 	 *
 	 * {@link https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal}
+	 *
+	 * @deprecated Move the `signal` parameter into `fetchOptions.signal`.
 	 */
 	signal?: AbortSignalLike;
 };
@@ -341,6 +357,8 @@ export class Client<
 	 */
 	fetchFn: FetchLike;
 
+	fetchOptions?: RequestInitLike;
+
 	/**
 	 * Default parameters that will be sent with each query. These parameters can
 	 * be overridden on each query if needed.
@@ -404,6 +422,7 @@ export class Client<
 		this.accessToken = options.accessToken;
 		this.routes = options.routes;
 		this.brokenRoute = options.brokenRoute;
+		this.fetchOptions = options.fetchOptions;
 		this.defaultParams = options.defaultParams;
 
 		if (options.ref) {
@@ -1269,12 +1288,15 @@ export class Client<
 	 */
 	async buildQueryURL({
 		signal,
+		fetchOptions,
 		...params
 	}: Partial<BuildQueryURLArgs> & FetchParams = {}): Promise<string> {
-		const ref = params.ref || (await this.getResolvedRefString());
+		const ref =
+			params.ref || (await this.getResolvedRefString({ signal, fetchOptions }));
 		const integrationFieldsRef =
 			params.integrationFieldsRef ||
-			(await this.getCachedRepository({ signal })).integrationFieldsRef ||
+			(await this.getCachedRepository({ signal, fetchOptions }))
+				.integrationFieldsRef ||
 			undefined;
 
 		return buildQueryURL(this.endpoint, {
@@ -1338,9 +1360,10 @@ export class Client<
 
 		if (documentID != null && previewToken != null) {
 			const document = await this.getByID(documentID, {
-				signal: args.signal,
 				ref: previewToken,
 				lang: "*",
+				signal: args.signal,
+				fetchOptions: args.fetchOptions,
 			});
 
 			const url = prismicH.asLink(document, args.linkResolver);
@@ -1688,7 +1711,16 @@ export class Client<
 		// 	: {};
 
 		const res = await this.fetchFn(url, {
-			signal: params.signal,
+			...this.fetchOptions,
+			...params.fetchOptions,
+			headers: {
+				...this.fetchOptions?.headers,
+				...params.fetchOptions?.headers,
+			},
+			signal:
+				params.fetchOptions?.signal ||
+				params.signal ||
+				this.fetchOptions?.signal,
 		});
 
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -5,6 +5,7 @@ import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createTestClient } from "./__testutils__/createClient";
 
 import * as prismic from "../src";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 it("returns repository metadata", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository();
@@ -38,6 +39,10 @@ it("includes access token if configured", async (ctx) => {
 	expect(res).toStrictEqual(repositoryResponse);
 });
 
+testFetchOptions("supports fetch options", {
+	run: (client, params) => client.getRepository(params),
+});
+
 testAbortableMethod("is abortable with an AbortController", {
-	run: (client, signal) => client.getRepository({ signal }),
+	run: (client, params) => client.getRepository(params),
 });

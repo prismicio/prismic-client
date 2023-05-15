@@ -1,5 +1,6 @@
 import { testGetAllMethod } from "./__testutils__/testAnyGetMethod";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 testGetAllMethod("returns all documents by UIDs from paginated response", {
 	run: (client) => client.getAllByUIDs("type", ["uid1", "uid2"]),
@@ -29,7 +30,12 @@ testGetAllMethod("includes params if provided", {
 	},
 });
 
+testFetchOptions("supports fetch options", {
+	run: (client, params) =>
+		client.getAllByUIDs("type", ["uid1", "uid2"], params),
+});
+
 testAbortableMethod("is abortable with an AbortController", {
-	run: (client, signal) =>
-		client.getAllByUIDs("type", ["uid1", "uid2"], { signal }),
+	run: (client, params) =>
+		client.getAllByUIDs("type", ["uid1", "uid2"], params),
 });

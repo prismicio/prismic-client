@@ -1,5 +1,6 @@
 import { testGetMethod } from "./__testutils__/testAnyGetMethod";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 testGetMethod("resolves a query", {
 	run: (client) => client.get(),
@@ -52,6 +53,10 @@ testGetMethod("merges params and default params if provided", {
 	},
 });
 
+testFetchOptions("supports fetch options", {
+	run: (client, params) => client.get(params),
+});
+
 testAbortableMethod("is abortable with an AbortController", {
-	run: (client, signal) => client.get({ signal }),
+	run: (client, params) => client.get(params),
 });

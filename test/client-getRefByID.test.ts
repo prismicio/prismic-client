@@ -5,6 +5,7 @@ import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 
 import * as prismic from "../src";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 it("returns a ref by ID", async (ctx) => {
 	const ref1 = ctx.mock.api.ref({ isMasterRef: true });
@@ -37,6 +38,10 @@ it("throws if ref could not be found", async (ctx) => {
 	);
 });
 
+testFetchOptions("supports fetch options", {
+	run: (client, params) => client.getRefByID("id", params),
+});
+
 testAbortableMethod("is abortable with an AbortController", {
-	run: (client, signal) => client.getRefByID("id", { signal }),
+	run: (client, params) => client.getRefByID("id", params),
 });

@@ -5,7 +5,6 @@ import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createTestClient } from "./__testutils__/createClient";
 import { getMasterRef } from "./__testutils__/getMasterRef";
 import { createAuthorizationHeader } from "./__testutils__/createAuthorizationHeader";
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
 import { createRepositoryName } from "./__testutils__/createRepositoryName";
 
 it("resolves a query", async (ctx) => {
@@ -203,9 +202,19 @@ it("includes a ref URL parameter to cache-bust", async (ctx) => {
 	expect(json).toStrictEqual(graphqlResponse);
 });
 
-testAbortableMethod("is abortable with an AbortController", {
-	run: (client, signal) =>
-		client.graphQLFetch("https://foo.cdn.prismic.io/graphql", {
-			signal,
-		}),
+// `graphQLFetch()` uses a different function signature from query methods, so
+// we cannot use the generalized `testAbortableMethod()` test util.
+it("is abortable with an AbortController", async (ctx) => {
+	const controller = new AbortController();
+	controller.abort();
+
+	mockPrismicRestAPIV2({ ctx });
+
+	const client = createTestClient();
+
+	await expect(async () => {
+		await client.graphQLFetch("https://foo.cdn.prismic.io/graphql", {
+			signal: controller.signal,
+		});
+	}).rejects.toThrow(/aborted/i);
 });
