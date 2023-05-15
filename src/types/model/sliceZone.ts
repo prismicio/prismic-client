@@ -51,7 +51,7 @@ export const CustomTypeModelSliceType = {
 } as const;
 
 /**
- * A Shared Slice for a custom type.
+ * A shared Slice for a custom type.
  *
  * More details: {@link https://prismic.io/docs/slice}
  */

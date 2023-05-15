@@ -184,8 +184,8 @@ export interface QueryParams {
 
 	/**
 	 * The `brokenRoute` option allows you to define the route populated in the
-	 * `url` property for broken Link or Content Relationship fields. A broken
-	 * link is a Link or Content Relationship field whose linked document has been
+	 * `url` property for broken link or content relationship fields. A broken
+	 * link is a link or content relationship field whose linked document has been
 	 * unpublished or deleted.
 	 *
 	 * {@link https://prismic.io/docs/route-resolver}

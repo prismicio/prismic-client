@@ -78,7 +78,7 @@ expectType<prismic.SliceZone<prismic.Slice<"foo">>>([
 ]);
 
 /**
- * Supports custom Shared Slice definitions.
+ * Supports custom shared Slice definitions.
  */
 expectType<prismic.SliceZone<prismic.SharedSlice<"foo">>>([
 	{

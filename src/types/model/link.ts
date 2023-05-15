@@ -19,7 +19,7 @@ export interface CustomTypeModelLinkField {
 }
 
 /**
- * Type of a Link custom type field.
+ * Type of a link custom type field.
  *
  * More details:
  * {@link https://prismic.io/docs/link}

@@ -16,7 +16,7 @@ export interface CustomTypeModel<
 	id: ID;
 
 	/**
-	 * The human readable name of the custom type Model.
+	 * The human readable name of the custom type model.
 	 */
 	// TODO: Revert to `label?: string | null` if `label` can be partial in: https://github.com/prismicio/prismic-types-internal/blob/HEAD/src/customtypes/CustomType.ts#L39
 	label: string | null | undefined;

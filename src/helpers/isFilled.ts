@@ -121,7 +121,7 @@ export const link = <
 /**
  * Determines if a link to media field is filled.
  *
- * @param field - Link to Media field to check.
+ * @param field - Link to media field to check.
  *
  * @returns `true` if `field` is filled, `false` otherwise.
  */

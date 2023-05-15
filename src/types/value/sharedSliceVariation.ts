@@ -1,7 +1,7 @@
 import type { AnyRegularField } from "./types";
 
 /**
- * A Shared Slice variation.
+ * A shared Slice variation.
  */
 export interface SharedSliceVariation<
 	Variation = string,

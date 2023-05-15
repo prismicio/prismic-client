@@ -28,7 +28,7 @@ expectType<prismic.SharedSlice>({
 });
 
 /**
- * Supports custom Shared Slice type API ID.
+ * Supports custom shared Slice type API ID.
  */
 expectType<prismic.SharedSlice<"foo">>({
 	slice_type: "foo",

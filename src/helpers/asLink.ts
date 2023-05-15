@@ -6,14 +6,14 @@ import type { FilledLinkToMediaField } from "../types/value/linkToMedia";
 import { documentToLinkField } from "./documentToLinkField";
 
 /**
- * Resolves a Link to a Prismic document to a URL
+ * Resolves a link to a Prismic document to a URL
  *
- * @typeParam ReturnType - Return type of your link resolver function, useful if
+ * @typeParam ReturnType - Return type of your Link Resolver function, useful if
  *   you prefer to return a complex object
- * @param linkToDocumentField - A document Link Field to resolve
+ * @param linkToDocumentField - A document link field to resolve
  *
  * @returns Resolved URL
- * @see Prismic link resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
+ * @see Prismic Link Resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
  */
 export type LinkResolverFunction<ReturnType = string | null | undefined> = (
 	linkToDocumentField: FilledContentRelationshipField,
@@ -136,7 +136,7 @@ export const asLink: {
 		return null as AsLinkReturnType<LinkResolverFunctionReturnType, Field>;
 	}
 
-	// Converts document to Link Field if needed
+	// Converts document to link field if needed
 	const linkField =
 		// prettier-ignore
 		(
