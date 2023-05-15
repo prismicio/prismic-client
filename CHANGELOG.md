@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.8.0](https://github.com/prismicio/prismic-client/compare/v6.7.3...v6.8.0) (2023-05-15)
+
+
+### Features
+
+* add `fetchOptions` parameter to control `fetch()` ([#291](https://github.com/prismicio/prismic-client/issues/291)) ([a492a40](https://github.com/prismicio/prismic-client/commit/a492a406eb3981d5eda73408c8e836cb2f591f99))
+
 ### [6.7.3](https://github.com/prismicio/prismic-client/compare/v6.7.2...v6.7.3) (2022-12-19)
 
 
