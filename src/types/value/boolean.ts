@@ -1,5 +1,5 @@
 /**
- * A Boolean field.
+ * A boolean field.
  *
  * @see More details: {@link https://prismic.io/docs/boolean}
  */

@@ -1,7 +1,7 @@
 import type { CustomTypeModelFieldType } from "./types";
 
 /**
- * A Key Text Custom Type field.
+ * A key text custom type field.
  *
  * More details: {@link https://prismic.io/docs/key-text}
  */

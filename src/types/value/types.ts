@@ -5,7 +5,7 @@ import type { DateField } from "./date";
 import type { EmbedField } from "./embed";
 import type { GeoPointField } from "./geoPoint";
 import type { ImageField } from "./image";
-import type { IntegrationFields } from "./integrationFields";
+import type { IntegrationField } from "./integration";
 import type { KeyTextField } from "./keyText";
 import type { LinkField } from "./link";
 import type { LinkToMediaField } from "./linkToMedia";
@@ -44,7 +44,7 @@ export type AnyRegularField =
 	| SelectField
 	| BooleanField
 	| GeoPointField
-	| IntegrationFields;
+	| IntegrationField;
 
 /**
  * Useful to flatten the type output to improve type hints shown in editors. And

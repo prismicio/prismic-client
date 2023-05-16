@@ -447,66 +447,66 @@ type EmbedData = prismic.VideoOEmbed & { foo: string };
  * Integration fields
  */
 
-type IntegrationFieldsDefault = Record<string, unknown>;
+type IntegrationFieldDefault = Record<string, unknown>;
 
 // Default
-(value: prismic.IntegrationFields) => {
-	if (prismic.isFilled.integrationFields(value)) {
+(value: prismic.IntegrationField) => {
+	if (prismic.isFilled.integrationField(value)) {
 		expectType<
 			TypeEqual<
-				prismic.IntegrationFields<IntegrationFieldsDefault, "filled">,
+				prismic.IntegrationField<IntegrationFieldDefault, "filled">,
 				typeof value
 			>
 		>(true);
 		expectType<
 			TypeEqual<
-				prismic.IntegrationFields<IntegrationFieldsDefault, "empty">,
+				prismic.IntegrationField<IntegrationFieldDefault, "empty">,
 				typeof value
 			>
 		>(false);
 	} else {
 		expectType<
 			TypeEqual<
-				prismic.IntegrationFields<IntegrationFieldsDefault, "filled">,
+				prismic.IntegrationField<IntegrationFieldDefault, "filled">,
 				typeof value
 			>
 		>(false);
 		expectType<
 			TypeEqual<
-				prismic.IntegrationFields<IntegrationFieldsDefault, "empty">,
+				prismic.IntegrationField<IntegrationFieldDefault, "empty">,
 				typeof value
 			>
 		>(true);
 	}
 };
 
-type IntegrationFieldsData = { foo: string };
+type IntegrationFieldData = { foo: string };
 
 // With data
-(value: prismic.IntegrationFields<IntegrationFieldsData>) => {
-	if (prismic.isFilled.integrationFields(value)) {
+(value: prismic.IntegrationField<IntegrationFieldData>) => {
+	if (prismic.isFilled.integrationField(value)) {
 		expectType<
 			TypeEqual<
-				prismic.IntegrationFields<IntegrationFieldsData, "filled">,
+				prismic.IntegrationField<IntegrationFieldData, "filled">,
 				typeof value
 			>
 		>(true);
 		expectType<
 			TypeEqual<
-				prismic.IntegrationFields<IntegrationFieldsData, "empty">,
+				prismic.IntegrationField<IntegrationFieldData, "empty">,
 				typeof value
 			>
 		>(false);
 	} else {
 		expectType<
 			TypeEqual<
-				prismic.IntegrationFields<IntegrationFieldsData, "filled">,
+				prismic.IntegrationField<IntegrationFieldData, "filled">,
 				typeof value
 			>
 		>(false);
 		expectType<
 			TypeEqual<
-				prismic.IntegrationFields<IntegrationFieldsData, "empty">,
+				prismic.IntegrationField<IntegrationFieldData, "empty">,
 				typeof value
 			>
 		>(true);

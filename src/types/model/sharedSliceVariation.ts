@@ -1,7 +1,7 @@
 import type { CustomTypeModelFieldForGroup } from "./types";
 
 /**
- * A Shared Slice variation.
+ * A shared Slice variation.
  *
  * More details: {@link https://prismic.io/docs/slice}
  *

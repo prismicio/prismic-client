@@ -25,7 +25,7 @@ export type ContentRelationshipField<
 	: FilledContentRelationshipField<TypeEnum, LangEnum, DataInterface>;
 
 /**
- * Links that refer to Documents
+ * Links that refer to documents
  */
 export interface FilledContentRelationshipField<
 	TypeEnum = string,

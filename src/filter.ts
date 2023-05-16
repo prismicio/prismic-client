@@ -177,7 +177,7 @@ export const filter = {
 	 * The `geopoint.near` filter checks that the value in the path is within
 	 * the radius of the given coordinates.
 	 *
-	 * This filter will only work for a GeoPoint field.
+	 * This filter will only work for a geopoint field.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#geopointnear}
 	 */

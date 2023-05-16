@@ -1,7 +1,7 @@
 import type { EmptyObjectField, FieldState } from "./types";
 
 /**
- * A Geopoint field.
+ * A geopoint field.
  *
  * @typeParam State - State of the field which determines its shape.
  * @see More details: {@link https://prismic.io/docs/geopoint}

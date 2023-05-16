@@ -45,8 +45,8 @@ expectType<prismic.CustomTypeModelLinkToMediaField>({
 expectType<prismic.CustomTypeModelLinkToMediaField>(
 	{} as prismicTI.CustomTypes.Widgets.Nestable.Link & {
 		// We must manually narrow `@prismicio/types-internal`'s type
-		// to match a Link to Media field; `@prismicio/types-internal`
-		// does not contain a Link to Media-specific type.
+		// to match a link to media field; `@prismicio/types-internal`
+		// does not contain a link to media-specific type.
 		config?: { select: "media" };
 	},
 );

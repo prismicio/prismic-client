@@ -1,7 +1,7 @@
 import type { CustomTypeModelFieldType } from "./types";
 
 /**
- * A Rich Text Custom Type field.
+ * A rich text custom type field.
  *
  * More details: {@link https://prismic.io/docs/rich-text-title}
  */
@@ -10,7 +10,7 @@ export type CustomTypeModelRichTextField =
 	| CustomTypeModelRichTextSingleField;
 
 /**
- * A Rich Text Custom Type field which supports multiple blocks of content.
+ * A rich text custom type field which supports multiple blocks of content.
  *
  * More details: {@link https://prismic.io/docs/rich-text-title}
  */
@@ -25,7 +25,7 @@ export interface CustomTypeModelRichTextMultiField {
 }
 
 /**
- * A Rich Text Custom Type field which supports one block of content.
+ * A rich text custom type field which supports one block of content.
  *
  * More details: {@link https://prismic.io/docs/rich-text-title}
  */

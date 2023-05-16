@@ -3,7 +3,7 @@ import type { CustomTypeModelFieldType } from "./types";
 import type { CustomTypeModelLegacySlice, CustomTypeModelSlice } from "./slice";
 
 /**
- * A Slice Zone Custom Type field.
+ * A Slice Zone custom type field.
  *
  * More details: {@link https://prismic.io/docs/slice}
  */
@@ -51,7 +51,7 @@ export const CustomTypeModelSliceType = {
 } as const;
 
 /**
- * A Shared Slice for a Custom Type.
+ * A shared Slice for a custom type.
  *
  * More details: {@link https://prismic.io/docs/slice}
  */

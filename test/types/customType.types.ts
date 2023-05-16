@@ -236,7 +236,7 @@ expectType<
 expectType<
 	TypeOf<
 		prismic.CustomTypeModelFieldForGroup,
-		prismic.CustomTypeModelIntegrationFieldsField
+		prismic.CustomTypeModelIntegrationField
 	>
 >(true);
 expectType<

@@ -1,7 +1,7 @@
 import type { CustomTypeModelFieldType } from "./types";
 
 /**
- * A Select Custom Type field.
+ * A select custom type field.
  *
  * More details: {@link https://prismic.io/docs/select}
  *

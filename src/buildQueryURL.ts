@@ -53,7 +53,7 @@ export interface Ordering {
  */
 export interface Route {
 	/**
-	 * The Custom Type of the document.
+	 * The custom type of the document.
 	 */
 	type: string;
 
@@ -184,8 +184,8 @@ export interface QueryParams {
 
 	/**
 	 * The `brokenRoute` option allows you to define the route populated in the
-	 * `url` property for broken Link or Content Relationship fields. A broken
-	 * link is a Link or Content Relationship field whose linked document has been
+	 * `url` property for broken link or content relationship fields. A broken
+	 * link is a link or content relationship field whose linked document has been
 	 * unpublished or deleted.
 	 *
 	 * {@link https://prismic.io/docs/route-resolver}
@@ -205,7 +205,7 @@ type BuildQueryURLParams = {
 	ref: string;
 
 	/**
-	 * Ref used to populate Integration Fields with the latest content.
+	 * Ref used to populate integration fields with the latest content.
 	 *
 	 * {@link https://prismic.io/docs/integration-fields}
 	 */

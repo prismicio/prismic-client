@@ -27,7 +27,7 @@ expectType<TypeOf<prismic.AnyRegularField, prismic.DateField>>(true);
 expectType<TypeOf<prismic.AnyRegularField, prismic.EmbedField>>(true);
 expectType<TypeOf<prismic.AnyRegularField, prismic.GeoPointField>>(true);
 expectType<TypeOf<prismic.AnyRegularField, prismic.ImageField>>(true);
-expectType<TypeOf<prismic.AnyRegularField, prismic.IntegrationFields>>(true);
+expectType<TypeOf<prismic.AnyRegularField, prismic.IntegrationField>>(true);
 expectType<TypeOf<prismic.AnyRegularField, prismic.KeyTextField>>(true);
 expectType<TypeOf<prismic.AnyRegularField, prismic.LinkField>>(true);
 expectType<TypeOf<prismic.AnyRegularField, prismic.LinkToMediaField>>(true);

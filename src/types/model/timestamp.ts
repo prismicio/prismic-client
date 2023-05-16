@@ -1,7 +1,7 @@
 import type { CustomTypeModelFieldType } from "./types";
 
 /**
- * A Timestamp Custom Type field.
+ * A timestamp custom type field.
  *
  * More details: {@link https://prismic.io/docs/timestamp}
  */

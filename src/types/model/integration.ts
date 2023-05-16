@@ -1,12 +1,12 @@
 import type { CustomTypeModelFieldType } from "./types";
 
 /**
- * An Integration Fields Custom Type field.
+ * An integration custom type field.
  *
  * More details: {@link https://prismic.io/docs/integration-fields}
  */
-export interface CustomTypeModelIntegrationFieldsField {
-	type: typeof CustomTypeModelFieldType.IntegrationFields;
+export interface CustomTypeModelIntegrationField {
+	type: typeof CustomTypeModelFieldType.Integration;
 	config?: {
 		label?: string | null;
 		placeholder?: string;

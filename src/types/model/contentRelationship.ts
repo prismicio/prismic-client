@@ -3,7 +3,7 @@ import type { CustomTypeModelFieldType } from "./types";
 import type { CustomTypeModelLinkSelectType } from "./link";
 
 /**
- * A Content Relationship Custom Type field.
+ * A content relationship custom type field.
  *
  * More details:
  * {@link https://prismic.io/docs/content-relationship}

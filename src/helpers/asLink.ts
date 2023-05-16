@@ -6,14 +6,14 @@ import type { FilledLinkToMediaField } from "../types/value/linkToMedia";
 import { documentToLinkField } from "./documentToLinkField";
 
 /**
- * Resolves a Link to a Prismic document to a URL
+ * Resolves a link to a Prismic document to a URL
  *
- * @typeParam ReturnType - Return type of your link resolver function, useful if
+ * @typeParam ReturnType - Return type of your Link Resolver function, useful if
  *   you prefer to return a complex object
- * @param linkToDocumentField - A document Link Field to resolve
+ * @param linkToDocumentField - A document link field to resolve
  *
  * @returns Resolved URL
- * @see Prismic link resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
+ * @see Prismic Link Resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
  */
 export type LinkResolverFunction<ReturnType = string | null | undefined> = (
 	linkToDocumentField: FilledContentRelationshipField,
@@ -62,15 +62,15 @@ export type AsLinkReturnType<
 // TODO: Remove overload when we remove support for deprecated tuple-style configuration.
 export const asLink: {
 	/**
-	 * Resolves any type of Link field or Prismic document to a URL.
+	 * Resolves any type of link field or Prismic document to a URL.
 	 *
 	 * @typeParam LinkResolverFunctionReturnType - Link Resolver function return
 	 *   type
 	 * @typeParam Field - Link field or Prismic document to resolve to a URL
-	 * @param linkFieldOrDocument - Any kind of Link field or a document to resolve
+	 * @param linkFieldOrDocument - Any kind of link field or a document to resolve
 	 * @param config - Configuration that determines the output of `asLink()`
 	 *
-	 * @returns Resolved URL or, if the provided Link field or document is empty, `null`
+	 * @returns Resolved URL or, if the provided link field or document is empty, `null`
 	 * @see Prismic Link Resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
 	 * @see Prismic API `routes` options documentation: {@link https://prismic.io/docs/route-resolver}
 	 */
@@ -87,16 +87,16 @@ export const asLink: {
 	): AsLinkReturnType<LinkResolverFunctionReturnType, Field>;
 
 	/**
-	 * Resolves any type of Link field or Prismic document to a URL.
+	 * Resolves any type of link field or Prismic document to a URL.
 	 *
 	 * @typeParam LinkResolverFunctionReturnType - Link Resolver function return
 	 *   type
 	 * @typeParam Field - Link field or Prismic document to resolve to a URL
-	 * @param linkFieldOrDocument - Any kind of Link field or a document to resolve
+	 * @param linkFieldOrDocument - Any kind of link field or a document to resolve
 	 * @param linkResolver - An optional Link Resolver function. Without it, you are
 	 *   expected to use the `routes` options from the API
 	 *
-	 * @returns Resolved URL or, if the provided Link field or document is empty, `null`
+	 * @returns Resolved URL or, if the provided link field or document is empty, `null`
 	 * @see Prismic Link Resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
 	 * @see Prismic API `routes` options documentation: {@link https://prismic.io/docs/route-resolver}
 	 *
@@ -136,7 +136,7 @@ export const asLink: {
 		return null as AsLinkReturnType<LinkResolverFunctionReturnType, Field>;
 	}
 
-	// Converts document to Link Field if needed
+	// Converts document to link field if needed
 	const linkField =
 		// prettier-ignore
 		(

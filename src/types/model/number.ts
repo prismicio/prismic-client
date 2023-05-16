@@ -1,7 +1,7 @@
 import type { CustomTypeModelFieldType } from "./types";
 
 /**
- * A Number Custom Type field.
+ * A number custom type field.
  *
  * More details: {@link https://prismic.io/docs/number}
  */

@@ -1,7 +1,7 @@
 import type { CustomTypeModelFieldType } from "./types";
 
 /**
- * A GeoPoint Custom Type field.
+ * A geopoint custom type field.
  *
  * More details: {@link https://prismic.io/docs/geopoint}
  */

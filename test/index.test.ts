@@ -45,7 +45,7 @@ it("embed type mapping", () => {
 });
 
 it("custom type field type mapping", () => {
-	expect(prismic.CustomTypeModelFieldType).toMatchObject({
+	expect(prismic.CustomTypeModelFieldType).toStrictEqual({
 		Boolean: "Boolean",
 		Color: "Color",
 		Date: "Date",
@@ -53,7 +53,7 @@ it("custom type field type mapping", () => {
 		GeoPoint: "GeoPoint",
 		Group: "Group",
 		Image: "Image",
-		IntegrationFields: "IntegrationFields",
+		Integration: "IntegrationFields",
 		Link: "Link",
 		Number: "Number",
 		Select: "Select",
@@ -62,6 +62,11 @@ it("custom type field type mapping", () => {
 		Text: "Text",
 		Timestamp: "Timestamp",
 		UID: "UID",
+		// Deprecated fields
+		IntegrationFields: "IntegrationFields",
+		Range: "Range",
+		Separator: "Separator",
+		LegacySlices: "Choice",
 	});
 });
 

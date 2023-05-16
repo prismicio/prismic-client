@@ -76,11 +76,14 @@ it("image thumbnail", () => {
 });
 
 it("integration fields", (ctx) => {
-	expect(isFilled.integrationFields(null)).toBe(false);
-	expect(isFilled.integrationFields(undefined)).toBe(false);
-	expect(isFilled.integrationFields(ctx.mock.value.integrationFields())).toBe(
+	expect(isFilled.integrationField(null)).toBe(false);
+	expect(isFilled.integrationField(undefined)).toBe(false);
+	expect(isFilled.integrationField(ctx.mock.value.integrationFields())).toBe(
 		true,
 	);
+});
+it("aliases integrationFields to integrationField", () => {
+	expect(isFilled.integrationFields).toBe(isFilled.integrationField);
 });
 
 it("key text", (ctx) => {

@@ -2,7 +2,7 @@ import { expectNever, expectType } from "ts-expect";
 
 import * as prismic from "../../src";
 
-(value: prismic.IntegrationFields): true => {
+(value: prismic.IntegrationField): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
@@ -21,13 +21,13 @@ import * as prismic from "../../src";
 /**
  * Filled state.
  */
-expectType<prismic.IntegrationFields>({
+expectType<prismic.IntegrationField>({
 	foo: "bar",
 });
-expectType<prismic.IntegrationFields<Record<string, unknown>, "filled">>({
+expectType<prismic.IntegrationField<Record<string, unknown>, "filled">>({
 	foo: "bar",
 });
-expectType<prismic.IntegrationFields<Record<string, unknown>, "empty">>(
+expectType<prismic.IntegrationField<Record<string, unknown>, "empty">>(
 	// @ts-expect-error - Empty fields cannot contain a filled value.
 	{
 		foo: "bar",
@@ -37,9 +37,9 @@ expectType<prismic.IntegrationFields<Record<string, unknown>, "empty">>(
 /**
  * Empty state.
  */
-expectType<prismic.IntegrationFields>(null);
-expectType<prismic.IntegrationFields<Record<string, unknown>, "empty">>(null);
-expectType<prismic.IntegrationFields<Record<string, unknown>, "filled">>(
+expectType<prismic.IntegrationField>(null);
+expectType<prismic.IntegrationField<Record<string, unknown>, "empty">>(null);
+expectType<prismic.IntegrationField<Record<string, unknown>, "filled">>(
 	// @ts-expect-error - Filled fields cannot contain an empty value.
 	null,
 );
@@ -47,10 +47,10 @@ expectType<prismic.IntegrationFields<Record<string, unknown>, "filled">>(
 /**
  * Supports custom blob type.
  */
-expectType<prismic.IntegrationFields<{ foo: "bar" }>>({
+expectType<prismic.IntegrationField<{ foo: "bar" }>>({
 	foo: "bar",
 });
-expectType<prismic.IntegrationFields<{ foo: "bar" }>>({
+expectType<prismic.IntegrationField<{ foo: "bar" }>>({
 	// @ts-expect-error - Blob should match the given type.
 	baz: "qux",
 });

@@ -11,7 +11,7 @@ type AsImageSrcReturnType<Field extends ImageFieldImage | null | undefined> =
 	Field extends ImageFieldImage<"filled"> ? string : null;
 
 /**
- * Returns the URL of an Image field with optional image transformations (via
+ * Returns the URL of an image field with optional image transformations (via
  * Imgix URL parameters).
  *
  * @example
@@ -25,8 +25,8 @@ type AsImageSrcReturnType<Field extends ImageFieldImage | null | undefined> =
  *   an image URL.
  * @param config - An object of Imgix URL API parameters to transform the image.
  *
- * @returns The Image field's image URL with transformations applied (if given).
- *   If the Image field is empty, `null` is returned.
+ * @returns The image field's image URL with transformations applied (if given).
+ *   If the image field is empty, `null` is returned.
  * @see Imgix URL parameters reference: https://docs.imgix.com/apis/rendering
  */
 export const asImageSrc = <Field extends ImageFieldImage | null | undefined>(

@@ -3,7 +3,7 @@ import type { FieldState } from "./types";
 import type { DateField } from "./date";
 
 /**
- * Simple Timestamp Field
+ * A timestamp field.
  *
  * @typeParam State - State of the field which determines its shape.
  */

@@ -30,12 +30,12 @@ type AsImagePixelDensitySrcSetReturnType<
 > = Field extends ImageFieldImage<"filled">
 	? {
 			/**
-			 * The Image field's image URL with Imgix URL parameters (if given).
+			 * The image field's image URL with Imgix URL parameters (if given).
 			 */
 			src: string;
 
 			/**
-			 * A pixel-densitye-based `srcset` attribute value for the Image field's
+			 * A pixel-densitye-based `srcset` attribute value for the image field's
 			 * image with Imgix URL parameters (if given).
 			 */
 			srcset: string;
@@ -43,7 +43,7 @@ type AsImagePixelDensitySrcSetReturnType<
 	: null;
 
 /**
- * Creates a pixel-density-based `srcset` from an Image field with optional
+ * Creates a pixel-density-based `srcset` from an image field with optional
  * image transformations (via Imgix URL parameters).
  *
  * If a `pixelDensities` parameter is not given, the following pixel densities
@@ -68,8 +68,8 @@ type AsImagePixelDensitySrcSetReturnType<
  * @param config - An object of Imgix URL API parameters. The `pixelDensities`
  *   parameter defines the resulting `srcset` widths.
  *
- * @returns A `srcset` attribute value for the Image field with Imgix URL
- *   parameters (if given). If the Image field is empty, `null` is returned.
+ * @returns A `srcset` attribute value for the image field with Imgix URL
+ *   parameters (if given). If the image field is empty, `null` is returned.
  * @see Imgix URL parameters reference: https://docs.imgix.com/apis/rendering
  */
 export const asImagePixelDensitySrcSet = <

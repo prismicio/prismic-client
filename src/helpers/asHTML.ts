@@ -22,13 +22,13 @@ import type { RichTextField } from "../types/value/richText";
 import { LinkResolverFunction } from "./asLink";
 
 /**
- * Serializes a node from a Rich Text or Title field with a function to HTML.
+ * Serializes a node from a rich text or title field with a function to HTML.
  *
  * Unlike a typical `@prismicio/richtext` function serializer, this serializer
  * converts the `children` argument to a single string rather than an array of
  * strings.
  *
- * @see Templating Rich Text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
+ * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
  */
 export type HTMLRichTextFunctionSerializer = (
 	type: Parameters<RichTextFunctionSerializer<string>>[0],
@@ -39,13 +39,13 @@ export type HTMLRichTextFunctionSerializer = (
 ) => string | null | undefined;
 
 /**
- * Serializes a node from a Rich Text or Title field with a map to HTML
+ * Serializes a node from a rich text or title field with a map to HTML
  *
  * Unlike a typical `@prismicio/richtext` map serializer, this serializer
  * converts the `children` property to a single string rather than an array of
  * strings.
  *
- * @see Templating Rich Text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
+ * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
  */
 export type HTMLRichTextMapSerializer = {
 	[P in keyof RichTextMapSerializer<string>]: (payload: {
@@ -63,7 +63,7 @@ export type HTMLRichTextMapSerializer = {
  * A {@link RichTextMapSerializerFunction} type specifically for
  * {@link HTMLRichTextMapSerializer}.
  *
- * @typeParam BlockName - The serializer's Rich Text block type.
+ * @typeParam BlockName - The serializer's rich text block type.
  */
 type HTMLRichTextMapSerializerFunction<
 	BlockType extends keyof RichTextMapSerializer<string>,
@@ -106,17 +106,17 @@ type ExtractTextTypeGeneric<T> = T extends RichTextMapSerializerFunction<
 	: never;
 
 /**
- * Serializes a node from a Rich Text or Title field with a map or a function to HTML
+ * Serializes a node from a rich text or title field with a map or a function to HTML
  *
  * @see {@link HTMLRichTextMapSerializer} and {@link HTMLRichTextFunctionSerializer}
- * @see Templating Rich Text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
+ * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
  */
 export type HTMLRichTextSerializer =
 	| HTMLRichTextMapSerializer
 	| HTMLRichTextFunctionSerializer;
 
 /**
- * Creates a default HTML Rich Text Serializer with a given Link Resolver providing
+ * Creates a default HTML rich text Serializer with a given Link Resolver providing
  * sensible and safe defaults for every node type
  *
  * @internal
@@ -211,7 +211,7 @@ type AsHTMLConfig = {
 	linkResolver?: LinkResolverFunction | null;
 
 	/**
-	 * An optional Rich Text Serializer, unhandled cases will fallback to the default serializer
+	 * An optional rich text Serializer, unhandled cases will fallback to the default serializer
 	 */
 	serializer?: HTMLRichTextSerializer | null;
 };
@@ -234,13 +234,13 @@ type AsHTMLReturnType<Field extends RichTextField | null | undefined> =
 // TODO: Remove overload when we remove support for deprecated tuple-style configuration.
 export const asHTML: {
 	/**
-	 * Serializes a Rich Text or Title field to an HTML string.
+	 * Serializes a rich text or title field to an HTML string.
 	 *
-	 * @param richTextField - A Rich Text or Title field from Prismic
+	 * @param richTextField - A rich text or title field from Prismic
 	 * @param config - Configuration that determines the output of `asHTML()`
 	 *
-	 * @returns HTML equivalent of the provided Rich Text or Title field
-	 * @see Templating Rich Text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
+	 * @returns HTML equivalent of the provided rich text or title field
+	 * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
 	 */
 	<Field extends RichTextField | null | undefined>(
 		richTextField: Field,
@@ -248,16 +248,16 @@ export const asHTML: {
 	): AsHTMLReturnType<Field>;
 
 	/**
-	 * Serializes a Rich Text or Title field to an HTML string.
+	 * Serializes a rich text or title field to an HTML string.
 	 *
-	 * @param richTextField - A Rich Text or Title field from Prismic
+	 * @param richTextField - A rich text or title field from Prismic
 	 * @param linkResolver - An optional link resolver function to resolve links,
 	 *   without it you're expected to use the `routes` options from the API
-	 * @param serializer - An optional Rich Text Serializer, unhandled cases will fallback
+	 * @param serializer - An optional rich text Serializer, unhandled cases will fallback
 	 *   to the default serializer
 	 *
-	 * @returns HTML equivalent of the provided Rich Text or Title field
-	 * @see Templating Rich Text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
+	 * @returns HTML equivalent of the provided rich text or title field
+	 * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
 	 *
 	 * @deprecated Use object-style configuration instead.
 	 *

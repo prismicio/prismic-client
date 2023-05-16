@@ -1,7 +1,7 @@
 import type { CustomTypeModelFieldType } from "./types";
 
 /**
- * A Color Custom Type field.
+ * A color custom type field.
  *
  * More details: {@link https://prismic.io/docs/color}
  */

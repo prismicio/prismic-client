@@ -14,7 +14,7 @@ export interface AlternateLanguage<TypeEnum = string, LangEnum = string> {
 }
 
 /**
- * Metadata for Prismic Document
+ * Metadata for Prismic document
  */
 export interface PrismicDocumentHeader<TypeEnum = string, LangEnum = string> {
 	/**
@@ -76,7 +76,7 @@ export interface PrismicDocumentHeader<TypeEnum = string, LangEnum = string> {
 /**
  * A Prismic document served through REST API v2.
  *
- * @see More details on Custom Types: {@link https://prismic.io/docs/custom-types}
+ * @see More details on custom types: {@link https://prismic.io/docs/custom-types}
  */
 export interface PrismicDocument<
 	DataInterface extends Record<
@@ -97,7 +97,7 @@ export interface PrismicDocument<
  * A Prismic document served through REST API v2. Does not contain a UID (a
  * unique identifier).
  *
- * @see More details on Custom Types: {@link https://prismic.io/docs/custom-types}
+ * @see More details on custom types: {@link https://prismic.io/docs/custom-types}
  * @see More details on the UID field: {@link https://prismic.io/docs/uid}
  */
 export interface PrismicDocumentWithoutUID<
@@ -123,7 +123,7 @@ export interface PrismicDocumentWithoutUID<
  * A Prismic document served through REST API v2. Contains a UID (a unique
  * identifier).
  *
- * @see More details on Custom Types: {@link https://prismic.io/docs/custom-types}
+ * @see More details on custom types: {@link https://prismic.io/docs/custom-types}
  * @see More details on the UID field: {@link https://prismic.io/docs/uid}
  */
 export interface PrismicDocumentWithUID<

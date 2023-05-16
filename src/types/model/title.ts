@@ -1,7 +1,7 @@
 import { CustomTypeModelRichTextSingleField } from "./richText";
 
 /**
- * A Title Custom Type field.
+ * A title custom type field.
  *
  * More details: {@link https://prismic.io/docs/rich-text-title}
  */

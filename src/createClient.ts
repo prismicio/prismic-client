@@ -234,7 +234,7 @@ export type ClientConfig = {
 	ref?: RefStringOrThunk;
 
 	/**
-	 * A list of Route Resolver objects that define how a document's `url` field
+	 * A list of Route Resolver objects that define how a document's `url` property
 	 * is resolved.
 	 *
 	 * {@link https://prismic.io/docs/route-resolver}
@@ -243,8 +243,8 @@ export type ClientConfig = {
 
 	/**
 	 * The `brokenRoute` option allows you to define the route populated in the
-	 * `url` property for broken Link or Content Relationship fields. A broken
-	 * link is a Link or Content Relationship field whose linked document has been
+	 * `url` property for broken link or content relationship fields. A broken
+	 * link is a link or content relationship field whose linked document has been
 	 * unpublished or deleted.
 	 *
 	 * {@link https://prismic.io/docs/route-resolver}
@@ -424,8 +424,8 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 	/**
 	 * The `brokenRoute` option allows you to define the route populated in the
-	 * `url` property for broken Link or Content Relationship fields. A broken
-	 * link is a Link or Content Relationship field whose linked document has been
+	 * `url` property for broken link or content relationship fields. A broken
+	 * link is a link or content relationship field whose linked document has been
 	 * unpublished or deleted.
 	 *
 	 * {@link https://prismic.io/docs/route-resolver}
@@ -735,7 +735,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * A document's UID is different from its ID. An ID is automatically generated
 	 * for all documents and is made available on its `id` property. A UID is
 	 * provided in the Prismic editor and is unique among all documents of its
-	 * Custom Type.
+	 * custom type.
 	 * @example
 	 *
 	 * ```ts
@@ -765,7 +765,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * A document's UID is different from its ID. An ID is automatically generated
 	 * for all documents and is made available on its `id` property. A UID is
 	 * provided in the Prismic editor and is unique among all documents of its
-	 * Custom Type.
+	 * custom type.
 	 * @example
 	 *
 	 * ```ts
@@ -801,7 +801,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * A document's UID is different from its ID. An ID is automatically generated
 	 * for all documents and is made available on its `id` property. A UID is
 	 * provided in the Prismic editor and is unique among all documents of its
-	 * Custom Type.
+	 * custom type.
 	 * @example
 	 *
 	 * ```ts
@@ -828,13 +828,13 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 	/**
 	 * Queries a document from the Prismic repository with a specific UID and
-	 * Custom Type.
+	 * custom type.
 	 *
 	 * @remarks
 	 * A document's UID is different from its ID. An ID is automatically generated
 	 * for all documents and is made available on its `id` property. A UID is
 	 * provided in the Prismic editor and is unique among all documents of its
-	 * Custom Type.
+	 * custom type.
 	 * @example
 	 *
 	 * ```ts
@@ -842,7 +842,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of the Prismic document returned.
-	 * @param documentType - The API ID of the document's Custom Type.
+	 * @param documentType - The API ID of the document's custom type.
 	 * @param uid - UID of the document.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
@@ -873,7 +873,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * A document's UID is different from its ID. An ID is automatically generated
 	 * for all documents and is made available on its `id` property. A UID is
 	 * provided in the Prismic editor and is unique among all documents of its
-	 * Custom Type.
+	 * custom type.
 	 * @example
 	 *
 	 * ```ts
@@ -884,7 +884,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of the Prismic document returned.
-	 * @param documentType - The API ID of the document's Custom Type.
+	 * @param documentType - The API ID of the document's custom type.
 	 * @param uids - A list of document UIDs.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
@@ -909,7 +909,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 	/**
 	 * Queries all documents from the Prismic repository with specific UIDs and
-	 * Custom Type.
+	 * custom type.
 	 *
 	 * This method may make multiple network requests to query all matching
 	 * content.
@@ -918,7 +918,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * A document's UID is different from its ID. An ID is automatically generated
 	 * for all documents and is made available on its `id` property. A UID is
 	 * provided in the Prismic editor and is unique among all documents of its
-	 * Custom Type.
+	 * custom type.
 	 * @example
 	 *
 	 * ```ts
@@ -929,7 +929,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of Prismic documents returned.
-	 * @param documentType - The API ID of the document's Custom Type.
+	 * @param documentType - The API ID of the document's custom type.
 	 * @param uids - A list of document UIDs.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
@@ -955,12 +955,12 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 	/**
 	 * Queries a singleton document from the Prismic repository for a specific
-	 * Custom Type.
+	 * custom type.
 	 *
 	 * @remarks
 	 * A singleton document is one that is configured in Prismic to only allow one
 	 * instance. For example, a repository may be configured to contain just one
-	 * Settings document. This is in contrast to a repeatable Custom Type which
+	 * Settings document. This is in contrast to a repeatable custom type which
 	 * allows multiple instances of itself.
 	 * @example
 	 *
@@ -969,10 +969,10 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of the Prismic document returned.
-	 * @param documentType - The API ID of the singleton Custom Type.
+	 * @param documentType - The API ID of the singleton custom type.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
-	 * @returns The singleton document for the Custom Type, if a matching document
+	 * @returns The singleton document for the custom type, if a matching document
 	 *   exists.
 	 */
 	async getSingle<
@@ -988,10 +988,10 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Queries documents from the Prismic repository for a specific Custom Type.
+	 * Queries documents from the Prismic repository for a specific custom type.
 	 *
 	 * Use `getAllByType` instead if you need to query all documents for a
-	 * specific Custom Type.
+	 * specific custom type.
 	 *
 	 * @example
 	 *
@@ -1000,10 +1000,10 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of Prismic documents returned.
-	 * @param documentType - The API ID of the Custom Type.
+	 * @param documentType - The API ID of the custom type.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
-	 * @returns A paginated response containing documents of the Custom Type.
+	 * @returns A paginated response containing documents of the custom type.
 	 */
 	async getByType<
 		TDocument extends TDocuments,
@@ -1031,10 +1031,10 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of Prismic documents returned.
-	 * @param documentType - The API ID of the Custom Type.
+	 * @param documentType - The API ID of the custom type.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
-	 * @returns A list of all documents of the Custom Type.
+	 * @returns A list of all documents of the custom type.
 	 */
 	async getAllByType<
 		TDocument extends TDocuments,

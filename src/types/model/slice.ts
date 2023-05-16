@@ -4,7 +4,7 @@ import type { CustomTypeModelGroupField } from "./group";
 import type { CustomTypeModelSliceType } from "./sliceZone";
 
 /**
- * A Slice for a Custom Type.
+ * A Slice for a custom type.
  *
  * More details: {@link https://prismic.io/docs/slice}
  *

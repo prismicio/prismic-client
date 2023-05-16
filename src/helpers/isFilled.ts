@@ -5,7 +5,7 @@ import type { AnyOEmbed, EmbedField } from "../types/value/embed";
 import type { GeoPointField } from "../types/value/geoPoint";
 import type { GroupField } from "../types/value/group";
 import type { ImageField, ImageFieldImage } from "../types/value/image";
-import type { IntegrationFields } from "../types/value/integrationFields";
+import type { IntegrationField } from "../types/value/integration";
 import type { KeyTextField } from "../types/value/keyText";
 import type { LinkField } from "../types/value/link";
 import type { LinkToMediaField } from "../types/value/linkToMedia";
@@ -44,9 +44,9 @@ const isNonEmptyArray = <T>(input: T[]): input is [T, ...T[]] => {
 };
 
 /**
- * Determines if a Rich Text field is filled.
+ * Determines if a rich text field is filled.
  *
- * @param field - Rich Text field to check.
+ * @param field - rich text field to check.
  *
  * @returns `true` if `field` is filled, `false` otherwise.
  */
@@ -63,7 +63,7 @@ export const richText = (
 };
 
 /**
- * Determines if a Title field is filled.
+ * Determines if a title field is filled.
  *
  * @param field - Title field to check.
  *
@@ -87,7 +87,7 @@ export const imageThumbnail = (
 };
 
 /**
- * Determines if an Image field is filled.
+ * Determines if an image field is filled.
  *
  * @param field - Image field to check.
  *
@@ -100,7 +100,7 @@ export const image = imageThumbnail as <
 ) => field is ImageField<ThumbnailNames, "filled">;
 
 /**
- * Determines if a Link field is filled.
+ * Determines if a link field is filled.
  *
  * @param field - Link field to check.
  *
@@ -119,9 +119,9 @@ export const link = <
 };
 
 /**
- * Determines if a Link to Media field is filled.
+ * Determines if a link to media field is filled.
  *
- * @param field - Link to Media field to check.
+ * @param field - Link to media field to check.
  *
  * @returns `true` if `field` is filled, `false` otherwise.
  */
@@ -130,7 +130,7 @@ export const linkToMedia = link as (
 ) => field is LinkToMediaField<"filled">;
 
 /**
- * Determines if a Content Relationship field is filled.
+ * Determines if a content relationship field is filled.
  *
  * @param field - Content Relationship field to check.
  *
@@ -155,7 +155,7 @@ export const contentRelationship = link as <
 >;
 
 /**
- * Determines if a Date field is filled.
+ * Determines if a date field is filled.
  *
  * @param field - Date field to check.
  *
@@ -166,7 +166,7 @@ export const date = isNonNullish as (
 ) => field is DateField<"filled">;
 
 /**
- * Determines if a Timestamp field is filled.
+ * Determines if a timestamp field is filled.
  *
  * @param field - Timestamp field to check.
  *
@@ -177,7 +177,7 @@ export const timestamp = isNonNullish as (
 ) => field is TimestampField<"filled">;
 
 /**
- * Determines if a Color field is filled.
+ * Determines if a color field is filled.
  *
  * @param field - Color field to check.
  *
@@ -188,7 +188,7 @@ export const color = isNonNullish as (
 ) => field is ColorField<"filled">;
 
 /**
- * Determines if a Number field is filled.
+ * Determines if a number field is filled.
  *
  * @param field - Number field to check.
  *
@@ -199,7 +199,7 @@ export const number = isNonNullish as (
 ) => field is NumberField<"filled">;
 
 /**
- * Determines if a Key Text field is filled.
+ * Determines if a key text field is filled.
  *
  * @param field - Key Text field to check.
  *
@@ -212,7 +212,7 @@ export const keyText = (
 };
 
 /**
- * Determines if a Select field is filled.
+ * Determines if a select field is filled.
  *
  * @param field - Select field to check.
  *
@@ -223,7 +223,7 @@ export const select = isNonNullish as <Enum extends string>(
 ) => field is SelectField<Enum, "filled">;
 
 /**
- * Determines if an Embed field is filled.
+ * Determines if an embed field is filled.
  *
  * @param field - Embed field to check.
  *
@@ -236,7 +236,7 @@ export const embed = <Field extends EmbedField<AnyOEmbed>>(
 };
 
 /**
- * Determines if a GeoPoint field is filled.
+ * Determines if a geopoint field is filled.
  *
  * @param field - GeoPoint field to check.
  *
@@ -249,17 +249,22 @@ export const geoPoint = (
 };
 
 /**
- * Determines if an Integration Fields field is filled.
+ * Determines if an integration field is filled.
  *
- * @param field - Integration Fields field to check.
+ * @param field - Integration field to check.
  *
  * @returns `true` if `field` is filled, `false` otherwise.
  */
-export const integrationFields = isNonNullish as <
+export const integrationField = isNonNullish as <
 	Data extends Record<string, unknown>,
 >(
-	field: IntegrationFields<Data> | null | undefined,
-) => field is IntegrationFields<Data, "filled">;
+	field: IntegrationField<Data> | null | undefined,
+) => field is IntegrationField<Data, "filled">;
+/**
+ * @deprecated Renamed to `integrationField`.
+ */
+// TODO: Remove when we remove support for deprecated `integrationFields` export.
+export const integrationFields = integrationField;
 
 /**
  * Determines if a Group has at least one item.
