@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.0.0-alpha.5](https://github.com/prismicio/prismic-client/compare/v7.0.0-alpha.4...v7.0.0-alpha.5) (2023-05-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* rename config `htmlRichTextSerializer` to `serializer`
+
+### Refactor
+
+* rename config `htmlRichTextSerializer` to `serializer` ([b4bdf7f](https://github.com/prismicio/prismic-client/commit/b4bdf7fbb44c487ee50edc4eff832cfc9321fc61))
+
 ## [7.0.0-alpha.4](https://github.com/prismicio/prismic-client/compare/v7.0.0-alpha.3...v7.0.0-alpha.4) (2023-05-09)
 
 
