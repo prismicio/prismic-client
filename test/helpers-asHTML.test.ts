@@ -20,7 +20,7 @@ it("serializes with a custom function serializer", () => {
 	expect(
 		asHTML(richTextFixture.en, {
 			linkResolver,
-			htmlRichTextSerializer: htmlRichTextFunctionSerializer,
+			serializer: htmlRichTextFunctionSerializer,
 		}),
 	).toMatchSnapshot();
 
@@ -30,7 +30,7 @@ it("serializes with a custom function serializer", () => {
 	).toBe(
 		asHTML(richTextFixture.en, {
 			linkResolver,
-			htmlRichTextSerializer: htmlRichTextFunctionSerializer,
+			serializer: htmlRichTextFunctionSerializer,
 		}),
 	);
 });
@@ -39,7 +39,7 @@ it("serializes with a custom map serializer", () => {
 	expect(
 		asHTML(richTextFixture.en, {
 			linkResolver,
-			htmlRichTextSerializer: htmlRichTextMapSerializer,
+			serializer: htmlRichTextMapSerializer,
 		}),
 	).toMatchSnapshot();
 
@@ -49,7 +49,7 @@ it("serializes with a custom map serializer", () => {
 	).toBe(
 		asHTML(richTextFixture.en, {
 			linkResolver,
-			htmlRichTextSerializer: htmlRichTextMapSerializer,
+			serializer: htmlRichTextMapSerializer,
 		}),
 	);
 });

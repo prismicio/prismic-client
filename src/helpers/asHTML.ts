@@ -213,7 +213,7 @@ type AsHTMLConfig = {
 	/**
 	 * An optional rich text Serializer, unhandled cases will fallback to the default serializer
 	 */
-	htmlRichTextSerializer?: HTMLRichTextSerializer | null;
+	serializer?: HTMLRichTextSerializer | null;
 };
 
 // TODO: Remove when we remove support for deprecated tuple-style configuration.
@@ -222,7 +222,7 @@ type AsHTMLConfig = {
  */
 type AsHTMLDeprecatedTupleConfig = [
 	linkResolver?: LinkResolverFunction | null,
-	htmlRichTextSerializer?: HTMLRichTextSerializer | null,
+	serializer?: HTMLRichTextSerializer | null,
 ];
 
 /**
@@ -253,7 +253,7 @@ export const asHTML: {
 	 * @param richTextField - A rich text or title field from Prismic
 	 * @param linkResolver - An optional link resolver function to resolve links,
 	 *   without it you're expected to use the `routes` options from the API
-	 * @param htmlRichTextSerializer - An optional rich text Serializer, unhandled cases will fallback
+	 * @param serializer - An optional rich text Serializer, unhandled cases will fallback
 	 *   to the default serializer
 	 *
 	 * @returns HTML equivalent of the provided rich text or title field
@@ -264,8 +264,8 @@ export const asHTML: {
 	 * ```ts
 	 * asHTML(field);
 	 * asHTML(field, { linkResolver });
-	 * asHTML(field, { htmlRichTextSerializer });
-	 * asHTML(field, { linkResolver, htmlRichTextSerializer });
+	 * asHTML(field, { serializer });
+	 * asHTML(field, { linkResolver, serializer });
 	 * ```
 	 */
 	<Field extends RichTextField | null | undefined>(
@@ -279,8 +279,7 @@ export const asHTML: {
 ): AsHTMLReturnType<Field> => {
 	if (richTextField) {
 		// TODO: Remove when we remove support for deprecated tuple-style configuration.
-		const [configObjectOrLinkResolver, maybeHTMLRichTextSerializer] =
-			configObjectOrTuple;
+		const [configObjectOrLinkResolver, maybeSerializer] = configObjectOrTuple;
 		let config: AsHTMLConfig;
 		if (
 			typeof configObjectOrLinkResolver === "function" ||
@@ -288,20 +287,20 @@ export const asHTML: {
 		) {
 			config = {
 				linkResolver: configObjectOrLinkResolver,
-				htmlRichTextSerializer: maybeHTMLRichTextSerializer,
+				serializer: maybeSerializer,
 			};
 		} else {
 			config = { ...configObjectOrLinkResolver };
 		}
 
 		let serializer: RichTextFunctionSerializer<string>;
-		if (config.htmlRichTextSerializer) {
+		if (config.serializer) {
 			serializer = composeSerializers(
-				typeof config.htmlRichTextSerializer === "object"
-					? wrapMapSerializerWithStringChildren(config.htmlRichTextSerializer)
+				typeof config.serializer === "object"
+					? wrapMapSerializerWithStringChildren(config.serializer)
 					: (type, node, text, children, key) =>
 							// TypeScript doesn't narrow the type correctly here since it is now in a callback function, so we have to cast it here.
-							(config.htmlRichTextSerializer as HTMLRichTextFunctionSerializer)(
+							(config.serializer as HTMLRichTextFunctionSerializer)(
 								type,
 								node,
 								text,
