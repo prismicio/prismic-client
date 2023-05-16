@@ -8,12 +8,12 @@ import { documentToLinkField } from "./documentToLinkField";
 /**
  * Resolves a link to a Prismic document to a URL
  *
- * @typeParam ReturnType - Return type of your Link Resolver function, useful if
+ * @typeParam ReturnType - Return type of your link resolver function, useful if
  *   you prefer to return a complex object
  * @param linkToDocumentField - A document link field to resolve
  *
  * @returns Resolved URL
- * @see Prismic Link Resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
+ * @see Prismic link resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
  */
 export type LinkResolverFunction<ReturnType = string | null | undefined> = (
 	linkToDocumentField: FilledContentRelationshipField,
@@ -25,7 +25,7 @@ export type LinkResolverFunction<ReturnType = string | null | undefined> = (
 type AsLinkConfig<LinkResolverFunctionReturnType = string | null | undefined> =
 	{
 		/**
-		 * An optional Link Resolver function. Without it, you are
+		 * An optional link resolver function. Without it, you are
 		 * expected to use the `routes` options from the API.
 		 */
 		linkResolver?: LinkResolverFunction<LinkResolverFunctionReturnType> | null;
@@ -64,14 +64,14 @@ export const asLink: {
 	/**
 	 * Resolves any type of link field or Prismic document to a URL.
 	 *
-	 * @typeParam LinkResolverFunctionReturnType - Link Resolver function return
+	 * @typeParam LinkResolverFunctionReturnType - link resolver function return
 	 *   type
 	 * @typeParam Field - Link field or Prismic document to resolve to a URL
 	 * @param linkFieldOrDocument - Any kind of link field or a document to resolve
 	 * @param config - Configuration that determines the output of `asLink()`
 	 *
 	 * @returns Resolved URL or, if the provided link field or document is empty, `null`
-	 * @see Prismic Link Resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
+	 * @see Prismic link resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
 	 * @see Prismic API `routes` options documentation: {@link https://prismic.io/docs/route-resolver}
 	 */
 	<
@@ -89,15 +89,15 @@ export const asLink: {
 	/**
 	 * Resolves any type of link field or Prismic document to a URL.
 	 *
-	 * @typeParam LinkResolverFunctionReturnType - Link Resolver function return
+	 * @typeParam LinkResolverFunctionReturnType - link resolver function return
 	 *   type
 	 * @typeParam Field - Link field or Prismic document to resolve to a URL
 	 * @param linkFieldOrDocument - Any kind of link field or a document to resolve
-	 * @param linkResolver - An optional Link Resolver function. Without it, you are
+	 * @param linkResolver - An optional link resolver function. Without it, you are
 	 *   expected to use the `routes` options from the API
 	 *
 	 * @returns Resolved URL or, if the provided link field or document is empty, `null`
-	 * @see Prismic Link Resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
+	 * @see Prismic link resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
 	 * @see Prismic API `routes` options documentation: {@link https://prismic.io/docs/route-resolver}
 	 *
 	 * @deprecated Use object-style configuration instead.
@@ -172,7 +172,7 @@ export const asLink: {
 
 		case LinkType.Document: {
 			if ("id" in linkField && config.linkResolver) {
-				// When using Link Resolver...
+				// When using link resolver...
 				const resolvedURL = config.linkResolver(linkField);
 
 				if (resolvedURL != null) {
@@ -184,14 +184,14 @@ export const asLink: {
 			}
 
 			if ("url" in linkField && linkField.url) {
-				// When using Route Resolver...
+				// When using route resolver...
 				return linkField.url as AsLinkReturnType<
 					LinkResolverFunctionReturnType,
 					Field
 				>;
 			}
 
-			// When empty or Link Resolver and Route Resolver are not used...
+			// When empty or link resolver and route resolver are not used...
 			return null as AsLinkReturnType<LinkResolverFunctionReturnType, Field>;
 		}
 

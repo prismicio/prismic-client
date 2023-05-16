@@ -70,14 +70,14 @@ type AsLinkAttrsReturnType<
  *
  * If a resolved URL is external (i.e. starts with a protocol like `https://`), `rel` is returned as `"noreferrer"`.
  *
- * @typeParam LinkResolverFunctionReturnType - Link Resolver function return
+ * @typeParam LinkResolverFunctionReturnType - link resolver function return
  *   type
  * @typeParam Field - Link field or Prismic document to resolve to link attributes
  * @param linkFieldOrDocument - Any kind of link field or a document to resolve
  * @param config - Configuration that determines the output of `asLinkAttrs()`
  *
  * @returns Resolved set of link attributes or, if the provided link field or document is empty, and empty object
- * @see Prismic Link Resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
+ * @see Prismic link resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
  * @see Prismic API `routes` options documentation: {@link https://prismic.io/docs/route-resolver}
  */
 export const asLinkAttrs = <

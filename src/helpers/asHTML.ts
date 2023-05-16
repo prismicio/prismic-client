@@ -116,7 +116,7 @@ export type HTMLRichTextSerializer =
 	| HTMLRichTextFunctionSerializer;
 
 /**
- * Creates a default HTML rich text Serializer with a given Link Resolver providing
+ * Creates a default HTML rich text serializer with a given link resolver providing
  * sensible and safe defaults for every node type
  *
  * @internal
@@ -211,7 +211,7 @@ type AsHTMLConfig = {
 	linkResolver?: LinkResolverFunction | null;
 
 	/**
-	 * An optional rich text Serializer, unhandled cases will fallback to the default serializer
+	 * An optional rich text serializer, unhandled cases will fallback to the default serializer
 	 */
 	serializer?: HTMLRichTextSerializer | null;
 };
@@ -253,7 +253,7 @@ export const asHTML: {
 	 * @param richTextField - A rich text or title field from Prismic
 	 * @param linkResolver - An optional link resolver function to resolve links,
 	 *   without it you're expected to use the `routes` options from the API
-	 * @param serializer - An optional rich text Serializer, unhandled cases will fallback
+	 * @param serializer - An optional rich text serializer, unhandled cases will fallback
 	 *   to the default serializer
 	 *
 	 * @returns HTML equivalent of the provided rich text or title field
