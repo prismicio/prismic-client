@@ -1,5 +1,6 @@
-import * as prismicTI from "@prismicio/types-internal";
 import { expectNever, expectType } from "ts-expect";
+
+import * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes";
 
 import * as prismic from "../../src";
 
@@ -40,13 +41,9 @@ expectType<prismic.CustomTypeModelDateField>({
 /**
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
-expectType<prismic.CustomTypeModelDateField>(
-	{} as prismicTI.CustomTypes.Widgets.Nestable.Date,
-);
+expectType<prismic.CustomTypeModelDateField>({} as prismicTICustomTypes.Date);
 
 /**
  * `@prismicio/types-internal` extends `@prismicio/types`
  */
-expectType<prismicTI.CustomTypes.Widgets.Nestable.Date>(
-	{} as prismic.CustomTypeModelDateField,
-);
+expectType<prismicTICustomTypes.Date>({} as prismic.CustomTypeModelDateField);

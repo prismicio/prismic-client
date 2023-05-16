@@ -1,5 +1,6 @@
-import * as prismicTI from "@prismicio/types-internal";
 import { TypeOf, expectNever, expectType } from "ts-expect";
+
+import * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes";
 
 import * as prismic from "../../src";
 
@@ -81,12 +82,12 @@ expectType<prismic.CustomTypeModelRichTextField>({
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
 expectType<prismic.CustomTypeModelRichTextField>(
-	{} as prismicTI.CustomTypes.Widgets.Nestable.RichText,
+	{} as prismicTICustomTypes.RichText,
 );
 
 /**
  * `@prismicio/types-internal` extends `@prismicio/types`
  */
-expectType<prismicTI.CustomTypes.Widgets.Nestable.RichText>(
+expectType<prismicTICustomTypes.RichText>(
 	{} as prismic.CustomTypeModelRichTextField,
 );

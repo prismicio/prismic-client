@@ -1,5 +1,6 @@
-import * as prismicTI from "@prismicio/types-internal";
 import { expectNever, expectType } from "ts-expect";
+
+import * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes";
 
 import * as prismic from "../../src";
 
@@ -27,12 +28,12 @@ expectType<prismic.CustomTypeModelSharedSlice>({
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
 expectType<prismic.CustomTypeModelSharedSlice>(
-	{} as prismicTI.CustomTypes.Widgets.Slices.SharedSliceRef,
+	{} as prismicTICustomTypes.SharedSliceRef,
 );
 
 /**
  * `@prismicio/types-internal` extends `@prismicio/types`
  */
-expectType<prismicTI.CustomTypes.Widgets.Slices.SharedSliceRef>(
+expectType<prismicTICustomTypes.SharedSliceRef>(
 	{} as prismic.CustomTypeModelSharedSlice,
 );

@@ -1,5 +1,6 @@
-import * as prismicTI from "@prismicio/types-internal";
 import { expectNever, expectType } from "ts-expect";
+
+import * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes";
 
 import * as prismic from "../../src";
 
@@ -62,13 +63,9 @@ expectType<prismic.CustomTypeModelLinkField>({
 /**
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
-expectType<prismic.CustomTypeModelLinkField>(
-	{} as prismicTI.CustomTypes.Widgets.Nestable.Link,
-);
+expectType<prismic.CustomTypeModelLinkField>({} as prismicTICustomTypes.Link);
 
 /**
  * `@prismicio/types-internal` extends `@prismicio/types`
  */
-expectType<prismicTI.CustomTypes.Widgets.Nestable.Link>(
-	{} as prismic.CustomTypeModelLinkField,
-);
+expectType<prismicTICustomTypes.Link>({} as prismic.CustomTypeModelLinkField);
