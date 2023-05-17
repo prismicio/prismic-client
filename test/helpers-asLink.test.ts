@@ -34,7 +34,7 @@ it("returns null when link field is empty", () => {
 	expect(asLink(field, linkResolver)).toBeNull();
 });
 
-it("resolves a link to document field without Route Resolver", () => {
+it("resolves a link to document field without route resolver", () => {
 	const field = {
 		id: "XvoFFREAAM0WGBng",
 		type: "page",
@@ -48,28 +48,28 @@ it("resolves a link to document field without Route Resolver", () => {
 
 	expect(
 		asLink(field),
-		"returns null if both Link Resolver and Route Resolver are not used",
+		"returns null if both link resolver and route resolver are not used",
 	).toBeNull();
 	expect(
 		asLink(field, { linkResolver }),
-		"uses Link Resolver URL if Link Resolver returns a non-nullish value",
+		"uses link resolver URL if link resolver returns a non-nullish value",
 	).toBe("/test");
 	// TODO: Remove when we remove support for deprecated tuple-style configuration.
 	expect(
 		asLink(field, linkResolver),
-		"uses Link Resolver URL if Link Resolver returns a non-nullish value (deprecated tuple configuration)",
+		"uses link resolver URL if link resolver returns a non-nullish value (deprecated tuple configuration)",
 	).toBe("/test");
 	expect(
 		asLink(field, { linkResolver: () => undefined }),
-		"returns null if Link Resolver returns undefined",
+		"returns null if link resolver returns undefined",
 	).toBeNull();
 	expect(
 		asLink(field, { linkResolver: () => null }),
-		"returns null if Link Resolver returns null",
+		"returns null if link resolver returns null",
 	).toBeNull();
 });
 
-it("resolves a link to document field with Route Resolver", () => {
+it("resolves a link to document field with route resolver", () => {
 	const field = {
 		id: "XvoFFREAAM0WGBng",
 		type: "page",
@@ -84,19 +84,19 @@ it("resolves a link to document field with Route Resolver", () => {
 
 	expect(
 		asLink(field),
-		"uses Route Resolver URL if Link Resolver is not given",
+		"uses route resolver URL if link resolver is not given",
 	).toBe(field.url);
 	expect(
 		asLink(field, { linkResolver: () => "link-resolver-value" }),
-		"uses Link Resolver URL if Link Resolver returns a non-nullish value",
+		"uses link resolver URL if link resolver returns a non-nullish value",
 	).toBe("link-resolver-value");
 	expect(
 		asLink(field, { linkResolver: () => undefined }),
-		"uses Route Resolver URL if Link Resolver returns undefined",
+		"uses route resolver URL if link resolver returns undefined",
 	).toBe(field.url);
 	expect(
 		asLink(field, { linkResolver: () => null }),
-		"uses Route Resolver URL if Link Resolver returns null",
+		"uses route resolver URL if link resolver returns null",
 	).toBe(field.url);
 });
 

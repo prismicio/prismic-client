@@ -234,7 +234,7 @@ export type ClientConfig = {
 	ref?: RefStringOrThunk;
 
 	/**
-	 * A list of Route Resolver objects that define how a document's `url` property
+	 * A list of route resolver objects that define how a document's `url` property
 	 * is resolved.
 	 *
 	 * {@link https://prismic.io/docs/route-resolver}
@@ -327,7 +327,7 @@ type ResolvePreviewArgs<LinkResolverReturnType> = {
 	linkResolver?: LinkResolverFunction<LinkResolverReturnType>;
 
 	/**
-	 * A fallback URL if the Link Resolver does not return a value.
+	 * A fallback URL if the link resolver does not return a value.
 	 */
 	defaultURL: string;
 
@@ -415,7 +415,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	accessToken?: string;
 
 	/**
-	 * A list of Route Resolver objects that define how a document's `url` field
+	 * A list of route resolver objects that define how a document's `url` field
 	 * is resolved.
 	 *
 	 * {@link https://prismic.io/docs/route-resolver}

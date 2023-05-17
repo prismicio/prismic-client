@@ -31,7 +31,7 @@ it("returns empty object when link to web field is empty", (ctx) => {
 	expect(asLinkAttrs(field)).toEqual({});
 });
 
-it("resolves a link to document field with Route Resolver", (ctx) => {
+it("resolves a link to document field with route resolver", (ctx) => {
 	const field = ctx.mock.value.link({ type: "Document" });
 	field.url = "/url";
 
@@ -47,7 +47,7 @@ it("resolves a link to document field with Route Resolver", (ctx) => {
 	});
 });
 
-it("resolves a link to document field without Route Resolver", (ctx) => {
+it("resolves a link to document field without route resolver", (ctx) => {
 	const field = ctx.mock.value.link({ type: "Document" });
 	field.url = undefined;
 
