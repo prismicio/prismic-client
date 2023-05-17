@@ -1,4 +1,4 @@
-import { it, expect } from "vitest";
+import { expect, it, vi } from "vitest";
 
 import * as prismic from "../src";
 
@@ -10,7 +10,19 @@ it("includes ref", () => {
 	);
 });
 
-it("supports single predicate", () => {
+it("supports single filter", () => {
+	expect(
+		decodeURIComponent(
+			prismic.buildQueryURL(endpoint, {
+				ref: "ref",
+				filters: prismic.filter.has("my.document.title"),
+			}),
+		),
+	).toBe(
+		"https://qwerty.cdn.prismic.io/api/v2/documents/search?q=[[has(my.document.title)]]&ref=ref",
+	);
+
+	// TODO: Remove when we remove support for deprecated `predicates` argument.
 	expect(
 		decodeURIComponent(
 			prismic.buildQueryURL(endpoint, {
@@ -23,7 +35,22 @@ it("supports single predicate", () => {
 	);
 });
 
-it("supports multiple predicates", () => {
+it("supports multiple filters", () => {
+	expect(
+		decodeURIComponent(
+			prismic.buildQueryURL(endpoint, {
+				ref: "ref",
+				filters: [
+					prismic.filter.has("my.document.title"),
+					prismic.filter.has("my.document.subtitle"),
+				],
+			}),
+		),
+	).toBe(
+		"https://qwerty.cdn.prismic.io/api/v2/documents/search?q=[[has(my.document.title)]]&q=[[has(my.document.subtitle)]]&ref=ref",
+	);
+
+	// TODO: Remove when we remove support for deprecated `predicates` argument.
 	expect(
 		decodeURIComponent(
 			prismic.buildQueryURL(endpoint, {
@@ -52,7 +79,7 @@ it("supports params", () => {
 				fetchLinks: "fetchLinks",
 				graphQuery: "graphQuery",
 				lang: "lang",
-				orderings: "orderings",
+				orderings: [{ field: "orderings" }],
 				routes: "routes",
 				brokenRoute: "brokenRoute",
 			}),
@@ -112,6 +139,7 @@ it("supports empty orderings param", () => {
 		decodeURIComponent(
 			prismic.buildQueryURL(endpoint, {
 				ref: "ref",
+				// TODO: Remove test with deprecated API in v8
 				orderings: "",
 			}),
 		),
@@ -136,6 +164,7 @@ it("supports array orderings param", () => {
 		decodeURIComponent(
 			prismic.buildQueryURL(endpoint, {
 				ref: "ref",
+				// TODO: Remove test with deprecated API in v8
 				orderings: ["page.title", { field: "page.subtitle" }],
 			}),
 		),
@@ -149,6 +178,7 @@ it("supports setting direction of ordering param", () => {
 		decodeURIComponent(
 			prismic.buildQueryURL(endpoint, {
 				ref: "ref",
+				// TODO: Remove test with deprecated API in v8
 				orderings: ["page.title", { field: "page.subtitle", direction: "asc" }],
 			}),
 		),
@@ -161,13 +191,14 @@ it("supports setting direction of ordering param", () => {
 			prismic.buildQueryURL(endpoint, {
 				ref: "ref",
 				orderings: [
-					"page.title",
+					// TODO: Remove test with deprecated API in v8
+					"page.title desc",
 					{ field: "page.subtitle", direction: "desc" },
 				],
 			}),
 		),
 	).toBe(
-		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[page.title,page.subtitle+desc]",
+		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[page.title+desc,page.subtitle+desc]",
 	);
 });
 
@@ -218,4 +249,73 @@ it("supports array routes param", () => {
 			routes,
 		)}`,
 	);
+});
+
+it("warns if NODE_ENV is development and a string is provided to `orderings`", () => {
+	const originalEnv = { ...process.env };
+
+	process.env.NODE_ENV = "development";
+
+	const consoleWarnSpy = vi
+		.spyOn(console, "warn")
+		.mockImplementation(() => void 0);
+
+	prismic.buildQueryURL(endpoint, {
+		ref: "ref",
+		orderings: "orderings",
+	});
+
+	expect(consoleWarnSpy).toHaveBeenCalledWith(
+		expect.stringMatching(/orderings-must-be-an-array-of-objects/i),
+	);
+
+	consoleWarnSpy.mockRestore();
+
+	process.env = originalEnv;
+});
+
+it("warns if NODE_ENV is development and an array of strings is provided to `orderings`", () => {
+	const originalEnv = { ...process.env };
+
+	process.env.NODE_ENV = "development";
+
+	const consoleWarnSpy = vi
+		.spyOn(console, "warn")
+		.mockImplementation(() => void 0);
+
+	prismic.buildQueryURL(endpoint, {
+		ref: "ref",
+		orderings: ["orderings"],
+	});
+
+	expect(consoleWarnSpy).toHaveBeenCalledWith(
+		expect.stringMatching(/orderings-must-be-an-array-of-objects/i),
+	);
+
+	consoleWarnSpy.mockRestore();
+
+	process.env = originalEnv;
+});
+
+it("warns if NODE_ENV is development and a string is provided to `filters`", () => {
+	const originalEnv = { ...process.env };
+
+	process.env.NODE_ENV = "development";
+
+	const consoleWarnSpy = vi
+		.spyOn(console, "warn")
+		.mockImplementation(() => void 0);
+
+	prismic.buildQueryURL(endpoint, {
+		ref: "ref",
+		filters: "filters",
+	});
+
+	expect(consoleWarnSpy).toHaveBeenCalledWith(
+		expect.stringMatching(/filters-must-be-an-array/i),
+	);
+
+	consoleWarnSpy.mockRestore();
+
+	process.env = originalEnv;
 });

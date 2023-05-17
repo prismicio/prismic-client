@@ -2,31 +2,126 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [6.8.0](https://github.com/prismicio/prismic-client/compare/v6.7.3...v6.8.0) (2023-05-15)
+## [7.0.0-alpha.5](https://github.com/prismicio/prismic-client/compare/v7.0.0-alpha.4...v7.0.0-alpha.5) (2023-05-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* rename config `htmlRichTextSerializer` to `serializer`
+
+### Refactor
+
+* rename config `htmlRichTextSerializer` to `serializer` ([b4bdf7f](https://github.com/prismicio/prismic-client/commit/b4bdf7fbb44c487ee50edc4eff832cfc9321fc61))
+
+## [7.0.0-alpha.4](https://github.com/prismicio/prismic-client/compare/v7.0.0-alpha.3...v7.0.0-alpha.4) (2023-05-09)
 
 
 ### Features
 
-* add `fetchOptions` parameter to control `fetch()` ([#291](https://github.com/prismicio/prismic-client/issues/291)) ([a492a40](https://github.com/prismicio/prismic-client/commit/a492a406eb3981d5eda73408c8e836cb2f591f99))
+* add `fetchOptions` parameter to control `fetch()` ([#289](https://github.com/prismicio/prismic-client/issues/289)) ([88bb32d](https://github.com/prismicio/prismic-client/commit/88bb32d73ed0b3c521007307c5da19351943a9d6))
+* **client:** warn when non-.cdn endpoints are used [#284](https://github.com/prismicio/prismic-client/issues/284) ([81ab2bf](https://github.com/prismicio/prismic-client/commit/81ab2bf342c3d9fa2d83321914d4630d6e70d879))
+* support Web API `Request`s containing partial URLs ([#286](https://github.com/prismicio/prismic-client/issues/286)) ([f2e8895](https://github.com/prismicio/prismic-client/commit/f2e889502ac39ab9ebfb5b7a3cbc4b71e4bb74d8))
 
-### [6.7.3](https://github.com/prismicio/prismic-client/compare/v6.7.2...v6.7.3) (2022-12-19)
+
+### Refactor
+
+* **helpers:** standardize helpers interface ([#288](https://github.com/prismicio/prismic-client/issues/288)) ([59f84ed](https://github.com/prismicio/prismic-client/commit/59f84ed051a2ea058cf9eae618ce1a781e0014f9))
+* rename `predicate` tests to `filter` ([3100b3a](https://github.com/prismicio/prismic-client/commit/3100b3a1a51adcb8f656c8829664b099149ae0b3))
 
 
-### Chore
+### Documentation
 
-* **deps:** maintain dependencies ([c821960](https://github.com/prismicio/prismic-client/commit/c82196076fe305d2f0a9aaf15167ba89da5cf8ed))
+* mark `optimize` option as `[@experimental](https://github.com/experimental)` ([343534f](https://github.com/prismicio/prismic-client/commit/343534ff21ae74ecf319f5c91f8d251d181e76dc))
+* wording and style ([0801785](https://github.com/prismicio/prismic-client/commit/0801785653a28abfbe175337b5fe04295d3e0949))
 
-### [6.7.2](https://github.com/prismicio/prismic-client/compare/v6.7.1...v6.7.2) (2022-12-19)
+## [7.0.0-alpha.3](https://github.com/prismicio/prismic-client/compare/v7.0.0-alpha.2...v7.0.0-alpha.3) (2023-04-28)
+
+
+### Features
+
+* add `optimize` options ([#285](https://github.com/prismicio/prismic-client/issues/285)) ([ff5dc42](https://github.com/prismicio/prismic-client/commit/ff5dc42e295febc6d5679d3e8a3203df6c72e9c6))
+
+## [7.0.0-alpha.2](https://github.com/prismicio/prismic-client/compare/v7.0.0-alpha.1...v7.0.0-alpha.2) (2023-04-22)
+
+
+### Features
+
+* export `AsLinkAttrsConfig` ([3957ab5](https://github.com/prismicio/prismic-client/commit/3957ab57f1804cf948e48654df6ac6505333b8ba))
+
+## [7.0.0-alpha.1](https://github.com/prismicio/prismic-client/compare/v7.0.0-alpha.0...v7.0.0-alpha.1) (2023-04-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* change `LinkResolver`'s default return type to `string | null | undefined`
+
+### Features
+
+* add `asLinkAttrs()` helper ([#282](https://github.com/prismicio/prismic-client/issues/282)) ([a520aa4](https://github.com/prismicio/prismic-client/commit/a520aa4d96aef37b0342a7dce9dce005e9738f2e))
+* add `getToolbarSrc()` helper ([#281](https://github.com/prismicio/prismic-client/issues/281)) ([f0e768c](https://github.com/prismicio/prismic-client/commit/f0e768cfd795c18f03aab4e9f3cb83461bd7f5b7))
+* add `HTMLRichTextSerializer` export ([014f15e](https://github.com/prismicio/prismic-client/commit/014f15ea93ad77f073f0fe4c6f2344bd333af808))
+* change `LinkResolver`'s default return type to `string | null | undefined` ([3e1fc53](https://github.com/prismicio/prismic-client/commit/3e1fc53397e038dad1b1f8ecb78a63ac40477a94)), closes [#273](https://github.com/prismicio/prismic-client/issues/273)
+* optimize concurrent queries via shared network requests ([7b72988](https://github.com/prismicio/prismic-client/commit/7b72988060fd6fd91dde86234ed2bd31ed89f0b9))
+* port downstream changes from `@prismicio/helpers` and `@prismicio/types` ([409a6d6](https://github.com/prismicio/prismic-client/commit/409a6d6265dddd48efd853725cf24ab0e41fc8a9))
 
 
 ### Bug Fixes
 
-* wrong example ([7dababc](https://github.com/prismicio/prismic-client/commit/7dababce904e3ab0928317b5e2a47c99bc3c57eb))
+* delete `fetch` job even if the network request rejects ([92dd2e7](https://github.com/prismicio/prismic-client/commit/92dd2e73d33b1ceb5fdcfc1faafea4fd3c7de8b6))
+* export helper types from the correct locations ([21375d1](https://github.com/prismicio/prismic-client/commit/21375d141324c8329c7239ce5ed18f157ca50992))
+
+
+### Refactor
+
+* organize types, errors, and imports ([#275](https://github.com/prismicio/prismic-client/issues/275)) ([90245e2](https://github.com/prismicio/prismic-client/commit/90245e2c5edc599cd4f2e510fd49c08c5e274140))
+* rename `HTMLSerializer` to `HTMLRichTextSerializer` ([84088d6](https://github.com/prismicio/prismic-client/commit/84088d6245ccfa9a3b2970484ecc6f769648902e))
+* rename `predicate` to `filter` ([6e45c28](https://github.com/prismicio/prismic-client/commit/6e45c287a44edf7fc828e9e751d60c334f898545))
+* replace nullish coalescing with `||` or ternaries ([#280](https://github.com/prismicio/prismic-client/issues/280)) ([d4720ad](https://github.com/prismicio/prismic-client/commit/d4720adcab38ea7b46ec32f7e248056173b8687a))
+* use backwards compatible `||=` syntax ([b021748](https://github.com/prismicio/prismic-client/commit/b021748c67c8f4be9ebc6724d6de8123bc58cf81))
+
+
+### Documentation
+
+* add comment about `fetchJobs` strategy ([3fcdb42](https://github.com/prismicio/prismic-client/commit/3fcdb424cfcf31e82ab0490081ceb2298b16d0f4))
+* port [#271](https://github.com/prismicio/prismic-client/issues/271) fix ([a3a6609](https://github.com/prismicio/prismic-client/commit/a3a66095dc62a3e4bf073f7b2d17c9758b20e93e))
+* update documentation links ([af81b62](https://github.com/prismicio/prismic-client/commit/af81b62989b313ad1b42e445433f5066d0069e36))
 
 
 ### Chore
 
-* **deps:** maintain dependencies ([5d19954](https://github.com/prismicio/prismic-client/commit/5d19954175f475a65ffad23d50ca429ebbf77e7e))
+* add "custom" header to `.prettierignore` ([325505d](https://github.com/prismicio/prismic-client/commit/325505d53924fdffad2bad68e009709401885825))
+* deprecate `orderings` string values, resolves [#269](https://github.com/prismicio/prismic-client/issues/269) ([#279](https://github.com/prismicio/prismic-client/issues/279)) ([25b9019](https://github.com/prismicio/prismic-client/commit/25b90196bdcaa258e33699c5393cb1882ef40167))
+* **deps:** inline `escape-html` ([530e49b](https://github.com/prismicio/prismic-client/commit/530e49bec00948f3687d557713218450077236da))
+* **deps:** maintain dependencies ([4a25c66](https://github.com/prismicio/prismic-client/commit/4a25c661796cb3905ae736d6af0d81e560416108))
+* **deps:** update all dependencies ([0b0eaee](https://github.com/prismicio/prismic-client/commit/0b0eaeebb096b71919e0d1953fbbb7e48459f6f2))
+* update `.prettierrc` import order ([74ddbe9](https://github.com/prismicio/prismic-client/commit/74ddbe95a5a7340b77d42e289169b68c1553dd6c))
+* update LICENSE ([d94a9e8](https://github.com/prismicio/prismic-client/commit/d94a9e850b3268ff1e4532071875a915252fc6a6))
+
+## [7.0.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v6.7.1...v7.0.0-alpha.0) (2022-10-14)
+
+
+### Bug Fixes
+
+* refactor `ImageField` for better `isFilled.image()` compatibility ([44369fa](https://github.com/prismicio/prismic-client/commit/44369faf592e0dccffcc4ece93f5792f40217d2a))
+
+
+### Chore
+
+* merge `helpers` and `types`, remove deprecated APIs ([3201188](https://github.com/prismicio/prismic-client/commit/3201188db18fb311791e252088a284bdc3cd2b73))
+* remove deprecated APIs ([610ddbc](https://github.com/prismicio/prismic-client/commit/610ddbc6db08f49c90ba87a2fd24a54ca4450cfe))
+* update `.github` ([9600113](https://github.com/prismicio/prismic-client/commit/9600113b0bcc61f1de34f0901efbe132f37f0139))
+
+
+### Documentation
+
+* fix comment typos ([9b8aee0](https://github.com/prismicio/prismic-client/commit/9b8aee0ec33a4ad718e83167c107676a3e991e38))
+
+
+### Refactor
+
+* `examples` ([e37c9af](https://github.com/prismicio/prismic-client/commit/e37c9af607891f1f0ea900aa6c33d0cb91aadf91))
+* make `getPreviewCookie()` break early ([3d639a7](https://github.com/prismicio/prismic-client/commit/3d639a7d8096b71b0d17650af1663cdffd183a3d))
+* remove unused function ([9b6b3bd](https://github.com/prismicio/prismic-client/commit/9b6b3bd7d00f156c4903e2ab5ca6ae332b90a9dc))
 
 ### [6.7.1](https://github.com/prismicio/prismic-client/compare/v6.7.0...v6.7.1) (2022-09-08)
 

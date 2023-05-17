@@ -110,7 +110,7 @@ npm run unit
 If you'd like to run only the unit tests in watch mode (re-runs tests each time a file is saved):
 
 ```bash
-npm run unit:watch
+npm run unit -- --watch
 ```
 
 When working on unit tests, you might want to update snapshots (be careful when doing so):
@@ -418,7 +418,6 @@ The project's package definition file.
 - `release:alpha:dry`: dry-run of the `release:alpha` script;
 - `lint`: Runs ESLint on the project;
 - `unit`: Runs Vitest on the project;
-- `unit:watch`: Runs Vitest on the project in watch mode;
 - `size`: Runs Size Limit on the project;
 - `test`: Runs the `lint`, `unit`, `build`, and `size` scripts.
 

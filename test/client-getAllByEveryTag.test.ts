@@ -1,5 +1,6 @@
-import { testGetAllMethod } from "./__testutils__/testAnyGetMethod";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { testGetAllMethod } from "./__testutils__/testAnyGetMethod";
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
 import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 testGetAllMethod("returns all documents by every tag from paginated response", {
@@ -30,4 +31,9 @@ testFetchOptions("supports fetch options", {
 
 testAbortableMethod("is abortable with an AbortController", {
 	run: (client, params) => client.getAllByEveryTag(["foo", "bar"], params),
+});
+
+testConcurrentMethod("shares concurrent equivalent network requests", {
+	run: (client, params) => client.getAllByEveryTag(["foo", "bar"], params),
+	mode: "getAll",
 });

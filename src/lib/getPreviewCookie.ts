@@ -23,7 +23,7 @@ export const getPreviewCookie = (cookieJar: string): string | undefined => {
 
 		if (name === previewCookieName) {
 			value = readValue(parts.slice(1).join("="));
-			continue;
+			break;
 		}
 	}
 

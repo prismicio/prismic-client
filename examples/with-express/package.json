@@ -1,10 +1,9 @@
 {
 	"type": "module",
 	"dependencies": {
-		"@prismicio/client": "alpha",
-		"express": "^4.17.1",
-		"node-fetch": "^2.6.1",
-		"prismic-dom": "^2.2.5",
-		"quick-lru": "^6.0.0"
+		"@prismicio/client": "latest",
+		"express": "^4.18.1",
+		"node-fetch": "^2.6.7",
+		"quick-lru": "^6.1.1"
 	}
 }

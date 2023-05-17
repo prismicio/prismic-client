@@ -1,7 +1,7 @@
-import * as prismicT from "@prismicio/types";
+import * as prismic from "../../src";
 
 export const getMasterRef = (
-	repositoryResponse: prismicT.Repository,
+	repositoryResponse: prismic.Repository,
 ): string => {
 	const masterRef = repositoryResponse.refs.find((ref) => ref.isMasterRef);
 

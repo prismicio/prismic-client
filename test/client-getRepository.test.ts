@@ -1,11 +1,11 @@
-import { it, expect } from "vitest";
+import { expect, it } from "vitest";
 
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createTestClient } from "./__testutils__/createClient";
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 import * as prismic from "../src";
-import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 it("returns repository metadata", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository();

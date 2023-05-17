@@ -1,14 +1,15 @@
 import { afterAll, beforeAll, beforeEach, vi } from "vitest";
-import { createMockFactory, MockFactory } from "@prismicio/mock";
-import { setupServer, SetupServerApi } from "msw/node";
+
+import { MockFactory, createMockFactory } from "@prismicio/mock";
 import AbortController from "abort-controller";
+import { SetupServer, setupServer } from "msw/node";
 
 import * as prismic from "../src";
 
 declare module "vitest" {
 	export interface TestContext {
 		mock: MockFactory;
-		server: SetupServerApi;
+		server: SetupServer;
 	}
 }
 

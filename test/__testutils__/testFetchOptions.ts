@@ -1,8 +1,11 @@
-import * as prismic from "../../src";
+import { expect, it, vi } from "vitest";
+
+import fetch from "node-fetch";
+
 import { createTestClient } from "./createClient";
 import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2";
-import fetch from "node-fetch";
-import { expect, it, vi } from "vitest";
+
+import * as prismic from "../../src";
 
 type TestFetchOptionsArgs = {
 	run: (
@@ -27,11 +30,11 @@ export const testFetchOptions = (
 			signal: abortController.signal,
 		};
 
-		const repositoryResponse = ctx.mock.api.repository();
 		const masterRef = ctx.mock.api.ref({ isMasterRef: true });
 		const releaseRef = ctx.mock.api.ref({ isMasterRef: false });
 		releaseRef.id = "id"; // Referenced in ref-related tests.
 		releaseRef.label = "label"; // Referenced in ref-related tests.
+		const repositoryResponse = ctx.mock.api.repository();
 		repositoryResponse.refs = [masterRef, releaseRef];
 
 		mockPrismicRestAPIV2({
@@ -68,11 +71,11 @@ export const testFetchOptions = (
 			signal: abortController.signal,
 		};
 
-		const repositoryResponse = ctx.mock.api.repository();
 		const masterRef = ctx.mock.api.ref({ isMasterRef: true });
 		const releaseRef = ctx.mock.api.ref({ isMasterRef: false });
 		releaseRef.id = "id"; // Referenced in ref-related tests.
 		releaseRef.label = "label"; // Referenced in ref-related tests.
+		const repositoryResponse = ctx.mock.api.repository();
 		repositoryResponse.refs = [masterRef, releaseRef];
 
 		mockPrismicRestAPIV2({

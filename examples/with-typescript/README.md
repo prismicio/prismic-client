@@ -27,5 +27,5 @@ cd prismic-client/examples/with-typescript
 npm install
 
 # Run the example
-node --loader ts-node/esm index.ts
+npx tsx index.ts
 ```

@@ -1,8 +1,9 @@
-import { it, expect } from "vitest";
+import { expect, it } from "vitest";
 
 import { createTestClient } from "./__testutils__/createClient";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
 import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 it("returns the master ref", async (ctx) => {
@@ -28,4 +29,9 @@ testFetchOptions("supports fetch options", {
 
 testAbortableMethod("is abortable with an AbortController", {
 	run: (client, params) => client.getMasterRef(params),
+});
+
+testConcurrentMethod("shares concurrent equivalent network requests", {
+	run: (client, params) => client.getMasterRef(params),
+	mode: "repository",
 });

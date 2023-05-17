@@ -1,5 +1,6 @@
 import { TestContext } from "vitest";
-import * as prismicT from "@prismicio/types";
+
+import * as prismic from "../../src";
 
 type CreatePagedQueryResponsesArgs = {
 	ctx: TestContext;
@@ -11,7 +12,7 @@ export const createPagedQueryResponses = ({
 	ctx,
 	pages = 2,
 	pageSize = 1,
-}: CreatePagedQueryResponsesArgs): prismicT.Query[] => {
+}: CreatePagedQueryResponsesArgs): prismic.Query[] => {
 	const documents = [];
 	for (let i = 0; i < pages * pageSize; i++) {
 		documents.push(ctx.mock.value.document());

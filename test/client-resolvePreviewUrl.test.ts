@@ -1,10 +1,12 @@
-import { it, expect } from "vitest";
-import { Headers } from "node-fetch";
+import { expect, it } from "vitest";
+
 import * as prismicM from "@prismicio/mock";
+import { Headers } from "node-fetch";
 
 import { createTestClient } from "./__testutils__/createClient";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
 import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 const previewToken = "previewToken";
@@ -84,6 +86,39 @@ it("resolves a preview url using a Web API-based server req object", async (ctx)
 	const url = new URL("https://example.com");
 	url.searchParams.set("documentId", document.id);
 	url.searchParams.set("token", previewToken);
+	const req = {
+		headers,
+		url: url.toString(),
+	};
+
+	mockPrismicRestAPIV2({
+		queryResponse,
+		queryRequiredParams: {
+			ref: previewToken,
+			lang: "*",
+			pageSize: "1",
+			q: `[[at(document.id, "${document.id}")]]`,
+		},
+		ctx,
+	});
+
+	const client = createTestClient();
+	client.enableAutoPreviewsFromReq(req);
+	const res = await client.resolvePreviewURL({
+		linkResolver: (document) => `/${document.uid}`,
+		defaultURL: "defaultURL",
+	});
+
+	expect(res).toBe(`/${document.uid}`);
+});
+
+it("resolves a preview url using a Web API-based server req object containing a URL without a host", async (ctx) => {
+	const seed = ctx.meta.name;
+	const document = { ...prismicM.value.document({ seed }), uid: seed };
+	const queryResponse = prismicM.api.query({ seed, documents: [document] });
+
+	const headers = new Headers();
+	const url = `/foo?documentId=${document.id}&token=${previewToken}`;
 	const req = {
 		headers,
 		url: url.toString(),
@@ -239,4 +274,15 @@ testAbortableMethod("is abortable with an AbortController", {
 			documentID: "foo",
 			previewToken,
 		}),
+});
+
+testConcurrentMethod("shares concurrent equivalent network requests", {
+	run: (client, params) =>
+		client.resolvePreviewURL({
+			...params,
+			defaultURL: "defaultURL",
+			documentID: "foo",
+			previewToken,
+		}),
+	mode: "resolvePreview",
 });

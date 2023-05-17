@@ -1,5 +1,6 @@
-import { testGetMethod } from "./__testutils__/testAnyGetMethod";
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { testGetMethod } from "./__testutils__/testAnyGetMethod";
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
 import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 testGetMethod("queries for documents by IDs", {
@@ -30,4 +31,9 @@ testFetchOptions("supports fetch options", {
 
 testAbortableMethod("is abortable with an AbortController", {
 	run: (client, params) => client.getByIDs(["id1", "id2"], params),
+});
+
+testConcurrentMethod("shares concurrent equivalent network requests", {
+	run: (client, params) => client.getByIDs(["id1", "id2"], params),
+	mode: "get",
 });

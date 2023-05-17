@@ -1,11 +1,13 @@
-import { it, expect } from "vitest";
+import { expect, it } from "vitest";
+
 import * as msw from "msw";
 
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
-import { createTestClient } from "./__testutils__/createClient";
-import { getMasterRef } from "./__testutils__/getMasterRef";
 import { createAuthorizationHeader } from "./__testutils__/createAuthorizationHeader";
+import { createTestClient } from "./__testutils__/createClient";
 import { createRepositoryName } from "./__testutils__/createRepositoryName";
+import { getMasterRef } from "./__testutils__/getMasterRef";
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
 
 it("resolves a query", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository();
@@ -66,6 +68,7 @@ it("merges provided headers with defaults", async (ctx) => {
 	expect(json).toStrictEqual(graphqlResponse);
 });
 
+// TODO: This test doesn't seem to test what the description claims.
 it("includes Authorization header if access token is provided", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository();
 	repositoryResponse.integrationFieldsRef = ctx.mock.api.ref().ref;
@@ -96,7 +99,8 @@ it("includes Authorization header if access token is provided", async (ctx) => {
 	expect(json).toStrictEqual(graphqlResponse);
 });
 
-it("includes Integration Fields header if ref is available", async (ctx) => {
+// TODO: This test doesn't seem to test what the description claims.
+it("includes integration fields header if ref is available", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository();
 	const accessToken = "accessToken";
 
@@ -217,4 +221,13 @@ it("is abortable with an AbortController", async (ctx) => {
 			signal: controller.signal,
 		});
 	}).rejects.toThrow(/aborted/i);
+});
+
+testConcurrentMethod("does not share concurrent equivalent network requests", {
+	run: (client, params) =>
+		client.graphQLFetch(
+			`https://${createRepositoryName()}.cdn.prismic.io/graphql`,
+			params,
+		),
+	mode: "NOT-SHARED___graphQL",
 });

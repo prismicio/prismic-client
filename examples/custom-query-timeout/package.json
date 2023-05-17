@@ -1,0 +1,8 @@
+{
+	"type": "module",
+	"dependencies": {
+		"@prismicio/client": "latest",
+		"abort-controller": "^3.0.0",
+		"node-fetch": "^3.2.10"
+	}
+}

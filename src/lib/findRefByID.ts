@@ -1,4 +1,4 @@
-import * as prismicT from "@prismicio/types";
+import { Ref } from "../types/api/ref";
 
 import { findRef } from "./findRef";
 
@@ -11,6 +11,6 @@ import { findRef } from "./findRef";
  * @returns The ref with a matching ID from the list.
  * @throws If a matching ref cannot be found.
  */
-export const findRefByID = (refs: prismicT.Ref[], id: string): prismicT.Ref => {
+export const findRefByID = (refs: Ref[], id: string): Ref => {
 	return findRef(refs, (ref) => ref.id === id);
 };

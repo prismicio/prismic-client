@@ -1,7 +1,8 @@
-import * as prismic from "../../src";
 import fetch from "node-fetch";
 
 import { createRepositoryName } from "./createRepositoryName";
+
+import * as prismic from "../../src";
 
 type CreateTestClientArgs = (
 	| {

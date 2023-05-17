@@ -1,14 +1,15 @@
-import { it, expect } from "vitest";
+import { expect, it } from "vitest";
 
 import * as prismicM from "@prismicio/mock";
 
-import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod";
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 import { createTestClient } from "./__testutils__/createClient";
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
+import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod";
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
+import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 import * as prismic from "../src";
-import { testFetchOptions } from "./__testutils__/testFetchOptions";
 
 testGetFirstMethod("returns the first document from a response", {
 	run: (client) => client.getFirst(),
@@ -99,4 +100,9 @@ testFetchOptions("supports fetch options", {
 
 testAbortableMethod("is abortable with an AbortController", {
 	run: (client, params) => client.getFirst(params),
+});
+
+testConcurrentMethod("shares concurrent equivalent network requests", {
+	run: (client, params) => client.getFirst(params),
+	mode: "get",
 });

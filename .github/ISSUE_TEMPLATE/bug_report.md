@@ -17,7 +17,7 @@ assignees: ""
 ### Versions
 
 - @prismicio/client: <!-- ex: v0.1.0 -->
-- node: <!-- ex: v12.14.0 -->
+- node: <!-- ex: v14.15.0 -->
 
 ### Reproduction
 
