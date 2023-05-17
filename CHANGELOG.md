@@ -2,6 +2,56 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.0.0](https://github.com/prismicio/prismic-client/compare/v7.0.0-alpha.5...v7.0.0) (2023-05-17)
+
+
+### Bug Fixes
+
+* update Prismic terms to use the latest language style ([#293](https://github.com/prismicio/prismic-client/issues/293)) ([1fce99c](https://github.com/prismicio/prismic-client/commit/1fce99cf282462df1952b8faa7ddf005ad96de6e))
+
+
+### Documentation
+
+* update link resolver, route resolver, and rich text serializer names ([#297](https://github.com/prismicio/prismic-client/issues/297)) ([a991a6c](https://github.com/prismicio/prismic-client/commit/a991a6cd98ce02ecabff15fb7a70d7a4531497b0))
+
+
+### Chore
+
+* **@prismicio/types-internal:** upgrade @prismicio/types-internal dependency ([#294](https://github.com/prismicio/prismic-client/issues/294)) ([edaa83d](https://github.com/prismicio/prismic-client/commit/edaa83db5b481ef3aefdbf9c998782d7abb5acd3))
+
+## [6.8.0](https://github.com/prismicio/prismic-client/compare/v7.0.0-alpha.4...v6.8.0) (2023-05-15)
+
+
+### Features
+
+* add `fetchOptions` parameter to control `fetch()` ([#291](https://github.com/prismicio/prismic-client/issues/291)) ([a492a40](https://github.com/prismicio/prismic-client/commit/a492a406eb3981d5eda73408c8e836cb2f591f99))
+
+
+### Chore
+
+* **release:** 6.8.0 ([4a3773e](https://github.com/prismicio/prismic-client/commit/4a3773eee45f4a440aef372082b44d14be894020))
+
+### [6.7.3](https://github.com/prismicio/prismic-client/compare/v6.7.2...v6.7.3) (2022-12-19)
+
+
+### Chore
+
+* **deps:** maintain dependencies ([c821960](https://github.com/prismicio/prismic-client/commit/c82196076fe305d2f0a9aaf15167ba89da5cf8ed))
+* **release:** 6.7.3 ([8f36b01](https://github.com/prismicio/prismic-client/commit/8f36b01f7ef6786384537da84a1ff1c36ca92058))
+
+### [6.7.2](https://github.com/prismicio/prismic-client/compare/v7.0.0-alpha.0...v6.7.2) (2022-12-19)
+
+
+### Bug Fixes
+
+* wrong example ([7dababc](https://github.com/prismicio/prismic-client/commit/7dababce904e3ab0928317b5e2a47c99bc3c57eb))
+
+
+### Chore
+
+* **deps:** maintain dependencies ([5d19954](https://github.com/prismicio/prismic-client/commit/5d19954175f475a65ffad23d50ca429ebbf77e7e))
+* **release:** 6.7.2 ([74833e8](https://github.com/prismicio/prismic-client/commit/74833e8904b9bfb22803e6d2900e2a3905817510))
+
 ## [7.0.0-alpha.5](https://github.com/prismicio/prismic-client/compare/v7.0.0-alpha.4...v7.0.0-alpha.5) (2023-05-16)
 
 
