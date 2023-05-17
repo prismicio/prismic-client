@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [7.0.0](https://github.com/prismicio/prismic-client/compare/v7.0.0-alpha.5...v7.0.0) (2023-05-17)
 
+[Check out the migration guide for how to migrate to `@prismicio/client` v7](https://prismic.io/docs/prismicio-client-v7-migration-guide)
 
 ### Bug Fixes
 
@@ -403,6 +404,8 @@ All notable changes to this project will be documented in this file. See [standa
 * **deps:** update dependencies ([7e1746a](https://github.com/prismicio/prismic-client/commit/7e1746a4f3c8932e344763cfd54ae193db987a09))
 
 ## [6.0.0](https://github.com/prismicio/prismic-client/compare/v5.1.1...v6.0.0) (2022-01-05)
+
+[Check out the migration guide for how to migrate to `@prismicio/client` v6](https://prismic.io/docs/prismicio-client-v6-migration-guide)
 
 ## [6.0.0-beta.5](https://github.com/prismicio/prismic-client/compare/v6.0.0-beta.4...v6.0.0-beta.5) (2021-12-21)
 
