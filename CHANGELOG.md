@@ -405,7 +405,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [6.0.0](https://github.com/prismicio/prismic-client/compare/v5.1.1...v6.0.0) (2022-01-05)
 
-[Check out the migration guide for how to migrate to `@prismicio/client` v6](https://prismic.io/docs/prismicio-client-v6-migration-guide)
+[Check out the migration guide for how to migrate to `@prismicio/client` v6](https://prismic.io/docs/prismic-client-v6-migration-guide)
 
 ## [6.0.0-beta.5](https://github.com/prismicio/prismic-client/compare/v6.0.0-beta.4...v6.0.0-beta.5) (2021-12-21)
 
