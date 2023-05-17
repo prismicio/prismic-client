@@ -9,6 +9,7 @@ import { findRef } from "./findRef";
  * @param id - The label of the ref to find.
  *
  * @returns The ref with a matching label from the list.
+ *
  * @throws If a matching ref cannot be found.
  */
 export const findRefByLabel = (refs: Ref[], label: string): Ref => {

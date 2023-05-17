@@ -9,6 +9,7 @@ import { PrismicError } from "./errors/PrismicError";
  * @param repositoryEndpoint - Prismic Rest API V2 endpoint for the repository.
  *
  * @returns The Prismic repository's name.
+ *
  * @throws {@link Error} Thrown if an invalid Prismic Rest API V2 endpoint is
  *   provided.
  */

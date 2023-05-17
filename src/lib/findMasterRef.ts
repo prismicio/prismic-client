@@ -8,6 +8,7 @@ import { findRef } from "./findRef";
  * @param refs - A list of refs to search.
  *
  * @returns The master ref from the list.
+ *
  * @throws If a matching ref cannot be found.
  */
 export const findMasterRef = (refs: Ref[]): Ref => {

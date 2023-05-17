@@ -5,8 +5,7 @@ import type { CustomTypeModelLinkSelectType } from "./link";
 /**
  * A content relationship custom type field.
  *
- * More details:
- * {@link https://prismic.io/docs/content-relationship}
+ * More details: {@link https://prismic.io/docs/content-relationship}
  */
 export interface CustomTypeModelContentRelationshipField<
 	CustomTypeIDs extends string = string,

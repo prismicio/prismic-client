@@ -3,8 +3,8 @@ import { filter } from "../filter";
 import { castArray } from "./castArray";
 
 /**
- * Creates a filter to filter content by document tags. All tags are required
- * on the document.
+ * Creates a filter to filter content by document tags. All tags are required on
+ * the document.
  *
  * @param tags - Document tags to filter queried content.
  *

@@ -3,8 +3,7 @@ import type { CustomTypeModelFieldType } from "./types";
 /**
  * A link custom type field.
  *
- * More details:
- * {@link https://prismic.io/docs/link}
+ * More details: {@link https://prismic.io/docs/link}
  */
 export interface CustomTypeModelLinkField {
 	type: typeof CustomTypeModelFieldType.Link;
@@ -21,8 +20,7 @@ export interface CustomTypeModelLinkField {
 /**
  * Type of a link custom type field.
  *
- * More details:
- * {@link https://prismic.io/docs/link}
+ * More details: {@link https://prismic.io/docs/link}
  */
 export const CustomTypeModelLinkSelectType = {
 	Document: "document",

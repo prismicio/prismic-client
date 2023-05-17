@@ -4,6 +4,7 @@
  * only element.
  *
  * @typeParam A - Element of the array.
+ *
  * @param a - Value to ensure is an array.
  *
  * @returns `a` as an array.

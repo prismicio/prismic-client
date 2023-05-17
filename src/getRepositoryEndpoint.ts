@@ -6,9 +6,11 @@ import { isRepositoryName } from "./isRepositoryName";
  * Get a repository's Prismic Rest API V2 endpoint.
  *
  * @typeParam RepositoryName - Name of the Prismic repository.
+ *
  * @param repositoryName - Name of the repository.
  *
  * @returns The repository's Prismic Rest API V2 endpoint
+ *
  * @throws {@link Error} Thrown if an invalid repository name is provided.
  */
 export const getRepositoryEndpoint = <RepositoryName extends string>(

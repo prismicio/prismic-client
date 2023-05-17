@@ -5,6 +5,7 @@ import type { FieldState, Simplify } from "./types";
  * uses this type.
  *
  * @typeParam State - State of the field which determines its shape.
+ *
  * @see {@link ImageField} for a full image field type.
  */
 export type ImageFieldImage<State extends FieldState = FieldState> =
@@ -36,6 +37,7 @@ export interface EmptyImageFieldImage {
  * @typeParam ThumbnailNames - Names of thumbnails. If the field does not
  *   contain thumbnails, `never` can be used to "disable" thumbnail fields.
  * @typeParam State - State of the field which determines its shape.
+ *
  * @see Image field documentation: {@link https://prismic.io/docs/image}
  */
 export type ImageField<

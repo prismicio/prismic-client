@@ -7,10 +7,11 @@ import { PrismicError } from "../errors/PrismicError";
  * returns true).
  *
  * @param refs - A list of refs to search.
- * @param filter - A function that determines if a ref from the list matches
- *   the criteria.
+ * @param filter - A function that determines if a ref from the list matches the
+ *   criteria.
  *
  * @returns The first matching ref.
+ *
  * @throws If a matching ref cannot be found.
  */
 export const findRef = (refs: Ref[], filter: (ref: Ref) => boolean): Ref => {

@@ -30,10 +30,10 @@ const formatValue = (
 };
 
 /**
- * Creates a filter builder function for filters with a path and
- * arguments.
+ * Creates a filter builder function for filters with a path and arguments.
  *
  * @typeParam Args - Arguments for the filter.
+ *
  * @param name - Name of the filter used in the resulting string.
  *
  * @returns Filter builder function for the given name.
@@ -73,8 +73,8 @@ const pathFilter = (name: string) => {
 };
 
 /**
- * Creates a filter builder function for filters with only arguments and
- * no path.
+ * Creates a filter builder function for filters with only arguments and no
+ * path.
  *
  * @param name - Name of the filter used in the resulting string.
  *
@@ -95,8 +95,8 @@ const argsFilter = <Args extends unknown[]>(name: string) => {
 
 export const filter = {
 	/**
-	 * The `at` filter checks that the path matches the described value
-	 * exactly. It takes a single value for a field or an array (only for tags).
+	 * The `at` filter checks that the path matches the described value exactly.
+	 * It takes a single value for a field or an array (only for tags).
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#at}
 	 */
@@ -115,8 +115,8 @@ export const filter = {
 	),
 
 	/**
-	 * The `any` filter takes an array of values. It works exactly the same way
-	 * as the `at` operator, but checks whether the fragment matches any of the
+	 * The `any` filter takes an array of values. It works exactly the same way as
+	 * the `at` operator, but checks whether the fragment matches any of the
 	 * values in the array.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#any}
@@ -126,9 +126,9 @@ export const filter = {
 	),
 
 	/**
-	 * The `in` filter is used specifically to retrieve an array of documents
-	 * by their IDs or UIDs. This filter is much more efficient at this than
-	 * the any filter.
+	 * The `in` filter is used specifically to retrieve an array of documents by
+	 * their IDs or UIDs. This filter is much more efficient at this than the any
+	 * filter.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#in}
 	 */
@@ -147,9 +147,9 @@ export const filter = {
 	fulltext: pathWithArgsFilter<[searchTerms: string]>("fulltext"),
 
 	/**
-	 * The `has` filter checks whether a fragment has a value. It will return
-	 * all the documents of the specified type that contain a value for the
-	 * specified field.
+	 * The `has` filter checks whether a fragment has a value. It will return all
+	 * the documents of the specified type that contain a value for the specified
+	 * field.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#has}
 	 */
@@ -174,8 +174,8 @@ export const filter = {
 	similar: argsFilter<[id: string, value: number]>("similar"),
 
 	/**
-	 * The `geopoint.near` filter checks that the value in the path is within
-	 * the radius of the given coordinates.
+	 * The `geopoint.near` filter checks that the value in the path is within the
+	 * radius of the given coordinates.
 	 *
 	 * This filter will only work for a geopoint field.
 	 *
@@ -195,16 +195,16 @@ export const filter = {
 	numberLessThan: pathWithArgsFilter<[value: number]>("number.lt"),
 
 	/**
-	 * The `number.gt` filter checks that the value in the number field is
-	 * greater than the value passed into the filter.
+	 * The `number.gt` filter checks that the value in the number field is greater
+	 * than the value passed into the filter.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#numbergreaterthan}
 	 */
 	numberGreaterThan: pathWithArgsFilter<[value: number]>("number.gt"),
 
 	/**
-	 * The `number.inRange` filter checks that the value in the path is within
-	 * the two values passed into the filter.
+	 * The `number.inRange` filter checks that the value in the path is within the
+	 * two values passed into the filter.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#numberinrange}
 	 */
@@ -214,8 +214,8 @@ export const filter = {
 		),
 
 	/**
-	 * The `date.after` filter checks that the value in the path is after the
-	 * date value passed into the filter.
+	 * The `date.after` filter checks that the value in the path is after the date
+	 * value passed into the filter.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#date-filters}
 	 */
@@ -230,8 +230,8 @@ export const filter = {
 	dateBefore: pathWithArgsFilter<[date: string | number | Date]>("date.before"),
 
 	/**
-	 * The `date.between` filter checks that the value in the path is within
-	 * the date values passed into the filter.
+	 * The `date.between` filter checks that the value in the path is within the
+	 * date values passed into the filter.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#date-filters}
 	 */
@@ -241,16 +241,16 @@ export const filter = {
 		>("date.between"),
 
 	/**
-	 * The `date.day-of-month` filter checks that the value in the path is
-	 * equal to the day of the month passed into the filter.
+	 * The `date.day-of-month` filter checks that the value in the path is equal
+	 * to the day of the month passed into the filter.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#date-filters}
 	 */
 	dateDayOfMonth: pathWithArgsFilter<[day: number]>("date.day-of-month"),
 
 	/**
-	 * The `date.day-of-month-after` filter checks that the value in the path
-	 * is after the day of the month passed into the filter.
+	 * The `date.day-of-month-after` filter checks that the value in the path is
+	 * after the day of the month passed into the filter.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#date-filters}
 	 */
@@ -259,8 +259,8 @@ export const filter = {
 	),
 
 	/**
-	 * The `date.day-of-month-before` filter checks that the value in the path
-	 * is before the day of the month passed into the filter.
+	 * The `date.day-of-month-before` filter checks that the value in the path is
+	 * before the day of the month passed into the filter.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#date-filters}
 	 */
@@ -269,8 +269,8 @@ export const filter = {
 	),
 
 	/**
-	 * The `date.day-of-week` filter checks that the value in the path is equal
-	 * to the day of the week passed into the filter.
+	 * The `date.day-of-week` filter checks that the value in the path is equal to
+	 * the day of the week passed into the filter.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#date-filters}
 	 */
@@ -305,8 +305,8 @@ export const filter = {
 	dateMonth: pathWithArgsFilter<[month: string | number]>("date.month"),
 
 	/**
-	 * The `date.month-after` filter checks that the value in the path occurs
-	 * in any month after the value passed into the filter.
+	 * The `date.month-after` filter checks that the value in the path occurs in
+	 * any month after the value passed into the filter.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#date-filters}
 	 */
@@ -314,8 +314,8 @@ export const filter = {
 		pathWithArgsFilter<[month: string | number]>("date.month-after"),
 
 	/**
-	 * The `date.month-before` filter checks that the value in the path occurs
-	 * in any month before the value passed into the filter.
+	 * The `date.month-before` filter checks that the value in the path occurs in
+	 * any month before the value passed into the filter.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#date-filters}
 	 */
@@ -323,24 +323,24 @@ export const filter = {
 		pathWithArgsFilter<[month: string | number]>("date.month-before"),
 
 	/**
-	 * The `date.year` filter checks that the value in the path occurs in the
-	 * year value passed into the filter.
+	 * The `date.year` filter checks that the value in the path occurs in the year
+	 * value passed into the filter.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#date-filters}
 	 */
 	dateYear: pathWithArgsFilter<[year: number]>("date.year"),
 
 	/**
-	 * The `date.hour` filter checks that the value in the path occurs within
-	 * the hour value passed into the filter.
+	 * The `date.hour` filter checks that the value in the path occurs within the
+	 * hour value passed into the filter.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#date-filters}
 	 */
 	dateHour: pathWithArgsFilter<[hour: number]>("date.hour"),
 
 	/**
-	 * The `date.hour-after` filter checks that the value in the path occurs
-	 * after the hour value passed into the filter.
+	 * The `date.hour-after` filter checks that the value in the path occurs after
+	 * the hour value passed into the filter.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#date-filters}
 	 */

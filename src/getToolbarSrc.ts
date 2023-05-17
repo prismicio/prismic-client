@@ -12,7 +12,7 @@ import { isRepositoryName } from "./isRepositoryName";
  * // In Next.js apps, use `next/script` in your `app/layout.tsx` file.
  *
  * import Script from "next/script";
- * import * as prismic from '@prismicio/client'
+ * import * as prismic from "@prismicio/client";
  *
  * export default function RootLayout({
  * 	children,

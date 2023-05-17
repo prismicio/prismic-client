@@ -5,6 +5,7 @@ import type { FieldState } from "./types";
  *
  * @typeParam Enum - Selectable options for the field.
  * @typeParam State - State of the field which determines its shape.
+ *
  * @see More details: {@link https://prismic.io/docs/select}
  */
 export type SelectField<

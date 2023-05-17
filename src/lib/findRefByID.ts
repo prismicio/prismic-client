@@ -9,6 +9,7 @@ import { findRef } from "./findRef";
  * @param id - The ID of the ref to find.
  *
  * @returns The ref with a matching ID from the list.
+ *
  * @throws If a matching ref cannot be found.
  */
 export const findRefByID = (refs: Ref[], id: string): Ref => {

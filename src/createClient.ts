@@ -106,7 +106,8 @@ export interface RequestInitLike extends Pick<RequestInit, "cache"> {
 	/**
 	 * An AbortSignal to set the `fetch()` request's signal.
 	 *
-	 * See: \<https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal\>
+	 * See:
+	 * [https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal)
 	 */
 	// NOTE: `AbortSignalLike` is `any`! It is left as `AbortSignalLike`
 	// for backwards compatibility (the type is exported) and to signal to
@@ -234,8 +235,8 @@ export type ClientConfig = {
 	ref?: RefStringOrThunk;
 
 	/**
-	 * A list of route resolver objects that define how a document's `url` property
-	 * is resolved.
+	 * A list of route resolver objects that define how a document's `url`
+	 * property is resolved.
 	 *
 	 * {@link https://prismic.io/docs/route-resolver}
 	 */
@@ -268,10 +269,9 @@ export type ClientConfig = {
 	fetch?: FetchLike;
 
 	/**
-	 * Options provided to the client's `fetch()` on all network requests.
-	 * These options will be merged with internally required options. They
-	 * can also be overriden on a per-query basis using the query's
-	 * `fetchOptions` parameter.
+	 * Options provided to the client's `fetch()` on all network requests. These
+	 * options will be merged with internally required options. They can also be
+	 * overriden on a per-query basis using the query's `fetchOptions` parameter.
 	 */
 	fetchOptions?: RequestInitLike;
 };
@@ -281,10 +281,9 @@ export type ClientConfig = {
  */
 type FetchParams = {
 	/**
-	 * Options provided to the client's `fetch()` on all network requests.
-	 * These options will be merged with internally required options. They
-	 * can also be overriden on a per-query basis using the query's
-	 * `fetchOptions` parameter.
+	 * Options provided to the client's `fetch()` on all network requests. These
+	 * options will be merged with internally required options. They can also be
+	 * overriden on a per-query basis using the query's `fetchOptions` parameter.
 	 */
 	fetchOptions?: RequestInitLike;
 
@@ -292,15 +291,9 @@ type FetchParams = {
 	 * An `AbortSignal` provided by an `AbortController`. This allows the network
 	 * request to be cancelled if necessary.
 	 *
-	 * {@link https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal}
-	 *
 	 * @deprecated Move the `signal` parameter into `fetchOptions.signal`:
 	 *
-	 * ```typescript
-	 * client.getByUID("page", "home",{
-	 * 	fetchOptions: { signal }
-	 * });
-	 * ```
+	 * @see \<https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal\>
 	 */
 	signal?: AbortSignalLike;
 };
@@ -627,6 +620,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of Prismic documents returned.
+	 *
 	 * @param params - Parameters to filter, sort, and paginate results.
 	 *
 	 * @returns A paginated response containing the result of the query.
@@ -650,6 +644,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of the Prismic document returned.
+	 *
 	 * @param params - Parameters to filter, sort, and paginate results. @returns
 	 *   The first result of the query, if any.
 	 */
@@ -690,6 +685,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of Prismic documents returned.
+	 *
 	 * @param params - Parameters to filter, sort, and paginate results.
 	 *
 	 * @returns A list of documents matching the query.
@@ -743,6 +739,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument- Type of the Prismic document returned.
+	 *
 	 * @param id - ID of the document.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
@@ -776,6 +773,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of Prismic documents returned.
+	 *
 	 * @param ids - A list of document IDs.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
@@ -812,6 +810,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of Prismic documents returned.
+	 *
 	 * @param ids - A list of document IDs.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
@@ -842,6 +841,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of the Prismic document returned.
+	 *
 	 * @param documentType - The API ID of the document's custom type.
 	 * @param uid - UID of the document.
 	 * @param params - Parameters to filter, sort, and paginate the results.
@@ -884,6 +884,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of the Prismic document returned.
+	 *
 	 * @param documentType - The API ID of the document's custom type.
 	 * @param uids - A list of document UIDs.
 	 * @param params - Parameters to filter, sort, and paginate the results.
@@ -929,6 +930,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of Prismic documents returned.
+	 *
 	 * @param documentType - The API ID of the document's custom type.
 	 * @param uids - A list of document UIDs.
 	 * @param params - Parameters to filter, sort, and paginate the results.
@@ -969,6 +971,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of the Prismic document returned.
+	 *
 	 * @param documentType - The API ID of the singleton custom type.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
@@ -1000,6 +1003,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of Prismic documents returned.
+	 *
 	 * @param documentType - The API ID of the custom type.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
@@ -1031,6 +1035,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of Prismic documents returned.
+	 *
 	 * @param documentType - The API ID of the custom type.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
@@ -1063,6 +1068,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of Prismic documents returned.
+	 *
 	 * @param tag - The tag that must be included on a document.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
@@ -1090,6 +1096,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of Prismic documents returned.
+	 *
 	 * @param tag - The tag that must be included on a document.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
@@ -1117,6 +1124,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of Prismic documents returned.
+	 *
 	 * @param tags - A list of tags that must be included on a document.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
@@ -1145,6 +1153,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of Prismic documents returned.
+	 *
 	 * @param tags - A list of tags that must be included on a document.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
@@ -1173,6 +1182,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of Prismic documents returned.
+	 *
 	 * @param tags - A list of tags that must be included on a document.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
@@ -1203,6 +1213,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 *
 	 * @typeParam TDocument - Type of Prismic documents returned.
+	 *
 	 * @param tags - A list of tags that must be included on a document.
 	 * @param params - Parameters to filter, sort, and paginate the results.
 	 *
@@ -1573,6 +1584,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *   supported.
 	 *
 	 * @returns The `fetch()` Response for the request.
+	 *
 	 * @experimental
 	 */
 	async graphQLFetch(
@@ -1667,6 +1679,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * @param name - Name of the form.
 	 *
 	 * @returns The repository form.
+	 *
 	 * @throws If a matching form cannot be found.
 	 */
 	private async getCachedRepositoryForm(
@@ -1765,6 +1778,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * normalizes unsuccessful network requests.
 	 *
 	 * @typeParam T - The JSON response.
+	 *
 	 * @param url - URL to the resource to fetch.
 	 * @param params - Prismic REST API parameters for the network request.
 	 *

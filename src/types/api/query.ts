@@ -5,6 +5,7 @@ import { PrismicDocument } from "../value/document";
  * paginated metadata and a list of matching results for the query.
  *
  * @typeParam Document - The type(s) of Prismic document that can be returned.
+ *
  * @see More details on querying: {@link https://prismic.io/docs/api}
  */
 export interface Query<Document extends PrismicDocument = PrismicDocument> {

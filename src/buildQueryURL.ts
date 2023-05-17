@@ -156,18 +156,18 @@ export interface QueryParams {
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#orderings}
 	 *
-	 * @remarks Strings and arrays of strings are deprecated as of
-	 * `@prismicio/client@7.0.0`. Please migrate to the more explicit
-	 * array of objects.
-	 *
+	 * @remarks
+	 * Strings and arrays of strings are deprecated as of
+	 * `@prismicio/client@7.0.0`. Please migrate to the more explicit array of
+	 * objects.
 	 * @example
 	 *
 	 * ```typescript
-	 * buildQueryURL(endpoint,{
-	 *   orderings: [
-	 *     { field: "my.product.price", direction: "desc" },
-	 *     { field: "my.product.title" },
-	 *   ],
+	 * buildQueryURL(endpoint, {
+	 * 	orderings: [
+	 * 		{ field: "my.product.price", direction: "desc" },
+	 * 		{ field: "my.product.title" },
+	 * 	],
 	 * });
 	 * ```
 	 */
@@ -219,7 +219,8 @@ type BuildQueryURLParams = {
 	filters?: string | string[];
 
 	/**
-	 * @deprecated Renamed to `filters`. Ensure the value is an array of filters, not a single, non-array filter.
+	 * @deprecated Renamed to `filters`. Ensure the value is an array of filters,
+	 *   not a single, non-array filter.
 	 */
 	predicates?: string | string[];
 };

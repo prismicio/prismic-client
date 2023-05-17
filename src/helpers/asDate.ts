@@ -14,6 +14,7 @@ type AsDateReturnType<
  * @param dateOrTimestampField - A date or timestamp field from Prismic
  *
  * @returns A Date object, null if provided date is falsy
+ *
  * @see Templating date field from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#date-and-timestamp}
  */
 export const asDate = <

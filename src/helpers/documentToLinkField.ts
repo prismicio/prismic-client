@@ -10,9 +10,11 @@ type SetOptional<T, Keys extends keyof T> = Omit<T, Keys> &
  * for document links
  *
  * @typeParam TDocument - Specific interface of the provided document
+ *
  * @param prismicDocument - A document coming from Prismic
  *
  * @returns The equivalent link field to use with `asLink()`
+ *
  * @internal
  */
 export const documentToLinkField = <

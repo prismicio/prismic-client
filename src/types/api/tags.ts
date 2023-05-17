@@ -3,6 +3,7 @@
  * sending a `GET` request to a repository's `/api/tags` endpoint.
  *
  * @typeParam Tag - Tags that are returned by the Tags API.
+ *
  * @see More details on the Tags API: {@link https://prismic.io/docs/tags-api-technical-reference}
  */
 export type Tags<Tag extends string = string> = Tag[];
