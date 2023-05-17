@@ -1,5 +1,6 @@
-import * as prismicTI from "@prismicio/types-internal";
 import { expectNever, expectType } from "ts-expect";
+
+import * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes";
 
 import * as prismic from "../../src";
 
@@ -40,13 +41,9 @@ expectType<prismic.CustomTypeModelColorField>({
 /**
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
-expectType<prismic.CustomTypeModelColorField>(
-	{} as prismicTI.CustomTypes.Widgets.Nestable.Color,
-);
+expectType<prismic.CustomTypeModelColorField>({} as prismicTICustomTypes.Color);
 
 /**
  * `@prismicio/types-internal` extends `@prismicio/types`
  */
-expectType<prismicTI.CustomTypes.Widgets.Nestable.Color>(
-	{} as prismic.CustomTypeModelColorField,
-);
+expectType<prismicTICustomTypes.Color>({} as prismic.CustomTypeModelColorField);

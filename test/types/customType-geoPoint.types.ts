@@ -1,5 +1,6 @@
-import * as prismicTI from "@prismicio/types-internal";
 import { expectNever, expectType } from "ts-expect";
+
+import * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes";
 
 import * as prismic from "../../src";
 
@@ -42,12 +43,12 @@ expectType<prismic.CustomTypeModelGeoPointField>({
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
 expectType<prismic.CustomTypeModelGeoPointField>(
-	{} as prismicTI.CustomTypes.Widgets.Nestable.GeoPoint,
+	{} as prismicTICustomTypes.GeoPoint,
 );
 
 /**
  * `@prismicio/types-internal` extends `@prismicio/types`
  */
-expectType<prismicTI.CustomTypes.Widgets.Nestable.GeoPoint>(
+expectType<prismicTICustomTypes.GeoPoint>(
 	{} as prismic.CustomTypeModelGeoPointField,
 );

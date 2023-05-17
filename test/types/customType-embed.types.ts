@@ -1,5 +1,6 @@
-import * as prismicTI from "@prismicio/types-internal";
 import { expectNever, expectType } from "ts-expect";
+
+import * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes";
 
 import * as prismic from "../../src";
 
@@ -40,13 +41,9 @@ expectType<prismic.CustomTypeModelEmbedField>({
 /**
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
-expectType<prismic.CustomTypeModelEmbedField>(
-	{} as prismicTI.CustomTypes.Widgets.Nestable.Embed,
-);
+expectType<prismic.CustomTypeModelEmbedField>({} as prismicTICustomTypes.Embed);
 
 /**
  * `@prismicio/types-internal` extends `@prismicio/types`
  */
-expectType<prismicTI.CustomTypes.Widgets.Nestable.Embed>(
-	{} as prismic.CustomTypeModelEmbedField,
-);
+expectType<prismicTICustomTypes.Embed>({} as prismic.CustomTypeModelEmbedField);

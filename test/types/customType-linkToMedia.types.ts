@@ -1,5 +1,6 @@
-import * as prismicTI from "@prismicio/types-internal";
 import { expectNever, expectType } from "ts-expect";
+
+import * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes";
 
 import * as prismic from "../../src";
 
@@ -43,7 +44,7 @@ expectType<prismic.CustomTypeModelLinkToMediaField>({
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
 expectType<prismic.CustomTypeModelLinkToMediaField>(
-	{} as prismicTI.CustomTypes.Widgets.Nestable.Link & {
+	{} as prismicTICustomTypes.Link & {
 		// We must manually narrow `@prismicio/types-internal`'s type
 		// to match a link to media field; `@prismicio/types-internal`
 		// does not contain a link to media-specific type.
@@ -54,6 +55,6 @@ expectType<prismic.CustomTypeModelLinkToMediaField>(
 /**
  * `@prismicio/types-internal` extends `@prismicio/types`
  */
-expectType<prismicTI.CustomTypes.Widgets.Nestable.Link>(
+expectType<prismicTICustomTypes.Link>(
 	{} as prismic.CustomTypeModelLinkToMediaField,
 );
