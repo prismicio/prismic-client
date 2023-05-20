@@ -65,6 +65,13 @@ export const asLink: {
 	/**
 	 * Resolves any type of link field or Prismic document to a URL.
 	 *
+	 * @example
+	 *
+	 * ```ts
+	 * asLink(field);
+	 * asLink(field, { linkResolver });
+	 * ```
+	 *
 	 * @typeParam LinkResolverFunctionReturnType - link resolver function return
 	 *   type
 	 * @typeParam Field - Link field or Prismic document to resolve to a URL
@@ -95,10 +102,6 @@ export const asLink: {
 	 *
 	 * @deprecated Use object-style configuration instead.
 	 *
-	 *   ```ts
-	 *   asLink(field);
-	 *   asLink(field, { linkResolver });
-	 *   ```
 	 * @typeParam LinkResolverFunctionReturnType - link resolver function return
 	 *   type
 	 * @typeParam Field - Link field or Prismic document to resolve to a URL

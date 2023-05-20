@@ -30,6 +30,13 @@ export const asText: {
 	/**
 	 * Serializes a rich text or title field to a plain text string.
 	 *
+	 * @example
+	 *
+	 * ```ts
+	 * asText(field);
+	 * asText(field, { separator });
+	 * ```
+	 *
 	 * @param richTextField - A rich text or title field from Prismic
 	 * @param config - Configuration that determines the output of `asText()`
 	 *
@@ -47,10 +54,6 @@ export const asText: {
 	 *
 	 * @deprecated Use object-style configuration instead.
 	 *
-	 *   ```ts
-	 *   asText(field);
-	 *   asText(field, { separator });
-	 *   ```
 	 * @param richTextField - A rich text or title field from Prismic
 	 * @param separator - Separator used to join each element, defaults to a space
 	 *
