@@ -46,6 +46,7 @@ export type {
 	FetchLike,
 	HttpRequestLike,
 	RequestInitLike,
+	RequestInitLikeOrThunk,
 	ResponseLike,
 } from "./createClient";
 export type {

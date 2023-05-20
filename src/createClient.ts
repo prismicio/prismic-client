@@ -218,6 +218,22 @@ type RefStringOrThunk =
 	| (() => string | undefined | Promise<string | undefined>);
 
 /**
+ * Options or a function that returns options provided to the client's `fetch()`
+ * on all network requests. These options will be merged with internally
+ * required options. They can also be overriden on a per-query basis using the
+ * query's `fetchOptions` parameter.
+ *
+ * If the options must be determined on-demand, a function can be provided. This
+ * function can be asynchronous.
+ */
+export type RequestInitLikeOrThunk =
+	| RequestInitLike
+	| ((
+			url: string,
+			init?: RequestInitLike,
+	  ) => RequestInitLike | undefined | Promise<RequestInitLike | undefined>);
+
+/**
  * Configuration for clients that determine how content is queried.
  */
 export type ClientConfig = {
@@ -269,11 +285,15 @@ export type ClientConfig = {
 	fetch?: FetchLike;
 
 	/**
-	 * Options provided to the client's `fetch()` on all network requests. These
-	 * options will be merged with internally required options. They can also be
-	 * overriden on a per-query basis using the query's `fetchOptions` parameter.
+	 * Options or a function that returns options provided to the client's
+	 * `fetch()` on all network requests. These options will be merged with
+	 * internally required options. They can also be overriden on a per-query
+	 * basis using the query's `fetchOptions` parameter.
+	 *
+	 * If the options must be determined on-demand, a function can be provided.
+	 * This function can be asynchronous.
 	 */
-	fetchOptions?: RequestInitLike;
+	fetchOptions?: RequestInitLikeOrThunk;
 };
 
 /**
@@ -281,11 +301,15 @@ export type ClientConfig = {
  */
 type FetchParams = {
 	/**
-	 * Options provided to the client's `fetch()` on all network requests. These
-	 * options will be merged with internally required options. They can also be
-	 * overriden on a per-query basis using the query's `fetchOptions` parameter.
+	 * Options or a function that returns options provided to the client's
+	 * `fetch()` on all network requests. These options will be merged with
+	 * internally required options. They can also be overriden on a per-query
+	 * basis using the query's `fetchOptions` parameter.
+	 *
+	 * If the options must be determined on-demand, a function can be provided.
+	 * This function can be asynchronous.
 	 */
-	fetchOptions?: RequestInitLike;
+	fetchOptions?: RequestInitLikeOrThunk;
 
 	/**
 	 * An `AbortSignal` provided by an `AbortController`. This allows the network
@@ -432,7 +456,16 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 */
 	fetchFn: FetchLike;
 
-	fetchOptions?: RequestInitLike;
+	/**
+	 * Options or a function that returns options provided to the client's
+	 * `fetch()` on all network requests. These options will be merged with
+	 * internally required options. They can also be overriden on a per-query
+	 * basis using the query's `fetchOptions` parameter.
+	 *
+	 * If the options must be determined on-demand, a function can be provided.
+	 * This function can be asynchronous.
+	 */
+	fetchOptions?: RequestInitLikeOrThunk;
 
 	/**
 	 * Default parameters that will be sent with each query. These parameters can
@@ -1788,17 +1821,21 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		url: string,
 		params: FetchParams = {},
 	): Promise<T> {
+		const paramsFetchOptions = await castThunk(params.fetchOptions)(url);
+		const thisFetchOptions = await castThunk(this.fetchOptions)(
+			url,
+			paramsFetchOptions,
+		);
+
 		const requestInit: RequestInitLike = {
-			...this.fetchOptions,
-			...params.fetchOptions,
+			...thisFetchOptions,
+			...paramsFetchOptions,
 			headers: {
-				...this.fetchOptions?.headers,
-				...params.fetchOptions?.headers,
+				...thisFetchOptions?.headers,
+				...paramsFetchOptions?.headers,
 			},
 			signal:
-				params.fetchOptions?.signal ||
-				params.signal ||
-				this.fetchOptions?.signal,
+				paramsFetchOptions?.signal || params.signal || thisFetchOptions?.signal,
 		};
 
 		let job: Promise<FetchJobResult>;

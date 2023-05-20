@@ -8,6 +8,12 @@
  *
  * @returns `a` as a a thunk.
  */
-export const castThunk = <A>(a: A | (() => A)): (() => A) => {
-	return typeof a === "function" ? (a as () => A) : () => a;
+export const castThunk = <
+	A,
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	TArgs extends any[],
+>(
+	a: A | ((...args: TArgs) => A),
+): ((...args: TArgs) => A) => {
+	return typeof a === "function" ? (a as (...args: TArgs) => A) : () => a;
 };
