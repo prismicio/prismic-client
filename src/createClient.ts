@@ -1828,11 +1828,11 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		);
 
 		const requestInit: RequestInitLike = {
-			...thisFetchOptions,
 			...paramsFetchOptions,
+			...thisFetchOptions,
 			headers: {
-				...thisFetchOptions?.headers,
 				...paramsFetchOptions?.headers,
+				...thisFetchOptions?.headers,
 			},
 			signal:
 				paramsFetchOptions?.signal || params.signal || thisFetchOptions?.signal,
