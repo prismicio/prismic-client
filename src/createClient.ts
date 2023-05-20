@@ -292,6 +292,8 @@ export type ClientConfig = {
 	 *
 	 * If the options must be determined on-demand, a function can be provided.
 	 * This function can be asynchronous.
+	 *
+	 * @experimental
 	 */
 	fetchOptions?: RequestInitLikeOrThunk;
 };
@@ -308,6 +310,8 @@ type FetchParams = {
 	 *
 	 * If the options must be determined on-demand, a function can be provided.
 	 * This function can be asynchronous.
+	 *
+	 * @experimental
 	 */
 	fetchOptions?: RequestInitLikeOrThunk;
 
@@ -464,6 +468,8 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *
 	 * If the options must be determined on-demand, a function can be provided.
 	 * This function can be asynchronous.
+	 *
+	 * @experimental
 	 */
 	fetchOptions?: RequestInitLikeOrThunk;
 
