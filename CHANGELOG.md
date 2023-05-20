@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.0.1-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.0.0...v7.0.1-alpha.0) (2023-05-20)
+
+
+### Bug Fixes
+
+* prioritize client defaults over methods ([9f4848b](https://github.com/prismicio/prismic-client/commit/9f4848b340c96f26187bfbf0d801148dbe6dd2a3))
+* support thunk values for `fetchOptions` parameter ([ee7599a](https://github.com/prismicio/prismic-client/commit/ee7599a039019aa96cb40fb44493f5b3bfaafef5))
+
+
+### Documentation
+
+* add migration guides in CHANGELOG.md ([aebbfa7](https://github.com/prismicio/prismic-client/commit/aebbfa72663910494e23772eebbf85f303429b7d))
+* mark `fetchOptions` as experimental ([8084857](https://github.com/prismicio/prismic-client/commit/808485762251787df490aba5ff492410584bac9d))
+* typo ([f06924c](https://github.com/prismicio/prismic-client/commit/f06924cb8cb37a72e76260959d3278b92cbf6c67))
+* update TSDoc to satisfy linter ([53a37cf](https://github.com/prismicio/prismic-client/commit/53a37cf29db455b7d11037114cc2c90c40d46245))
+
+
+### Chore
+
+* remove `--release-as major` from `release:alpha` scripts ([8fb403f](https://github.com/prismicio/prismic-client/commit/8fb403f6f21fcc41c5c845ae1ee3d564d1df43d5))
+
 ## [7.0.0](https://github.com/prismicio/prismic-client/compare/v7.0.0-alpha.5...v7.0.0) (2023-05-17)
 
 [Check out the migration guide for how to migrate to `@prismicio/client` v7](https://prismic.io/docs/prismicio-client-v7-migration-guide)
