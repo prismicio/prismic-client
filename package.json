@@ -23,8 +23,14 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"require": "./dist/index.cjs",
-			"import": "./dist/index.js"
+			"require": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.cjs"
+			},
+			"import": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			}
 		},
 		"./package.json": "./package.json"
 	},
@@ -53,7 +59,7 @@
 		"test": "npm run lint && npm run types && npm run unit && npm run build && npm run size"
 	},
 	"dependencies": {
-		"@prismicio/richtext": "^2.1.4",
+		"@prismicio/richtext": "^2.1.5",
 		"imgix-url-builder": "^0.0.3"
 	},
 	"devDependencies": {
