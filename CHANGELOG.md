@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.0.1](https://github.com/prismicio/prismic-client/compare/v7.0.0...v7.0.1) (2023-05-22)
+
+
+### Bug Fixes
+
+* properly resolve types when using TypeScript's latest module resolution strategy ([#300](https://github.com/prismicio/prismic-client/issues/300)) ([a2b1084](https://github.com/prismicio/prismic-client/commit/a2b1084e013d92b913063833119ac0d1f002be4a))
+
+
+### Documentation
+
+* add migration guides in CHANGELOG.md ([aebbfa7](https://github.com/prismicio/prismic-client/commit/aebbfa72663910494e23772eebbf85f303429b7d))
+* typo ([f06924c](https://github.com/prismicio/prismic-client/commit/f06924cb8cb37a72e76260959d3278b92cbf6c67))
+
 ## [7.0.0](https://github.com/prismicio/prismic-client/compare/v7.0.0-alpha.5...v7.0.0) (2023-05-17)
 
 [Check out the migration guide for how to migrate to `@prismicio/client` v7](https://prismic.io/docs/prismicio-client-v7-migration-guide)
