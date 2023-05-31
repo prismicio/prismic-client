@@ -68,6 +68,7 @@ export { asHTML } from "./helpers/asHTML";
 export { asImageSrc } from "./helpers/asImageSrc";
 export { asImageWidthSrcSet } from "./helpers/asImageWidthSrcSet";
 export { asImagePixelDensitySrcSet } from "./helpers/asImagePixelDensitySrcSet";
+export { unstable_mapSliceZone } from "./helpers/unstable_mapSliceZone";
 export * as isFilled from "./helpers/isFilled";
 
 // Conversion helper.
