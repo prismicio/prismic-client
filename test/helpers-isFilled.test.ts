@@ -1,5 +1,7 @@
 import { expect, it } from "vitest";
 
+import { documentFixture } from "./__fixtures__/document";
+
 import { GroupField, SliceZone, isFilled } from "../src";
 
 it("color", (ctx) => {
@@ -78,12 +80,10 @@ it("image thumbnail", () => {
 it("integration fields", (ctx) => {
 	expect(isFilled.integrationField(null)).toBe(false);
 	expect(isFilled.integrationField(undefined)).toBe(false);
-	expect(isFilled.integrationField(ctx.mock.value.integrationFields())).toBe(
-		true,
-	);
+	expect(isFilled.integrationField(ctx.mock.value.integration())).toBe(true);
 });
 it("aliases integrationFields to integrationField", () => {
-	expect(isFilled.integrationFields).toBe(isFilled.integrationField);
+	expect(isFilled.integrationField).toBe(isFilled.integrationField);
 });
 
 it("key text", (ctx) => {
@@ -163,6 +163,12 @@ it("timestamp", (ctx) => {
 	expect(isFilled.timestamp(null)).toBe(false);
 	expect(isFilled.timestamp(undefined)).toBe(false);
 	expect(isFilled.timestamp(ctx.mock.value.timestamp())).toBe(true);
+	expect(isFilled.timestamp(documentFixture.empty.first_publication_date)).toBe(
+		true,
+	);
+	expect(isFilled.timestamp(documentFixture.empty.last_publication_date)).toBe(
+		true,
+	);
 });
 
 it("title", (ctx) => {
