@@ -220,6 +220,7 @@ it("uses the master ref by default", async (ctx) => {
 	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
 	mockPrismicRestAPIV2({
+		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		ctx,
 	});
@@ -235,6 +236,7 @@ it("supports manual string ref", async (ctx) => {
 	const ref = "ref";
 
 	mockPrismicRestAPIV2({
+		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		queryRequiredParams: { ref },
 		ctx,
@@ -251,6 +253,7 @@ it("supports manual thunk ref", async (ctx) => {
 	const ref = "ref";
 
 	mockPrismicRestAPIV2({
+		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		queryRequiredParams: { ref },
 		ctx,
@@ -268,6 +271,7 @@ it("uses master ref if ref thunk param returns non-string value", async (ctx) =>
 
 	mockPrismicRestAPIV2({
 		repositoryResponse,
+		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		queryRequiredParams: { ref: getMasterRef(repositoryResponse) },
 		ctx,
@@ -289,6 +293,7 @@ it("uses browser preview ref if available", async (ctx) => {
 	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
 	mockPrismicRestAPIV2({
+		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		queryRequiredParams: { ref: previewRef },
 		ctx,
@@ -313,6 +318,7 @@ it("uses req preview ref if available", async (ctx) => {
 	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
 	mockPrismicRestAPIV2({
+		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		queryRequiredParams: { ref: previewRef },
 		ctx,
@@ -337,6 +343,7 @@ it("supports req with Web APIs", async (ctx) => {
 	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
 	mockPrismicRestAPIV2({
+		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		queryRequiredParams: { ref: previewRef },
 		ctx,
@@ -359,6 +366,7 @@ it("ignores req without cookies", async (ctx) => {
 
 	mockPrismicRestAPIV2({
 		repositoryResponse,
+		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		queryRequiredParams: { ref: getMasterRef(repositoryResponse) },
 		ctx,
@@ -389,6 +397,7 @@ it("does not use preview ref if auto previews are disabled", async (ctx) => {
 	client.disableAutoPreviews();
 	mockPrismicRestAPIV2({
 		repositoryResponse,
+		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		queryRequiredParams: { ref: getMasterRef(repositoryResponse) },
 		ctx,
@@ -402,6 +411,7 @@ it("does not use preview ref if auto previews are disabled", async (ctx) => {
 	client.enableAutoPreviews();
 	mockPrismicRestAPIV2({
 		repositoryResponse,
+		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		queryRequiredParams: { ref: previewRef },
 		ctx,
@@ -421,6 +431,7 @@ it("uses the integration fields ref if the repository provides it", async (ctx) 
 
 	mockPrismicRestAPIV2({
 		repositoryResponse,
+		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		queryRequiredParams: {
 			ref: getMasterRef(repositoryResponse),
@@ -443,6 +454,7 @@ it("ignores the integration fields ref if the repository provides a null value",
 
 	mockPrismicRestAPIV2({
 		repositoryResponse,
+		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		queryRequiredParams: {
 			ref: getMasterRef(repositoryResponse),
@@ -478,6 +490,7 @@ it("uses client-provided routes in queries", async (ctx) => {
 	];
 
 	mockPrismicRestAPIV2({
+		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		queryRequiredParams: {
 			routes: JSON.stringify(routes),
@@ -497,6 +510,7 @@ it("uses client-provided brokenRoute in queries", async (ctx) => {
 	const brokenRoute = "/404";
 
 	mockPrismicRestAPIV2({
+		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		queryRequiredParams: {
 			brokenRoute,

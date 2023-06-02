@@ -45,6 +45,7 @@ export const testGetWithinTTL = (
 
 		mockPrismicRestAPIV2({
 			repositoryResponse,
+			// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 			queryResponse,
 			queryRequiredParams: {
 				ref,
@@ -105,6 +106,7 @@ export const testGetOutsideTTL = (
 
 			mockPrismicRestAPIV2({
 				repositoryResponse: repositoryResponse1,
+				// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 				queryResponse: queryResponse1,
 				queryRequiredParams: {
 					ref: ref1,
@@ -129,6 +131,7 @@ export const testGetOutsideTTL = (
 			// We're also using a new query handler using the new master ref.
 			mockPrismicRestAPIV2({
 				repositoryResponse: repositoryResponse2,
+				// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 				queryResponse: queryResponse2,
 				queryRequiredParams: {
 					ref: ref2,

@@ -30,5 +30,6 @@ export const createPagedQueryResponses = ({
 		);
 	}
 
+	// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 	return responses;
 };

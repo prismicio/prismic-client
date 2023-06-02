@@ -63,7 +63,6 @@
 		"imgix-url-builder": "^0.0.3"
 	},
 	"devDependencies": {
-		"@prismicio/client": ".",
 		"@prismicio/mock": "^0.3.0",
 		"@prismicio/types-internal": "2.0.0-alpha.11",
 		"@size-limit/preset-small-lib": "^8.2.4",

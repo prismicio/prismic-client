@@ -35,6 +35,7 @@ it("uses master ref if manual thunk ref returns non-string value", async (ctx) =
 
 	mockPrismicRestAPIV2({
 		repositoryResponse,
+		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		queryRequiredParams: {
 			ref: getMasterRef(repositoryResponse),
