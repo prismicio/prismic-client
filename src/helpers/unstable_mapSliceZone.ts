@@ -19,81 +19,82 @@ type ExtractSliceType<Slice extends SliceLike> = Slice extends SliceLikeRestV2
 
 /**
  * The minimum required properties to represent a Prismic Slice from the Prismic
- * Rest API V2 for the `<SliceZone>` component.
+ * Rest API V2 for the `unstable_mapSliceZone()` helper.
  *
  * If using Prismic's Rest API V2, use the `Slice` export from
- * `@prismicio/types` for a full interface.
+ * `@prismicio/client` for a full interface.
  *
  * @typeParam SliceType - Type name of the Slice.
  */
-export type SliceLikeRestV2<SliceType extends string = string> = {
-	slice_type: Slice<SliceType>["slice_type"];
-	id?: string;
-};
+type SliceLikeRestV2<SliceType extends string = string> = Pick<
+	Slice<SliceType>,
+	"slice_type" | "id"
+>;
 
 /**
  * The minimum required properties to represent a Prismic Slice from the Prismic
- * GraphQL API for the `<SliceZone>` component.
+ * GraphQL API for the `unstable_mapSliceZone()` helper.
  *
  * @typeParam SliceType - Type name of the Slice.
  */
-export type SliceLikeGraphQL<SliceType extends string = string> = {
+type SliceLikeGraphQL<SliceType extends string = string> = {
 	type: Slice<SliceType>["slice_type"];
 };
 
 /**
  * The minimum required properties to represent a Prismic Slice for the
- * `<SliceZone>` component.
+ * `unstable_mapSliceZone()` helper.
  *
  * If using Prismic's Rest API V2, use the `Slice` export from
- * `@prismicio/types` for a full interface.
+ * `@prismicio/client` for a full interface.
  *
  * @typeParam SliceType - Type name of the Slice.
  */
-export type SliceLike<SliceType extends string = string> =
+type SliceLike<SliceType extends string = string> =
 	| SliceLikeRestV2<SliceType>
 	| SliceLikeGraphQL<SliceType>;
 
 /**
- * A looser version of the `SliceZone` type from `@prismicio/types` using
+ * A looser version of the `SliceZone` type from `@prismicio/client` using
  * `SliceLike`.
  *
  * If using Prismic's Rest API V2, use the `SliceZone` export from
- * `@prismicio/types` for the full type.
+ * `@prismicio/client` for the full type.
  *
  * @typeParam TSlice - The type(s) of a Slice in the Slice Zone.
  */
-export type SliceZoneLike<TSlice extends SliceLike = SliceLike> =
-	readonly TSlice[];
+type SliceZoneLike<TSlice extends SliceLike = SliceLike> = readonly TSlice[];
 
 /**
- * A set of properties that identify a Slice as having been mapped.
- * `<SliceZone>` uses these properties internally to determine how props are
- * provided to a Slice's component.
+ * A set of properties that identify a Slice as having been mapped. Consumers of
+ * the mapped Slice Zone can use these properties to detect and specially handle
+ * mapped Slices.
  */
 type MappedSliceLike = {
 	/**
 	 * If `true`, this Slice has been modified from its original value using a
 	 * mapper.
+	 *
+	 * @internal
 	 */
 	__mapped: true;
 };
 
 /**
- * React props for a component rendering content from a Prismic Slice using the
- * `<SliceZone>` component.
+ * Arguments for a function mapping content from a Prismic Slice using the
+ * `unstable_mapSliceZone()` helper.
  *
  * @typeParam TSlice - The Slice passed as a prop.
- * @typeParam TContext - Arbitrary data passed to `<SliceZone>` and made
- *   available to all Slice components.
+ * @typeParam TContext - Arbitrary data passed to `unstable_mapSliceZone()` and
+ *   made available to all Slice mappers.
  */
-export type SliceComponentProps<
+type SliceMapperArgs<
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	TSlice extends SliceLike = any,
 	TContext = unknown,
 > = {
 	/**
-	 * Slice data for this component.
+	 * Slice data.
 	 */
 	slice: TSlice;
 
@@ -112,8 +113,8 @@ export type SliceComponentProps<
 	slices: SliceZoneLike<SliceLike>;
 
 	/**
-	 * Arbitrary data passed to `<SliceZone>` and made available to all Slice
-	 * components.
+	 * Arbitrary data passed to `unstable_mapSliceZone()` and made available to
+	 * all Slice mappers.
 	 */
 	context: TContext;
 };
@@ -136,7 +137,7 @@ export type Mappers<
 
 /**
  * A function that maps a Slice and its metadata to a modified version. The
- * return value will be passed to the Slice's component as props.
+ * return value will replace the Slice in the Slice Zone.
  */
 export type Mapper<
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -153,7 +154,7 @@ export type MapperArgs<
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	TSlice extends SliceLike = any,
 	TContext = unknown,
-> = SliceComponentProps<TSlice, TContext>;
+> = SliceMapperArgs<TSlice, TContext>;
 
 /**
  * Unwraps a lazily loaded mapper module.
@@ -236,9 +237,17 @@ export function unstable_mapSliceZone<
 
 			const mapperArgs = { slice, slices, index, context };
 
+			// `result` may be a mapper function OR a module
+			// containing a mapper function.
 			let result = await mapper(mapperArgs);
 
+			// `result` is a module containing a mapper function,
+			// we need to dig out the mapper function. `result`
+			// will be reassigned with the mapper function's value.
 			if (
+				// `mapper.length < 1` ensures the given
+				// function is something of the form:
+				// `() => import(...)`
 				mapper.length < 1 &&
 				(typeof result === "function" ||
 					(typeof result === "object" && "default" in result))
