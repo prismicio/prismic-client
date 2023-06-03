@@ -22,6 +22,13 @@ export interface CustomTypeModel<
 	label: string | null | undefined;
 
 	/**
+	 * The format of the custom type model.
+	 *
+	 * Fallback to "custom" if undefined.
+	 */
+	format?: "page" | "custom";
+
+	/**
 	 * Determines if more than one document for the custom type can be created.
 	 */
 	repeatable: boolean;

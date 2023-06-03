@@ -2,6 +2,7 @@ import { AnyRegularField } from "./types";
 
 import { GroupField } from "./group";
 import { SliceZone } from "./sliceZone";
+import { TimestampField } from "./timestamp";
 
 /**
  * Document metadata for a translation of a Prismic document.
@@ -46,11 +47,11 @@ export interface PrismicDocumentHeader<TypeEnum = string, LangEnum = string> {
 	/**
 	 * The timestamp at which the document was first published.
 	 */
-	first_publication_date: string;
+	first_publication_date: TimestampField<"filled">;
 	/**
 	 * The timestamp at which the document was last published.
 	 */
-	last_publication_date: string;
+	last_publication_date: TimestampField<"filled">;
 	/**
 	 * Slugs associated with document.
 	 *
