@@ -63,7 +63,7 @@
 		"imgix-url-builder": "^0.0.3"
 	},
 	"devDependencies": {
-		"@prismicio/mock": "^0.2.0",
+		"@prismicio/mock": "^0.3.0",
 		"@prismicio/types-internal": "2.0.0-alpha.11",
 		"@size-limit/preset-small-lib": "^8.2.4",
 		"@trivago/prettier-plugin-sort-imports": "^4.1.1",
