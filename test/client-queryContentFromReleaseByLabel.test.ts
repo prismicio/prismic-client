@@ -24,7 +24,6 @@ it("uses a releases ref by label", async (ctx) => {
 
 	mockPrismicRestAPIV2({
 		repositoryResponse,
-		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		queryRequiredParams: {
 			ref: ref1.ref,

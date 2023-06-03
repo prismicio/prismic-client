@@ -22,7 +22,6 @@ it("resolves a preview url in the browser", async (ctx) => {
 	};
 
 	mockPrismicRestAPIV2({
-		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		queryRequiredParams: {
 			ref: previewToken,
@@ -58,7 +57,6 @@ it("resolves a preview url using a server req object", async (ctx) => {
 	};
 
 	mockPrismicRestAPIV2({
-		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		queryRequiredParams: {
 			ref: previewToken,
@@ -94,7 +92,6 @@ it("resolves a preview url using a Web API-based server req object", async (ctx)
 	};
 
 	mockPrismicRestAPIV2({
-		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		queryRequiredParams: {
 			ref: previewToken,
@@ -128,7 +125,6 @@ it("resolves a preview url using a Web API-based server req object containing a 
 	};
 
 	mockPrismicRestAPIV2({
-		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		queryRequiredParams: {
 			ref: previewToken,
@@ -162,7 +158,6 @@ it("allows providing an explicit documentId and previewToken", async (ctx) => {
 	};
 
 	mockPrismicRestAPIV2({
-		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		queryRequiredParams: {
 			ref: previewToken,
@@ -240,7 +235,6 @@ it("returns defaultURL if resolved URL is not a string", async (ctx) => {
 	const defaultURL = "defaultURL";
 
 	mockPrismicRestAPIV2({
-		// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 		queryResponse,
 		queryRequiredParams: {
 			ref: previewToken,

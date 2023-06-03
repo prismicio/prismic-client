@@ -112,23 +112,12 @@ it("resolves a document", (ctx) => {
 	const doc = ctx.mock.value.document();
 	doc.url = "/foo";
 
-	expect(
-		asLinkAttrs(
-			// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
-			doc,
-		),
-	).toEqual({
+	expect(asLinkAttrs(doc)).toEqual({
 		href: doc.url,
 		target: undefined,
 		rel: undefined,
 	});
-	expect(
-		asLinkAttrs(
-			// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
-			doc,
-			{ linkResolver: () => "/linkResolver" },
-		),
-	).toEqual({
+	expect(asLinkAttrs(doc, { linkResolver: () => "/linkResolver" })).toEqual({
 		href: "/linkResolver",
 		target: undefined,
 		rel: undefined,

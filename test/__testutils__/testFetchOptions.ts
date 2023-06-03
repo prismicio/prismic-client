@@ -40,7 +40,6 @@ export const testFetchOptions = (
 		mockPrismicRestAPIV2({
 			ctx,
 			repositoryResponse,
-			// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 			queryResponse: ctx.mock.api.query({
 				documents: [ctx.mock.value.document()],
 			}),
@@ -82,7 +81,6 @@ export const testFetchOptions = (
 		mockPrismicRestAPIV2({
 			ctx,
 			repositoryResponse,
-			// @ts-expect-error - Remove after publishing https://github.com/prismicio/prismic-client/pull/304
 			queryResponse: ctx.mock.api.query({
 				documents: [ctx.mock.value.document()],
 			}),
