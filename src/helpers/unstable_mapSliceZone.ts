@@ -7,29 +7,20 @@ import { Slice } from "../types/value/slice";
 type LazyModule<T> = () => Promise<T | { default: T }>;
 
 /**
+ * Mark a type as potentially lazy-loaded via a module.
+ */
+type MaybeLazyModule<T> = T | LazyModule<T>;
+
+/**
  * Returns the type of a `SliceLike` type.
  *
  * @typeParam Slice - The Slice from which the type will be extracted.
  */
-type ExtractSliceType<Slice extends SliceLike> = Slice extends SliceLikeRestV2
-	? Slice["slice_type"]
-	: Slice extends SliceLikeGraphQL
-	? Slice["type"]
+type ExtractSliceType<TSlice extends SliceLike> = TSlice extends Slice
+	? TSlice["slice_type"]
+	: TSlice extends SliceGraphQLLike
+	? TSlice["type"]
 	: never;
-
-/**
- * The minimum required properties to represent a Prismic Slice from the Prismic
- * Rest API V2 for the `unstable_mapSliceZone()` helper.
- *
- * If using Prismic's Rest API V2, use the `Slice` export from
- * `@prismicio/client` for a full interface.
- *
- * @typeParam SliceType - Type name of the Slice.
- */
-type SliceLikeRestV2<SliceType extends string = string> = Pick<
-	Slice<SliceType>,
-	"slice_type" | "id"
->;
 
 /**
  * The minimum required properties to represent a Prismic Slice from the Prismic
@@ -37,8 +28,8 @@ type SliceLikeRestV2<SliceType extends string = string> = Pick<
  *
  * @typeParam SliceType - Type name of the Slice.
  */
-type SliceLikeGraphQL<SliceType extends string = string> = {
-	type: Slice<SliceType>["slice_type"];
+type SliceGraphQLLike<TSliceType extends string = string> = {
+	type: Slice<TSliceType>["slice_type"];
 };
 
 /**
@@ -50,9 +41,9 @@ type SliceLikeGraphQL<SliceType extends string = string> = {
  *
  * @typeParam SliceType - Type name of the Slice.
  */
-type SliceLike<SliceType extends string = string> =
-	| SliceLikeRestV2<SliceType>
-	| SliceLikeGraphQL<SliceType>;
+type SliceLike<TSliceType extends string = string> =
+	| Slice<TSliceType>
+	| SliceGraphQLLike<TSliceType>;
 
 /**
  * A looser version of the `SliceZone` type from `@prismicio/client` using
@@ -89,8 +80,7 @@ type MappedSliceLike = {
  *   made available to all Slice mappers.
  */
 type SliceMapperArgs<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	TSlice extends SliceLike = any,
+	TSlice extends SliceLike = SliceLike,
 	TContext = unknown,
 > = {
 	/**
@@ -110,7 +100,9 @@ type SliceMapperArgs<
 	// reference limtiations. If we had another generic to determine the full
 	// union of Slice types, it would include TSlice. This causes TypeScript to
 	// throw a compilation error.
-	slices: SliceZoneLike<SliceLike>;
+	slices: SliceZoneLike<
+		TSlice extends SliceGraphQLLike ? SliceGraphQLLike : Slice
+	>;
 
 	/**
 	 * Arbitrary data passed to `unstable_mapSliceZone()` and made available to
@@ -123,36 +115,39 @@ type SliceMapperArgs<
  * A record of mappers.
  */
 export type Mappers<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	TSlice extends SliceLike = any,
+	TSlice extends SliceLike = SliceLike,
 	TContext = unknown,
-> = Partial<{
-	[P in ExtractSliceType<TSlice>]: Mapper<
-		Extract<TSlice, SliceLike<P>>,
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		any,
-		TContext
+> = {
+	[P in ExtractSliceType<TSlice>]: MaybeLazyModule<
+		Mapper<
+			Extract<TSlice, SliceLike<P>>,
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			any,
+			TContext
+		>
 	>;
-}>;
+};
 
 /**
  * A function that maps a Slice and its metadata to a modified version. The
  * return value will replace the Slice in the Slice Zone.
  */
 export type Mapper<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	TSlice extends SliceLike = any,
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	TProps extends Record<string, any> | undefined | void = any,
+	TSlice extends SliceLike = SliceLike,
+	TMappedSlice extends Record<string, unknown> | undefined | void =
+		| Record<string, unknown>
+		| undefined
+		| void,
 	TContext = unknown,
-> = (args: MapperArgs<TSlice, TContext>) => TProps | Promise<TProps>;
+> = (
+	args: MapperArgs<TSlice, TContext>,
+) => TMappedSlice | Promise<TMappedSlice>;
 
 /**
  * Arguments provided to a mapper function.
  */
 export type MapperArgs<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	TSlice extends SliceLike = any,
+	TSlice extends SliceLike = SliceLike,
 	TContext = unknown,
 > = SliceMapperArgs<TSlice, TContext>;
 
@@ -162,8 +157,7 @@ export type MapperArgs<
 type ResolveLazyMapperModule<TMapper extends Mapper | LazyModule<Mapper>> =
 	TMapper extends LazyModule<Mapper>
 		? Awaited<ReturnType<TMapper>> extends {
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				default: any;
+				default: unknown;
 		  }
 			? Awaited<ReturnType<TMapper>>["default"]
 			: Awaited<ReturnType<TMapper>>
@@ -174,10 +168,10 @@ type ResolveLazyMapperModule<TMapper extends Mapper | LazyModule<Mapper>> =
  */
 type MapSliceLike<
 	TSliceLike extends SliceLike,
-	TMappers extends Record<string, Mapper>,
-> = TSliceLike extends SliceLikeRestV2
+	TMappers extends Mappers,
+> = TSliceLike extends Slice
 	? TSliceLike["slice_type"] extends keyof TMappers
-		? SliceLikeRestV2<TSliceLike["slice_type"]> &
+		? Slice<TSliceLike["slice_type"]> &
 				MappedSliceLike &
 				Awaited<
 					ReturnType<
@@ -185,9 +179,9 @@ type MapSliceLike<
 					>
 				>
 		: TSliceLike
-	: TSliceLike extends SliceLikeGraphQL
+	: TSliceLike extends SliceGraphQLLike
 	? TSliceLike["type"] extends keyof TMappers
-		? SliceLikeGraphQL<TSliceLike["type"]> &
+		? SliceGraphQLLike<TSliceLike["type"]> &
 				MappedSliceLike &
 				Awaited<
 					ReturnType<ResolveLazyMapperModule<TMappers[TSliceLike["type"]]>>
@@ -217,7 +211,7 @@ type MapSliceLike<
  */
 export function unstable_mapSliceZone<
 	TSliceLike extends SliceLike,
-	TMappers extends Record<string, Mapper>,
+	TMappers extends Mappers,
 	TContext = unknown,
 >(
 	sliceZone: SliceZoneLike<TSliceLike>,
