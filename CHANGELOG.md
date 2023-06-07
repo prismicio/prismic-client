@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.1.0](https://github.com/prismicio/prismic-client/compare/v7.0.1...v7.1.0) (2023-06-07)
+
+
+### Features
+
+* add `unstable_mapSliceZone()` ([#302](https://github.com/prismicio/prismic-client/issues/302)) ([9e604d3](https://github.com/prismicio/prismic-client/commit/9e604d310eff9f4cae7c4340084501c68611ae9e))
+* **customtype:** support new format property ([#295](https://github.com/prismicio/prismic-client/issues/295)) ([c68a557](https://github.com/prismicio/prismic-client/commit/c68a5576b6a264954181a2adab76744adc48149a))
+
+
+### Bug Fixes
+
+* type `PrismicDocument.*_publication_date` as `TimestampField<"filled">` ([#304](https://github.com/prismicio/prismic-client/issues/304)) ([7cce22a](https://github.com/prismicio/prismic-client/commit/7cce22a35cd3ef327920cf8a8f8289d5c38cb7bc))
+
 ### [7.0.1](https://github.com/prismicio/prismic-client/compare/v7.0.0...v7.0.1) (2023-05-22)
 
 
