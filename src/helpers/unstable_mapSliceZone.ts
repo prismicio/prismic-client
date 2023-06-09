@@ -18,9 +18,20 @@ type MaybeLazyModule<T> = T | LazyModule<T>;
  */
 type ExtractSliceType<TSlice extends SliceLike> = TSlice extends Slice
 	? TSlice["slice_type"]
-	: TSlice extends SliceGraphQLLike
+	: TSlice extends SliceLikeGraphQL
 	? TSlice["type"]
 	: never;
+
+/**
+ * The minimum required properties to represent a Prismic Slice from the Prismic
+ * Rest API V2 for the `unstable_mapSliceZone()` helper.
+ *
+ * @typeParam SliceType - Type name of the Slice.
+ */
+type SliceLikeRestV2<TSliceType extends string = string> = Pick<
+	Slice<TSliceType>,
+	"id" | "slice_type"
+>;
 
 /**
  * The minimum required properties to represent a Prismic Slice from the Prismic
@@ -28,7 +39,7 @@ type ExtractSliceType<TSlice extends SliceLike> = TSlice extends Slice
  *
  * @typeParam SliceType - Type name of the Slice.
  */
-type SliceGraphQLLike<TSliceType extends string = string> = {
+type SliceLikeGraphQL<TSliceType extends string = string> = {
 	type: Slice<TSliceType>["slice_type"];
 };
 
@@ -42,8 +53,8 @@ type SliceGraphQLLike<TSliceType extends string = string> = {
  * @typeParam SliceType - Type name of the Slice.
  */
 type SliceLike<TSliceType extends string = string> =
-	| Slice<TSliceType>
-	| SliceGraphQLLike<TSliceType>;
+	| SliceLikeRestV2<TSliceType>
+	| SliceLikeGraphQL<TSliceType>;
 
 /**
  * A looser version of the `SliceZone` type from `@prismicio/client` using
@@ -101,7 +112,7 @@ type SliceMapperArgs<
 	// union of Slice types, it would include TSlice. This causes TypeScript to
 	// throw a compilation error.
 	slices: SliceZoneLike<
-		TSlice extends SliceGraphQLLike ? SliceGraphQLLike : Slice
+		TSlice extends SliceLikeGraphQL ? SliceLikeGraphQL : SliceLikeRestV2
 	>;
 
 	/**
@@ -171,7 +182,7 @@ type MapSliceLike<
 	TMappers extends Mappers,
 > = TSliceLike extends Slice
 	? TSliceLike["slice_type"] extends keyof TMappers
-		? Slice<TSliceLike["slice_type"]> &
+		? SliceLikeRestV2<TSliceLike["slice_type"]> &
 				MappedSliceLike &
 				Awaited<
 					ReturnType<
@@ -179,9 +190,9 @@ type MapSliceLike<
 					>
 				>
 		: TSliceLike
-	: TSliceLike extends SliceGraphQLLike
+	: TSliceLike extends SliceLikeGraphQL
 	? TSliceLike["type"] extends keyof TMappers
-		? SliceGraphQLLike<TSliceLike["type"]> &
+		? SliceLikeGraphQL<TSliceLike["type"]> &
 				MappedSliceLike &
 				Awaited<
 					ReturnType<ResolveLazyMapperModule<TMappers[TSliceLike["type"]]>>
