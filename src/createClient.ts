@@ -6,6 +6,7 @@ import { findMasterRef } from "./lib/findMasterRef";
 import { findRefByID } from "./lib/findRefByID";
 import { findRefByLabel } from "./lib/findRefByLabel";
 import { getPreviewCookie } from "./lib/getPreviewCookie";
+import { isActivePreviewCookie } from "./lib/isActivePreviewCookie";
 import { minifyGraphQLQuery } from "./lib/minifyGraphQLQuery";
 import { someTagsFilter } from "./lib/someTagsFilter";
 import { typeFilter } from "./lib/typeFilter";
@@ -1748,7 +1749,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 				previewRef = getPreviewCookie(cookieJar);
 			}
 
-			if (previewRef) {
+			if (previewRef && isActivePreviewCookie(previewRef)) {
 				return previewRef;
 			}
 		}

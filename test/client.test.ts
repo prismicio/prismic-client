@@ -8,6 +8,8 @@ import { createTestClient } from "./__testutils__/createClient";
 import { getMasterRef } from "./__testutils__/getMasterRef";
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
 
+import { previewRef } from "./__fixtures__/previewRef";
+
 import * as prismic from "../src";
 
 it("createClient creates a Client", () => {
@@ -280,17 +282,16 @@ it("uses master ref if ref thunk param returns non-string value", async (ctx) =>
 });
 
 it("uses browser preview ref if available", async (ctx) => {
-	const previewRef = "previewRef";
 	globalThis.document = {
 		...globalThis.document,
-		cookie: `io.prismic.preview=${previewRef}`,
+		cookie: `io.prismic.preview=${previewRef.active}`,
 	};
 
 	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
 
 	mockPrismicRestAPIV2({
 		queryResponse,
-		queryRequiredParams: { ref: previewRef },
+		queryRequiredParams: { ref: previewRef.active },
 		ctx,
 	});
 
@@ -303,10 +304,9 @@ it("uses browser preview ref if available", async (ctx) => {
 });
 
 it("uses req preview ref if available", async (ctx) => {
-	const previewRef = "previewRef";
 	const req = {
 		headers: {
-			cookie: `io.prismic.preview=${previewRef}`,
+			cookie: `io.prismic.preview=${previewRef.active}`,
 		},
 	};
 
@@ -314,7 +314,7 @@ it("uses req preview ref if available", async (ctx) => {
 
 	mockPrismicRestAPIV2({
 		queryResponse,
-		queryRequiredParams: { ref: previewRef },
+		queryRequiredParams: { ref: previewRef.active },
 		ctx,
 	});
 
@@ -326,9 +326,8 @@ it("uses req preview ref if available", async (ctx) => {
 });
 
 it("supports req with Web APIs", async (ctx) => {
-	const previewRef = "previewRef";
 	const headers = new Headers();
-	headers.set("cookie", `io.prismic.preview=${previewRef}`);
+	headers.set("cookie", `io.prismic.preview=${previewRef.active}`);
 	const req = {
 		headers,
 		url: "https://example.com",
@@ -338,7 +337,7 @@ it("supports req with Web APIs", async (ctx) => {
 
 	mockPrismicRestAPIV2({
 		queryResponse,
-		queryRequiredParams: { ref: previewRef },
+		queryRequiredParams: { ref: previewRef.active },
 		ctx,
 	});
 
@@ -372,10 +371,9 @@ it("ignores req without cookies", async (ctx) => {
 });
 
 it("does not use preview ref if auto previews are disabled", async (ctx) => {
-	const previewRef = "previewRef";
 	globalThis.document = {
 		...globalThis.document,
-		cookie: `io.prismic.preview=${previewRef}`,
+		cookie: `io.prismic.preview=${previewRef.active}`,
 	};
 
 	const repositoryResponse = ctx.mock.api.repository();
@@ -403,13 +401,39 @@ it("does not use preview ref if auto previews are disabled", async (ctx) => {
 	mockPrismicRestAPIV2({
 		repositoryResponse,
 		queryResponse,
-		queryRequiredParams: { ref: previewRef },
+		queryRequiredParams: { ref: previewRef.active },
 		ctx,
 	});
 
 	const resWithPreviews = await client.get();
 
 	expect(resWithPreviews).toStrictEqual(queryResponse);
+
+	globalThis.document.cookie = "";
+});
+
+it("does not use preview ref if preview ref is inactive", async (ctx) => {
+	globalThis.document = {
+		...globalThis.document,
+		cookie: `io.prismic.preview=${previewRef.inactive}`,
+	};
+
+	const repositoryResponse = ctx.mock.api.repository();
+	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
+	const masterRef = getMasterRef(repositoryResponse);
+
+	const client = createTestClient();
+
+	mockPrismicRestAPIV2({
+		repositoryResponse,
+		queryResponse,
+		queryRequiredParams: { ref: masterRef },
+		ctx,
+	});
+
+	const res = await client.get();
+
+	expect(res).toStrictEqual(queryResponse);
 
 	globalThis.document.cookie = "";
 });
