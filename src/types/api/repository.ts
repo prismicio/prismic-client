@@ -52,7 +52,9 @@ export interface Repository {
 	 */
 	oauth_initiate: string;
 
-	// TODO: Describe this field
+	/**
+	 * The token used for the OAuth process for the repository.
+	 */
 	oauth_token: string;
 
 	/**
