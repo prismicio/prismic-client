@@ -35,7 +35,7 @@ export interface Repository {
 
 	/**
 	 * @deprecated Tags are only available in the forms object.
-	 * 
+	 *
 	 * @see More details in the blog post "A change to how the Prismic API handles tags": {@link https://prismic.io/blog/a-change-to-how-the-prismic-api-handles-tags}
 	 */
 	tags: string[];
