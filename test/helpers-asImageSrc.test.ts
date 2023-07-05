@@ -27,6 +27,8 @@ it("applies given Imgix URL parameters", () => {
 	};
 
 	expect(asImageSrc(field, { sat: 100 })).toBe(`${field.url}&sat=100`);
+	expect(asImageSrc(field, { w: 100 })).toBe(`${field.url}&w=100`);
+	expect(asImageSrc(field, { width: 100 })).toBe(`${field.url}&width=100`);
 });
 
 it("returns null when image field is empty", () => {
