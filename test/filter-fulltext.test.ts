@@ -16,3 +16,8 @@ testFilter(
 	'[fulltext(my.product.title, "phone")]',
 	prismic.filter.fulltext("my.product.title", "phone"),
 );
+
+testFilter(
+	'[fulltext(my.product.description, "\\"quote\\"")]',
+	prismic.filter.fulltext("my.product.description", '"quote"'),
+);
