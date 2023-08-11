@@ -370,6 +370,7 @@ export interface CreateClient {
  *
  * @typeParam TDocuments - A map of Prismic document type IDs mapped to their
  *   TypeScript type.
+ *
  * @param repositoryNameOrEndpoint - The Prismic repository name or full Rest
  *   API V2 endpoint for the repository.
  * @param options - Configuration that determines how content will be queried
@@ -732,6 +733,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * for all documents and is made available on its `id` property. A UID is
 	 * provided in the Prismic editor and is unique among all documents of its
 	 * custom type.
+	 *
 	 * @example
 	 *
 	 * ```ts
@@ -763,6 +765,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * for all documents and is made available on its `id` property. A UID is
 	 * provided in the Prismic editor and is unique among all documents of its
 	 * custom type.
+	 *
 	 * @example
 	 *
 	 * ```ts
@@ -800,6 +803,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * for all documents and is made available on its `id` property. A UID is
 	 * provided in the Prismic editor and is unique among all documents of its
 	 * custom type.
+	 *
 	 * @example
 	 *
 	 * ```ts
@@ -834,6 +838,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * for all documents and is made available on its `id` property. A UID is
 	 * provided in the Prismic editor and is unique among all documents of its
 	 * custom type.
+	 *
 	 * @example
 	 *
 	 * ```ts
@@ -874,6 +879,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * for all documents and is made available on its `id` property. A UID is
 	 * provided in the Prismic editor and is unique among all documents of its
 	 * custom type.
+	 *
 	 * @example
 	 *
 	 * ```ts
@@ -920,6 +926,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * for all documents and is made available on its `id` property. A UID is
 	 * provided in the Prismic editor and is unique among all documents of its
 	 * custom type.
+	 *
 	 * @example
 	 *
 	 * ```ts
@@ -964,6 +971,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * instance. For example, a repository may be configured to contain just one
 	 * Settings document. This is in contrast to a repeatable custom type which
 	 * allows multiple instances of itself.
+	 *
 	 * @example
 	 *
 	 * ```ts

@@ -47,10 +47,6 @@ export const asText: {
 	 *
 	 * @deprecated Use object-style configuration instead.
 	 *
-	 *   ```ts
-	 *   asText(field);
-	 *   asText(field, { separator });
-	 *   ```
 	 * @param richTextField - A rich text or title field from Prismic
 	 * @param separator - Separator used to join each element, defaults to a space
 	 *
