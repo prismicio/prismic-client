@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.1.1](https://github.com/prismicio/prismic-client/compare/v7.1.0...v7.1.1) (2023-08-11)
+
+
+### Bug Fixes
+
+* reduce the return type of `unstable_mapSliceZone()` to only include necessary properties ([#308](https://github.com/prismicio/prismic-client/issues/308)) ([d52cdfd](https://github.com/prismicio/prismic-client/commit/d52cdfd03b7a105efc3b2a4ce1bf421097c89fe3))
+* throw `NotFoundError` when a document cannot be found ([#316](https://github.com/prismicio/prismic-client/issues/316)) ([74fce89](https://github.com/prismicio/prismic-client/commit/74fce893e812e29c49c8704d46c31b0f735ab176))
+
+
+### Documentation
+
+* Updated tags and oauth_token definitions in repository.ts ([#311](https://github.com/prismicio/prismic-client/issues/311)) ([cad174d](https://github.com/prismicio/prismic-client/commit/cad174da5d1099ed61619e40c34fb420e9186186))
+
+
+### Chore
+
+* **deps:** update all dependencies ([#307](https://github.com/prismicio/prismic-client/issues/307)) ([eb8cccc](https://github.com/prismicio/prismic-client/commit/eb8cccc4426d0696aa660588ffcc050ea8fb0104))
+* **deps:** update dependencies ([#317](https://github.com/prismicio/prismic-client/issues/317)) ([d80b64a](https://github.com/prismicio/prismic-client/commit/d80b64ab39d181653f7bd08c97cae3f0564dc219))
+
 ## [7.1.0](https://github.com/prismicio/prismic-client/compare/v7.0.1...v7.1.0) (2023-06-07)
 
 
