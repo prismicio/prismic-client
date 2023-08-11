@@ -10,6 +10,7 @@ import { documentToLinkField } from "./documentToLinkField";
  *
  * @typeParam ReturnType - Return type of your link resolver function, useful if
  *   you prefer to return a complex object
+ *
  * @param linkToDocumentField - A document link field to resolve
  *
  * @returns Resolved URL
@@ -75,6 +76,7 @@ export const asLink: {
 	 *
 	 * @returns Resolved URL or, if the provided link field or document is empty,
 	 *   `null`
+	 *
 	 * @see Prismic link resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
 	 * @see Prismic API `routes` options documentation: {@link https://prismic.io/docs/route-resolver}
 	 */
@@ -95,10 +97,6 @@ export const asLink: {
 	 *
 	 * @deprecated Use object-style configuration instead.
 	 *
-	 *   ```ts
-	 *   asLink(field);
-	 *   asLink(field, { linkResolver });
-	 *   ```
 	 * @typeParam LinkResolverFunctionReturnType - link resolver function return
 	 *   type
 	 * @typeParam Field - Link field or Prismic document to resolve to a URL
@@ -110,6 +108,7 @@ export const asLink: {
 	 *
 	 * @returns Resolved URL or, if the provided link field or document is empty,
 	 *   `null`
+	 *
 	 * @see Prismic link resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
 	 * @see Prismic API `routes` options documentation: {@link https://prismic.io/docs/route-resolver}
 	 */

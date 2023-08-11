@@ -255,12 +255,6 @@ export const asHTML: {
 	 *
 	 * @deprecated Use object-style configuration instead.
 	 *
-	 *   ```ts
-	 *   asHTML(field);
-	 *   asHTML(field, { linkResolver });
-	 *   asHTML(field, { serializer });
-	 *   asHTML(field, { linkResolver, serializer });
-	 *   ```
 	 * @param richTextField - A rich text or title field from Prismic
 	 * @param linkResolver - An optional link resolver function to resolve links,
 	 *   without it you're expected to use the `routes` options from the API

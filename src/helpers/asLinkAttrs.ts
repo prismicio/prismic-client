@@ -77,11 +77,13 @@ type AsLinkAttrsReturnType<
  *   type
  * @typeParam Field - Link field or Prismic document to resolve to link
  *   attributes
+ *
  * @param linkFieldOrDocument - Any kind of link field or a document to resolve
  * @param config - Configuration that determines the output of `asLinkAttrs()`
  *
  * @returns Resolved set of link attributes or, if the provided link field or
  *   document is empty, and empty object
+ *
  * @see Prismic link resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
  * @see Prismic API `routes` options documentation: {@link https://prismic.io/docs/route-resolver}
  */
