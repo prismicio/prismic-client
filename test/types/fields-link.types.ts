@@ -101,14 +101,16 @@ expectType<prismic.LinkField<"foo">>({
 	tags: [],
 	lang: "string",
 });
-expectType<prismic.LinkField<"foo">>({
-	link_type: prismic.LinkType.Document,
-	id: "string",
+expectType<prismic.LinkField<"foo">>(
 	// @ts-expect-error - Document type must match the given type.
-	type: "string",
-	tags: [],
-	lang: "string",
-});
+	{
+		link_type: prismic.LinkType.Document,
+		id: "string",
+		type: "string",
+		tags: [],
+		lang: "string",
+	},
+);
 
 /**
  * Supports custom document language for document links.
@@ -120,14 +122,16 @@ expectType<prismic.LinkField<string, "fr-fr">>({
 	tags: [],
 	lang: "fr-fr",
 });
-expectType<prismic.LinkField<string, "fr-fr">>({
-	link_type: prismic.LinkType.Document,
-	id: "string",
-	type: "string",
-	tags: [],
+expectType<prismic.LinkField<string, "fr-fr">>(
 	// @ts-expect-error - Document language must match the given type.
-	lang: "string",
-});
+	{
+		link_type: prismic.LinkType.Document,
+		id: "string",
+		type: "string",
+		tags: [],
+		lang: "string",
+	},
+);
 
 /**
  * Supports custom document data for document links.
