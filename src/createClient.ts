@@ -664,7 +664,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			return firstResult;
 		}
 
-		throw new PrismicError("No documents were returned", url, undefined);
+		throw new NotFoundError("No documents were returned", url, undefined);
 	}
 
 	/**
