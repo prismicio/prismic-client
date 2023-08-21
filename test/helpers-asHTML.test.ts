@@ -1,61 +1,74 @@
 import { expect, it } from "vitest";
 
-import { htmlRichTextFunctionSerializer } from "./__fixtures__/htmlRichTextFunctionSerializer";
-import { htmlRichTextMapSerializer } from "./__fixtures__/htmlRichTextMapSerializer";
+import { createRichTextFixtures } from "./__testutils__/createRichTextFixtures";
+
 import { linkResolver } from "./__fixtures__/linkResolver";
-import { richTextFixture } from "./__fixtures__/richText";
+import { partialHTMLRichTextFunctionSerializer } from "./__fixtures__/partialHTMLRichTextFunctionSerializer";
+import { partialHTMLRichTextMapSerializer } from "./__fixtures__/partialHTMLRichTextMapSerializer";
 
 import { RichTextField, asHTML } from "../src";
 
 it("serializes with default serializer", () => {
-	expect(asHTML(richTextFixture.en, { linkResolver })).toMatchSnapshot();
+	const richTextFixtures = createRichTextFixtures();
+
+	expect(asHTML(richTextFixtures.en, { linkResolver })).toMatchSnapshot();
 
 	// TODO: Remove when we remove support for deprecated tuple-style configuration.
-	expect(asHTML(richTextFixture.en, linkResolver)).toBe(
-		asHTML(richTextFixture.en, { linkResolver }),
+	expect(asHTML(richTextFixtures.en, linkResolver)).toBe(
+		asHTML(richTextFixtures.en, { linkResolver }),
 	);
 });
 
 it("serializes with a custom function serializer", () => {
+	const richTextFixtures = createRichTextFixtures();
+
 	expect(
-		asHTML(richTextFixture.en, {
+		asHTML(richTextFixtures.en, {
 			linkResolver,
-			serializer: htmlRichTextFunctionSerializer,
+			serializer: partialHTMLRichTextFunctionSerializer,
 		}),
 	).toMatchSnapshot();
 
 	// TODO: Remove when we remove support for deprecated tuple-style configuration.
 	expect(
-		asHTML(richTextFixture.en, linkResolver, htmlRichTextFunctionSerializer),
-	).toBe(
-		asHTML(richTextFixture.en, {
+		asHTML(
+			richTextFixtures.en,
 			linkResolver,
-			serializer: htmlRichTextFunctionSerializer,
+			partialHTMLRichTextFunctionSerializer,
+		),
+	).toBe(
+		asHTML(richTextFixtures.en, {
+			linkResolver,
+			serializer: partialHTMLRichTextFunctionSerializer,
 		}),
 	);
 });
 
 it("serializes with a custom map serializer", () => {
+	const richTextFixtures = createRichTextFixtures();
+
 	expect(
-		asHTML(richTextFixture.en, {
+		asHTML(richTextFixtures.en, {
 			linkResolver,
-			serializer: htmlRichTextMapSerializer,
+			serializer: partialHTMLRichTextMapSerializer,
 		}),
 	).toMatchSnapshot();
 
 	// TODO: Remove when we remove support for deprecated tuple-style configuration.
 	expect(
-		asHTML(richTextFixture.en, linkResolver, htmlRichTextMapSerializer),
+		asHTML(richTextFixtures.en, linkResolver, partialHTMLRichTextMapSerializer),
 	).toBe(
-		asHTML(richTextFixture.en, {
+		asHTML(richTextFixtures.en, {
 			linkResolver,
-			serializer: htmlRichTextMapSerializer,
+			serializer: partialHTMLRichTextMapSerializer,
 		}),
 	);
 });
 
 it("escapes external links to prevent XSS", () => {
-	expect(asHTML(richTextFixture.xss, { linkResolver })).toMatchSnapshot();
+	const richTextFixtures = createRichTextFixtures();
+
+	expect(asHTML(richTextFixtures.xss, { linkResolver })).toMatchSnapshot();
 });
 
 it("omits target attribute on links without a target value", () => {
