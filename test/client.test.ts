@@ -686,7 +686,10 @@ it("throws NotFoundError if repository does not exist", async (ctx) => {
 
 it("retries after `retry-after` milliseconds if response code is 429", async (ctx) => {
 	const retryAfter = 200; // ms
-	const TEST_TOLERANCE = 100; // ms
+	/**
+	 * The number of milliseconds that time-measuring tests can vary.
+	 */
+	const testTolerance = 100;
 	/**
 	 * The number of times 429 is returned.
 	 */
@@ -708,6 +711,8 @@ it("retries after `retry-after` milliseconds if response code is 429", async (ct
 
 	let responseTries = 0;
 
+	// Override the query endpoint to return a 429 while `responseTries` is
+	// less than or equal to `retryResponseQty`
 	ctx.server.use(
 		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
 			responseTries++;
@@ -726,7 +731,7 @@ it("retries after `retry-after` milliseconds if response code is 429", async (ct
 		}),
 	);
 
-	// Rate limited. Should resolve after around 1000ms.
+	// Rate limited. Should resolve roughly after retryAfter * retryResponseQty milliseconds.
 	const t0_0 = performance.now();
 	const res0 = await client.get();
 	const t0_1 = performance.now();
@@ -734,7 +739,7 @@ it("retries after `retry-after` milliseconds if response code is 429", async (ct
 	expect(res0).toStrictEqual(queryResponse);
 	expect(t0_1 - t0_0).toBeGreaterThanOrEqual(retryAfter * retryResponseQty);
 	expect(t0_1 - t0_0).toBeLessThanOrEqual(
-		retryAfter * retryResponseQty + TEST_TOLERANCE,
+		retryAfter * retryResponseQty + testTolerance,
 	);
 
 	// Not rate limited. Should resolve nearly immediately.
@@ -744,5 +749,5 @@ it("retries after `retry-after` milliseconds if response code is 429", async (ct
 
 	expect(res1).toStrictEqual(queryResponse);
 	expect(t1_1 - t1_0).toBeGreaterThanOrEqual(0);
-	expect(t1_1 - t1_0).toBeLessThanOrEqual(TEST_TOLERANCE);
+	expect(t1_1 - t1_0).toBeLessThanOrEqual(testTolerance);
 });
