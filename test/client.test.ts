@@ -810,12 +810,7 @@ it("throws if a non-2xx response is returned even after retrying", async (ctx) =
 	 */
 	const testTolerance = 100;
 
-	const queryResponse = prismicM.api.query({ seed: ctx.task.name });
-
-	mockPrismicRestAPIV2({
-		ctx,
-		queryResponse,
-	});
+	mockPrismicRestAPIV2({ ctx });
 
 	const client = createTestClient();
 
