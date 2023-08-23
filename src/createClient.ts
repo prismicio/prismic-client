@@ -52,9 +52,9 @@ export const REPOSITORY_CACHE_TTL = 5000;
 export const GET_ALL_QUERY_DELAY = 500;
 
 /**
- * The number of milliseconds to wait before retrying a rate-limited `fetch()`
- * request (429 response code). The default value is only used if the response
- * does not include a `retry-after` header.
+ * The default number of milliseconds to wait before retrying a rate-limited
+ * `fetch()` request (429 response code). The default value is only used if the
+ * response does not include a `retry-after` header.
  *
  * The API allows up to 200 requests per second.
  */
@@ -135,7 +135,7 @@ export interface ResponseLike {
 }
 
 /**
- * THe minimum required properties from Headers.
+ * The minimum required properties from Headers.
  */
 export interface HeadersLike {
 	get(name: string): string | null;
