@@ -683,3 +683,66 @@ it("throws NotFoundError if repository does not exist", async (ctx) => {
 	);
 	await expect(() => client.get()).rejects.toThrowError(prismic.NotFoundError);
 });
+
+it("retries after `retry-after` milliseconds if response code is 429", async (ctx) => {
+	const retryAfter = 200; // ms
+	const TEST_TOLERANCE = 100; // ms
+	/**
+	 * The number of times 429 is returned.
+	 */
+	const retryResponseQty = 2;
+
+	const queryResponse = prismicM.api.query({ seed: ctx.task.name });
+
+	mockPrismicRestAPIV2({
+		ctx,
+		queryResponse,
+	});
+
+	const client = createTestClient();
+
+	const queryEndpoint = new URL(
+		"documents/search",
+		`${client.endpoint}/`,
+	).toString();
+
+	let responseTries = 0;
+
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
+			responseTries++;
+
+			if (responseTries <= retryResponseQty) {
+				return res(
+					ctx.status(429),
+					ctx.json({
+						status_code: 429,
+						status_message:
+							"Your request count (11) is over the allowed limit of 10.",
+					}),
+					ctx.set("retry-after", retryAfter.toString()),
+				);
+			}
+		}),
+	);
+
+	// Rate limited. Should resolve after around 1000ms.
+	const t0_0 = performance.now();
+	const res0 = await client.get();
+	const t0_1 = performance.now();
+
+	expect(res0).toStrictEqual(queryResponse);
+	expect(t0_1 - t0_0).toBeGreaterThanOrEqual(retryAfter * retryResponseQty);
+	expect(t0_1 - t0_0).toBeLessThanOrEqual(
+		retryAfter * retryResponseQty + TEST_TOLERANCE,
+	);
+
+	// Not rate limited. Should resolve nearly immediately.
+	const t1_0 = performance.now();
+	const res1 = await client.get();
+	const t1_1 = performance.now();
+
+	expect(res1).toStrictEqual(queryResponse);
+	expect(t1_1 - t1_0).toBeGreaterThanOrEqual(0);
+	expect(t1_1 - t1_0).toBeLessThanOrEqual(TEST_TOLERANCE);
+});
