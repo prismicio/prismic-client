@@ -52,6 +52,15 @@ export const REPOSITORY_CACHE_TTL = 5000;
 export const GET_ALL_QUERY_DELAY = 500;
 
 /**
+ * The default number of milliseconds to wait before retrying a rate-limited
+ * `fetch()` request (429 response code). The default value is only used if the
+ * response does not include a `retry-after` header.
+ *
+ * The API allows up to 200 requests per second.
+ */
+const DEFUALT_RETRY_AFTER_MS = 1000;
+
+/**
  * Extracts one or more Prismic document types that match a given Prismic
  * document type. If no matches are found, no extraction is performed and the
  * union of all provided Prismic document types are returned.
@@ -120,8 +129,16 @@ export interface RequestInitLike extends Pick<RequestInit, "cache"> {
  */
 export interface ResponseLike {
 	status: number;
+	headers: HeadersLike;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	json(): Promise<any>;
+}
+
+/**
+ * The minimum required properties from Headers.
+ */
+export interface HeadersLike {
+	get(name: string): string | null;
 }
 
 /**
@@ -342,6 +359,7 @@ type ResolvePreviewArgs<LinkResolverReturnType> = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type FetchJobResult<TJSON = any> = {
 	status: number;
+	headers: HeadersLike;
 	json: TJSON;
 };
 
@@ -1839,6 +1857,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 					return {
 						status: res.status,
+						headers: res.headers,
 						json,
 					};
 				})
@@ -1895,6 +1914,25 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 					url,
 					undefined,
 				);
+			}
+
+			// Too Many Requests
+			// - Exceeded the maximum number of requests per second
+			case 429: {
+				const parsedRetryAfter = Number(res.headers.get("retry-after"));
+				const delay = Number.isNaN(parsedRetryAfter)
+					? DEFUALT_RETRY_AFTER_MS
+					: parsedRetryAfter;
+
+				return await new Promise((resolve, reject) => {
+					setTimeout(async () => {
+						try {
+							resolve(await this.fetch(url, params));
+						} catch (error) {
+							reject(error);
+						}
+					}, delay);
+				});
 			}
 		}
 
