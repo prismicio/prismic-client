@@ -65,7 +65,7 @@ export const serializeStandardTag = <
 			node,
 			generalAttributes,
 		)}>${children}</${tag}>`;
-	}) as HTMLStrictRichTextMapSerializer[BlockType];
+	}) as NonNullable<HTMLStrictRichTextMapSerializer[BlockType]>;
 };
 
 export const serializePreFormatted = (
