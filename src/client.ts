@@ -50,6 +50,15 @@ export const REPOSITORY_CACHE_TTL = 5000;
 export const GET_ALL_QUERY_DELAY = 500;
 
 /**
+ * The default number of milliseconds to wait before retrying a rate-limited
+ * `fetch()` request (429 response code). The default value is only used if the
+ * response does not include a `retry-after` header.
+ *
+ * The API allows up to 200 requests per second.
+ */
+const DEFUALT_RETRY_AFTER_MS = 1000;
+
+/**
  * Modes for client ref management.
  */
 enum RefStateMode {
@@ -1769,6 +1778,25 @@ export class Client<
 					url,
 					json,
 				);
+			}
+
+			// Too Many Requests
+			// - Exceeded the maximum number of requests per second
+			case 429: {
+				const parsedRetryAfter = Number(res.headers.get("retry-after"));
+				const delay = Number.isNaN(parsedRetryAfter)
+					? DEFUALT_RETRY_AFTER_MS
+					: parsedRetryAfter;
+
+				return await new Promise((resolve, reject) => {
+					setTimeout(async () => {
+						try {
+							resolve(await this.fetch(url, params));
+						} catch (error) {
+							reject(error);
+						}
+					}, delay);
+				});
 			}
 		}
 

@@ -641,3 +641,173 @@ it("throws if a prismic.io endpoint is given that is not for Rest API V2", () =>
 
 	process.env.NODE_ENV === originalNodeEnv;
 });
+
+it("retries after `retry-after` milliseconds if response code is 429", async (ctx) => {
+	const retryAfter = 200; // ms
+	/**
+	 * The number of milliseconds that time-measuring tests can vary.
+	 */
+	const testTolerance = 100;
+	/**
+	 * The number of times 429 is returned.
+	 */
+	const retryResponseQty = 2;
+
+	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
+
+	mockPrismicRestAPIV2({
+		ctx,
+		queryResponse,
+	});
+
+	const client = createTestClient();
+
+	const queryEndpoint = new URL(
+		"documents/search",
+		`${client.endpoint}/`,
+	).toString();
+
+	let responseTries = 0;
+
+	// Override the query endpoint to return a 429 while `responseTries` is
+	// less than or equal to `retryResponseQty`
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
+			responseTries++;
+
+			if (responseTries <= retryResponseQty) {
+				return res(
+					ctx.status(429),
+					ctx.json({
+						status_code: 429,
+						status_message:
+							"Your request count (11) is over the allowed limit of 10.",
+					}),
+					ctx.set("retry-after", retryAfter.toString()),
+				);
+			}
+		}),
+	);
+
+	// Rate limited. Should resolve roughly after retryAfter * retryResponseQty milliseconds.
+	const t0_0 = performance.now();
+	const res0 = await client.get();
+	const t0_1 = performance.now();
+
+	expect(res0).toStrictEqual(queryResponse);
+	expect(t0_1 - t0_0).toBeGreaterThanOrEqual(retryAfter * retryResponseQty);
+	expect(t0_1 - t0_0).toBeLessThanOrEqual(
+		retryAfter * retryResponseQty + testTolerance,
+	);
+
+	// Not rate limited. Should resolve nearly immediately.
+	const t1_0 = performance.now();
+	const res1 = await client.get();
+	const t1_1 = performance.now();
+
+	expect(res1).toStrictEqual(queryResponse);
+	expect(t1_1 - t1_0).toBeGreaterThanOrEqual(0);
+	expect(t1_1 - t1_0).toBeLessThanOrEqual(testTolerance);
+});
+
+it("retries after 1000 milliseconds if response code is 429 and an invalid `retry-after` value is returned", async (ctx) => {
+	/**
+	 * The number of milliseconds that time-measuring tests can vary.
+	 */
+	const testTolerance = 100;
+
+	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
+
+	mockPrismicRestAPIV2({
+		ctx,
+		queryResponse,
+	});
+
+	const client = createTestClient();
+
+	const queryEndpoint = new URL(
+		"documents/search",
+		`${client.endpoint}/`,
+	).toString();
+
+	let responseTries = 0;
+
+	// Override the query endpoint to return a 429 while `responseTries` is
+	// less than or equal to `retryResponseQty`
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
+			responseTries++;
+
+			if (responseTries <= 1) {
+				return res(
+					ctx.status(429),
+					ctx.json({
+						status_code: 429,
+						status_message:
+							"Your request count (11) is over the allowed limit of 10.",
+					}),
+					ctx.set("retry-after", "invalid"),
+				);
+			}
+		}),
+	);
+
+	// Rate limited. Should resolve roughly after 1000 milliseconds.
+	const t0 = performance.now();
+	const res = await client.get();
+	const t1 = performance.now();
+
+	expect(res).toStrictEqual(queryResponse);
+	expect(t1 - t0).toBeGreaterThanOrEqual(1000);
+	expect(t1 - t0).toBeLessThanOrEqual(1000 + testTolerance);
+});
+
+it("throws if a non-2xx response is returned even after retrying", async (ctx) => {
+	/**
+	 * The number of milliseconds that time-measuring tests can vary.
+	 */
+	const testTolerance = 100;
+
+	mockPrismicRestAPIV2({ ctx });
+
+	const client = createTestClient();
+
+	const queryEndpoint = new URL(
+		"documents/search",
+		`${client.endpoint}/`,
+	).toString();
+
+	let responseTries = 0;
+
+	// Override the query endpoint to return a 429 while `responseTries` is
+	// less than or equal to `retryResponseQty`
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
+			responseTries++;
+
+			if (responseTries <= 1) {
+				return res(
+					ctx.status(429),
+					ctx.json({
+						status_code: 429,
+						status_message:
+							"Your request count (11) is over the allowed limit of 10.",
+					}),
+					ctx.set("retry-after", "invalid"),
+				);
+			} else {
+				return res(ctx.status(418));
+			}
+		}),
+	);
+
+	// Rate limited. Should reject roughly after 1000 milliseconds.
+	const t0 = performance.now();
+	await expect(() => client.get()).rejects.toThrowError(
+		/invalid api response/i,
+	);
+	const t1 = performance.now();
+
+	expect(t1 - t0).toBeGreaterThanOrEqual(1000);
+	expect(t1 - t0).toBeLessThanOrEqual(1000 + testTolerance);
+});
