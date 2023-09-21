@@ -105,7 +105,7 @@ describe('request', () => {
     assert.isTrue(t1_1 - t1_0 >= 0)
     assert.isTrue(t1_1 - t1_0 <= testTolerance)
 
-    apiMock.restore?.()
+    apiMock.restore && apiMock.restore()
   });
   
   it("retries after 1000 milliseconds if response code is 429 and an invalid `retry-after` value is returned", async () => {
@@ -156,7 +156,7 @@ describe('request', () => {
     assert.isTrue(t1 - t0 >= 1000)
     assert.isTrue(t1 - t0 <= 1000 + testTolerance)
 
-    apiMock.restore?.()
+    apiMock.restore && apiMock.restore()
   });
   
   it("throws if a non-2xx response is returned even after retrying", async () => {
@@ -211,6 +211,6 @@ describe('request', () => {
     assert.isTrue(t1 - t0 >= 1000)
     assert.isTrue(t1 - t0 <= 1000 + testTolerance)
 
-    apiMock.restore?.()
+    apiMock.restore && apiMock.restore()
   });
 });
