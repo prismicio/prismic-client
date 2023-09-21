@@ -101,8 +101,16 @@ export interface RequestInitLike extends Pick<RequestInit, "cache"> {
  */
 export interface ResponseLike {
 	status: number;
+	headers: HeadersLike;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	json(): Promise<any>;
+}
+
+/**
+ * The minimum required properties from Headers.
+ */
+export interface HeadersLike {
+	get(name: string): string | null;
 }
 
 /**
