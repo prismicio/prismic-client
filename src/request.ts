@@ -1,5 +1,14 @@
 import crossFetch from 'cross-fetch';
 
+/**
+ * The default number of milliseconds to wait before retrying a rate-limited
+ * `fetch()` request (429 response code). The default value is only used if the
+ * response does not include a `retry-after` header.
+ *
+ * The API allows up to 200 requests per second.
+ */
+const DEFUALT_RETRY_AFTER_MS = 1000;
+
 interface NodeRequestInit extends RequestInit {
   agent?: any;
 }
@@ -34,6 +43,20 @@ function fetchRequest<T>(url: string, options: RequestHandlerOption, callback: R
   promise.then((resp: Response) => {
 
     clearTimeout(timeoutId);
+
+    if (resp.status === 429) {
+      const parsedRetryAfter = Number(resp.headers.get("retry-after"));
+      const delay = Number.isNaN(parsedRetryAfter)
+        ? DEFUALT_RETRY_AFTER_MS
+        : parsedRetryAfter;
+
+      return new Promise<void>((resolve) => {
+        setTimeout(() => {
+          fetchRequest(url, options, callback)
+          resolve()
+        }, delay);
+      });
+    }
 
     if (~~(resp.status / 100 !== 2)) {
         /**
