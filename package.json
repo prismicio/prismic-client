@@ -10,7 +10,7 @@
     "content",
     "api"
   ],
-  "version": "5.1.1",
+  "version": "5.2.0",
   "engines": {
     "node": ">=0.10.3"
   },
@@ -51,7 +51,8 @@
     "prepublishOnly": "npm run test",
     "docs": "typedoc --mode file --out ./docs ./src/index.ts",
     "declarations": "tsc --emitDeclarationOnly --declaration --declarationDir ./types",
-    "lint": "eslint src/**/*.ts"
+    "lint": "eslint src/**/*.ts",
+    "release": "npm publish --tag latest-v5"
   },
   "dependencies": {
     "cross-fetch": "^3.0.6"
