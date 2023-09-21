@@ -88,18 +88,18 @@ describe('request', () => {
     }).persist(true)
 
     // Rate limited. Should resolve roughly after retryAfter * retryResponseQty milliseconds.
-    const t0_0 = performance.now()
+    const t0_0 = Date.now()
     const res0 = await Prismic.getApi(endpoint)
-    const t0_1 = performance.now()
+    const t0_1 = Date.now()
 
     assert.deepEqual(res0.data, okResponse)
     assert.isTrue(t0_1 - t0_0 >= retryAfter * retryResponseQty)
     assert.isTrue(t0_1 - t0_0 <= retryAfter * retryResponseQty + testTolerance)
   
     // Not rate limited. Should resolve nearly immediately.
-    const t1_0 = performance.now()
+    const t1_0 = Date.now()
     const res1 = await Prismic.getApi(endpoint)
-    const t1_1 = performance.now()
+    const t1_1 = Date.now()
   
     assert.deepEqual(res1.data, okResponse)
     assert.isTrue(t1_1 - t1_0 >= 0)
@@ -148,9 +148,9 @@ describe('request', () => {
     }).persist(true)
   
     // Rate limited. Should resolve roughly after 1000 milliseconds.
-    const t0 = performance.now()
+    const t0 = Date.now()
     const res = await Prismic.getApi(endpoint)
-    const t1 = performance.now()
+    const t1 = Date.now()
   
     assert.deepEqual(res.data, okResponse)
     assert.isTrue(t1 - t0 >= 1000)
@@ -197,7 +197,7 @@ describe('request', () => {
     }).persist(true)
 
     // Rate limited. Should reject roughly after 1000 milliseconds.
-    const t0 = performance.now()
+    const t0 = Date.now()
     let error;
     try {
       await Prismic.getApi(endpoint)
@@ -205,7 +205,7 @@ describe('request', () => {
       error = _error
     }
 
-    const t1 = performance.now()
+    const t1 = Date.now()
 
     assert.equal(error.toString(), 'Error: Unexpected status code [418] on URL https://example4.prismic.io/api/v2')
     assert.isTrue(t1 - t0 >= 1000)
