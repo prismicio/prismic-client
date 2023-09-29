@@ -153,12 +153,19 @@ export interface RTLabelNode extends RTSpanNodeBase {
  */
 export type RTImageNode = {
 	type: typeof RichTextNodeType.image;
+	id?: string;
 	url: string;
 	alt: string | null;
 	copyright: string | null;
 	dimensions: {
 		width: number;
 		height: number;
+	};
+	edit?: {
+		x: number;
+		y: number;
+		zoom: number;
+		background: string;
 	};
 	linkTo?:
 		| FilledContentRelationshipField
