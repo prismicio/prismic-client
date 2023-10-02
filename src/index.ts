@@ -103,6 +103,8 @@ export type { HTMLRichTextSerializer } from "./helpers/asHTML";
 export { PrismicError } from "./errors/PrismicError";
 export { ForbiddenError } from "./errors/ForbiddenError";
 export { NotFoundError } from "./errors/NotFoundError";
+export { RefNotFoundError } from "./errors/RefNotFoundError";
+export { RefExpiredError } from "./errors/RefExpiredError";
 export { ParsingError } from "./errors/ParsingError";
 
 //=============================================================================

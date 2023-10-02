@@ -631,7 +631,7 @@ it("throws PrismicError if response is not 200, 400, 401, 403, or 404", async (c
 	const client = createTestClient();
 
 	const queryEndpoint = new URL(
-		"documents/search",
+		"./documents/search",
 		`${client.endpoint}/`,
 	).toString();
 
@@ -682,6 +682,60 @@ it("throws NotFoundError if repository does not exist", async (ctx) => {
 		/repository not found/i,
 	);
 	await expect(() => client.get()).rejects.toThrowError(prismic.NotFoundError);
+});
+
+it("throws RefNotFoundError if ref does not exist", async (ctx) => {
+	const queryResponse = {
+		type: "api_notfound_error",
+		message: "message",
+	};
+
+	mockPrismicRestAPIV2({ ctx });
+
+	const client = createTestClient();
+
+	const queryEndpoint = new URL(
+		"./documents/search",
+		`${client.endpoint}/`,
+	).toString();
+
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
+			return res(ctx.status(404), ctx.json(queryResponse));
+		}),
+	);
+
+	await expect(() => client.get()).rejects.toThrowError(queryResponse.message);
+	await expect(() => client.get()).rejects.toThrowError(
+		prismic.RefNotFoundError,
+	);
+});
+
+it("throws RefExpiredError if ref is expired", async (ctx) => {
+	const queryResponse = {
+		type: "api_validation_error",
+		message: "message",
+	};
+
+	mockPrismicRestAPIV2({ ctx });
+
+	const client = createTestClient();
+
+	const queryEndpoint = new URL(
+		"./documents/search",
+		`${client.endpoint}/`,
+	).toString();
+
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
+			return res(ctx.status(410), ctx.json(queryResponse));
+		}),
+	);
+
+	await expect(() => client.get()).rejects.toThrowError(queryResponse.message);
+	await expect(() => client.get()).rejects.toThrowError(
+		prismic.RefExpiredError,
+	);
 });
 
 it("retries after `retry-after` milliseconds if response code is 429", async (ctx) => {
