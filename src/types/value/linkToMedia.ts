@@ -16,7 +16,7 @@ export type LinkToMediaField<State extends FieldState = FieldState> =
  * A link that points to media.
  */
 export interface FilledLinkToMediaField {
-	id?: string;
+	id: string;
 	link_type: typeof LinkType.Media;
 	name: string;
 	kind: string;

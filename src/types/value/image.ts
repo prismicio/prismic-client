@@ -12,13 +12,13 @@ export type ImageFieldImage<State extends FieldState = FieldState> =
 	State extends "empty" ? EmptyImageFieldImage : FilledImageFieldImage;
 
 export interface FilledImageFieldImage {
-	id?: string;
+	id: string;
 	url: string;
 	dimensions: {
 		width: number;
 		height: number;
 	};
-	edit?: {
+	edit: {
 		x: number;
 		y: number;
 		zoom: number;

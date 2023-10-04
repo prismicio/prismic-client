@@ -22,24 +22,6 @@ import * as prismic from "../../src";
  * Filled state.
  */
 expectType<prismic.LinkToMediaField>({
-	link_type: prismic.LinkType.Media,
-	name: "string",
-	kind: "string",
-	url: "string",
-	size: "string",
-	height: "string",
-	width: "string",
-});
-expectType<prismic.LinkToMediaField<"filled">>({
-	link_type: prismic.LinkType.Media,
-	name: "string",
-	kind: "string",
-	url: "string",
-	size: "string",
-	height: "string",
-	width: "string",
-});
-expectType<prismic.LinkToMediaField>({
 	id: "string",
 	link_type: prismic.LinkType.Media,
 	name: "string",

@@ -22,18 +22,6 @@ import * as prismic from "../../src";
  * Filled state.
  */
 expectType<prismic.ImageField>({
-	url: "url",
-	dimensions: { width: 1, height: 1 },
-	alt: "alt",
-	copyright: "copyright",
-});
-expectType<prismic.ImageField<never, "filled">>({
-	url: "url",
-	dimensions: { width: 1, height: 1 },
-	alt: "alt",
-	copyright: "copyright",
-});
-expectType<prismic.ImageField>({
 	id: "id",
 	url: "url",
 	dimensions: { width: 1, height: 1 },
@@ -97,8 +85,10 @@ expectType<prismic.ImageField<never, "filled">>({
  * Allows null alt and copyright.
  */
 expectType<prismic.ImageField>({
+	id: "id",
 	url: "url",
 	dimensions: { width: 1, height: 1 },
+	edit: { x: 0, y: 0, zoom: 1, background: "background" },
 	alt: null,
 	copyright: null,
 });
@@ -119,19 +109,25 @@ expectType<prismic.ImageField>({
  * Supports thumbnails.
  */
 expectType<prismic.ImageField<"Foo" | "Bar">>({
+	id: "id",
 	url: "url",
 	dimensions: { width: 1, height: 1 },
+	edit: { x: 0, y: 0, zoom: 1, background: "background" },
 	alt: "alt",
 	copyright: "copyright",
 	Foo: {
+		id: "id",
 		url: "url",
 		dimensions: { width: 1, height: 1 },
+		edit: { x: 0, y: 0, zoom: 1, background: "background" },
 		alt: "alt",
 		copyright: "copyright",
 	},
 	Bar: {
+		id: "id",
 		url: "url",
 		dimensions: { width: 1, height: 1 },
+		edit: { x: 0, y: 0, zoom: 1, background: "background" },
 		alt: "alt",
 		copyright: "copyright",
 	},
@@ -204,13 +200,17 @@ expectType<prismic.ImageField>({
 	},
 });
 expectType<prismic.ImageField<"length">>({
+	id: "id",
 	url: "url",
 	dimensions: { width: 1, height: 1 },
+	edit: { x: 0, y: 0, zoom: 1, background: "background" },
 	alt: "alt",
 	copyright: "copyright",
 	length: {
+		id: "id",
 		url: "url",
 		dimensions: { width: 1, height: 1 },
+		edit: { x: 0, y: 0, zoom: 1, background: "background" },
 		alt: "alt",
 		copyright: "copyright",
 	},
