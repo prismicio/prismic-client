@@ -19,6 +19,7 @@ import * as prismic from "../../src";
 };
 
 expectType<prismic.SharedSlice>({
+	id: "id",
 	slice_type: "string",
 	slice_label: null,
 	variation: "string",
@@ -31,6 +32,7 @@ expectType<prismic.SharedSlice>({
  * Supports custom shared Slice type API ID.
  */
 expectType<prismic.SharedSlice<"foo">>({
+	id: "id",
 	slice_type: "foo",
 	slice_label: null,
 	variation: "string",
@@ -39,6 +41,7 @@ expectType<prismic.SharedSlice<"foo">>({
 	items: [],
 });
 expectType<prismic.SharedSlice<"foo">>({
+	id: "id",
 	// @ts-expect-error - Slice type must match the given type.
 	slice_type: "string",
 	slice_label: null,
@@ -52,6 +55,7 @@ expectType<prismic.SharedSlice<"foo">>({
  * Supports custom variation types.
  */
 expectType<prismic.SharedSlice<string, prismic.SharedSliceVariation<"foo">>>({
+	id: "id",
 	slice_type: "string",
 	slice_label: null,
 	variation: "foo",
@@ -60,6 +64,7 @@ expectType<prismic.SharedSlice<string, prismic.SharedSliceVariation<"foo">>>({
 	items: [],
 });
 expectType<prismic.SharedSlice<string, prismic.SharedSliceVariation<"foo">>>({
+	id: "id",
 	slice_type: "string",
 	slice_label: null,
 	// @ts-expect-error - Variation type must match the given type.
