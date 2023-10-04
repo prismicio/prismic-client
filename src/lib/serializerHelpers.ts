@@ -31,7 +31,7 @@ const formatAttributes = (node: RTAnyNode, attributes: Attributes): string => {
 			if (typeof value === "boolean") {
 				result.push(key);
 			} else {
-				result.push(`${key}="${value}"`);
+				result.push(`${key}="${escapeHTML(value)}"`);
 			}
 		}
 	}
@@ -93,8 +93,8 @@ export const serializeImage = (
 		const attributes = {
 			...generalAttributes,
 			src: node.url,
-			alt: node.alt && escapeHTML(node.alt),
-			copyright: node.copyright && escapeHTML(node.copyright),
+			alt: node.alt,
+			copyright: node.copyright,
 		};
 
 		let imageTag = `<img${formatAttributes(node, attributes)} />`;
@@ -153,7 +153,7 @@ export const serializeHyperlink = (
 		};
 
 		if (node.data.link_type === LinkType.Web) {
-			attributes.href = escapeHTML(node.data.url);
+			attributes.href = node.data.url;
 			attributes.target = node.data.target;
 			attributes.rel = "noopener noreferrer";
 		} else if (node.data.link_type === LinkType.Document) {

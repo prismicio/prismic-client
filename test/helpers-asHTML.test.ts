@@ -60,6 +60,9 @@ it("serializes with a custom shorthand map serializer", () => {
 			linkResolver,
 			serializer: {
 				heading1: { class: "text-xl", "data-heading": true },
+				heading2: {
+					xss: 'https://example.org" onmouseover="alert(document.cookie);',
+				},
 				label: { class: "shorthand" },
 			},
 		}),
