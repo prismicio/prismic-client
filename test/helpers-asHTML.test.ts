@@ -54,6 +54,21 @@ it("serializes with a custom map serializer", () => {
 	);
 });
 
+it("serializes with a custom shorthand map serializer", () => {
+	expect(
+		asHTML(richTextFixture.en, {
+			linkResolver,
+			serializer: {
+				heading1: { class: "text-xl", "data-heading": true },
+				heading2: {
+					xss: 'https://example.org" onmouseover="alert(document.cookie);',
+				},
+				label: { class: "shorthand" },
+			},
+		}),
+	).toMatchSnapshot();
+});
+
 it("escapes external links to prevent XSS", () => {
 	expect(asHTML(richTextFixture.xss, { linkResolver })).toMatchSnapshot();
 });
