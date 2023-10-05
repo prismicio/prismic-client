@@ -1,6 +1,6 @@
-import { asText as baseAsText } from "@prismicio/richtext";
-
 import { RichTextField } from "../types/value/richText";
+
+import { asText as baseAsText } from "../richtext/asText";
 
 /**
  * Configuration that determines the output of `asText()`.

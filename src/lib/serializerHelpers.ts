@@ -1,5 +1,4 @@
-import { RichTextMapSerializer } from "@prismicio/richtext";
-
+import type { RichTextMapSerializer } from "../richtext/types";
 import { LinkType } from "../types/value/link";
 import { RTAnyNode } from "../types/value/richText";
 

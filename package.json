@@ -32,12 +32,32 @@
 				"default": "./dist/index.js"
 			}
 		},
+		"./richtext": {
+			"require": {
+				"types": "./dist/richtext/index.d.ts",
+				"default": "./dist/richtext.cjs"
+			},
+			"import": {
+				"types": "./dist/richtext/index.d.ts",
+				"default": "./dist/richtext.js"
+			}
+		},
 		"./package.json": "./package.json"
 	},
 	"main": "./dist/index.cjs",
 	"module": "./dist/index.js",
 	"react-native": "./dist/index.js",
 	"types": "./dist/index.d.ts",
+	"typesVersions": {
+		"*": {
+			"*": [
+				"dist/index.d.ts"
+			],
+			"richtext": [
+				"dist/richtext/index.d.ts"
+			]
+		}
+	},
 	"files": [
 		"dist",
 		"src"
