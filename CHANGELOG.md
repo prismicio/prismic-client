@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.2.0](https://github.com/prismicio/prismic-client/compare/v7.1.1...v7.2.0) (2023-08-25)
+
+
+### Features
+
+* automatically retry rate-limited requests ([#319](https://github.com/prismicio/prismic-client/issues/319)) ([e0c8c49](https://github.com/prismicio/prismic-client/commit/e0c8c49fafac235c070550efbd45dc9dcbda4027))
+
 ### [7.1.1](https://github.com/prismicio/prismic-client/compare/v7.1.0...v7.1.1) (2023-08-11)
 
 
