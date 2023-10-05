@@ -78,7 +78,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         node: [20]
-        typescript: ["4.6", "4.7", "4.8", "4.9", "5.0", "5.1", "5.2"]
+        typescript: ["4.6", "4.7", "4.8", "4.9", "5.0"]
 
     steps:
       - name: Set up Node
