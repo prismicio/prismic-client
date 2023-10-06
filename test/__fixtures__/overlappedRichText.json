@@ -1,0 +1,98 @@
+[
+	{
+		"type": "paragraph",
+		"text": "Lorem ipsum dolor sit amet",
+		"spans": [
+			{
+				"start": 18,
+				"end": 26,
+				"type": "strong"
+			},
+			{
+				"start": 18,
+				"end": 21,
+				"type": "em"
+			}
+		]
+	},
+	{
+		"type": "paragraph",
+		"text": "Lorem ipsum dolor sit amet",
+		"spans": [
+			{
+				"start": 18,
+				"end": 21,
+				"type": "em"
+			},
+			{
+				"start": 18,
+				"end": 26,
+				"type": "strong"
+			}
+		]
+	},
+	{
+		"type": "paragraph",
+		"text": "Lorem ipsum dolor sit amet",
+		"spans": [
+			{
+				"start": 18,
+				"end": 26,
+				"type": "strong"
+			},
+			{
+				"start": 22,
+				"end": 26,
+				"type": "em"
+			}
+		]
+	},
+	{
+		"type": "paragraph",
+		"text": "Lorem ipsum dolor sit amet",
+		"spans": [
+			{
+				"start": 22,
+				"end": 26,
+				"type": "em"
+			},
+			{
+				"start": 18,
+				"end": 26,
+				"type": "strong"
+			}
+		]
+	},
+	{
+		"type": "paragraph",
+		"text": "Lorem ipsum dolor sit amet",
+		"spans": [
+			{
+				"start": 18,
+				"end": 26,
+				"type": "em"
+			},
+			{
+				"start": 18,
+				"end": 26,
+				"type": "strong"
+			}
+		]
+	},
+	{
+		"type": "paragraph",
+		"text": "Lorem ipsum dolor sit amet",
+		"spans": [
+			{
+				"start": 6,
+				"end": 17,
+				"type": "em"
+			},
+			{
+				"start": 12,
+				"end": 21,
+				"type": "strong"
+			}
+		]
+	}
+]
