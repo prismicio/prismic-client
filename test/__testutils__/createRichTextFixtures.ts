@@ -1,11 +1,11 @@
-import type { RichTextField } from "@prismicio/client";
-
 import cnRichTextJSON from "../__fixtures__/cnRichText.json";
 import emojiRichTextJSON from "../__fixtures__/emojiRichText.json";
 import enRichTextJSON from "../__fixtures__/enRichText.json";
 import koRichTextJSON from "../__fixtures__/koRichText.json";
 import overlappedRichTextJSON from "../__fixtures__/overlappedRichText.json";
 import xssRichTextJSON from "../__fixtures__/xssRichText.json";
+
+import type { RichTextField } from "../../src";
 
 const deepCloneJSON = <T>(json: T): T => {
 	return JSON.parse(JSON.stringify(json));

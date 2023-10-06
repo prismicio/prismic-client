@@ -22,22 +22,30 @@ import * as prismic from "../../src";
  * Filled state.
  */
 expectType<prismic.ImageField>({
+	id: "id",
 	url: "url",
 	dimensions: { width: 1, height: 1 },
+	edit: { x: 0, y: 0, zoom: 1, background: "background" },
 	alt: "alt",
 	copyright: "copyright",
 });
 expectType<prismic.ImageField<never, "filled">>({
+	id: "id",
 	url: "url",
 	dimensions: { width: 1, height: 1 },
+	edit: { x: 0, y: 0, zoom: 1, background: "background" },
 	alt: "alt",
 	copyright: "copyright",
 });
 expectType<prismic.ImageField<never, "empty">>({
 	// @ts-expect-error - Empty fields cannot contain a filled value.
+	id: "id",
+	// @ts-expect-error - Empty fields cannot contain a filled value.
 	url: "url",
 	// @ts-expect-error - Empty fields cannot contain a filled value.
 	dimensions: { width: 1, height: 1 },
+	// @ts-expect-error - Empty fields cannot contain a filled value.
+	edit: { x: 0, y: 0, zoom: 1, background: "background" },
 	// @ts-expect-error - Empty fields cannot contain a filled value.
 	alt: "alt",
 	// @ts-expect-error - Empty fields cannot contain a filled value.
@@ -62,9 +70,13 @@ expectType<prismic.ImageField<never, "empty">>({
 });
 expectType<prismic.ImageField<never, "filled">>({
 	// @ts-expect-error - Filled fields cannot contain an empty value.
+	id: null,
+	// @ts-expect-error - Filled fields cannot contain an empty value.
 	url: null,
 	// @ts-expect-error - Filled fields cannot contain an empty value.
 	dimensions: null,
+	// @ts-expect-error - Filled fields cannot contain an empty value.
+	edit: null,
 	alt: null,
 	copyright: null,
 });
@@ -73,8 +85,10 @@ expectType<prismic.ImageField<never, "filled">>({
  * Allows null alt and copyright.
  */
 expectType<prismic.ImageField>({
+	id: "id",
 	url: "url",
 	dimensions: { width: 1, height: 1 },
+	edit: { x: 0, y: 0, zoom: 1, background: "background" },
 	alt: null,
 	copyright: null,
 });
@@ -95,19 +109,25 @@ expectType<prismic.ImageField>({
  * Supports thumbnails.
  */
 expectType<prismic.ImageField<"Foo" | "Bar">>({
+	id: "id",
 	url: "url",
 	dimensions: { width: 1, height: 1 },
+	edit: { x: 0, y: 0, zoom: 1, background: "background" },
 	alt: "alt",
 	copyright: "copyright",
 	Foo: {
+		id: "id",
 		url: "url",
 		dimensions: { width: 1, height: 1 },
+		edit: { x: 0, y: 0, zoom: 1, background: "background" },
 		alt: "alt",
 		copyright: "copyright",
 	},
 	Bar: {
+		id: "id",
 		url: "url",
 		dimensions: { width: 1, height: 1 },
+		edit: { x: 0, y: 0, zoom: 1, background: "background" },
 		alt: "alt",
 		copyright: "copyright",
 	},
@@ -180,13 +200,17 @@ expectType<prismic.ImageField>({
 	},
 });
 expectType<prismic.ImageField<"length">>({
+	id: "id",
 	url: "url",
 	dimensions: { width: 1, height: 1 },
+	edit: { x: 0, y: 0, zoom: 1, background: "background" },
 	alt: "alt",
 	copyright: "copyright",
 	length: {
+		id: "id",
 		url: "url",
 		dimensions: { width: 1, height: 1 },
+		edit: { x: 0, y: 0, zoom: 1, background: "background" },
 		alt: "alt",
 		copyright: "copyright",
 	},

@@ -34,6 +34,7 @@ import * as prismic from "../../src";
 expectType<prismic.SliceZone>([
 	// Slice
 	{
+		id: "id",
 		slice_type: "string",
 		slice_label: "string",
 		primary: {},
@@ -41,6 +42,7 @@ expectType<prismic.SliceZone>([
 	},
 	// Shared Slice
 	{
+		id: "id",
 		slice_type: "string",
 		slice_label: null,
 		variation: "string",
@@ -61,6 +63,7 @@ expectType<prismic.SliceZone>([]);
  */
 expectType<prismic.SliceZone<prismic.Slice<"foo">>>([
 	{
+		id: "id",
 		slice_type: "foo",
 		slice_label: "string",
 		primary: {},
@@ -69,6 +72,7 @@ expectType<prismic.SliceZone<prismic.Slice<"foo">>>([
 ]);
 expectType<prismic.SliceZone<prismic.Slice<"foo">>>([
 	{
+		id: "id",
 		// @ts-expect-error - Slice must match the given type.
 		slice_type: "string",
 		slice_label: "string",
@@ -82,6 +86,7 @@ expectType<prismic.SliceZone<prismic.Slice<"foo">>>([
  */
 expectType<prismic.SliceZone<prismic.SharedSlice<"foo">>>([
 	{
+		id: "id",
 		slice_type: "foo",
 		slice_label: null,
 		variation: "string",
@@ -92,6 +97,7 @@ expectType<prismic.SliceZone<prismic.SharedSlice<"foo">>>([
 ]);
 expectType<prismic.SliceZone<prismic.SharedSlice<"foo">>>([
 	{
+		id: "id",
 		// @ts-expect-error - Slice must match the given type.
 		slice_type: "string",
 		slice_label: null,

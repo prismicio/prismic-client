@@ -19,6 +19,7 @@ import * as prismic from "../../src";
 };
 
 expectType<prismic.Slice>({
+	id: "id",
 	slice_type: "string",
 	slice_label: null,
 	primary: {},
@@ -29,6 +30,7 @@ expectType<prismic.Slice>({
  * Supports Slice labels.
  */
 expectType<prismic.Slice>({
+	id: "id",
 	slice_type: "string",
 	slice_label: "string",
 	primary: {},
@@ -39,12 +41,14 @@ expectType<prismic.Slice>({
  * Supports custom Slice type API ID.
  */
 expectType<prismic.Slice<"foo">>({
+	id: "id",
 	slice_type: "foo",
 	slice_label: "string",
 	primary: {},
 	items: [],
 });
 expectType<prismic.Slice<"foo">>({
+	id: "id",
 	// @ts-expect-error - Slice type must match the given type.
 	slice_type: "string",
 	slice_label: "string",
@@ -56,6 +60,7 @@ expectType<prismic.Slice<"foo">>({
  * Supports custom primary fields type.
  */
 expectType<prismic.Slice<string, { foo: prismic.BooleanField }>>({
+	id: "id",
 	slice_type: "string",
 	slice_label: "string",
 	primary: {
@@ -78,6 +83,7 @@ expectType<
 		}
 	>
 >({
+	id: "id",
 	slice_type: "string",
 	slice_label: "string",
 	primary: {
@@ -94,6 +100,7 @@ expectType<
 		}
 	>
 >({
+	id: "id",
 	slice_type: "string",
 	slice_label: "string",
 	primary: {
@@ -112,6 +119,7 @@ expectType<
 		{ bar: prismic.KeyTextField }
 	>
 >({
+	id: "id",
 	slice_type: "string",
 	slice_label: "string",
 	primary: {
@@ -139,6 +147,7 @@ expectType<
 		}
 	>
 >({
+	id: "id",
 	slice_type: "string",
 	slice_label: "string",
 	primary: {
@@ -156,6 +165,7 @@ expectType<
 		}
 	>
 >({
+	id: "id",
 	slice_type: "string",
 	slice_label: "string",
 	primary: {
