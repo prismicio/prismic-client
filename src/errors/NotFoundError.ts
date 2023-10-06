@@ -1,3 +1,5 @@
 import { PrismicError } from "./PrismicError";
 
-export class NotFoundError extends PrismicError<undefined> {}
+export class NotFoundError<
+	TResponse = undefined,
+> extends PrismicError<TResponse> {}

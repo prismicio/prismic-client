@@ -295,9 +295,8 @@ expectType<TypeEqual<typeof defaultGetAllByType, prismic.PrismicDocument[]>>(
 );
 
 // With generic
-const genericGetAllByType = await defaultClient.getAllByType<FooDocument>(
-	"foo",
-);
+const genericGetAllByType =
+	await defaultClient.getAllByType<FooDocument>("foo");
 expectType<TypeEqual<typeof genericGetAllByType, FooDocument[]>>(true);
 
 // Documents (known)

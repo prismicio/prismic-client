@@ -19,6 +19,8 @@ import { ForbiddenError } from "./errors/ForbiddenError";
 import { NotFoundError } from "./errors/NotFoundError";
 import { ParsingError } from "./errors/ParsingError";
 import { PrismicError } from "./errors/PrismicError";
+import { RefExpiredError } from "./errors/RefExpiredError";
+import { RefNotFoundError } from "./errors/RefNotFoundError";
 
 import { LinkResolverFunction, asLink } from "./helpers/asLink";
 
@@ -1900,20 +1902,31 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			// - Incorrect access token for query endpoint
 			case 403: {
 				throw new ForbiddenError(
-					"error" in res.json ? res.json.error : res.json.message,
+					res.json.error || res.json.message,
 					url,
 					res.json,
 				);
 			}
 
-			// Not Found (this response has an empty body)
-			// - Incorrect repository name
+			// Not Found
+			// - Incorrect repository name (this response has an empty body)
+			// - Ref does not exist
 			case 404: {
+				if (res.json && res.json.type === "api_notfound_error") {
+					throw new RefNotFoundError(res.json.message, url, res.json);
+				}
+
 				throw new NotFoundError(
 					`Prismic repository not found. Check that "${this.endpoint}" is pointing to the correct repository.`,
 					url,
-					undefined,
+					undefined, // res.json is empty
 				);
+			}
+
+			// Gone
+			// - Ref is expired
+			case 410: {
+				throw new RefExpiredError(res.json.message, url, res.json);
 			}
 
 			// Too Many Requests

@@ -1,0 +1,62 @@
+[
+	{
+		"type": "paragraph",
+		"text": "국가는 건전한 소비행위를 계도하고 생산품의 품질향상을 촉구하기",
+		"spans": [
+			{
+				"start": 4,
+				"end": 13,
+				"type": "strong"
+			},
+			{
+				"start": 8,
+				"end": 11,
+				"type": "em"
+			},
+			{
+				"start": 19,
+				"end": 23,
+				"type": "label",
+				"data": {
+					"label": "label_1"
+				}
+			}
+		]
+	},
+	{
+		"type": "o-list-item",
+		"text": "위한 소비자보호운동을",
+		"spans": []
+	},
+	{
+		"type": "o-list-item",
+		"text": "법률이 정하는",
+		"spans": []
+	},
+	{
+		"type": "o-list-item",
+		"text": "바에 의하여 보장한다.",
+		"spans": []
+	},
+	{
+		"type": "paragraph",
+		"text": "모든 국민은 자기의 행위가 아닌 친족의 행위로 인하여 불이익한 처우를 받지 아니한다. 국민에 대하여 책임을 진다. 감사위원은 원장의 제청으로 대통령이 임명하고.",
+		"spans": [
+			{
+				"start": 30,
+				"end": 41,
+				"type": "hyperlink",
+				"data": {
+					"id": "YCiUyRUAACQAxfZK",
+					"type": "kitchen_sink",
+					"tags": [],
+					"slug": "home",
+					"lang": "en-us",
+					"uid": "home",
+					"link_type": "Document",
+					"isBroken": false
+				}
+			}
+		]
+	}
+]
