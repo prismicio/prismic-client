@@ -1,6 +1,7 @@
 // Imports are used for deprecations.
 import type { CustomTypeModelIntegrationField } from "./types/model/integration";
 import type { IntegrationField } from "./types/value/integration";
+import { RichTextNodeType } from "./types/value/richText";
 
 import type {
 	HTMLRichTextFunctionSerializer,
@@ -74,9 +75,6 @@ export * as isFilled from "./helpers/isFilled";
 // Conversion helper.
 export { documentToLinkField } from "./helpers/documentToLinkField";
 
-// RichText element types.
-export { Element } from "@prismicio/richtext";
-
 export type { LinkResolverFunction } from "./helpers/asLink";
 export type { AsLinkAttrsConfig } from "./helpers/asLinkAttrs";
 
@@ -110,7 +108,12 @@ export { ParsingError } from "./errors/ParsingError";
 //=============================================================================
 
 // Values - Types representing Prismic content.
-export { RichTextNodeType } from "./types/value/richText";
+/**
+ * @deprecated Use {@link RichTextNodeType} instead.
+ */
+// TODO: Remove in v8.
+const Element = RichTextNodeType;
+export { RichTextNodeType, Element };
 export { LinkType } from "./types/value/link";
 export { OEmbedType } from "./types/value/embed";
 

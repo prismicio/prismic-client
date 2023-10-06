@@ -1,13 +1,4 @@
 import {
-	RichTextFunctionSerializer,
-	RichTextMapSerializer,
-	RichTextMapSerializerFunction,
-	composeSerializers,
-	serialize,
-	wrapMapSerializer,
-} from "@prismicio/richtext";
-
-import {
 	serializeEmbed,
 	serializeHyperlink,
 	serializeImage,
@@ -18,14 +9,23 @@ import {
 
 import type { RichTextField } from "../types/value/richText";
 
+import {
+	RichTextFunctionSerializer,
+	RichTextMapSerializer,
+	RichTextMapSerializerFunction,
+	composeSerializers,
+	serialize,
+	wrapMapSerializer,
+} from "../richtext";
+
 import { LinkResolverFunction } from "./asLink";
 
 /**
  * Serializes a node from a rich text or title field with a function to HTML.
  *
- * Unlike a typical `@prismicio/richtext` function serializer, this serializer
- * converts the `children` argument to a single string rather than an array of
- * strings.
+ * Unlike a typical `@prismicio/client/richtext` function serializer, this
+ * serializer converts the `children` argument to a single string rather than an
+ * array of strings.
  *
  * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
  */
@@ -40,7 +40,7 @@ export type HTMLRichTextFunctionSerializer = (
 /**
  * Serializes a node from a rich text or title field with a map to HTML
  *
- * Unlike a typical `@prismicio/richtext` map serializer, this serializer
+ * Unlike a typical `@prismicio/client/richtext` map serializer, this serializer
  * converts the `children` property to a single string rather than an array of
  * strings and accepts shorthand declarations.
  *
@@ -55,7 +55,7 @@ export type HTMLRichTextMapSerializer = {
 /**
  * Serializes a node from a rich text or title field with a map to HTML
  *
- * Unlike a typical `@prismicio/richtext` map serializer, this serializer
+ * Unlike a typical `@prismicio/client/richtext` map serializer, this serializer
  * converts the `children` property to a single string rather than an array of
  * strings but doesn't accept shorthand declarations.
  *
@@ -258,7 +258,7 @@ const createHTMLRichTextSerializer = (
 /**
  * Wraps a map serializer into a regular function serializer. The given map
  * serializer should accept children as a string, not as an array of strings
- * like `@prismicio/richtext`'s `wrapMapSerializer`.
+ * like `@prismicio/client/richtext`'s `wrapMapSerializer`.
  *
  * @param mapSerializer - Map serializer to wrap
  *
