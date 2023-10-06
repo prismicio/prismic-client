@@ -94,8 +94,10 @@ export const asImageWidthSrcSet = <
 		const {
 			url,
 			dimensions,
+			id: _id,
 			alt: _alt,
 			copyright: _copyright,
+			edit: _edit,
 			...responsiveViews
 		} = field;
 
