@@ -9,6 +9,13 @@ it("returns null for nullish inputs", () => {
 
 it("returns an image field pixel-density-based srcset with [1, 2, 3] pxiel densities by default", () => {
 	const field: ImageField = {
+		id: "id",
+		edit: {
+			x: 0,
+			y: 0,
+			zoom: 1,
+			background: "background",
+		},
 		url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 		alt: null,
 		copyright: null,
@@ -26,6 +33,13 @@ it("returns an image field pixel-density-based srcset with [1, 2, 3] pxiel densi
 
 it("supports custom pixel densities", () => {
 	const field: ImageField = {
+		id: "id",
+		edit: {
+			x: 0,
+			y: 0,
+			zoom: 1,
+			background: "background",
+		},
 		url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 		alt: null,
 		copyright: null,
@@ -47,6 +61,13 @@ it("supports custom pixel densities", () => {
 
 it("applies given Imgix URL parameters", () => {
 	const field: ImageField = {
+		id: "id",
+		edit: {
+			x: 0,
+			y: 0,
+			zoom: 1,
+			background: "background",
+		},
 		url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 		alt: null,
 		copyright: null,
