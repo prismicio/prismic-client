@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.3.0](https://github.com/prismicio/prismic-client/compare/v7.2.0...v7.3.0) (2023-10-09)
+
+
+### Features
+
+* add `@prismicio/client/richtext` entry ([#318](https://github.com/prismicio/prismic-client/issues/318)) ([fb555fd](https://github.com/prismicio/prismic-client/commit/fb555fde672ed8276ac0039aa093fa6d7227f35f))
+* **helpers:** support attribute shorthand for map serializer ([#321](https://github.com/prismicio/prismic-client/issues/321)) ([b43557d](https://github.com/prismicio/prismic-client/commit/b43557d00a821938b463bcc6630953f4bfdc11cf))
+* support expired and not-found ref API errors ([#327](https://github.com/prismicio/prismic-client/issues/327)) ([26d5b0f](https://github.com/prismicio/prismic-client/commit/26d5b0f022c61ed8711d99edce572bdbe013d3c9))
+* support extended media API response ([#326](https://github.com/prismicio/prismic-client/issues/326)) ([5e5d057](https://github.com/prismicio/prismic-client/commit/5e5d0570dff67324c21cec1b553ae5f75b822590))
+
 ## [7.2.0](https://github.com/prismicio/prismic-client/compare/v7.1.1...v7.2.0) (2023-08-25)
 
 
