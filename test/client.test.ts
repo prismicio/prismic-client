@@ -669,7 +669,7 @@ it("throws PrismicError if response is not JSON", async (ctx) => {
 	await expect(() => client.get()).rejects.toThrowError(prismic.PrismicError);
 });
 
-it("throws NotFoundError if repository does not exist", async (ctx) => {
+it("throws RepositoryNotFoundError if repository does not exist", async (ctx) => {
 	const client = createTestClient();
 
 	ctx.server.use(
@@ -681,7 +681,9 @@ it("throws NotFoundError if repository does not exist", async (ctx) => {
 	await expect(() => client.get()).rejects.toThrowError(
 		/repository not found/i,
 	);
-	await expect(() => client.get()).rejects.toThrowError(prismic.NotFoundError);
+	await expect(() => client.get()).rejects.toThrowError(
+		prismic.RepositoryNotFoundError,
+	);
 });
 
 it("throws RefNotFoundError if ref does not exist", async (ctx) => {

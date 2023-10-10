@@ -22,6 +22,7 @@ import { PreviewTokenExpiredError } from "./errors/PreviewTokenExpired";
 import { PrismicError } from "./errors/PrismicError";
 import { RefExpiredError } from "./errors/RefExpiredError";
 import { RefNotFoundError } from "./errors/RefNotFoundError";
+import { RepositoryNotFoundError } from "./errors/RepositoryNotFoundError";
 
 import { LinkResolverFunction, asLink } from "./helpers/asLink";
 
@@ -1912,9 +1913,10 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			// Not Found
 			// - Incorrect repository name (this response has an empty body)
 			// - Ref does not exist
+			// - Preview token is expired
 			case 404: {
 				if (res.json === undefined) {
-					throw new NotFoundError(
+					throw new RepositoryNotFoundError(
 						`Prismic repository not found. Check that "${this.endpoint}" is pointing to the correct repository.`,
 						url,
 						undefined,

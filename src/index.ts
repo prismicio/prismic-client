@@ -105,6 +105,7 @@ export { RefNotFoundError } from "./errors/RefNotFoundError";
 export { RefExpiredError } from "./errors/RefExpiredError";
 export { PreviewTokenExpiredError } from "./errors/PreviewTokenExpired";
 export { ParsingError } from "./errors/ParsingError";
+export { RepositoryNotFoundError } from "./errors/RepositoryNotFoundError";
 
 //=============================================================================
 // Types - Types representing Prismic content, models, and API payloads.
