@@ -18,6 +18,7 @@ import type { PrismicDocument } from "./types/value/document";
 import { ForbiddenError } from "./errors/ForbiddenError";
 import { NotFoundError } from "./errors/NotFoundError";
 import { ParsingError } from "./errors/ParsingError";
+import { PreviewTokenExpiredError } from "./errors/PreviewTokenExpired";
 import { PrismicError } from "./errors/PrismicError";
 import { RefExpiredError } from "./errors/RefExpiredError";
 import { RefNotFoundError } from "./errors/RefNotFoundError";
@@ -1912,15 +1913,26 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			// - Incorrect repository name (this response has an empty body)
 			// - Ref does not exist
 			case 404: {
-				if (res.json && res.json.type === "api_notfound_error") {
+				if (res.json === undefined) {
+					throw new NotFoundError(
+						`Prismic repository not found. Check that "${this.endpoint}" is pointing to the correct repository.`,
+						url,
+						undefined,
+					);
+				}
+
+				if (res.json.type === "api_notfound_error") {
 					throw new RefNotFoundError(res.json.message, url, res.json);
 				}
 
-				throw new NotFoundError(
-					`Prismic repository not found. Check that "${this.endpoint}" is pointing to the correct repository.`,
-					url,
-					undefined, // res.json is empty
-				);
+				if (
+					res.json.type === "api_security_error" &&
+					/preview token.*expired/i.test(res.json.message)
+				) {
+					throw new PreviewTokenExpiredError(res.json.message, url, res.json);
+				}
+
+				throw new NotFoundError(res.json.message, url, res.json);
 			}
 
 			// Gone

@@ -103,6 +103,7 @@ export { ForbiddenError } from "./errors/ForbiddenError";
 export { NotFoundError } from "./errors/NotFoundError";
 export { RefNotFoundError } from "./errors/RefNotFoundError";
 export { RefExpiredError } from "./errors/RefExpiredError";
+export { PreviewTokenExpiredError } from "./errors/PreviewTokenExpired";
 export { ParsingError } from "./errors/ParsingError";
 
 //=============================================================================
