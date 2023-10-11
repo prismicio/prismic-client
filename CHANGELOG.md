@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.3.1](https://github.com/prismicio/prismic-client/compare/v7.3.0...v7.3.1) (2023-10-11)
+
+
+### Bug Fixes
+
+* support expired preview token and repository not found API error ([#328](https://github.com/prismicio/prismic-client/issues/328)) ([d098a7f](https://github.com/prismicio/prismic-client/commit/d098a7ff0bfb318f73a30c98f355724248d89bfd))
+
 ## [7.3.0](https://github.com/prismicio/prismic-client/compare/v7.2.0...v7.3.0) (2023-10-09)
 
 
