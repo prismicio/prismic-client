@@ -669,7 +669,7 @@ it("throws PrismicError if response is not JSON", async (ctx) => {
 	await expect(() => client.get()).rejects.toThrowError(prismic.PrismicError);
 });
 
-it("throws NotFoundError if repository does not exist", async (ctx) => {
+it("throws RepositoryNotFoundError if repository does not exist", async (ctx) => {
 	const client = createTestClient();
 
 	ctx.server.use(
@@ -681,7 +681,9 @@ it("throws NotFoundError if repository does not exist", async (ctx) => {
 	await expect(() => client.get()).rejects.toThrowError(
 		/repository not found/i,
 	);
-	await expect(() => client.get()).rejects.toThrowError(prismic.NotFoundError);
+	await expect(() => client.get()).rejects.toThrowError(
+		prismic.RepositoryNotFoundError,
+	);
 });
 
 it("throws RefNotFoundError if ref does not exist", async (ctx) => {
@@ -736,6 +738,60 @@ it("throws RefExpiredError if ref is expired", async (ctx) => {
 	await expect(() => client.get()).rejects.toThrowError(
 		prismic.RefExpiredError,
 	);
+});
+
+it("throws PreviewTokenExpiredError if preview token is expired", async (ctx) => {
+	const queryResponse = {
+		type: "api_security_error",
+		message: "This preview token has expired",
+		oauth_initiate: "https://qwerty.prismic.io/auth",
+		oauth_token: "https://qwerty.prismic.io/auth/token",
+	};
+
+	mockPrismicRestAPIV2({ ctx });
+
+	const client = createTestClient();
+
+	const queryEndpoint = new URL(
+		"./documents/search",
+		`${client.endpoint}/`,
+	).toString();
+
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
+			return res(ctx.status(404), ctx.json(queryResponse));
+		}),
+	);
+
+	await expect(() => client.get()).rejects.toThrowError(queryResponse.message);
+	await expect(() => client.get()).rejects.toThrowError(
+		prismic.PreviewTokenExpiredError,
+	);
+});
+
+it("throws NotFoundError if the 404 error is unknown", async (ctx) => {
+	const queryResponse = {
+		type: "unknown_type",
+		message: "message",
+	};
+
+	mockPrismicRestAPIV2({ ctx });
+
+	const client = createTestClient();
+
+	const queryEndpoint = new URL(
+		"./documents/search",
+		`${client.endpoint}/`,
+	).toString();
+
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
+			return res(ctx.status(404), ctx.json(queryResponse));
+		}),
+	);
+
+	await expect(() => client.get()).rejects.toThrowError(queryResponse.message);
+	await expect(() => client.get()).rejects.toThrowError(prismic.NotFoundError);
 });
 
 it("retries after `retry-after` milliseconds if response code is 429", async (ctx) => {
