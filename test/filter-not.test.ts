@@ -13,6 +13,11 @@ testFilter(
 );
 
 testFilter(
+	'[not(my.product.description, "\\"quote\\"")]',
+	prismic.filter.not("my.product.description", '"quote"'),
+);
+
+testFilter(
 	"[not(my.product.price, 50)]",
 	prismic.filter.not("my.product.price", 50),
 );
