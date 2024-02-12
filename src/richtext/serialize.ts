@@ -29,7 +29,7 @@ export const serialize = <SerializerReturnType>(
 	);
 };
 
-const serializeTreeNodes = <T>(
+export const serializeTreeNodes = <T>(
 	nodes: TreeNode[],
 	serializer: RichTextFunctionSerializer<T>,
 ): T[] => {
