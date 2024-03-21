@@ -72,7 +72,11 @@ export type ImageField<
 		// editor experience.
 		State extends "filled"
 			? ImageFieldImage<State> &
-					Record<Extract<ThumbnailNames, string>, ImageFieldImage<State>>
+					Record<Extract<ThumbnailNames, string>, ImageFieldImage<State>> & {
+						caption: string | null;
+					}
 			: ImageFieldImage<State> &
-					Record<Extract<ThumbnailNames, string>, ImageFieldImage<State>>
+					Record<Extract<ThumbnailNames, string>, ImageFieldImage<State>> & {
+						caption?: null;
+					}
 	>;
