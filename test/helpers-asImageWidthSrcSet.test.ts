@@ -19,6 +19,7 @@ it("returns an image field src and width-based srcset with [640, 750, 828, 1080,
 		url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 		alt: null,
 		copyright: null,
+		caption: null,
 		dimensions: { width: 400, height: 300 },
 	};
 
@@ -45,6 +46,7 @@ it("supports custom widths", () => {
 		url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 		alt: null,
 		copyright: null,
+		caption: null,
 		dimensions: { width: 400, height: 300 },
 	};
 
@@ -73,6 +75,7 @@ it("applies given Imgix URL parameters", () => {
 		url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 		alt: null,
 		copyright: null,
+		caption: null,
 		dimensions: { width: 400, height: 300 },
 	};
 
@@ -103,6 +106,7 @@ it('if widths is "thumbnails", returns a srcset of responsive views if the field
 		url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 		alt: null,
 		copyright: null,
+		caption: null,
 		dimensions: { width: 1000, height: 800 },
 		foo: {
 			id: "id",
@@ -153,6 +157,7 @@ it('if widths is "thumbnails", but the field does not contain responsive views, 
 		url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 		alt: null,
 		copyright: null,
+		caption: null,
 		dimensions: { width: 1000, height: 800 },
 	};
 
@@ -179,6 +184,7 @@ it('if widths is not "thumbnails", but the field contains responsive views, uses
 		url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 		alt: null,
 		copyright: null,
+		caption: null,
 		dimensions: { width: 1000, height: 800 },
 		foo: {
 			id: "id",

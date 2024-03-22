@@ -4,7 +4,7 @@ import {
 	buildWidthSrcSet,
 } from "imgix-url-builder";
 
-import type { ImageFieldImage } from "../types/value/image";
+import type { ImageField, ImageFieldImage } from "../types/value/image";
 
 import * as isFilled from "./isFilled";
 
@@ -78,7 +78,7 @@ type AsImageWidthSrcSetConfig = Omit<BuildWidthSrcSetParams, "widths"> & {
  * @see Imgix URL parameters reference: https://docs.imgix.com/apis/rendering
  */
 export const asImageWidthSrcSet = <
-	Field extends ImageFieldImage | null | undefined,
+	Field extends ImageField | ImageFieldImage | null | undefined,
 >(
 	field: Field,
 	config: AsImageWidthSrcSetConfig = {},
@@ -91,16 +91,11 @@ export const asImageWidthSrcSet = <
 			// eslint-disable-next-line prefer-const
 			...imgixParams
 		} = config;
-		const {
-			url,
-			dimensions,
-			id: _id,
-			alt: _alt,
-			copyright: _copyright,
-			edit: _edit,
-			caption: _caption,
-			...responsiveViews
-		} = field;
+		const { url, dimensions } = field;
+
+		const responsiveViews = Object.values(field).filter(
+			isFilled.imageThumbnail,
+		);
 
 		// The Prismic Rest API will always return thumbnail values if
 		// the base size is filled.
