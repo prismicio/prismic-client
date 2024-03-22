@@ -19,6 +19,7 @@ it("returns an image field URL", () => {
 		url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 		alt: null,
 		copyright: null,
+		caption: null,
 		dimensions: { width: 400, height: 300 },
 	};
 
@@ -37,6 +38,7 @@ it("applies given Imgix URL parameters", () => {
 		url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 		alt: null,
 		copyright: null,
+		caption: null,
 		dimensions: { width: 400, height: 300 },
 	};
 
