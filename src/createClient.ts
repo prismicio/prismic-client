@@ -1,3 +1,5 @@
+import { backOff } from "exponential-backoff";
+
 import { appendFilters } from "./lib/appendFilters";
 import { castThunk } from "./lib/castThunk";
 import { devMsg } from "./lib/devMsg";
@@ -1878,6 +1880,22 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 		const res = await job;
 
+		return await this.processResponse<T>({
+			res,
+			url,
+			params,
+		});
+	}
+
+	private async processResponse<T = unknown>({
+		res,
+		url,
+		params = {},
+	}: {
+		res: FetchJobResult;
+		url: string;
+		params: FetchParams;
+	}): Promise<T> {
 		if (res.status !== 404 && res.json == null) {
 			throw new PrismicError(undefined, url, res.json);
 		}
@@ -1940,7 +1958,38 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			// Gone
 			// - Ref is expired
 			case 410: {
-				throw new RefExpiredError(res.json.message, url, res.json);
+				switch (this.refState.mode) {
+					case RefStateMode.Master:
+						const slices = (res.json.message as string).split(" ");
+						const masterRef = slices[slices.length - 1];
+						this.queryContentFromRef(masterRef);
+						this.refState.mode = RefStateMode.Master;
+					default:
+						const backOffRes = (await backOff(
+							async () => {
+								console.warn(res.json.message);
+
+								return await this.fetch(url, params);
+							},
+							{
+								jitter: "full",
+								maxDelay: 64,
+							},
+						)) as FetchJobResult<unknown>;
+
+						if (backOffRes.status === 410) {
+							throw new RefExpiredError(res.json.message, url, res.json);
+						}
+				}
+				if (this.refState.mode !== RefStateMode.Master) {
+					throw new RefExpiredError(res.json.message, url, res.json);
+				}
+
+				return await this.processResponse({
+					res,
+					url,
+					params,
+				});
 			}
 
 			// Too Many Requests
