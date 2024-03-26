@@ -69,7 +69,7 @@ export { asHTML } from "./helpers/asHTML";
 export { asImageSrc } from "./helpers/asImageSrc";
 export { asImageWidthSrcSet } from "./helpers/asImageWidthSrcSet";
 export { asImagePixelDensitySrcSet } from "./helpers/asImagePixelDensitySrcSet";
-export { unstable_mapSliceZone } from "./helpers/unstable_mapSliceZone";
+export { mapSliceZone } from "./helpers/mapSliceZone";
 export * as isFilled from "./helpers/isFilled";
 
 // Conversion helper.
@@ -77,6 +77,7 @@ export { documentToLinkField } from "./helpers/documentToLinkField";
 
 export type { LinkResolverFunction } from "./helpers/asLink";
 export type { AsLinkAttrsConfig } from "./helpers/asLinkAttrs";
+export type { SliceMapper } from "./helpers/mapSliceZone";
 
 /**
  * @deprecated Renamed to `HTMLRichTextMapSerializer`
