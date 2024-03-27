@@ -74,6 +74,16 @@ expectType<prismic.CustomTypeModelImageField>({
 });
 
 /**
+ * Supports optional caption.
+ */
+expectType<prismic.CustomTypeModelImageField>({
+	type: prismic.CustomTypeModelFieldType.Image,
+	config: {
+		allowCaption: true,
+	},
+});
+
+/**
  * Supports custom thumbnail names.
  */
 expectType<prismic.CustomTypeModelImageField<"Foo">>({

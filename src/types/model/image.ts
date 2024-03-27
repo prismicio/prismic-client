@@ -33,5 +33,6 @@ export interface CustomTypeModelImageField<
 		label?: string | null;
 		constraint?: CustomTypeModelImageConstraint;
 		thumbnails?: readonly CustomTypeModelImageThumbnail<ThumbnailNames>[];
+		allowCaption?: boolean;
 	};
 }
