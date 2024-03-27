@@ -716,7 +716,8 @@ it("throws RefNotFoundError if ref does not exist", async (ctx) => {
 it("throws RefExpiredError if ref is expired", async (ctx) => {
 	const queryResponse = {
 		type: "api_validation_error",
-		message: "message",
+		message:
+			"The provided ref is no longer accessible, it has expired. Master ref is: xxxxxxxxxxxxxx",
 	};
 
 	mockPrismicRestAPIV2({ ctx });
@@ -735,9 +736,55 @@ it("throws RefExpiredError if ref is expired", async (ctx) => {
 	);
 
 	await expect(() => client.get()).rejects.toThrowError(queryResponse.message);
+	expect(client.queryContentFromRef).toHaveBeenNthCalledWith(
+		10,
+		"xxxxxxxxxxxxxx",
+	);
 	await expect(() => client.get()).rejects.toThrowError(
 		prismic.RefExpiredError,
 	);
+});
+
+it("return Ressponse when ref is cached", async (ctx) => {
+	const queryResponse = {
+		type: "api_validation_error",
+		message:
+			"The provided ref is no longer accessible, it has expired. Master ref is: xxxxxxxxxxxxxx",
+	};
+
+	mockPrismicRestAPIV2({ ctx });
+
+	const client = createTestClient();
+
+	const queryEndpoint = new URL(
+		"./documents/search",
+		`${client.endpoint}/`,
+	).toString();
+
+	let requestCount = -1;
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
+			requestCount++;
+			if (requestCount === 0) {
+				return res(ctx.status(410), ctx.json(queryResponse));
+			}
+
+			return res(ctx.status(200), ctx.json(queryResponse));
+		}),
+	);
+
+	const initialRequest = client.get();
+	const successiveRequest = client.get();
+	await expect(() => initialRequest).rejects.toThrowError(
+		queryResponse.message,
+	);
+	await expect(() => initialRequest).rejects.toThrowError(
+		prismic.RefExpiredError,
+	);
+
+	expect(client.queryContentFromRef).toHaveBeenCalledWith("xxxxxxxxxxxxxx");
+	expect(console.warn).toHaveBeenCalledWith(queryResponse.message);
+	expect(() => successiveRequest).resolves.toEqual(queryResponse);
 });
 
 it("throws PreviewTokenExpiredError if preview token is expired", async (ctx) => {

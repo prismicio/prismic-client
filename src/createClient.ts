@@ -1887,6 +1887,18 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		});
 	}
 
+	/**
+	 * Performs a network request using the configured `fetch` function. It
+	 * assumes all successful responses will have a JSON content type. It also
+	 * normalizes unsuccessful network requests.
+	 *
+	 * @typeParam T - The JSON response.
+	 *
+	 * @param url - URL to the resource to fetch.
+	 * @param params - Prismic REST API parameters for the network request.
+	 *
+	 * @returns The JSON response from the network request.
+	 */
 	private async processResponse<T = unknown>({
 		res,
 		url,
@@ -1980,16 +1992,13 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 						if (backOffRes.status === 410) {
 							throw new RefExpiredError(res.json.message, url, res.json);
 						}
-				}
-				if (this.refState.mode !== RefStateMode.Master) {
-					throw new RefExpiredError(res.json.message, url, res.json);
-				}
 
-				return await this.processResponse({
-					res,
-					url,
-					params,
-				});
+						return await this.processResponse({
+							res,
+							url,
+							params,
+						});
+				}
 			}
 
 			// Too Many Requests
