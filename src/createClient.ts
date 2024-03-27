@@ -488,6 +488,11 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	private cachedRepositoryExpiration = 0;
 
 	/**
+	 * An optional field used to check `refState` has cached reference
+	 */
+	private cached = true;
+
+	/**
 	 * Active `fetch()` jobs keyed by URL and AbortSignal (if it exists).
 	 */
 	private fetchJobs: Record<
@@ -1813,6 +1818,8 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *
 	 * @param url - URL to the resource to fetch.
 	 * @param params - Prismic REST API parameters for the network request.
+	 * @param skipCache - Boolean indicating whether cached response should be
+	 *   used or not. Default: true.
 	 *
 	 * @returns The JSON response from the network request.
 	 */
@@ -1896,6 +1903,8 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *
 	 * @param url - URL to the resource to fetch.
 	 * @param params - Prismic REST API parameters for the network request.
+	 * @param skipCache - Boolean indicating whether cached response should be
+	 *   used or not. Default: true.
 	 *
 	 * @returns The JSON response from the network request.
 	 */
@@ -1970,6 +1979,10 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			// Gone
 			// - Ref is expired
 			case 410: {
+				if (!this.cached) {
+					throw new RefExpiredError(res.json.message, url, res.json);
+				}
+
 				switch (this.refState.mode) {
 					case RefStateMode.Master:
 						const slices = (res.json.message as string).split(" ");
@@ -1977,7 +1990,8 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 						this.queryContentFromRef(masterRef);
 						this.refState.mode = RefStateMode.Master;
 					default:
-						const backOffRes = (await backOff(
+						this.cached = false;
+						await backOff(
 							async () => {
 								console.warn(res.json.message);
 
@@ -1986,12 +2000,9 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 							{
 								jitter: "full",
 								maxDelay: 64,
+								numOfAttempts: 10,
 							},
-						)) as FetchJobResult<unknown>;
-
-						if (backOffRes.status === 410) {
-							throw new RefExpiredError(res.json.message, url, res.json);
-						}
+						);
 
 						return await this.processResponse({
 							res,

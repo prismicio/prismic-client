@@ -735,11 +735,9 @@ it("throws RefExpiredError if ref is expired", async (ctx) => {
 		}),
 	);
 
+	const queryContentFromRef = vi.spyOn(client, "queryContentFromRef");
 	await expect(() => client.get()).rejects.toThrowError(queryResponse.message);
-	expect(client.queryContentFromRef).toHaveBeenNthCalledWith(
-		10,
-		"xxxxxxxxxxxxxx",
-	);
+	expect(queryContentFromRef).toHaveBeenCalledWith("xxxxxxxxxxxxxx");
 	await expect(() => client.get()).rejects.toThrowError(
 		prismic.RefExpiredError,
 	);
@@ -773,8 +771,9 @@ it("return Ressponse when ref is cached", async (ctx) => {
 		}),
 	);
 
+	const queryContentFromRef = vi.spyOn(client, "queryContentFromRef");
+	const warn = vi.spyOn(console, "warn");
 	const initialRequest = client.get();
-	const successiveRequest = client.get();
 	await expect(() => initialRequest).rejects.toThrowError(
 		queryResponse.message,
 	);
@@ -782,9 +781,10 @@ it("return Ressponse when ref is cached", async (ctx) => {
 		prismic.RefExpiredError,
 	);
 
-	expect(client.queryContentFromRef).toHaveBeenCalledWith("xxxxxxxxxxxxxx");
-	expect(console.warn).toHaveBeenCalledWith(queryResponse.message);
-	expect(() => successiveRequest).resolves.toEqual(queryResponse);
+	expect(queryContentFromRef).toHaveBeenCalledTimes(1);
+	expect(queryContentFromRef).toHaveBeenCalledWith("xxxxxxxxxxxxxx");
+	expect(warn).toHaveBeenCalledWith(queryResponse.message);
+	expect(client.get()).resolves.toEqual(queryResponse);
 });
 
 it("throws PreviewTokenExpiredError if preview token is expired", async (ctx) => {
