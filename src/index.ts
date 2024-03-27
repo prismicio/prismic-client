@@ -7,6 +7,7 @@ import type {
 	HTMLRichTextFunctionSerializer,
 	HTMLRichTextMapSerializer,
 } from "./helpers/asHTML";
+import { mapSliceZone } from "./helpers/mapSliceZone";
 
 import { filter } from "./filter";
 
@@ -69,14 +70,20 @@ export { asHTML } from "./helpers/asHTML";
 export { asImageSrc } from "./helpers/asImageSrc";
 export { asImageWidthSrcSet } from "./helpers/asImageWidthSrcSet";
 export { asImagePixelDensitySrcSet } from "./helpers/asImagePixelDensitySrcSet";
-export { unstable_mapSliceZone } from "./helpers/unstable_mapSliceZone";
 export * as isFilled from "./helpers/isFilled";
+
+/**
+ * @deprecated Renamed to `mapSliceZone`
+ */
+const unstable_mapSliceZone = mapSliceZone;
+export { mapSliceZone, unstable_mapSliceZone };
 
 // Conversion helper.
 export { documentToLinkField } from "./helpers/documentToLinkField";
 
 export type { LinkResolverFunction } from "./helpers/asLink";
 export type { AsLinkAttrsConfig } from "./helpers/asLinkAttrs";
+export type { SliceMapper } from "./helpers/mapSliceZone";
 
 /**
  * @deprecated Renamed to `HTMLRichTextMapSerializer`
