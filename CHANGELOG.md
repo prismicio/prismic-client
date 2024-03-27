@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.4.0](https://github.com/prismicio/prismic-client/compare/v7.3.1...v7.4.0) (2024-03-27)
+
+
+### Features
+
+* stable `mapSliceZone` (previously `unstable_mapSliceZone`) ([#336](https://github.com/prismicio/prismic-client/issues/336)) ([b6852a4](https://github.com/prismicio/prismic-client/commit/b6852a419a247276debc2f094578bd8ab318958c))
+
 ### [7.3.1](https://github.com/prismicio/prismic-client/compare/v7.3.0...v7.3.1) (2023-10-11)
 
 
