@@ -306,6 +306,33 @@ expectType<
 >(false);
 
 /**
+ * CustomTypeModelFieldForSlice includes groups and any field compatible with
+ * groups.
+ */
+expectType<
+	TypeOf<
+		prismic.CustomTypeModelFieldForSlice,
+		prismic.CustomTypeModelFieldForGroup
+	>
+>(true);
+expectType<
+	TypeOf<prismic.CustomTypeModelField, prismic.CustomTypeModelGroupField>
+>(true);
+
+/**
+ * CustomTypeModelFieldForSlice excludes any fields not compatible with a slice.
+ */
+expectType<
+	TypeOf<prismic.CustomTypeModelFieldForSlice, prismic.CustomTypeModelUIDField>
+>(false);
+expectType<
+	TypeOf<
+		prismic.CustomTypeModelFieldForGroup,
+		prismic.CustomTypeModelSliceZoneField
+	>
+>(false);
+
+/**
  * CustomTypeModelField includes any field.
  */
 expectType<

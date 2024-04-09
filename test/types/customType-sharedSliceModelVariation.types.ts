@@ -71,11 +71,44 @@ expectType<prismic.SharedSliceModelVariation<"foo">>({
 });
 
 /**
+ * Supports custom fields.
+ */
+expectType<
+	prismic.SharedSliceModelVariation<
+		string,
+		{ foo: prismic.CustomTypeModelBooleanField }
+	>
+>({
+	id: "foo",
+	name: "string",
+	docURL: "string",
+	version: "string",
+	description: "string",
+	fields: {
+		foo: {
+			type: prismic.CustomTypeModelFieldType.Boolean,
+			config: {
+				label: "string",
+			},
+		},
+		// @ts-expect-error - Only given fields are valid.
+		bar: {
+			type: prismic.CustomTypeModelFieldType.Boolean,
+			config: {
+				label: "string",
+			},
+		},
+	},
+	imageUrl: "string",
+});
+
+/**
  * Supports custom primary fields.
  */
 expectType<
 	prismic.SharedSliceModelVariation<
 		string,
+		never,
 		{ foo: prismic.CustomTypeModelBooleanField }
 	>
 >({
@@ -99,7 +132,6 @@ expectType<
 			},
 		},
 	},
-	items: {},
 	imageUrl: "string",
 });
 
@@ -109,7 +141,8 @@ expectType<
 expectType<
 	prismic.SharedSliceModelVariation<
 		string,
-		Record<string, never>,
+		never,
+		never,
 		{ foo: prismic.CustomTypeModelBooleanField }
 	>
 >({
@@ -118,7 +151,6 @@ expectType<
 	docURL: "string",
 	version: "string",
 	description: "string",
-	primary: {},
 	items: {
 		foo: {
 			type: prismic.CustomTypeModelFieldType.Boolean,
