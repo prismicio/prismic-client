@@ -89,3 +89,13 @@ export type CustomTypeModelFieldForGroup =
 	| CustomTypeModelKeyTextField
 	| CustomTypeModelTimestampField
 	| CustomTypeModelSeparatorField;
+
+/**
+ * Any custom type field that is valid for a slice.
+ *
+ * **Note**: This type is only valid for a slice's `fields` property. It cannot
+ * be used for the deprecated `primary` or `items` properties.
+ */
+export type CustomTypeModelFieldForSlice =
+	| CustomTypeModelGroupField
+	| CustomTypeModelFieldForGroup;
