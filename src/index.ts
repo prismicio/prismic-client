@@ -300,6 +300,7 @@ export type { CustomTypeModelSeparatorField } from "./types/model/separator";
 export type {
 	CustomTypeModelField,
 	CustomTypeModelFieldForGroup,
+	CustomTypeModelFieldForSlice,
 } from "./types/model/types";
 
 // API - Types representing Prismic Rest API V2 responses.
