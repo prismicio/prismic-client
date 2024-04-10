@@ -6,7 +6,7 @@ export type SharedSliceVariationBase<Variation extends string = string> = {
 };
 
 /**
- * A shared Slice variation. Content is in the `primary` and `items` properties.
+ * A shared slice variation. Content is in the `primary` and `items` properties.
  */
 export type SharedSliceVariationWithPrimaryAndItems<
 	Variation extends string = string,
@@ -26,7 +26,7 @@ export type SharedSliceVariationWithPrimaryAndItems<
 };
 
 /**
- * A shared Slice variation. Content is in the `data` property.
+ * A shared slice variation. Content is in the `data` property.
  */
 export type SharedSliceVariationWithData<
 	Variation extends string = string,
@@ -38,7 +38,7 @@ export type SharedSliceVariationWithData<
 };
 
 /**
- * A shared Slice variation.
+ * A shared slice variation.
  */
 export type SharedSliceVariation<
 	Variation extends string = string,
