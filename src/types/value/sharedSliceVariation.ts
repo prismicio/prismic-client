@@ -1,11 +1,18 @@
 import type { AnyRegularField, SliceField } from "./types";
 
+export type SharedSliceVariationBase<Variation extends string = string> = {
+	variation: Variation;
+	version: string;
+};
+
 /**
  * A shared Slice variation. Content is in the `primary` and `items` properties.
  */
 export type SharedSliceVariationWithPrimaryAndItems<
-	Variation = string,
-	PrimaryFields extends Record<string, AnyRegularField> = Record<
+	Variation extends string = string,
+	// SliceField is used to support a top-level SharedSliceVariation type.
+	// It must support `AnyRegularField` and `SliceField`.
+	PrimaryFields extends Record<string, SliceField> = Record<
 		string,
 		AnyRegularField
 	>,
@@ -13,30 +20,32 @@ export type SharedSliceVariationWithPrimaryAndItems<
 		string,
 		AnyRegularField
 	>,
-> = Omit<SharedSliceVariation<Variation, PrimaryFields, ItemsFields>, "data">;
+> = SharedSliceVariationBase<Variation> & {
+	primary: PrimaryFields;
+	items: ItemsFields[];
+};
 
 /**
  * A shared Slice variation. Content is in the `data` property.
  */
 export type SharedSliceVariationWithData<
-	Variation = string,
+	Variation extends string = string,
 	Fields extends Record<string, SliceField> = Record<string, SliceField>,
-> = Omit<SharedSliceVariation<Variation, Fields>, "primary" | "items">;
+> = SharedSliceVariationBase<Variation> & {
+	variation: Variation;
+	version: string;
+	data: Fields;
+};
 
 /**
  * A shared Slice variation.
  */
-export interface SharedSliceVariation<
-	Variation = string,
+export type SharedSliceVariation<
+	Variation extends string = string,
 	Fields extends Record<string, SliceField> = Record<string, SliceField>,
 	ItemsFields extends Record<string, AnyRegularField> = Record<
 		string,
 		AnyRegularField
 	>,
-> {
-	variation: Variation;
-	version: string;
-	data: Fields;
-	primary: Fields;
-	items: ItemsFields[];
-}
+> = SharedSliceVariationWithData<Variation, Fields> &
+	SharedSliceVariationWithPrimaryAndItems<Variation, Fields, ItemsFields>;

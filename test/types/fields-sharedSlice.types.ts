@@ -24,6 +24,7 @@ expectType<prismic.SharedSlice>({
 	slice_label: null,
 	variation: "string",
 	version: "string",
+	data: {},
 	primary: {},
 	items: [],
 });
@@ -37,6 +38,7 @@ expectType<prismic.SharedSlice<"foo">>({
 	slice_label: null,
 	variation: "string",
 	version: "string",
+	data: {},
 	primary: {},
 	items: [],
 });
@@ -47,6 +49,7 @@ expectType<prismic.SharedSlice<"foo">>({
 	slice_label: null,
 	variation: "string",
 	version: "string",
+	data: {},
 	primary: {},
 	items: [],
 });
@@ -60,6 +63,7 @@ expectType<prismic.SharedSlice<string, prismic.SharedSliceVariation<"foo">>>({
 	slice_label: null,
 	variation: "foo",
 	version: "string",
+	data: {},
 	primary: {},
 	items: [],
 });
@@ -70,6 +74,7 @@ expectType<prismic.SharedSlice<string, prismic.SharedSliceVariation<"foo">>>({
 	// @ts-expect-error - Variation type must match the given type.
 	variation: "string",
 	version: "string",
+	data: {},
 	primary: {},
 	items: [],
 });
