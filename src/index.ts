@@ -228,7 +228,11 @@ export type { Slice } from "./types/value/slice";
 export type { SharedSlice } from "./types/value/sharedSlice";
 export type { SharedSliceVariation } from "./types/value/sharedSliceVariation";
 
-export type { FieldState, AnyRegularField } from "./types/value/types";
+export type {
+	FieldState,
+	AnyRegularField,
+	AnySlicePrimaryField,
+} from "./types/value/types";
 
 // Models - Types representing Prismic content models.
 export { CustomTypeModelFieldType } from "./types/model/types";

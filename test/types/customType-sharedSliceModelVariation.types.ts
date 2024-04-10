@@ -76,7 +76,12 @@ expectType<prismic.SharedSliceModelVariation<"foo">>({
 expectType<
 	prismic.SharedSliceModelVariation<
 		string,
-		{ foo: prismic.CustomTypeModelBooleanField }
+		{
+			foo: prismic.CustomTypeModelBooleanField;
+			bar: prismic.CustomTypeModelGroupField<{
+				baz: prismic.CustomTypeModelBooleanField;
+			}>;
+		}
 	>
 >({
 	id: "foo",
@@ -91,8 +96,22 @@ expectType<
 				label: "string",
 			},
 		},
-		// @ts-expect-error - Only given fields are valid.
 		bar: {
+			type: prismic.CustomTypeModelFieldType.Group,
+			config: {
+				label: "string",
+				fields: {
+					baz: {
+						type: "Boolean",
+						config: {
+							label: "string",
+						},
+					},
+				},
+			},
+		},
+		// @ts-expect-error - Only given fields are valid.
+		qux: {
 			type: prismic.CustomTypeModelFieldType.Boolean,
 			config: {
 				label: "string",
@@ -134,6 +153,28 @@ expectType<
 			},
 		},
 	},
+	imageUrl: "string",
+});
+
+/**
+ * Does not support groups in items section.
+ */
+expectType<
+	prismic.SharedSliceModelVariation<
+		string,
+		Record<string, never>,
+		// @ts-expect-error - Group fields are not supported.
+		{ foo: prismic.CustomTypeModelGroupField }
+	>
+>({
+	id: "foo",
+	name: "string",
+	docURL: "string",
+	version: "string",
+	description: "string",
+	primary: {},
+	// @ts-expect-error - We don't care about the actual value.
+	items: {},
 	imageUrl: "string",
 });
 

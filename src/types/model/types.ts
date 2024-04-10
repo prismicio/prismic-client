@@ -68,6 +68,13 @@ export type CustomTypeModelField =
 	| CustomTypeModelFieldForGroup;
 
 /**
+ * Any custom type field that is valid for a slice's primary section.
+ */
+export type CustomTypeModelFieldForSlicePrimary =
+	| CustomTypeModelGroupField
+	| CustomTypeModelFieldForGroup;
+
+/**
  * Any custom type field that is valid for a group field.
  */
 export type CustomTypeModelFieldForGroup =
