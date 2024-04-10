@@ -22,12 +22,6 @@ import type { TitleField } from "./title";
 export type EmptyObjectField = Record<string, never>;
 
 /**
- * Utility type to provide a fallback value for an input.
- */
-export type WithDefault<Input, Constraint> =
-	Input extends NonNullable<Constraint> ? Input : NonNullable<Constraint>;
-
-/**
  * Valid states for fields. Not all fields use this type (e.g. BooleanField).
  */
 export type FieldState = "empty" | "filled";
