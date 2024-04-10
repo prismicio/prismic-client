@@ -4,6 +4,7 @@ import type { ContentRelationshipField } from "./contentRelationship";
 import type { DateField } from "./date";
 import type { EmbedField } from "./embed";
 import type { GeoPointField } from "./geoPoint";
+import { GroupField } from "./group";
 import type { ImageField } from "./image";
 import type { IntegrationField } from "./integration";
 import type { KeyTextField } from "./keyText";
@@ -19,6 +20,12 @@ import type { TitleField } from "./title";
  * Empty state for object-shaped fields.
  */
 export type EmptyObjectField = Record<string, never>;
+
+/**
+ * Utility type to provide a fallback value for an input.
+ */
+export type WithDefault<Input, Constraint> =
+	Input extends NonNullable<Constraint> ? Input : NonNullable<Constraint>;
 
 /**
  * Valid states for fields. Not all fields use this type (e.g. BooleanField).
@@ -45,6 +52,11 @@ export type AnyRegularField =
 	| BooleanField
 	| GeoPointField
 	| IntegrationField;
+
+/**
+ * Any field that can be used in a slice.
+ */
+export type SliceField = GroupField | AnyRegularField;
 
 /**
  * Useful to flatten the type output to improve type hints shown in editors. And

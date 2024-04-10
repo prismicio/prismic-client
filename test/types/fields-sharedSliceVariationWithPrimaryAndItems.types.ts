@@ -2,7 +2,7 @@ import { expectNever, expectType } from "ts-expect";
 
 import * as prismic from "../../src";
 
-(value: prismic.SharedSliceVariation): true => {
+(value: prismic.SharedSliceVariationWithPrimaryAndItems): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
@@ -18,10 +18,9 @@ import * as prismic from "../../src";
 	}
 };
 
-expectType<prismic.SharedSliceVariation>({
+expectType<prismic.SharedSliceVariationWithPrimaryAndItems>({
 	variation: "string",
 	version: "string",
-	data: {},
 	primary: {},
 	items: [],
 });
@@ -29,59 +28,44 @@ expectType<prismic.SharedSliceVariation>({
 /**
  * Supports custom API ID.
  */
-expectType<prismic.SharedSliceVariation<"foo">>({
+expectType<prismic.SharedSliceVariationWithPrimaryAndItems<"foo">>({
 	variation: "foo",
 	version: "string",
-	data: {},
 	primary: {},
 	items: [],
 });
-expectType<prismic.SharedSliceVariation<"foo">>({
+expectType<prismic.SharedSliceVariationWithPrimaryAndItems<"foo">>({
 	// @ts-expect-error - Variation type must match the given type.
 	variation: "string",
 	version: "string",
-	data: {},
 	primary: {},
 	items: [],
 });
-
-/**
- * Supports custom data type.
- */
-expectType<prismic.SharedSliceVariation<string, { foo: prismic.BooleanField }>>(
-	{
-		variation: "string",
-		version: "string",
-		data: {
-			foo: true,
-			// @ts-expect-error - Only given fields are valid.
-			bar: false,
-		},
-		items: [],
-	},
-);
 
 /**
  * Supports custom primary fields type.
  */
-expectType<prismic.SharedSliceVariation<string, { foo: prismic.BooleanField }>>(
-	{
-		variation: "string",
-		version: "string",
-		primary: {
-			foo: true,
-			// @ts-expect-error - Only given fields are valid.
-			bar: false,
-		},
-		items: [],
+expectType<
+	prismic.SharedSliceVariationWithPrimaryAndItems<
+		string,
+		{ foo: prismic.BooleanField }
+	>
+>({
+	variation: "string",
+	version: "string",
+	primary: {
+		foo: true,
+		// @ts-expect-error - Only given fields are valid.
+		bar: false,
 	},
-);
+	items: [],
+});
 
 /**
  * Supports custom items fields type.
  */
 expectType<
-	prismic.SharedSliceVariation<
+	prismic.SharedSliceVariationWithPrimaryAndItems<
 		string,
 		{ foo: prismic.BooleanField },
 		{ bar: prismic.KeyTextField }
