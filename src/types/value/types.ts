@@ -4,7 +4,7 @@ import type { ContentRelationshipField } from "./contentRelationship";
 import type { DateField } from "./date";
 import type { EmbedField } from "./embed";
 import type { GeoPointField } from "./geoPoint";
-import { GroupField } from "./group";
+import type { GroupField } from "./group";
 import type { ImageField } from "./image";
 import type { IntegrationField } from "./integration";
 import type { KeyTextField } from "./keyText";
