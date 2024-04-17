@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.5.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.4.0...v7.5.0-alpha.0) (2024-04-17)
+
+
+### Features
+
+* support groups in a slice's primary section ([98a44fa](https://github.com/prismicio/prismic-client/commit/98a44fa7a9da314f24d8b2ba518c921625391db2))
+
+
+### Bug Fixes
+
+* update `@prismicio/types-internal` ([3ee1b06](https://github.com/prismicio/prismic-client/commit/3ee1b064f2ae5de7ddbbd2e69f93776ff0d9a0ad))
+
+
+### Refactor
+
+* use `type` import ([46c4343](https://github.com/prismicio/prismic-client/commit/46c43439cce0ccf6626102a77918cea1e04736b7))
+
+
+### Chore
+
+* release alpha as minor ([9bd6355](https://github.com/prismicio/prismic-client/commit/9bd6355d7098f45f221821e3485edc8bad05f29e))
+* use `@prismicio/types-internal` alpha ([df8f63d](https://github.com/prismicio/prismic-client/commit/df8f63d858227a246913dac33f15529294fc0515))
+
 ## [7.4.0](https://github.com/prismicio/prismic-client/compare/v7.3.1...v7.4.0) (2024-03-27)
 
 
