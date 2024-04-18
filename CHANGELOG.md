@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.5.0-alpha.1](https://github.com/prismicio/prismic-client/compare/v7.5.0-alpha.0...v7.5.0-alpha.1) (2024-04-18)
+
+
+### Bug Fixes
+
+* export `CustomTypeModelFieldForSlicePrimary` ([16739f6](https://github.com/prismicio/prismic-client/commit/16739f6ec00a244e51b008f98d243be739376c50))
+
 ## [7.5.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.4.0...v7.5.0-alpha.0) (2024-04-17)
 
 
