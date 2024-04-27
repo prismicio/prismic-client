@@ -19,7 +19,7 @@ type AnyFunction = (...args: any[]) => any;
  *
  * @typeParam Slice - The Slice from which the type will be extracted.
  */
-type ExtractSliceType<TSlice extends SliceLike> = TSlice extends Slice
+type ExtractSliceType<TSlice extends SliceLike> = TSlice extends SliceLikeRestV2
 	? TSlice["slice_type"]
 	: TSlice extends SliceLikeGraphQL
 	? TSlice["type"]
@@ -175,7 +175,7 @@ type MapSliceLike<
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	TSliceLike extends SliceLike<any>,
 	TSliceMappers extends SliceMappers<
-		SliceLike<ExtractSliceType<TSliceLike>>,
+		TSliceLike,
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		any
 	>,
@@ -232,13 +232,7 @@ export function mapSliceZone<
 	sliceZone: SliceZoneLike<TSliceLike>,
 	mappers: TSliceMappers,
 	context?: TContext,
-): Promise<
-	MapSliceLike<
-		TSliceLike,
-		// @ts-expect-error - I don't know how to fix this type
-		TSliceMappers
-	>[]
-> {
+): Promise<MapSliceLike<TSliceLike, TSliceMappers>[]> {
 	return Promise.all(
 		sliceZone.map(async (slice, index, slices) => {
 			const isRestSliceType = "slice_type" in slice;

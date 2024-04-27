@@ -39,6 +39,13 @@ All notable changes to this project will be documented in this file. See [standa
 * release alpha as minor ([9bd6355](https://github.com/prismicio/prismic-client/commit/9bd6355d7098f45f221821e3485edc8bad05f29e))
 * use `@prismicio/types-internal` alpha ([df8f63d](https://github.com/prismicio/prismic-client/commit/df8f63d858227a246913dac33f15529294fc0515))
 
+### [7.4.1](https://github.com/prismicio/prismic-client/compare/v7.4.0...v7.4.1) (2024-04-13)
+
+
+### Bug Fixes
+
+* type error in `mapSliceZone` ([#339](https://github.com/prismicio/prismic-client/issues/339)) ([638e87a](https://github.com/prismicio/prismic-client/commit/638e87aeb97a04c0b8fbb160bd65a1d26028335e))
+
 ## [7.4.0](https://github.com/prismicio/prismic-client/compare/v7.3.1...v7.4.0) (2024-03-27)
 
 
