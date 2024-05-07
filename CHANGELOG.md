@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.5.0-alpha.3](https://github.com/prismicio/prismic-client/compare/v7.5.0-alpha.2...v7.5.0-alpha.3) (2024-05-07)
+
+
+### Bug Fixes
+
+* update @prismicio/types-internal ([e75b4c2](https://github.com/prismicio/prismic-client/commit/e75b4c2fb6a6495543d66556d42e787e2ab226c9))
+
+### [7.4.1](https://github.com/prismicio/prismic-client/compare/v7.4.0...v7.4.1) (2024-04-13)
+
+
+### Bug Fixes
+
+* type error in `mapSliceZone` ([#339](https://github.com/prismicio/prismic-client/issues/339)) ([638e87a](https://github.com/prismicio/prismic-client/commit/638e87aeb97a04c0b8fbb160bd65a1d26028335e))
+
+
+### Chore
+
+* **release:** 7.4.1 ([f141026](https://github.com/prismicio/prismic-client/commit/f141026309e21be8f7e2fbdcc9dea9c5dc4594b2))
+
 ## [7.5.0-alpha.2](https://github.com/prismicio/prismic-client/compare/v7.5.0-alpha.1...v7.5.0-alpha.2) (2024-04-26)
 
 
