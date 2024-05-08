@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.5.0](https://github.com/prismicio/prismic-client/compare/v7.4.1...v7.5.0) (2024-05-08)
+
+
+### Features
+
+* support groups in a slice's primary section ([#338](https://github.com/prismicio/prismic-client/issues/338)) ([0672bcb](https://github.com/prismicio/prismic-client/commit/0672bcbec506728a7a080783a985750fcdca8376))
+
 ## [7.5.0-alpha.3](https://github.com/prismicio/prismic-client/compare/v7.5.0-alpha.2...v7.5.0-alpha.3) (2024-05-07)
 
 
