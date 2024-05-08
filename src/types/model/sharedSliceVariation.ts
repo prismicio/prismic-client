@@ -1,4 +1,7 @@
-import type { CustomTypeModelFieldForGroup } from "./types";
+import type {
+	CustomTypeModelFieldForGroup,
+	CustomTypeModelFieldForSlicePrimary,
+} from "./types";
 
 /**
  * A shared Slice variation.
@@ -10,10 +13,10 @@ import type { CustomTypeModelFieldForGroup } from "./types";
  */
 export interface SharedSliceModelVariation<
 	ID extends string = string,
-	PrimaryFields extends Record<string, CustomTypeModelFieldForGroup> = Record<
+	PrimaryFields extends Record<
 		string,
-		CustomTypeModelFieldForGroup
-	>,
+		CustomTypeModelFieldForSlicePrimary
+	> = Record<string, CustomTypeModelFieldForSlicePrimary>,
 	ItemFields extends Record<string, CustomTypeModelFieldForGroup> = Record<
 		string,
 		CustomTypeModelFieldForGroup

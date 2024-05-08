@@ -4,6 +4,7 @@ import type { ContentRelationshipField } from "./contentRelationship";
 import type { DateField } from "./date";
 import type { EmbedField } from "./embed";
 import type { GeoPointField } from "./geoPoint";
+import type { GroupField } from "./group";
 import type { ImageField } from "./image";
 import type { IntegrationField } from "./integration";
 import type { KeyTextField } from "./keyText";
@@ -45,6 +46,11 @@ export type AnyRegularField =
 	| BooleanField
 	| GeoPointField
 	| IntegrationField;
+
+/**
+ * Any field that can be used in a slice's primary section.
+ */
+export type AnySlicePrimaryField = GroupField | AnyRegularField;
 
 /**
  * Useful to flatten the type output to improve type hints shown in editors. And

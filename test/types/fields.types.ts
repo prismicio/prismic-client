@@ -45,3 +45,16 @@ expectType<TypeOf<prismic.AnyRegularField, prismic.TitleField>>(true);
  */
 expectType<TypeOf<prismic.AnyRegularField, prismic.SliceZone>>(false);
 expectType<TypeOf<prismic.AnyRegularField, prismic.GroupField>>(false);
+
+/**
+ * AnySlicePrimaryField supports any field compatible with a slice's primary
+ * section.
+ */
+expectType<TypeOf<prismic.AnySlicePrimaryField, prismic.GroupField>>(true);
+expectType<TypeOf<prismic.AnySlicePrimaryField, prismic.AnyRegularField>>(true);
+
+/**
+ * AnySlicePrimaryField excludes any fields not compatible with a slice's
+ * primary section.
+ */
+expectType<TypeOf<prismic.AnySlicePrimaryField, prismic.SliceZone>>(false);

@@ -45,18 +45,22 @@ expectType<prismic.SharedSliceVariation<"foo">>({
 /**
  * Supports custom primary fields type.
  */
-expectType<prismic.SharedSliceVariation<string, { foo: prismic.BooleanField }>>(
-	{
-		variation: "string",
-		version: "string",
-		primary: {
-			foo: true,
-			// @ts-expect-error - Only given fields are valid.
-			bar: false,
-		},
-		items: [],
+expectType<
+	prismic.SharedSliceVariation<
+		string,
+		{ foo: prismic.BooleanField; bar: prismic.GroupField }
+	>
+>({
+	variation: "string",
+	version: "string",
+	primary: {
+		foo: true,
+		bar: [],
+		// @ts-expect-error - Only given fields are valid.
+		baz: false,
 	},
-);
+	items: [],
+});
 
 /**
  * Supports custom items fields type.
@@ -64,15 +68,13 @@ expectType<prismic.SharedSliceVariation<string, { foo: prismic.BooleanField }>>(
 expectType<
 	prismic.SharedSliceVariation<
 		string,
-		{ foo: prismic.BooleanField },
+		Record<never, never>,
 		{ bar: prismic.KeyTextField }
 	>
 >({
 	variation: "string",
 	version: "string",
-	primary: {
-		foo: true,
-	},
+	primary: {},
 	items: [
 		{
 			bar: "string",
@@ -80,4 +82,21 @@ expectType<
 			baz: false,
 		},
 	],
+});
+
+/**
+ * Does not support groups in items section.
+ */
+expectType<
+	prismic.SharedSliceVariation<
+		string,
+		Record<never, never>,
+		// @ts-expect-error - Group fields are not supported.
+		{ foo: prismic.GroupField }
+	>
+>({
+	variation: "string",
+	version: "string",
+	primary: {},
+	items: [],
 });

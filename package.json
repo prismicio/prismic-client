@@ -1,6 +1,6 @@
 {
 	"name": "@prismicio/client",
-	"version": "7.4.1",
+	"version": "7.5.0-alpha.3",
 	"description": "The official JavaScript + TypeScript client library for Prismic",
 	"keywords": [
 		"typescript",
@@ -69,8 +69,8 @@
 		"prepare": "npm run build",
 		"release": "npm run test && standard-version && git push --follow-tags && npm run build && npm publish",
 		"release:dry": "standard-version --dry-run",
-		"release:alpha": "npm run test && standard-version --release-as major --prerelease alpha && git push --follow-tags && npm run build && npm publish --tag alpha",
-		"release:alpha:dry": "standard-version --release-as major --prerelease alpha --dry-run",
+		"release:alpha": "npm run test && standard-version --release-as minor --prerelease alpha && git push --follow-tags && npm run build && npm publish --tag alpha",
+		"release:alpha:dry": "standard-version --release-as minor --prerelease alpha --dry-run",
 		"lint": "eslint --ext .js,.ts .",
 		"types": "tsc --noEmit",
 		"unit": "vitest run --coverage",
@@ -83,7 +83,7 @@
 	},
 	"devDependencies": {
 		"@prismicio/mock": "^0.3.1",
-		"@prismicio/types-internal": "2.3.0",
+		"@prismicio/types-internal": "^2.4.0",
 		"@size-limit/preset-small-lib": "^9.0.0",
 		"@trivago/prettier-plugin-sort-imports": "^4.2.0",
 		"@typescript-eslint/eslint-plugin": "^6.7.4",

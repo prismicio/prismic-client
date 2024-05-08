@@ -2,6 +2,62 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.5.0-alpha.3](https://github.com/prismicio/prismic-client/compare/v7.5.0-alpha.2...v7.5.0-alpha.3) (2024-05-07)
+
+
+### Bug Fixes
+
+* update @prismicio/types-internal ([e75b4c2](https://github.com/prismicio/prismic-client/commit/e75b4c2fb6a6495543d66556d42e787e2ab226c9))
+
+### [7.4.1](https://github.com/prismicio/prismic-client/compare/v7.4.0...v7.4.1) (2024-04-13)
+
+
+### Bug Fixes
+
+* type error in `mapSliceZone` ([#339](https://github.com/prismicio/prismic-client/issues/339)) ([638e87a](https://github.com/prismicio/prismic-client/commit/638e87aeb97a04c0b8fbb160bd65a1d26028335e))
+
+
+### Chore
+
+* **release:** 7.4.1 ([f141026](https://github.com/prismicio/prismic-client/commit/f141026309e21be8f7e2fbdcc9dea9c5dc4594b2))
+
+## [7.5.0-alpha.2](https://github.com/prismicio/prismic-client/compare/v7.5.0-alpha.1...v7.5.0-alpha.2) (2024-04-26)
+
+
+### Bug Fixes
+
+* update ([c28ae3a](https://github.com/prismicio/prismic-client/commit/c28ae3aa53a9c82573677d5ceaadf51b051b729d))
+
+## [7.5.0-alpha.1](https://github.com/prismicio/prismic-client/compare/v7.5.0-alpha.0...v7.5.0-alpha.1) (2024-04-18)
+
+
+### Bug Fixes
+
+* export `CustomTypeModelFieldForSlicePrimary` ([16739f6](https://github.com/prismicio/prismic-client/commit/16739f6ec00a244e51b008f98d243be739376c50))
+
+## [7.5.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.4.0...v7.5.0-alpha.0) (2024-04-17)
+
+
+### Features
+
+* support groups in a slice's primary section ([98a44fa](https://github.com/prismicio/prismic-client/commit/98a44fa7a9da314f24d8b2ba518c921625391db2))
+
+
+### Bug Fixes
+
+* update `@prismicio/types-internal` ([3ee1b06](https://github.com/prismicio/prismic-client/commit/3ee1b064f2ae5de7ddbbd2e69f93776ff0d9a0ad))
+
+
+### Refactor
+
+* use `type` import ([46c4343](https://github.com/prismicio/prismic-client/commit/46c43439cce0ccf6626102a77918cea1e04736b7))
+
+
+### Chore
+
+* release alpha as minor ([9bd6355](https://github.com/prismicio/prismic-client/commit/9bd6355d7098f45f221821e3485edc8bad05f29e))
+* use `@prismicio/types-internal` alpha ([df8f63d](https://github.com/prismicio/prismic-client/commit/df8f63d858227a246913dac33f15529294fc0515))
+
 ### [7.4.1](https://github.com/prismicio/prismic-client/compare/v7.4.0...v7.4.1) (2024-04-13)
 
 
