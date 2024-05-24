@@ -1,25 +1,16 @@
 # Contributing
 
-This package is primarily maintained by [Prismic](https://prismic.io). External contributions are welcome. Ask for help by [opening an issue](https://github.com/prismicio/prismic-client/issues/new/choose), or request a review by opening a pull request.
+This package is primarily maintained by [Prismic](https://prismic.io)[^1]. External contributions are welcome. Ask for help by [opening an issue](https://github.com/prismicio/prismic-client/issues/new/choose), or request a review by opening a pull request.
 
-<details><summary><strong>For Prismic employees</strong></summary>
+<details><summary><strong>For Prismic employees</strong></summary><p>
 
 This package is maintained by the DevX team. Ask for help or a review in the [#team-devx](https://prismic-team.slack.com/archives/C014VAACCQL) Slack channel.
 
-> [!NOTE]
-> It's highly recommended to discuss your changes with the DevTools team ([#team-dev-tools](https://prismic-team.slack.com/archives/CPG31MDL1)) before starting.
->
-> A short discussion can accellerate your work and ship it faster.
+- It's highly recommended to discuss your changes with the DevTools team ([#team-dev-tools](https://prismic-team.slack.com/archives/CPG31MDL1)) before starting. A short discussion can accellerate your work and ship it faster.
+- Code should be reviewed by the DevTools team before merging. Request a review in the [#team-dev-tools](https://prismic-team.slack.com/archives/CPG31MDL1) Slack channel.
+- Ask the DevX team for [npm](https://www.npmjs.com) publish access.
 
-> [!IMPORTANT]
-> Code should be reviewed by the DevTools team before merging.
->
-> Request a review in the [#team-dev-tools](https://prismic-team.slack.com/archives/CPG31MDL1) Slack channel.
-
-> [!CAUTION]
-> Ask the DevTools team for [npm](https://www.npmjs.com) publish access before continuing.
-
-</details>
+</p></details>
 
 ## :gear: Setup
 
@@ -72,7 +63,7 @@ The following setup is required to work on this project:
 ## :construction_worker: Develop
 
 > [!NOTE]
-> It's highly recommended to discuss your changes with the Prismic team before starting by [opening an issue](https://github.com/prismicio/prismic-client/issues/new/choose).
+> It's highly recommended to discuss your changes with the Prismic team before starting by [opening an issue](https://github.com/prismicio/prismic-client/issues/new/choose).[^2]
 >
 > A short discussion can accellerate your work and ship it faster.
 
@@ -114,7 +105,7 @@ npm run types
 ## :building_construction: Submit a pull request
 
 > [!NOTE]
-> Code will be reviewed by the Prismic team before merging.
+> Code will be reviewed by the Prismic team before merging.[^3]
 >
 > Request a review by opening a pull request.
 
@@ -130,8 +121,8 @@ gh pr create
 
 ## :rocket: Publish
 
-> [!NOTE]
-> Publishing is restricted to the Prismic team.
+> [!CAUTION]
+> Publishing is restricted to the Prismic team.[^4]
 
 ```sh
 # Checkout the master branch and pull the latest changes.
@@ -149,3 +140,8 @@ npm run release
 npm run release:alpha:dry
 npm run release:alpha
 ```
+
+[^1]: This package is maintained by the DevX team. Prismic employees can ask for help or a review in the [#team-devx](https://prismic-team.slack.com/archives/C014VAACCQL) Slack channel.
+[^2]: Prismic employees are highly encouraged to discuss changes with the DevX team in the [#team-devx](https://prismic-team.slack.com/archives/C014VAACCQL) Slack channel before starting.
+[^3]: Code should be reviewed by the DevX team before merging. Prismic employees can request a review in the [#team-devx](https://prismic-team.slack.com/archives/CPG31MDL1) Slack channel.
+[^4]: Prismic employees can ask the DevX team for [npm](https://www.npmjs.com) publish access.
