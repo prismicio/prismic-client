@@ -1,6 +1,6 @@
 # Contributing
 
-This package is primarily maintained by [Prismic](https://prismic.io), and external contributions are welcome. Ask for help by opening an issue, or request a review by opening a pull request.
+This package is primarily maintained by [Prismic](https://prismic.io). External contributions are welcome. Ask for help by [opening an issue](https://github.com/prismicio/prismic-client/issues/new/choose), or request a review by opening a pull request.
 
 ## :gear: Setup
 
@@ -53,7 +53,7 @@ The following setup is required to work on this project:
 ## :construction_worker: Develop
 
 > [!NOTE]
-> It's highly recommended to discuss your changes with Prismic team before starting.
+> It's highly recommended to discuss your changes with the Prismic team before starting by [opening an issue](https://github.com/prismicio/prismic-client/issues/new/choose).
 >
 > A short discussion can accellerate your work and ship it faster.
 
@@ -76,6 +76,8 @@ npm run build
 
 # Lint your changes before requesting a review. No errors are allowed.
 npm run lint
+# Some errors can be fixed automatically:
+npm run lint -- --fix
 
 # Format your changes before requesting a review. No errors are allowed.
 npm run format
