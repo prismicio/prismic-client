@@ -78,6 +78,38 @@ expectType<
 });
 
 /**
+ * Supports nested groups.
+ */
+expectType<
+	prismic.CustomTypeModelGroupField<{
+		foo: prismic.CustomTypeModelNestedGroupField<{
+			bar: prismic.CustomTypeModelBooleanField;
+		}>;
+	}>
+>({
+	type: prismic.CustomTypeModelFieldType.Group,
+	config: {
+		label: "string",
+		fields: {
+			foo: {
+				type: prismic.CustomTypeModelFieldType.Group,
+				config: {
+					label: "string",
+					fields: {
+						bar: {
+							type: prismic.CustomTypeModelFieldType.Boolean,
+							config: {
+								label: "string",
+							},
+						},
+					},
+				},
+			},
+		},
+	},
+});
+
+/**
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
 expectType<prismic.CustomTypeModelGroupField>({} as prismicTICustomTypes.Group);

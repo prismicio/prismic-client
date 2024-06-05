@@ -59,14 +59,13 @@ expectType<prismic.GroupField<{ boolean: prismic.BooleanField }>>([
 ]);
 
 /**
+ * Supports nested groups.
+ */
+expectType<prismic.GroupField<{ group: prismic.NestedGroupField }>>([]);
+
+/**
  * Custom fields may only contain group-compatible fields.
  */
-expectType<
-	prismic.GroupField<// @ts-expect-error - Groups are invalid within group fields.
-	{
-		group: prismic.GroupField;
-	}>
->([]);
 expectType<
 	prismic.GroupField<// @ts-expect-error - Slice Zones are invalid within group fields.
 	{
