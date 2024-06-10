@@ -120,13 +120,13 @@ git checkout master
 git pull
 
 # Perform a dry-run and verify the output.
-# If it looks good, release a new # version.
+# If it looks good, release a new version.
 npm run release:dry
 npm run release
 
 # Or release an alpha.
 # Perform a dry-run and verify the output.
-# If it looks good, release a new # alpha version.
+# If it looks good, release a new alpha version.
 npm run release:alpha:dry
 npm run release:alpha
 ```
