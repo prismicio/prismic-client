@@ -46,24 +46,24 @@ Whether you're helping us fix bugs, improve the docs, or spread the word, we'd l
 
 **Submitting code changes**: For small fixes, feel free to [open a pull request][repo-pull-requests] with a description of your changes. For large changes, please first [open an issue][repo-feature-request] so we can discuss if and how the changes should be implemented.
 
-For more clarity on this project and its structure you can also check out the detailed [CONTRIBUTING.md][contributing] document.
+For more clarity on this project, check out the detailed [CONTRIBUTING.md][contributing] document.
 
 ## License
 
 ```
-   Copyright 2013-2023 Prismic <contact@prismic.io> (https://prismic.io)
+Copyright 2013-2024 Prismic <contact@prismic.io> (https://prismic.io)
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ```
 
 <!-- Links -->
