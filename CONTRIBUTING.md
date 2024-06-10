@@ -61,7 +61,7 @@ The following setup is required to work on this project:
 # Clone and prepare the project.
 git clone git@github.com:prismicio/prismic-client.git
 cd prismic-client
-npm ininstall
+npm install
 
 # Create a new branch for your changes (e.g. lh/fix-win32-paths).
 git checkout -b <your-initials>/<feature-or-fix-description>
