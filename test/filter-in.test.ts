@@ -11,3 +11,8 @@ testFilter(
 	'[in(my.page.uid, ["myuid1", "myuid2"])]',
 	prismic.filter.in("my.page.uid", ["myuid1", "myuid2"]),
 );
+
+testFilter(
+	'[in(my.product.description, ["\\"quote\\""])]',
+	prismic.filter.in("my.product.description", ['"quote"']),
+);

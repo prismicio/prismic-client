@@ -13,6 +13,11 @@ testFilter(
 );
 
 testFilter(
+	'[any(my.product.description, ["\\"quote\\""])]',
+	prismic.filter.any("my.product.description", ['"quote"']),
+);
+
+testFilter(
 	"[any(my.product.restock_date, [1600000000000, 1700000000000])]",
 	prismic.filter.any("my.product.restock_date", [
 		new Date(1600000000000),
