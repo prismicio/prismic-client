@@ -1,6 +1,6 @@
-import type { CustomTypeModelFieldForGroup } from "./types";
+import type { CustomTypeModelFieldForNestedGroup } from "./types";
 
-import type { CustomTypeModelGroupField } from "./group";
+import type { CustomTypeModelNestedGroupField } from "./group";
 import type { CustomTypeModelSliceType } from "./sliceZone";
 
 /**
@@ -12,14 +12,14 @@ import type { CustomTypeModelSliceType } from "./sliceZone";
  * @typeParam RepeatFields - A record of fields that can be repeated.
  */
 export interface CustomTypeModelSlice<
-	NonRepeatFields extends Record<string, CustomTypeModelFieldForGroup> = Record<
+	NonRepeatFields extends Record<
 		string,
-		CustomTypeModelFieldForGroup
-	>,
-	RepeatFields extends Record<string, CustomTypeModelFieldForGroup> = Record<
+		CustomTypeModelFieldForNestedGroup
+	> = Record<string, CustomTypeModelFieldForNestedGroup>,
+	RepeatFields extends Record<
 		string,
-		CustomTypeModelFieldForGroup
-	>,
+		CustomTypeModelFieldForNestedGroup
+	> = Record<string, CustomTypeModelFieldForNestedGroup>,
 > {
 	type: typeof CustomTypeModelSliceType.Slice;
 	fieldset?: string | null;
@@ -46,5 +46,5 @@ export const CustomTypeModelSliceDisplay = {
  * @deprecated - Legacy slice type. Do not use.
  */
 export type CustomTypeModelLegacySlice =
-	| CustomTypeModelGroupField
-	| CustomTypeModelFieldForGroup;
+	| CustomTypeModelNestedGroupField
+	| CustomTypeModelFieldForNestedGroup;

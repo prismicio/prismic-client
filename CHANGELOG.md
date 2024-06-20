@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.6.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.5.0...v7.6.0-alpha.0) (2024-06-05)
+
+
+### Features
+
+* support nested groups ([9c8a96c](https://github.com/prismicio/prismic-client/commit/9c8a96ca264564a08db9e7b445148542913d3665))
+
 ## [7.5.0](https://github.com/prismicio/prismic-client/compare/v7.4.1...v7.5.0) (2024-05-08)
 
 

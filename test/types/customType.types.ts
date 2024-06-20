@@ -258,6 +258,12 @@ expectType<
 expectType<
 	TypeOf<
 		prismic.CustomTypeModelFieldForGroup,
+		prismic.CustomTypeModelNestedGroupField
+	>
+>(true);
+expectType<
+	TypeOf<
+		prismic.CustomTypeModelFieldForGroup,
 		prismic.CustomTypeModelNumberField
 	>
 >(true);

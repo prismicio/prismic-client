@@ -517,7 +517,10 @@ type IntegrationFieldData = { foo: string };
  * Group
  */
 
-type GroupDefault = Record<string, prismic.AnyRegularField>;
+type GroupDefault = Record<
+	string,
+	prismic.AnyRegularField | prismic.NestedGroupField
+>;
 
 // Default
 (value: prismic.GroupField) => {

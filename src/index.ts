@@ -221,7 +221,7 @@ export type { GeoPointField } from "./types/value/geoPoint";
 type IntegrationFields = IntegrationField;
 export { IntegrationField, IntegrationFields };
 
-export type { GroupField } from "./types/value/group";
+export type { GroupField, NestedGroupField } from "./types/value/group";
 
 export type { SliceZone } from "./types/value/sliceZone";
 export type { Slice } from "./types/value/slice";
@@ -283,7 +283,10 @@ export {
 	CustomTypeModelIntegrationField,
 	CustomTypeModelIntegrationFieldsField,
 };
-export type { CustomTypeModelGroupField } from "./types/model/group";
+export type {
+	CustomTypeModelGroupField,
+	CustomTypeModelNestedGroupField,
+} from "./types/model/group";
 export type {
 	CustomTypeModelSliceZoneField,
 	CustomTypeModelSliceLabel,
@@ -304,6 +307,7 @@ export type { CustomTypeModelSeparatorField } from "./types/model/separator";
 export type {
 	CustomTypeModelField,
 	CustomTypeModelFieldForGroup,
+	CustomTypeModelFieldForNestedGroup,
 	CustomTypeModelFieldForSlicePrimary,
 } from "./types/model/types";
 

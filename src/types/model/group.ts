@@ -1,5 +1,6 @@
 import type {
 	CustomTypeModelFieldForGroup,
+	CustomTypeModelFieldForNestedGroup,
 	CustomTypeModelFieldType,
 } from "./types";
 
@@ -22,3 +23,17 @@ export interface CustomTypeModelGroupField<
 		fields?: Fields;
 	};
 }
+
+/**
+ * A nested group custom type field.
+ *
+ * More details: {@link https://prismic.io/docs/group}
+ *
+ * @typeParam Fields - A record of fields that can be repeated.
+ */
+export type CustomTypeModelNestedGroupField<
+	Fields extends Record<string, CustomTypeModelFieldForNestedGroup> = Record<
+		string,
+		CustomTypeModelFieldForNestedGroup
+	>,
+> = CustomTypeModelGroupField<Fields>;

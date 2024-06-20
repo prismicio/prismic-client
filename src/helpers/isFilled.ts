@@ -3,7 +3,7 @@ import type { ContentRelationshipField } from "../types/value/contentRelationshi
 import type { DateField } from "../types/value/date";
 import type { AnyOEmbed, EmbedField } from "../types/value/embed";
 import type { GeoPointField } from "../types/value/geoPoint";
-import type { GroupField } from "../types/value/group";
+import type { GroupField, NestedGroupField } from "../types/value/group";
 import type { ImageField, ImageFieldImage } from "../types/value/image";
 import type { IntegrationField } from "../types/value/integration";
 import type { KeyTextField } from "../types/value/keyText";
@@ -273,7 +273,9 @@ export const integrationFields = integrationField;
  *
  * @returns `true` if `group` contains at least one item, `false` otherwise.
  */
-export const group = <Fields extends Record<string, AnyRegularField>>(
+export const group = <
+	Fields extends Record<string, AnyRegularField | NestedGroupField>,
+>(
 	group: GroupField<Fields> | null | undefined,
 ): group is GroupField<Fields, "filled"> => {
 	return isNonNullish(group) && isNonEmptyArray(group);
