@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.6.0](https://github.com/prismicio/prismic-client/compare/v7.5.0...v7.6.0) (2024-06-20)
+
+
+### Features
+
+* support nested groups ([#341](https://github.com/prismicio/prismic-client/issues/341)) ([e6dc747](https://github.com/prismicio/prismic-client/commit/e6dc74710470c7bd66da61ccf0ece1f784c8129d))
+
+
+### Documentation
+
+* update `CONTRIBUTING.md` ([#340](https://github.com/prismicio/prismic-client/issues/340)) ([228f6b6](https://github.com/prismicio/prismic-client/commit/228f6b671d52d6ee6cd1c7b9a348d8613d4196aa))
+* update README.md ([02479ae](https://github.com/prismicio/prismic-client/commit/02479ae34c5dbd3eb73f005ac71a19fe3b9c23f9))
+
 ## [7.6.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.5.0...v7.6.0-alpha.0) (2024-06-05)
 
 
