@@ -716,7 +716,8 @@ it("throws RefNotFoundError if ref does not exist", async (ctx) => {
 it("throws RefExpiredError if ref is expired", async (ctx) => {
 	const queryResponse = {
 		type: "api_validation_error",
-		message: "message",
+		message:
+			"The provided ref is no longer accessible, it has expired. Master ref is: xxxxxxxxxxxxxx",
 	};
 
 	mockPrismicRestAPIV2({ ctx });
@@ -734,10 +735,56 @@ it("throws RefExpiredError if ref is expired", async (ctx) => {
 		}),
 	);
 
+	const queryContentFromRef = vi.spyOn(client, "queryContentFromRef");
 	await expect(() => client.get()).rejects.toThrowError(queryResponse.message);
+	expect(queryContentFromRef).toHaveBeenCalledWith("xxxxxxxxxxxxxx");
 	await expect(() => client.get()).rejects.toThrowError(
 		prismic.RefExpiredError,
 	);
+});
+
+it("return Ressponse when ref is cached", async (ctx) => {
+	const queryResponse = {
+		type: "api_validation_error",
+		message:
+			"The provided ref is no longer accessible, it has expired. Master ref is: xxxxxxxxxxxxxx",
+	};
+
+	mockPrismicRestAPIV2({ ctx });
+
+	const client = createTestClient();
+
+	const queryEndpoint = new URL(
+		"./documents/search",
+		`${client.endpoint}/`,
+	).toString();
+
+	let requestCount = -1;
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
+			requestCount++;
+			if (requestCount === 0) {
+				return res(ctx.status(410), ctx.json(queryResponse));
+			}
+
+			return res(ctx.status(200), ctx.json(queryResponse));
+		}),
+	);
+
+	const queryContentFromRef = vi.spyOn(client, "queryContentFromRef");
+	const warn = vi.spyOn(console, "warn");
+	const initialRequest = client.get();
+	await expect(() => initialRequest).rejects.toThrowError(
+		queryResponse.message,
+	);
+	await expect(() => initialRequest).rejects.toThrowError(
+		prismic.RefExpiredError,
+	);
+
+	expect(queryContentFromRef).toHaveBeenCalledTimes(1);
+	expect(queryContentFromRef).toHaveBeenCalledWith("xxxxxxxxxxxxxx");
+	expect(warn).toHaveBeenCalledWith(queryResponse.message);
+	expect(client.get()).resolves.toEqual(queryResponse);
 });
 
 it("throws PreviewTokenExpiredError if preview token is expired", async (ctx) => {

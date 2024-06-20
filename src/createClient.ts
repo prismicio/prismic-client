@@ -1,3 +1,5 @@
+import { backOff } from "exponential-backoff";
+
 import { appendFilters } from "./lib/appendFilters";
 import { castThunk } from "./lib/castThunk";
 import { devMsg } from "./lib/devMsg";
@@ -484,6 +486,11 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Timestamp at which the cached repository data is considered stale.
 	 */
 	private cachedRepositoryExpiration = 0;
+
+	/**
+	 * An optional field used to check `refState` has cached reference
+	 */
+	private cached = true;
 
 	/**
 	 * Active `fetch()` jobs keyed by URL and AbortSignal (if it exists).
@@ -1811,6 +1818,8 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *
 	 * @param url - URL to the resource to fetch.
 	 * @param params - Prismic REST API parameters for the network request.
+	 * @param skipCache - Boolean indicating whether cached response should be
+	 *   used or not. Default: true.
 	 *
 	 * @returns The JSON response from the network request.
 	 */
@@ -1878,6 +1887,36 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 		const res = await job;
 
+		return await this.processResponse<T>({
+			res,
+			url,
+			params,
+		});
+	}
+
+	/**
+	 * Performs a network request using the configured `fetch` function. It
+	 * assumes all successful responses will have a JSON content type. It also
+	 * normalizes unsuccessful network requests.
+	 *
+	 * @typeParam T - The JSON response.
+	 *
+	 * @param url - URL to the resource to fetch.
+	 * @param params - Prismic REST API parameters for the network request.
+	 * @param skipCache - Boolean indicating whether cached response should be
+	 *   used or not. Default: true.
+	 *
+	 * @returns The JSON response from the network request.
+	 */
+	private async processResponse<T = unknown>({
+		res,
+		url,
+		params = {},
+	}: {
+		res: FetchJobResult;
+		url: string;
+		params: FetchParams;
+	}): Promise<T> {
 		if (res.status !== 404 && res.json == null) {
 			throw new PrismicError(undefined, url, res.json);
 		}
@@ -1940,7 +1979,37 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			// Gone
 			// - Ref is expired
 			case 410: {
-				throw new RefExpiredError(res.json.message, url, res.json);
+				if (!this.cached) {
+					throw new RefExpiredError(res.json.message, url, res.json);
+				}
+
+				switch (this.refState.mode) {
+					case RefStateMode.Master:
+						const slices = (res.json.message as string).split(" ");
+						const masterRef = slices[slices.length - 1];
+						this.queryContentFromRef(masterRef);
+						this.refState.mode = RefStateMode.Master;
+					default:
+						this.cached = false;
+						await backOff(
+							async () => {
+								console.warn(res.json.message);
+
+								return await this.fetch(url, params);
+							},
+							{
+								jitter: "full",
+								maxDelay: 64,
+								numOfAttempts: 10,
+							},
+						);
+
+						return await this.processResponse({
+							res,
+							url,
+							params,
+						});
+				}
 			}
 
 			// Too Many Requests
