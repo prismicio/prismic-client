@@ -42,30 +42,39 @@ export class RichTextFieldBuilder {
 			throw new Error("Cannot add span to non-text tail node");
 		}
 
-		const lastIdenticalSpanIndex = this.tail.spans.findLastIndex(
-			(maybeLastSpanOfType) => {
-				if (span.type === "strong" || span.type === "em") {
-					return maybeLastSpanOfType.type === span.type;
-				} else if (span.type === "label") {
-					if (maybeLastSpanOfType.type !== span.type) {
-						return false;
-					}
+		let lastIdenticalSpanIndex = -1;
+		for (let i = this.tail.spans.length - 1; i >= 0; i--) {
+			const lastSpan = this.tail.spans[i];
 
-					return maybeLastSpanOfType.data.label === span.data.label;
-				} else {
-					if (maybeLastSpanOfType.type !== span.type) {
-						return false;
-					}
-
+			if (span.type === "strong" || span.type === "em") {
+				if (lastSpan.type === span.type) {
+					lastIdenticalSpanIndex = i;
+					break;
+				}
+			} else if (span.type === "label") {
+				if (
+					lastSpan.type === "label" &&
+					lastSpan.data.label === span.data.label
+				) {
+					lastIdenticalSpanIndex = i;
+					break;
+				}
+			} else if (span.type === "hyperlink") {
+				if (lastSpan.type === "hyperlink") {
 					// Check that all data fields are the same. Since it's not a
 					// deep equal operation, this doesn't guarantee a perfect
 					// match with content relationship.
-					return (
+					const isSameLink = (
 						Object.entries(span.data) as [keyof RTLinkNode["data"], unknown][]
-					).every(([key, value]) => maybeLastSpanOfType.data[key] === value);
+					).every(([key, value]) => lastSpan.data[key] === value);
+
+					if (isSameLink) {
+						lastIdenticalSpanIndex = i;
+						break;
+					}
 				}
-			},
-		);
+			}
+		}
 
 		// Prefer to extend the last span of the same type end
 		// position if it ends at the start of the new span.
