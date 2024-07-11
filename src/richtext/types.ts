@@ -1,3 +1,5 @@
+import { VFile } from "vfile";
+
 import {
 	RTAnyNode,
 	RTEmNode,
@@ -19,8 +21,11 @@ import {
 	RTPreformattedNode,
 	RTSpanNode,
 	RTStrongNode,
+	RichTextField,
 	RichTextNodeType,
 } from "../types/value/richText";
+
+import { RehypeRichTextConfig } from "./unified/rehypeRichText";
 
 // Serializers
 
@@ -151,3 +156,13 @@ export const RichTextReversedNodeType = {
 	[RichTextNodeType.list]: "list",
 	[RichTextNodeType.oList]: "oList",
 } as const;
+
+/**
+ * Configuration that determines the output of `*AsRichText` functions.
+ */
+export type AsRichTextConfig = RehypeRichTextConfig;
+
+/**
+ * The return type of `*AsRichText` functions.
+ */
+export type AsRichTextReturnType = VFile & { result: RichTextField };

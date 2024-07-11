@@ -1,0 +1,518 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`transforms HTML to rich text ('compacts directly adjacent identical spans (hyperlink)') > produces valid rich text field 1`] = `
+[
+  {
+    "spans": [
+      {
+        "data": {
+          "link_type": "Web",
+          "target": undefined,
+          "url": "https://prismic.io",
+        },
+        "end": 17,
+        "start": 6,
+        "type": "hyperlink",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('compacts directly adjacent identical spans (label)') > produces valid rich text field 1`] = `
+[
+  {
+    "spans": [
+      {
+        "data": {
+          "label": "underline",
+        },
+        "end": 17,
+        "start": 6,
+        "type": "label",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('compacts directly adjacent identical spans (strong, em)') > produces valid rich text field 1`] = `
+[
+  {
+    "spans": [
+      {
+        "end": 17,
+        "start": 6,
+        "type": "strong",
+      },
+      {
+        "end": 38,
+        "start": 22,
+        "type": "em",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet consectetur adipiscing elit",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('compacts nested directly adjacent identical spans') > produces valid rich text field 1`] = `
+[
+  {
+    "spans": [
+      {
+        "end": 11,
+        "start": 6,
+        "type": "strong",
+      },
+      {
+        "end": 17,
+        "start": 9,
+        "type": "em",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('converts only the given container') > produces valid rich text field 1`] = `
+[
+  {
+    "spans": [],
+    "text": "consectetur adipiscing elit",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('does not compact directly adjacent different spans (hyperlink)') > produces valid rich text field 1`] = `
+[
+  {
+    "spans": [
+      {
+        "data": {
+          "link_type": "Web",
+          "target": undefined,
+          "url": "https://prismic.io",
+        },
+        "end": 11,
+        "start": 6,
+        "type": "hyperlink",
+      },
+      {
+        "data": {
+          "link_type": "Web",
+          "target": undefined,
+          "url": "https://google.com",
+        },
+        "end": 17,
+        "start": 11,
+        "type": "hyperlink",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('does not compact directly adjacent different spans (label)') > produces valid rich text field 1`] = `
+[
+  {
+    "spans": [
+      {
+        "data": {
+          "label": "underline",
+        },
+        "end": 11,
+        "start": 6,
+        "type": "label",
+      },
+      {
+        "data": {
+          "label": "strikethrough",
+        },
+        "end": 17,
+        "start": 11,
+        "type": "label",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('embed') > produces valid rich text field 1`] = `
+[
+  {
+    "oembed": {
+      "embed_url": "https://www.youtube.com/embed/wkS1bf7BLjs?feature=oembed",
+      "height": 150,
+      "html": "<iframe width=\\"200\\" height=\\"150\\" src=\\"https://www.youtube.com/embed/wkS1bf7BLjs?feature=oembed\\" frameborder=\\"0\\" allow=\\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\\" referrerpolicy=\\"strict-origin-when-cross-origin\\" allowfullscreen title=\\"幾田りら「ハミング」Official Music Video\\"></iframe>",
+      "title": "幾田りら「ハミング」Official Music Video",
+      "type": "rich",
+      "version": "1.0",
+      "width": 200,
+    },
+    "type": "embed",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('empty') > produces valid rich text field 1`] = `[]`;
+
+exports[`transforms HTML to rich text ('excludes the given selectors') > produces valid rich text field 1`] = `
+[
+  {
+    "spans": [],
+    "text": "ipsum dolor sit amet",
+    "type": "heading1",
+  },
+  {
+    "spans": [
+      {
+        "data": {
+          "link_type": "Web",
+          "target": undefined,
+          "url": "#",
+        },
+        "end": 11,
+        "start": 0,
+        "type": "hyperlink",
+      },
+    ],
+    "text": "consectetur adipiscing elit",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('extracts images from rich text text nodes and resumes with the same text node (adjacent spans)') > produces valid rich text field 1`] = `
+[
+  {
+    "spans": [
+      {
+        "end": 11,
+        "start": 6,
+        "type": "strong",
+      },
+    ],
+    "text": "lorem ipsum",
+    "type": "paragraph",
+  },
+  {
+    "alt": "bar",
+    "copyright": null,
+    "dimensions": {
+      "height": 0,
+      "width": 0,
+    },
+    "edit": {
+      "background": "transparent",
+      "x": 0,
+      "y": 0,
+      "zoom": 1,
+    },
+    "id": "",
+    "type": "image",
+    "url": "https://example.com/foo.png",
+  },
+  {
+    "spans": [
+      {
+        "end": 5,
+        "start": 0,
+        "type": "em",
+      },
+    ],
+    "text": "dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('extracts images from rich text text nodes and resumes with the same text node (spans)') > produces valid rich text field 1`] = `
+[
+  {
+    "spans": [
+      {
+        "end": 5,
+        "start": 0,
+        "type": "strong",
+      },
+    ],
+    "text": "lorem ipsum",
+    "type": "paragraph",
+  },
+  {
+    "alt": "bar",
+    "copyright": null,
+    "dimensions": {
+      "height": 0,
+      "width": 0,
+    },
+    "edit": {
+      "background": "transparent",
+      "x": 0,
+      "y": 0,
+      "zoom": 1,
+    },
+    "id": "",
+    "type": "image",
+    "url": "https://example.com/foo.png",
+  },
+  {
+    "spans": [
+      {
+        "end": 9,
+        "start": 6,
+        "type": "em",
+      },
+    ],
+    "text": "dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('extracts images from rich text text nodes and resumes with the same text node') > produces valid rich text field 1`] = `
+[
+  {
+    "spans": [],
+    "text": "lorem ipsum",
+    "type": "paragraph",
+  },
+  {
+    "alt": "bar",
+    "copyright": null,
+    "dimensions": {
+      "height": 0,
+      "width": 0,
+    },
+    "edit": {
+      "background": "transparent",
+      "x": 0,
+      "y": 0,
+      "zoom": 1,
+    },
+    "id": "",
+    "type": "image",
+    "url": "https://example.com/foo.png",
+  },
+  {
+    "spans": [],
+    "text": "dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('image (prismic)') > produces valid rich text field 1`] = `
+[
+  {
+    "alt": "foo",
+    "copyright": null,
+    "dimensions": {
+      "height": 1602,
+      "width": 2400,
+    },
+    "edit": {
+      "background": "transparent",
+      "x": 399,
+      "y": 259,
+      "zoom": 1.5,
+    },
+    "id": "",
+    "type": "image",
+    "url": "https://images.prismic.io/200629-sms-hoy/f0a757f6-770d-4eb8-a08b-f1727f1a58e4_guilherme-romano-KI2KaOeT670-unsplash.jpg?auto=format%2Ccompress&rect=399%2C259%2C1600%2C1068&w=2400&h=1602",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('image') > produces valid rich text field 1`] = `
+[
+  {
+    "alt": "foo",
+    "copyright": null,
+    "dimensions": {
+      "height": 0,
+      "width": 0,
+    },
+    "edit": {
+      "background": "transparent",
+      "x": 0,
+      "y": 0,
+      "zoom": 1,
+    },
+    "id": "",
+    "type": "image",
+    "url": "https://example.com/foo.png",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('multiple tags') > produces valid rich text field 1`] = `
+[
+  {
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "heading1",
+  },
+  {
+    "spans": [],
+    "text": "consectetur adipiscing elit",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('nested spans') > produces valid rich text field 1`] = `
+[
+  {
+    "spans": [
+      {
+        "end": 17,
+        "start": 6,
+        "type": "strong",
+      },
+      {
+        "end": 17,
+        "start": 9,
+        "type": "em",
+      },
+      {
+        "data": {
+          "link_type": "Web",
+          "target": undefined,
+          "url": "https://prismic.io",
+        },
+        "end": 17,
+        "start": 12,
+        "type": "hyperlink",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('single tag') > produces valid rich text field 1`] = `
+[
+  {
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('spans (hyperlink)') > produces valid rich text field 1`] = `
+[
+  {
+    "spans": [
+      {
+        "data": {
+          "link_type": "Web",
+          "target": undefined,
+          "url": "https://prismic.io",
+        },
+        "end": 11,
+        "start": 6,
+        "type": "hyperlink",
+      },
+      {
+        "data": {
+          "link_type": "Web",
+          "target": "_blank",
+          "url": "https://prismic.io",
+        },
+        "end": 21,
+        "start": 18,
+        "type": "hyperlink",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('spans (label)') > produces valid rich text field 1`] = `
+[
+  {
+    "spans": [
+      {
+        "data": {
+          "label": "underline",
+        },
+        "end": 11,
+        "start": 6,
+        "type": "label",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('spans (strong, em)') > produces valid rich text field 1`] = `
+[
+  {
+    "spans": [
+      {
+        "end": 11,
+        "start": 6,
+        "type": "strong",
+      },
+      {
+        "end": 21,
+        "start": 18,
+        "type": "em",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('strips complex indentation') > produces valid rich text field 1`] = `
+[
+  {
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet consectetur adipiscing elit",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('strips indentation') > produces valid rich text field 1`] = `
+[
+  {
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text ('treats \`<br>\` as new lines') > produces valid rich text field 1`] = `
+[
+  {
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet
+consectetur adipiscing elit",
+    "type": "paragraph",
+  },
+]
+`;

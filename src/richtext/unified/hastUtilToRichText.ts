@@ -1,0 +1,354 @@
+import { Element, Root } from "hast";
+import { matches } from "hast-util-select";
+import { toHtml } from "hast-util-to-html";
+import { whitespace } from "hast-util-whitespace";
+import { toString } from "mdast-util-to-string";
+import { visitParents } from "unist-util-visit-parents";
+import { VFile } from "vfile";
+
+import { OEmbedType } from "../../types/value/embed";
+import { LinkType } from "../../types/value/link";
+import {
+	RTLabelNode,
+	RichTextField,
+	RichTextNodeType,
+} from "../../types/value/richText";
+
+import * as isNodeType from "../utils/isNodeType";
+import { RichTextFieldBuilder } from "../utils/RichTextFieldBuilder";
+import { RTNodeTypes, RTTextNodeTypes } from "../utils/isNodeType";
+
+/**
+ * A map of HTML tag names or CSS selectors to
+ * {@link RichTextNodeType | rich text node types}.
+ *
+ * @remarks
+ * You can only use "shallow" CSS selectors like `p.primary`, `h1#title`,
+ * `div[data-type="content"]`. Selectors like `p > a` or `h1 + p` are not
+ * supported.
+ * @remarks
+ * The `o-list-item` rich text node type is not available. Use the `list-item`
+ * type for any kind of list item instead. The correct list item type will be
+ * inferred on whether the parent is considered a `group-list-item` or
+ * `group-o-list-item` by the converter.
+ * @remarks
+ * The `label` rich text node type is not available as is. Use an object
+ * containing your label name to convert to label nodes instead. For example:
+ * `u: { label: "underline" }`
+ * @remarks
+ * The `span` rich text node type is not available as it is not relevant in the
+ * context of going from HTML to Prismic rich text.
+ */
+type RichTextHTMLMapConverter = Record<
+	string,
+	| Exclude<
+			(typeof RichTextNodeType)[keyof typeof RichTextNodeType],
+			"o-list-item" | "label" | "span"
+	  >
+	| { label: string }
+>;
+
+const DEFAULT_CONVERTER: RichTextHTMLMapConverter = {
+	h1: "heading1",
+	h2: "heading2",
+	h3: "heading3",
+	h4: "heading4",
+	h5: "heading5",
+	h6: "heading6",
+	p: "paragraph",
+	pre: "preformatted",
+	strong: "strong",
+	em: "em",
+	li: "list-item",
+	ul: "group-list-item",
+	ol: "group-o-list-item",
+	img: "image",
+	iframe: "embed",
+	a: "hyperlink",
+};
+
+const VFileRule = {
+	MissingImageSrc: "missing-image-src",
+	MissingEmbedSrc: "missing-embed-src",
+	MissingHyperlinkHref: "missing-hyperlink-href",
+} as const;
+
+const VFILE_SOURCE = "prismic";
+
+export type HastUtilToRichTextConfig = {
+	/**
+	 * An optional HTML to rich text converter. Will be merged with the default
+	 * HTML to rich text converter.
+	 */
+	converter?: RichTextHTMLMapConverter;
+};
+
+const createFindType = (converter: RichTextHTMLMapConverter) => {
+	// We separate tag name converters from CSS selector converters to
+	// attempt to match on tag names first as it's much more performant
+	// than matching CSS selectors.
+	const tagNameConverter: RichTextHTMLMapConverter = {};
+	const cssSelectorConverter: [string, RichTextHTMLMapConverter[string]][] = [];
+
+	Object.entries(converter).forEach(([key, value]) => {
+		// HTML tag names are single word, lowercase strings, a-z and 1-6 (headings).
+		// See: https://regex101.com/r/LILLWH/1
+		if (key.match(/^[a-z]+[1-6]?$/)) {
+			tagNameConverter[key] = value;
+		} else {
+			cssSelectorConverter.push([key, value]);
+		}
+	});
+
+	return (
+		node: Element,
+	):
+		| { type: Extract<RichTextHTMLMapConverter[string], string> }
+		| Pick<RTLabelNode, "type" | "data">
+		| null => {
+		let match: RichTextHTMLMapConverter[string] | null = null;
+
+		if (node.tagName in tagNameConverter) {
+			match = tagNameConverter[node.tagName];
+		} else {
+			for (let i = 0; i < cssSelectorConverter.length; i++) {
+				const [selector, value] = cssSelectorConverter[i];
+
+				if (matches(selector, node)) {
+					match = value;
+					break;
+				}
+			}
+		}
+
+		if (typeof match === "string") {
+			return { type: match };
+		} else if (match) {
+			return { type: "label", data: match };
+		}
+
+		return null;
+	};
+};
+
+export const hastUtilToRichText = (
+	tree: Root | Element,
+	file: VFile,
+	config?: HastUtilToRichTextConfig,
+): RichTextField => {
+	const builder = new RichTextFieldBuilder();
+
+	const converter = {
+		...DEFAULT_CONVERTER,
+		...config?.converter,
+	};
+
+	const findType = createFindType(converter);
+
+	// Keep track of the last node type to append text nodes to in case
+	// of an image or an embed node is present inside a paragraph.
+	let lastRTNodeType: RTNodeTypes | null = null;
+
+	// Keep track of the last text node type to append text nodes to in
+	// case of an image or an embed node is present inside a paragraph.
+	let lastRTTextNodeType: RTTextNodeTypes | null = null;
+
+	// Keep track of the last list type to know whether we need to append
+	// `list-item` or `o-list-item` nodes.
+	let lastListType: "group-list-item" | "group-o-list-item" | null = null;
+
+	visitParents(tree, (node, _parents) => {
+		if (node.type === "element") {
+			// Transforms line break elements to line breaks
+			if (node.tagName === "br") {
+				try {
+					builder.appendText("\n");
+				} catch (error) {
+					// noop
+				}
+			}
+
+			const maybeMatch = findType(node);
+
+			if (!maybeMatch) {
+				return;
+			}
+
+			const { type } = maybeMatch;
+
+			if (isNodeType.rt(type)) {
+				lastRTNodeType = type;
+			}
+
+			if (isNodeType.rtText(type)) {
+				lastRTTextNodeType = type;
+
+				if (type === "list-item") {
+					const listItemType =
+						lastListType === RichTextNodeType.oList
+							? RichTextNodeType.oListItem
+							: RichTextNodeType.listItem;
+
+					builder.appendTextNode(listItemType);
+				} else {
+					builder.appendTextNode(type);
+				}
+			} else if (isNodeType.image(type)) {
+				// TODO: handle image
+				const src = node.properties?.src as string | undefined;
+
+				if (src) {
+					const url = new URL(src);
+
+					let width = (node.properties?.width as number) ?? 0;
+					let height = (node.properties?.height as number) ?? 0;
+					let x = 0;
+					let y = 0;
+					let zoom = 1;
+
+					// Attempt to infer the image dimensions from the URL imgix parameters.
+					if (url.hostname === "images.prismic.io") {
+						if (url.searchParams.has("w")) {
+							width = Number(url.searchParams.get("w"));
+						}
+
+						if (url.searchParams.has("h")) {
+							height = Number(url.searchParams.get("h"));
+						}
+
+						if (url.searchParams.has("rect")) {
+							const [rectX, rextY, rectW, _rectH] = url.searchParams
+								.get("rect")!
+								.split(",");
+
+							x = Number(rectX);
+							y = Number(rextY);
+
+							// This is not perfect but it's supposed to work on images without constrainsts.
+							if (width) {
+								zoom = Math.max(1, width / Number(rectW));
+							}
+						}
+					}
+
+					builder.appendNode({
+						type,
+						id: "",
+						url: src,
+						alt: (node.properties?.alt as string) ?? null,
+						copyright: (node.properties?.copyright as string) ?? null,
+						dimensions: { width, height },
+						edit: { x, y, zoom, background: "transparent" },
+					});
+				} else {
+					file.message("Element of type `img` is missing an `src` attribute", {
+						place: node.position,
+						ruleId: VFileRule.MissingImageSrc,
+						source: VFILE_SOURCE,
+					});
+				}
+			} else if (isNodeType.embed(type)) {
+				const src = node.properties?.src as string | undefined;
+
+				if (src) {
+					const oembedBase = {
+						version: "1.0",
+						embed_url: src,
+						html: toHtml(node),
+						title: node.properties?.title as string | undefined,
+					};
+
+					const width = node.properties?.width as number | undefined;
+					const height = node.properties?.height as number | undefined;
+
+					if (width && height) {
+						builder.appendNode({
+							type,
+							oembed: { ...oembedBase, type: OEmbedType.Rich, width, height },
+						});
+					} else {
+						builder.appendNode({
+							type,
+							oembed: { ...oembedBase, type: OEmbedType.Link },
+						});
+					}
+				} else {
+					file.message(
+						"Element of type `embed` is missing an `src` attribute",
+						{
+							place: node.position,
+							ruleId: VFileRule.MissingEmbedSrc,
+							source: VFILE_SOURCE,
+						},
+					);
+				}
+
+				// Remove the children of the embed node as we don't want to process them.
+				node.children = [];
+			} else if (type === "group-list-item" || type === "group-o-list-item") {
+				lastListType = type;
+			} else {
+				// Happens when we extract an image/embed node inside an RTTextNode.
+				if (!isNodeType.rtText(lastRTNodeType) && lastRTTextNodeType) {
+					lastRTNodeType = lastRTTextNodeType;
+					builder.appendTextNode(lastRTTextNodeType);
+				}
+
+				if (type === "strong" || type === "em") {
+					builder.appendSpanOfLength({ type }, toString(node).length);
+				} else if (type === "label") {
+					builder.appendSpanOfLength(
+						{ type: "label", data: maybeMatch.data },
+						toString(node).length,
+					);
+				} else if (type === "hyperlink") {
+					const url = node.properties?.href as string | undefined;
+					if (url) {
+						builder.appendSpanOfLength(
+							{
+								type,
+								data: {
+									link_type: LinkType.Web,
+									url,
+									target: node.properties?.target as string | undefined,
+								},
+							},
+							toString(node).length,
+						);
+					} else {
+						file.message(
+							"Element of type `hyperlink` is missing an `href` attribute",
+							{
+								place: node.position,
+								ruleId: VFileRule.MissingHyperlinkHref,
+								source: VFILE_SOURCE,
+							},
+						);
+					}
+				}
+			}
+		} else if (node.type === "text") {
+			if (!whitespace(node)) {
+				try {
+					builder.appendText(node.value);
+				} catch (error) {
+					// Happens when we extract an image/embed node inside an RTTextNode.
+					if (lastRTTextNodeType) {
+						lastRTNodeType = lastRTTextNodeType;
+						builder.appendTextNode(lastRTTextNodeType);
+						builder.appendText(node.value);
+					} else {
+						throw error;
+					}
+				}
+			}
+		}
+
+		// We ignore the following node types:
+		// root, doctype, comment, raw
+
+		// TODO: What's that raw node?
+	});
+
+	return builder.build();
+};

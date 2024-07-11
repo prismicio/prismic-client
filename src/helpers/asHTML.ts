@@ -168,7 +168,7 @@ const createHTMLRichTextSerializer = (
 				return (
 					(
 						nodeSerializerOrShorthand as HTMLStrictRichTextMapSerializer[BlockType]
-					)(payload) || defaultWithShorthand(payload)
+					)?.(payload) || defaultWithShorthand(payload)
 				);
 			}) as NonNullable<HTMLStrictRichTextMapSerializer[BlockType]>;
 		}
