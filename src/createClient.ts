@@ -72,7 +72,7 @@ const DEFUALT_RETRY_AFTER_MS = 1000;
  * @typeParam TDocuments - Prismic document types from which to extract.
  * @typeParam TDocumentType - Type(s) to match `TDocuments` against.
  */
-type ExtractDocumentType<
+export type ExtractDocumentType<
 	TDocuments extends PrismicDocument,
 	TDocumentType extends TDocuments["type"],
 > = Extract<TDocuments, { type: TDocumentType }> extends never

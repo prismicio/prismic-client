@@ -40,6 +40,8 @@ export { filter, predicate };
 // A collection of well-known cookie names shared between Prismic libraries and systems.
 export * as cookie from "./cookie";
 
+export { compileGraphQuery } from "./compileGraphQuery";
+
 // General types used to query content from Prismic. These are made public to allow users to better type their projects.
 export type {
 	AbortSignalLike,
