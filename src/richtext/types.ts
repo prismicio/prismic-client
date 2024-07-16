@@ -25,7 +25,7 @@ import {
 	RichTextNodeType,
 } from "../types/value/richText";
 
-import { RehypeRichTextConfig } from "./unified/rehypeRichText";
+import { RehypeRichTextConfig } from "./utils/rehypeRichText";
 
 // Serializers
 
@@ -165,4 +165,7 @@ export type AsRichTextConfig = RehypeRichTextConfig;
 /**
  * The return type of `*AsRichText` functions.
  */
-export type AsRichTextReturnType = VFile & { result: RichTextField };
+export type AsRichTextReturnType = {
+	result: RichTextField;
+	warnings: VFile["messages"];
+};

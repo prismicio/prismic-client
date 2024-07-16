@@ -90,9 +90,9 @@
 		"remark-rehype": "^11.1.0",
 		"unified": "^11.0.5",
 		"unist-util-remove": "^4.0.0",
+		"unist-util-visit": "^5.0.0",
 		"unist-util-visit-parents": "^6.0.1",
-		"vfile": "^6.0.1",
-		"vfile-reporter": "^8.1.1"
+		"vfile": "^6.0.1"
 	},
 	"devDependencies": {
 		"@prismicio/mock": "^0.3.1",

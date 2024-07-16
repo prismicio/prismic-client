@@ -3,10 +3,7 @@ import { unified } from "unified";
 
 import { AsRichTextConfig, AsRichTextReturnType } from "./types";
 
-import { rehypeRichText } from "./unified/rehypeRichText";
-
-const htmlProcessor = (config?: AsRichTextConfig) =>
-	unified().use(rehypeParse).use(rehypeRichText, config);
+import { rehypeRichText } from "./utils/rehypeRichText";
 
 /**
  * Converts an HTML string to a rich text field.
@@ -17,25 +14,14 @@ const htmlProcessor = (config?: AsRichTextConfig) =>
  *
  * @returns Rich text field equivalent of the provided HTML string.
  */
-export const htmlAsRichText = (
+export const htmlAsRichText = async (
 	html: string,
 	config?: AsRichTextConfig,
 ): Promise<AsRichTextReturnType> => {
-	return htmlProcessor(config).process(html);
-};
+	const { result, messages } = await unified()
+		.use(rehypeParse, { emitParseErrors: true })
+		.use(rehypeRichText, config)
+		.process(html);
 
-/**
- * Converts an HTML string to a rich text field synchronously.
- *
- * @param html - An HTML string
- * @param config - Configuration that determines the output of
- *   `htmlAsRichTextSync()`
- *
- * @returns Rich text field equivalent of the provided HTML string.
- */
-export const htmlAsRichTextSync = (
-	html: string,
-	config?: AsRichTextConfig,
-): AsRichTextReturnType => {
-	return htmlProcessor(config).processSync(html);
+	return { result, warnings: messages };
 };

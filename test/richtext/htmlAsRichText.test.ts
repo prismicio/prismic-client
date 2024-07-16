@@ -1,252 +1,278 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { LinkType, asHTML } from "../../src";
-import {
-	AsRichTextConfig,
-	htmlAsRichText,
-	htmlAsRichTextSync,
-} from "../../src/richtext";
+import { testHTMLAsRichTextHelper } from "./__testutils__/testAsRichTextHelper";
 
-type Case = {
-	case: string;
+import { htmlAsRichText } from "../../src/richtext";
 
-	input: string;
-
-	config?: AsRichTextConfig;
-
-	/**
-	 * The rich text format is a lossy representation of HTML. Namely it does not
-	 * preserves indentation and applies some optimizations to the output such as
-	 * merging directly adjacent identical spans.
-	 *
-	 * By default, the test suite will expect the HTML representation of the
-	 * output to exactly match the input. This flag can be used to tell it to
-	 * expect the output to not match the input instead.
-	 */
-	expectAsHTMLNotToMatchInput?: true;
-};
-
-describe.each<Case>([
-	{
-		case: "empty",
-		input: /* html */ ``,
-	},
-	{
-		case: "single tag",
-		input: /* html */ `<p>lorem ipsum dolor sit amet</p>`,
-	},
-	{
-		case: "multiple tags",
-		input: /* html */ `<h1>lorem ipsum dolor sit amet</h1><p>consectetur adipiscing elit</p>`,
-	},
-	{
-		case: "spans (strong, em)",
-		input: /* html */ `<p>lorem <strong>ipsum</strong> dolor <em>sit</em> amet</p>`,
-	},
-	{
-		case: "spans (label)",
-		input: /* html */ `<p>lorem <span class="underline">ipsum</span> dolor sit amet</p>`,
-		config: { converter: { "span.underline": { label: "underline" } } },
-	},
-	{
-		case: "spans (hyperlink)",
-		input: /* html */ `<p>lorem <a href="https://prismic.io">ipsum</a> dolor <a href="https://prismic.io" target="_blank">sit</a> amet</p>`,
-	},
-	{
-		case: "nested spans",
-		input: /* html */ `<p>lorem <strong>ips<em>um <a href="https://prismic.io">dolor</a></em></strong> sit amet</p>`,
-	},
-	{
-		case: "compacts directly adjacent identical spans (strong, em)",
-		input: /* html */ `<p>lorem <strong>ipsum</strong><strong> dolor</strong> sit <em>amet</em><em> consectetur</em> adipiscing elit</p>`,
-		// `strong` and `em` tags will be merged into single ones.
-		expectAsHTMLNotToMatchInput: true,
-	},
-	{
-		case: "compacts directly adjacent identical spans (hyperlink)",
-		input: /* html */ `<p>lorem <a href="https://prismic.io">ipsum</a><a href="https://prismic.io"> dolor</a> sit amet</p>`,
-		// `a` tags will be merged into single ones.
-		expectAsHTMLNotToMatchInput: true,
-	},
-	{
-		case: "compacts directly adjacent identical spans (label)",
-		input: /* html */ `<p>lorem <span class="underline">ipsum</span><span class="underline"> dolor</span> sit amet</p>`,
-		config: { converter: { "span.underline": { label: "underline" } } },
-		// `span.underline` tags will be merged into single ones.
-		expectAsHTMLNotToMatchInput: true,
-	},
-	{
-		case: "does not compact directly adjacent different spans (hyperlink)",
-		input: /* html */ `<p>lorem <a href="https://prismic.io">ipsum</a><a href="https://google.com"> dolor</a> sit amet</p>`,
-	},
-	{
-		case: "does not compact directly adjacent different spans (label)",
-		input: /* html */ `<p>lorem <span class="underline">ipsum</span><span class="strikethrough"> dolor</span> sit amet</p>`,
-		config: {
-			converter: {
-				"span.underline": { label: "underline" },
-				"span.strikethrough": { label: "strikethrough" },
-			},
-		},
-	},
-	{
-		case: "compacts nested directly adjacent identical spans",
-		input: /* html */ `<p>lorem <strong>ips<em>um</em></strong><em> dolor</em> sit amet</p>`,
-	},
-	{
-		case: "image",
-		input: /* html */ `<img src="https://example.com/foo.png" alt="foo" />`,
-	},
-	{
-		case: "image (prismic)",
-		input: /* html */ `<img src="https://images.prismic.io/200629-sms-hoy/f0a757f6-770d-4eb8-a08b-f1727f1a58e4_guilherme-romano-KI2KaOeT670-unsplash.jpg?auto=format%2Ccompress&rect=399%2C259%2C1600%2C1068&w=2400&h=1602" alt="foo" />`,
-	},
-	{
-		case: "embed",
-		input: /* html */ `<iframe width="200" height="150" src="https://www.youtube.com/embed/wkS1bf7BLjs?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="幾田りら「ハミング」Official Music Video"></iframe>`,
-	},
-	{
-		case: "extracts images from rich text text nodes and resumes with the same text node",
-		input: /* html */ `<p>lorem ipsum <img src="https://example.com/foo.png" alt="bar" /> dolor sit amet</p>`,
-		expectAsHTMLNotToMatchInput: true,
-	},
-	{
-		case: "extracts images from rich text text nodes and resumes with the same text node (spans)",
-		input: /* html */ `<p><strong>lorem</strong> ipsum <img src="https://example.com/foo.png" alt="bar" /> dolor <em>sit</em> amet</p>`,
-		expectAsHTMLNotToMatchInput: true,
-	},
-	{
-		case: "extracts images from rich text text nodes and resumes with the same text node (adjacent spans)",
-		input: /* html */ `<p>lorem <strong>ipsum</strong> <img src="https://example.com/foo.png" alt="bar" /> <em>dolor</em> sit amet</p>`,
-		expectAsHTMLNotToMatchInput: true,
-	},
-	{
-		case: "converts only the given container",
-		input: /* html */ `
-			<article id="foo"><p>lorem ipsum dolor sit amet</p></article>
-			<article id="bar"><p>consectetur adipiscing elit</p></article>`,
-		config: { container: "article#bar" },
-		expectAsHTMLNotToMatchInput: true,
-	},
-	{
-		case: "excludes the given selectors",
-		input: /* html */ `
-			<h1><a href="#">lorem</a> ipsum dolor sit amet</h1>
-			<p><a href="#">consectetur</a> adipiscing elit</p>`,
-		config: { exclude: ["h1 > a"] },
-		expectAsHTMLNotToMatchInput: true,
-	},
-	{
-		case: "treats `<br>` as new lines",
-		input: /* html */ `<p>lorem ipsum dolor sit amet<br />consectetur adipiscing elit</p>`,
-	},
-	{
-		case: "strips indentation",
-		input: /* html */ `
-			<p>
-				lorem ipsum dolor sit amet
-			</p>
-		`,
-		expectAsHTMLNotToMatchInput: true,
-	},
-	{
-		case: "strips complex indentation",
-		input: /* html */ `
-			<p>
-				lorem ipsum dolor sit amet
-        consectetur adipiscing elit
-			</p>
-		`,
-		expectAsHTMLNotToMatchInput: true,
-	},
-])(
-	"transforms HTML to rich text ($case)",
-	({ input, config, expectAsHTMLNotToMatchInput }) => {
-		it("produces the same output with sync and async helpers", async () => {
-			const asyncOutput = await htmlAsRichText(input, config);
-			const syncOutput = htmlAsRichTextSync(input, config);
-
-			expect(asyncOutput).toStrictEqual(syncOutput);
+describe("transforms HTML to rich text", () => {
+	describe("basic", () => {
+		testHTMLAsRichTextHelper("empty", {
+			input: /* html */ ``,
 		});
 
-		it("produces valid rich text field", async () => {
-			const output = await htmlAsRichText(input, config);
+		testHTMLAsRichTextHelper("single tag", {
+			input: /* html */ `<p>lorem ipsum dolor sit amet</p>`,
+		});
 
-			expect(output.result).toMatchSnapshot();
+		testHTMLAsRichTextHelper("multiple tags", {
+			input: /* html */ `<h1>lorem ipsum dolor sit amet</h1><p>consectetur adipiscing elit</p>`,
+		});
+	});
 
-			const outputAsHTML = asHTML(output.result, {
-				serializer: {
-					// A simplified hyperlink serializer so that we don't have
-					// to append `rel="noopener noreferrer"` to every link in
-					// the test cases.
-					hyperlink: ({ node, children }) => {
-						const maybeTarget =
-							node.data.link_type === LinkType.Web && node.data.target
-								? ` target="${node.data.target}"`
-								: "";
+	describe("spans", () => {
+		testHTMLAsRichTextHelper("strong, em", {
+			input: /* html */ `<p>lorem <strong>ipsum</strong> dolor <em>sit</em> amet</p>`,
+		});
 
-						return `<a href="${node.data.url}"${maybeTarget}>${children}</a>`;
-					},
-					// A simplified image serializer so that we don't have to
-					// wrap the images in a `div` element like the default
-					// serializer does.
-					image: ({ node }) => `<img src="${node.url}" alt="${node.alt}" />`,
-					// A simplified embed serializer so that we don't have to
-					// wrap the embeds in a `div` element with the various data
-					// attributes the default serializer applies.
-					embed: ({ node }) => node.oembed.html,
-				},
+		testHTMLAsRichTextHelper("label", {
+			input: /* html */ `<p>lorem <span class="underline">ipsum</span> dolor sit amet</p>`,
+			config: { serializer: { "span.underline": { label: "underline" } } },
+		});
+
+		testHTMLAsRichTextHelper("hyperlink", {
+			input: /* html */ `<p>lorem <a href="https://prismic.io">ipsum</a> dolor <a href="https://prismic.io" target="_blank">sit</a> amet</p>`,
+		});
+
+		testHTMLAsRichTextHelper("nested spans", {
+			input: /* html */ `<p>lorem <strong>ips<em>um <a href="https://prismic.io">dolor</a></em></strong> sit amet</p>`,
+		});
+
+		describe("directly adjacent spans", () => {
+			describe("compacts similar", () => {
+				testHTMLAsRichTextHelper("strong, em", {
+					input: /* html */ `<p>lorem <strong>ipsum</strong><strong> dolor</strong> sit <em>amet</em><em> consectetur</em> adipiscing elit</p>`,
+					// `strong` and `em` tags will be merged into single ones.
+					expectAsHTMLNotToMatchInput: true,
+				});
+
+				testHTMLAsRichTextHelper("hyperlink", {
+					input: /* html */ `<p>lorem <a href="https://prismic.io">ipsum</a><a href="https://prismic.io"> dolor</a> sit amet</p>`,
+					// `a` tags will be merged into single ones.
+					expectAsHTMLNotToMatchInput: true,
+				});
+
+				testHTMLAsRichTextHelper("label", {
+					input: /* html */ `<p>lorem <span class="underline">ipsum</span><span class="underline"> dolor</span> sit amet</p>`,
+					config: { serializer: { "span.underline": { label: "underline" } } },
+					// `span.underline` tags will be merged into single ones.
+					expectAsHTMLNotToMatchInput: true,
+				});
+
+				testHTMLAsRichTextHelper("nested spans", {
+					input: /* html */ `<p>lorem <strong>ips<em>um</em></strong><em> dolor</em> sit amet</p>`,
+				});
 			});
 
-			if (!expectAsHTMLNotToMatchInput) {
-				expect(outputAsHTML).toBe(input);
-			} else {
-				expect(outputAsHTML).not.toBe(input);
-			}
+			describe("does not compact different", () => {
+				testHTMLAsRichTextHelper("hyperlink", {
+					input: /* html */ `<p>lorem <a href="https://prismic.io">ipsum</a><a href="https://google.com"> dolor</a> sit amet</p>`,
+				});
+
+				testHTMLAsRichTextHelper("label", {
+					input: /* html */ `<p>lorem <span class="underline">ipsum</span><span class="strikethrough"> dolor</span> sit amet</p>`,
+					config: {
+						serializer: {
+							"span.underline": { label: "underline" },
+							"span.strikethrough": { label: "strikethrough" },
+						},
+					},
+				});
+			});
 		});
+	});
+
+	describe("image", () => {
+		testHTMLAsRichTextHelper("non-prismic", {
+			input: /* html */ `<img src="https://example.com/foo.png" alt="foo" />`,
+		});
+
+		testHTMLAsRichTextHelper("prismic", {
+			input: /* html */ `<img src="https://images.prismic.io/200629-sms-hoy/f0a757f6-770d-4eb8-a08b-f1727f1a58e4_guilherme-romano-KI2KaOeT670-unsplash.jpg?auto=format%2Ccompress&rect=399%2C259%2C1600%2C1068&w=2400&h=1602" alt="foo" />`,
+		});
+
+		describe("extracts image in text nodes and resume previous text node", () => {
+			testHTMLAsRichTextHelper("basic", {
+				input: /* html */ `<p>lorem ipsum <img src="https://example.com/foo.png" alt="bar" /> dolor sit amet</p>`,
+				expectAsHTMLNotToMatchInput: true,
+			});
+
+			testHTMLAsRichTextHelper("spans", {
+				input: /* html */ `<p><strong>lorem</strong> ipsum <img src="https://example.com/foo.png" alt="bar" /> dolor <em>sit</em> amet</p>`,
+				expectAsHTMLNotToMatchInput: true,
+			});
+
+			testHTMLAsRichTextHelper("adjacent spans", {
+				input: /* html */ `<p>lorem <strong>ipsum</strong> <img src="https://example.com/foo.png" alt="bar" /> <em>dolor</em> sit amet</p>`,
+				expectAsHTMLNotToMatchInput: true,
+			});
+		});
+	});
+
+	describe("embed", () => {
+		testHTMLAsRichTextHelper("iframe", {
+			input: /* html */ `<iframe width="200" height="150" src="https://www.youtube.com/embed/wkS1bf7BLjs?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="幾田りら「ハミング」Official Music Video"></iframe>`,
+		});
+	});
+
+	describe("configuration", () => {
+		describe("serializer", () => {
+			testHTMLAsRichTextHelper("tag name", {
+				input: /* html */ `<p>lorem ipsum dolor sit amet</p>`,
+				config: {
+					serializer: {
+						p: "heading1",
+					},
+				},
+				expectAsHTMLNotToMatchInput: true,
+			});
+
+			testHTMLAsRichTextHelper("selector", {
+				input: /* html */ `<p id="foo">lorem ipsum dolor sit amet</p><p id="bar">consectetur adipiscing elit</p>`,
+				config: {
+					serializer: {
+						"#foo": "heading1",
+					},
+				},
+				expectAsHTMLNotToMatchInput: true,
+			});
+
+			testHTMLAsRichTextHelper("complex selector", {
+				input: /* html */ `
+					<article id="foo"><p>lorem ipsum dolor sit amet</p></article>
+					<article id="bar"><p>consectetur adipiscing elit</p></article>`,
+				config: {
+					serializer: {
+						"article#foo > p": "heading1",
+					},
+				},
+				expectAsHTMLNotToMatchInput: true,
+			});
+		});
+
+		describe("container", () => {
+			testHTMLAsRichTextHelper("converts only the given container", {
+				input: /* html */ `
+					<article id="foo"><p>lorem ipsum dolor sit amet</p></article>
+					<article id="bar"><p>consectetur adipiscing elit</p></article>`,
+				config: { container: "article#bar" },
+				expectAsHTMLNotToMatchInput: true,
+			});
+
+			it("throws when the container cannot be found", async () => {
+				await expect(
+					htmlAsRichText("", { container: "article#baz" }),
+				).rejects.toThrowErrorMatchingInlineSnapshot(
+					'"No container matching `article#baz` could be found in the input AST."',
+				);
+			});
+		});
+
+		describe("exclude", () => {
+			testHTMLAsRichTextHelper("excludes the given selectors", {
+				input: /* html */ `
+					<h1>lorem ipsum dolor sit amet</h1>
+					<p>consectetur adipiscing elit</p>`,
+				config: { exclude: ["h1"] },
+				expectAsHTMLNotToMatchInput: true,
+			});
+
+			testHTMLAsRichTextHelper("excludes the given complex selectors", {
+				input: /* html */ `
+					<h1><a href="#">lorem</a> ipsum dolor sit amet</h1>
+					<p><a href="#">consectetur</a> adipiscing elit</p>`,
+				config: { exclude: ["h1 > a"] },
+				expectAsHTMLNotToMatchInput: true,
+			});
+		});
+
+		describe("include", () => {
+			testHTMLAsRichTextHelper("includes only the given selectors", {
+				input: /* html */ `
+					<h1>lorem ipsum dolor sit amet</h1>
+					<p>consectetur adipiscing elit</p>`,
+				config: { include: ["h1"] },
+				expectAsHTMLNotToMatchInput: true,
+			});
+
+			testHTMLAsRichTextHelper("includes only the given complex selectors", {
+				input: /* html */ `
+					<article id="foo"><p>lorem ipsum dolor sit amet</p></article>
+					<article id="bar"><p>consectetur adipiscing elit</p></article>`,
+				config: { include: ["article#bar > p"] },
+				expectAsHTMLNotToMatchInput: true,
+			});
+
+			testHTMLAsRichTextHelper(
+				"dedupes matches that are child of other matches",
+				{
+					input: /* html */ `
+						<article id="foo"><p>lorem ipsum dolor sit amet</p></article>
+						<article id="bar"><p>consectetur adipiscing elit</p></article>`,
+					config: { include: ["article#bar", "p"] },
+					expectAsHTMLNotToMatchInput: true,
+				},
+			);
+		});
+
+		describe("direction", () => {
+			testHTMLAsRichTextHelper("marks text as left-to-right", {
+				input: /* html */ `<p>lorem ipsum dolor sit amet</p>`,
+				config: { direction: "ltr" },
+			});
+
+			testHTMLAsRichTextHelper("marks text as right-to-left", {
+				input: /* html */ `<p>lorem ipsum dolor sit amet</p>`,
+				config: { direction: "rtl" },
+			});
+		});
+	});
+
+	describe("whistespaces", () => {
+		testHTMLAsRichTextHelper("treats `<br>` as new lines", {
+			input: /* html */ `<p>lorem ipsum dolor sit amet<br />consectetur adipiscing elit</p>`,
+		});
+
+		testHTMLAsRichTextHelper("strips indentation", {
+			input: /* html */ `
+				<p>
+					lorem ipsum dolor sit amet
+				</p>
+			`,
+			expectAsHTMLNotToMatchInput: true,
+		});
+
+		testHTMLAsRichTextHelper("strips complex indentation", {
+			input: /* html */ `
+				<p>
+					lorem ipsum dolor sit amet
+          consectetur adipiscing elit
+				</p>
+			`,
+			expectAsHTMLNotToMatchInput: true,
+		});
+	});
+});
+
+type WarnCase = {
+	name: string;
+	input: string;
+};
+
+it.each<WarnCase>([
+	{
+		name: "element of type `img` is missing an `src` attribute",
+		input: /* html */ `<img>`,
 	},
-);
+	{
+		name: "element of type `embed` is missing an `src` attribute",
+		input: /* html */ `<iframe>lorem ipsum dolor sit amet</iframe>`,
+	},
+	{
+		name: "element of type `hyperlink` is missing an `href` attribute",
+		input: /* html */ `<p><a>missing-hyperlink-href</a></p>`,
+	},
+])("warns on unprocessable elements ($name)", async ({ name, input }) => {
+	const output = await htmlAsRichText(input);
 
-it("warns about missing `src` attribute in `image` elements", async () => {
-	const consoleWarnSpy = vi
-		.spyOn(console, "warn")
-		.mockImplementation(() => void 0);
-
-	await htmlAsRichText(/* html */ `<img>`);
-
-	expect(consoleWarnSpy).toHaveBeenCalledWith(
-		expect.stringMatching(/missing-image-src/i),
-	);
-
-	consoleWarnSpy.mockRestore();
-});
-
-it("warns about missing `src` attribute in `embed` elements", async () => {
-	const consoleWarnSpy = vi
-		.spyOn(console, "warn")
-		.mockImplementation(() => void 0);
-
-	await htmlAsRichText(
-		/* html */ `<iframe>lorem ipsum dolor sit amet</iframe>`,
-	);
-
-	expect(consoleWarnSpy).toHaveBeenCalledWith(
-		expect.stringMatching(/missing-embed-src/i),
-	);
-
-	consoleWarnSpy.mockRestore();
-});
-
-it("warns about missing `href` attribute in `hyperlink` elements", async () => {
-	const consoleWarnSpy = vi
-		.spyOn(console, "warn")
-		.mockImplementation(() => void 0);
-
-	await htmlAsRichText(/* html */ `<p><a>missing-hyperlink-href</a></p>`);
-
-	expect(consoleWarnSpy).toHaveBeenCalledWith(
-		expect.stringMatching(/missing-hyperlink-href/i),
-	);
-
-	consoleWarnSpy.mockRestore();
+	expect(output.warnings.toString()).toMatch(new RegExp(name, "i"));
 });

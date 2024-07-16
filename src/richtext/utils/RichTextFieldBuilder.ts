@@ -29,11 +29,12 @@ export class RichTextFieldBuilder {
 		return this;
 	}
 
-	appendTextNode(type: RTTextNodeTypes): this {
+	appendTextNode(type: RTTextNodeTypes, direction?: "ltr" | "rtl"): this {
 		return this.appendNode({
 			type: type,
 			text: "",
 			spans: [],
+			direction: direction || "ltr",
 		});
 	}
 

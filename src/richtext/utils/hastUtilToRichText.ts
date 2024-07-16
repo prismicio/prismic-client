@@ -1,5 +1,4 @@
 import { Element, Root } from "hast";
-import { matches } from "hast-util-select";
 import { toHtml } from "hast-util-to-html";
 import { whitespace } from "hast-util-whitespace";
 import { toString } from "mdast-util-to-string";
@@ -23,14 +22,10 @@ import { RTNodeTypes, RTTextNodeTypes } from "../utils/isNodeType";
  * {@link RichTextNodeType | rich text node types}.
  *
  * @remarks
- * You can only use "shallow" CSS selectors like `p.primary`, `h1#title`,
- * `div[data-type="content"]`. Selectors like `p > a` or `h1 + p` are not
- * supported.
- * @remarks
  * The `o-list-item` rich text node type is not available. Use the `list-item`
  * type for any kind of list item instead. The correct list item type will be
  * inferred on whether the parent is considered a `group-list-item` or
- * `group-o-list-item` by the converter.
+ * `group-o-list-item` by the serializer.
  * @remarks
  * The `label` rich text node type is not available as is. Use an object
  * containing your label name to convert to label nodes instead. For example:
@@ -39,7 +34,7 @@ import { RTNodeTypes, RTTextNodeTypes } from "../utils/isNodeType";
  * The `span` rich text node type is not available as it is not relevant in the
  * context of going from HTML to Prismic rich text.
  */
-type RichTextHTMLMapConverter = Record<
+type RichTextHTMLMapSerializer = Record<
 	string,
 	| Exclude<
 			(typeof RichTextNodeType)[keyof typeof RichTextNodeType],
@@ -48,7 +43,7 @@ type RichTextHTMLMapConverter = Record<
 	| { label: string }
 >;
 
-const DEFAULT_CONVERTER: RichTextHTMLMapConverter = {
+const DEFAULT_SERIALIZER: RichTextHTMLMapSerializer = {
 	h1: "heading1",
 	h2: "heading2",
 	h3: "heading3",
@@ -77,48 +72,33 @@ const VFILE_SOURCE = "prismic";
 
 export type HastUtilToRichTextConfig = {
 	/**
-	 * An optional HTML to rich text converter. Will be merged with the default
-	 * HTML to rich text converter.
+	 * An optional HTML to rich text serializer. Will be merged with the default
+	 * HTML to rich text serializer.
 	 */
-	converter?: RichTextHTMLMapConverter;
+	serializer?: RichTextHTMLMapSerializer;
+
+	/**
+	 * Whether or not the text processed should be marked as right-to-left.
+	 *
+	 * @defaultValue `false`
+	 */
+	direction?: "ltr" | "rtl";
 };
 
-const createFindType = (converter: RichTextHTMLMapConverter) => {
-	// We separate tag name converters from CSS selector converters to
-	// attempt to match on tag names first as it's much more performant
-	// than matching CSS selectors.
-	const tagNameConverter: RichTextHTMLMapConverter = {};
-	const cssSelectorConverter: [string, RichTextHTMLMapConverter[string]][] = [];
-
-	Object.entries(converter).forEach(([key, value]) => {
-		// HTML tag names are single word, lowercase strings, a-z and 1-6 (headings).
-		// See: https://regex101.com/r/LILLWH/1
-		if (key.match(/^[a-z]+[1-6]?$/)) {
-			tagNameConverter[key] = value;
-		} else {
-			cssSelectorConverter.push([key, value]);
-		}
-	});
-
+const createFindType = (serializer: RichTextHTMLMapSerializer) => {
 	return (
 		node: Element,
 	):
-		| { type: Extract<RichTextHTMLMapConverter[string], string> }
+		| { type: Extract<RichTextHTMLMapSerializer[string], string> }
 		| Pick<RTLabelNode, "type" | "data">
 		| null => {
-		let match: RichTextHTMLMapConverter[string] | null = null;
+		let match: RichTextHTMLMapSerializer[string] | null = null;
 
-		if (node.tagName in tagNameConverter) {
-			match = tagNameConverter[node.tagName];
+		// We give priority to CSS selectors over tag names.
+		if (node.matchesSerializer && node.matchesSerializer in serializer) {
+			match = serializer[node.matchesSerializer];
 		} else {
-			for (let i = 0; i < cssSelectorConverter.length; i++) {
-				const [selector, value] = cssSelectorConverter[i];
-
-				if (matches(selector, node)) {
-					match = value;
-					break;
-				}
-			}
+			match = serializer[node.tagName];
 		}
 
 		if (typeof match === "string") {
@@ -138,12 +118,12 @@ export const hastUtilToRichText = (
 ): RichTextField => {
 	const builder = new RichTextFieldBuilder();
 
-	const converter = {
-		...DEFAULT_CONVERTER,
-		...config?.converter,
+	const serializer = {
+		...DEFAULT_SERIALIZER,
+		...config?.serializer,
 	};
 
-	const findType = createFindType(converter);
+	const findType = createFindType(serializer);
 
 	// Keep track of the last node type to append text nodes to in case
 	// of an image or an embed node is present inside a paragraph.
@@ -189,9 +169,9 @@ export const hastUtilToRichText = (
 							? RichTextNodeType.oListItem
 							: RichTextNodeType.listItem;
 
-					builder.appendTextNode(listItemType);
+					builder.appendTextNode(listItemType, config?.direction);
 				} else {
-					builder.appendTextNode(type);
+					builder.appendTextNode(type, config?.direction);
 				}
 			} else if (isNodeType.image(type)) {
 				// TODO: handle image
@@ -291,7 +271,7 @@ export const hastUtilToRichText = (
 				// Happens when we extract an image/embed node inside an RTTextNode.
 				if (!isNodeType.rtText(lastRTNodeType) && lastRTTextNodeType) {
 					lastRTNodeType = lastRTTextNodeType;
-					builder.appendTextNode(lastRTTextNodeType);
+					builder.appendTextNode(lastRTTextNodeType, config?.direction);
 				}
 
 				if (type === "strong" || type === "em") {
@@ -335,7 +315,7 @@ export const hastUtilToRichText = (
 					// Happens when we extract an image/embed node inside an RTTextNode.
 					if (lastRTTextNodeType) {
 						lastRTNodeType = lastRTTextNodeType;
-						builder.appendTextNode(lastRTTextNodeType);
+						builder.appendTextNode(lastRTTextNodeType, config?.direction);
 						builder.appendText(node.value);
 					} else {
 						throw error;

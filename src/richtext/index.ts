@@ -7,11 +7,8 @@ export { composeSerializers } from "./composeSerializers";
 
 export { RichTextNodeType as Element } from "../types/value/richText";
 
-export { htmlAsRichText, htmlAsRichTextSync } from "./htmlAsRichText";
-export {
-	markdownAsRichText,
-	markdownAsRichTextSync,
-} from "./markdownAsRichText";
+export { htmlAsRichText } from "./htmlAsRichText";
+export { markdownAsRichText } from "./markdownAsRichText";
 
 export type {
 	AsRichTextConfig,

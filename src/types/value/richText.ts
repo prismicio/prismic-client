@@ -40,6 +40,7 @@ export const RichTextNodeType = {
 export interface RTTextNodeBase {
 	text: string;
 	spans: RTInlineNode[];
+	direction?: "ltr" | "rtl";
 }
 
 /**

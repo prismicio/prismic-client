@@ -4,14 +4,11 @@ import { unified } from "unified";
 
 import { AsRichTextConfig, AsRichTextReturnType } from "./types";
 
-import { rehypeRichText } from "./unified/rehypeRichText";
+import { rehypeRichText } from "./utils/rehypeRichText";
 
 // Used for TSDocs only.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { htmlAsRichText, htmlAsRichTextSync } from "./htmlAsRichText";
-
-const markdownProcessor = (config?: AsRichTextConfig) =>
-	unified().use(remarkParse).use(remarkRehype).use(rehypeRichText, config);
+import type { htmlAsRichText } from "./htmlAsRichText";
 
 /**
  * Converts a markdown string to a rich text field.
@@ -26,29 +23,15 @@ const markdownProcessor = (config?: AsRichTextConfig) =>
  *
  * @returns Rich text field equivalent of the provided markdown string.
  */
-export const markdownAsRichText = (
+export const markdownAsRichText = async (
 	markdown: string,
 	config?: AsRichTextConfig,
 ): Promise<AsRichTextReturnType> => {
-	return markdownProcessor(config).process(markdown);
-};
+	const { result, messages } = await unified()
+		.use(remarkParse)
+		.use(remarkRehype)
+		.use(rehypeRichText, config)
+		.process(markdown);
 
-/**
- * Converts an markdown string to a rich text field synchronously.
- *
- * @remarks
- * To convert markdown to a rich text field, this function first converts it to
- * HTML. It's essentially a sugar above {@link htmlAsRichTextSync}.
- *
- * @param markdown - An markdown string
- * @param config - Configuration that determines the output of
- *   `markdownAsRichTextSync()`
- *
- * @returns Rich text field equivalent of the provided markdown string.
- */
-export const markdownAsRichTextSync = (
-	markdown: string,
-	config?: AsRichTextConfig,
-): AsRichTextReturnType => {
-	return markdownProcessor(config).processSync(markdown);
+	return { result, warnings: messages };
 };
