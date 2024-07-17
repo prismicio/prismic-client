@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { testHTMLAsRichTextHelper } from "./__testutils__/testAsRichTextHelper";
+import { testHTMLAsRichTextHelper } from "../__testutils__/testAsRichTextHelper";
 
 import { htmlAsRichText } from "../../src/richtext";
 
@@ -158,10 +158,10 @@ describe("transforms HTML to rich text", () => {
 				expectAsHTMLNotToMatchInput: true,
 			});
 
-			it("throws when the container cannot be found", async () => {
-				await expect(
+			it("throws when the container cannot be found", () => {
+				expect(() =>
 					htmlAsRichText("", { container: "article#baz" }),
-				).rejects.toThrowErrorMatchingInlineSnapshot(
+				).toThrowErrorMatchingInlineSnapshot(
 					'"No container matching `article#baz` could be found in the input AST."',
 				);
 			});
@@ -214,6 +214,36 @@ describe("transforms HTML to rich text", () => {
 			);
 		});
 
+		describe("model", () => {
+			testHTMLAsRichTextHelper(
+				"filters output according to single type model",
+				{
+					input: /* html */ `<h1>lorem <strong>ipsum</strong> dolor <em>sit</em> amet</h1><p>consectetur <strong>adipiscing</strong> elit</p>`,
+					config: {
+						model: {
+							type: "StructuredText",
+							config: { single: "heading1,strong" },
+						},
+					},
+					expectAsHTMLNotToMatchInput: true,
+				},
+			);
+
+			testHTMLAsRichTextHelper("filters output according to multi type model", {
+				input: /* html */ `
+						<h1>lorem <strong>ipsum</strong> dolor <em>sit</em> amet</h1>
+						<p>consectetur <strong>adipiscing</strong> elit</p>
+						<p>sed <em>do</em> eiusmod tempor</p>`,
+				config: {
+					model: {
+						type: "StructuredText",
+						config: { multi: "paragraph,strong" },
+					},
+				},
+				expectAsHTMLNotToMatchInput: true,
+			});
+		});
+
 		describe("direction", () => {
 			testHTMLAsRichTextHelper("marks text as left-to-right", {
 				input: /* html */ `<p>lorem ipsum dolor sit amet</p>`,
@@ -224,6 +254,25 @@ describe("transforms HTML to rich text", () => {
 				input: /* html */ `<p>lorem ipsum dolor sit amet</p>`,
 				config: { direction: "rtl" },
 			});
+		});
+
+		describe("defaultWrapperNodeType", () => {
+			testHTMLAsRichTextHelper(
+				'wraps inner input within a "paragraph" rich text node type by default',
+				{
+					input: /* html */ `lorem <strong>ipsum</strong> dolor sit amet`,
+					expectAsHTMLNotToMatchInput: true,
+				},
+			);
+
+			testHTMLAsRichTextHelper(
+				"wraps inner input within the given rich text node type",
+				{
+					input: /* html */ `lorem <strong>ipsum</strong> dolor sit amet`,
+					config: { defaultWrapperNodeType: "heading1" },
+					expectAsHTMLNotToMatchInput: true,
+				},
+			);
 		});
 	});
 
@@ -271,8 +320,8 @@ it.each<WarnCase>([
 		name: "element of type `hyperlink` is missing an `href` attribute",
 		input: /* html */ `<p><a>missing-hyperlink-href</a></p>`,
 	},
-])("warns on unprocessable elements ($name)", async ({ name, input }) => {
-	const output = await htmlAsRichText(input);
+])("warns on unprocessable elements ($name)", ({ name, input }) => {
+	const output = htmlAsRichText(input);
 
 	expect(output.warnings.toString()).toMatch(new RegExp(name, "i"));
 });

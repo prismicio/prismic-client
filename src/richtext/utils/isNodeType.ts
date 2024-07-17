@@ -1,6 +1,10 @@
-import { RTNode, RTTextNodeBase } from "../../types/value/richText";
+import {
+	RTNode,
+	RTTextNode,
+	RichTextNodeType,
+} from "../../types/value/richText";
 
-export type RTTextNodeTypes = Extract<RTNode, RTTextNodeBase>["type"];
+export type RTTextNodeTypes = RTTextNode["type"];
 export const RT_TEXT_NODE_TYPES: RTTextNodeTypes[] = [
 	"heading1",
 	"heading2",
@@ -27,6 +31,8 @@ export const rt = (type: unknown): type is RTNodeTypes =>
 export const rtText = (type: unknown): type is RTTextNodeTypes =>
 	RT_TEXT_NODE_TYPES.includes(type as RTTextNodeTypes);
 
-export const image = (type: unknown): type is "image" => type === "image";
+export const image = (type: unknown): type is typeof RichTextNodeType.image =>
+	type === RichTextNodeType.image;
 
-export const embed = (type: unknown): type is "embed" => type === "embed";
+export const embed = (type: unknown): type is typeof RichTextNodeType.embed =>
+	type === RichTextNodeType.embed;

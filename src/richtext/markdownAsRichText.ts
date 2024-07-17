@@ -22,16 +22,18 @@ import type { htmlAsRichText } from "./htmlAsRichText";
  *   `markdownAsRichText()`
  *
  * @returns Rich text field equivalent of the provided markdown string.
+ *
+ * @experimental - This API is subject to change and might not follow SemVer.
  */
-export const markdownAsRichText = async (
+export const markdownAsRichText = (
 	markdown: string,
 	config?: AsRichTextConfig,
-): Promise<AsRichTextReturnType> => {
-	const { result, messages } = await unified()
+): AsRichTextReturnType => {
+	const { result, messages } = unified()
 		.use(remarkParse)
 		.use(remarkRehype)
 		.use(rehypeRichText, config)
-		.process(markdown);
+		.processSync(markdown);
 
 	return { result, warnings: messages };
 };

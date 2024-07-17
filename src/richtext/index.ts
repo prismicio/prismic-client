@@ -4,6 +4,7 @@ export { asText } from "./asText";
 export { serialize } from "./serialize";
 export { wrapMapSerializer } from "./wrapMapSerializer";
 export { composeSerializers } from "./composeSerializers";
+export { filterRichTextField } from "./filterRichTextField";
 
 export { RichTextNodeType as Element } from "../types/value/richText";
 
@@ -17,3 +18,5 @@ export type {
 	RichTextMapSerializer,
 	RichTextMapSerializerFunction,
 } from "./types";
+
+export type { RichTextHTMLMapSerializer } from "./utils/hastUtilToRichText";

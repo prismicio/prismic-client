@@ -171,6 +171,7 @@ export type {
 	RTBlockNode,
 	RTInlineNode,
 	RTAnyNode,
+	RichTextNodeTypes,
 } from "./types/value/richText";
 export type { TitleField } from "./types/value/title";
 

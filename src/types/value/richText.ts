@@ -6,7 +6,7 @@ import type { FilledLinkToWebField } from "./link";
 import type { FilledLinkToMediaField } from "./linkToMedia";
 
 /**
- * Types for RichTextNodes
+ * Types enum for RichTextNodes
  *
  * @see More details: {@link https://prismic.io/docs/rich-text-title}
  */
@@ -31,6 +31,14 @@ export const RichTextNodeType = {
 	label: "label",
 	span: "span",
 } as const;
+
+/**
+ * Types for RichTextNodes
+ *
+ * @see More details: {@link https://prismic.io/docs/rich-text-title}
+ */
+export type RichTextNodeTypes =
+	(typeof RichTextNodeType)[keyof typeof RichTextNodeType];
 
 // Text nodes
 

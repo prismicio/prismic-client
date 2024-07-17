@@ -8,18 +8,30 @@ import { VFile } from "vfile";
 import { OEmbedType } from "../../types/value/embed";
 import { LinkType } from "../../types/value/link";
 import {
+	RTBlockNode,
+	RTInlineNode,
 	RTLabelNode,
 	RichTextField,
 	RichTextNodeType,
+	RichTextNodeTypes,
 } from "../../types/value/richText";
 
 import * as isNodeType from "../utils/isNodeType";
 import { RichTextFieldBuilder } from "../utils/RichTextFieldBuilder";
 import { RTNodeTypes, RTTextNodeTypes } from "../utils/isNodeType";
 
+type RichTextHTMLMapSerializerShorthand =
+	| Exclude<RichTextNodeTypes, "o-list-item" | "label" | "span">
+	| { label: string };
+
+type RichTextHTMLMapSerializerFunction = (
+	node: Element,
+) => RichTextHTMLMapSerializerShorthand | RTBlockNode | RTInlineNode;
+
 /**
  * A map of HTML tag names or CSS selectors to
- * {@link RichTextNodeType | rich text node types}.
+ * {@link RichTextNodeType | rich text node types} or
+ * {@link RichTextHTMLMapSerializerFunction | serializer functions}.
  *
  * @remarks
  * The `o-list-item` rich text node type is not available. Use the `list-item`
@@ -34,13 +46,9 @@ import { RTNodeTypes, RTTextNodeTypes } from "../utils/isNodeType";
  * The `span` rich text node type is not available as it is not relevant in the
  * context of going from HTML to Prismic rich text.
  */
-type RichTextHTMLMapSerializer = Record<
+export type RichTextHTMLMapSerializer = Record<
 	string,
-	| Exclude<
-			(typeof RichTextNodeType)[keyof typeof RichTextNodeType],
-			"o-list-item" | "label" | "span"
-	  >
-	| { label: string }
+	RichTextHTMLMapSerializerShorthand | RichTextHTMLMapSerializerFunction
 >;
 
 const DEFAULT_SERIALIZER: RichTextHTMLMapSerializer = {
@@ -83,31 +91,60 @@ export type HastUtilToRichTextConfig = {
 	 * @defaultValue `false`
 	 */
 	direction?: "ltr" | "rtl";
+
+	/**
+	 * The default node type to wrap the input with in case it only represents the
+	 * inner content of an element.
+	 *
+	 * @remarks
+	 * This is a niche option that allows you to serialize correctly an input such
+	 * as: `"lorem <strong>ipsum</strong> dolor sit amet"`, wrapping it inside a
+	 * node of the desired type.
+	 *
+	 * @defaultValue `"paragraph"`
+	 */
+	defaultWrapperNodeType?: RTTextNodeTypes;
 };
 
 const createFindType = (serializer: RichTextHTMLMapSerializer) => {
 	return (
 		node: Element,
 	):
-		| { type: Extract<RichTextHTMLMapSerializer[string], string> }
+		| { type: Extract<RichTextHTMLMapSerializerShorthand, string> }
 		| Pick<RTLabelNode, "type" | "data">
+		| RTBlockNode
+		| RTInlineNode
 		| null => {
-		let match: RichTextHTMLMapSerializer[string] | null = null;
+		let serializerOrShorthand:
+			| RichTextHTMLMapSerializerShorthand
+			| RichTextHTMLMapSerializerFunction
+			| null = null;
 
 		// We give priority to CSS selectors over tag names.
 		if (node.matchesSerializer && node.matchesSerializer in serializer) {
-			match = serializer[node.matchesSerializer];
+			serializerOrShorthand = serializer[node.matchesSerializer];
 		} else {
-			match = serializer[node.tagName];
+			serializerOrShorthand = serializer[node.tagName];
 		}
 
-		if (typeof match === "string") {
-			return { type: match };
-		} else if (match) {
-			return { type: "label", data: match };
+		let shorthandOrNode:
+			| RichTextHTMLMapSerializerShorthand
+			| RTBlockNode
+			| RTInlineNode
+			| null = null;
+		if (typeof serializerOrShorthand === "function") {
+			shorthandOrNode = serializerOrShorthand(node);
+		} else {
+			shorthandOrNode = serializerOrShorthand;
 		}
 
-		return null;
+		if (typeof shorthandOrNode === "string") {
+			return { type: shorthandOrNode };
+		} else if (shorthandOrNode && "label" in shorthandOrNode) {
+			return { type: "label", data: shorthandOrNode };
+		}
+
+		return shorthandOrNode;
 	};
 };
 
@@ -127,11 +164,13 @@ export const hastUtilToRichText = (
 
 	// Keep track of the last node type to append text nodes to in case
 	// of an image or an embed node is present inside a paragraph.
-	let lastRTNodeType: RTNodeTypes | null = null;
+	let lastRTNodeType: RTNodeTypes =
+		config?.defaultWrapperNodeType ?? RichTextNodeType.paragraph;
 
 	// Keep track of the last text node type to append text nodes to in
 	// case of an image or an embed node is present inside a paragraph.
-	let lastRTTextNodeType: RTTextNodeTypes | null = null;
+	let lastRTTextNodeType: RTTextNodeTypes =
+		config?.defaultWrapperNodeType ?? RichTextNodeType.paragraph;
 
 	// Keep track of the last list type to know whether we need to append
 	// `list-item` or `o-list-item` nodes.
@@ -149,7 +188,6 @@ export const hastUtilToRichText = (
 			}
 
 			const maybeMatch = findType(node);
-
 			if (!maybeMatch) {
 				return;
 			}
@@ -269,7 +307,7 @@ export const hastUtilToRichText = (
 				lastListType = type;
 			} else {
 				// Happens when we extract an image/embed node inside an RTTextNode.
-				if (!isNodeType.rtText(lastRTNodeType) && lastRTTextNodeType) {
+				if (!isNodeType.rtText(lastRTNodeType)) {
 					lastRTNodeType = lastRTTextNodeType;
 					builder.appendTextNode(lastRTTextNodeType, config?.direction);
 				}
@@ -277,10 +315,7 @@ export const hastUtilToRichText = (
 				if (type === "strong" || type === "em") {
 					builder.appendSpanOfLength({ type }, toString(node).length);
 				} else if (type === "label") {
-					builder.appendSpanOfLength(
-						{ type: "label", data: maybeMatch.data },
-						toString(node).length,
-					);
+					builder.appendSpanOfLength(maybeMatch, toString(node).length);
 				} else if (type === "hyperlink") {
 					const url = node.properties?.href as string | undefined;
 					if (url) {
@@ -313,13 +348,9 @@ export const hastUtilToRichText = (
 					builder.appendText(node.value);
 				} catch (error) {
 					// Happens when we extract an image/embed node inside an RTTextNode.
-					if (lastRTTextNodeType) {
-						lastRTNodeType = lastRTTextNodeType;
-						builder.appendTextNode(lastRTTextNodeType, config?.direction);
-						builder.appendText(node.value);
-					} else {
-						throw error;
-					}
+					lastRTNodeType = lastRTTextNodeType;
+					builder.appendTextNode(lastRTTextNodeType, config?.direction);
+					builder.appendText(node.value);
 				}
 			}
 		}

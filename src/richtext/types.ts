@@ -23,6 +23,7 @@ import {
 	RTStrongNode,
 	RichTextField,
 	RichTextNodeType,
+	RichTextNodeTypes,
 } from "../types/value/richText";
 
 import { RehypeRichTextConfig } from "./utils/rehypeRichText";
@@ -37,7 +38,7 @@ import { RehypeRichTextConfig } from "./utils/rehypeRichText";
  * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/technologies/templating-rich-text-and-title-fields-javascript}
  */
 export type RichTextFunctionSerializer<ReturnType> = (
-	type: (typeof RichTextNodeType)[keyof typeof RichTextNodeType],
+	type: RichTextNodeTypes,
 	node: RTAnyNode,
 	text: string | undefined,
 	children: ReturnType[],
@@ -143,7 +144,7 @@ export interface Tree {
 
 export interface TreeNode {
 	key: string;
-	type: (typeof RichTextNodeType)[keyof typeof RichTextNodeType];
+	type: RichTextNodeTypes;
 	text?: string;
 	node: RTAnyNode;
 	children: TreeNode[];

@@ -6,13 +6,19 @@ import { remove } from "unist-util-remove";
 import { SKIP, visit } from "unist-util-visit";
 import { VFile } from "vfile";
 
+import { CustomTypeModelRichTextField } from "../../types/model/richText";
 import { RichTextField } from "../../types/value/richText";
+
+import { filterRichTextField } from "../filterRichTextField";
 
 import {
 	HastUtilToRichTextConfig,
 	hastUtilToRichText,
 } from "./hastUtilToRichText";
 
+/**
+ * Configuration options for {@link rehypeRichText}.
+ */
 export type RehypeRichTextConfig = {
 	/**
 	 * A CSS selector that targets the section of the document to convert to rich
@@ -20,7 +26,7 @@ export type RehypeRichTextConfig = {
 	 *
 	 * @example `div.post`
 	 *
-	 * @defaultValue The top-level element of the document.
+	 * @defaultValue `":root"` - The top-level element of the document.
 	 */
 	container?: string;
 
@@ -40,13 +46,28 @@ export type RehypeRichTextConfig = {
 	 *
 	 * @example `["p", "img"]`
 	 *
-	 * @defaultValue All nodes are included.
+	 * @defaultValue `[]` - All nodes are included.
 	 */
 	include?: string[];
+
+	/**
+	 * A rich text or title field model definition. When provided the serializer
+	 * will filter out any node types not allowed by the model.
+	 *
+	 * @defaultValue `undefined` - No filtering is applied.
+	 */
+	model?: CustomTypeModelRichTextField;
 } & HastUtilToRichTextConfig;
 
+/**
+ * A unified plugin that compiles HAST to a Prismic rich text field.
+ *
+ * @param config - Configuration options for the rehype rich text processor.
+ *
+ * @experimental - This API is subject to change and might not follow SemVer.
+ */
 // unified requires the function to be typed directly with the
-// Plugin type to properly infer return types on processors.
+// `Plugin` type to properly infer return types on processors.
 export const rehypeRichText: Plugin<
 	[config?: RehypeRichTextConfig],
 	Root,
@@ -139,7 +160,13 @@ export const rehypeRichText: Plugin<
 	self.compiler = compiler;
 
 	function compiler(tree: Root, file: VFile): RichTextField {
-		return hastUtilToRichText(tree, file, config);
+		const richTextField = hastUtilToRichText(tree, file, config);
+
+		if (config?.model) {
+			return filterRichTextField(richTextField, config.model);
+		}
+
+		return richTextField;
 	}
 };
 

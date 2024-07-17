@@ -21,6 +21,8 @@ export interface CustomTypeModelRichTextMultiField {
 		placeholder?: string;
 		allowTargetBlank?: boolean;
 		multi?: string;
+		// @prismicio/types-internal types `labels` as readonly.
+		labels?: readonly string[];
 	};
 }
 
@@ -36,5 +38,7 @@ export interface CustomTypeModelRichTextSingleField {
 		placeholder?: string;
 		allowTargetBlank?: boolean;
 		single?: string;
+		// @prismicio/types-internal types `labels` as readonly.
+		labels?: readonly string[];
 	};
 }

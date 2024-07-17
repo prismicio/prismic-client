@@ -2,7 +2,7 @@ import {
 	RTInlineNode,
 	RTLinkNode,
 	RTNode,
-	RTTextNodeBase,
+	RTTextNode,
 	RichTextField,
 } from "../../types/value/richText";
 
@@ -144,7 +144,7 @@ export class RichTextFieldBuilder {
 	 *
 	 * @returns `true` if `node` is of kind text, `false` otherwise.
 	 */
-	private isOfKindText(node?: RTNode): node is Extract<RTNode, RTTextNodeBase> {
+	private isOfKindText(node?: RTNode): node is RTTextNode {
 		return isNodeType.rtText(node?.type);
 	}
 }

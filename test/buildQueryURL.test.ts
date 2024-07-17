@@ -288,7 +288,13 @@ it("warns if NODE_ENV is development and an array of strings is provided to `ord
 		orderings: ["orderings"],
 	});
 
-	expect(consoleWarnSpy).toHaveBeenCalledWith(
+	prismic.buildQueryURL(endpoint, {
+		ref: "ref",
+		orderings: ["orderings desc"],
+	});
+
+	expect(consoleWarnSpy).toHaveBeenNthCalledWith(
+		2,
 		expect.stringMatching(/orderings-must-be-an-array-of-objects/i),
 	);
 

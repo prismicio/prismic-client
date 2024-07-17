@@ -1,11 +1,11 @@
 import { expect, it } from "vitest";
 
-import { LinkType, asHTML } from "../../../src";
+import { LinkType, asHTML } from "../../src";
 import {
 	AsRichTextConfig,
 	htmlAsRichText,
 	markdownAsRichText,
-} from "../../../src/richtext";
+} from "../../src/richtext";
 
 type TestAsRichTextHelperArgs = {
 	input: string;
@@ -29,8 +29,8 @@ const testAsRichTextHelperFactory = (
 	args: TestAsRichTextHelperArgs,
 	helper: typeof htmlAsRichText | typeof markdownAsRichText,
 ): void => {
-	it(description, async () => {
-		const output = await helper(args.input, args.config);
+	it(description, () => {
+		const output = helper(args.input, args.config);
 
 		expect(output.result).toMatchSnapshot();
 
@@ -75,11 +75,11 @@ export const testHTMLAsRichTextHelper = (
 
 export const testMarkdownAsRichTextHelper = (
 	description: string,
-	args: TestAsRichTextHelperArgs,
+	args: Omit<TestAsRichTextHelperArgs, "expectAsHTMLNotToMatchInput">,
 ): void => {
 	testAsRichTextHelperFactory(
 		description,
-		{ ...args, expectAsHTMLNotToMatchInput: true },
+		{ ...args, expectAsHTMLNotToMatchInput: !!args.input },
 		markdownAsRichText,
 	);
 };

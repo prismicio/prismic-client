@@ -13,15 +13,17 @@ import { rehypeRichText } from "./utils/rehypeRichText";
  *   `htmlAsRichText()`
  *
  * @returns Rich text field equivalent of the provided HTML string.
+ *
+ * @experimental - This API is subject to change and might not follow SemVer.
  */
-export const htmlAsRichText = async (
+export const htmlAsRichText = (
 	html: string,
 	config?: AsRichTextConfig,
-): Promise<AsRichTextReturnType> => {
-	const { result, messages } = await unified()
+): AsRichTextReturnType => {
+	const { result, messages } = unified()
 		.use(rehypeParse, { emitParseErrors: true })
 		.use(rehypeRichText, config)
-		.process(html);
+		.processSync(html);
 
 	return { result, warnings: messages };
 };

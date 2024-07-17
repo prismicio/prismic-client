@@ -41,6 +41,40 @@ exports[`transforms HTML to rich text > configuration > container > converts onl
 ]
 `;
 
+exports[`transforms HTML to rich text > configuration > defaultWrapperNodeType > wraps inner input within a "paragraph" rich text node type by default 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "end": 11,
+        "start": 6,
+        "type": "strong",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > defaultWrapperNodeType > wraps inner input within the given rich text node type 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "end": 11,
+        "start": 6,
+        "type": "strong",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "heading1",
+  },
+]
+`;
+
 exports[`transforms HTML to rich text > configuration > direction > marks text as left-to-right 1`] = `
 [
   {
@@ -135,6 +169,46 @@ exports[`transforms HTML to rich text > configuration > include > includes only 
   {
     "direction": "ltr",
     "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "heading1",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > model > filters output according to multi type model 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "end": 22,
+        "start": 12,
+        "type": "strong",
+      },
+    ],
+    "text": "consectetur adipiscing elit",
+    "type": "paragraph",
+  },
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "sed do eiusmod tempor",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > model > filters output according to single type model 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "end": 11,
+        "start": 6,
+        "type": "strong",
+      },
+    ],
     "text": "lorem ipsum dolor sit amet",
     "type": "heading1",
   },
