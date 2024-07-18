@@ -60,7 +60,7 @@ export type RehypeRichTextConfig = {
 } & HastUtilToRichTextConfig;
 
 /**
- * A unified plugin that compiles HAST to a Prismic rich text field.
+ * A unified plugin that compiles an hast tree to a Prismic rich text field.
  *
  * @param config - Configuration options for the rehype rich text processor.
  *

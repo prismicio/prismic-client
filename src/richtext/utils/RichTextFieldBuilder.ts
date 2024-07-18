@@ -6,13 +6,25 @@ import {
 	RichTextField,
 } from "../../types/value/richText";
 
-import * as isNodeType from "./isNodeType";
-import { RTTextNodeTypes } from "./isNodeType";
-
+/**
+ * Omits keys from a type, distributing the operation over a union.
+ *
+ * Taken from the `type-fest` package.
+ *
+ * @see https://github.com/sindresorhus/type-fest/blob/8a45ba048767aaffcebc7d190172d814a739feb0/source/distributed-omit.d.ts
+ */
 type DistributedOmit<
 	ObjectType,
 	KeyType extends ObjectType extends unknown ? keyof ObjectType : never,
 > = ObjectType extends unknown ? Omit<ObjectType, KeyType> : never;
+
+/**
+ * An inline node without its `start` and `end` properties.
+ */
+export type RTPartialInlineNode = DistributedOmit<
+	RTInlineNode,
+	"start" | "end"
+>;
 
 export class RichTextFieldBuilder {
 	private nodes: RTNode[] = [];
@@ -29,7 +41,7 @@ export class RichTextFieldBuilder {
 		return this;
 	}
 
-	appendTextNode(type: RTTextNodeTypes, direction?: "ltr" | "rtl"): this {
+	appendTextNode(type: RTTextNode["type"], direction?: "ltr" | "rtl"): this {
 		return this.appendNode({
 			type: type,
 			text: "",
@@ -88,10 +100,7 @@ export class RichTextFieldBuilder {
 		return this;
 	}
 
-	appendSpanOfLength(
-		span: DistributedOmit<RTInlineNode, "start" | "end">,
-		length: number,
-	): this {
+	appendSpanOfLength(partialSpan: RTPartialInlineNode, length: number): this {
 		if (!this.isOfKindText(this.tail)) {
 			throw new Error("Cannot add span to non-text tail node");
 		}
@@ -99,7 +108,7 @@ export class RichTextFieldBuilder {
 		const tailLenght = this.tail.text.length;
 
 		return this.appendSpan({
-			...span,
+			...partialSpan,
 			start: tailLenght,
 			end: tailLenght + length,
 		});
@@ -129,7 +138,7 @@ export class RichTextFieldBuilder {
 	}
 
 	/**
-	 * Cleanup the current tail node.
+	 * Cleans up the current tail node.
 	 */
 	private cleanupTail(): void {
 		if (this.isOfKindText(this.tail)) {
@@ -145,6 +154,6 @@ export class RichTextFieldBuilder {
 	 * @returns `true` if `node` is of kind text, `false` otherwise.
 	 */
 	private isOfKindText(node?: RTNode): node is RTTextNode {
-		return isNodeType.rtText(node?.type);
+		return !!node && node.type !== "image" && node.type !== "embed";
 	}
 }

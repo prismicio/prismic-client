@@ -1,11 +1,8 @@
 import { expect, it } from "vitest";
 
 import { LinkType, asHTML } from "../../src";
-import {
-	AsRichTextConfig,
-	htmlAsRichText,
-	markdownAsRichText,
-} from "../../src/richtext";
+import { htmlAsRichText, markdownAsRichText } from "../../src/richtext";
+import { AsRichTextConfig } from "../../src/richtext/types";
 
 type TestAsRichTextHelperArgs = {
 	input: string;
