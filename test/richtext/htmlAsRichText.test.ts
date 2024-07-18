@@ -33,6 +33,14 @@ describe("transforms HTML to rich text", () => {
 			input: /* html */ `<p>lorem <a href="https://prismic.io">ipsum</a> dolor <a href="https://prismic.io" target="_blank">sit</a> amet</p>`,
 		});
 
+		testHTMLAsRichTextHelper("hyperlink missing href", {
+			input: /* html */ `<p>lorem <a>ipsum</a> dolor sit amet</p>`,
+			expectWarnings: [
+				"Element of type `hyperlink` is missing an `href` attribute",
+			],
+			expectAsHTMLNotToMatchInput: true,
+		});
+
 		testHTMLAsRichTextHelper("nested spans", {
 			input: /* html */ `<p>lorem <strong>ips<em>um <a href="https://prismic.io">dolor</a></em></strong> sit amet</p>`,
 		});
@@ -119,6 +127,12 @@ describe("transforms HTML to rich text", () => {
 			expectAsHTMLNotToMatchInput: true,
 		});
 
+		testHTMLAsRichTextHelper("missing src", {
+			input: /* html */ `<img />`,
+			expectWarnings: ["Element of type `img` is missing an `src` attribute"],
+			expectAsHTMLNotToMatchInput: true,
+		});
+
 		describe("extracts image in text nodes and resume previous text node", () => {
 			testHTMLAsRichTextHelper("basic", {
 				input: /* html */ `<p>lorem ipsum <img src="https://example.com/foo.png" alt="bar" /> dolor sit amet</p>`,
@@ -152,6 +166,12 @@ describe("transforms HTML to rich text", () => {
 		testHTMLAsRichTextHelper("custom", {
 			input: /* html */ `<blockquote class="twitter-tweet" src="https://twitter.com/li_hbr/status/1803718142222282829?ref_src=twsrc%5Etfw"><p lang="en" dir="ltr">Slack bot that uses AI to tl;dr; threads for you, anyone?</p>— Lucie (@li_hbr) <a href="https://twitter.com/li_hbr/status/1803718142222282829?ref_src=twsrc%5Etfw">June 20, 2024</a></blockquote>`,
 			config: { serializer: { blockquote: "embed" } },
+		});
+
+		testHTMLAsRichTextHelper("missing src", {
+			input: /* html */ `<iframe></iframe>`,
+			expectWarnings: ["Element of type `embed` is missing an `src` attribute"],
+			expectAsHTMLNotToMatchInput: true,
 		});
 	});
 
@@ -224,7 +244,7 @@ describe("transforms HTML to rich text", () => {
 				});
 
 				testHTMLAsRichTextHelper("image node", {
-					input: /* html */ `<foo src="https://example.com/foo.png" alt="foo" />`,
+					input: /* html */ `<foo src="https://example.com/foo.png" alt="foo"></foo>`,
 					config: {
 						serializer: {
 							foo: () => ({
@@ -242,7 +262,7 @@ describe("transforms HTML to rich text", () => {
 				});
 
 				testHTMLAsRichTextHelper("embed node", {
-					input: /* html */ `<foo src="https://example.com/foo.png" />`,
+					input: /* html */ `<foo src="https://example.com/foo.png"></foo>`,
 					config: {
 						serializer: {
 							foo: () => ({
@@ -464,28 +484,4 @@ describe("transforms HTML to rich text", () => {
 			expectAsHTMLNotToMatchInput: true,
 		});
 	});
-});
-
-type WarnCase = {
-	name: string;
-	input: string;
-};
-
-it.each<WarnCase>([
-	{
-		name: "element of type `img` is missing an `src` attribute",
-		input: /* html */ `<img>`,
-	},
-	{
-		name: "element of type `embed` is missing an `src` attribute",
-		input: /* html */ `<iframe>lorem ipsum dolor sit amet</iframe>`,
-	},
-	{
-		name: "element of type `hyperlink` is missing an `href` attribute",
-		input: /* html */ `<p><a>missing-hyperlink-href</a></p>`,
-	},
-])("warns on unprocessable elements ($name)", ({ name, input }) => {
-	const output = htmlAsRichText(input);
-
-	expect(output.warnings.toString()).toMatch(new RegExp(name, "i"));
 });

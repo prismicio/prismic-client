@@ -21,7 +21,7 @@ export const htmlAsRichText = (
 	config?: AsRichTextConfig,
 ): AsRichTextReturnType => {
 	const { result, messages } = unified()
-		.use(rehypeParse, { emitParseErrors: true })
+		.use(rehypeParse, { emitParseErrors: true, missingDoctype: 0 })
 		.use(rehypeRichText, config)
 		.processSync(html);
 

@@ -10,6 +10,11 @@ type TestAsRichTextHelperArgs = {
 	config?: AsRichTextConfig;
 
 	/**
+	 * Warnings that are expected to be present in the output.
+	 */
+	expectWarnings?: string[];
+
+	/**
 	 * The rich text format is a lossy representation of HTML. Namely it does not
 	 * preserves indentation and applies some optimizations to the output such as
 	 * merging directly adjacent identical spans.
@@ -54,6 +59,10 @@ const testAsRichTextHelperFactory = (
 				embed: ({ node }) => node.oembed.html,
 			},
 		});
+
+		expect(
+			output.warnings.map((warning) => warning.message).sort(),
+		).toStrictEqual(args.expectWarnings?.sort() ?? []);
 
 		if (!args.expectAsHTMLNotToMatchInput) {
 			expect(outputAsHTML).toBe(args.input);

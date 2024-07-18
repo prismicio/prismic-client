@@ -472,6 +472,8 @@ exports[`transforms HTML to rich text > embed > iframe 1`] = `
 ]
 `;
 
+exports[`transforms HTML to rich text > embed > missing src 1`] = `[]`;
+
 exports[`transforms HTML to rich text > image > empty alt 1`] = `
 [
   {
@@ -687,6 +689,8 @@ exports[`transforms HTML to rich text > image > missing alt 1`] = `
   },
 ]
 `;
+
+exports[`transforms HTML to rich text > image > missing src 1`] = `[]`;
 
 exports[`transforms HTML to rich text > image > non-prismic 1`] = `
 [
@@ -996,6 +1000,17 @@ exports[`transforms HTML to rich text > spans > hyperlink 1`] = `
         "type": "hyperlink",
       },
     ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > spans > hyperlink missing href 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
     "text": "lorem ipsum dolor sit amet",
     "type": "paragraph",
   },
