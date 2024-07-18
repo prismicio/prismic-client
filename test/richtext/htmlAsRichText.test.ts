@@ -233,6 +233,17 @@ describe("transforms HTML to rich text", () => {
 					expectAsHTMLNotToMatchInput: true,
 				});
 
+				testHTMLAsRichTextHelper("nullish", {
+					input: /* html */ `<p data-heading>lorem ipsum dolor sit amet</p><p>consectetur adipiscing elit</p>`,
+					config: {
+						serializer: {
+							p: ({ node }) =>
+								"dataHeading" in node.properties ? null : "paragraph",
+						},
+					},
+					expectAsHTMLNotToMatchInput: true,
+				});
+
 				testHTMLAsRichTextHelper("text nodes", {
 					input: /* html */ `<div>lorem ipsum dolor sit amet</div>`,
 					config: {

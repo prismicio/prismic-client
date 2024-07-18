@@ -90,7 +90,9 @@ type RichTextHTMLMapSerializerFunction = (
 	| RichTextHTMLMapSerializerShorthand
 	| RTNode
 	| RTInlineNode
-	| RTPartialInlineNode;
+	| RTPartialInlineNode
+	| null
+	| undefined;
 
 /**
  * Serializes an hast {@link Element} node matching the given HTML tag name or
@@ -209,8 +211,14 @@ export const hastUtilToRichText = (
 					context: { listType: lastListType },
 				});
 
-				// When the serializer returns a rich text node, we append it and return.
-				if (typeof shorthandOrNode === "object" && "type" in shorthandOrNode) {
+				if (!shorthandOrNode) {
+					// Exit on unhandled node.
+					return;
+				} else if (
+					typeof shorthandOrNode === "object" &&
+					"type" in shorthandOrNode
+				) {
+					// When the serializer returns a rich text node, we append it and return.
 					switch (shorthandOrNode.type) {
 						case RichTextNodeType.strong:
 						case RichTextNodeType.em:
