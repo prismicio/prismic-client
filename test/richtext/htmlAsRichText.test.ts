@@ -36,9 +36,9 @@ describe("transforms HTML to rich text", () => {
 		testHTMLAsRichTextHelper("hyperlink missing href", {
 			input: /* html */ `<p>lorem <a>ipsum</a> dolor sit amet</p>`,
 			expectWarnings: [
-				"Element of type `hyperlink` is missing an `href` attribute",
+				"1:10-1:22: Element of type `hyperlink` is missing an `href` attribute",
 			],
-			expectAsHTMLNotToMatchInput: true,
+			expectHTMLToMatchInputExactly: false,
 		});
 
 		testHTMLAsRichTextHelper("nested spans", {
@@ -50,20 +50,20 @@ describe("transforms HTML to rich text", () => {
 				testHTMLAsRichTextHelper("strong, em", {
 					input: /* html */ `<p>lorem <strong>ipsum</strong><strong> dolor</strong> sit <em>amet</em><em> consectetur</em> adipiscing elit</p>`,
 					// `strong` and `em` tags will be merged into single ones.
-					expectAsHTMLNotToMatchInput: true,
+					expectHTMLToMatchInputExactly: false,
 				});
 
 				testHTMLAsRichTextHelper("hyperlink", {
 					input: /* html */ `<p>lorem <a href="https://prismic.io">ipsum</a><a href="https://prismic.io"> dolor</a> sit amet</p>`,
 					// `a` tags will be merged into single ones.
-					expectAsHTMLNotToMatchInput: true,
+					expectHTMLToMatchInputExactly: false,
 				});
 
 				testHTMLAsRichTextHelper("label", {
 					input: /* html */ `<p>lorem <span class="underline">ipsum</span><span class="underline"> dolor</span> sit amet</p>`,
 					config: { serializer: { "span.underline": { label: "underline" } } },
 					// `span.underline` tags will be merged into single ones.
-					expectAsHTMLNotToMatchInput: true,
+					expectHTMLToMatchInputExactly: false,
 				});
 
 				testHTMLAsRichTextHelper("nested spans", {
@@ -105,7 +105,7 @@ describe("transforms HTML to rich text", () => {
 		// We expect the last list item to be an `o-list-item` because we don't support nested lists.
 		testHTMLAsRichTextHelper("nested list-item and o-list-item", {
 			input: /* html */ `<ul><li>lorem ipsum dolor sit amet<ol><li>consectetur adipiscing elit</li><li>sed do eiusmod tempor incididunt</li></ol></li><li>ut labore et dolore magna aliqua</li></ul>`,
-			expectAsHTMLNotToMatchInput: true,
+			expectHTMLToMatchInputExactly: false,
 		});
 	});
 
@@ -124,35 +124,37 @@ describe("transforms HTML to rich text", () => {
 
 		testHTMLAsRichTextHelper("missing alt", {
 			input: /* html */ `<img src="https://example.com/foo.png" />`,
-			expectAsHTMLNotToMatchInput: true,
+			expectHTMLToMatchInputExactly: false,
 		});
 
 		testHTMLAsRichTextHelper("missing src", {
 			input: /* html */ `<img />`,
-			expectWarnings: ["Element of type `img` is missing an `src` attribute"],
-			expectAsHTMLNotToMatchInput: true,
+			expectWarnings: [
+				"1:1-1:8: Element of type `img` is missing an `src` attribute",
+			],
+			expectHTMLToMatchInputExactly: false,
 		});
 
 		describe("extracts image in text nodes and resume previous text node", () => {
 			testHTMLAsRichTextHelper("basic", {
 				input: /* html */ `<p>lorem ipsum <img src="https://example.com/foo.png" alt="bar" /> dolor sit amet</p>`,
-				expectAsHTMLNotToMatchInput: true,
+				expectHTMLToMatchInputExactly: false,
 			});
 
 			testHTMLAsRichTextHelper("spans", {
 				input: /* html */ `<p><strong>lorem</strong> ipsum <img src="https://example.com/foo.png" alt="bar" /> dolor <em>sit</em> amet</p>`,
-				expectAsHTMLNotToMatchInput: true,
+				expectHTMLToMatchInputExactly: false,
 			});
 
 			testHTMLAsRichTextHelper("adjacent spans", {
 				input: /* html */ `<p>lorem <strong>ipsum</strong> <img src="https://example.com/foo.png" alt="bar" /> <em>dolor</em> sit amet</p>`,
-				expectAsHTMLNotToMatchInput: true,
+				expectHTMLToMatchInputExactly: false,
 			});
 
 			testHTMLAsRichTextHelper("adjacent spans (respects direction)", {
 				input: /* html */ `<p>lorem <strong>ipsum</strong> <img src="https://example.com/foo.png" alt="bar" /> <em>dolor</em> sit amet</p>`,
 				config: { direction: "rtl" },
-				expectAsHTMLNotToMatchInput: true,
+				expectHTMLToMatchInputExactly: false,
 			});
 		});
 	});
@@ -170,8 +172,10 @@ describe("transforms HTML to rich text", () => {
 
 		testHTMLAsRichTextHelper("missing src", {
 			input: /* html */ `<iframe></iframe>`,
-			expectWarnings: ["Element of type `embed` is missing an `src` attribute"],
-			expectAsHTMLNotToMatchInput: true,
+			expectWarnings: [
+				"1:1-1:18: Element of type `embed` is missing an `src` attribute",
+			],
+			expectHTMLToMatchInputExactly: false,
 		});
 	});
 
@@ -184,7 +188,7 @@ describe("transforms HTML to rich text", () => {
 						p: "heading1",
 					},
 				},
-				expectAsHTMLNotToMatchInput: true,
+				expectHTMLToMatchInputExactly: false,
 			});
 
 			testHTMLAsRichTextHelper("selector", {
@@ -194,7 +198,7 @@ describe("transforms HTML to rich text", () => {
 						"#foo": "heading1",
 					},
 				},
-				expectAsHTMLNotToMatchInput: true,
+				expectHTMLToMatchInputExactly: false,
 			});
 
 			testHTMLAsRichTextHelper("complex selector", {
@@ -206,7 +210,7 @@ describe("transforms HTML to rich text", () => {
 						"article#foo > p": "heading1",
 					},
 				},
-				expectAsHTMLNotToMatchInput: true,
+				expectHTMLToMatchInputExactly: false,
 			});
 
 			describe("shorthand serializer", () => {
@@ -230,7 +234,7 @@ describe("transforms HTML to rich text", () => {
 								"dataHeading" in node.properties ? "heading1" : "paragraph",
 						},
 					},
-					expectAsHTMLNotToMatchInput: true,
+					expectHTMLToMatchInputExactly: false,
 				});
 
 				testHTMLAsRichTextHelper("nullish", {
@@ -241,7 +245,7 @@ describe("transforms HTML to rich text", () => {
 								"dataHeading" in node.properties ? null : "paragraph",
 						},
 					},
-					expectAsHTMLNotToMatchInput: true,
+					expectHTMLToMatchInputExactly: false,
 				});
 
 				testHTMLAsRichTextHelper("text nodes", {
@@ -251,7 +255,7 @@ describe("transforms HTML to rich text", () => {
 							div: () => ({ type: "paragraph", text: "", spans: [] }),
 						},
 					},
-					expectAsHTMLNotToMatchInput: true,
+					expectHTMLToMatchInputExactly: false,
 				});
 
 				testHTMLAsRichTextHelper("image node", {
@@ -269,7 +273,7 @@ describe("transforms HTML to rich text", () => {
 							}),
 						},
 					},
-					expectAsHTMLNotToMatchInput: true,
+					expectHTMLToMatchInputExactly: false,
 				});
 
 				testHTMLAsRichTextHelper("embed node", {
@@ -290,7 +294,7 @@ describe("transforms HTML to rich text", () => {
 							}),
 						},
 					},
-					expectAsHTMLNotToMatchInput: true,
+					expectHTMLToMatchInputExactly: false,
 				});
 
 				describe("span nodes", () => {
@@ -301,7 +305,7 @@ describe("transforms HTML to rich text", () => {
 								span: () => ({ type: "strong" }),
 							},
 						},
-						expectAsHTMLNotToMatchInput: true,
+						expectHTMLToMatchInputExactly: false,
 					});
 
 					testHTMLAsRichTextHelper("full", {
@@ -311,7 +315,7 @@ describe("transforms HTML to rich text", () => {
 								span: () => ({ type: "strong", start: 0, end: 5 }),
 							},
 						},
-						expectAsHTMLNotToMatchInput: true,
+						expectHTMLToMatchInputExactly: false,
 					});
 
 					describe("with extracted image node", () => {
@@ -322,7 +326,7 @@ describe("transforms HTML to rich text", () => {
 									span: () => ({ type: "strong" }),
 								},
 							},
-							expectAsHTMLNotToMatchInput: true,
+							expectHTMLToMatchInputExactly: false,
 						});
 
 						testHTMLAsRichTextHelper("full", {
@@ -332,7 +336,7 @@ describe("transforms HTML to rich text", () => {
 									span: () => ({ type: "strong", start: 6, end: 9 }),
 								},
 							},
-							expectAsHTMLNotToMatchInput: true,
+							expectHTMLToMatchInputExactly: false,
 						});
 					});
 				});
@@ -345,7 +349,7 @@ describe("transforms HTML to rich text", () => {
 					<article id="foo"><p>lorem ipsum dolor sit amet</p></article>
 					<article id="bar"><p>consectetur adipiscing elit</p></article>`,
 				config: { container: "article#bar" },
-				expectAsHTMLNotToMatchInput: true,
+				expectHTMLToMatchInputExactly: false,
 			});
 
 			it("throws when the container cannot be found", () => {
@@ -363,7 +367,7 @@ describe("transforms HTML to rich text", () => {
 					<h1>lorem ipsum dolor sit amet</h1>
 					<p>consectetur adipiscing elit</p>`,
 				config: { exclude: ["h1"] },
-				expectAsHTMLNotToMatchInput: true,
+				expectHTMLToMatchInputExactly: false,
 			});
 
 			testHTMLAsRichTextHelper("excludes the given complex selectors", {
@@ -371,7 +375,7 @@ describe("transforms HTML to rich text", () => {
 					<h1><a href="#">lorem</a> ipsum dolor sit amet</h1>
 					<p><a href="#">consectetur</a> adipiscing elit</p>`,
 				config: { exclude: ["h1 > a"] },
-				expectAsHTMLNotToMatchInput: true,
+				expectHTMLToMatchInputExactly: false,
 			});
 		});
 
@@ -381,7 +385,7 @@ describe("transforms HTML to rich text", () => {
 					<h1>lorem ipsum dolor sit amet</h1>
 					<p>consectetur adipiscing elit</p>`,
 				config: { include: ["h1"] },
-				expectAsHTMLNotToMatchInput: true,
+				expectHTMLToMatchInputExactly: false,
 			});
 
 			testHTMLAsRichTextHelper("includes only the given complex selectors", {
@@ -389,7 +393,7 @@ describe("transforms HTML to rich text", () => {
 					<article id="foo"><p>lorem ipsum dolor sit amet</p></article>
 					<article id="bar"><p>consectetur adipiscing elit</p></article>`,
 				config: { include: ["article#bar > p"] },
-				expectAsHTMLNotToMatchInput: true,
+				expectHTMLToMatchInputExactly: false,
 			});
 
 			testHTMLAsRichTextHelper(
@@ -399,7 +403,7 @@ describe("transforms HTML to rich text", () => {
 						<article id="foo"><p>lorem ipsum dolor sit amet</p></article>
 						<article id="bar"><p>consectetur adipiscing elit</p></article>`,
 					config: { include: ["article#bar", "p"] },
-					expectAsHTMLNotToMatchInput: true,
+					expectHTMLToMatchInputExactly: false,
 				},
 			);
 		});
@@ -415,7 +419,7 @@ describe("transforms HTML to rich text", () => {
 							config: { single: "heading1,strong" },
 						},
 					},
-					expectAsHTMLNotToMatchInput: true,
+					expectHTMLToMatchInputExactly: false,
 				},
 			);
 
@@ -430,7 +434,7 @@ describe("transforms HTML to rich text", () => {
 						config: { multi: "paragraph,strong" },
 					},
 				},
-				expectAsHTMLNotToMatchInput: true,
+				expectHTMLToMatchInputExactly: false,
 			});
 		});
 
@@ -451,7 +455,7 @@ describe("transforms HTML to rich text", () => {
 				'wraps inner input within a "paragraph" rich text node type by default',
 				{
 					input: /* html */ `lorem <strong>ipsum</strong> dolor sit amet`,
-					expectAsHTMLNotToMatchInput: true,
+					expectHTMLToMatchInputExactly: false,
 				},
 			);
 
@@ -460,7 +464,7 @@ describe("transforms HTML to rich text", () => {
 				{
 					input: /* html */ `lorem <strong>ipsum</strong> dolor sit amet`,
 					config: { defaultWrapperNodeType: "heading1" },
-					expectAsHTMLNotToMatchInput: true,
+					expectHTMLToMatchInputExactly: false,
 				},
 			);
 		});
@@ -473,7 +477,7 @@ describe("transforms HTML to rich text", () => {
 
 		testHTMLAsRichTextHelper("ignores wild `<br />`", {
 			input: /* html */ `<br /><p>lorem ipsum dolor sit amet</p>`,
-			expectAsHTMLNotToMatchInput: true,
+			expectHTMLToMatchInputExactly: false,
 		});
 
 		testHTMLAsRichTextHelper("strips indentation", {
@@ -482,7 +486,7 @@ describe("transforms HTML to rich text", () => {
 					lorem ipsum dolor sit amet
 				</p>
 			`,
-			expectAsHTMLNotToMatchInput: true,
+			expectHTMLToMatchInputExactly: false,
 		});
 
 		testHTMLAsRichTextHelper("strips complex indentation", {
@@ -492,7 +496,7 @@ describe("transforms HTML to rich text", () => {
           consectetur adipiscing elit
 				</p>
 			`,
-			expectAsHTMLNotToMatchInput: true,
+			expectHTMLToMatchInputExactly: false,
 		});
 	});
 });

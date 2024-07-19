@@ -11,10 +11,7 @@ import { RichTextField } from "../../types/value/richText";
 
 import { filterRichTextField } from "../filterRichTextField";
 
-import {
-	HastUtilToRichTextConfig,
-	hastUtilToRichText,
-} from "./hastUtilToRichText";
+import { ToRichTextConfig, toRichText } from "./hastUtilToRichText";
 
 /**
  * Configuration options for {@link rehypeRichText}.
@@ -57,10 +54,10 @@ export type RehypeRichTextConfig = {
 	 * @defaultValue `undefined` - No filtering is applied.
 	 */
 	model?: CustomTypeModelRichTextField;
-} & HastUtilToRichTextConfig;
+} & ToRichTextConfig;
 
 /**
- * A unified plugin that compiles an hast tree to a Prismic rich text field.
+ * A unified plugin that compiles a hast tree to a Prismic rich text field.
  *
  * @param config - Configuration options for the rehype rich text processor.
  *
@@ -160,7 +157,7 @@ export const rehypeRichText: Plugin<
 	self.compiler = compiler;
 
 	function compiler(tree: Root, file: VFile): RichTextField {
-		const richTextField = hastUtilToRichText(tree, file, config);
+		const richTextField = toRichText(tree, file, config);
 
 		if (config?.model) {
 			return filterRichTextField(richTextField, config.model);

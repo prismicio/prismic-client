@@ -13,9 +13,9 @@ import { TitleField } from "../types/value/title";
 /**
  * Get allowed nodes types from a rich text or title field custom type model.
  *
- * @param model - A rich text or title field custom type model
+ * @param model - A rich text or title field custom type model.
  *
- * @returns An array of allowed nodes types
+ * @returns An array of allowed nodes types.
  */
 const getAllowedNodeTypes = (
 	model: CustomTypeModelRichTextField,
@@ -44,10 +44,10 @@ const getAllowedNodeTypes = (
 /**
  * Filter an image node based on given model.
  *
- * @param node - An image node to filter
- * @param model - A rich text or title field custom type model
+ * @param node - An image node to filter.
+ * @param model - A rich text or title field custom type model.
  *
- * @returns A filtered image node based on the given model
+ * @returns A filtered image node based on the given model.
  */
 const filterImageNode = (
 	node: RTImageNode,
@@ -72,11 +72,11 @@ const filterImageNode = (
 /**
  * Filter a text node based on given model.
  *
- * @param node - A text node to filter
- * @param model - A rich text or title field custom type model
- * @param allowedNodeTypes - An array of allowed nodes types
+ * @param node - A text node to filter.
+ * @param model - A rich text or title field custom type model.
+ * @param allowedNodeTypes - An array of allowed nodes types.
  *
- * @returns A filtered text node based on the given model
+ * @returns A filtered text node based on the given model.
  */
 const filterTextNode = (
 	node: RTTextNode,
@@ -123,10 +123,10 @@ const filterTextNode = (
 /**
  * Filter a rich text field based on given model.
  *
- * @param richTextField - A rich text or title field from Prismic
- * @param model - A rich text or title field custom type model
+ * @param richTextField - A rich text or title field from Prismic.
+ * @param model - A rich text or title field custom type model.
  *
- * @returns A rich text or title field filtered based on the given model
+ * @returns A rich text or title field filtered based on the given model.
  *
  * @experimental - This API is subject to change and might not follow SemVer.
  */

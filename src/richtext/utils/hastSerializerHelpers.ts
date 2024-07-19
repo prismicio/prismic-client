@@ -18,11 +18,11 @@ import { RTPartialInlineNode } from "./RichTextFieldBuilder";
 export class SerializerWarning extends Error {}
 
 /**
- * Serializes an hast {@link Element} node to a {@link RTImageNode}.
+ * Serializes a hast {@link Element} node to a {@link RTImageNode}.
  *
- * @param node - An hast node to serialize
+ * @param node - A hast node to serialize.
  *
- * @returns Equivalent {@link RTImageNode}
+ * @returns Equivalent {@link RTImageNode}.
  */
 export const serializeImage = (node: Element): RTImageNode => {
 	const src = node.properties?.src as string | undefined;
@@ -35,8 +35,8 @@ export const serializeImage = (node: Element): RTImageNode => {
 
 	const url = new URL(src);
 
-	let width = (node.properties?.width as number) ?? 0;
-	let height = (node.properties?.height as number) ?? 0;
+	let width = node.properties?.width as number | undefined;
+	let height = node.properties?.height as number | undefined;
 	let x = 0;
 	let y = 0;
 	let zoom = 1;
@@ -59,7 +59,7 @@ export const serializeImage = (node: Element): RTImageNode => {
 			x = Number(rectX);
 			y = Number(rextY);
 
-			// This is not perfect but it's supposed to work on images without constrainsts.
+			// This is not perfect but it's supposed to work on images without constraints.
 			if (width) {
 				zoom = Math.max(1, width / Number(rectW));
 			}
@@ -72,17 +72,17 @@ export const serializeImage = (node: Element): RTImageNode => {
 		url: src,
 		alt: (node.properties?.alt as string) ?? "",
 		copyright: (node.properties?.copyright as string) ?? null,
-		dimensions: { width, height },
+		dimensions: { width: width as number, height: height as number },
 		edit: { x, y, zoom, background: "transparent" },
 	};
 };
 
 /**
- * Serializes an hast {@link Element} node to a {@link RTEmbedNode}.
+ * Serializes a hast {@link Element} node to a {@link RTEmbedNode}.
  *
- * @param node - An hast node to serialize
+ * @param node - A hast node to serialize.
  *
- * @returns Equivalent {@link RTEmbedNode}
+ * @returns Equivalent {@link RTEmbedNode}.
  */
 export const serializeEmbed = (node: Element): RTEmbedNode => {
 	const src = node.properties?.src as string | undefined;
@@ -120,12 +120,12 @@ export const serializeEmbed = (node: Element): RTEmbedNode => {
 };
 
 /**
- * Serializes an hast {@link Element} node to a {@link RTPartialInlineNode}.
+ * Serializes a hast {@link Element} node to a {@link RTPartialInlineNode}.
  *
- * @param node - An hast node to serialize
- * @param rtPartialInlineNode - A partial rich text node
+ * @param node - A hast node to serialize.
+ * @param rtPartialInlineNode - A partial rich text node.
  *
- * @returns Equivalent {@link RTPartialInlineNode}
+ * @returns Equivalent {@link RTPartialInlineNode}.
  */
 export const serializeSpan = (
 	node: Element,

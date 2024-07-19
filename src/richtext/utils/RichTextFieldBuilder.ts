@@ -27,37 +27,56 @@ export type RTPartialInlineNode = DistributedOmit<
 >;
 
 export class RichTextFieldBuilder {
-	private nodes: RTNode[] = [];
+	#nodes: RTNode[] = [];
 
-	private get tail(): RTNode | undefined {
-		return this.nodes[this.nodes.length - 1];
+	get #last(): RTNode | undefined {
+		return this.#nodes[this.#nodes.length - 1];
 	}
 
-	appendNode(node: RTNode): this {
-		this.cleanupTail();
+	appendNode(node: RTNode): void {
+		this.cleanupLast();
 
-		this.nodes.push(node);
-
-		return this;
+		this.#nodes.push(node);
 	}
 
-	appendTextNode(type: RTTextNode["type"], direction?: "ltr" | "rtl"): this {
-		return this.appendNode({
-			type: type,
+	appendTextNode(
+		type: RTTextNode["type"],
+		direction: "ltr" | "rtl" = "ltr",
+	): void {
+		this.appendNode({
+			type,
 			text: "",
 			spans: [],
-			direction: direction || "ltr",
+			direction,
 		});
 	}
 
-	appendSpan(span: RTInlineNode): this {
-		if (!this.isOfKindText(this.tail)) {
-			throw new Error("Cannot add span to non-text tail node");
+	appendSpan(span: RTInlineNode): void;
+	appendSpan(partialSpan: RTPartialInlineNode, length: number): void;
+	appendSpan(
+		spanOrPartialSpan: RTInlineNode | RTPartialInlineNode,
+		length?: number,
+	): void {
+		if (!this.isTextNode(this.#last)) {
+			throw new Error("Cannot add span to non-text last node");
+		}
+
+		let span: RTInlineNode;
+		if ("start" in spanOrPartialSpan && "end" in spanOrPartialSpan) {
+			span = spanOrPartialSpan;
+		} else {
+			const lastLength = this.#last.text.length;
+
+			span = {
+				...spanOrPartialSpan,
+				start: lastLength,
+				end: lastLength + length!,
+			};
 		}
 
 		let lastIdenticalSpanIndex = -1;
-		for (let i = this.tail.spans.length - 1; i >= 0; i--) {
-			const lastSpan = this.tail.spans[i];
+		for (let i = this.#last.spans.length - 1; i >= 0; i--) {
+			const lastSpan = this.#last.spans[i];
 
 			if (span.type === "strong" || span.type === "em") {
 				if (lastSpan.type === span.type) {
@@ -91,69 +110,51 @@ export class RichTextFieldBuilder {
 
 		// Prefer to extend the last span of the same type end
 		// position if it ends at the start of the new span.
-		if (this.tail.spans[lastIdenticalSpanIndex]?.end === span.start) {
-			this.tail.spans[lastIdenticalSpanIndex].end = span.end;
+		if (this.#last.spans[lastIdenticalSpanIndex]?.end === span.start) {
+			this.#last.spans[lastIdenticalSpanIndex].end = span.end;
 		} else {
-			this.tail.spans.push(span);
+			this.#last.spans.push(span);
 		}
-
-		return this;
 	}
 
-	appendSpanOfLength(partialSpan: RTPartialInlineNode, length: number): this {
-		if (!this.isOfKindText(this.tail)) {
-			throw new Error("Cannot add span to non-text tail node");
+	appendText(text: string): void {
+		if (!this.isTextNode(this.#last)) {
+			throw new Error("Cannot append text to non-text last node");
 		}
 
-		const tailLenght = this.tail.text.length;
-
-		return this.appendSpan({
-			...partialSpan,
-			start: tailLenght,
-			end: tailLenght + length,
-		});
-	}
-
-	appendText(text: string): this {
-		if (!this.isOfKindText(this.tail)) {
-			throw new Error("Cannot append text to non-text tail node");
-		}
-
-		if (!this.tail.text) {
-			this.tail.text = text.trimStart();
+		if (this.#last.text) {
+			this.#last.text += text;
 		} else {
-			this.tail.text += text;
+			this.#last.text = text.trimStart();
 		}
-
-		return this;
 	}
 
 	build(): RichTextField {
 		// Ensure that the last text node is trimmed.
-		this.cleanupTail();
+		this.cleanupLast();
 
-		// Because `RichTextField` is defined as a tuple,
-		// we have to cast `RTNode[]` to `RichTextField`.
-		return this.nodes as RichTextField;
+		// Because `RichTextField` is defined as a non-empty,
+		// array we have to cast `RTNode[]` to `RichTextField`.
+		return this.#nodes as RichTextField;
 	}
 
 	/**
-	 * Cleans up the current tail node.
+	 * Cleans up the current last node.
 	 */
-	private cleanupTail(): void {
-		if (this.isOfKindText(this.tail)) {
-			this.tail.text = this.tail.text.trimEnd();
+	private cleanupLast(): void {
+		if (this.isTextNode(this.#last)) {
+			this.#last.text = this.#last.text.trimEnd();
 		}
 	}
 
 	/**
-	 * Determines if a node is of kind text.
+	 * Determines if a node is a text node.
 	 *
 	 * @param node - rich text node to check.
 	 *
-	 * @returns `true` if `node` is of kind text, `false` otherwise.
+	 * @returns `true` if `node` is a text node, `false` otherwise.
 	 */
-	private isOfKindText(node?: RTNode): node is RTTextNode {
+	private isTextNode(node?: RTNode): node is RTTextNode {
 		return !!node && node.type !== "image" && node.type !== "embed";
 	}
 }

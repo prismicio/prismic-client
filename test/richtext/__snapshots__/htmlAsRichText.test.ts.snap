@@ -351,8 +351,8 @@ exports[`transforms HTML to rich text > configuration > serializer > function se
     "alt": "bar",
     "copyright": null,
     "dimensions": {
-      "height": 0,
-      "width": 0,
+      "height": undefined,
+      "width": undefined,
     },
     "edit": {
       "background": "transparent",
@@ -391,8 +391,8 @@ exports[`transforms HTML to rich text > configuration > serializer > function se
     "alt": "bar",
     "copyright": null,
     "dimensions": {
-      "height": 0,
-      "width": 0,
+      "height": undefined,
+      "width": undefined,
     },
     "edit": {
       "background": "transparent",
@@ -497,8 +497,8 @@ exports[`transforms HTML to rich text > image > empty alt 1`] = `
     "alt": "",
     "copyright": null,
     "dimensions": {
-      "height": 0,
-      "width": 0,
+      "height": undefined,
+      "width": undefined,
     },
     "edit": {
       "background": "transparent",
@@ -531,8 +531,8 @@ exports[`transforms HTML to rich text > image > extracts image in text nodes and
     "alt": "bar",
     "copyright": null,
     "dimensions": {
-      "height": 0,
-      "width": 0,
+      "height": undefined,
+      "width": undefined,
     },
     "edit": {
       "background": "transparent",
@@ -577,8 +577,8 @@ exports[`transforms HTML to rich text > image > extracts image in text nodes and
     "alt": "bar",
     "copyright": null,
     "dimensions": {
-      "height": 0,
-      "width": 0,
+      "height": undefined,
+      "width": undefined,
     },
     "edit": {
       "background": "transparent",
@@ -617,8 +617,8 @@ exports[`transforms HTML to rich text > image > extracts image in text nodes and
     "alt": "bar",
     "copyright": null,
     "dimensions": {
-      "height": 0,
-      "width": 0,
+      "height": undefined,
+      "width": undefined,
     },
     "edit": {
       "background": "transparent",
@@ -657,8 +657,8 @@ exports[`transforms HTML to rich text > image > extracts image in text nodes and
     "alt": "bar",
     "copyright": null,
     "dimensions": {
-      "height": 0,
-      "width": 0,
+      "height": undefined,
+      "width": undefined,
     },
     "edit": {
       "background": "transparent",
@@ -691,8 +691,8 @@ exports[`transforms HTML to rich text > image > missing alt 1`] = `
     "alt": "",
     "copyright": null,
     "dimensions": {
-      "height": 0,
-      "width": 0,
+      "height": undefined,
+      "width": undefined,
     },
     "edit": {
       "background": "transparent",
@@ -715,8 +715,8 @@ exports[`transforms HTML to rich text > image > non-prismic 1`] = `
     "alt": "foo",
     "copyright": null,
     "dimensions": {
-      "height": 0,
-      "width": 0,
+      "height": undefined,
+      "width": undefined,
     },
     "edit": {
       "background": "transparent",

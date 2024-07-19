@@ -1,29 +1,41 @@
 import rehypeParse from "rehype-parse";
 import { unified } from "unified";
 
-import { AsRichTextConfig, AsRichTextReturnType } from "./types";
+import { RichTextField } from "../types/value/richText";
 
-import { rehypeRichText } from "./utils/rehypeRichText";
+import { RehypeRichTextConfig, rehypeRichText } from "./utils/rehypeRichText";
+
+/**
+ * Configuration that determines the output of {@link htmlAsRichText}.
+ */
+export type HTMLAsRichTextConfig = RehypeRichTextConfig;
+
+/**
+ * The return type of {@link htmlAsRichText}.
+ */
+export type HTMLAsRichTextReturnType = {
+	result: RichTextField;
+	warnings: string[];
+};
 
 /**
  * Converts an HTML string to a rich text field.
  *
- * @param html - An HTML string
- * @param config - Configuration that determines the output of
- *   `htmlAsRichText()`
+ * @param html - An HTML string.
+ * @param config - Configuration that determines the output the function.
  *
- * @returns Rich text field equivalent of the provided HTML string.
+ * @returns `html` as rich text.
  *
  * @experimental - This API is subject to change and might not follow SemVer.
  */
 export const htmlAsRichText = (
 	html: string,
-	config?: AsRichTextConfig,
-): AsRichTextReturnType => {
+	config?: HTMLAsRichTextConfig,
+): HTMLAsRichTextReturnType => {
 	const { result, messages } = unified()
 		.use(rehypeParse, { emitParseErrors: true, missingDoctype: 0 })
 		.use(rehypeRichText, config)
 		.processSync(html);
 
-	return { result, warnings: messages };
+	return { result, warnings: messages.map((message) => message.toString()) };
 };

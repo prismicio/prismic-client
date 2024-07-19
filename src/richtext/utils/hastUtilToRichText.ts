@@ -8,24 +8,24 @@ import {
 	RTBlockNode,
 	RTInlineNode,
 	RTLabelNode,
-	RTNode,
 	RTTextNode,
 	RichTextField,
 	RichTextNodeType,
-	RichTextNodeTypes,
 } from "../../types/value/richText";
-
 import {
-	RTPartialInlineNode,
-	RichTextFieldBuilder,
-} from "../utils/RichTextFieldBuilder";
+	RichTextHTMLMapSerializer,
+	RichTextHTMLMapSerializerFunction,
+	RichTextHTMLMapSerializerShorthand,
+} from "../types";
+
+import { RichTextFieldBuilder } from "../utils/RichTextFieldBuilder";
 
 import {
 	SerializerWarning,
 	serializeEmbed,
 	serializeImage,
 	serializeSpan,
-} from "./serializerHelpers";
+} from "./hastSerializerHelpers";
 
 /**
  * Pick keys from a type, distributing the operation over a union.
@@ -38,70 +38,6 @@ type DistributedPick<
 	ObjectType,
 	KeyType extends ObjectType extends unknown ? keyof ObjectType : never,
 > = ObjectType extends unknown ? Pick<ObjectType, KeyType> : never;
-
-/**
- * A shorthand definition for {@link RichTextHTMLMapSerializer} rich text node
- * types.
- *
- * @remarks
- * The `label` rich text node type is not available as is. Use an object
- * containing your label name to convert to label nodes instead. For example:
- * `u: { label: "underline" }`
- * @remarks
- * The `span` rich text node type is not available as it is not relevant in the
- * context of going from HTML to Prismic rich text.
- */
-type RichTextHTMLMapSerializerShorthand =
-	| Exclude<RichTextNodeTypes, "label" | "span">
-	| { label: string };
-
-/**
- * The payload provided to a {@link RichTextHTMLMapSerializerFunction}.
- */
-type RichTextHTMLMapSerializerFunctionPayload = {
-	/**
-	 * The hast {@link Element} node to serialize.
-	 */
-	node: Element;
-
-	/**
-	 * Additional context information to help with the serialization.
-	 */
-	context: {
-		/**
-		 * The list type of the last list node encountered if any.
-		 */
-		listType: "group-list-item" | "group-o-list-item" | null;
-	};
-};
-
-/**
- * Serializes a hast {@link Element} node to a
- * {@link RichTextHTMLMapSerializerShorthand} or a rich text node.
- *
- * @remarks
- * Serializing to a rich text node directly is not recommended and is only
- * available as an escape hatch. Prefer returning a
- * {@link RichTextHTMLMapSerializerShorthand} instead.
- */
-type RichTextHTMLMapSerializerFunction = (
-	payload: RichTextHTMLMapSerializerFunctionPayload,
-) =>
-	| RichTextHTMLMapSerializerShorthand
-	| RTNode
-	| RTInlineNode
-	| RTPartialInlineNode
-	| null
-	| undefined;
-
-/**
- * Serializes an hast {@link Element} node matching the given HTML tag name or
- * CSS selector to a Prismic rich text node.
- */
-export type RichTextHTMLMapSerializer = Record<
-	string,
-	RichTextHTMLMapSerializerShorthand | RichTextHTMLMapSerializerFunction
->;
 
 const DEFAULT_SERIALIZER: RichTextHTMLMapSerializer = {
 	h1: "heading1",
@@ -127,9 +63,9 @@ const VFILE_RULE = "failed-to-serialize-node";
 const VFILE_SOURCE = "prismic";
 
 /**
- * Configuration that determines the output of `hastUtilToRichText`.
+ * Configuration that determines the output of `toRichText`.
  */
-export type HastUtilToRichTextConfig = {
+export type ToRichTextConfig = {
 	/**
 	 * An optional HTML to rich text serializer. Will be merged with the default
 	 * HTML to rich text serializer.
@@ -157,10 +93,19 @@ export type HastUtilToRichTextConfig = {
 	defaultWrapperNodeType?: RTTextNode["type"];
 };
 
-export const hastUtilToRichText = (
+/**
+ * Transfor a hast tree to a rich text field.
+ *
+ * @param tree - The hast tree to transform.
+ * @param file - The vfile to attach warnings to.
+ * @param config - Configuration that determines the output of the function.
+ *
+ * @returns The rich text field equivalent of the provided hast tree.
+ */
+export const toRichText = (
 	tree: Root | Element,
 	file: VFile,
-	config?: HastUtilToRichTextConfig,
+	config?: ToRichTextConfig,
 ): RichTextField => {
 	const builder = new RichTextFieldBuilder();
 
@@ -177,7 +122,8 @@ export const hastUtilToRichText = (
 
 	// Keep track of the last list type to know whether we need to append
 	// `list-item` or `o-list-item` nodes.
-	let lastListType: "group-list-item" | "group-o-list-item" | null = null;
+	let lastListType: "group-list-item" | "group-o-list-item" | undefined =
+		undefined;
 
 	visit(tree, (node) => {
 		if (node.type === "element") {
@@ -224,28 +170,16 @@ export const hastUtilToRichText = (
 						case RichTextNodeType.em:
 						case RichTextNodeType.label:
 						case RichTextNodeType.hyperlink: {
+							const length = toString(node).length;
+
 							try {
-								if ("start" in shorthandOrNode) {
-									builder.appendSpan(shorthandOrNode);
-								} else {
-									builder.appendSpanOfLength(
-										shorthandOrNode,
-										toString(node).length,
-									);
-								}
+								builder.appendSpan(shorthandOrNode, length);
 							} catch (error) {
 								// Happens when we extract an image/embed node inside an RTTextNode and that
 								// the next children is a span. The last RT node type is then an image/embed
 								// node, so we need to resume a new RT text node.
 								builder.appendTextNode(lastRTTextNodeType, config?.direction);
-								if ("start" in shorthandOrNode) {
-									builder.appendSpan(shorthandOrNode);
-								} else {
-									builder.appendSpanOfLength(
-										shorthandOrNode,
-										toString(node).length,
-									);
-								}
+								builder.appendSpan(shorthandOrNode, length);
 							}
 
 							return;
@@ -320,13 +254,13 @@ export const hastUtilToRichText = (
 						const length = toString(node).length;
 
 						try {
-							builder.appendSpanOfLength(span, length);
+							builder.appendSpan(span, length);
 						} catch (error) {
 							// Happens when we extract an image/embed node inside an RTTextNode and that
 							// the next children is a span. The last RT node type is then an image/embed
 							// node, so we need to resume a new RT text node.
 							builder.appendTextNode(lastRTTextNodeType, config?.direction);
-							builder.appendSpanOfLength(span, length);
+							builder.appendSpan(span, length);
 						}
 						break;
 					}

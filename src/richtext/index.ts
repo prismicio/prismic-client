@@ -15,6 +15,5 @@ export type {
 	RichTextFunctionSerializer,
 	RichTextMapSerializer,
 	RichTextMapSerializerFunction,
+	RichTextHTMLMapSerializer,
 } from "./types";
-
-export type { RichTextHTMLMapSerializer } from "./utils/hastUtilToRichText";

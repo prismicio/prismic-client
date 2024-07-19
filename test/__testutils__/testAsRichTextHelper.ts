@@ -2,12 +2,13 @@ import { expect, it } from "vitest";
 
 import { LinkType, asHTML } from "../../src";
 import { htmlAsRichText, markdownAsRichText } from "../../src/richtext";
-import { AsRichTextConfig } from "../../src/richtext/types";
+import type { HTMLAsRichTextConfig } from "../../src/richtext/htmlAsRichText";
+import type { MarkdownAsRichTextConfig } from "../../src/richtext/markdownAsRichText";
 
-type TestAsRichTextHelperArgs = {
+type TestAsRichTextHelperArgs<TConfig> = {
 	input: string;
 
-	config?: AsRichTextConfig;
+	config?: TConfig;
 
 	/**
 	 * Warnings that are expected to be present in the output.
@@ -23,13 +24,21 @@ type TestAsRichTextHelperArgs = {
 	 * output to exactly match the input. This flag can be used to tell it to
 	 * expect the output to not match the input instead.
 	 */
-	expectAsHTMLNotToMatchInput?: boolean;
+	expectHTMLToMatchInputExactly?: boolean;
 };
 
-const testAsRichTextHelperFactory = (
+const testAsRichTextHelperFactory = <
+	THelper extends typeof htmlAsRichText | typeof markdownAsRichText,
+>(
 	description: string,
-	args: TestAsRichTextHelperArgs,
-	helper: typeof htmlAsRichText | typeof markdownAsRichText,
+	args: TestAsRichTextHelperArgs<
+		THelper extends typeof htmlAsRichText
+			? HTMLAsRichTextConfig
+			: THelper extends typeof markdownAsRichText
+			? MarkdownAsRichTextConfig
+			: undefined
+	>,
+	helper: THelper,
 ): void => {
 	it(description, () => {
 		const output = helper(args.input, args.config);
@@ -60,11 +69,14 @@ const testAsRichTextHelperFactory = (
 			},
 		});
 
-		expect(
-			output.warnings.map((warning) => warning.message).sort(),
-		).toStrictEqual(args.expectWarnings?.sort() ?? []);
+		expect(output.warnings.sort()).toStrictEqual(
+			args.expectWarnings?.sort() ?? [],
+		);
 
-		if (!args.expectAsHTMLNotToMatchInput) {
+		if (
+			typeof args.expectHTMLToMatchInputExactly === "undefined" ||
+			args.expectHTMLToMatchInputExactly
+		) {
 			expect(outputAsHTML).toBe(args.input);
 		} else {
 			expect(outputAsHTML).not.toBe(args.input);
@@ -74,18 +86,21 @@ const testAsRichTextHelperFactory = (
 
 export const testHTMLAsRichTextHelper = (
 	description: string,
-	args: TestAsRichTextHelperArgs,
+	args: TestAsRichTextHelperArgs<HTMLAsRichTextConfig>,
 ): void => {
 	testAsRichTextHelperFactory(description, args, htmlAsRichText);
 };
 
 export const testMarkdownAsRichTextHelper = (
 	description: string,
-	args: Omit<TestAsRichTextHelperArgs, "expectAsHTMLNotToMatchInput">,
+	args: Omit<
+		TestAsRichTextHelperArgs<MarkdownAsRichTextConfig>,
+		"expectHTMLToMatchInputExactly"
+	>,
 ): void => {
 	testAsRichTextHelperFactory(
 		description,
-		{ ...args, expectAsHTMLNotToMatchInput: !!args.input },
+		{ ...args, expectHTMLToMatchInputExactly: !args.input },
 		markdownAsRichText,
 	);
 };
