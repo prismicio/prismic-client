@@ -1,9 +1,12 @@
 import { expect, it } from "vitest";
 
 import { LinkType, asHTML } from "../../src";
-import { htmlAsRichText, markdownAsRichText } from "../../src/richtext";
-import type { HTMLAsRichTextConfig } from "../../src/richtext/htmlAsRichText";
-import type { MarkdownAsRichTextConfig } from "../../src/richtext/markdownAsRichText";
+import {
+	unstable_htmlAsRichText,
+	unstable_markdownAsRichText,
+} from "../../src/richtext";
+import type { HTMLAsRichTextConfig } from "../../src/richtext/unstable_htmlAsRichText";
+import type { MarkdownAsRichTextConfig } from "../../src/richtext/unstable_markdownAsRichText";
 
 type TestAsRichTextHelperArgs<TConfig> = {
 	input: string;
@@ -28,13 +31,15 @@ type TestAsRichTextHelperArgs<TConfig> = {
 };
 
 const testAsRichTextHelperFactory = <
-	THelper extends typeof htmlAsRichText | typeof markdownAsRichText,
+	THelper extends
+		| typeof unstable_htmlAsRichText
+		| typeof unstable_markdownAsRichText,
 >(
 	description: string,
 	args: TestAsRichTextHelperArgs<
-		THelper extends typeof htmlAsRichText
+		THelper extends typeof unstable_htmlAsRichText
 			? HTMLAsRichTextConfig
-			: THelper extends typeof markdownAsRichText
+			: THelper extends typeof unstable_markdownAsRichText
 			? MarkdownAsRichTextConfig
 			: undefined
 	>,
@@ -88,7 +93,7 @@ export const testHTMLAsRichTextHelper = (
 	description: string,
 	args: TestAsRichTextHelperArgs<HTMLAsRichTextConfig>,
 ): void => {
-	testAsRichTextHelperFactory(description, args, htmlAsRichText);
+	testAsRichTextHelperFactory(description, args, unstable_htmlAsRichText);
 };
 
 export const testMarkdownAsRichTextHelper = (
@@ -101,6 +106,6 @@ export const testMarkdownAsRichTextHelper = (
 	testAsRichTextHelperFactory(
 		description,
 		{ ...args, expectHTMLToMatchInputExactly: !args.input },
-		markdownAsRichText,
+		unstable_markdownAsRichText,
 	);
 };

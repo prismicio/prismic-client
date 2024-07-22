@@ -8,8 +8,8 @@ export { filterRichTextField } from "./filterRichTextField";
 
 export { RichTextNodeType as Element } from "../types/value/richText";
 
-export { htmlAsRichText } from "./htmlAsRichText";
-export { markdownAsRichText } from "./markdownAsRichText";
+export { unstable_htmlAsRichText } from "./unstable_htmlAsRichText";
+export { unstable_markdownAsRichText } from "./unstable_markdownAsRichText";
 
 export type {
 	RichTextFunctionSerializer,

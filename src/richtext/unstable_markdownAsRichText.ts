@@ -8,7 +8,7 @@ import { RehypeRichTextConfig, rehypeRichText } from "./utils/rehypeRichText";
 
 // Used for TSDocs only.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { htmlAsRichText } from "./htmlAsRichText";
+import type { unstable_htmlAsRichText } from "./unstable_htmlAsRichText";
 
 /**
  * Configuration that determines the output of {@link markdownAsRichText}.
@@ -28,16 +28,17 @@ export type MarkdownAsRichTextReturnType = {
  *
  * @remarks
  * To convert markdown to a rich text field, this function first converts it to
- * HTML. It's essentially a sugar above {@link htmlAsRichText}.
+ * HTML. It's essentially a sugar above {@link unstable_htmlAsRichText}.
  *
  * @param markdown - A markdown string.
  * @param config - Configuration that determines the output of the function.
  *
  * @returns `markdown` as rich text.
  *
- * @experimental - This API is subject to change and might not follow SemVer.
+ * @experimental Names and implementations may change in the future.
+ * `unstable_markdownAsRichText()` does not follow SemVer.
  */
-export const markdownAsRichText = (
+export const unstable_markdownAsRichText = (
 	markdown: string,
 	config?: MarkdownAsRichTextConfig,
 ): MarkdownAsRichTextReturnType => {

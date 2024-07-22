@@ -127,8 +127,6 @@ const filterTextNode = (
  * @param model - A rich text or title field custom type model.
  *
  * @returns A rich text or title field filtered based on the given model.
- *
- * @experimental - This API is subject to change and might not follow SemVer.
  */
 export const filterRichTextField = <Field extends RichTextField | TitleField>(
 	richTextField: Field,

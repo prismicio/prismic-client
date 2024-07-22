@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { testHTMLAsRichTextHelper } from "../__testutils__/testAsRichTextHelper";
 
-import { htmlAsRichText } from "../../src/richtext";
+import { unstable_htmlAsRichText } from "../../src/richtext";
 
 describe("transforms HTML to rich text", () => {
 	describe("basic", () => {
@@ -216,9 +216,12 @@ describe("transforms HTML to rich text", () => {
 			describe("shorthand serializer", () => {
 				it("throws on invalide rich text node type", () => {
 					expect(() =>
-						htmlAsRichText(/* html */ `<p>lorem ipsum dolor sit amet</p>`, {
-							serializer: { p: "foo" as "paragraph" },
-						}),
+						unstable_htmlAsRichText(
+							/* html */ `<p>lorem ipsum dolor sit amet</p>`,
+							{
+								serializer: { p: "foo" as "paragraph" },
+							},
+						),
 					).toThrowErrorMatchingInlineSnapshot(
 						'"Unknown rich text node type: `foo`"',
 					);
@@ -354,7 +357,7 @@ describe("transforms HTML to rich text", () => {
 
 			it("throws when the container cannot be found", () => {
 				expect(() =>
-					htmlAsRichText("", { container: "article#baz" }),
+					unstable_htmlAsRichText("", { container: "article#baz" }),
 				).toThrowErrorMatchingInlineSnapshot(
 					'"No container matching `article#baz` could be found in the input AST."',
 				);

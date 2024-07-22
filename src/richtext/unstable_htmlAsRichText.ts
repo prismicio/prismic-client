@@ -26,9 +26,10 @@ export type HTMLAsRichTextReturnType = {
  *
  * @returns `html` as rich text.
  *
- * @experimental - This API is subject to change and might not follow SemVer.
+ * @experimental Names and implementations may change in the future.
+ * `unstable_htmlAsRichText()` does not follow SemVer.
  */
-export const htmlAsRichText = (
+export const unstable_htmlAsRichText = (
 	html: string,
 	config?: HTMLAsRichTextConfig,
 ): HTMLAsRichTextReturnType => {

@@ -60,8 +60,6 @@ export type RehypeRichTextConfig = {
  * A unified plugin that compiles a hast tree to a Prismic rich text field.
  *
  * @param config - Configuration options for the rehype rich text processor.
- *
- * @experimental - This API is subject to change and might not follow SemVer.
  */
 // unified requires the function to be typed directly with the
 // `Plugin` type to properly infer return types on processors.
