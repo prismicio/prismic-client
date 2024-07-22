@@ -18,8 +18,7 @@ import {
 	RichTextHTMLMapSerializerShorthand,
 } from "../types";
 
-import { RichTextFieldBuilder } from "../utils/RichTextFieldBuilder";
-
+import { RichTextFieldBuilder } from "./RichTextFieldBuilder";
 import {
 	SerializerWarning,
 	serializeEmbed,
@@ -36,7 +35,7 @@ import {
  */
 type DistributedPick<
 	ObjectType,
-	KeyType extends ObjectType extends unknown ? keyof ObjectType : never,
+	KeyType extends keyof ObjectType,
 > = ObjectType extends unknown ? Pick<ObjectType, KeyType> : never;
 
 const DEFAULT_SERIALIZER: RichTextHTMLMapSerializer = {
@@ -65,7 +64,7 @@ const VFILE_SOURCE = "prismic";
 /**
  * Configuration that determines the output of `toRichText`.
  */
-export type ToRichTextConfig = {
+export type HASTToRichTextConfig = {
 	/**
 	 * An optional HTML to rich text serializer. Will be merged with the default
 	 * HTML to rich text serializer.
@@ -102,10 +101,10 @@ export type ToRichTextConfig = {
  *
  * @returns The rich text field equivalent of the provided hast tree.
  */
-export const toRichText = (
+export const hastToRichText = (
 	tree: Root | Element,
 	file: VFile,
-	config?: ToRichTextConfig,
+	config?: HASTToRichTextConfig,
 ): RichTextField => {
 	const builder = new RichTextFieldBuilder();
 
