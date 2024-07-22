@@ -15,7 +15,7 @@ import {
  */
 type DistributedOmit<
 	ObjectType,
-	KeyType extends ObjectType extends unknown ? keyof ObjectType : never,
+	KeyType extends keyof ObjectType,
 > = ObjectType extends unknown ? Omit<ObjectType, KeyType> : never;
 
 /**
