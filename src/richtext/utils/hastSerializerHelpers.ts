@@ -9,13 +9,9 @@ import {
 	RTLinkNode,
 } from "../../types/value/richText";
 
-import { RTPartialInlineNode } from "./RichTextFieldBuilder";
+import { PrismicRichTextSerializerError } from "../errors/PrismicRichTextSerializerError";
 
-/**
- * A warning thrown when a serializer encounters an issue while working with an
- * hast {@link Element} node. It's then added to the vfile messages.
- */
-export class SerializerWarning extends Error {}
+import { RTPartialInlineNode } from "./RichTextFieldBuilder";
 
 /**
  * Serializes a hast {@link Element} node to a {@link RTImageNode}.
@@ -28,7 +24,7 @@ export const serializeImage = (node: Element): RTImageNode => {
 	const src = node.properties?.src as string | undefined;
 
 	if (!src) {
-		throw new SerializerWarning(
+		throw new PrismicRichTextSerializerError(
 			"Element of type `img` is missing an `src` attribute",
 		);
 	}
@@ -88,7 +84,7 @@ export const serializeEmbed = (node: Element): RTEmbedNode => {
 	const src = node.properties?.src as string | undefined;
 
 	if (!src) {
-		throw new SerializerWarning(
+		throw new PrismicRichTextSerializerError(
 			"Element of type `embed` is missing an `src` attribute",
 		);
 	}
@@ -139,7 +135,7 @@ export const serializeSpan = (
 	) {
 		const url = node.properties?.href as string | undefined;
 		if (!url) {
-			throw new SerializerWarning(
+			throw new PrismicRichTextSerializerError(
 				"Element of type `hyperlink` is missing an `href` attribute",
 			);
 		}

@@ -6,6 +6,8 @@ import {
 	RichTextField,
 } from "../../types/value/richText";
 
+import { PrismicRichTextError } from "../errors/PrismicRichTextError";
+
 /**
  * Omits keys from a type, distributing the operation over a union.
  *
@@ -58,7 +60,7 @@ export class RichTextFieldBuilder {
 		length?: number,
 	): void {
 		if (!this.isTextNode(this.#last)) {
-			throw new Error("Cannot add span to non-text last node");
+			throw new PrismicRichTextError("Cannot add span to non-text last node");
 		}
 
 		let span: RTInlineNode;
@@ -119,7 +121,9 @@ export class RichTextFieldBuilder {
 
 	appendText(text: string): void {
 		if (!this.isTextNode(this.#last)) {
-			throw new Error("Cannot append text to non-text last node");
+			throw new PrismicRichTextError(
+				"Cannot append text to non-text last node",
+			);
 		}
 
 		if (this.#last.text) {

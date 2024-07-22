@@ -18,9 +18,10 @@ import {
 	RichTextHTMLMapSerializerShorthand,
 } from "../types";
 
+import { PrismicRichTextSerializerError } from "../errors/PrismicRichTextSerializerError";
+
 import { RichTextFieldBuilder } from "./RichTextFieldBuilder";
 import {
-	SerializerWarning,
 	serializeEmbed,
 	serializeImage,
 	serializeSpan,
@@ -258,7 +259,7 @@ export const hastToRichText = (
 						);
 				}
 			} catch (error) {
-				if (error instanceof SerializerWarning) {
+				if (error instanceof PrismicRichTextSerializerError) {
 					file.message(error.message, {
 						cause: error,
 						place: node.position,
