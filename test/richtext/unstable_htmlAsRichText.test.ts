@@ -240,12 +240,12 @@ describe("transforms HTML to rich text", () => {
 					expectHTMLToMatchInputExactly: false,
 				});
 
-				testHTMLAsRichTextHelper("nullish", {
+				testHTMLAsRichTextHelper("undefined", {
 					input: /* html */ `<p data-heading>lorem ipsum dolor sit amet</p><p>consectetur adipiscing elit</p>`,
 					config: {
 						serializer: {
 							p: ({ node }) =>
-								"dataHeading" in node.properties ? null : "paragraph",
+								"dataHeading" in node.properties ? undefined : "paragraph",
 						},
 					},
 					expectHTMLToMatchInputExactly: false,

@@ -213,7 +213,6 @@ export type RichTextHTMLMapSerializerFunction = (
 	| RTNode
 	| RTInlineNode
 	| RTPartialInlineNode
-	| null
 	| undefined;
 
 /**

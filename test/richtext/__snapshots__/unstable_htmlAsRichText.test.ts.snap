@@ -288,23 +288,6 @@ exports[`transforms HTML to rich text > configuration > serializer > function se
 ]
 `;
 
-exports[`transforms HTML to rich text > configuration > serializer > function serializer > nullish 1`] = `
-[
-  {
-    "direction": "ltr",
-    "spans": [],
-    "text": "lorem ipsum dolor sit amet",
-    "type": "paragraph",
-  },
-  {
-    "direction": "ltr",
-    "spans": [],
-    "text": "consectetur adipiscing elit",
-    "type": "paragraph",
-  },
-]
-`;
-
 exports[`transforms HTML to rich text > configuration > serializer > function serializer > span nodes > full 1`] = `
 [
   {
@@ -424,6 +407,23 @@ exports[`transforms HTML to rich text > configuration > serializer > function se
   {
     "spans": [],
     "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > serializer > function serializer > undefined 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "consectetur adipiscing elit",
     "type": "paragraph",
   },
 ]
