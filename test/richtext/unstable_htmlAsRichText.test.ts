@@ -17,6 +17,11 @@ describe("transforms HTML to rich text", () => {
 		testHTMLAsRichTextHelper("multiple tags", {
 			input: /* html */ `<h1>lorem ipsum dolor sit amet</h1><p>consectetur adipiscing elit</p>`,
 		});
+
+		testHTMLAsRichTextHelper("innerHTML", {
+			input: /* html */ `lorem <strong>ipsum</strong> dolor sit amet`,
+			expectHTMLToMatchInputExactly: false,
+		});
 	});
 
 	describe("spans", () => {
@@ -451,25 +456,6 @@ describe("transforms HTML to rich text", () => {
 				input: /* html */ `<p>lorem ipsum dolor sit amet</p>`,
 				config: { direction: "rtl" },
 			});
-		});
-
-		describe("defaultWrapperNodeType", () => {
-			testHTMLAsRichTextHelper(
-				'wraps inner input within a "paragraph" rich text node type by default',
-				{
-					input: /* html */ `lorem <strong>ipsum</strong> dolor sit amet`,
-					expectHTMLToMatchInputExactly: false,
-				},
-			);
-
-			testHTMLAsRichTextHelper(
-				"wraps inner input within the given rich text node type",
-				{
-					input: /* html */ `lorem <strong>ipsum</strong> dolor sit amet`,
-					config: { defaultWrapperNodeType: "heading1" },
-					expectHTMLToMatchInputExactly: false,
-				},
-			);
 		});
 	});
 

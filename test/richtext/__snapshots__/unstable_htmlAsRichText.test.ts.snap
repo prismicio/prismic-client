@@ -2,6 +2,23 @@
 
 exports[`transforms HTML to rich text > basic > empty 1`] = `[]`;
 
+exports[`transforms HTML to rich text > basic > innerHTML 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "end": 11,
+        "start": 6,
+        "type": "strong",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
 exports[`transforms HTML to rich text > basic > multiple tags 1`] = `
 [
   {
@@ -37,40 +54,6 @@ exports[`transforms HTML to rich text > configuration > container > converts onl
     "spans": [],
     "text": "consectetur adipiscing elit",
     "type": "paragraph",
-  },
-]
-`;
-
-exports[`transforms HTML to rich text > configuration > defaultWrapperNodeType > wraps inner input within a "paragraph" rich text node type by default 1`] = `
-[
-  {
-    "direction": "ltr",
-    "spans": [
-      {
-        "end": 11,
-        "start": 6,
-        "type": "strong",
-      },
-    ],
-    "text": "lorem ipsum dolor sit amet",
-    "type": "paragraph",
-  },
-]
-`;
-
-exports[`transforms HTML to rich text > configuration > defaultWrapperNodeType > wraps inner input within the given rich text node type 1`] = `
-[
-  {
-    "direction": "ltr",
-    "spans": [
-      {
-        "end": 11,
-        "start": 6,
-        "type": "strong",
-      },
-    ],
-    "text": "lorem ipsum dolor sit amet",
-    "type": "heading1",
   },
 ]
 `;

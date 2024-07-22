@@ -77,19 +77,6 @@ export type HASTToRichTextConfig = {
 	 * @defaultValue `false`
 	 */
 	direction?: "ltr" | "rtl";
-
-	/**
-	 * The default node type to wrap the input with in case it only represents the
-	 * inner content of an element.
-	 *
-	 * @remarks
-	 * This is a niche option that allows you to serialize correctly an input such
-	 * as: `"lorem <strong>ipsum</strong> dolor sit amet"`, wrapping it inside a
-	 * node of the desired type.
-	 *
-	 * @defaultValue `"paragraph"`
-	 */
-	defaultWrapperNodeType?: RTTextNode["type"];
 };
 
 /**
@@ -116,8 +103,7 @@ export const hastToRichText = (
 
 	// Keep track of the last text node type to append text nodes to in
 	// case of an image or an embed node is present inside a paragraph.
-	let lastRTTextNodeType: RTTextNode["type"] =
-		config?.defaultWrapperNodeType ?? RichTextNodeType.paragraph;
+	let lastRTTextNodeType: RTTextNode["type"] = RichTextNodeType.paragraph;
 
 	// Keep track of the last list type to know whether we need to append
 	// `list-item` or `o-list-item` nodes.
