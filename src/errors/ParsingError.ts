@@ -9,4 +9,6 @@ type ParsingErrorAPIResponse = {
 	location: string;
 };
 
-export class ParsingError extends PrismicError<ParsingErrorAPIResponse> {}
+export class ParsingError<
+	TResponse = ParsingErrorAPIResponse,
+> extends PrismicError<TResponse> {}

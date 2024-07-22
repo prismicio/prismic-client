@@ -19,7 +19,7 @@ import * as prismic from "../../src";
 };
 
 /**
- * AnyRegularField supports any field compatible with a Group.
+ * AnyRegularField supports any field compatible with a nested Group.
  */
 expectType<TypeOf<prismic.AnyRegularField, prismic.BooleanField>>(true);
 expectType<TypeOf<prismic.AnyRegularField, prismic.ColorField>>(true);
@@ -41,7 +41,21 @@ expectType<TypeOf<prismic.AnyRegularField, prismic.TimestampField>>(true);
 expectType<TypeOf<prismic.AnyRegularField, prismic.TitleField>>(true);
 
 /**
- * AnyRegularField excludes any fields not compatible with a Group.
+ * AnyRegularField excludes any fields not compatible with a nested Group.
  */
 expectType<TypeOf<prismic.AnyRegularField, prismic.SliceZone>>(false);
 expectType<TypeOf<prismic.AnyRegularField, prismic.GroupField>>(false);
+expectType<TypeOf<prismic.AnyRegularField, prismic.NestedGroupField>>(false);
+
+/**
+ * AnySlicePrimaryField supports any field compatible with a slice's primary
+ * section.
+ */
+expectType<TypeOf<prismic.AnySlicePrimaryField, prismic.GroupField>>(true);
+expectType<TypeOf<prismic.AnySlicePrimaryField, prismic.AnyRegularField>>(true);
+
+/**
+ * AnySlicePrimaryField excludes any fields not compatible with a slice's
+ * primary section.
+ */
+expectType<TypeOf<prismic.AnySlicePrimaryField, prismic.SliceZone>>(false);

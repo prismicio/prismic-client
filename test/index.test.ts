@@ -102,3 +102,8 @@ it("webhook type mapping", () => {
 it("predicate is a temporary alias for filter", () => {
 	expect(prismic.predicate).toStrictEqual(prismic.filter);
 });
+
+// TODO: Remove when we remove support for deprecated `unstable_mapSliceZone` export.
+it("unstable_mapSliceZone is a temporary alias for mapSliceZone", () => {
+	expect(prismic.unstable_mapSliceZone).toStrictEqual(prismic.mapSliceZone);
+});

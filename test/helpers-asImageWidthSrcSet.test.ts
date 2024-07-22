@@ -9,6 +9,13 @@ it("returns null for nullish inputs", () => {
 
 it("returns an image field src and width-based srcset with [640, 750, 828, 1080, 1200, 1920, 2048, 3840] widths by default", () => {
 	const field: ImageField = {
+		id: "id",
+		edit: {
+			x: 0,
+			y: 0,
+			zoom: 1,
+			background: "background",
+		},
 		url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 		alt: null,
 		copyright: null,
@@ -28,6 +35,13 @@ it("returns an image field src and width-based srcset with [640, 750, 828, 1080,
 
 it("supports custom widths", () => {
 	const field: ImageField = {
+		id: "id",
+		edit: {
+			x: 0,
+			y: 0,
+			zoom: 1,
+			background: "background",
+		},
 		url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 		alt: null,
 		copyright: null,
@@ -49,6 +63,13 @@ it("supports custom widths", () => {
 
 it("applies given Imgix URL parameters", () => {
 	const field: ImageField = {
+		id: "id",
+		edit: {
+			x: 0,
+			y: 0,
+			zoom: 1,
+			background: "background",
+		},
 		url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 		alt: null,
 		copyright: null,
@@ -70,19 +91,40 @@ it("applies given Imgix URL parameters", () => {
 	});
 });
 
-it('if widths is "auto", returns a srcset of responsive views if the field contains responsive views', () => {
-	const field = {
+it('if widths is "thumbnails", returns a srcset of responsive views if the field contains responsive views', () => {
+	const field: ImageField<"foo" | "bar"> = {
+		id: "id",
+		edit: {
+			x: 0,
+			y: 0,
+			zoom: 1,
+			background: "background",
+		},
 		url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 		alt: null,
 		copyright: null,
 		dimensions: { width: 1000, height: 800 },
 		foo: {
+			id: "id",
+			edit: {
+				x: 0,
+				y: 0,
+				zoom: 1,
+				background: "background",
+			},
 			url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 			alt: null,
 			copyright: null,
 			dimensions: { width: 500, height: 400 },
 		},
 		bar: {
+			id: "id",
+			edit: {
+				x: 0,
+				y: 0,
+				zoom: 1,
+				background: "background",
+			},
 			url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 			alt: null,
 			copyright: null,
@@ -99,8 +141,15 @@ it('if widths is "auto", returns a srcset of responsive views if the field conta
 	});
 });
 
-it('if widths is "auto", but the field does not contain responsive views, uses the default widths', () => {
-	const field = {
+it('if widths is "thumbnails", but the field does not contain responsive views, uses the default widths', () => {
+	const field: ImageField = {
+		id: "id",
+		edit: {
+			x: 0,
+			y: 0,
+			zoom: 1,
+			background: "background",
+		},
 		url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 		alt: null,
 		copyright: null,
@@ -118,19 +167,40 @@ it('if widths is "auto", but the field does not contain responsive views, uses t
 	});
 });
 
-it('if widths is not "auto", but the field contains responsive views, uses the default widths and ignores thumbnails', () => {
-	const field = {
+it('if widths is not "thumbnails", but the field contains responsive views, uses the default widths and ignores thumbnails', () => {
+	const field: ImageField<"foo" | "bar"> = {
+		id: "id",
+		edit: {
+			x: 0,
+			y: 0,
+			zoom: 1,
+			background: "background",
+		},
 		url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 		alt: null,
 		copyright: null,
 		dimensions: { width: 1000, height: 800 },
 		foo: {
+			id: "id",
+			edit: {
+				x: 0,
+				y: 0,
+				zoom: 1,
+				background: "background",
+			},
 			url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 			alt: null,
 			copyright: null,
 			dimensions: { width: 500, height: 400 },
 		},
 		bar: {
+			id: "id",
+			edit: {
+				x: 0,
+				y: 0,
+				zoom: 1,
+				background: "background",
+			},
 			url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 			alt: null,
 			copyright: null,

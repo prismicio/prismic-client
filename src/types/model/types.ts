@@ -4,7 +4,10 @@ import type { CustomTypeModelContentRelationshipField } from "./contentRelations
 import type { CustomTypeModelDateField } from "./date";
 import type { CustomTypeModelEmbedField } from "./embed";
 import type { CustomTypeModelGeoPointField } from "./geoPoint";
-import type { CustomTypeModelGroupField } from "./group";
+import type {
+	CustomTypeModelGroupField,
+	CustomTypeModelNestedGroupField,
+} from "./group";
 import type { CustomTypeModelImageField } from "./image";
 import type { CustomTypeModelIntegrationField } from "./integration";
 import type { CustomTypeModelKeyTextField } from "./keyText";
@@ -65,12 +68,26 @@ export type CustomTypeModelField =
 	| CustomTypeModelUIDField
 	| CustomTypeModelGroupField
 	| CustomTypeModelSliceZoneField
-	| CustomTypeModelFieldForGroup;
+	| CustomTypeModelFieldForNestedGroup;
+
+/**
+ * Any custom type field that is valid for a slice's primary section.
+ */
+export type CustomTypeModelFieldForSlicePrimary =
+	| CustomTypeModelGroupField
+	| CustomTypeModelFieldForNestedGroup;
 
 /**
  * Any custom type field that is valid for a group field.
  */
 export type CustomTypeModelFieldForGroup =
+	| CustomTypeModelNestedGroupField
+	| CustomTypeModelFieldForNestedGroup;
+
+/**
+ * Any custom type field that is valid for a nested group field.
+ */
+export type CustomTypeModelFieldForNestedGroup =
 	| CustomTypeModelBooleanField
 	| CustomTypeModelColorField
 	| CustomTypeModelDateField

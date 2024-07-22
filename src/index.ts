@@ -1,11 +1,13 @@
 // Imports are used for deprecations.
 import type { CustomTypeModelIntegrationField } from "./types/model/integration";
 import type { IntegrationField } from "./types/value/integration";
+import { RichTextNodeType } from "./types/value/richText";
 
 import type {
 	HTMLRichTextFunctionSerializer,
 	HTMLRichTextMapSerializer,
 } from "./helpers/asHTML";
+import { mapSliceZone } from "./helpers/mapSliceZone";
 
 import { filter } from "./filter";
 
@@ -68,17 +70,20 @@ export { asHTML } from "./helpers/asHTML";
 export { asImageSrc } from "./helpers/asImageSrc";
 export { asImageWidthSrcSet } from "./helpers/asImageWidthSrcSet";
 export { asImagePixelDensitySrcSet } from "./helpers/asImagePixelDensitySrcSet";
-export { unstable_mapSliceZone } from "./helpers/unstable_mapSliceZone";
 export * as isFilled from "./helpers/isFilled";
+
+/**
+ * @deprecated Renamed to `mapSliceZone`
+ */
+const unstable_mapSliceZone = mapSliceZone;
+export { mapSliceZone, unstable_mapSliceZone };
 
 // Conversion helper.
 export { documentToLinkField } from "./helpers/documentToLinkField";
 
-// RichText element types.
-export { Element } from "@prismicio/richtext";
-
 export type { LinkResolverFunction } from "./helpers/asLink";
 export type { AsLinkAttrsConfig } from "./helpers/asLinkAttrs";
+export type { SliceMapper } from "./helpers/mapSliceZone";
 
 /**
  * @deprecated Renamed to `HTMLRichTextMapSerializer`
@@ -103,14 +108,23 @@ export type { HTMLRichTextSerializer } from "./helpers/asHTML";
 export { PrismicError } from "./errors/PrismicError";
 export { ForbiddenError } from "./errors/ForbiddenError";
 export { NotFoundError } from "./errors/NotFoundError";
+export { RefNotFoundError } from "./errors/RefNotFoundError";
+export { RefExpiredError } from "./errors/RefExpiredError";
+export { PreviewTokenExpiredError } from "./errors/PreviewTokenExpired";
 export { ParsingError } from "./errors/ParsingError";
+export { RepositoryNotFoundError } from "./errors/RepositoryNotFoundError";
 
 //=============================================================================
 // Types - Types representing Prismic content, models, and API payloads.
 //=============================================================================
 
 // Values - Types representing Prismic content.
-export { RichTextNodeType } from "./types/value/richText";
+/**
+ * @deprecated Use {@link RichTextNodeType} instead.
+ */
+// TODO: Remove in v8.
+const Element = RichTextNodeType;
+export { RichTextNodeType, Element };
 export { LinkType } from "./types/value/link";
 export { OEmbedType } from "./types/value/embed";
 
@@ -207,14 +221,18 @@ export type { GeoPointField } from "./types/value/geoPoint";
 type IntegrationFields = IntegrationField;
 export { IntegrationField, IntegrationFields };
 
-export type { GroupField } from "./types/value/group";
+export type { GroupField, NestedGroupField } from "./types/value/group";
 
 export type { SliceZone } from "./types/value/sliceZone";
 export type { Slice } from "./types/value/slice";
 export type { SharedSlice } from "./types/value/sharedSlice";
 export type { SharedSliceVariation } from "./types/value/sharedSliceVariation";
 
-export type { FieldState, AnyRegularField } from "./types/value/types";
+export type {
+	FieldState,
+	AnyRegularField,
+	AnySlicePrimaryField,
+} from "./types/value/types";
 
 // Models - Types representing Prismic content models.
 export { CustomTypeModelFieldType } from "./types/model/types";
@@ -265,7 +283,10 @@ export {
 	CustomTypeModelIntegrationField,
 	CustomTypeModelIntegrationFieldsField,
 };
-export type { CustomTypeModelGroupField } from "./types/model/group";
+export type {
+	CustomTypeModelGroupField,
+	CustomTypeModelNestedGroupField,
+} from "./types/model/group";
 export type {
 	CustomTypeModelSliceZoneField,
 	CustomTypeModelSliceLabel,
@@ -286,6 +307,8 @@ export type { CustomTypeModelSeparatorField } from "./types/model/separator";
 export type {
 	CustomTypeModelField,
 	CustomTypeModelFieldForGroup,
+	CustomTypeModelFieldForNestedGroup,
+	CustomTypeModelFieldForSlicePrimary,
 } from "./types/model/types";
 
 // API - Types representing Prismic Rest API V2 responses.

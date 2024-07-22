@@ -9,6 +9,13 @@ it("returns null for nullish inputs", () => {
 
 it("returns an image field URL", () => {
 	const field: ImageField = {
+		id: "id",
+		edit: {
+			x: 0,
+			y: 0,
+			zoom: 1,
+			background: "background",
+		},
 		url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 		alt: null,
 		copyright: null,
@@ -20,6 +27,13 @@ it("returns an image field URL", () => {
 
 it("applies given Imgix URL parameters", () => {
 	const field: ImageField = {
+		id: "id",
+		edit: {
+			x: 0,
+			y: 0,
+			zoom: 1,
+			background: "background",
+		},
 		url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
 		alt: null,
 		copyright: null,

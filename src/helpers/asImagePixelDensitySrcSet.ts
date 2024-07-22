@@ -70,6 +70,7 @@ type AsImagePixelDensitySrcSetReturnType<
  *
  * @returns A `srcset` attribute value for the image field with Imgix URL
  *   parameters (if given). If the image field is empty, `null` is returned.
+ *
  * @see Imgix URL parameters reference: https://docs.imgix.com/apis/rendering
  */
 export const asImagePixelDensitySrcSet = <

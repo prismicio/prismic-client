@@ -90,7 +90,7 @@ it("throws if no documents were returned", async (ctx) => {
 		/no documents were returned/i,
 	);
 	await expect(() => client.getFirst()).rejects.toThrowError(
-		prismic.PrismicError,
+		prismic.NotFoundError,
 	);
 });
 

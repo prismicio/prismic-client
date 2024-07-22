@@ -6,6 +6,7 @@ import { PrismicError } from "./errors/PrismicError";
  *
  * @typeParam RepositoryEndpoint - Prismic Rest API V2 endpoint for the
  *   repository.
+ *
  * @param repositoryEndpoint - Prismic Rest API V2 endpoint for the repository.
  *
  * @returns The Prismic repository's name.

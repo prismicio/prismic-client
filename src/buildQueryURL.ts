@@ -160,6 +160,7 @@ export interface QueryParams {
 	 * Strings and arrays of strings are deprecated as of
 	 * `@prismicio/client@7.0.0`. Please migrate to the more explicit array of
 	 * objects.
+	 *
 	 * @example
 	 *
 	 * ```typescript

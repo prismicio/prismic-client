@@ -11,5 +11,5 @@ export type SharedSlice<
 > = {
 	slice_type: SliceType;
 	slice_label: null;
-	id?: string;
+	id: string;
 } & Variations;

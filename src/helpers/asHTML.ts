@@ -1,14 +1,4 @@
 import {
-	Element,
-	RichTextFunctionSerializer,
-	RichTextMapSerializer,
-	RichTextMapSerializerFunction,
-	composeSerializers,
-	serialize,
-	wrapMapSerializer,
-} from "@prismicio/richtext";
-
-import {
 	serializeEmbed,
 	serializeHyperlink,
 	serializeImage,
@@ -19,14 +9,23 @@ import {
 
 import type { RichTextField } from "../types/value/richText";
 
+import {
+	RichTextFunctionSerializer,
+	RichTextMapSerializer,
+	RichTextMapSerializerFunction,
+	composeSerializers,
+	serialize,
+	wrapMapSerializer,
+} from "../richtext";
+
 import { LinkResolverFunction } from "./asLink";
 
 /**
  * Serializes a node from a rich text or title field with a function to HTML.
  *
- * Unlike a typical `@prismicio/richtext` function serializer, this serializer
- * converts the `children` argument to a single string rather than an array of
- * strings.
+ * Unlike a typical `@prismicio/client/richtext` function serializer, this
+ * serializer converts the `children` argument to a single string rather than an
+ * array of strings.
  *
  * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
  */
@@ -41,13 +40,28 @@ export type HTMLRichTextFunctionSerializer = (
 /**
  * Serializes a node from a rich text or title field with a map to HTML
  *
- * Unlike a typical `@prismicio/richtext` map serializer, this serializer
+ * Unlike a typical `@prismicio/client/richtext` map serializer, this serializer
  * converts the `children` property to a single string rather than an array of
- * strings.
+ * strings and accepts shorthand declarations.
  *
  * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
  */
 export type HTMLRichTextMapSerializer = {
+	[P in keyof RichTextMapSerializer<string>]: P extends RichTextMapSerializer<string>["span"]
+		? HTMLStrictRichTextMapSerializer[P]
+		: HTMLStrictRichTextMapSerializer[P] | HTMLRichTextMapSerializerShorthand;
+};
+
+/**
+ * Serializes a node from a rich text or title field with a map to HTML
+ *
+ * Unlike a typical `@prismicio/client/richtext` map serializer, this serializer
+ * converts the `children` property to a single string rather than an array of
+ * strings but doesn't accept shorthand declarations.
+ *
+ * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
+ */
+export type HTMLStrictRichTextMapSerializer = {
 	[P in keyof RichTextMapSerializer<string>]: (payload: {
 		type: Parameters<HTMLRichTextMapSerializerFunction<P>>[0]["type"];
 		node: Parameters<HTMLRichTextMapSerializerFunction<P>>[0]["node"];
@@ -106,6 +120,21 @@ type ExtractTextTypeGeneric<T> = T extends RichTextMapSerializerFunction<
 	: never;
 
 /**
+ * A shorthand definition for {@link HTMLRichTextMapSerializer} element types.
+ */
+export type HTMLRichTextMapSerializerShorthand = {
+	/**
+	 * Classes to apply to the element type.
+	 */
+	class?: string;
+
+	/**
+	 * Other attributes to apply to the element type.
+	 */
+	[Attribute: string]: string | boolean | null | undefined;
+};
+
+/**
  * Serializes a node from a rich text or title field with a map or a function to
  * HTML
  *
@@ -117,70 +146,126 @@ export type HTMLRichTextSerializer =
 	| HTMLRichTextFunctionSerializer;
 
 /**
- * Creates a default HTML rich text serializer with a given link resolver
- * providing sensible and safe defaults for every node type
+ * Creates a HTML rich text serializer with a given link resolver and provide
+ * sensible and safe defaults for every node type
  *
  * @internal
  */
-const createDefaultHTMLRichTextSerializer = (
+const createHTMLRichTextSerializer = (
 	linkResolver: LinkResolverFunction | undefined | null,
+	serializer?: HTMLRichTextMapSerializer | null,
 ): RichTextFunctionSerializer<string> => {
-	return (_type, node, text, children, _key) => {
-		switch (node.type) {
-			case Element.heading1:
-				return serializeStandardTag("h1", node, children);
-			case Element.heading2:
-				return serializeStandardTag("h2", node, children);
-			case Element.heading3:
-				return serializeStandardTag("h3", node, children);
-			case Element.heading4:
-				return serializeStandardTag("h4", node, children);
-			case Element.heading5:
-				return serializeStandardTag("h5", node, children);
-			case Element.heading6:
-				return serializeStandardTag("h6", node, children);
-			case Element.paragraph:
-				return serializeStandardTag("p", node, children);
-			case Element.preformatted:
-				return serializePreFormatted(node);
-			case Element.strong:
-				return serializeStandardTag("strong", node, children);
-			case Element.em:
-				return serializeStandardTag("em", node, children);
-			case Element.listItem:
-				return serializeStandardTag("li", node, children);
-			case Element.oListItem:
-				return serializeStandardTag("li", node, children);
-			case Element.list:
-				return serializeStandardTag("ul", node, children);
-			case Element.oList:
-				return serializeStandardTag("ol", node, children);
-			case Element.image:
-				return serializeImage(linkResolver, node);
-			case Element.embed:
-				return serializeEmbed(node);
-			case Element.hyperlink:
-				return serializeHyperlink(linkResolver, node, children);
-			case Element.label:
-				return serializeStandardTag("span", node, children);
-			case Element.span:
-			default:
-				return serializeSpan(text);
+	const useSerializerOrDefault = <
+		BlockType extends keyof RichTextMapSerializer<string>,
+	>(
+		nodeSerializerOrShorthand: HTMLRichTextMapSerializer[BlockType],
+		defaultWithShorthand: NonNullable<
+			HTMLStrictRichTextMapSerializer[BlockType]
+		>,
+	): NonNullable<HTMLStrictRichTextMapSerializer[BlockType]> => {
+		if (typeof nodeSerializerOrShorthand === "function") {
+			return ((payload) => {
+				return (
+					(
+						nodeSerializerOrShorthand as HTMLStrictRichTextMapSerializer[BlockType]
+					)(payload) || defaultWithShorthand(payload)
+				);
+			}) as NonNullable<HTMLStrictRichTextMapSerializer[BlockType]>;
 		}
+
+		return defaultWithShorthand;
 	};
+
+	const mapSerializer: Required<HTMLStrictRichTextMapSerializer> = {
+		heading1: useSerializerOrDefault<"heading1">(
+			serializer?.heading1,
+			serializeStandardTag<"heading1">("h1", serializer?.heading1),
+		),
+		heading2: useSerializerOrDefault<"heading2">(
+			serializer?.heading2,
+			serializeStandardTag<"heading2">("h2", serializer?.heading2),
+		),
+		heading3: useSerializerOrDefault<"heading3">(
+			serializer?.heading3,
+			serializeStandardTag<"heading3">("h3", serializer?.heading3),
+		),
+		heading4: useSerializerOrDefault<"heading4">(
+			serializer?.heading4,
+			serializeStandardTag<"heading4">("h4", serializer?.heading4),
+		),
+		heading5: useSerializerOrDefault<"heading5">(
+			serializer?.heading5,
+			serializeStandardTag<"heading5">("h5", serializer?.heading5),
+		),
+		heading6: useSerializerOrDefault<"heading6">(
+			serializer?.heading6,
+			serializeStandardTag<"heading6">("h6", serializer?.heading6),
+		),
+		paragraph: useSerializerOrDefault<"paragraph">(
+			serializer?.paragraph,
+			serializeStandardTag<"paragraph">("p", serializer?.paragraph),
+		),
+		preformatted: useSerializerOrDefault<"preformatted">(
+			serializer?.preformatted,
+			serializePreFormatted(serializer?.preformatted),
+		),
+		strong: useSerializerOrDefault<"strong">(
+			serializer?.strong,
+			serializeStandardTag<"strong">("strong", serializer?.strong),
+		),
+		em: useSerializerOrDefault<"em">(
+			serializer?.em,
+			serializeStandardTag<"em">("em", serializer?.em),
+		),
+		listItem: useSerializerOrDefault<"listItem">(
+			serializer?.listItem,
+			serializeStandardTag<"listItem">("li", serializer?.listItem),
+		),
+		oListItem: useSerializerOrDefault<"oListItem">(
+			serializer?.oListItem,
+			serializeStandardTag<"oListItem">("li", serializer?.oListItem),
+		),
+		list: useSerializerOrDefault<"list">(
+			serializer?.list,
+			serializeStandardTag<"list">("ul", serializer?.list),
+		),
+		oList: useSerializerOrDefault<"oList">(
+			serializer?.oList,
+			serializeStandardTag<"oList">("ol", serializer?.oList),
+		),
+		image: useSerializerOrDefault<"image">(
+			serializer?.image,
+			serializeImage(linkResolver, serializer?.image),
+		),
+		embed: useSerializerOrDefault<"embed">(
+			serializer?.embed,
+			serializeEmbed(serializer?.embed),
+		),
+		hyperlink: useSerializerOrDefault<"hyperlink">(
+			serializer?.hyperlink,
+			serializeHyperlink(linkResolver, serializer?.hyperlink),
+		),
+		label: useSerializerOrDefault<"label">(
+			serializer?.label,
+			serializeStandardTag<"label">("span", serializer?.label),
+		),
+		span: useSerializerOrDefault<"span">(serializer?.span, serializeSpan()),
+	};
+
+	return wrapMapSerializerWithStringChildren(mapSerializer);
 };
 
 /**
  * Wraps a map serializer into a regular function serializer. The given map
  * serializer should accept children as a string, not as an array of strings
- * like `@prismicio/richtext`'s `wrapMapSerializer`.
+ * like `@prismicio/client/richtext`'s `wrapMapSerializer`.
  *
  * @param mapSerializer - Map serializer to wrap
  *
  * @returns A regular function serializer
  */
 const wrapMapSerializerWithStringChildren = (
-	mapSerializer: HTMLRichTextMapSerializer,
+	mapSerializer: HTMLStrictRichTextMapSerializer,
 ): RichTextFunctionSerializer<string> => {
 	const modifiedMapSerializer = {} as RichTextMapSerializer<string>;
 
@@ -255,12 +340,6 @@ export const asHTML: {
 	 *
 	 * @deprecated Use object-style configuration instead.
 	 *
-	 *   ```ts
-	 *   asHTML(field);
-	 *   asHTML(field, { linkResolver });
-	 *   asHTML(field, { serializer });
-	 *   asHTML(field, { linkResolver, serializer });
-	 *   ```
 	 * @param richTextField - A rich text or title field from Prismic
 	 * @param linkResolver - An optional link resolver function to resolve links,
 	 *   without it you're expected to use the `routes` options from the API
@@ -298,22 +377,27 @@ export const asHTML: {
 
 		let serializer: RichTextFunctionSerializer<string>;
 		if (config.serializer) {
-			serializer = composeSerializers(
-				typeof config.serializer === "object"
-					? wrapMapSerializerWithStringChildren(config.serializer)
-					: (type, node, text, children, key) =>
-							// TypeScript doesn't narrow the type correctly here since it is now in a callback function, so we have to cast it here.
-							(config.serializer as HTMLRichTextFunctionSerializer)(
-								type,
-								node,
-								text,
-								children.join(""),
-								key,
-							),
-				createDefaultHTMLRichTextSerializer(config.linkResolver),
-			);
+			if (typeof config.serializer === "function") {
+				serializer = composeSerializers(
+					(type, node, text, children, key) =>
+						// TypeScript doesn't narrow the type correctly here since it is now in a callback function, so we have to cast it here.
+						(config.serializer as HTMLRichTextFunctionSerializer)(
+							type,
+							node,
+							text,
+							children.join(""),
+							key,
+						),
+					createHTMLRichTextSerializer(config.linkResolver),
+				);
+			} else {
+				serializer = createHTMLRichTextSerializer(
+					config.linkResolver,
+					config.serializer,
+				);
+			}
 		} else {
-			serializer = createDefaultHTMLRichTextSerializer(config.linkResolver);
+			serializer = createHTMLRichTextSerializer(config.linkResolver);
 		}
 
 		return serialize(richTextField, serializer).join(

@@ -2,6 +2,146 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.6.0](https://github.com/prismicio/prismic-client/compare/v7.5.0...v7.6.0) (2024-06-20)
+
+
+### Features
+
+* support nested groups ([#341](https://github.com/prismicio/prismic-client/issues/341)) ([e6dc747](https://github.com/prismicio/prismic-client/commit/e6dc74710470c7bd66da61ccf0ece1f784c8129d))
+
+
+### Documentation
+
+* update `CONTRIBUTING.md` ([#340](https://github.com/prismicio/prismic-client/issues/340)) ([228f6b6](https://github.com/prismicio/prismic-client/commit/228f6b671d52d6ee6cd1c7b9a348d8613d4196aa))
+* update README.md ([02479ae](https://github.com/prismicio/prismic-client/commit/02479ae34c5dbd3eb73f005ac71a19fe3b9c23f9))
+
+## [7.6.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.5.0...v7.6.0-alpha.0) (2024-06-05)
+
+
+### Features
+
+* support nested groups ([9c8a96c](https://github.com/prismicio/prismic-client/commit/9c8a96ca264564a08db9e7b445148542913d3665))
+
+## [7.5.0](https://github.com/prismicio/prismic-client/compare/v7.4.1...v7.5.0) (2024-05-08)
+
+
+### Features
+
+* support groups in a slice's primary section ([#338](https://github.com/prismicio/prismic-client/issues/338)) ([0672bcb](https://github.com/prismicio/prismic-client/commit/0672bcbec506728a7a080783a985750fcdca8376))
+
+## [7.5.0-alpha.3](https://github.com/prismicio/prismic-client/compare/v7.5.0-alpha.2...v7.5.0-alpha.3) (2024-05-07)
+
+
+### Bug Fixes
+
+* update @prismicio/types-internal ([e75b4c2](https://github.com/prismicio/prismic-client/commit/e75b4c2fb6a6495543d66556d42e787e2ab226c9))
+
+### [7.4.1](https://github.com/prismicio/prismic-client/compare/v7.4.0...v7.4.1) (2024-04-13)
+
+
+### Bug Fixes
+
+* type error in `mapSliceZone` ([#339](https://github.com/prismicio/prismic-client/issues/339)) ([638e87a](https://github.com/prismicio/prismic-client/commit/638e87aeb97a04c0b8fbb160bd65a1d26028335e))
+
+
+### Chore
+
+* **release:** 7.4.1 ([f141026](https://github.com/prismicio/prismic-client/commit/f141026309e21be8f7e2fbdcc9dea9c5dc4594b2))
+
+## [7.5.0-alpha.2](https://github.com/prismicio/prismic-client/compare/v7.5.0-alpha.1...v7.5.0-alpha.2) (2024-04-26)
+
+
+### Bug Fixes
+
+* update ([c28ae3a](https://github.com/prismicio/prismic-client/commit/c28ae3aa53a9c82573677d5ceaadf51b051b729d))
+
+## [7.5.0-alpha.1](https://github.com/prismicio/prismic-client/compare/v7.5.0-alpha.0...v7.5.0-alpha.1) (2024-04-18)
+
+
+### Bug Fixes
+
+* export `CustomTypeModelFieldForSlicePrimary` ([16739f6](https://github.com/prismicio/prismic-client/commit/16739f6ec00a244e51b008f98d243be739376c50))
+
+## [7.5.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.4.0...v7.5.0-alpha.0) (2024-04-17)
+
+
+### Features
+
+* support groups in a slice's primary section ([98a44fa](https://github.com/prismicio/prismic-client/commit/98a44fa7a9da314f24d8b2ba518c921625391db2))
+
+
+### Bug Fixes
+
+* update `@prismicio/types-internal` ([3ee1b06](https://github.com/prismicio/prismic-client/commit/3ee1b064f2ae5de7ddbbd2e69f93776ff0d9a0ad))
+
+
+### Refactor
+
+* use `type` import ([46c4343](https://github.com/prismicio/prismic-client/commit/46c43439cce0ccf6626102a77918cea1e04736b7))
+
+
+### Chore
+
+* release alpha as minor ([9bd6355](https://github.com/prismicio/prismic-client/commit/9bd6355d7098f45f221821e3485edc8bad05f29e))
+* use `@prismicio/types-internal` alpha ([df8f63d](https://github.com/prismicio/prismic-client/commit/df8f63d858227a246913dac33f15529294fc0515))
+
+### [7.4.1](https://github.com/prismicio/prismic-client/compare/v7.4.0...v7.4.1) (2024-04-13)
+
+
+### Bug Fixes
+
+* type error in `mapSliceZone` ([#339](https://github.com/prismicio/prismic-client/issues/339)) ([638e87a](https://github.com/prismicio/prismic-client/commit/638e87aeb97a04c0b8fbb160bd65a1d26028335e))
+
+## [7.4.0](https://github.com/prismicio/prismic-client/compare/v7.3.1...v7.4.0) (2024-03-27)
+
+
+### Features
+
+* stable `mapSliceZone` (previously `unstable_mapSliceZone`) ([#336](https://github.com/prismicio/prismic-client/issues/336)) ([b6852a4](https://github.com/prismicio/prismic-client/commit/b6852a419a247276debc2f094578bd8ab318958c))
+
+### [7.3.1](https://github.com/prismicio/prismic-client/compare/v7.3.0...v7.3.1) (2023-10-11)
+
+
+### Bug Fixes
+
+* support expired preview token and repository not found API error ([#328](https://github.com/prismicio/prismic-client/issues/328)) ([d098a7f](https://github.com/prismicio/prismic-client/commit/d098a7ff0bfb318f73a30c98f355724248d89bfd))
+
+## [7.3.0](https://github.com/prismicio/prismic-client/compare/v7.2.0...v7.3.0) (2023-10-09)
+
+
+### Features
+
+* add `@prismicio/client/richtext` entry ([#318](https://github.com/prismicio/prismic-client/issues/318)) ([fb555fd](https://github.com/prismicio/prismic-client/commit/fb555fde672ed8276ac0039aa093fa6d7227f35f))
+* **helpers:** support attribute shorthand for map serializer ([#321](https://github.com/prismicio/prismic-client/issues/321)) ([b43557d](https://github.com/prismicio/prismic-client/commit/b43557d00a821938b463bcc6630953f4bfdc11cf))
+* support expired and not-found ref API errors ([#327](https://github.com/prismicio/prismic-client/issues/327)) ([26d5b0f](https://github.com/prismicio/prismic-client/commit/26d5b0f022c61ed8711d99edce572bdbe013d3c9))
+* support extended media API response ([#326](https://github.com/prismicio/prismic-client/issues/326)) ([5e5d057](https://github.com/prismicio/prismic-client/commit/5e5d0570dff67324c21cec1b553ae5f75b822590))
+
+## [7.2.0](https://github.com/prismicio/prismic-client/compare/v7.1.1...v7.2.0) (2023-08-25)
+
+
+### Features
+
+* automatically retry rate-limited requests ([#319](https://github.com/prismicio/prismic-client/issues/319)) ([e0c8c49](https://github.com/prismicio/prismic-client/commit/e0c8c49fafac235c070550efbd45dc9dcbda4027))
+
+### [7.1.1](https://github.com/prismicio/prismic-client/compare/v7.1.0...v7.1.1) (2023-08-11)
+
+
+### Bug Fixes
+
+* reduce the return type of `unstable_mapSliceZone()` to only include necessary properties ([#308](https://github.com/prismicio/prismic-client/issues/308)) ([d52cdfd](https://github.com/prismicio/prismic-client/commit/d52cdfd03b7a105efc3b2a4ce1bf421097c89fe3))
+* throw `NotFoundError` when a document cannot be found ([#316](https://github.com/prismicio/prismic-client/issues/316)) ([74fce89](https://github.com/prismicio/prismic-client/commit/74fce893e812e29c49c8704d46c31b0f735ab176))
+
+
+### Documentation
+
+* Updated tags and oauth_token definitions in repository.ts ([#311](https://github.com/prismicio/prismic-client/issues/311)) ([cad174d](https://github.com/prismicio/prismic-client/commit/cad174da5d1099ed61619e40c34fb420e9186186))
+
+
+### Chore
+
+* **deps:** update all dependencies ([#307](https://github.com/prismicio/prismic-client/issues/307)) ([eb8cccc](https://github.com/prismicio/prismic-client/commit/eb8cccc4426d0696aa660588ffcc050ea8fb0104))
+* **deps:** update dependencies ([#317](https://github.com/prismicio/prismic-client/issues/317)) ([d80b64a](https://github.com/prismicio/prismic-client/commit/d80b64ab39d181653f7bd08c97cae3f0564dc219))
+
 ## [7.1.0](https://github.com/prismicio/prismic-client/compare/v7.0.1...v7.1.0) (2023-06-07)
 
 

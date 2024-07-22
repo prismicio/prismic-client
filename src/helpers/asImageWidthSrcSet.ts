@@ -74,6 +74,7 @@ type AsImageWidthSrcSetConfig = Omit<BuildWidthSrcSetParams, "widths"> & {
  *
  * @returns A `srcset` attribute value for the image field with Imgix URL
  *   parameters (if given). If the image field is empty, `null` is returned.
+ *
  * @see Imgix URL parameters reference: https://docs.imgix.com/apis/rendering
  */
 export const asImageWidthSrcSet = <
@@ -93,8 +94,10 @@ export const asImageWidthSrcSet = <
 		const {
 			url,
 			dimensions,
+			id: _id,
 			alt: _alt,
 			copyright: _copyright,
+			edit: _edit,
 			...responsiveViews
 		} = field;
 

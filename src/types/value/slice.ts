@@ -18,7 +18,7 @@ export interface Slice<
 > {
 	slice_type: SliceType;
 	slice_label: string | null;
-	id?: string;
+	id: string;
 	primary: PrimaryFields;
 	items: ItemsFields[];
 }

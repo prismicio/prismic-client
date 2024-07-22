@@ -18,7 +18,11 @@ import type { PrismicDocument } from "./types/value/document";
 import { ForbiddenError } from "./errors/ForbiddenError";
 import { NotFoundError } from "./errors/NotFoundError";
 import { ParsingError } from "./errors/ParsingError";
+import { PreviewTokenExpiredError } from "./errors/PreviewTokenExpired";
 import { PrismicError } from "./errors/PrismicError";
+import { RefExpiredError } from "./errors/RefExpiredError";
+import { RefNotFoundError } from "./errors/RefNotFoundError";
+import { RepositoryNotFoundError } from "./errors/RepositoryNotFoundError";
 
 import { LinkResolverFunction, asLink } from "./helpers/asLink";
 
@@ -50,6 +54,15 @@ export const REPOSITORY_CACHE_TTL = 5000;
  * of a failed API request due to overloading.
  */
 export const GET_ALL_QUERY_DELAY = 500;
+
+/**
+ * The default number of milliseconds to wait before retrying a rate-limited
+ * `fetch()` request (429 response code). The default value is only used if the
+ * response does not include a `retry-after` header.
+ *
+ * The API allows up to 200 requests per second.
+ */
+const DEFUALT_RETRY_AFTER_MS = 1000;
 
 /**
  * Extracts one or more Prismic document types that match a given Prismic
@@ -120,8 +133,16 @@ export interface RequestInitLike extends Pick<RequestInit, "cache"> {
  */
 export interface ResponseLike {
 	status: number;
+	headers: HeadersLike;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	json(): Promise<any>;
+}
+
+/**
+ * The minimum required properties from Headers.
+ */
+export interface HeadersLike {
+	get(name: string): string | null;
 }
 
 /**
@@ -342,6 +363,7 @@ type ResolvePreviewArgs<LinkResolverReturnType> = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type FetchJobResult<TJSON = any> = {
 	status: number;
+	headers: HeadersLike;
 	json: TJSON;
 };
 
@@ -370,6 +392,7 @@ export interface CreateClient {
  *
  * @typeParam TDocuments - A map of Prismic document type IDs mapped to their
  *   TypeScript type.
+ *
  * @param repositoryNameOrEndpoint - The Prismic repository name or full Rest
  *   API V2 endpoint for the repository.
  * @param options - Configuration that determines how content will be queried
@@ -664,7 +687,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			return firstResult;
 		}
 
-		throw new PrismicError("No documents were returned", url, undefined);
+		throw new NotFoundError("No documents were returned", url, undefined);
 	}
 
 	/**
@@ -732,6 +755,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * for all documents and is made available on its `id` property. A UID is
 	 * provided in the Prismic editor and is unique among all documents of its
 	 * custom type.
+	 *
 	 * @example
 	 *
 	 * ```ts
@@ -763,6 +787,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * for all documents and is made available on its `id` property. A UID is
 	 * provided in the Prismic editor and is unique among all documents of its
 	 * custom type.
+	 *
 	 * @example
 	 *
 	 * ```ts
@@ -800,6 +825,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * for all documents and is made available on its `id` property. A UID is
 	 * provided in the Prismic editor and is unique among all documents of its
 	 * custom type.
+	 *
 	 * @example
 	 *
 	 * ```ts
@@ -834,6 +860,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * for all documents and is made available on its `id` property. A UID is
 	 * provided in the Prismic editor and is unique among all documents of its
 	 * custom type.
+	 *
 	 * @example
 	 *
 	 * ```ts
@@ -874,6 +901,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * for all documents and is made available on its `id` property. A UID is
 	 * provided in the Prismic editor and is unique among all documents of its
 	 * custom type.
+	 *
 	 * @example
 	 *
 	 * ```ts
@@ -920,6 +948,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * for all documents and is made available on its `id` property. A UID is
 	 * provided in the Prismic editor and is unique among all documents of its
 	 * custom type.
+	 *
 	 * @example
 	 *
 	 * ```ts
@@ -964,6 +993,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * instance. For example, a repository may be configured to contain just one
 	 * Settings document. This is in contrast to a repeatable custom type which
 	 * allows multiple instances of itself.
+	 *
 	 * @example
 	 *
 	 * ```ts
@@ -1831,6 +1861,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 					return {
 						status: res.status,
+						headers: res.headers,
 						json,
 					};
 				})
@@ -1873,20 +1904,62 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			// - Incorrect access token for query endpoint
 			case 403: {
 				throw new ForbiddenError(
-					"error" in res.json ? res.json.error : res.json.message,
+					res.json.error || res.json.message,
 					url,
 					res.json,
 				);
 			}
 
-			// Not Found (this response has an empty body)
-			// - Incorrect repository name
+			// Not Found
+			// - Incorrect repository name (this response has an empty body)
+			// - Ref does not exist
+			// - Preview token is expired
 			case 404: {
-				throw new NotFoundError(
-					`Prismic repository not found. Check that "${this.endpoint}" is pointing to the correct repository.`,
-					url,
-					undefined,
-				);
+				if (res.json === undefined) {
+					throw new RepositoryNotFoundError(
+						`Prismic repository not found. Check that "${this.endpoint}" is pointing to the correct repository.`,
+						url,
+						undefined,
+					);
+				}
+
+				if (res.json.type === "api_notfound_error") {
+					throw new RefNotFoundError(res.json.message, url, res.json);
+				}
+
+				if (
+					res.json.type === "api_security_error" &&
+					/preview token.*expired/i.test(res.json.message)
+				) {
+					throw new PreviewTokenExpiredError(res.json.message, url, res.json);
+				}
+
+				throw new NotFoundError(res.json.message, url, res.json);
+			}
+
+			// Gone
+			// - Ref is expired
+			case 410: {
+				throw new RefExpiredError(res.json.message, url, res.json);
+			}
+
+			// Too Many Requests
+			// - Exceeded the maximum number of requests per second
+			case 429: {
+				const parsedRetryAfter = Number(res.headers.get("retry-after"));
+				const delay = Number.isNaN(parsedRetryAfter)
+					? DEFUALT_RETRY_AFTER_MS
+					: parsedRetryAfter;
+
+				return await new Promise((resolve, reject) => {
+					setTimeout(async () => {
+						try {
+							resolve(await this.fetch(url, params));
+						} catch (error) {
+							reject(error);
+						}
+					}, delay);
+				});
 			}
 		}
 

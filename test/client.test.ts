@@ -631,7 +631,7 @@ it("throws PrismicError if response is not 200, 400, 401, 403, or 404", async (c
 	const client = createTestClient();
 
 	const queryEndpoint = new URL(
-		"documents/search",
+		"./documents/search",
 		`${client.endpoint}/`,
 	).toString();
 
@@ -669,7 +669,7 @@ it("throws PrismicError if response is not JSON", async (ctx) => {
 	await expect(() => client.get()).rejects.toThrowError(prismic.PrismicError);
 });
 
-it("throws NotFoundError if repository does not exist", async (ctx) => {
+it("throws RepositoryNotFoundError if repository does not exist", async (ctx) => {
 	const client = createTestClient();
 
 	ctx.server.use(
@@ -681,5 +681,285 @@ it("throws NotFoundError if repository does not exist", async (ctx) => {
 	await expect(() => client.get()).rejects.toThrowError(
 		/repository not found/i,
 	);
+	await expect(() => client.get()).rejects.toThrowError(
+		prismic.RepositoryNotFoundError,
+	);
+});
+
+it("throws RefNotFoundError if ref does not exist", async (ctx) => {
+	const queryResponse = {
+		type: "api_notfound_error",
+		message: "message",
+	};
+
+	mockPrismicRestAPIV2({ ctx });
+
+	const client = createTestClient();
+
+	const queryEndpoint = new URL(
+		"./documents/search",
+		`${client.endpoint}/`,
+	).toString();
+
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
+			return res(ctx.status(404), ctx.json(queryResponse));
+		}),
+	);
+
+	await expect(() => client.get()).rejects.toThrowError(queryResponse.message);
+	await expect(() => client.get()).rejects.toThrowError(
+		prismic.RefNotFoundError,
+	);
+});
+
+it("throws RefExpiredError if ref is expired", async (ctx) => {
+	const queryResponse = {
+		type: "api_validation_error",
+		message: "message",
+	};
+
+	mockPrismicRestAPIV2({ ctx });
+
+	const client = createTestClient();
+
+	const queryEndpoint = new URL(
+		"./documents/search",
+		`${client.endpoint}/`,
+	).toString();
+
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
+			return res(ctx.status(410), ctx.json(queryResponse));
+		}),
+	);
+
+	await expect(() => client.get()).rejects.toThrowError(queryResponse.message);
+	await expect(() => client.get()).rejects.toThrowError(
+		prismic.RefExpiredError,
+	);
+});
+
+it("throws PreviewTokenExpiredError if preview token is expired", async (ctx) => {
+	const queryResponse = {
+		type: "api_security_error",
+		message: "This preview token has expired",
+		oauth_initiate: "https://qwerty.prismic.io/auth",
+		oauth_token: "https://qwerty.prismic.io/auth/token",
+	};
+
+	mockPrismicRestAPIV2({ ctx });
+
+	const client = createTestClient();
+
+	const queryEndpoint = new URL(
+		"./documents/search",
+		`${client.endpoint}/`,
+	).toString();
+
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
+			return res(ctx.status(404), ctx.json(queryResponse));
+		}),
+	);
+
+	await expect(() => client.get()).rejects.toThrowError(queryResponse.message);
+	await expect(() => client.get()).rejects.toThrowError(
+		prismic.PreviewTokenExpiredError,
+	);
+});
+
+it("throws NotFoundError if the 404 error is unknown", async (ctx) => {
+	const queryResponse = {
+		type: "unknown_type",
+		message: "message",
+	};
+
+	mockPrismicRestAPIV2({ ctx });
+
+	const client = createTestClient();
+
+	const queryEndpoint = new URL(
+		"./documents/search",
+		`${client.endpoint}/`,
+	).toString();
+
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
+			return res(ctx.status(404), ctx.json(queryResponse));
+		}),
+	);
+
+	await expect(() => client.get()).rejects.toThrowError(queryResponse.message);
 	await expect(() => client.get()).rejects.toThrowError(prismic.NotFoundError);
+});
+
+it("retries after `retry-after` milliseconds if response code is 429", async (ctx) => {
+	const retryAfter = 200; // ms
+	/**
+	 * The number of milliseconds that time-measuring tests can vary.
+	 */
+	const testTolerance = 100;
+	/**
+	 * The number of times 429 is returned.
+	 */
+	const retryResponseQty = 2;
+
+	const queryResponse = prismicM.api.query({ seed: ctx.task.name });
+
+	mockPrismicRestAPIV2({
+		ctx,
+		queryResponse,
+	});
+
+	const client = createTestClient();
+
+	const queryEndpoint = new URL(
+		"documents/search",
+		`${client.endpoint}/`,
+	).toString();
+
+	let responseTries = 0;
+
+	// Override the query endpoint to return a 429 while `responseTries` is
+	// less than or equal to `retryResponseQty`
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
+			responseTries++;
+
+			if (responseTries <= retryResponseQty) {
+				return res(
+					ctx.status(429),
+					ctx.json({
+						status_code: 429,
+						status_message:
+							"Your request count (11) is over the allowed limit of 10.",
+					}),
+					ctx.set("retry-after", retryAfter.toString()),
+				);
+			}
+		}),
+	);
+
+	// Rate limited. Should resolve roughly after retryAfter * retryResponseQty milliseconds.
+	const t0_0 = performance.now();
+	const res0 = await client.get();
+	const t0_1 = performance.now();
+
+	expect(res0).toStrictEqual(queryResponse);
+	expect(t0_1 - t0_0).toBeGreaterThanOrEqual(retryAfter * retryResponseQty);
+	expect(t0_1 - t0_0).toBeLessThanOrEqual(
+		retryAfter * retryResponseQty + testTolerance,
+	);
+
+	// Not rate limited. Should resolve nearly immediately.
+	const t1_0 = performance.now();
+	const res1 = await client.get();
+	const t1_1 = performance.now();
+
+	expect(res1).toStrictEqual(queryResponse);
+	expect(t1_1 - t1_0).toBeGreaterThanOrEqual(0);
+	expect(t1_1 - t1_0).toBeLessThanOrEqual(testTolerance);
+});
+
+it("retries after 1000 milliseconds if response code is 429 and an invalid `retry-after` value is returned", async (ctx) => {
+	/**
+	 * The number of milliseconds that time-measuring tests can vary.
+	 */
+	const testTolerance = 100;
+
+	const queryResponse = prismicM.api.query({ seed: ctx.task.name });
+
+	mockPrismicRestAPIV2({
+		ctx,
+		queryResponse,
+	});
+
+	const client = createTestClient();
+
+	const queryEndpoint = new URL(
+		"documents/search",
+		`${client.endpoint}/`,
+	).toString();
+
+	let responseTries = 0;
+
+	// Override the query endpoint to return a 429 while `responseTries` is
+	// less than or equal to `retryResponseQty`
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
+			responseTries++;
+
+			if (responseTries <= 1) {
+				return res(
+					ctx.status(429),
+					ctx.json({
+						status_code: 429,
+						status_message:
+							"Your request count (11) is over the allowed limit of 10.",
+					}),
+					ctx.set("retry-after", "invalid"),
+				);
+			}
+		}),
+	);
+
+	// Rate limited. Should resolve roughly after 1000 milliseconds.
+	const t0 = performance.now();
+	const res = await client.get();
+	const t1 = performance.now();
+
+	expect(res).toStrictEqual(queryResponse);
+	expect(t1 - t0).toBeGreaterThanOrEqual(1000);
+	expect(t1 - t0).toBeLessThanOrEqual(1000 + testTolerance);
+});
+
+it("throws if a non-2xx response is returned even after retrying", async (ctx) => {
+	/**
+	 * The number of milliseconds that time-measuring tests can vary.
+	 */
+	const testTolerance = 100;
+
+	mockPrismicRestAPIV2({ ctx });
+
+	const client = createTestClient();
+
+	const queryEndpoint = new URL(
+		"documents/search",
+		`${client.endpoint}/`,
+	).toString();
+
+	let responseTries = 0;
+
+	// Override the query endpoint to return a 429 while `responseTries` is
+	// less than or equal to `retryResponseQty`
+	ctx.server.use(
+		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
+			responseTries++;
+
+			if (responseTries <= 1) {
+				return res(
+					ctx.status(429),
+					ctx.json({
+						status_code: 429,
+						status_message:
+							"Your request count (11) is over the allowed limit of 10.",
+					}),
+					ctx.set("retry-after", "invalid"),
+				);
+			} else {
+				return res(ctx.status(418));
+			}
+		}),
+	);
+
+	// Rate limited. Should reject roughly after 1000 milliseconds.
+	const t0 = performance.now();
+	await expect(() => client.get()).rejects.toThrowError(
+		/invalid api response/i,
+	);
+	const t1 = performance.now();
+
+	expect(t1 - t0).toBeGreaterThanOrEqual(1000);
+	expect(t1 - t0).toBeLessThanOrEqual(1000 + testTolerance);
 });
