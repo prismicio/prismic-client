@@ -68,6 +68,9 @@ export const serializeImage = (node: Element): RTImageNode => {
 		url: src,
 		alt: (node.properties?.alt as string) ?? "",
 		copyright: (node.properties?.copyright as string) ?? null,
+		// This is not accurate. We're doing the casting because it seems the migration API
+		// accepts `undefined` values for those fields which is more convenient to us here.
+		// See: https://github.com/prismicio/prismic-client/pull/342#discussion_r1683650185
 		dimensions: { width: width as number, height: height as number },
 		edit: { x, y, zoom, background: "transparent" },
 	};
