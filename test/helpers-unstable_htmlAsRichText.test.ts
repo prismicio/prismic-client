@@ -115,9 +115,13 @@ describe("transforms HTML to rich text", () => {
 	})
 
 	describe("image", () => {
-		testHTMLAsRichTextHelper("non-prismic", {
+		testHTMLAsRichTextHelper("absolute", {
 			input: /* html */ `<img src="https://example.com/foo.png" alt="foo" />`,
 		})
+
+		testHTMLAsRichTextHelper("relative", {
+			input: /* html */ `<img src="/foo.png" alt="foo" />`,
+		});
 
 		testHTMLAsRichTextHelper("prismic", {
 			input: /* html */ `<img src="https://images.prismic.io/200629-sms-hoy/f0a757f6-770d-4eb8-a08b-f1727f1a58e4_guilherme-romano-KI2KaOeT670-unsplash.jpg?auto=format%2Ccompress&rect=399%2C259%2C1600%2C1068&w=2400&h=1602" alt="foo" />`,

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.7.1](https://github.com/prismicio/prismic-client/compare/v7.7.0...v7.7.1) (2024-07-23)
+
+
+### Bug Fixes
+
+* support relative image URL ([5711f04](https://github.com/prismicio/prismic-client/commit/5711f046baf512f63f532da399c3f03146390d81))
+
 ## [7.7.0](https://github.com/prismicio/prismic-client/compare/v7.6.0...v7.7.0) (2024-07-23)
 
 

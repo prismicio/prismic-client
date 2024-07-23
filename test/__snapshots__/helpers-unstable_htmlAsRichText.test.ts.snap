@@ -474,6 +474,28 @@ exports[`transforms HTML to rich text > embed > iframe 1`] = `
 
 exports[`transforms HTML to rich text > embed > missing src 1`] = `[]`;
 
+exports[`transforms HTML to rich text > image > absolute 1`] = `
+[
+  {
+    "alt": "foo",
+    "copyright": null,
+    "dimensions": {
+      "height": undefined,
+      "width": undefined,
+    },
+    "edit": {
+      "background": "transparent",
+      "x": 0,
+      "y": 0,
+      "zoom": 1,
+    },
+    "id": "",
+    "type": "image",
+    "url": "https://example.com/foo.png",
+  },
+]
+`;
+
 exports[`transforms HTML to rich text > image > empty alt 1`] = `
 [
   {
@@ -692,28 +714,6 @@ exports[`transforms HTML to rich text > image > missing alt 1`] = `
 
 exports[`transforms HTML to rich text > image > missing src 1`] = `[]`;
 
-exports[`transforms HTML to rich text > image > non-prismic 1`] = `
-[
-  {
-    "alt": "foo",
-    "copyright": null,
-    "dimensions": {
-      "height": undefined,
-      "width": undefined,
-    },
-    "edit": {
-      "background": "transparent",
-      "x": 0,
-      "y": 0,
-      "zoom": 1,
-    },
-    "id": "",
-    "type": "image",
-    "url": "https://example.com/foo.png",
-  },
-]
-`;
-
 exports[`transforms HTML to rich text > image > prismic 1`] = `
 [
   {
@@ -732,6 +732,28 @@ exports[`transforms HTML to rich text > image > prismic 1`] = `
     "id": "",
     "type": "image",
     "url": "https://images.prismic.io/200629-sms-hoy/f0a757f6-770d-4eb8-a08b-f1727f1a58e4_guilherme-romano-KI2KaOeT670-unsplash.jpg?auto=format%2Ccompress&rect=399%2C259%2C1600%2C1068&w=2400&h=1602",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > image > relative 1`] = `
+[
+  {
+    "alt": "foo",
+    "copyright": null,
+    "dimensions": {
+      "height": undefined,
+      "width": undefined,
+    },
+    "edit": {
+      "background": "transparent",
+      "x": 0,
+      "y": 0,
+      "zoom": 1,
+    },
+    "id": "",
+    "type": "image",
+    "url": "/foo.png",
   },
 ]
 `;
