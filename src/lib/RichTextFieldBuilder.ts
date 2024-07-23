@@ -109,7 +109,7 @@ export class RichTextFieldBuilder {
 
 		// Ignore empty spans.
 		if (span.start === span.end) {
-			return;
+			return
 		}
 
 		// Prefer to extend the last span of the same type end
