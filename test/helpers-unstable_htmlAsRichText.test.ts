@@ -46,6 +46,11 @@ describe("transforms HTML to rich text", () => {
 			expectHTMLToMatchInputExactly: false,
 		})
 
+		testHTMLAsRichTextHelper("empty spans", {
+			input: /* html */ `<p>lorem <strong></strong>ipsum dolor sit amet</p>`,
+			expectHTMLToMatchInputExactly: false,
+		});
+
 		testHTMLAsRichTextHelper("nested spans", {
 			input: /* html */ `<p>lorem <strong>ips<em>um <a href="https://prismic.io">dolor</a></em></strong> sit amet</p>`,
 		})

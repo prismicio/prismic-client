@@ -996,6 +996,17 @@ exports[`transforms HTML to rich text > spans > directly adjacent spans > does n
 ]
 `;
 
+exports[`transforms HTML to rich text > spans > empty spans 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
 exports[`transforms HTML to rich text > spans > hyperlink 1`] = `
 [
   {

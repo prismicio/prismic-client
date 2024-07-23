@@ -107,6 +107,11 @@ export class RichTextFieldBuilder {
 			}
 		}
 
+		// Ignore empty spans.
+		if (span.start === span.end) {
+			return;
+		}
+
 		// Prefer to extend the last span of the same type end
 		// position if it ends at the start of the new span.
 		if (this.#last.spans[lastIdenticalSpanIndex]?.end === span.start) {
