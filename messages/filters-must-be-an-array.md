@@ -5,9 +5,9 @@ Prismic queries can be filtered using the `filters` query parameter.
 The `filters` parameter accepts an array of filters like the following:
 
 ```typescript
-import * as prismic from "@prismicio/client";
+import * as prismic from "@prismicio/client"
 
-const client = prismic.createClient("my-repo-name");
+const client = prismic.createClient("my-repo-name")
 
 const blogPosts = await client.getAllByType("blog_post", {
 	filters: [
@@ -17,7 +17,7 @@ const blogPosts = await client.getAllByType("blog_post", {
 			new Date("1991-03-07"),
 		),
 	],
-});
+})
 ```
 
 This query will fetch all `blog_post` documents _except_ those that:
@@ -41,10 +41,10 @@ await client.getAllByType("blog_post", {
 			new Date("1991-03-07"),
 		),
 	],
-});
+})
 
 // ❌ Incorrect
 await client.getAllByType("blog_post", {
 	filters: prismic.filter.not("my.document.uid", "hidden"),
-});
+})
 ```
