@@ -1,24 +1,24 @@
-import { expectNever, expectType } from "ts-expect";
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes";
+import type * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes"
 
-import * as prismic from "../../src";
+import * as prismic from "../../src"
 
-(value: prismic.CustomTypeModelImageField): true => {
+;(value: prismic.CustomTypeModelImageField): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				expectNever(value);
+				expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 
 expectType<prismic.CustomTypeModelImageField>({
 	type: prismic.CustomTypeModelFieldType.Image,
@@ -33,7 +33,7 @@ expectType<prismic.CustomTypeModelImageField>({
 			},
 		],
 	},
-});
+})
 
 /**
  * Does not support a placeholder.
@@ -56,7 +56,7 @@ expectType<prismic.CustomTypeModelImageField>({
 			},
 		],
 	},
-});
+})
 
 /**
  * Supports optional constraint.
@@ -71,7 +71,7 @@ expectType<prismic.CustomTypeModelImageField>({
 		},
 		thumbnails: [],
 	},
-});
+})
 
 /**
  * Supports custom thumbnail names.
@@ -95,7 +95,7 @@ expectType<prismic.CustomTypeModelImageField<"Foo">>({
 			},
 		],
 	},
-});
+})
 
 /**
  * Constraint supports nullable width and height to represent no constraint.
@@ -103,15 +103,15 @@ expectType<prismic.CustomTypeModelImageField<"Foo">>({
 expectType<prismic.CustomTypeModelImageConstraint>({
 	width: null,
 	height: null,
-});
+})
 expectType<prismic.CustomTypeModelImageConstraint>({
 	width: 1,
 	height: null,
-});
+})
 expectType<prismic.CustomTypeModelImageConstraint>({
 	width: null,
 	height: 1,
-});
+})
 
 /**
  * Thumbnail supports configurable name.
@@ -120,20 +120,20 @@ expectType<prismic.CustomTypeModelImageThumbnail<"Foo">>({
 	name: "Foo",
 	width: null,
 	height: null,
-});
+})
 expectType<prismic.CustomTypeModelImageThumbnail<"Foo">>({
 	// @ts-expect-error - Name must match the given name.
 	name: "string",
 	width: null,
 	height: null,
-});
+})
 
 /**
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
-expectType<prismic.CustomTypeModelImageField>({} as prismicTICustomTypes.Image);
+expectType<prismic.CustomTypeModelImageField>({} as prismicTICustomTypes.Image)
 
 /**
  * `@prismicio/types-internal` extends `@prismicio/types`
  */
-expectType<prismicTICustomTypes.Image>({} as prismic.CustomTypeModelImageField);
+expectType<prismicTICustomTypes.Image>({} as prismic.CustomTypeModelImageField)

@@ -1,27 +1,28 @@
-import remarkParse from "remark-parse";
-import remarkRehype from "remark-rehype";
-import { unified } from "unified";
+import remarkParse from "remark-parse"
+import remarkRehype from "remark-rehype"
+import { unified } from "unified"
 
-import { RehypeRichTextConfig, rehypeRichText } from "../lib/rehypeRichText";
+import type { RehypeRichTextConfig } from "../lib/rehypeRichText"
+import { rehypeRichText } from "../lib/rehypeRichText"
 
-import { RichTextField } from "../types/value/richText";
+import type { RichTextField } from "../types/value/richText"
 
 // Used for TSDocs only.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { unstable_htmlAsRichText } from "./unstable_htmlAsRichText";
+import type { unstable_htmlAsRichText } from "./unstable_htmlAsRichText"
 
 /**
  * Configuration that determines the output of {@link markdownAsRichText}.
  */
-export type MarkdownAsRichTextConfig = RehypeRichTextConfig;
+export type MarkdownAsRichTextConfig = RehypeRichTextConfig
 
 /**
  * The return type of {@link markdownAsRichText}.
  */
 type MarkdownAsRichTextReturnType = {
-	result: RichTextField;
-	warnings: string[];
-};
+	result: RichTextField
+	warnings: string[]
+}
 
 /**
  * Converts a markdown string to a rich text field.
@@ -46,7 +47,7 @@ export const unstable_markdownAsRichText = (
 		.use(remarkParse)
 		.use(remarkRehype)
 		.use(rehypeRichText, config)
-		.processSync(markdown);
+		.processSync(markdown)
 
-	return { result, warnings: messages.map((message) => message.toString()) };
-};
+	return { result, warnings: messages.map((message) => message.toString()) }
+}

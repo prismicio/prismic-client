@@ -1,24 +1,24 @@
-import { expectNever, expectType } from "ts-expect";
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes";
+import type * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes"
 
-import * as prismic from "../../src";
+import * as prismic from "../../src"
 
-(value: prismic.CustomTypeModelLinkToMediaField): true => {
+;(value: prismic.CustomTypeModelLinkToMediaField): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				expectNever(value);
+				expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 
 expectType<prismic.CustomTypeModelLinkToMediaField>({
 	type: prismic.CustomTypeModelFieldType.Link,
@@ -26,7 +26,7 @@ expectType<prismic.CustomTypeModelLinkToMediaField>({
 		label: "string",
 		select: prismic.CustomTypeModelLinkSelectType.Media,
 	},
-});
+})
 
 /**
  * Supports optional placeholder.
@@ -38,7 +38,7 @@ expectType<prismic.CustomTypeModelLinkToMediaField>({
 		placeholder: "string",
 		select: prismic.CustomTypeModelLinkSelectType.Media,
 	},
-});
+})
 
 /**
  * `@prismicio/types` extends `@prismicio/types-internal`
@@ -48,13 +48,13 @@ expectType<prismic.CustomTypeModelLinkToMediaField>(
 		// We must manually narrow `@prismicio/types-internal`'s type
 		// to match a link to media field; `@prismicio/types-internal`
 		// does not contain a link to media-specific type.
-		config?: { select: "media" };
+		config?: { select: "media" }
 	},
-);
+)
 
 /**
  * `@prismicio/types-internal` extends `@prismicio/types`
  */
 expectType<prismicTICustomTypes.Link>(
 	{} as prismic.CustomTypeModelLinkToMediaField,
-);
+)

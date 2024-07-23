@@ -1,11 +1,11 @@
-import { expect, it } from "vitest";
+import { expect, it } from "vitest"
 
-import { documentFixture } from "./__fixtures__/document";
+import { documentFixture } from "./__fixtures__/document"
 
-import { LinkType, documentToLinkField } from "../src";
+import { LinkType, documentToLinkField } from "../src"
 
 it("returns equivalent link field from given document", () => {
-	const document = { ...documentFixture.empty, url: null };
+	const document = { ...documentFixture.empty, url: null }
 
 	expect(documentToLinkField(document)).toStrictEqual({
 		link_type: LinkType.Document,
@@ -16,11 +16,11 @@ it("returns equivalent link field from given document", () => {
 		lang: "en-us",
 		url: undefined,
 		slug: "slug",
-	});
-});
+	})
+})
 
 it("returns equivalent link field from given document with `apiOptions.routes`", () => {
-	const document = { ...documentFixture.empty };
+	const document = { ...documentFixture.empty }
 
 	expect(documentToLinkField(document)).toStrictEqual({
 		link_type: LinkType.Document,
@@ -31,11 +31,11 @@ it("returns equivalent link field from given document with `apiOptions.routes`",
 		lang: "en-us",
 		url: "/test",
 		slug: "slug",
-	});
-});
+	})
+})
 
 it("returns equivalent link field from given document without uid", () => {
-	const document = { ...documentFixture.empty, uid: null };
+	const document = { ...documentFixture.empty, uid: null }
 
 	expect(documentToLinkField(document)).toStrictEqual({
 		link_type: LinkType.Document,
@@ -46,11 +46,11 @@ it("returns equivalent link field from given document without uid", () => {
 		lang: "en-us",
 		url: "/test",
 		slug: "slug",
-	});
-});
+	})
+})
 
 it("returns equivalent link field from given document with non-empty data", () => {
-	const document = { ...documentFixture.empty, data: { foo: "bar" } };
+	const document = { ...documentFixture.empty, data: { foo: "bar" } }
 
 	expect(documentToLinkField(document)).toStrictEqual({
 		link_type: LinkType.Document,
@@ -62,8 +62,8 @@ it("returns equivalent link field from given document with non-empty data", () =
 		url: "/test",
 		slug: "slug",
 		data: { foo: "bar" },
-	});
-});
+	})
+})
 
 // This test checks support for Gatsby users. The `slugs` field is not
 // queriable in Gatsby since it is deprecated.
@@ -73,7 +73,7 @@ it("supports documents without slugs field", () => {
 		...documentFixture.empty,
 		url: null,
 		slugs: undefined,
-	};
+	}
 
 	expect(documentToLinkField(document)).toStrictEqual({
 		link_type: LinkType.Document,
@@ -84,5 +84,5 @@ it("supports documents without slugs field", () => {
 		lang: "en-us",
 		url: undefined,
 		slug: undefined,
-	});
-});
+	})
+})

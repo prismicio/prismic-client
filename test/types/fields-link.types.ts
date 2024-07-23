@@ -1,22 +1,22 @@
-import { expectNever, expectType } from "ts-expect";
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismic from "../../src";
+import * as prismic from "../../src"
 
-(value: prismic.LinkField): true => {
+;(value: prismic.LinkField): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				return expectNever(value);
+				return expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 
 /**
  * `LinkType` keeps compatibility with other versions.
@@ -26,12 +26,12 @@ import * as prismic from "../../src";
 const ForeignLinkType = {
 	Document: "Document",
 	Breaking: "Breaking",
-} as const;
-expectType<typeof prismic.LinkType.Document>(ForeignLinkType.Document);
+} as const
+expectType<typeof prismic.LinkType.Document>(ForeignLinkType.Document)
 expectType<typeof prismic.LinkType.Document>(
 	// @ts-expect-error - `LinkType` should still fail with breaking changes
 	ForeignLinkType.Breaking,
-);
+)
 
 /**
  * Filled state.
@@ -41,7 +41,7 @@ expectType<prismic.LinkField>({
 	link_type: prismic.LinkType.Web,
 	url: "string",
 	target: "string",
-});
+})
 // Content relationship link
 expectType<prismic.LinkField>({
 	link_type: prismic.LinkType.Document,
@@ -54,7 +54,7 @@ expectType<prismic.LinkField>({
 	slug: "string",
 	isBroken: true,
 	data: undefined,
-});
+})
 // Media link
 expectType<prismic.LinkField>({
 	link_type: prismic.LinkType.Media,
@@ -64,32 +64,32 @@ expectType<prismic.LinkField>({
 	size: "string",
 	height: "string",
 	width: "string",
-});
+})
 expectType<prismic.LinkField<string, string, never, "filled">>({
 	link_type: prismic.LinkType.Web,
 	url: "string",
 	target: "string",
-});
+})
 expectType<prismic.LinkField<string, string, never, "empty">>({
 	link_type: prismic.LinkType.Web,
 	// @ts-expect-error - Empty fields cannot contain a filled value.
 	url: "string",
 	target: "string",
-});
+})
 
 /**
  * Empty state.
  */
 expectType<prismic.LinkField>({
 	link_type: prismic.LinkType.Any,
-});
+})
 expectType<prismic.LinkField<string, string, never, "empty">>({
 	link_type: prismic.LinkType.Any,
-});
+})
 expectType<prismic.LinkField<string, string, never, "filled">>({
 	// @ts-expect-error - Filled fields cannot contain an empty value.
 	link_type: prismic.LinkType.Any,
-});
+})
 
 /**
  * Supports custom document type for document links.
@@ -100,7 +100,7 @@ expectType<prismic.LinkField<"foo">>({
 	type: "foo",
 	tags: [],
 	lang: "string",
-});
+})
 // @ts-expect-error - Document type must match the given type.
 expectType<prismic.LinkField<"foo">>({
 	link_type: prismic.LinkType.Document,
@@ -108,7 +108,7 @@ expectType<prismic.LinkField<"foo">>({
 	type: "string",
 	tags: [],
 	lang: "string",
-});
+})
 
 /**
  * Supports custom document language for document links.
@@ -119,7 +119,7 @@ expectType<prismic.LinkField<string, "fr-fr">>({
 	type: "string",
 	tags: [],
 	lang: "fr-fr",
-});
+})
 // @ts-expect-error - Document language must match the given type.
 expectType<prismic.LinkField<string, "fr-fr">>({
 	link_type: prismic.LinkType.Document,
@@ -127,7 +127,7 @@ expectType<prismic.LinkField<string, "fr-fr">>({
 	type: "string",
 	tags: [],
 	lang: "string",
-});
+})
 
 /**
  * Supports custom document data for document links.
@@ -143,4 +143,4 @@ expectType<prismic.LinkField<string, string, { foo: prismic.BooleanField }>>({
 		// @ts-expect-error - Only given fields are valid.
 		bar: false,
 	},
-});
+})

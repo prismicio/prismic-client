@@ -1,4 +1,4 @@
-import type { FieldState } from "./types";
+import type { FieldState } from "./types"
 
 /**
  * A date field.
@@ -8,4 +8,4 @@ import type { FieldState } from "./types";
  * @see More details: {@link https://prismic.io/docs/date}
  */
 export type DateField<State extends FieldState = FieldState> =
-	State extends "empty" ? null : `${number}-${number}-${number}`;
+	State extends "empty" ? null : `${number}-${number}-${number}`

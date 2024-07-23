@@ -1,8 +1,8 @@
-import { CustomTypeModelRichTextSingleField } from "./richText";
+import type { CustomTypeModelRichTextSingleField } from "./richText"
 
 /**
  * A title custom type field.
  *
  * More details: {@link https://prismic.io/docs/rich-text-title}
  */
-export type CustomTypeModelTitleField = CustomTypeModelRichTextSingleField;
+export type CustomTypeModelTitleField = CustomTypeModelRichTextSingleField

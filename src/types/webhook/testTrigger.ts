@@ -1,4 +1,4 @@
-import { WebhookBodyBase, WebhookType } from "./types";
+import type { WebhookBodyBase, WebhookType } from "./types"
 
 /**
  * Webhook payload sent when a test webhook action is triggered.
@@ -6,5 +6,5 @@ import { WebhookBodyBase, WebhookType } from "./types";
  * @see More details: {@link https://prismic.io/docs/webhooks}
  */
 export interface WebhookBodyTestTrigger extends WebhookBodyBase {
-	type: typeof WebhookType.TestTrigger;
+	type: typeof WebhookType.TestTrigger
 }

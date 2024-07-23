@@ -1,4 +1,4 @@
-import type { CustomTypeModelFieldType } from "./types";
+import type { CustomTypeModelFieldType } from "./types"
 
 /**
  * A rich text custom type field.
@@ -7,7 +7,7 @@ import type { CustomTypeModelFieldType } from "./types";
  */
 export type CustomTypeModelRichTextField =
 	| CustomTypeModelRichTextMultiField
-	| CustomTypeModelRichTextSingleField;
+	| CustomTypeModelRichTextSingleField
 
 /**
  * A rich text custom type field which supports multiple blocks of content.
@@ -15,15 +15,15 @@ export type CustomTypeModelRichTextField =
  * More details: {@link https://prismic.io/docs/rich-text-title}
  */
 export interface CustomTypeModelRichTextMultiField {
-	type: typeof CustomTypeModelFieldType.StructuredText;
+	type: typeof CustomTypeModelFieldType.StructuredText
 	config?: {
-		label?: string | null;
-		placeholder?: string;
-		allowTargetBlank?: boolean;
-		multi?: string;
+		label?: string | null
+		placeholder?: string
+		allowTargetBlank?: boolean
+		multi?: string
 		// @prismicio/types-internal types `labels` as readonly.
-		labels?: readonly string[];
-	};
+		labels?: readonly string[]
+	}
 }
 
 /**
@@ -32,13 +32,13 @@ export interface CustomTypeModelRichTextMultiField {
  * More details: {@link https://prismic.io/docs/rich-text-title}
  */
 export interface CustomTypeModelRichTextSingleField {
-	type: typeof CustomTypeModelFieldType.StructuredText;
+	type: typeof CustomTypeModelFieldType.StructuredText
 	config?: {
-		label?: string | null;
-		placeholder?: string;
-		allowTargetBlank?: boolean;
-		single?: string;
+		label?: string | null
+		placeholder?: string
+		allowTargetBlank?: boolean
+		single?: string
 		// @prismicio/types-internal types `labels` as readonly.
-		labels?: readonly string[];
-	};
+		labels?: readonly string[]
+	}
 }

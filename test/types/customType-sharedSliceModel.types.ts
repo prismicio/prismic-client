@@ -1,24 +1,24 @@
-import { expectNever, expectType } from "ts-expect";
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes";
+import type * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes"
 
-import * as prismic from "../../src";
+import * as prismic from "../../src"
 
-(value: prismic.SharedSliceModel): true => {
+;(value: prismic.SharedSliceModel): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				expectNever(value);
+				expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 
 expectType<prismic.SharedSliceModel>({
 	type: prismic.CustomTypeModelSliceType.SharedSlice,
@@ -51,7 +51,7 @@ expectType<prismic.SharedSliceModel>({
 			imageUrl: "string",
 		},
 	],
-});
+})
 
 /**
  * Supports custom ID.
@@ -62,7 +62,7 @@ expectType<prismic.SharedSliceModel<"foo">>({
 	name: "string",
 	description: "string",
 	variations: [],
-});
+})
 expectType<prismic.SharedSliceModel<"foo">>({
 	type: prismic.CustomTypeModelSliceType.SharedSlice,
 	// @ts-expect-error - Slice ID must match the given ID.
@@ -70,7 +70,7 @@ expectType<prismic.SharedSliceModel<"foo">>({
 	name: "string",
 	description: "string",
 	variations: [],
-});
+})
 
 /**
  * Supports custom variations.
@@ -105,14 +105,14 @@ expectType<
 			imageUrl: "string",
 		},
 	],
-});
+})
 
 /**
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
-expectType<prismic.SharedSliceModel>({} as prismicTICustomTypes.SharedSlice);
+expectType<prismic.SharedSliceModel>({} as prismicTICustomTypes.SharedSlice)
 
 /**
  * `@prismicio/types-internal` extends `@prismicio/types`
  */
-expectType<prismicTICustomTypes.SharedSlice>({} as prismic.SharedSliceModel);
+expectType<prismicTICustomTypes.SharedSlice>({} as prismic.SharedSliceModel)

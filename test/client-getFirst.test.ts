@@ -1,19 +1,19 @@
-import { expect, it } from "vitest";
+import { expect, it } from "vitest"
 
-import * as prismicM from "@prismicio/mock";
+import * as prismicM from "@prismicio/mock"
 
-import { createTestClient } from "./__testutils__/createClient";
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
-import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod";
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
-import { testFetchOptions } from "./__testutils__/testFetchOptions";
+import { createTestClient } from "./__testutils__/createClient"
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
+import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod"
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
+import { testFetchOptions } from "./__testutils__/testFetchOptions"
 
-import * as prismic from "../src";
+import * as prismic from "../src"
 
 testGetFirstMethod("returns the first document from a response", {
 	run: (client) => client.getFirst(),
-});
+})
 
 testGetFirstMethod("includes params if provided", {
 	run: (client) =>
@@ -27,7 +27,7 @@ testGetFirstMethod("includes params if provided", {
 		ref: "custom-ref",
 		lang: "*",
 	},
-});
+})
 
 testGetFirstMethod("includes default params if provided", {
 	run: (client) => client.getFirst(),
@@ -39,7 +39,7 @@ testGetFirstMethod("includes default params if provided", {
 	requiredParams: {
 		lang: "*",
 	},
-});
+})
 
 testGetFirstMethod("merges params and default params if provided", {
 	run: (client) =>
@@ -60,7 +60,7 @@ testGetFirstMethod("merges params and default params if provided", {
 		ref: "overridden-ref",
 		lang: "fr-fr",
 	},
-});
+})
 
 testGetFirstMethod(
 	"ignores default pageSize=1 param if a page param is given",
@@ -73,7 +73,7 @@ testGetFirstMethod(
 			pageSize: "2",
 		},
 	},
-);
+)
 
 it("throws if no documents were returned", async (ctx) => {
 	mockPrismicRestAPIV2({
@@ -82,27 +82,27 @@ it("throws if no documents were returned", async (ctx) => {
 			documents: [],
 		}),
 		ctx,
-	});
+	})
 
-	const client = createTestClient();
+	const client = createTestClient()
 
 	await expect(() => client.getFirst()).rejects.toThrowError(
 		/no documents were returned/i,
-	);
+	)
 	await expect(() => client.getFirst()).rejects.toThrowError(
 		prismic.NotFoundError,
-	);
-});
+	)
+})
 
 testFetchOptions("supports fetch options", {
 	run: (client, params) => client.getFirst(params),
-});
+})
 
 testAbortableMethod("is abortable with an AbortController", {
 	run: (client, params) => client.getFirst(params),
-});
+})
 
 testConcurrentMethod("shares concurrent equivalent network requests", {
 	run: (client, params) => client.getFirst(params),
 	mode: "get",
-});
+})

@@ -28,7 +28,7 @@
 	"importOrderGroupNamespaceSpecifiers": true,
 	"printWidth": 80,
 	"useTabs": true,
-	"semi": true,
+	"semi": false,
 	"singleQuote": false,
 	"quoteProps": "as-needed",
 	"jsxSingleQuote": false,

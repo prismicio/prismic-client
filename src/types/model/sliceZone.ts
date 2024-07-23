@@ -1,6 +1,6 @@
-import type { CustomTypeModelFieldType } from "./types";
+import type { CustomTypeModelFieldType } from "./types"
 
-import type { CustomTypeModelLegacySlice, CustomTypeModelSlice } from "./slice";
+import type { CustomTypeModelLegacySlice, CustomTypeModelSlice } from "./slice"
 
 /**
  * A Slice Zone custom type field.
@@ -22,12 +22,12 @@ export interface CustomTypeModelSliceZoneField<
 > {
 	type:
 		| typeof CustomTypeModelFieldType.Slices
-		| typeof CustomTypeModelFieldType.LegacySlices;
-	fieldset?: string | null;
+		| typeof CustomTypeModelFieldType.LegacySlices
+	fieldset?: string | null
 	config?: {
-		labels?: Record<string, readonly CustomTypeModelSliceLabel[]> | null;
-		choices?: Slices;
-	};
+		labels?: Record<string, readonly CustomTypeModelSliceLabel[]> | null
+		choices?: Slices
+	}
 }
 
 /**
@@ -36,8 +36,8 @@ export interface CustomTypeModelSliceZoneField<
  * More details: {@link https://prismic.io/docs/slice}
  */
 export interface CustomTypeModelSliceLabel {
-	name: string;
-	display?: string;
+	name: string
+	display?: string
 }
 
 /**
@@ -48,7 +48,7 @@ export interface CustomTypeModelSliceLabel {
 export const CustomTypeModelSliceType = {
 	Slice: "Slice",
 	SharedSlice: "SharedSlice",
-} as const;
+} as const
 
 /**
  * A shared Slice for a custom type.
@@ -56,5 +56,5 @@ export const CustomTypeModelSliceType = {
  * More details: {@link https://prismic.io/docs/slice}
  */
 export interface CustomTypeModelSharedSlice {
-	type: typeof CustomTypeModelSliceType.SharedSlice;
+	type: typeof CustomTypeModelSliceType.SharedSlice
 }

@@ -1,24 +1,24 @@
-import { expectNever, expectType } from "ts-expect";
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes";
+import type * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes"
 
-import * as prismic from "../../src";
+import * as prismic from "../../src"
 
-(value: prismic.CustomTypeModelSlice): true => {
+;(value: prismic.CustomTypeModelSlice): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				expectNever(value);
+				expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 
 expectType<prismic.CustomTypeModelSlice>({
 	type: prismic.CustomTypeModelSliceType.Slice,
@@ -42,7 +42,7 @@ expectType<prismic.CustomTypeModelSlice>({
 			},
 		},
 	},
-});
+})
 
 /**
  * Supports custom non-repeat fields.
@@ -71,7 +71,7 @@ expectType<
 		},
 	},
 	repeat: {},
-});
+})
 
 /**
  * Supports custom repeat fields.
@@ -103,18 +103,18 @@ expectType<
 			},
 		},
 	},
-});
+})
 
 /**
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
 expectType<prismic.CustomTypeModelSlice>(
 	{} as prismicTICustomTypes.CompositeSlice,
-);
+)
 
 /**
  * `@prismicio/types-internal` extends `@prismicio/types`
  */
 expectType<prismicTICustomTypes.CompositeSlice>(
 	{} as prismic.CustomTypeModelSlice,
-);
+)

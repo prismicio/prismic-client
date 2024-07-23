@@ -1,4 +1,4 @@
-import type { SharedSliceVariation } from "./sharedSliceVariation";
+import type { SharedSliceVariation } from "./sharedSliceVariation"
 
 /**
  * A shared Slice.
@@ -9,7 +9,7 @@ export type SharedSlice<
 	SliceType = string,
 	Variations extends SharedSliceVariation = SharedSliceVariation,
 > = {
-	slice_type: SliceType;
-	slice_label: null;
-	id: string;
-} & Variations;
+	slice_type: SliceType
+	slice_label: null
+	id: string
+} & Variations

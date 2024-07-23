@@ -1,15 +1,12 @@
-import { getMasterRef } from "./__testutils__/getMasterRef";
-import {
-	testGetOutsideTTL,
-	testGetWithinTTL,
-} from "./__testutils__/testGetTTL";
+import { getMasterRef } from "./__testutils__/getMasterRef"
+import { testGetOutsideTTL, testGetWithinTTL } from "./__testutils__/testGetTTL"
 
 testGetWithinTTL("uses the cached master ref within the ref's TTL", {
 	getContext: {
 		getRef: getMasterRef,
 	},
 	beforeFirstGet: (args) => args.client.queryLatestContent(),
-});
+})
 
 testGetOutsideTTL(
 	"uses a fresh master ref outside of the cached ref's TTL",
@@ -23,4 +20,4 @@ testGetOutsideTTL(
 		},
 		beforeFirstGet: (args) => args.client.queryLatestContent(),
 	},
-);
+)

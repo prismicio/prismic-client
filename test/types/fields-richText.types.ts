@@ -1,31 +1,31 @@
-import { expectNever, expectType } from "ts-expect";
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismic from "../../src";
+import * as prismic from "../../src"
 
-(value: prismic.RichTextField): true => {
+;(value: prismic.RichTextField): true => {
 	if (!Array.isArray(value)) {
-		return expectNever(value);
+		return expectNever(value)
 	}
 
 	switch (typeof value[0]) {
 		case "object": {
 			if (value[0] === null) {
-				expectNever(value[0]);
+				expectNever(value[0])
 			}
 
-			return true;
+			return true
 		}
 
 		// When the field is empty, value[0] is undefined.
 		case "undefined": {
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value[0]);
+			return expectNever(value[0])
 		}
 	}
-};
+}
 
 /**
  * `RichTextNodeType` keeps compatibility with other versions.
@@ -35,14 +35,14 @@ import * as prismic from "../../src";
 const ForeignRichTextNodeType = {
 	heading1: "heading1",
 	breaking: "breaking",
-} as const;
+} as const
 expectType<typeof prismic.RichTextNodeType.heading1>(
 	ForeignRichTextNodeType.heading1,
-);
+)
 expectType<typeof prismic.RichTextNodeType.heading1>(
 	// @ts-expect-error - `RichTextNodeType` should still fail with breaking changes
 	ForeignRichTextNodeType.breaking,
-);
+)
 
 /**
  * Filled state.
@@ -59,7 +59,7 @@ expectType<prismic.RichTextField>([
 			},
 		],
 	},
-]);
+])
 expectType<prismic.RichTextField<"filled">>([
 	{
 		type: prismic.RichTextNodeType.paragraph,
@@ -72,7 +72,7 @@ expectType<prismic.RichTextField<"filled">>([
 			},
 		],
 	},
-]);
+])
 expectType<prismic.RichTextField<"empty">>(
 	// @ts-expect-error - Empty fields cannot contain a filled value.
 	[
@@ -88,17 +88,17 @@ expectType<prismic.RichTextField<"empty">>(
 			],
 		},
 	],
-);
+)
 
 /**
  * Empty state.
  */
-expectType<prismic.RichTextField>([]);
-expectType<prismic.RichTextField<"empty">>([]);
+expectType<prismic.RichTextField>([])
+expectType<prismic.RichTextField<"empty">>([])
 expectType<prismic.RichTextField<"filled">>(
 	// @ts-expect-error - Filled fields cannot contain an empty value.
 	[],
-);
+)
 
 /**
  * Supports all root-level Structured Text block types.
@@ -149,43 +149,43 @@ expectType<prismic.RichTextField>([
 			html: null,
 		},
 	},
-]);
+])
 expectType<prismic.RichTextField>([
 	{
 		// @ts-expect-error - Not a root-level block type.
 		type: prismic.RichTextNodeType.strong,
 	},
-]);
+])
 expectType<prismic.RichTextField>([
 	{
 		// @ts-expect-error - Not a root-level block type.
 		type: prismic.RichTextNodeType.em,
 	},
-]);
+])
 expectType<prismic.RichTextField>([
 	{
 		// @ts-expect-error - Not a root-level block type.
 		type: prismic.RichTextNodeType.label,
 	},
-]);
+])
 expectType<prismic.RichTextField>([
 	{
 		// @ts-expect-error - Not a root-level block type.
 		type: prismic.RichTextNodeType.hyperlink,
 	},
-]);
+])
 expectType<prismic.RichTextField>([
 	{
 		// @ts-expect-error - Not a root-label block type (meta block for internal use only).
 		type: prismic.RichTextNodeType.list,
 	},
-]);
+])
 expectType<prismic.RichTextField>([
 	{
 		// @ts-expect-error - Not a root-label block type (meta block for internal use only).
 		type: prismic.RichTextNodeType.oList,
 	},
-]);
+])
 
 /**
  * Text blocks support spans.
@@ -225,4 +225,4 @@ expectType<prismic.RichTextField>([
 			},
 		],
 	},
-]);
+])

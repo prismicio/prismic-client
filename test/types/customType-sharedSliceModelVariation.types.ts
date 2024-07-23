@@ -1,24 +1,24 @@
-import { expectNever, expectType } from "ts-expect";
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes";
+import type * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes"
 
-import * as prismic from "../../src";
+import * as prismic from "../../src"
 
-(value: prismic.SharedSliceModelVariation): true => {
+;(value: prismic.SharedSliceModelVariation): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				expectNever(value);
+				expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 
 expectType<prismic.SharedSliceModelVariation>({
 	id: "string",
@@ -43,7 +43,7 @@ expectType<prismic.SharedSliceModelVariation>({
 		},
 	},
 	imageUrl: "string",
-});
+})
 
 /**
  * Supports custom ID.
@@ -57,7 +57,7 @@ expectType<prismic.SharedSliceModelVariation<"foo">>({
 	primary: {},
 	items: {},
 	imageUrl: "string",
-});
+})
 expectType<prismic.SharedSliceModelVariation<"foo">>({
 	// @ts-expect-error - Slice ID must match the given ID.
 	id: "string",
@@ -68,7 +68,7 @@ expectType<prismic.SharedSliceModelVariation<"foo">>({
 	primary: {},
 	items: {},
 	imageUrl: "string",
-});
+})
 
 /**
  * Supports custom primary fields.
@@ -77,10 +77,10 @@ expectType<
 	prismic.SharedSliceModelVariation<
 		string,
 		{
-			foo: prismic.CustomTypeModelBooleanField;
+			foo: prismic.CustomTypeModelBooleanField
 			bar: prismic.CustomTypeModelGroupField<{
-				baz: prismic.CustomTypeModelBooleanField;
-			}>;
+				baz: prismic.CustomTypeModelBooleanField
+			}>
 		}
 	>
 >({
@@ -120,7 +120,7 @@ expectType<
 	},
 	items: {},
 	imageUrl: "string",
-});
+})
 
 /**
  * Supports custom items fields.
@@ -154,7 +154,7 @@ expectType<
 		},
 	},
 	imageUrl: "string",
-});
+})
 
 /**
  * Does not support groups in items section.
@@ -176,18 +176,18 @@ expectType<
 	// @ts-expect-error - We don't care about the actual value.
 	items: {},
 	imageUrl: "string",
-});
+})
 
 /**
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
 expectType<prismic.SharedSliceModelVariation>(
 	{} as prismicTICustomTypes.Variation,
-);
+)
 
 /**
  * `@prismicio/types-internal` extends `@prismicio/types`
  */
 expectType<prismicTICustomTypes.Variation>(
 	{} as prismic.SharedSliceModelVariation,
-);
+)

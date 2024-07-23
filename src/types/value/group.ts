@@ -1,4 +1,4 @@
-import type { AnyRegularField, FieldState } from "./types";
+import type { AnyRegularField, FieldState } from "./types"
 
 /**
  * A group field.
@@ -11,7 +11,7 @@ export type GroupField<
 		AnyRegularField | NestedGroupField
 	>,
 	State extends FieldState = FieldState,
-> = State extends "empty" ? [] : [Fields, ...Fields[]];
+> = State extends "empty" ? [] : [Fields, ...Fields[]]
 
 /**
  * A nested group field.
@@ -24,4 +24,4 @@ export type NestedGroupField<
 		AnyRegularField
 	>,
 	State extends FieldState = FieldState,
-> = GroupField<Fields, State>;
+> = GroupField<Fields, State>

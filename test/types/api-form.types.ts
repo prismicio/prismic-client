@@ -1,22 +1,22 @@
-import { expectNever, expectType } from "ts-expect";
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismic from "../../src";
+import type * as prismic from "../../src"
 
-(value: prismic.Form): true => {
+;(value: prismic.Form): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				expectNever(value);
+				expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 
 expectType<prismic.Form>({
 	method: "GET",
@@ -31,7 +31,7 @@ expectType<prismic.Form>({
 			default: "string",
 		},
 	},
-});
+})
 
 /**
  * `method` must be "GET".
@@ -44,7 +44,7 @@ expectType<prismic.Form>({
 	name: "string",
 	rel: "string",
 	fields: {},
-});
+})
 
 /**
  * Supports optional `name` and `rel` properties.
@@ -54,4 +54,4 @@ expectType<prismic.Form>({
 	enctype: "string",
 	action: "string",
 	fields: {},
-});
+})

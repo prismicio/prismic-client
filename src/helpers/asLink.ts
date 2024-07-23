@@ -1,9 +1,10 @@
-import type { FilledContentRelationshipField } from "../types/value/contentRelationship";
-import type { PrismicDocument } from "../types/value/document";
-import { FilledLinkToWebField, LinkField, LinkType } from "../types/value/link";
-import type { FilledLinkToMediaField } from "../types/value/linkToMedia";
+import type { FilledContentRelationshipField } from "../types/value/contentRelationship"
+import type { PrismicDocument } from "../types/value/document"
+import type { FilledLinkToWebField, LinkField } from "../types/value/link"
+import { LinkType } from "../types/value/link"
+import type { FilledLinkToMediaField } from "../types/value/linkToMedia"
 
-import { documentToLinkField } from "./documentToLinkField";
+import { documentToLinkField } from "./documentToLinkField"
 
 /**
  * Resolves a link to a Prismic document to a URL
@@ -19,7 +20,7 @@ import { documentToLinkField } from "./documentToLinkField";
  */
 export type LinkResolverFunction<ReturnType = string | null | undefined> = (
 	linkToDocumentField: FilledContentRelationshipField,
-) => ReturnType;
+) => ReturnType
 
 /**
  * Configuration that determines the output of `asLink()`.
@@ -30,8 +31,8 @@ type AsLinkConfig<LinkResolverFunctionReturnType = string | null | undefined> =
 		 * An optional link resolver function. Without it, you are expected to use
 		 * the `routes` options from the API.
 		 */
-		linkResolver?: LinkResolverFunction<LinkResolverFunctionReturnType> | null;
-	};
+		linkResolver?: LinkResolverFunction<LinkResolverFunctionReturnType> | null
+	}
 
 // TODO: Remove when we remove support for deprecated tuple-style configuration.
 /**
@@ -39,9 +40,7 @@ type AsLinkConfig<LinkResolverFunctionReturnType = string | null | undefined> =
  */
 type AsLinkDeprecatedTupleConfig<
 	LinkResolverFunctionReturnType = string | null | undefined,
-> = [
-	linkResolver?: LinkResolverFunction<LinkResolverFunctionReturnType> | null,
-];
+> = [linkResolver?: LinkResolverFunction<LinkResolverFunctionReturnType> | null]
 
 /**
  * The return type of `asLink()`.
@@ -59,7 +58,7 @@ export type AsLinkReturnType<
 	| FilledContentRelationshipField
 	| PrismicDocument
 	? LinkResolverFunctionReturnType | string | null
-	: null;
+	: null
 
 // TODO: Remove overload when we remove support for deprecated tuple-style configuration.
 export const asLink: {
@@ -90,7 +89,7 @@ export const asLink: {
 	>(
 		linkFieldOrDocument: Field,
 		config?: AsLinkConfig<LinkResolverFunctionReturnType>,
-	): AsLinkReturnType<LinkResolverFunctionReturnType, Field>;
+	): AsLinkReturnType<LinkResolverFunctionReturnType, Field>
 
 	/**
 	 * Resolves any type of link field or Prismic document to a URL.
@@ -122,7 +121,7 @@ export const asLink: {
 	>(
 		linkFieldOrDocument: Field,
 		...config: AsLinkDeprecatedTupleConfig<LinkResolverFunctionReturnType>
-	): AsLinkReturnType<LinkResolverFunctionReturnType, Field>;
+	): AsLinkReturnType<LinkResolverFunctionReturnType, Field>
 } = <
 	LinkResolverFunctionReturnType = string | null | undefined,
 	Field extends LinkField | PrismicDocument | null | undefined =
@@ -138,7 +137,7 @@ export const asLink: {
 		| AsLinkDeprecatedTupleConfig<LinkResolverFunctionReturnType>
 ): AsLinkReturnType<LinkResolverFunctionReturnType, Field> => {
 	if (!linkFieldOrDocument) {
-		return null as AsLinkReturnType<LinkResolverFunctionReturnType, Field>;
+		return null as AsLinkReturnType<LinkResolverFunctionReturnType, Field>
 	}
 
 	// Converts document to link field if needed
@@ -151,20 +150,20 @@ export const asLink: {
 			"link_type" in linkFieldOrDocument
 				? linkFieldOrDocument
 				: documentToLinkField(linkFieldOrDocument)
-		) as LinkField;
+		) as LinkField
 
 	// TODO: Remove when we remove support for deprecated tuple-style configuration.
-	const [configObjectOrLinkResolver] = configObjectOrTuple;
-	let config: AsLinkConfig<LinkResolverFunctionReturnType>;
+	const [configObjectOrLinkResolver] = configObjectOrTuple
+	let config: AsLinkConfig<LinkResolverFunctionReturnType>
 	if (
 		typeof configObjectOrLinkResolver === "function" ||
 		configObjectOrLinkResolver == null
 	) {
 		config = {
 			linkResolver: configObjectOrLinkResolver,
-		};
+		}
 	} else {
-		config = { ...configObjectOrLinkResolver };
+		config = { ...configObjectOrLinkResolver }
 	}
 
 	switch (linkField.link_type) {
@@ -173,18 +172,18 @@ export const asLink: {
 			return ("url" in linkField ? linkField.url : null) as AsLinkReturnType<
 				LinkResolverFunctionReturnType,
 				Field
-			>;
+			>
 
 		case LinkType.Document: {
 			if ("id" in linkField && config.linkResolver) {
 				// When using link resolver...
-				const resolvedURL = config.linkResolver(linkField);
+				const resolvedURL = config.linkResolver(linkField)
 
 				if (resolvedURL != null) {
 					return resolvedURL as AsLinkReturnType<
 						LinkResolverFunctionReturnType,
 						Field
-					>;
+					>
 				}
 			}
 
@@ -193,15 +192,15 @@ export const asLink: {
 				return linkField.url as AsLinkReturnType<
 					LinkResolverFunctionReturnType,
 					Field
-				>;
+				>
 			}
 
 			// When empty or link resolver and route resolver are not used...
-			return null as AsLinkReturnType<LinkResolverFunctionReturnType, Field>;
+			return null as AsLinkReturnType<LinkResolverFunctionReturnType, Field>
 		}
 
 		case LinkType.Any:
 		default:
-			return null as AsLinkReturnType<LinkResolverFunctionReturnType, Field>;
+			return null as AsLinkReturnType<LinkResolverFunctionReturnType, Field>
 	}
-};
+}

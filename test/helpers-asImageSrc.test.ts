@@ -1,11 +1,12 @@
-import { expect, it } from "vitest";
+import { expect, it } from "vitest"
 
-import { ImageField, asImageSrc } from "../src";
+import type { ImageField } from "../src"
+import { asImageSrc } from "../src"
 
 it("returns null for nullish inputs", () => {
-	expect(asImageSrc(null)).toBeNull();
-	expect(asImageSrc(undefined)).toBeNull();
-});
+	expect(asImageSrc(null)).toBeNull()
+	expect(asImageSrc(undefined)).toBeNull()
+})
 
 it("returns an image field URL", () => {
 	const field: ImageField = {
@@ -20,10 +21,10 @@ it("returns an image field URL", () => {
 		alt: null,
 		copyright: null,
 		dimensions: { width: 400, height: 300 },
-	};
+	}
 
-	expect(asImageSrc(field)).toBe(field.url);
-});
+	expect(asImageSrc(field)).toBe(field.url)
+})
 
 it("applies given Imgix URL parameters", () => {
 	const field: ImageField = {
@@ -38,15 +39,15 @@ it("applies given Imgix URL parameters", () => {
 		alt: null,
 		copyright: null,
 		dimensions: { width: 400, height: 300 },
-	};
+	}
 
-	expect(asImageSrc(field, { sat: 100 })).toBe(`${field.url}&sat=100`);
-	expect(asImageSrc(field, { w: 100 })).toBe(`${field.url}&w=100`);
-	expect(asImageSrc(field, { width: 100 })).toBe(`${field.url}&width=100`);
-});
+	expect(asImageSrc(field, { sat: 100 })).toBe(`${field.url}&sat=100`)
+	expect(asImageSrc(field, { w: 100 })).toBe(`${field.url}&w=100`)
+	expect(asImageSrc(field, { width: 100 })).toBe(`${field.url}&width=100`)
+})
 
 it("returns null when image field is empty", () => {
-	const field: ImageField<null, "empty"> = {};
+	const field: ImageField<null, "empty"> = {}
 
-	expect(asImageSrc(field)).toBeNull();
-});
+	expect(asImageSrc(field)).toBeNull()
+})

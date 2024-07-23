@@ -1,29 +1,29 @@
-import { expectNever, expectType } from "ts-expect";
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismic from "../../src";
+import type * as prismic from "../../src"
 
-(value: prismic.SharedSliceVariation): true => {
+;(value: prismic.SharedSliceVariation): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				expectNever(value);
+				expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 
 expectType<prismic.SharedSliceVariation>({
 	variation: "string",
 	version: "string",
 	primary: {},
 	items: [],
-});
+})
 
 /**
  * Supports custom API ID.
@@ -33,14 +33,14 @@ expectType<prismic.SharedSliceVariation<"foo">>({
 	version: "string",
 	primary: {},
 	items: [],
-});
+})
 expectType<prismic.SharedSliceVariation<"foo">>({
 	// @ts-expect-error - Variation type must match the given type.
 	variation: "string",
 	version: "string",
 	primary: {},
 	items: [],
-});
+})
 
 /**
  * Supports custom primary fields type.
@@ -60,7 +60,7 @@ expectType<
 		baz: false,
 	},
 	items: [],
-});
+})
 
 /**
  * Supports custom items fields type.
@@ -82,7 +82,7 @@ expectType<
 			baz: false,
 		},
 	],
-});
+})
 
 /**
  * Does not support groups in items section.
@@ -99,4 +99,4 @@ expectType<
 	version: "string",
 	primary: {},
 	items: [],
-});
+})

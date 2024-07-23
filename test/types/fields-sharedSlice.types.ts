@@ -1,22 +1,22 @@
-import { expectNever, expectType } from "ts-expect";
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismic from "../../src";
+import type * as prismic from "../../src"
 
-(value: prismic.SharedSlice): true => {
+;(value: prismic.SharedSlice): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				expectNever(value);
+				expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 
 expectType<prismic.SharedSlice>({
 	id: "id",
@@ -26,7 +26,7 @@ expectType<prismic.SharedSlice>({
 	version: "string",
 	primary: {},
 	items: [],
-});
+})
 
 /**
  * Supports custom shared Slice type API ID.
@@ -39,7 +39,7 @@ expectType<prismic.SharedSlice<"foo">>({
 	version: "string",
 	primary: {},
 	items: [],
-});
+})
 expectType<prismic.SharedSlice<"foo">>({
 	id: "id",
 	// @ts-expect-error - Slice type must match the given type.
@@ -49,7 +49,7 @@ expectType<prismic.SharedSlice<"foo">>({
 	version: "string",
 	primary: {},
 	items: [],
-});
+})
 
 /**
  * Supports custom variation types.
@@ -62,7 +62,7 @@ expectType<prismic.SharedSlice<string, prismic.SharedSliceVariation<"foo">>>({
 	version: "string",
 	primary: {},
 	items: [],
-});
+})
 expectType<prismic.SharedSlice<string, prismic.SharedSliceVariation<"foo">>>({
 	id: "id",
 	slice_type: "string",
@@ -72,4 +72,4 @@ expectType<prismic.SharedSlice<string, prismic.SharedSliceVariation<"foo">>>({
 	version: "string",
 	primary: {},
 	items: [],
-});
+})

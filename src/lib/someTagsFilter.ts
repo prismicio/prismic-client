@@ -1,6 +1,6 @@
-import { filter } from "../filter";
+import { filter } from "../filter"
 
-import { castArray } from "./castArray";
+import { castArray } from "./castArray"
 
 /**
  * Creates a filter to filter content by document tags. At least one matching
@@ -11,5 +11,5 @@ import { castArray } from "./castArray";
  * @returns A filter that can be used in a Prismic REST API V2 request.
  */
 export const someTagsFilter = (tags: string | string[]): string => {
-	return filter.any("document.tags", castArray(tags));
-};
+	return filter.any("document.tags", castArray(tags))
+}

@@ -1,4 +1,4 @@
-import { PrismicError } from "./PrismicError";
+import { PrismicError } from "./PrismicError"
 
 export class NotFoundError<
 	TResponse = undefined,

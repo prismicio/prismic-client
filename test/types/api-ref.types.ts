@@ -1,22 +1,22 @@
-import { expectNever, expectType } from "ts-expect";
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismic from "../../src";
+import type * as prismic from "../../src"
 
-(value: prismic.Ref): true => {
+;(value: prismic.Ref): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				expectNever(value);
+				expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 
 expectType<prismic.Ref>({
 	id: "string",
@@ -24,7 +24,7 @@ expectType<prismic.Ref>({
 	label: "string",
 	isMasterRef: true,
 	scheduledAt: "string",
-});
+})
 
 /**
  * Supports optional `scheduledAt` property.
@@ -34,4 +34,4 @@ expectType<prismic.Ref>({
 	ref: "string",
 	label: "string",
 	isMasterRef: true,
-});
+})

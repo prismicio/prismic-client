@@ -1,4 +1,4 @@
-import type { CustomTypeModelFieldType } from "./types";
+import type { CustomTypeModelFieldType } from "./types"
 
 /**
  * A timestamp custom type field.
@@ -6,10 +6,10 @@ import type { CustomTypeModelFieldType } from "./types";
  * More details: {@link https://prismic.io/docs/timestamp}
  */
 export interface CustomTypeModelTimestampField {
-	type: typeof CustomTypeModelFieldType.Timestamp;
+	type: typeof CustomTypeModelFieldType.Timestamp
 	config?: {
-		label?: string | null;
-		placeholder?: string;
-		default?: string;
-	};
+		label?: string | null
+		placeholder?: string
+		default?: string
+	}
 }

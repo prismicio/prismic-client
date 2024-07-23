@@ -7,8 +7,8 @@
  */
 // TODO: This does not detect all relative URLs as internal such as `about` or `./about`. This function assumes relative URLs start with a "/" or "#"`.
 export const isInternalURL = (url: string): boolean => {
-	const isInternal = /^(\/(?!\/)|#)/.test(url);
-	const isSpecialLink = !isInternal && !/^https?:\/\//.test(url);
+	const isInternal = /^(\/(?!\/)|#)/.test(url)
+	const isSpecialLink = !isInternal && !/^https?:\/\//.test(url)
 
-	return isInternal && !isSpecialLink;
-};
+	return isInternal && !isSpecialLink
+}

@@ -1,4 +1,4 @@
-import * as prismic from "../../src";
+import type * as prismic from "../../src"
 
 export const partialHTMLRichTextMapSerializer: prismic.HTMLRichTextMapSerializer =
 	{
@@ -7,4 +7,4 @@ export const partialHTMLRichTextMapSerializer: prismic.HTMLRichTextMapSerializer
 		heading2: undefined,
 		// `undefined` returning serializers should fallback to default serializer.
 		heading3: () => undefined,
-	};
+	}

@@ -1,4 +1,4 @@
-import { Ref } from "./ref";
+import type { Ref } from "./ref"
 
 /**
  * Metadata for a Release.
@@ -9,4 +9,4 @@ import { Ref } from "./ref";
  * @see {@link Ref}
  * @see More details on Releases: {@link https://prismic.io/docs/guides/draft-plan-and-schedule-content#releases}
  */
-export type Release = Ref;
+export type Release = Ref

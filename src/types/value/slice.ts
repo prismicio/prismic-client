@@ -1,4 +1,4 @@
-import type { AnyRegularField } from "./types";
+import type { AnyRegularField } from "./types"
 
 /**
  * A Slice - sections of your webpages.
@@ -16,9 +16,9 @@ export interface Slice<
 		AnyRegularField
 	>,
 > {
-	slice_type: SliceType;
-	slice_label: string | null;
-	id: string;
-	primary: PrimaryFields;
-	items: ItemsFields[];
+	slice_type: SliceType
+	slice_label: string | null
+	id: string
+	primary: PrimaryFields
+	items: ItemsFields[]
 }

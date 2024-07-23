@@ -1,6 +1,6 @@
-import { Ref } from "../types/api/ref";
+import type { Ref } from "../types/api/ref"
 
-import { findRef } from "./findRef";
+import { findRef } from "./findRef"
 
 /**
  * Returns the ref from a list of given refs with a matching label.
@@ -13,5 +13,5 @@ import { findRef } from "./findRef";
  * @throws If a matching ref cannot be found.
  */
 export const findRefByLabel = (refs: Ref[], label: string): Ref => {
-	return findRef(refs, (ref) => ref.label === label);
-};
+	return findRef(refs, (ref) => ref.label === label)
+}

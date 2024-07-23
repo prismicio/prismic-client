@@ -1,22 +1,22 @@
-import { expectNever, expectType } from "ts-expect";
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismic from "../../src";
+import * as prismic from "../../src"
 
-(value: prismic.EmbedField): true => {
+;(value: prismic.EmbedField): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				expectNever(value);
+				expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 
 /**
  * `EmbedType` keeps compatibility with other versions.
@@ -26,12 +26,12 @@ import * as prismic from "../../src";
 const ForeignEmbedType = {
 	Link: "link",
 	Breaking: "breaking",
-} as const;
-expectType<typeof prismic.OEmbedType.Link>(ForeignEmbedType.Link);
+} as const
+expectType<typeof prismic.OEmbedType.Link>(ForeignEmbedType.Link)
 expectType<typeof prismic.OEmbedType.Link>(
 	// @ts-expect-error - `EmbedType` should still fail with breaking changes
 	ForeignEmbedType.Breaking,
-);
+)
 
 /**
  * Filled state.
@@ -50,13 +50,13 @@ expectType<prismic.EmbedField>({
 	thumbnail_width: null,
 	thumbnail_height: null,
 	html: null,
-});
+})
 expectType<prismic.EmbedField<prismic.LinkOEmbed, "filled">>({
 	embed_url: "https://example.com",
 	type: prismic.OEmbedType.Link,
 	version: "1.0",
 	html: null,
-});
+})
 expectType<prismic.EmbedField<prismic.LinkOEmbed, "empty">>({
 	// @ts-expect-error - Empty fields cannot contain a filled value.
 	embed_url: "https://example.com",
@@ -66,17 +66,17 @@ expectType<prismic.EmbedField<prismic.LinkOEmbed, "empty">>({
 	version: "1.0",
 	// @ts-expect-error - Empty fields cannot contain a filled value.
 	html: null,
-});
+})
 
 /**
  * Empty state.
  */
-expectType<prismic.EmbedField>({});
-expectType<prismic.EmbedField<prismic.AnyOEmbed, "empty">>({});
+expectType<prismic.EmbedField>({})
+expectType<prismic.EmbedField<prismic.AnyOEmbed, "empty">>({})
 expectType<prismic.EmbedField<prismic.AnyOEmbed, "filled">>(
 	// @ts-expect-error - Filled fields cannot contain an empty value.
 	{},
-);
+)
 
 /**
  * Includes common oEmbed data by default.
@@ -95,7 +95,7 @@ expectType<prismic.EmbedField>({
 	thumbnail_width: 666,
 	thumbnail_height: 999,
 	html: "html",
-});
+})
 
 /**
  * Supports unknown keys by default.
@@ -115,7 +115,7 @@ expectType<prismic.EmbedField>({
 	thumbnail_height: null,
 	html: null,
 	unknown_key: "string",
-});
+})
 
 /**
  * Supports custom oEmbed data.
@@ -126,7 +126,7 @@ expectType<prismic.EmbedField<prismic.LinkOEmbed & { foo: "bar" }>>({
 	version: "1.0",
 	html: null,
 	foo: "bar",
-});
+})
 
 /**
  * Gives priority to custom oEmbed data.
@@ -138,4 +138,4 @@ expectType<prismic.EmbedField<prismic.LinkOEmbed & { foo: "bar" }>>({
 	html: null,
 	// @ts-expect-error - Now expects `foo` to be `"bar"`.
 	foo: "baz",
-});
+})

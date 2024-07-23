@@ -1,15 +1,15 @@
-import type { CustomTypeModelFieldType } from "./types";
+import type { CustomTypeModelFieldType } from "./types"
 
 /**
  * @deprecated - Legacy field. Use `CustomTypeModelNumberField` instead.
  */
 export interface CustomTypeModelRangeField {
-	type: typeof CustomTypeModelFieldType.Range;
+	type: typeof CustomTypeModelFieldType.Range
 	config?: {
-		label?: string | null;
-		placeholder?: string;
-		min?: number;
-		max?: number;
-		step?: number;
-	};
+		label?: string | null
+		placeholder?: string
+		min?: number
+		max?: number
+		step?: number
+	}
 }

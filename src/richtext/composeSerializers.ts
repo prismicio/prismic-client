@@ -1,4 +1,4 @@
-import { RichTextFunctionSerializer } from "./types";
+import type { RichTextFunctionSerializer } from "./types"
 
 /**
  * Takes an array of serializers and returns a serializer applying provided
@@ -22,15 +22,15 @@ export const composeSerializers = <SerializerReturnType>(
 ): RichTextFunctionSerializer<SerializerReturnType> => {
 	return (...args) => {
 		for (let i = 0; i < serializers.length; i++) {
-			const serializer = serializers[i];
+			const serializer = serializers[i]
 
 			if (serializer) {
-				const res = serializer(...args);
+				const res = serializer(...args)
 
 				if (res != null) {
-					return res;
+					return res
 				}
 			}
 		}
-	};
-};
+	}
+}

@@ -9,5 +9,5 @@
  * @returns `a` as a a thunk.
  */
 export const castThunk = <A>(a: A | (() => A)): (() => A) => {
-	return typeof a === "function" ? (a as () => A) : () => a;
-};
+	return typeof a === "function" ? (a as () => A) : () => a
+}

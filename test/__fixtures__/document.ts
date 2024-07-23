@@ -1,7 +1,7 @@
-import emptyDocumentJSON from "./emptyDocument.json";
+import emptyDocumentJSON from "./emptyDocument.json"
 
-import * as prismic from "../../src";
+import type * as prismic from "../../src"
 
 export const documentFixture = {
 	empty: emptyDocumentJSON as prismic.PrismicDocument,
-};
+}

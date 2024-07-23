@@ -1,4 +1,4 @@
-import { CustomTypeModelField } from "./types";
+import type { CustomTypeModelField } from "./types"
 
 /**
  * A Prismic custom type model.
@@ -13,35 +13,35 @@ export interface CustomTypeModel<
 	/**
 	 * The ID of the custom type model.
 	 */
-	id: ID;
+	id: ID
 
 	/**
 	 * The human readable name of the custom type model.
 	 */
 	// TODO: Revert to `label?: string | null` if `label` can be partial in: https://github.com/prismicio/prismic-types-internal/blob/HEAD/src/customtypes/CustomType.ts#L39
-	label: string | null | undefined;
+	label: string | null | undefined
 
 	/**
 	 * The format of the custom type model.
 	 *
 	 * Fallback to "custom" if undefined.
 	 */
-	format?: "page" | "custom";
+	format?: "page" | "custom"
 
 	/**
 	 * Determines if more than one document for the custom type can be created.
 	 */
-	repeatable: boolean;
+	repeatable: boolean
 
 	/**
 	 * The custom type model definition.
 	 */
-	json: Definition;
+	json: Definition
 
 	/**
 	 * Determines if new documents for the custom type can be created.
 	 */
-	status: boolean;
+	status: boolean
 }
 
 /**
@@ -52,7 +52,7 @@ export interface CustomTypeModel<
 export type CustomTypeModelDefinition<TabName extends string = string> = Record<
 	TabName,
 	CustomTypeModelTab
->;
+>
 
 /**
  * A custom type's tab. Each tab can contain any number of fields but is limited
@@ -65,4 +65,4 @@ export type CustomTypeModelTab<
 		string,
 		CustomTypeModelField
 	>,
-> = Fields;
+> = Fields

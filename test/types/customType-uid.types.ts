@@ -1,31 +1,31 @@
-import { expectNever, expectType } from "ts-expect";
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes";
+import type * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes"
 
-import * as prismic from "../../src";
+import * as prismic from "../../src"
 
-(value: prismic.CustomTypeModelUIDField): true => {
+;(value: prismic.CustomTypeModelUIDField): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				expectNever(value);
+				expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 
 expectType<prismic.CustomTypeModelUIDField>({
 	type: prismic.CustomTypeModelFieldType.UID,
 	config: {
 		label: "string",
 	},
-});
+})
 
 /**
  * Supports optional placeholder.
@@ -36,14 +36,14 @@ expectType<prismic.CustomTypeModelUIDField>({
 		label: "string",
 		placeholder: "string",
 	},
-});
+})
 
 /**
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
-expectType<prismic.CustomTypeModelUIDField>({} as prismicTICustomTypes.UID);
+expectType<prismic.CustomTypeModelUIDField>({} as prismicTICustomTypes.UID)
 
 /**
  * `@prismicio/types-internal` extends `@prismicio/types`
  */
-expectType<prismicTICustomTypes.UID>({} as prismic.CustomTypeModelUIDField);
+expectType<prismicTICustomTypes.UID>({} as prismic.CustomTypeModelUIDField)

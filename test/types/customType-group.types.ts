@@ -1,24 +1,24 @@
-import { expectNever, expectType } from "ts-expect";
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes";
+import type * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes"
 
-import * as prismic from "../../src";
+import * as prismic from "../../src"
 
-(value: prismic.CustomTypeModelGroupField): true => {
+;(value: prismic.CustomTypeModelGroupField): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				expectNever(value);
+				expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 
 expectType<prismic.CustomTypeModelGroupField>({
 	type: prismic.CustomTypeModelFieldType.Group,
@@ -33,7 +33,7 @@ expectType<prismic.CustomTypeModelGroupField>({
 			},
 		},
 	},
-});
+})
 
 /**
  * Does not support a placeholder.
@@ -46,14 +46,14 @@ expectType<prismic.CustomTypeModelGroupField>({
 		placeholder: "string",
 		fields: {},
 	},
-});
+})
 
 /**
  * Supports custom fields.
  */
 expectType<
 	prismic.CustomTypeModelGroupField<{
-		foo: prismic.CustomTypeModelBooleanField;
+		foo: prismic.CustomTypeModelBooleanField
 	}>
 >({
 	type: prismic.CustomTypeModelFieldType.Group,
@@ -75,7 +75,7 @@ expectType<
 			},
 		},
 	},
-});
+})
 
 /**
  * Supports nested groups.
@@ -83,8 +83,8 @@ expectType<
 expectType<
 	prismic.CustomTypeModelGroupField<{
 		foo: prismic.CustomTypeModelNestedGroupField<{
-			bar: prismic.CustomTypeModelBooleanField;
-		}>;
+			bar: prismic.CustomTypeModelBooleanField
+		}>
 	}>
 >({
 	type: prismic.CustomTypeModelFieldType.Group,
@@ -107,14 +107,14 @@ expectType<
 			},
 		},
 	},
-});
+})
 
 /**
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
-expectType<prismic.CustomTypeModelGroupField>({} as prismicTICustomTypes.Group);
+expectType<prismic.CustomTypeModelGroupField>({} as prismicTICustomTypes.Group)
 
 /**
  * `@prismicio/types-internal` extends `@prismicio/types`
  */
-expectType<prismicTICustomTypes.Group>({} as prismic.CustomTypeModelGroupField);
+expectType<prismicTICustomTypes.Group>({} as prismic.CustomTypeModelGroupField)

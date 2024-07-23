@@ -1,12 +1,12 @@
-import { expect, it } from "vitest";
+import { expect, it } from "vitest"
 
-import { createTestClient } from "./__testutils__/createClient";
-import { createPagedQueryResponses } from "./__testutils__/createPagedQueryResponses";
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
-import { testGetAllMethod } from "./__testutils__/testAnyGetMethod";
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
-import { testFetchOptions } from "./__testutils__/testFetchOptions";
+import { createTestClient } from "./__testutils__/createClient"
+import { createPagedQueryResponses } from "./__testutils__/createPagedQueryResponses"
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
+import { testGetAllMethod } from "./__testutils__/testAnyGetMethod"
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
+import { testFetchOptions } from "./__testutils__/testFetchOptions"
 
 /**
  * The number of milliseconds in which a multi-page `getAll` (e.g. `getAll`,
@@ -20,7 +20,7 @@ import { testFetchOptions } from "./__testutils__/testFetchOptions";
  * note that changing `GET_ALL_QUERY_DELAY` in the public code may have an
  * effect on tests using this test-specific constant.
  */
-export const GET_ALL_QUERY_DELAY = 500;
+export const GET_ALL_QUERY_DELAY = 500
 
 /**
  * Tolerance in number of milliseconds for the duration of a simulated network
@@ -29,11 +29,11 @@ export const GET_ALL_QUERY_DELAY = 500;
  * If tests are failing due to incorrect timed durations, increase the tolerance
  * amount.
  */
-const NETWORK_REQUEST_DURATION_TOLERANCE = 300;
+const NETWORK_REQUEST_DURATION_TOLERANCE = 300
 
 testGetAllMethod("returns all documents from paginated response", {
 	run: (client) => client.dangerouslyGetAll(),
-});
+})
 
 testGetAllMethod("includes params if provided", {
 	run: (client) =>
@@ -47,7 +47,7 @@ testGetAllMethod("includes params if provided", {
 		ref: "custom-ref",
 		lang: "*",
 	},
-});
+})
 
 testGetAllMethod("includes default params if provided", {
 	run: (client) => client.dangerouslyGetAll(),
@@ -59,7 +59,7 @@ testGetAllMethod("includes default params if provided", {
 	requiredParams: {
 		lang: "*",
 	},
-});
+})
 
 testGetAllMethod("merges params and default params if provided", {
 	run: (client) =>
@@ -80,7 +80,7 @@ testGetAllMethod("merges params and default params if provided", {
 		ref: "overridden-ref",
 		lang: "fr-fr",
 	},
-});
+})
 
 testGetAllMethod(
 	"uses the default pageSize when given a falsey pageSize param",
@@ -93,7 +93,7 @@ testGetAllMethod(
 			pageSize: "100",
 		},
 	},
-);
+)
 
 testGetAllMethod("optimizes pageSize when limit is below the pageSize", {
 	run: (client) =>
@@ -104,7 +104,7 @@ testGetAllMethod("optimizes pageSize when limit is below the pageSize", {
 	requiredParams: {
 		pageSize: "3",
 	},
-});
+})
 
 testGetAllMethod(
 	"does not optimize pageSize when limit is above the pageSize",
@@ -118,16 +118,16 @@ testGetAllMethod(
 			pageSize: "100",
 		},
 	},
-);
+)
 
 it("throttles requests past first page", async (ctx) => {
-	const numPages = 3;
+	const numPages = 3
 	const queryResponses = createPagedQueryResponses({
 		ctx,
 		pages: numPages,
-	});
+	})
 
-	const queryDelay = 200;
+	const queryDelay = 200
 
 	mockPrismicRestAPIV2({
 		ctx,
@@ -136,17 +136,17 @@ it("throttles requests past first page", async (ctx) => {
 			pageSize: "100",
 		},
 		queryDelay,
-	});
+	})
 
-	const client = createTestClient();
+	const client = createTestClient()
 
-	const startTime = Date.now();
-	await client.dangerouslyGetAll();
-	const endTime = Date.now();
+	const startTime = Date.now()
+	await client.dangerouslyGetAll()
+	const endTime = Date.now()
 
-	const totalTime = endTime - startTime;
-	const minTime = numPages * queryDelay + (numPages - 1) * 500;
-	const maxTime = minTime + NETWORK_REQUEST_DURATION_TOLERANCE;
+	const totalTime = endTime - startTime
+	const minTime = numPages * queryDelay + (numPages - 1) * 500
+	const maxTime = minTime + NETWORK_REQUEST_DURATION_TOLERANCE
 
 	// The total time should be the amount of time it takes to resolve all
 	// network requests in addition to a delay between requests (accounting for
@@ -154,15 +154,15 @@ it("throttles requests past first page", async (ctx) => {
 	expect(
 		minTime <= totalTime && totalTime <= maxTime,
 		`Total time should be between ${minTime}ms and ${maxTime}ms (inclusive), but was ${totalTime}ms`,
-	).toBe(true);
-});
+	).toBe(true)
+})
 
 it("does not throttle single page queries", async (ctx) => {
 	const queryResponses = createPagedQueryResponses({
 		ctx,
 		pages: 1,
-	});
-	const queryDelay = 200;
+	})
+	const queryDelay = 200
 
 	mockPrismicRestAPIV2({
 		ctx,
@@ -171,17 +171,17 @@ it("does not throttle single page queries", async (ctx) => {
 			pageSize: "100",
 		},
 		queryDelay,
-	});
+	})
 
-	const client = createTestClient();
+	const client = createTestClient()
 
-	const startTime = Date.now();
-	await client.dangerouslyGetAll();
-	const endTime = Date.now();
+	const startTime = Date.now()
+	await client.dangerouslyGetAll()
+	const endTime = Date.now()
 
-	const totalTime = endTime - startTime;
-	const minTime = queryDelay;
-	const maxTime = minTime + NETWORK_REQUEST_DURATION_TOLERANCE;
+	const totalTime = endTime - startTime
+	const minTime = queryDelay
+	const maxTime = minTime + NETWORK_REQUEST_DURATION_TOLERANCE
 
 	// The total time should only be the amount of time it takes to resolve the
 	// network request (accounting for some tolerance). In other words, there is
@@ -189,18 +189,18 @@ it("does not throttle single page queries", async (ctx) => {
 	expect(
 		minTime <= totalTime && totalTime <= maxTime,
 		`Total time should be between ${minTime}ms and ${maxTime}ms (inclusive), but was ${totalTime}ms`,
-	).toBe(true);
-});
+	).toBe(true)
+})
 
 testFetchOptions("supports fetch options", {
 	run: (client, params) => client.dangerouslyGetAll(params),
-});
+})
 
 testAbortableMethod("is abortable with an AbortController", {
 	run: (client, params) => client.dangerouslyGetAll(params),
-});
+})
 
 testConcurrentMethod("shares concurrent equivalent network requests", {
 	run: (client, params) => client.dangerouslyGetAll(params),
 	mode: "getAll",
-});
+})

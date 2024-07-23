@@ -1,9 +1,9 @@
-import type { FilledContentRelationshipField } from "../types/value/contentRelationship";
-import type { PrismicDocument } from "../types/value/document";
-import { LinkType } from "../types/value/link";
+import type { FilledContentRelationshipField } from "../types/value/contentRelationship"
+import type { PrismicDocument } from "../types/value/document"
+import { LinkType } from "../types/value/link"
 
 type SetOptional<T, Keys extends keyof T> = Omit<T, Keys> &
-	Partial<Pick<T, Keys>>;
+	Partial<Pick<T, Keys>>
 
 /**
  * Converts a document into a link field, this is useful when crawling the API
@@ -45,5 +45,5 @@ export const documentToLinkField = <
 		...(prismicDocument.data && Object.keys(prismicDocument.data).length > 0
 			? { data: prismicDocument.data }
 			: {}),
-	};
-};
+	}
+}
