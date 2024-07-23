@@ -25,7 +25,7 @@ export const serializeImage = (node: Element): RTImageNode => {
 		);
 	}
 
-	const url = new URL(src);
+	const url = new URL(src, "https://noop.com");
 
 	let width = node.properties?.width as number | undefined;
 	let height = node.properties?.height as number | undefined;

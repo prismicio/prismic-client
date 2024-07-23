@@ -115,8 +115,12 @@ describe("transforms HTML to rich text", () => {
 	});
 
 	describe("image", () => {
-		testHTMLAsRichTextHelper("non-prismic", {
+		testHTMLAsRichTextHelper("absolute", {
 			input: /* html */ `<img src="https://example.com/foo.png" alt="foo" />`,
+		});
+
+		testHTMLAsRichTextHelper("relative", {
+			input: /* html */ `<img src="/foo.png" alt="foo" />`,
 		});
 
 		testHTMLAsRichTextHelper("prismic", {
