@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.7.0](https://github.com/prismicio/prismic-client/compare/v7.6.0...v7.7.0) (2024-07-23)
+
+
+### Features
+
+* add `unstable_htmlAsRichText` helpers ([#342](https://github.com/prismicio/prismic-client/issues/342)) ([8c5a82b](https://github.com/prismicio/prismic-client/commit/8c5a82b859ef0266e562da1f20eea5c9a785726b))
+
+
+### Chore
+
+* **deps:** maintain dependencies ([24df0e9](https://github.com/prismicio/prismic-client/commit/24df0e98ceaaf7244649cf8c1cc588ac55e0a86e))
+
 ## [7.6.0](https://github.com/prismicio/prismic-client/compare/v7.5.0...v7.6.0) (2024-06-20)
 
 
