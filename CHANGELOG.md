@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.7.3](https://github.com/prismicio/prismic-client/compare/v7.7.2...v7.7.3) (2024-07-23)
+
+
+### Bug Fixes
+
+* ignore trimmed empty spans ([6d1ce03](https://github.com/prismicio/prismic-client/commit/6d1ce035f7f5b3c112c3f00460190fdbd98e3543))
+
 ### [7.7.2](https://github.com/prismicio/prismic-client/compare/v7.7.1...v7.7.2) (2024-07-23)
 
 
