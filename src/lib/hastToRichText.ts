@@ -157,7 +157,7 @@ export const hastToRichText = (
 						case RichTextNodeType.em:
 						case RichTextNodeType.label:
 						case RichTextNodeType.hyperlink: {
-							const length = toString(node).length;
+							const length = toString(node).trimEnd().length;
 
 							try {
 								builder.appendSpan(shorthandOrNode, length);
@@ -238,7 +238,7 @@ export const hastToRichText = (
 					case RichTextNodeType.label:
 					case RichTextNodeType.hyperlink: {
 						const span = serializeSpan(node, match);
-						const length = toString(node).length;
+						const length = toString(node).trimEnd().length;
 
 						try {
 							builder.appendSpan(span, length);
