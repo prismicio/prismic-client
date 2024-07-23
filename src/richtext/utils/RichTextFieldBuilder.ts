@@ -137,8 +137,8 @@ export class RichTextFieldBuilder {
 		// Ensure that the last text node is trimmed.
 		this.cleanupLast();
 
-		// Because `RichTextField` is defined as a non-empty,
-		// array we have to cast `RTNode[]` to `RichTextField`.
+		// Because `RichTextField` is defined as a non-empty
+		// array, we have to cast `RTNode[]` to `RichTextField`.
 		return this.#nodes as RichTextField;
 	}
 
