@@ -13,6 +13,11 @@ testFilter(
 );
 
 testFilter(
+	'[at(my.product.description, "\\"quote\\"")]',
+	prismic.filter.at("my.product.description", '"quote"'),
+);
+
+testFilter(
 	"[at(my.product.price, 50)]",
 	prismic.filter.at("my.product.price", 50),
 );
