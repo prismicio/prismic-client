@@ -4,9 +4,9 @@ import { LinkType, asHTML } from "../../src";
 import {
 	unstable_htmlAsRichText,
 	unstable_markdownAsRichText,
-} from "../../src/richtext";
-import type { HTMLAsRichTextConfig } from "../../src/richtext/unstable_htmlAsRichText";
-import type { MarkdownAsRichTextConfig } from "../../src/richtext/unstable_markdownAsRichText";
+} from "../../src";
+import type { HTMLAsRichTextConfig } from "../../src/helpers/unstable_htmlAsRichText";
+import type { MarkdownAsRichTextConfig } from "../../src/helpers/unstable_markdownAsRichText";
 
 type TestAsRichTextHelperArgs<TConfig> = {
 	input: string;

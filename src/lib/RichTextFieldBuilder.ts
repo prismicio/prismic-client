@@ -4,7 +4,7 @@ import {
 	RTNode,
 	RTTextNode,
 	RichTextField,
-} from "../../types/value/richText";
+} from "../types/value/richText";
 
 import { PrismicRichTextError } from "../errors/PrismicRichTextError";
 

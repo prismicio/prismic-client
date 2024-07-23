@@ -2,9 +2,9 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 
-import { RichTextField } from "../types/value/richText";
+import { RehypeRichTextConfig, rehypeRichText } from "../lib/rehypeRichText";
 
-import { RehypeRichTextConfig, rehypeRichText } from "./utils/rehypeRichText";
+import { RichTextField } from "../types/value/richText";
 
 // Used for TSDocs only.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -18,7 +18,7 @@ export type MarkdownAsRichTextConfig = RehypeRichTextConfig;
 /**
  * The return type of {@link markdownAsRichText}.
  */
-export type MarkdownAsRichTextReturnType = {
+type MarkdownAsRichTextReturnType = {
 	result: RichTextField;
 	warnings: string[];
 };

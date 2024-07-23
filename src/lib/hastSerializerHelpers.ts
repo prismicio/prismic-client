@@ -1,13 +1,9 @@
 import { Element } from "hast";
 import { toHtml } from "hast-util-to-html";
 
-import { OEmbedType } from "../../types/value/embed";
-import { LinkType } from "../../types/value/link";
-import {
-	RTEmbedNode,
-	RTImageNode,
-	RTLinkNode,
-} from "../../types/value/richText";
+import { OEmbedType } from "../types/value/embed";
+import { LinkType } from "../types/value/link";
+import { RTEmbedNode, RTImageNode, RTLinkNode } from "../types/value/richText";
 
 import { PrismicRichTextSerializerError } from "../errors/PrismicRichTextSerializerError";
 

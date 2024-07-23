@@ -11,14 +11,15 @@ import {
 	RTTextNode,
 	RichTextField,
 	RichTextNodeType,
-} from "../../types/value/richText";
+} from "../types/value/richText";
+
+import { PrismicRichTextSerializerError } from "../errors/PrismicRichTextSerializerError";
+
 import {
 	RichTextHTMLMapSerializer,
 	RichTextHTMLMapSerializerFunction,
 	RichTextHTMLMapSerializerShorthand,
-} from "../types";
-
-import { PrismicRichTextSerializerError } from "../errors/PrismicRichTextSerializerError";
+} from "../helpers/unstable_htmlAsRichText";
 
 import { RichTextFieldBuilder } from "./RichTextFieldBuilder";
 import {

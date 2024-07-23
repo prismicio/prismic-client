@@ -1,5 +1,3 @@
-import { Element } from "hast";
-
 import {
 	RTAnyNode,
 	RTEmNode,
@@ -11,12 +9,10 @@ import {
 	RTHeading5Node,
 	RTHeading6Node,
 	RTImageNode,
-	RTInlineNode,
 	RTLabelNode,
 	RTLinkNode,
 	RTListItemNode,
 	RTListNode,
-	RTNode,
 	RTOListItemNode,
 	RTOListNode,
 	RTParagraphNode,
@@ -26,8 +22,6 @@ import {
 	RichTextNodeType,
 	RichTextNodeTypes,
 } from "../types/value/richText";
-
-import { RTPartialInlineNode } from "./utils/RichTextFieldBuilder";
 
 // Serializers
 
@@ -158,68 +152,3 @@ export const RichTextReversedNodeType = {
 	[RichTextNodeType.list]: "list",
 	[RichTextNodeType.oList]: "oList",
 } as const;
-
-// hast serializers
-
-/**
- * A shorthand definition for {@link RichTextHTMLMapSerializer} rich text node
- * types.
- *
- * @remarks
- * The `label` rich text node type is not available as is. Use an object
- * containing your label name to convert to label nodes instead. For example:
- * `u: { label: "underline" }`
- * @remarks
- * The `span` rich text node type is not available as it is not relevant in the
- * context of going from HTML to Prismic rich text.
- */
-export type RichTextHTMLMapSerializerShorthand =
-	| Exclude<RichTextNodeTypes, "label" | "span">
-	| { label: string };
-
-/**
- * The payload provided to a {@link RichTextHTMLMapSerializerFunction}.
- */
-type RichTextHTMLMapSerializerFunctionPayload = {
-	/**
-	 * The hast {@link Element} node to serialize.
-	 */
-	node: Element;
-
-	/**
-	 * Additional context information to help with the serialization.
-	 */
-	context: {
-		/**
-		 * The list type of the last list node encountered if any.
-		 */
-		listType?: "group-list-item" | "group-o-list-item";
-	};
-};
-
-/**
- * Serializes a hast {@link Element} node to a
- * {@link RichTextHTMLMapSerializerShorthand} or a rich text node.
- *
- * @remarks
- * Serializing to a rich text node directly is not recommended and is only
- * available as an escape hatch. Prefer returning a
- * {@link RichTextHTMLMapSerializerShorthand} instead.
- */
-export type RichTextHTMLMapSerializerFunction = (
-	payload: RichTextHTMLMapSerializerFunctionPayload,
-) =>
-	| RichTextHTMLMapSerializerShorthand
-	| RTNode
-	| RTInlineNode
-	| RTPartialInlineNode
-	| undefined;
-
-/**
- * Serializes a hast {@link Element} node matching the given HTML tag name or CSS
- * selector to a Prismic rich text node.
- */
-export type RichTextHTMLMapSerializer = Record<
-	string,
-	RichTextHTMLMapSerializerShorthand | RichTextHTMLMapSerializerFunction
->;

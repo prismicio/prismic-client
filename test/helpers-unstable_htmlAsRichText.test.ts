@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { testHTMLAsRichTextHelper } from "../__testutils__/testAsRichTextHelper";
+import { testHTMLAsRichTextHelper } from "./__testutils__/testAsRichTextHelper";
 
-import { unstable_htmlAsRichText } from "../../src/richtext";
+import { unstable_htmlAsRichText } from "../src";
 
 describe("transforms HTML to rich text", () => {
 	describe("basic", () => {

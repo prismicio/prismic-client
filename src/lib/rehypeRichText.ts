@@ -6,11 +6,10 @@ import { remove } from "unist-util-remove";
 import { SKIP, visit } from "unist-util-visit";
 import { VFile } from "vfile";
 
-import { CustomTypeModelRichTextField } from "../../types/model/richText";
-import { RichTextField } from "../../types/value/richText";
+import { CustomTypeModelRichTextField } from "../types/model/richText";
+import { RichTextField } from "../types/value/richText";
 
-import { filterRichTextField } from "../filterRichTextField";
-
+import { filterRichTextField } from "./filterRichTextField";
 import { HASTToRichTextConfig, hastToRichText } from "./hastToRichText";
 
 /**

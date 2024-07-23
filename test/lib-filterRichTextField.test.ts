@@ -1,14 +1,9 @@
 import { expect, it } from "vitest";
 
-import { createRichTextFixtures } from "../__testutils__/createRichTextFixtures";
+import { createRichTextFixtures } from "./__testutils__/createRichTextFixtures";
 
-import {
-	LinkType,
-	RTImageNode,
-	RTParagraphNode,
-	RichTextField,
-} from "../../src";
-import { filterRichTextField } from "../../src/richtext";
+import { LinkType, RTImageNode, RTParagraphNode, RichTextField } from "../src";
+import { filterRichTextField } from "../src/lib/filterRichTextField";
 
 it("filters out node types that aren't allowed by single type model", () => {
 	const input: RichTextField = [
