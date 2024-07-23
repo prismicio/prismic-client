@@ -47,7 +47,9 @@ describe("transforms HTML to rich text", () => {
 		})
 
 		testHTMLAsRichTextHelper("empty spans", {
-			input: /* html */ `<p>lorem <strong></strong>ipsum dolor sit amet</p>`,
+			// It's normal for `dolor` and `sit` to be concatenated here.
+			// That's how the browser would render it.
+			input: /* html */ `<p>lorem <strong></strong>ipsum dolor<em> </em>sit amet</p>`,
 			expectHTMLToMatchInputExactly: false,
 		})
 
