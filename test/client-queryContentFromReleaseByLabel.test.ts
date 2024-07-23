@@ -20,7 +20,7 @@ ref2.label = ref1.label;
 it("uses a releases ref by label", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository();
 	repositoryResponse.refs = [ref1];
-	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
+	const queryResponse = prismicM.api.query({ seed: ctx.task.name });
 
 	mockPrismicRestAPIV2({
 		repositoryResponse,

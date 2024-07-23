@@ -93,15 +93,16 @@ type HTMLRichTextMapSerializerFunction<
  * @typeParam T - The `RichTextMapSerializerFunction` containing the needed
  *   `Node` generic.
  */
-type ExtractNodeGeneric<T> = T extends RichTextMapSerializerFunction<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	any,
-	infer U,
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	any
->
-	? U
-	: never;
+type ExtractNodeGeneric<T> =
+	T extends RichTextMapSerializerFunction<
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		any,
+		infer U,
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		any
+	>
+		? U
+		: never;
 
 /**
  * Returns the `TextType` generic from {@link RichTextMapSerializerFunction}.
@@ -109,15 +110,16 @@ type ExtractNodeGeneric<T> = T extends RichTextMapSerializerFunction<
  * @typeParam T - The `RichTextMapSerializerFunction` containing the needed
  *   `TextType` generic.
  */
-type ExtractTextTypeGeneric<T> = T extends RichTextMapSerializerFunction<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	any,
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	any,
-	infer U
->
-	? U
-	: never;
+type ExtractTextTypeGeneric<T> =
+	T extends RichTextMapSerializerFunction<
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		any,
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		any,
+		infer U
+	>
+		? U
+		: never;
 
 /**
  * A shorthand definition for {@link HTMLRichTextMapSerializer} element types.

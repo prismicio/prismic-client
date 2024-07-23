@@ -13,4 +13,4 @@ export type GeoPointField<State extends FieldState = FieldState> =
 		: {
 				latitude: number;
 				longitude: number;
-		  };
+			};

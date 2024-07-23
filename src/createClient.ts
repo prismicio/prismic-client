@@ -75,9 +75,10 @@ const DEFUALT_RETRY_AFTER_MS = 1000;
 type ExtractDocumentType<
 	TDocuments extends PrismicDocument,
 	TDocumentType extends TDocuments["type"],
-> = Extract<TDocuments, { type: TDocumentType }> extends never
-	? TDocuments
-	: Extract<TDocuments, { type: TDocumentType }>;
+> =
+	Extract<TDocuments, { type: TDocumentType }> extends never
+		? TDocuments
+		: Extract<TDocuments, { type: TDocumentType }>;
 
 /**
  * A universal API to make network requests. A subset of the `fetch()` API.

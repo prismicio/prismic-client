@@ -18,20 +18,21 @@ const DEFAULT_WIDTHS = [640, 828, 1200, 2048, 3840];
  */
 type AsImageWidthSrcSetReturnType<
 	Field extends ImageFieldImage | null | undefined,
-> = Field extends ImageFieldImage<"filled">
-	? {
-			/**
-			 * The image field's image URL with Imgix URL parameters (if given).
-			 */
-			src: string;
+> =
+	Field extends ImageFieldImage<"filled">
+		? {
+				/**
+				 * The image field's image URL with Imgix URL parameters (if given).
+				 */
+				src: string;
 
-			/**
-			 * A width-based `srcset` attribute value for the image field's image with
-			 * Imgix URL parameters (if given).
-			 */
-			srcset: string;
-	  }
-	: null;
+				/**
+				 * A width-based `srcset` attribute value for the image field's image
+				 * with Imgix URL parameters (if given).
+				 */
+				srcset: string;
+			}
+		: null;
 
 /**
  * Configuration for `asImageWidthSrcSet()`.
@@ -130,11 +131,11 @@ export const asImageWidthSrcSet = <
 									widths: [thumbnail.dimensions.width],
 								});
 							}),
-					  ].join(", ")
+						].join(", ")
 					: buildWidthSrcSet(field.url, {
 							...imgixParams,
 							widths,
-					  }),
+						}),
 		} as AsImageWidthSrcSetReturnType<Field>;
 	} else {
 		return null as AsImageWidthSrcSetReturnType<Field>;

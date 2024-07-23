@@ -15,6 +15,7 @@ export default defineConfig({
 		coverage: {
 			provider: "v8",
 			reporter: ["lcovonly", "text"],
+			include: ["src"],
 		},
 		setupFiles: ["./test/__setup__"],
 	},

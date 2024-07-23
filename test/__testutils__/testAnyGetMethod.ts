@@ -28,7 +28,7 @@ export const testAnyGetMethodFactory = (
 	args: TestGetAllMethodArgs,
 	mode: "get" | "getFirst" | "getAll",
 ): void => {
-	it.concurrent(description, async (ctx) => {
+	it(description, async (ctx) => {
 		const queryResponses = createPagedQueryResponses({
 			ctx,
 			pages: args.mockedPages,

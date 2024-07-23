@@ -40,8 +40,8 @@ const testAsRichTextHelperFactory = <
 		THelper extends typeof unstable_htmlAsRichText
 			? HTMLAsRichTextConfig
 			: THelper extends typeof unstable_markdownAsRichText
-			? MarkdownAsRichTextConfig
-			: undefined
+				? MarkdownAsRichTextConfig
+				: undefined
 	>,
 	helper: THelper,
 ): void => {

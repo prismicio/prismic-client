@@ -78,7 +78,7 @@ testGetFirstMethod(
 it("throws if no documents were returned", async (ctx) => {
 	mockPrismicRestAPIV2({
 		queryResponse: prismicM.api.query({
-			seed: ctx.meta.name,
+			seed: ctx.task.name,
 			documents: [],
 		}),
 		ctx,

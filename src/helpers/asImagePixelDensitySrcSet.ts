@@ -27,20 +27,21 @@ type AsImagePixelDensitySrcSetConfig = Omit<
  */
 type AsImagePixelDensitySrcSetReturnType<
 	Field extends ImageFieldImage | null | undefined,
-> = Field extends ImageFieldImage<"filled">
-	? {
-			/**
-			 * The image field's image URL with Imgix URL parameters (if given).
-			 */
-			src: string;
+> =
+	Field extends ImageFieldImage<"filled">
+		? {
+				/**
+				 * The image field's image URL with Imgix URL parameters (if given).
+				 */
+				src: string;
 
-			/**
-			 * A pixel-densitye-based `srcset` attribute value for the image field's
-			 * image with Imgix URL parameters (if given).
-			 */
-			srcset: string;
-	  }
-	: null;
+				/**
+				 * A pixel-densitye-based `srcset` attribute value for the image field's
+				 * image with Imgix URL parameters (if given).
+				 */
+				srcset: string;
+			}
+		: null;
 
 /**
  * Creates a pixel-density-based `srcset` from an image field with optional

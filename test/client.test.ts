@@ -217,7 +217,7 @@ it("uses globalThis.fetch if available", async () => {
 });
 
 it("uses the master ref by default", async (ctx) => {
-	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
+	const queryResponse = prismicM.api.query({ seed: ctx.task.name });
 
 	mockPrismicRestAPIV2({
 		queryResponse,
@@ -231,7 +231,7 @@ it("uses the master ref by default", async (ctx) => {
 });
 
 it("supports manual string ref", async (ctx) => {
-	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
+	const queryResponse = prismicM.api.query({ seed: ctx.task.name });
 	const ref = "ref";
 
 	mockPrismicRestAPIV2({
@@ -247,7 +247,7 @@ it("supports manual string ref", async (ctx) => {
 });
 
 it("supports manual thunk ref", async (ctx) => {
-	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
+	const queryResponse = prismicM.api.query({ seed: ctx.task.name });
 	const ref = "ref";
 
 	mockPrismicRestAPIV2({
@@ -264,7 +264,7 @@ it("supports manual thunk ref", async (ctx) => {
 
 it("uses master ref if ref thunk param returns non-string value", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository();
-	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
+	const queryResponse = prismicM.api.query({ seed: ctx.task.name });
 
 	mockPrismicRestAPIV2({
 		repositoryResponse,
@@ -286,7 +286,7 @@ it("uses browser preview ref if available", async (ctx) => {
 		cookie: `io.prismic.preview=${previewRef}`,
 	};
 
-	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
+	const queryResponse = prismicM.api.query({ seed: ctx.task.name });
 
 	mockPrismicRestAPIV2({
 		queryResponse,
@@ -310,7 +310,7 @@ it("uses req preview ref if available", async (ctx) => {
 		},
 	};
 
-	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
+	const queryResponse = prismicM.api.query({ seed: ctx.task.name });
 
 	mockPrismicRestAPIV2({
 		queryResponse,
@@ -334,7 +334,7 @@ it("supports req with Web APIs", async (ctx) => {
 		url: "https://example.com",
 	};
 
-	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
+	const queryResponse = prismicM.api.query({ seed: ctx.task.name });
 
 	mockPrismicRestAPIV2({
 		queryResponse,
@@ -355,7 +355,7 @@ it("ignores req without cookies", async (ctx) => {
 	};
 
 	const repositoryResponse = ctx.mock.api.repository();
-	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
+	const queryResponse = prismicM.api.query({ seed: ctx.task.name });
 
 	mockPrismicRestAPIV2({
 		repositoryResponse,
@@ -379,7 +379,7 @@ it("does not use preview ref if auto previews are disabled", async (ctx) => {
 	};
 
 	const repositoryResponse = ctx.mock.api.repository();
-	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
+	const queryResponse = prismicM.api.query({ seed: ctx.task.name });
 
 	const client = createTestClient();
 
@@ -417,7 +417,7 @@ it("does not use preview ref if auto previews are disabled", async (ctx) => {
 it("uses the integration fields ref if the repository provides it", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository();
 	repositoryResponse.integrationFieldsRef = ctx.mock.api.ref().ref;
-	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
+	const queryResponse = prismicM.api.query({ seed: ctx.task.name });
 
 	mockPrismicRestAPIV2({
 		repositoryResponse,
@@ -439,7 +439,7 @@ it("uses the integration fields ref if the repository provides it", async (ctx) 
 it("ignores the integration fields ref if the repository provides a null value", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository();
 	repositoryResponse.integrationFieldsRef = null;
-	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
+	const queryResponse = prismicM.api.query({ seed: ctx.task.name });
 
 	mockPrismicRestAPIV2({
 		repositoryResponse,
@@ -457,7 +457,7 @@ it("ignores the integration fields ref if the repository provides a null value",
 });
 
 it("uses client-provided routes in queries", async (ctx) => {
-	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
+	const queryResponse = prismicM.api.query({ seed: ctx.task.name });
 
 	const routes: prismic.Route[] = [
 		{
@@ -492,7 +492,7 @@ it("uses client-provided routes in queries", async (ctx) => {
 });
 
 it("uses client-provided brokenRoute in queries", async (ctx) => {
-	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
+	const queryResponse = prismicM.api.query({ seed: ctx.task.name });
 
 	const brokenRoute = "/404";
 

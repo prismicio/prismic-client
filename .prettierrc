@@ -3,7 +3,7 @@
 	"jsdocCapitalizeDescription": false,
 	"jsdocSeparateReturnsFromParam": true,
 	"jsdocSeparateTagGroups": true,
-	"jsdocSingleLineComment": false,
+	"jsdocCommentLineStrategy": "multiline",
 	"tsdoc": true,
 	"importOrder": [
 		"^vitest(/|$)",

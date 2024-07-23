@@ -445,7 +445,7 @@ exports[`transforms HTML to rich text > embed > custom 1`] = `
   {
     "oembed": {
       "embed_url": "https://twitter.com/li_hbr/status/1803718142222282829?ref_src=twsrc%5Etfw",
-      "html": "<blockquote class=\\"twitter-tweet\\" src=\\"https://twitter.com/li_hbr/status/1803718142222282829?ref_src=twsrc%5Etfw\\"><p lang=\\"en\\" dir=\\"ltr\\">Slack bot that uses AI to tl;dr; threads for you, anyone?</p>— Lucie (@li_hbr) <a href=\\"https://twitter.com/li_hbr/status/1803718142222282829?ref_src=twsrc%5Etfw\\">June 20, 2024</a></blockquote>",
+      "html": "<blockquote class="twitter-tweet" src="https://twitter.com/li_hbr/status/1803718142222282829?ref_src=twsrc%5Etfw"><p lang="en" dir="ltr">Slack bot that uses AI to tl;dr; threads for you, anyone?</p>— Lucie (@li_hbr) <a href="https://twitter.com/li_hbr/status/1803718142222282829?ref_src=twsrc%5Etfw">June 20, 2024</a></blockquote>",
       "title": undefined,
       "type": "link",
       "version": "1.0",
@@ -461,7 +461,7 @@ exports[`transforms HTML to rich text > embed > iframe 1`] = `
     "oembed": {
       "embed_url": "https://www.youtube.com/embed/wkS1bf7BLjs?feature=oembed",
       "height": 150,
-      "html": "<iframe width=\\"200\\" height=\\"150\\" src=\\"https://www.youtube.com/embed/wkS1bf7BLjs?feature=oembed\\" frameborder=\\"0\\" allow=\\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\\" referrerpolicy=\\"strict-origin-when-cross-origin\\" allowfullscreen title=\\"幾田りら「ハミング」Official Music Video\\"></iframe>",
+      "html": "<iframe width="200" height="150" src="https://www.youtube.com/embed/wkS1bf7BLjs?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="幾田りら「ハミング」Official Music Video"></iframe>",
       "title": "幾田りら「ハミング」Official Music Video",
       "type": "rich",
       "version": "1.0",

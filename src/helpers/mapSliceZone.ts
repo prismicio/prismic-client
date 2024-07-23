@@ -22,8 +22,8 @@ type AnyFunction = (...args: any[]) => any;
 type ExtractSliceType<TSlice extends SliceLike> = TSlice extends SliceLikeRestV2
 	? TSlice["slice_type"]
 	: TSlice extends SliceLikeGraphQL
-	? TSlice["type"]
-	: never;
+		? TSlice["type"]
+		: never;
 
 /**
  * The minimum required properties to represent a Prismic Slice from the Prismic
@@ -160,13 +160,14 @@ export type SliceMapper<
 type ResolveLazySliceMapperModule<
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	TSliceMapper extends SliceMapper<any, any> | LazyModule<SliceMapper>,
-> = TSliceMapper extends LazyModule<SliceMapper>
-	? Awaited<ReturnType<TSliceMapper>> extends {
-			default: unknown;
-	  }
-		? Awaited<ReturnType<TSliceMapper>>["default"]
-		: Awaited<ReturnType<TSliceMapper>>
-	: TSliceMapper;
+> =
+	TSliceMapper extends LazyModule<SliceMapper>
+		? Awaited<ReturnType<TSliceMapper>> extends {
+				default: unknown;
+			}
+			? Awaited<ReturnType<TSliceMapper>>["default"]
+			: Awaited<ReturnType<TSliceMapper>>
+		: TSliceMapper;
 
 /**
  * Transforms a Slice into its mapped version.
@@ -194,18 +195,18 @@ type MapSliceLike<
 			: TSliceLike
 		: TSliceLike
 	: TSliceLike extends SliceLikeGraphQL
-	? TSliceLike["type"] extends keyof TSliceMappers
-		? TSliceMappers[TSliceLike["type"]] extends AnyFunction
-			? SliceLikeGraphQL<TSliceLike["type"]> &
-					MappedSliceLike &
-					Awaited<
-						ReturnType<
-							ResolveLazySliceMapperModule<TSliceMappers[TSliceLike["type"]]>
+		? TSliceLike["type"] extends keyof TSliceMappers
+			? TSliceMappers[TSliceLike["type"]] extends AnyFunction
+				? SliceLikeGraphQL<TSliceLike["type"]> &
+						MappedSliceLike &
+						Awaited<
+							ReturnType<
+								ResolveLazySliceMapperModule<TSliceMappers[TSliceLike["type"]]>
+							>
 						>
-					>
+				: TSliceLike
 			: TSliceLike
-		: TSliceLike
-	: never;
+		: never;
 
 /**
  * Transforms a Slice Zone using a set of mapping functions, one for each type

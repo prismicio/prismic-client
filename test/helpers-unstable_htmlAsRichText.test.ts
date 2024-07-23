@@ -228,7 +228,7 @@ describe("transforms HTML to rich text", () => {
 							},
 						),
 					).toThrowErrorMatchingInlineSnapshot(
-						'"Unknown rich text node type: `foo`"',
+						`[Error: Unknown rich text node type: \`foo\`]`,
 					);
 				});
 			});
@@ -364,7 +364,7 @@ describe("transforms HTML to rich text", () => {
 				expect(() =>
 					unstable_htmlAsRichText("", { container: "article#baz" }),
 				).toThrowErrorMatchingInlineSnapshot(
-					'"No container matching `article#baz` could be found in the input AST."',
+					`[Error: No container matching \`article#baz\` could be found in the input AST.]`,
 				);
 			});
 		});

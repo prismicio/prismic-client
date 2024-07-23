@@ -29,4 +29,4 @@ export type TitleField<State extends FieldState = FieldState> =
 				> & {
 					spans: [];
 				},
-		  ];
+			];

@@ -101,10 +101,10 @@ expectType<prismic.LinkField<"foo">>({
 	tags: [],
 	lang: "string",
 });
+// @ts-expect-error - Document type must match the given type.
 expectType<prismic.LinkField<"foo">>({
 	link_type: prismic.LinkType.Document,
 	id: "string",
-	// @ts-expect-error - Document type must match the given type.
 	type: "string",
 	tags: [],
 	lang: "string",
@@ -120,12 +120,12 @@ expectType<prismic.LinkField<string, "fr-fr">>({
 	tags: [],
 	lang: "fr-fr",
 });
+// @ts-expect-error - Document language must match the given type.
 expectType<prismic.LinkField<string, "fr-fr">>({
 	link_type: prismic.LinkType.Document,
 	id: "string",
 	type: "string",
 	tags: [],
-	// @ts-expect-error - Document language must match the given type.
 	lang: "string",
 });
 

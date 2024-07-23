@@ -58,12 +58,12 @@ type AsLinkAttrsReturnType<
 				| undefined;
 			target?: string;
 			rel?: string;
-	  }
+		}
 	: {
 			href?: undefined;
 			target?: undefined;
 			rel?: undefined;
-	  };
+		};
 
 /**
  * Resolves any type of link field or Prismic document to a set of link
@@ -120,8 +120,8 @@ export const asLinkAttrs = <
 		const rel = config.rel
 			? config.rel({ href, isExternal, target })
 			: isExternal
-			? "noreferrer"
-			: undefined;
+				? "noreferrer"
+				: undefined;
 
 		return {
 			href,

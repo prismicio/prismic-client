@@ -108,7 +108,7 @@ it("omits target attribute on links without a target value", () => {
 	];
 
 	expect(asHTML(field, { linkResolver })).toMatchInlineSnapshot(
-		'"<p><a href=\\"https://example.org\\" rel=\\"noopener noreferrer\\">link</a></p>"',
+		`"<p><a href="https://example.org" rel="noopener noreferrer">link</a></p>"`,
 	);
 });
 
@@ -133,7 +133,7 @@ it("includes target attribute on links with a target value", () => {
 	];
 
 	expect(asHTML(field, { linkResolver })).toMatchInlineSnapshot(
-		'"<p><a href=\\"https://example.org\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">link</a></p>"',
+		`"<p><a href="https://example.org" target="_blank" rel="noopener noreferrer">link</a></p>"`,
 	);
 });
 

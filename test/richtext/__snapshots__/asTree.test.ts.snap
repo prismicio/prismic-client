@@ -3552,7 +3552,7 @@ exports[`converts a rich text field value to a tree 1`] = `
           "author_url": "https://www.youtube.com/user/reolch",
           "embed_url": "https://www.youtube.com/watch?v=n5CwXuyNfoc",
           "height": 113,
-          "html": "<iframe width=\\"200\\" height=\\"113\\" src=\\"https://www.youtube.com/embed/n5CwXuyNfoc?feature=oembed\\" frameborder=\\"0\\" allow=\\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\\" allowfullscreen></iframe>",
+          "html": "<iframe width="200" height="113" src="https://www.youtube.com/embed/n5CwXuyNfoc?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>",
           "provider_name": "YouTube",
           "provider_url": "https://www.youtube.com/",
           "thumbnail_height": 360,

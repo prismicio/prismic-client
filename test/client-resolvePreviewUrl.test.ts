@@ -12,7 +12,7 @@ import { testFetchOptions } from "./__testutils__/testFetchOptions";
 const previewToken = "previewToken";
 
 it("resolves a preview url in the browser", async (ctx) => {
-	const seed = ctx.meta.name;
+	const seed = ctx.task.name;
 	const document = { ...prismicM.value.document({ seed }), uid: seed };
 	const queryResponse = prismicM.api.query({ seed, documents: [document] });
 
@@ -45,7 +45,7 @@ it("resolves a preview url in the browser", async (ctx) => {
 });
 
 it("resolves a preview url using a server req object", async (ctx) => {
-	const seed = ctx.meta.name;
+	const seed = ctx.task.name;
 	const document = { ...prismicM.value.document({ seed }), uid: seed };
 	const queryResponse = prismicM.api.query({ seed, documents: [document] });
 
@@ -78,7 +78,7 @@ it("resolves a preview url using a server req object", async (ctx) => {
 });
 
 it("resolves a preview url using a Web API-based server req object", async (ctx) => {
-	const seed = ctx.meta.name;
+	const seed = ctx.task.name;
 	const document = { ...prismicM.value.document({ seed }), uid: seed };
 	const queryResponse = prismicM.api.query({ seed, documents: [document] });
 
@@ -113,7 +113,7 @@ it("resolves a preview url using a Web API-based server req object", async (ctx)
 });
 
 it("resolves a preview url using a Web API-based server req object containing a URL without a host", async (ctx) => {
-	const seed = ctx.meta.name;
+	const seed = ctx.task.name;
 	const document = { ...prismicM.value.document({ seed }), uid: seed };
 	const queryResponse = prismicM.api.query({ seed, documents: [document] });
 
@@ -146,7 +146,7 @@ it("resolves a preview url using a Web API-based server req object containing a 
 });
 
 it("allows providing an explicit documentId and previewToken", async (ctx) => {
-	const seed = ctx.meta.name;
+	const seed = ctx.task.name;
 	const document = { ...prismicM.value.document({ seed }), uid: seed };
 	const queryResponse = prismicM.api.query({ seed, documents: [document] });
 
@@ -226,7 +226,7 @@ it("returns defaultURL if no preview context is available", async () => {
 });
 
 it("returns defaultURL if resolved URL is not a string", async (ctx) => {
-	const seed = ctx.meta.name;
+	const seed = ctx.task.name;
 	const document = {
 		...prismicM.value.document({ seed, withURL: false }),
 		uid: seed,

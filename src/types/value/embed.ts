@@ -194,4 +194,4 @@ export type EmbedField<
 	: Data & {
 			embed_url: string;
 			html: string | null;
-	  };
+		};

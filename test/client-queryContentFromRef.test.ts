@@ -31,7 +31,7 @@ testGetMethod("supports manual thunk ref", {
 
 it("uses master ref if manual thunk ref returns non-string value", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository();
-	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
+	const queryResponse = prismicM.api.query({ seed: ctx.task.name });
 
 	mockPrismicRestAPIV2({
 		repositoryResponse,
