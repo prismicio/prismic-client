@@ -1,0 +1,31 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`transforms markdown to rich text > basic > empty 1`] = `[]`;
+
+exports[`transforms markdown to rich text > basic > multiple tags 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "heading1",
+  },
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "consectetur adipiscing elit",
+    "type": "preformatted",
+  },
+]
+`;
+
+exports[`transforms markdown to rich text > basic > single tag 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;

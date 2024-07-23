@@ -80,6 +80,8 @@ export { mapSliceZone, unstable_mapSliceZone };
 
 // Conversion helper.
 export { documentToLinkField } from "./helpers/documentToLinkField";
+export { unstable_htmlAsRichText } from "./helpers/unstable_htmlAsRichText";
+export { unstable_markdownAsRichText } from "./helpers/unstable_markdownAsRichText";
 
 export type { LinkResolverFunction } from "./helpers/asLink";
 export type { AsLinkAttrsConfig } from "./helpers/asLinkAttrs";
@@ -101,10 +103,13 @@ export type {
 };
 export type { HTMLRichTextSerializer } from "./helpers/asHTML";
 
+export type { RichTextHTMLMapSerializer } from "./helpers/unstable_htmlAsRichText";
+
 //=============================================================================
 // Errors - Custom errors for Prismic APIs.
 //=============================================================================
 
+// Client Errors
 export { PrismicError } from "./errors/PrismicError";
 export { ForbiddenError } from "./errors/ForbiddenError";
 export { NotFoundError } from "./errors/NotFoundError";
@@ -113,6 +118,10 @@ export { RefExpiredError } from "./errors/RefExpiredError";
 export { PreviewTokenExpiredError } from "./errors/PreviewTokenExpired";
 export { ParsingError } from "./errors/ParsingError";
 export { RepositoryNotFoundError } from "./errors/RepositoryNotFoundError";
+
+// Rich Text Errors
+export { PrismicRichTextError } from "./errors/PrismicRichTextError";
+export { PrismicRichTextSerializerError } from "./errors/PrismicRichTextSerializerError";
 
 //=============================================================================
 // Types - Types representing Prismic content, models, and API payloads.
@@ -171,6 +180,7 @@ export type {
 	RTBlockNode,
 	RTInlineNode,
 	RTAnyNode,
+	RichTextNodeTypes,
 } from "./types/value/richText";
 export type { TitleField } from "./types/value/title";
 

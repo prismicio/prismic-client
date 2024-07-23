@@ -1,0 +1,1137 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`transforms HTML to rich text > basic > empty 1`] = `[]`;
+
+exports[`transforms HTML to rich text > basic > innerHTML 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "end": 11,
+        "start": 6,
+        "type": "strong",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > basic > multiple tags 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "heading1",
+  },
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "consectetur adipiscing elit",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > basic > single tag 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > container > converts only the given container 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "consectetur adipiscing elit",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > direction > marks text as left-to-right 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > direction > marks text as right-to-left 1`] = `
+[
+  {
+    "direction": "rtl",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > exclude > excludes the given complex selectors 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "ipsum dolor sit amet",
+    "type": "heading1",
+  },
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "data": {
+          "link_type": "Web",
+          "target": undefined,
+          "url": "#",
+        },
+        "end": 11,
+        "start": 0,
+        "type": "hyperlink",
+      },
+    ],
+    "text": "consectetur adipiscing elit",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > exclude > excludes the given selectors 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "consectetur adipiscing elit",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > include > dedupes matches that are child of other matches 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "consectetur adipiscing elit",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > include > includes only the given complex selectors 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "consectetur adipiscing elit",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > include > includes only the given selectors 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "heading1",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > model > filters output according to multi type model 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "end": 22,
+        "start": 12,
+        "type": "strong",
+      },
+    ],
+    "text": "consectetur adipiscing elit",
+    "type": "paragraph",
+  },
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "sed do eiusmod tempor",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > model > filters output according to single type model 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "end": 11,
+        "start": 6,
+        "type": "strong",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "heading1",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > serializer > complex selector 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "heading1",
+  },
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "consectetur adipiscing elit",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > serializer > function serializer > basic 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "heading1",
+  },
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "consectetur adipiscing elit",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > serializer > function serializer > embed node 1`] = `
+[
+  {
+    "oembed": {
+      "embed_url": "bar",
+      "height": 0,
+      "html": "baz",
+      "title": "qux",
+      "type": "rich",
+      "version": "1.0",
+      "width": 0,
+    },
+    "type": "embed",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > serializer > function serializer > image node 1`] = `
+[
+  {
+    "alt": "qux",
+    "copyright": null,
+    "dimensions": {
+      "height": 0,
+      "width": 0,
+    },
+    "edit": {
+      "background": "transparent",
+      "x": 0,
+      "y": 0,
+      "zoom": 1,
+    },
+    "id": "bar",
+    "type": "image",
+    "url": "baz",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > serializer > function serializer > span nodes > full 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "end": 5,
+        "start": 0,
+        "type": "strong",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > serializer > function serializer > span nodes > partial 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "end": 11,
+        "start": 6,
+        "type": "strong",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > serializer > function serializer > span nodes > with extracted image node > full 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum",
+    "type": "paragraph",
+  },
+  {
+    "alt": "bar",
+    "copyright": null,
+    "dimensions": {
+      "height": undefined,
+      "width": undefined,
+    },
+    "edit": {
+      "background": "transparent",
+      "x": 0,
+      "y": 0,
+      "zoom": 1,
+    },
+    "id": "",
+    "type": "image",
+    "url": "https://example.com/foo.png",
+  },
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "end": 9,
+        "start": 6,
+        "type": "strong",
+      },
+    ],
+    "text": "dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > serializer > function serializer > span nodes > with extracted image node > partial 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum",
+    "type": "paragraph",
+  },
+  {
+    "alt": "bar",
+    "copyright": null,
+    "dimensions": {
+      "height": undefined,
+      "width": undefined,
+    },
+    "edit": {
+      "background": "transparent",
+      "x": 0,
+      "y": 0,
+      "zoom": 1,
+    },
+    "id": "",
+    "type": "image",
+    "url": "https://example.com/foo.png",
+  },
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "end": 5,
+        "start": 0,
+        "type": "strong",
+      },
+    ],
+    "text": "dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > serializer > function serializer > text nodes 1`] = `
+[
+  {
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > serializer > function serializer > undefined 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "consectetur adipiscing elit",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > serializer > selector 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "heading1",
+  },
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "consectetur adipiscing elit",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > configuration > serializer > tag name 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "heading1",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > embed > custom 1`] = `
+[
+  {
+    "oembed": {
+      "embed_url": "https://twitter.com/li_hbr/status/1803718142222282829?ref_src=twsrc%5Etfw",
+      "html": "<blockquote class=\\"twitter-tweet\\" src=\\"https://twitter.com/li_hbr/status/1803718142222282829?ref_src=twsrc%5Etfw\\"><p lang=\\"en\\" dir=\\"ltr\\">Slack bot that uses AI to tl;dr; threads for you, anyone?</p>— Lucie (@li_hbr) <a href=\\"https://twitter.com/li_hbr/status/1803718142222282829?ref_src=twsrc%5Etfw\\">June 20, 2024</a></blockquote>",
+      "title": undefined,
+      "type": "link",
+      "version": "1.0",
+    },
+    "type": "embed",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > embed > iframe 1`] = `
+[
+  {
+    "oembed": {
+      "embed_url": "https://www.youtube.com/embed/wkS1bf7BLjs?feature=oembed",
+      "height": 150,
+      "html": "<iframe width=\\"200\\" height=\\"150\\" src=\\"https://www.youtube.com/embed/wkS1bf7BLjs?feature=oembed\\" frameborder=\\"0\\" allow=\\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\\" referrerpolicy=\\"strict-origin-when-cross-origin\\" allowfullscreen title=\\"幾田りら「ハミング」Official Music Video\\"></iframe>",
+      "title": "幾田りら「ハミング」Official Music Video",
+      "type": "rich",
+      "version": "1.0",
+      "width": 200,
+    },
+    "type": "embed",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > embed > missing src 1`] = `[]`;
+
+exports[`transforms HTML to rich text > image > empty alt 1`] = `
+[
+  {
+    "alt": "",
+    "copyright": null,
+    "dimensions": {
+      "height": undefined,
+      "width": undefined,
+    },
+    "edit": {
+      "background": "transparent",
+      "x": 0,
+      "y": 0,
+      "zoom": 1,
+    },
+    "id": "",
+    "type": "image",
+    "url": "https://example.com/foo.png",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > image > extracts image in text nodes and resume previous text node > adjacent spans (respects direction) 1`] = `
+[
+  {
+    "direction": "rtl",
+    "spans": [
+      {
+        "end": 11,
+        "start": 6,
+        "type": "strong",
+      },
+    ],
+    "text": "lorem ipsum",
+    "type": "paragraph",
+  },
+  {
+    "alt": "bar",
+    "copyright": null,
+    "dimensions": {
+      "height": undefined,
+      "width": undefined,
+    },
+    "edit": {
+      "background": "transparent",
+      "x": 0,
+      "y": 0,
+      "zoom": 1,
+    },
+    "id": "",
+    "type": "image",
+    "url": "https://example.com/foo.png",
+  },
+  {
+    "direction": "rtl",
+    "spans": [
+      {
+        "end": 5,
+        "start": 0,
+        "type": "em",
+      },
+    ],
+    "text": "dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > image > extracts image in text nodes and resume previous text node > adjacent spans 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "end": 11,
+        "start": 6,
+        "type": "strong",
+      },
+    ],
+    "text": "lorem ipsum",
+    "type": "paragraph",
+  },
+  {
+    "alt": "bar",
+    "copyright": null,
+    "dimensions": {
+      "height": undefined,
+      "width": undefined,
+    },
+    "edit": {
+      "background": "transparent",
+      "x": 0,
+      "y": 0,
+      "zoom": 1,
+    },
+    "id": "",
+    "type": "image",
+    "url": "https://example.com/foo.png",
+  },
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "end": 5,
+        "start": 0,
+        "type": "em",
+      },
+    ],
+    "text": "dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > image > extracts image in text nodes and resume previous text node > basic 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum",
+    "type": "paragraph",
+  },
+  {
+    "alt": "bar",
+    "copyright": null,
+    "dimensions": {
+      "height": undefined,
+      "width": undefined,
+    },
+    "edit": {
+      "background": "transparent",
+      "x": 0,
+      "y": 0,
+      "zoom": 1,
+    },
+    "id": "",
+    "type": "image",
+    "url": "https://example.com/foo.png",
+  },
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > image > extracts image in text nodes and resume previous text node > spans 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "end": 5,
+        "start": 0,
+        "type": "strong",
+      },
+    ],
+    "text": "lorem ipsum",
+    "type": "paragraph",
+  },
+  {
+    "alt": "bar",
+    "copyright": null,
+    "dimensions": {
+      "height": undefined,
+      "width": undefined,
+    },
+    "edit": {
+      "background": "transparent",
+      "x": 0,
+      "y": 0,
+      "zoom": 1,
+    },
+    "id": "",
+    "type": "image",
+    "url": "https://example.com/foo.png",
+  },
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "end": 9,
+        "start": 6,
+        "type": "em",
+      },
+    ],
+    "text": "dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > image > missing alt 1`] = `
+[
+  {
+    "alt": "",
+    "copyright": null,
+    "dimensions": {
+      "height": undefined,
+      "width": undefined,
+    },
+    "edit": {
+      "background": "transparent",
+      "x": 0,
+      "y": 0,
+      "zoom": 1,
+    },
+    "id": "",
+    "type": "image",
+    "url": "https://example.com/foo.png",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > image > missing src 1`] = `[]`;
+
+exports[`transforms HTML to rich text > image > non-prismic 1`] = `
+[
+  {
+    "alt": "foo",
+    "copyright": null,
+    "dimensions": {
+      "height": undefined,
+      "width": undefined,
+    },
+    "edit": {
+      "background": "transparent",
+      "x": 0,
+      "y": 0,
+      "zoom": 1,
+    },
+    "id": "",
+    "type": "image",
+    "url": "https://example.com/foo.png",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > image > prismic 1`] = `
+[
+  {
+    "alt": "foo",
+    "copyright": null,
+    "dimensions": {
+      "height": 1602,
+      "width": 2400,
+    },
+    "edit": {
+      "background": "transparent",
+      "x": 399,
+      "y": 259,
+      "zoom": 1.5,
+    },
+    "id": "",
+    "type": "image",
+    "url": "https://images.prismic.io/200629-sms-hoy/f0a757f6-770d-4eb8-a08b-f1727f1a58e4_guilherme-romano-KI2KaOeT670-unsplash.jpg?auto=format%2Ccompress&rect=399%2C259%2C1600%2C1068&w=2400&h=1602",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > lists > list-item 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "list-item",
+  },
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "consectetur adipiscing elit",
+    "type": "list-item",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > lists > list-item and o-list-item 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "o-list-item",
+  },
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "consectetur adipiscing elit",
+    "type": "o-list-item",
+  },
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "sed do eiusmod tempor incididunt",
+    "type": "list-item",
+  },
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "ut labore et dolore magna aliqua",
+    "type": "list-item",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > lists > nested list-item and o-list-item 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "list-item",
+  },
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "consectetur adipiscing elit",
+    "type": "o-list-item",
+  },
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "sed do eiusmod tempor incididunt",
+    "type": "o-list-item",
+  },
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "ut labore et dolore magna aliqua",
+    "type": "o-list-item",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > lists > o-list-item 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "o-list-item",
+  },
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "consectetur adipiscing elit",
+    "type": "o-list-item",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > spans > directly adjacent spans > compacts similar > hyperlink 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "data": {
+          "link_type": "Web",
+          "target": undefined,
+          "url": "https://prismic.io",
+        },
+        "end": 17,
+        "start": 6,
+        "type": "hyperlink",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > spans > directly adjacent spans > compacts similar > label 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "data": {
+          "label": "underline",
+        },
+        "end": 17,
+        "start": 6,
+        "type": "label",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > spans > directly adjacent spans > compacts similar > nested spans 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "end": 11,
+        "start": 6,
+        "type": "strong",
+      },
+      {
+        "end": 17,
+        "start": 9,
+        "type": "em",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > spans > directly adjacent spans > compacts similar > strong, em 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "end": 17,
+        "start": 6,
+        "type": "strong",
+      },
+      {
+        "end": 38,
+        "start": 22,
+        "type": "em",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet consectetur adipiscing elit",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > spans > directly adjacent spans > does not compact different > hyperlink 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "data": {
+          "link_type": "Web",
+          "target": undefined,
+          "url": "https://prismic.io",
+        },
+        "end": 11,
+        "start": 6,
+        "type": "hyperlink",
+      },
+      {
+        "data": {
+          "link_type": "Web",
+          "target": undefined,
+          "url": "https://google.com",
+        },
+        "end": 17,
+        "start": 11,
+        "type": "hyperlink",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > spans > directly adjacent spans > does not compact different > label 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "data": {
+          "label": "underline",
+        },
+        "end": 11,
+        "start": 6,
+        "type": "label",
+      },
+      {
+        "data": {
+          "label": "strikethrough",
+        },
+        "end": 17,
+        "start": 11,
+        "type": "label",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > spans > hyperlink 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "data": {
+          "link_type": "Web",
+          "target": undefined,
+          "url": "https://prismic.io",
+        },
+        "end": 11,
+        "start": 6,
+        "type": "hyperlink",
+      },
+      {
+        "data": {
+          "link_type": "Web",
+          "target": "_blank",
+          "url": "https://prismic.io",
+        },
+        "end": 21,
+        "start": 18,
+        "type": "hyperlink",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > spans > hyperlink missing href 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > spans > label 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "data": {
+          "label": "underline",
+        },
+        "end": 11,
+        "start": 6,
+        "type": "label",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > spans > nested spans 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "end": 17,
+        "start": 6,
+        "type": "strong",
+      },
+      {
+        "end": 17,
+        "start": 9,
+        "type": "em",
+      },
+      {
+        "data": {
+          "link_type": "Web",
+          "target": undefined,
+          "url": "https://prismic.io",
+        },
+        "end": 17,
+        "start": 12,
+        "type": "hyperlink",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > spans > strong, em 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [
+      {
+        "end": 11,
+        "start": 6,
+        "type": "strong",
+      },
+      {
+        "end": 21,
+        "start": 18,
+        "type": "em",
+      },
+    ],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > whistespaces > ignores wild \`<br />\` 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > whistespaces > strips complex indentation 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet consectetur adipiscing elit",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > whistespaces > strips indentation 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet",
+    "type": "paragraph",
+  },
+]
+`;
+
+exports[`transforms HTML to rich text > whistespaces > treats \`<br />\` as new lines 1`] = `
+[
+  {
+    "direction": "ltr",
+    "spans": [],
+    "text": "lorem ipsum dolor sit amet
+consectetur adipiscing elit",
+    "type": "paragraph",
+  },
+]
+`;

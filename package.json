@@ -79,7 +79,19 @@
 		"test": "npm run lint && npm run types && npm run unit && npm run build && npm run size"
 	},
 	"dependencies": {
-		"imgix-url-builder": "^0.0.4"
+		"hast": "^1.0.0",
+		"hast-util-select": "^6.0.2",
+		"hast-util-to-html": "^9.0.1",
+		"imgix-url-builder": "^0.0.4",
+		"mdast-util-to-string": "^4.0.0",
+		"rehype-minify-whitespace": "^6.0.0",
+		"rehype-parse": "^9.0.0",
+		"remark-parse": "^11.0.0",
+		"remark-rehype": "^11.1.0",
+		"unified": "^11.0.5",
+		"unist-util-remove": "^4.0.0",
+		"unist-util-visit": "^5.0.0",
+		"vfile": "^6.0.2"
 	},
 	"devDependencies": {
 		"@prismicio/mock": "^0.3.1",
