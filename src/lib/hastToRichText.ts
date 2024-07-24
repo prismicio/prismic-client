@@ -1,5 +1,4 @@
 import type { Element, Root } from "hast"
-import { whitespace } from "hast-util-whitespace"
 import { toString } from "mdast-util-to-string"
 import { visit } from "unist-util-visit"
 import type { VFile } from "vfile"
@@ -274,7 +273,9 @@ export const hastToRichText = (
 				throw error
 			}
 		} else if (node.type === "text") {
-			if (!whitespace(node)) {
+			// Inspired from `hast-util-whitespace`, see:
+			// https://github.com/syntax-tree/hast-util-whitespace/blob/main/lib/index.js
+			if (!(node.value.replace(/[ \t\n\f\r]/g, "") === "")) {
 				try {
 					builder.appendText(node.value)
 				} catch (error) {
