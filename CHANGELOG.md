@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.7.4](https://github.com/prismicio/prismic-client/compare/v7.7.3...v7.7.4) (2024-07-24)
+
+
+### Bug Fixes
+
+* remove `hast-util-whitespace` dependency ([2d9c098](https://github.com/prismicio/prismic-client/commit/2d9c0988e4b9910e61299a8aa1ea03e7d57ec2fe))
+
 ### [7.7.3](https://github.com/prismicio/prismic-client/compare/v7.7.2...v7.7.3) (2024-07-23)
 
 
