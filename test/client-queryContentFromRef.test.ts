@@ -1,37 +1,37 @@
-import { expect, it } from "vitest";
+import { expect, it } from "vitest"
 
-import * as prismicM from "@prismicio/mock";
+import * as prismicM from "@prismicio/mock"
 
-import { createTestClient } from "./__testutils__/createClient";
-import { getMasterRef } from "./__testutils__/getMasterRef";
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
-import { testGetMethod } from "./__testutils__/testAnyGetMethod";
+import { createTestClient } from "./__testutils__/createClient"
+import { getMasterRef } from "./__testutils__/getMasterRef"
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
+import { testGetMethod } from "./__testutils__/testAnyGetMethod"
 
 testGetMethod("supports manual string ref", {
 	run: (client) => {
-		client.queryContentFromRef("ref");
+		client.queryContentFromRef("ref")
 
-		return client.get();
+		return client.get()
 	},
 	requiredParams: {
 		ref: "ref",
 	},
-});
+})
 
 testGetMethod("supports manual thunk ref", {
 	run: (client) => {
-		client.queryContentFromRef(async () => "thunk");
+		client.queryContentFromRef(async () => "thunk")
 
-		return client.get();
+		return client.get()
 	},
 	requiredParams: {
 		ref: "thunk",
 	},
-});
+})
 
 it("uses master ref if manual thunk ref returns non-string value", async (ctx) => {
-	const repositoryResponse = ctx.mock.api.repository();
-	const queryResponse = prismicM.api.query({ seed: ctx.task.name });
+	const repositoryResponse = ctx.mock.api.repository()
+	const queryResponse = prismicM.api.query({ seed: ctx.task.name })
 
 	mockPrismicRestAPIV2({
 		repositoryResponse,
@@ -40,13 +40,13 @@ it("uses master ref if manual thunk ref returns non-string value", async (ctx) =
 			ref: getMasterRef(repositoryResponse),
 		},
 		ctx,
-	});
+	})
 
-	const client = createTestClient();
+	const client = createTestClient()
 
-	client.queryContentFromRef(async () => undefined);
+	client.queryContentFromRef(async () => undefined)
 
-	const res = await client.get();
+	const res = await client.get()
 
-	expect(res).toStrictEqual(queryResponse);
-});
+	expect(res).toStrictEqual(queryResponse)
+})

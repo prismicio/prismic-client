@@ -1,24 +1,24 @@
-import { expectNever, expectType } from "ts-expect";
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes";
+import type * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes"
 
-import * as prismic from "../../src";
+import * as prismic from "../../src"
 
-(value: prismic.CustomTypeModelSliceZoneField): true => {
+;(value: prismic.CustomTypeModelSliceZoneField): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				expectNever(value);
+				expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 
 expectType<prismic.CustomTypeModelSliceZoneField>({
 	type: prismic.CustomTypeModelFieldType.Slices,
@@ -58,15 +58,15 @@ expectType<prismic.CustomTypeModelSliceZoneField>({
 			},
 		},
 	},
-});
+})
 
 /**
  * Supports custom Slice types.
  */
 expectType<
 	prismic.CustomTypeModelSliceZoneField<{
-		foo: prismic.CustomTypeModelSlice;
-		bar: prismic.CustomTypeModelSharedSlice;
+		foo: prismic.CustomTypeModelSlice
+		bar: prismic.CustomTypeModelSharedSlice
 	}>
 >({
 	type: prismic.CustomTypeModelFieldType.Slices,
@@ -88,18 +88,18 @@ expectType<
 			},
 		},
 	},
-});
+})
 
 /**
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
 expectType<prismic.CustomTypeModelSliceZoneField>(
 	{} as prismicTICustomTypes.DynamicSlices,
-);
+)
 
 /**
  * `@prismicio/types-internal` extends `@prismicio/types`
  */
 expectType<prismicTICustomTypes.DynamicSlices>(
 	{} as prismic.CustomTypeModelSliceZoneField,
-);
+)

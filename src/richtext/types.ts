@@ -1,4 +1,4 @@
-import {
+import type {
 	RTAnyNode,
 	RTEmNode,
 	RTEmbedNode,
@@ -19,9 +19,9 @@ import {
 	RTPreformattedNode,
 	RTSpanNode,
 	RTStrongNode,
-	RichTextNodeType,
 	RichTextNodeTypes,
-} from "../types/value/richText";
+} from "../types/value/richText"
+import { RichTextNodeType } from "../types/value/richText"
 
 // Serializers
 
@@ -38,7 +38,7 @@ export type RichTextFunctionSerializer<ReturnType> = (
 	text: string | undefined,
 	children: ReturnType[],
 	key: string,
-) => ReturnType | null | undefined;
+) => ReturnType | null | undefined
 
 /**
  * Map serializer's tag function serializer, can be helpful for typing those
@@ -51,12 +51,12 @@ export type RichTextMapSerializerFunction<
 	Node extends RTAnyNode = RTAnyNode,
 	TextType = string | undefined,
 > = (payload: {
-	type: Node["type"];
-	node: Node;
-	text: TextType;
-	children: ReturnType[];
-	key: string;
-}) => ReturnType | null | undefined;
+	type: Node["type"]
+	node: Node
+	text: TextType
+	children: ReturnType[]
+	key: string
+}) => ReturnType | null | undefined
 
 /**
  * Serializes a node from a rich text or title field with a map
@@ -74,75 +74,75 @@ export type RichTextMapSerializer<ReturnType> = {
 		ReturnType,
 		RTHeading1Node,
 		undefined
-	>;
+	>
 	heading2?: RichTextMapSerializerFunction<
 		ReturnType,
 		RTHeading2Node,
 		undefined
-	>;
+	>
 	heading3?: RichTextMapSerializerFunction<
 		ReturnType,
 		RTHeading3Node,
 		undefined
-	>;
+	>
 	heading4?: RichTextMapSerializerFunction<
 		ReturnType,
 		RTHeading4Node,
 		undefined
-	>;
+	>
 	heading5?: RichTextMapSerializerFunction<
 		ReturnType,
 		RTHeading5Node,
 		undefined
-	>;
+	>
 	heading6?: RichTextMapSerializerFunction<
 		ReturnType,
 		RTHeading6Node,
 		undefined
-	>;
+	>
 	paragraph?: RichTextMapSerializerFunction<
 		ReturnType,
 		RTParagraphNode,
 		undefined
-	>;
+	>
 	preformatted?: RichTextMapSerializerFunction<
 		ReturnType,
 		RTPreformattedNode,
 		undefined
-	>;
-	strong?: RichTextMapSerializerFunction<ReturnType, RTStrongNode, string>;
-	em?: RichTextMapSerializerFunction<ReturnType, RTEmNode, string>;
+	>
+	strong?: RichTextMapSerializerFunction<ReturnType, RTStrongNode, string>
+	em?: RichTextMapSerializerFunction<ReturnType, RTEmNode, string>
 	listItem?: RichTextMapSerializerFunction<
 		ReturnType,
 		RTListItemNode,
 		undefined
-	>;
+	>
 	oListItem?: RichTextMapSerializerFunction<
 		ReturnType,
 		RTOListItemNode,
 		undefined
-	>;
-	list?: RichTextMapSerializerFunction<ReturnType, RTListNode, undefined>;
-	oList?: RichTextMapSerializerFunction<ReturnType, RTOListNode, undefined>;
-	image?: RichTextMapSerializerFunction<ReturnType, RTImageNode, undefined>;
-	embed?: RichTextMapSerializerFunction<ReturnType, RTEmbedNode, undefined>;
-	hyperlink?: RichTextMapSerializerFunction<ReturnType, RTLinkNode, string>;
-	label?: RichTextMapSerializerFunction<ReturnType, RTLabelNode, string>;
-	span?: RichTextMapSerializerFunction<ReturnType, RTSpanNode, string>;
-};
+	>
+	list?: RichTextMapSerializerFunction<ReturnType, RTListNode, undefined>
+	oList?: RichTextMapSerializerFunction<ReturnType, RTOListNode, undefined>
+	image?: RichTextMapSerializerFunction<ReturnType, RTImageNode, undefined>
+	embed?: RichTextMapSerializerFunction<ReturnType, RTEmbedNode, undefined>
+	hyperlink?: RichTextMapSerializerFunction<ReturnType, RTLinkNode, string>
+	label?: RichTextMapSerializerFunction<ReturnType, RTLabelNode, string>
+	span?: RichTextMapSerializerFunction<ReturnType, RTSpanNode, string>
+}
 
 // Tree
 export interface Tree {
-	key: string;
-	children: TreeNode[];
+	key: string
+	children: TreeNode[]
 }
 
 export interface TreeNode {
-	key: string;
-	type: RichTextNodeTypes;
-	text?: string;
-	node: RTAnyNode;
-	children: TreeNode[];
+	key: string
+	type: RichTextNodeTypes
+	text?: string
+	node: RTAnyNode
+	children: TreeNode[]
 }
 
 // Helpers
@@ -151,4 +151,4 @@ export const RichTextReversedNodeType = {
 	[RichTextNodeType.oListItem]: "oListItem",
 	[RichTextNodeType.list]: "list",
 	[RichTextNodeType.oList]: "oList",
-} as const;
+} as const

@@ -1,7 +1,7 @@
-import type { FieldState } from "./types";
+import type { FieldState } from "./types"
 
-import type { SharedSlice } from "./sharedSlice";
-import type { Slice } from "./slice";
+import type { SharedSlice } from "./sharedSlice"
+import type { Slice } from "./slice"
 
 /**
  * Prismic Slices are sections of your website. Prismic documents contain a
@@ -14,4 +14,4 @@ import type { Slice } from "./slice";
 export type SliceZone<
 	Slices extends Slice | SharedSlice = Slice | SharedSlice,
 	State extends FieldState = FieldState,
-> = State extends "empty" ? [] : [Slices, ...Slices[]];
+> = State extends "empty" ? [] : [Slices, ...Slices[]]

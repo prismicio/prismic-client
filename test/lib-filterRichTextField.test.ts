@@ -1,9 +1,10 @@
-import { expect, it } from "vitest";
+import { expect, it } from "vitest"
 
-import { createRichTextFixtures } from "./__testutils__/createRichTextFixtures";
+import { createRichTextFixtures } from "./__testutils__/createRichTextFixtures"
 
-import { LinkType, RTImageNode, RTParagraphNode, RichTextField } from "../src";
-import { filterRichTextField } from "../src/lib/filterRichTextField";
+import type { RTImageNode, RTParagraphNode, RichTextField } from "../src"
+import { LinkType } from "../src"
+import { filterRichTextField } from "../src/lib/filterRichTextField"
 
 it("filters out node types that aren't allowed by single type model", () => {
 	const input: RichTextField = [
@@ -22,40 +23,40 @@ it("filters out node types that aren't allowed by single type model", () => {
 			text: "sed do eiusmod tempor",
 			type: "heading1",
 		},
-	];
+	]
 
-	const allowedNodeTypes = ["heading1"];
+	const allowedNodeTypes = ["heading1"]
 
 	const output = filterRichTextField(input, {
 		type: "StructuredText",
 		config: {
 			single: allowedNodeTypes.join(","),
 		},
-	});
+	})
 
-	expect(output).toHaveLength(1);
+	expect(output).toHaveLength(1)
 	expect(output.every((node) => allowedNodeTypes.includes(node.type))).toBe(
 		true,
-	);
-});
+	)
+})
 
 it("filters out node types that aren't allowed by multi type model", () => {
-	const { en: input } = createRichTextFixtures();
+	const { en: input } = createRichTextFixtures()
 
-	const allowedNodeTypes = ["paragraph", "embed"];
+	const allowedNodeTypes = ["paragraph", "embed"]
 
 	const output = filterRichTextField(input, {
 		type: "StructuredText",
 		config: {
 			multi: allowedNodeTypes.join(","),
 		},
-	});
+	})
 
-	expect(output.length).toBeGreaterThanOrEqual(1);
+	expect(output.length).toBeGreaterThanOrEqual(1)
 	expect(output.every((node) => allowedNodeTypes.includes(node.type))).toBe(
 		true,
-	);
-});
+	)
+})
 
 it("filters out span node types that aren't allowed by single type model", () => {
 	const input: RichTextField = [
@@ -75,22 +76,22 @@ it("filters out span node types that aren't allowed by single type model", () =>
 			text: "lorem ipsum dolor sit amet",
 			type: "paragraph",
 		},
-	];
+	]
 
-	const allowedNodeTypes = ["paragraph", "strong"];
+	const allowedNodeTypes = ["paragraph", "strong"]
 
 	const [output] = filterRichTextField(input, {
 		type: "StructuredText",
 		config: {
 			single: allowedNodeTypes.join(","),
 		},
-	}) as RTParagraphNode[];
+	}) as RTParagraphNode[]
 
-	expect(output.spans.length).toBeGreaterThanOrEqual(1);
+	expect(output.spans.length).toBeGreaterThanOrEqual(1)
 	expect(
 		output.spans.every((span) => allowedNodeTypes.includes(span.type)),
-	).toBe(true);
-});
+	).toBe(true)
+})
 
 it("filters out label span nodes that aren't allowed by single type model", () => {
 	const input: RichTextField = [
@@ -112,9 +113,9 @@ it("filters out label span nodes that aren't allowed by single type model", () =
 			text: "lorem ipsum dolor sit amet",
 			type: "paragraph",
 		},
-	];
+	]
 
-	const allowedLabelTypes = ["code"];
+	const allowedLabelTypes = ["code"]
 
 	const [output] = filterRichTextField(input, {
 		type: "StructuredText",
@@ -122,16 +123,16 @@ it("filters out label span nodes that aren't allowed by single type model", () =
 			single: "paragraph",
 			labels: allowedLabelTypes,
 		},
-	}) as RTParagraphNode[];
+	}) as RTParagraphNode[]
 
-	expect(output.spans.length).toBeGreaterThanOrEqual(1);
+	expect(output.spans.length).toBeGreaterThanOrEqual(1)
 	expect(
 		output.spans.every(
 			(span) =>
 				span.type === "label" && allowedLabelTypes.includes(span.data.label),
 		),
-	).toBe(true);
-});
+	).toBe(true)
+})
 
 it('removes `target: "_blank"` from hyperlink spans when they are not allowed', () => {
 	const input: RichTextField = [
@@ -157,7 +158,7 @@ it('removes `target: "_blank"` from hyperlink spans when they are not allowed', 
 			text: "lorem ipsum dolor sit amet",
 			type: "paragraph",
 		},
-	];
+	]
 
 	const [allowedOutput] = filterRichTextField(input, {
 		type: "StructuredText",
@@ -165,9 +166,9 @@ it('removes `target: "_blank"` from hyperlink spans when they are not allowed', 
 			single: "paragraph,hyperlink",
 			allowTargetBlank: true,
 		},
-	}) as RTParagraphNode[];
+	}) as RTParagraphNode[]
 
-	expect(allowedOutput.spans.length).toBeGreaterThanOrEqual(1);
+	expect(allowedOutput.spans.length).toBeGreaterThanOrEqual(1)
 	expect(
 		allowedOutput.spans.every(
 			(span) =>
@@ -175,7 +176,7 @@ it('removes `target: "_blank"` from hyperlink spans when they are not allowed', 
 				span.data.link_type === LinkType.Web &&
 				!span.data.target,
 		),
-	).toBe(false);
+	).toBe(false)
 
 	const [notAllowedOutput] = filterRichTextField(input, {
 		type: "StructuredText",
@@ -183,9 +184,9 @@ it('removes `target: "_blank"` from hyperlink spans when they are not allowed', 
 			single: "paragraph,hyperlink",
 			allowTargetBlank: false,
 		},
-	}) as RTParagraphNode[];
+	}) as RTParagraphNode[]
 
-	expect(notAllowedOutput.spans.length).toBeGreaterThanOrEqual(1);
+	expect(notAllowedOutput.spans.length).toBeGreaterThanOrEqual(1)
 	expect(
 		notAllowedOutput.spans.every(
 			(span) =>
@@ -193,8 +194,8 @@ it('removes `target: "_blank"` from hyperlink spans when they are not allowed', 
 				span.data.link_type === LinkType.Web &&
 				!span.data.target,
 		),
-	).toBe(true);
-});
+	).toBe(true)
+})
 
 it('removes `target: "_blank"` from image nodes when they are not allowed', () => {
 	const baseImageNode = {
@@ -205,7 +206,7 @@ it('removes `target: "_blank"` from image nodes when they are not allowed', () =
 		copyright: "",
 		dimensions: { height: 100, width: 100 },
 		edit: { x: 0, y: 0, zoom: 1, background: "transparent" },
-	} as const;
+	} as const
 
 	const input: RichTextField = [
 		{
@@ -220,7 +221,7 @@ it('removes `target: "_blank"` from image nodes when they are not allowed', () =
 				target: "_blank",
 			},
 		},
-	];
+	]
 
 	const allowedOutput = filterRichTextField(input, {
 		type: "StructuredText",
@@ -228,9 +229,9 @@ it('removes `target: "_blank"` from image nodes when they are not allowed', () =
 			multi: "image",
 			allowTargetBlank: true,
 		},
-	}) as RTImageNode[];
+	}) as RTImageNode[]
 
-	expect(allowedOutput.length).toBeGreaterThanOrEqual(1);
+	expect(allowedOutput.length).toBeGreaterThanOrEqual(1)
 	expect(
 		allowedOutput.every(
 			(node) =>
@@ -238,7 +239,7 @@ it('removes `target: "_blank"` from image nodes when they are not allowed', () =
 				node.linkTo.link_type === LinkType.Web &&
 				!node.linkTo.target,
 		),
-	).toBe(false);
+	).toBe(false)
 
 	const notAllowedOutput = filterRichTextField(input, {
 		type: "StructuredText",
@@ -246,9 +247,9 @@ it('removes `target: "_blank"` from image nodes when they are not allowed', () =
 			multi: "image",
 			allowTargetBlank: false,
 		},
-	}) as RTImageNode[];
+	}) as RTImageNode[]
 
-	expect(notAllowedOutput.length).toBeGreaterThanOrEqual(1);
+	expect(notAllowedOutput.length).toBeGreaterThanOrEqual(1)
 	expect(
 		notAllowedOutput.every(
 			(node) =>
@@ -256,5 +257,5 @@ it('removes `target: "_blank"` from image nodes when they are not allowed', () =
 				node.linkTo.link_type === LinkType.Web &&
 				!node.linkTo.target,
 		),
-	).toBe(true);
-});
+	).toBe(true)
+})

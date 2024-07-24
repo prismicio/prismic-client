@@ -1,4 +1,4 @@
-import type { CustomTypeModelFieldType } from "./types";
+import type { CustomTypeModelFieldType } from "./types"
 
 /**
  * A color custom type field.
@@ -6,9 +6,9 @@ import type { CustomTypeModelFieldType } from "./types";
  * More details: {@link https://prismic.io/docs/color}
  */
 export interface CustomTypeModelColorField {
-	type: typeof CustomTypeModelFieldType.Color;
+	type: typeof CustomTypeModelFieldType.Color
 	config?: {
-		label?: string | null;
-		placeholder?: string;
-	};
+		label?: string | null
+		placeholder?: string
+	}
 }

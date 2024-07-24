@@ -1,11 +1,12 @@
-import { expect, it } from "vitest";
+import { expect, it } from "vitest"
 
-import { ImageField, asImagePixelDensitySrcSet } from "../src";
+import type { ImageField } from "../src"
+import { asImagePixelDensitySrcSet } from "../src"
 
 it("returns null for nullish inputs", () => {
-	expect(asImagePixelDensitySrcSet(null)).toBeNull();
-	expect(asImagePixelDensitySrcSet(undefined)).toBeNull();
-});
+	expect(asImagePixelDensitySrcSet(null)).toBeNull()
+	expect(asImagePixelDensitySrcSet(undefined)).toBeNull()
+})
 
 it("returns an image field pixel-density-based srcset with [1, 2, 3] pxiel densities by default", () => {
 	const field: ImageField = {
@@ -20,7 +21,7 @@ it("returns an image field pixel-density-based srcset with [1, 2, 3] pxiel densi
 		alt: null,
 		copyright: null,
 		dimensions: { width: 400, height: 300 },
-	};
+	}
 
 	expect(asImagePixelDensitySrcSet(field)).toStrictEqual({
 		src: field.url,
@@ -28,8 +29,8 @@ it("returns an image field pixel-density-based srcset with [1, 2, 3] pxiel densi
 			`${field.url}&dpr=1 1x, ` +
 			`${field.url}&dpr=2 2x, ` +
 			`${field.url}&dpr=3 3x`,
-	});
-});
+	})
+})
 
 it("supports custom pixel densities", () => {
 	const field: ImageField = {
@@ -44,7 +45,7 @@ it("supports custom pixel densities", () => {
 		alt: null,
 		copyright: null,
 		dimensions: { width: 400, height: 300 },
-	};
+	}
 
 	expect(
 		asImagePixelDensitySrcSet(field, {
@@ -56,8 +57,8 @@ it("supports custom pixel densities", () => {
 			`${field.url}&dpr=2 2x, ` +
 			`${field.url}&dpr=4 4x, ` +
 			`${field.url}&dpr=6 6x`,
-	});
-});
+	})
+})
 
 it("applies given Imgix URL parameters", () => {
 	const field: ImageField = {
@@ -72,7 +73,7 @@ it("applies given Imgix URL parameters", () => {
 		alt: null,
 		copyright: null,
 		dimensions: { width: 400, height: 300 },
-	};
+	}
 
 	expect(
 		asImagePixelDensitySrcSet(field, {
@@ -84,11 +85,11 @@ it("applies given Imgix URL parameters", () => {
 			`${field.url}&sat=100&dpr=1 1x, ` +
 			`${field.url}&sat=100&dpr=2 2x, ` +
 			`${field.url}&sat=100&dpr=3 3x`,
-	});
-});
+	})
+})
 
 it("returns null when image field is empty", () => {
-	const field: ImageField<null, "empty"> = {};
+	const field: ImageField<null, "empty"> = {}
 
-	expect(asImagePixelDensitySrcSet(field)).toBeNull();
-});
+	expect(asImagePixelDensitySrcSet(field)).toBeNull()
+})

@@ -2,7 +2,7 @@ import type {
 	CustomTypeModelFieldForGroup,
 	CustomTypeModelFieldForNestedGroup,
 	CustomTypeModelFieldType,
-} from "./types";
+} from "./types"
 
 /**
  * A group custom type field.
@@ -17,11 +17,11 @@ export interface CustomTypeModelGroupField<
 		CustomTypeModelFieldForGroup
 	>,
 > {
-	type: typeof CustomTypeModelFieldType.Group;
+	type: typeof CustomTypeModelFieldType.Group
 	config?: {
-		label?: string | null;
-		fields?: Fields;
-	};
+		label?: string | null
+		fields?: Fields
+	}
 }
 
 /**
@@ -36,4 +36,4 @@ export type CustomTypeModelNestedGroupField<
 		string,
 		CustomTypeModelFieldForNestedGroup
 	>,
-> = CustomTypeModelGroupField<Fields>;
+> = CustomTypeModelGroupField<Fields>

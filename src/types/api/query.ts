@@ -1,4 +1,4 @@
-import { PrismicDocument } from "../value/document";
+import type { PrismicDocument } from "../value/document"
 
 /**
  * A query response from the Prismic REST API V2. The response contains
@@ -12,40 +12,40 @@ export interface Query<Document extends PrismicDocument = PrismicDocument> {
 	/**
 	 * The page number for this page of results.
 	 */
-	page: number;
+	page: number
 
 	/**
 	 * Maximum number of results per page.
 	 */
-	results_per_page: number;
+	results_per_page: number
 
 	/**
 	 * Number of results in this page.
 	 */
-	results_size: number;
+	results_size: number
 
 	/**
 	 * Total number of results within all pages.
 	 */
-	total_results_size: number;
+	total_results_size: number
 
 	/**
 	 * Total number of pages.
 	 */
-	total_pages: number;
+	total_pages: number
 
 	/**
 	 * The Prismic REST API V2 URL to the next page, if one exists.
 	 */
-	next_page: string | null;
+	next_page: string | null
 
 	/**
 	 * The Prismic REST API V2 URL to the previous page, if one exists.
 	 */
-	prev_page: string | null;
+	prev_page: string | null
 
 	/**
 	 * A paginated list of documents matching the query.
 	 */
-	results: Document[];
+	results: Document[]
 }

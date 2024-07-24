@@ -1,22 +1,23 @@
-import { TypeOf, expectNever, expectType } from "ts-expect";
+import type { TypeOf } from "ts-expect"
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismic from "../../src";
+import type * as prismic from "../../src"
 
-(value: prismic.ImageField): true => {
+;(value: prismic.ImageField): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				expectNever(value);
+				expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 
 /**
  * Filled state.
@@ -28,7 +29,7 @@ expectType<prismic.ImageField>({
 	edit: { x: 0, y: 0, zoom: 1, background: "background" },
 	alt: "alt",
 	copyright: "copyright",
-});
+})
 expectType<prismic.ImageField<never, "filled">>({
 	id: "id",
 	url: "url",
@@ -36,7 +37,7 @@ expectType<prismic.ImageField<never, "filled">>({
 	edit: { x: 0, y: 0, zoom: 1, background: "background" },
 	alt: "alt",
 	copyright: "copyright",
-});
+})
 expectType<prismic.ImageField<never, "empty">>({
 	// @ts-expect-error - Empty fields cannot contain a filled value.
 	id: "id",
@@ -50,7 +51,7 @@ expectType<prismic.ImageField<never, "empty">>({
 	alt: "alt",
 	// @ts-expect-error - Empty fields cannot contain a filled value.
 	copyright: "copyright",
-});
+})
 
 /**
  * Empty state.
@@ -60,14 +61,14 @@ expectType<prismic.ImageField>({
 	dimensions: null,
 	alt: null,
 	copyright: null,
-});
-expectType<prismic.ImageField>({});
+})
+expectType<prismic.ImageField>({})
 expectType<prismic.ImageField<never, "empty">>({
 	url: null,
 	dimensions: null,
 	alt: null,
 	copyright: null,
-});
+})
 expectType<prismic.ImageField<never, "filled">>({
 	// @ts-expect-error - Filled fields cannot contain an empty value.
 	id: null,
@@ -79,7 +80,7 @@ expectType<prismic.ImageField<never, "filled">>({
 	edit: null,
 	alt: null,
 	copyright: null,
-});
+})
 
 /**
  * Allows null alt and copyright.
@@ -91,7 +92,7 @@ expectType<prismic.ImageField>({
 	edit: { x: 0, y: 0, zoom: 1, background: "background" },
 	alt: null,
 	copyright: null,
-});
+})
 
 /**
  * Does not contain thumbnails by default.
@@ -103,7 +104,7 @@ expectType<prismic.ImageField>({
 	copyright: "copyright",
 	// @ts-expect-error - No thumbnails are included by default.
 	Foo: {},
-});
+})
 
 /**
  * Supports thumbnails.
@@ -131,11 +132,11 @@ expectType<prismic.ImageField<"Foo" | "Bar">>({
 		alt: "alt",
 		copyright: "copyright",
 	},
-});
+})
 // See: #27
-const withThumbnails = {} as prismic.ImageField<"Foo" | "Bar">;
-withThumbnails.Foo;
-withThumbnails.Bar;
+const withThumbnails = {} as prismic.ImageField<"Foo" | "Bar">
+withThumbnails.Foo
+withThumbnails.Bar
 
 /**
  * Thumbnails can be disabled with `never` ThumbnailNames.
@@ -152,12 +153,12 @@ expectType<prismic.ImageField<never>>({
 		alt: "alt",
 		copyright: "copyright",
 	},
-});
-const withoutThumbnails = {} as prismic.ImageField<never>;
+})
+const withoutThumbnails = {} as prismic.ImageField<never>
 // @ts-expect-error - No thumbnails should be included when set to `never`.
-withoutThumbnails.Foo;
+withoutThumbnails.Foo
 // @ts-expect-error - No thumbnails should be included when set to `never`.
-withoutThumbnails.Bar;
+withoutThumbnails.Bar
 
 // TODO: Remove this group of tests when support for `null` ThumbnailNames is
 // removed.
@@ -176,12 +177,12 @@ expectType<prismic.ImageField<null>>({
 		alt: "alt",
 		copyright: "copyright",
 	},
-});
-const withoutThumbnailsNull = {} as prismic.ImageField<null>;
+})
+const withoutThumbnailsNull = {} as prismic.ImageField<null>
 // @ts-expect-error - No thumbnails should be included when set to `null`.
-withoutThumbnailsNull.Foo;
+withoutThumbnailsNull.Foo
 // @ts-expect-error - No thumbnails should be included when set to `null`.
-withoutThumbnailsNull.Bar;
+withoutThumbnailsNull.Bar
 
 /**
  * Thumbnail name can be `"length"` (edge case, see: #31)
@@ -198,7 +199,7 @@ expectType<prismic.ImageField>({
 		alt: "alt",
 		copyright: "copyright",
 	},
-});
+})
 expectType<prismic.ImageField<"length">>({
 	id: "id",
 	url: "url",
@@ -214,28 +215,28 @@ expectType<prismic.ImageField<"length">>({
 		alt: "alt",
 		copyright: "copyright",
 	},
-});
+})
 
 /**
  * ImageFields are valid ImageFieldImage extends.
  */
-expectType<TypeOf<prismic.ImageFieldImage, prismic.ImageField>>(true);
-expectType<TypeOf<prismic.ImageFieldImage, prismic.ImageField<never>>>(true);
-expectType<TypeOf<prismic.ImageFieldImage, prismic.ImageField<"Foo">>>(true);
+expectType<TypeOf<prismic.ImageFieldImage, prismic.ImageField>>(true)
+expectType<TypeOf<prismic.ImageFieldImage, prismic.ImageField<never>>>(true)
+expectType<TypeOf<prismic.ImageFieldImage, prismic.ImageField<"Foo">>>(true)
 expectType<TypeOf<prismic.ImageFieldImage, prismic.ImageField<"Foo" | "Bar">>>(
 	true,
-);
+)
 const _ImageFieldIsValidImageFieldImageExtendDebug: prismic.ImageFieldImage =
-	{} as prismic.ImageField;
+	{} as prismic.ImageField
 
 /**
  * ImageFieldImages are valid ImageField extends with no thumbnails.
  */
-expectType<TypeOf<prismic.ImageField, prismic.ImageFieldImage>>(true);
-expectType<TypeOf<prismic.ImageField<never>, prismic.ImageFieldImage>>(true);
-expectType<TypeOf<prismic.ImageField<"Foo">, prismic.ImageFieldImage>>(false);
+expectType<TypeOf<prismic.ImageField, prismic.ImageFieldImage>>(true)
+expectType<TypeOf<prismic.ImageField<never>, prismic.ImageFieldImage>>(true)
+expectType<TypeOf<prismic.ImageField<"Foo">, prismic.ImageFieldImage>>(false)
 expectType<TypeOf<prismic.ImageField<"Foo" | "Bar">, prismic.ImageFieldImage>>(
 	false,
-);
+)
 const _ImageFieldImageIsValidImageFieldExtendDebug: prismic.ImageField =
-	{} as prismic.ImageFieldImage;
+	{} as prismic.ImageFieldImage

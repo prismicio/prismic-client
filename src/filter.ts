@@ -15,19 +15,19 @@ const formatValue = (
 		| (string | number | Date | unknown)[],
 ): string => {
 	if (Array.isArray(value)) {
-		return `[${value.map(formatValue).join(", ")}]`;
+		return `[${value.map(formatValue).join(", ")}]`
 	}
 
 	if (typeof value === "string") {
-		return `"${value}"`;
+		return `"${value}"`
 	}
 
 	if (value instanceof Date) {
-		return `${value.getTime()}`;
+		return `${value.getTime()}`
 	}
 
-	return `${value}`;
-};
+	return `${value}`
+}
 
 /**
  * Creates a filter builder function for filters with a path and arguments.
@@ -43,14 +43,14 @@ const pathWithArgsFilter = <Args extends unknown[]>(name: string) => {
 	 * @param path - Path to the value to be compared.
 	 */
 	const fn = (path: string, ...args: Args): string => {
-		const formattedArgs = args.map(formatValue).join(", ");
-		const joiner = path && args.length ? ", " : "";
+		const formattedArgs = args.map(formatValue).join(", ")
+		const joiner = path && args.length ? ", " : ""
 
-		return `[${name}(${path}${joiner}${formattedArgs})]`;
-	};
+		return `[${name}(${path}${joiner}${formattedArgs})]`
+	}
 
-	return fn;
-};
+	return fn
+}
 
 /**
  * Creates a filter builder function for filters with only a path.
@@ -60,17 +60,17 @@ const pathWithArgsFilter = <Args extends unknown[]>(name: string) => {
  * @returns Filter builder function for the given name.
  */
 const pathFilter = (name: string) => {
-	const filterFn = pathWithArgsFilter(name);
+	const filterFn = pathWithArgsFilter(name)
 
 	/**
 	 * @param path - Path for the filter.
 	 */
 	const fn = (path: string): string => {
-		return filterFn(path);
-	};
+		return filterFn(path)
+	}
 
-	return fn;
-};
+	return fn
+}
 
 /**
  * Creates a filter builder function for filters with only arguments and no
@@ -81,17 +81,17 @@ const pathFilter = (name: string) => {
  * @returns Filter builder function for the given name.
  */
 const argsFilter = <Args extends unknown[]>(name: string) => {
-	const filterFn = pathWithArgsFilter<Args>(name);
+	const filterFn = pathWithArgsFilter<Args>(name)
 
 	/**
 	 * @param args - Arguments for the filter.
 	 */
 	const fn = (...args: Args): string => {
-		return filterFn("", ...args);
-	};
+		return filterFn("", ...args)
+	}
 
-	return fn;
-};
+	return fn
+}
 
 export const filter = {
 	/**
@@ -353,4 +353,4 @@ export const filter = {
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#date-filters}
 	 */
 	dateHourBefore: pathWithArgsFilter<[hour: number]>("date.hour-before"),
-};
+}

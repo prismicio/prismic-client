@@ -1,7 +1,7 @@
-import { castArray } from "./castArray";
+import { castArray } from "./castArray"
 
 interface WithFilters {
-	filters?: string | string[];
+	filters?: string | string[]
 }
 
 /**
@@ -22,5 +22,5 @@ export const appendFilters = <T extends WithFilters>(
 	return {
 		...objWithFilters,
 		filters: [...(objWithFilters.filters || []), ...castArray(filters)],
-	};
-};
+	}
+}

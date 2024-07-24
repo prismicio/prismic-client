@@ -1,13 +1,13 @@
-import { PrismicError } from "./PrismicError";
+import { PrismicError } from "./PrismicError"
 
 type ForbiddenErrorRepositoryAPIResponse = {
-	type: string;
-	message: string;
-};
+	type: string
+	message: string
+}
 
 type ForbiddenErrorQueryAPIResponse = {
-	error: string;
-};
+	error: string
+}
 
 export class ForbiddenError<
 	TResponse =

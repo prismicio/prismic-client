@@ -1,6 +1,6 @@
-import { RichTextField } from "../types/value/richText";
+import type { RichTextField } from "../types/value/richText"
 
-import { asText as baseAsText } from "../richtext/asText";
+import { asText as baseAsText } from "../richtext/asText"
 
 /**
  * Configuration that determines the output of `asText()`.
@@ -11,20 +11,20 @@ type AsTextConfig = {
 	 *
 	 * @defaultValue ` ` (a space)
 	 */
-	separator?: string;
-};
+	separator?: string
+}
 
 // TODO: Remove when we remove support for deprecated tuple-style configuration.
 /**
  * @deprecated Use object-style configuration instead.
  */
-type AsTextDeprecatedTupleConfig = [separator?: string];
+type AsTextDeprecatedTupleConfig = [separator?: string]
 
 /**
  * The return type of `asText()`.
  */
 type AsTextReturnType<Field extends RichTextField | null | undefined> =
-	Field extends RichTextField ? string : null;
+	Field extends RichTextField ? string : null
 
 export const asText: {
 	/**
@@ -40,7 +40,7 @@ export const asText: {
 	<Field extends RichTextField | null | undefined>(
 		richTextField: Field,
 		config?: AsTextConfig,
-	): AsTextReturnType<Field>;
+	): AsTextReturnType<Field>
 
 	/**
 	 * Serializes a rich text or title field to a plain text string.
@@ -57,7 +57,7 @@ export const asText: {
 	<Field extends RichTextField | null | undefined>(
 		richTextField: Field,
 		...config: AsTextDeprecatedTupleConfig
-	): AsTextReturnType<Field>;
+	): AsTextReturnType<Field>
 } = <Field extends RichTextField | null | undefined>(
 	richTextField: Field,
 	// TODO: Rename to `config` when we remove support for deprecated tuple-style configuration.
@@ -65,21 +65,21 @@ export const asText: {
 ): AsTextReturnType<Field> => {
 	if (richTextField) {
 		// TODO: Remove when we remove support for deprecated tuple-style configuration.
-		const [configObjectOrSeparator] = configObjectOrTuple;
-		let config: AsTextConfig;
+		const [configObjectOrSeparator] = configObjectOrTuple
+		let config: AsTextConfig
 		if (typeof configObjectOrSeparator === "string") {
 			config = {
 				separator: configObjectOrSeparator,
-			};
+			}
 		} else {
-			config = { ...configObjectOrSeparator };
+			config = { ...configObjectOrSeparator }
 		}
 
 		return baseAsText(
 			richTextField,
 			config.separator,
-		) as AsTextReturnType<Field>;
+		) as AsTextReturnType<Field>
 	} else {
-		return null as AsTextReturnType<Field>;
+		return null as AsTextReturnType<Field>
 	}
-};
+}

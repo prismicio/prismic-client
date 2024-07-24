@@ -1,6 +1,6 @@
-import type { FieldState } from "./types";
+import type { FieldState } from "./types"
 
-import type { DateField } from "./date";
+import type { DateField } from "./date"
 
 /**
  * A timestamp field.
@@ -10,4 +10,4 @@ import type { DateField } from "./date";
 export type TimestampField<State extends FieldState = FieldState> =
 	State extends "empty"
 		? null
-		: `${DateField<"filled">}T${number}:${number}:${number}+${number}`;
+		: `${DateField<"filled">}T${number}:${number}:${number}+${number}`

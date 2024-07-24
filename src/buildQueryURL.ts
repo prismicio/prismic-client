@@ -1,5 +1,5 @@
-import { castArray } from "./lib/castArray";
-import { devMsg } from "./lib/devMsg";
+import { castArray } from "./lib/castArray"
+import { devMsg } from "./lib/devMsg"
 
 /**
  * Create a union of the given object's values, and optionally specify which
@@ -13,7 +13,7 @@ import { devMsg } from "./lib/devMsg";
 type ValueOf<
 	ObjectType,
 	ValueType extends keyof ObjectType = keyof ObjectType,
-> = ObjectType[ValueType];
+> = ObjectType[ValueType]
 
 /**
  * An `orderings` parameter that orders the results by the specified field.
@@ -21,8 +21,8 @@ type ValueOf<
  * {@link https://prismic.io/docs/rest-api-technical-reference#orderings}
  */
 export interface Ordering {
-	field: string;
-	direction?: "asc" | "desc";
+	field: string
+	direction?: "asc" | "desc"
 }
 
 /**
@@ -55,29 +55,29 @@ export interface Route {
 	/**
 	 * The custom type of the document.
 	 */
-	type: string;
+	type: string
 
 	/**
 	 * A specific UID to which this route definition is scoped. The route is only
 	 * defined for the document whose UID matches the given UID.
 	 */
-	uid?: string;
+	uid?: string
 
 	/**
 	 * A specific language to which this route definition is scoped. The route is
 	 * only defined for documents whose language matches the given language.
 	 */
-	lang?: string;
+	lang?: string
 
 	/**
 	 * The resolved path of the document with optional placeholders.
 	 */
-	path: string;
+	path: string
 
 	/**
 	 * An object that lists the API IDs of the Content Relationships in the route.
 	 */
-	resolvers?: Record<string, string>;
+	resolvers?: Record<string, string>
 }
 
 /**
@@ -92,7 +92,7 @@ export interface QueryParams {
 	 *
 	 * {@link https://prismic.io/docs/access-token}
 	 */
-	accessToken?: string;
+	accessToken?: string
 
 	/**
 	 * The `pageSize` parameter defines the maximum number of documents that the
@@ -100,14 +100,14 @@ export interface QueryParams {
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#pagesize}
 	 */
-	pageSize?: number;
+	pageSize?: number
 
 	/**
 	 * The `page` parameter defines the pagination for the result of your query.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#page}
 	 */
-	page?: number;
+	page?: number
 
 	/**
 	 * The `after` parameter can be used along with the orderings option. It will
@@ -116,7 +116,7 @@ export interface QueryParams {
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#after}
 	 */
-	after?: string;
+	after?: string
 
 	/**
 	 * The `fetch` parameter is used to make queries faster by only retrieving the
@@ -124,7 +124,7 @@ export interface QueryParams {
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#fetch}
 	 */
-	fetch?: string | string[];
+	fetch?: string | string[]
 
 	/**
 	 * The `fetchLinks` parameter allows you to retrieve a specific content field
@@ -132,7 +132,7 @@ export interface QueryParams {
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#fetchlinks}
 	 */
-	fetchLinks?: string | string[];
+	fetchLinks?: string | string[]
 
 	/**
 	 * The `graphQuery` parameter allows you to specify which fields to retrieve
@@ -141,14 +141,14 @@ export interface QueryParams {
 	 *
 	 * {@link https://prismic.io/docs/graphquery-rest-api}
 	 */
-	graphQuery?: string;
+	graphQuery?: string
 
 	/**
 	 * The `lang` option defines the language code for the results of your query.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#lang}
 	 */
-	lang?: string;
+	lang?: string
 
 	/**
 	 * The `orderings` parameter orders the results by the specified field(s). You
@@ -169,11 +169,11 @@ export interface QueryParams {
 	 * 		{ field: "my.product.price", direction: "desc" },
 	 * 		{ field: "my.product.title" },
 	 * 	],
-	 * });
+	 * })
 	 * ```
 	 */
 	// TODO: Update TSDoc with deprecated API removal in v8
-	orderings?: string | Ordering | (string | Ordering)[];
+	orderings?: string | Ordering | (string | Ordering)[]
 
 	/**
 	 * The `routes` option allows you to define how a document's `url` field is
@@ -181,7 +181,7 @@ export interface QueryParams {
 	 *
 	 * {@link https://prismic.io/docs/route-resolver}
 	 */
-	routes?: Route | string | (Route | string)[];
+	routes?: Route | string | (Route | string)[]
 
 	/**
 	 * The `brokenRoute` option allows you to define the route populated in the
@@ -191,7 +191,7 @@ export interface QueryParams {
 	 *
 	 * {@link https://prismic.io/docs/route-resolver}
 	 */
-	brokenRoute?: string;
+	brokenRoute?: string
 }
 
 /**
@@ -203,28 +203,28 @@ type BuildQueryURLParams = {
 	 *
 	 * {@link https://prismic.io/docs/api#refs-and-the-entry-api}
 	 */
-	ref: string;
+	ref: string
 
 	/**
 	 * Ref used to populate integration fields with the latest content.
 	 *
 	 * {@link https://prismic.io/docs/integration-fields}
 	 */
-	integrationFieldsRef?: string;
+	integrationFieldsRef?: string
 
 	/**
 	 * One or more filters to filter documents for the query.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#q}
 	 */
-	filters?: string | string[];
+	filters?: string | string[]
 
 	/**
 	 * @deprecated Renamed to `filters`. Ensure the value is an array of filters,
 	 *   not a single, non-array filter.
 	 */
-	predicates?: string | string[];
-};
+	predicates?: string | string[]
+}
 
 /**
  * Parameters in this map have been renamed from the official Prismic REST API
@@ -234,7 +234,7 @@ type BuildQueryURLParams = {
  */
 const RENAMED_PARAMS = {
 	accessToken: "access_token",
-} as const;
+} as const
 
 /**
  * A valid parameter name for the Prismic REST API V2.
@@ -244,7 +244,7 @@ type ValidParamName =
 			keyof QueryParams,
 			keyof typeof RENAMED_PARAMS | keyof BuildQueryURLParams
 	  >
-	| ValueOf<typeof RENAMED_PARAMS>;
+	| ValueOf<typeof RENAMED_PARAMS>
 
 /**
  * Converts an Ordering to a string that is compatible with Prismic's REST API.
@@ -258,29 +258,29 @@ const castOrderingToString = (ordering: Ordering | string): string => {
 	// TODO: Remove the following when `orderings` strings are no longer supported.
 	if (typeof ordering === "string") {
 		if (process.env.NODE_ENV === "development") {
-			const [field, direction] = ordering.split(" ");
+			const [field, direction] = ordering.split(" ")
 
 			const objectForm =
 				direction === "desc"
 					? `{ field: "${field}", direction: "desc" }`
-					: `{ field: "${field}" }`;
+					: `{ field: "${field}" }`
 
 			console.warn(
 				`[@prismicio/client] A string value was provided to the \`orderings\` query parameter. Strings are deprecated. Please convert it to the object form: ${objectForm}. For more details, see ${devMsg(
 					"orderings-must-be-an-array-of-objects",
 				)}`,
-			);
+			)
 		}
 
-		return ordering;
+		return ordering
 	}
 
 	return ordering.direction === "desc"
 		? `${ordering.field} desc`
-		: ordering.field;
-};
+		: ordering.field
+}
 
-export type BuildQueryURLArgs = QueryParams & BuildQueryURLParams;
+export type BuildQueryURLArgs = QueryParams & BuildQueryURLParams
 
 /**
  * Build a Prismic REST API V2 URL to request documents from a repository. The
@@ -303,9 +303,9 @@ export const buildQueryURL = (
 	endpoint: string,
 	args: BuildQueryURLArgs,
 ): string => {
-	const { filters, predicates, ...params } = args;
+	const { filters, predicates, ...params } = args
 
-	const url = new URL(`documents/search`, `${endpoint}/`);
+	const url = new URL(`documents/search`, `${endpoint}/`)
 
 	if (filters) {
 		// TODO: Remove warning when we remove support for string `filters` values.
@@ -314,19 +314,19 @@ export const buildQueryURL = (
 				`[@prismicio/client] A non-array value was provided to the \`filters\` query parameter (\`${filters}\`). Non-array values are deprecated. Please convert it to an array. For more details, see ${devMsg(
 					"filters-must-be-an-array",
 				)}`,
-			);
+			)
 		}
 
 		// TODO: Remove `castArray` when we remove support for string `filters` values.
 		for (const filter of castArray(filters)) {
-			url.searchParams.append("q", `[${filter}]`);
+			url.searchParams.append("q", `[${filter}]`)
 		}
 	}
 
 	// TODO: Remove when we remove support for deprecated `predicates` argument.
 	if (predicates) {
 		for (const predicate of castArray(predicates)) {
-			url.searchParams.append("q", `[${predicate}]`);
+			url.searchParams.append("q", `[${predicate}]`)
 		}
 	}
 
@@ -334,12 +334,12 @@ export const buildQueryURL = (
 	// parameter value needs to be transformed to fit the REST API.
 	for (const k in params) {
 		const name = (RENAMED_PARAMS[k as keyof typeof RENAMED_PARAMS] ||
-			k) as ValidParamName;
+			k) as ValidParamName
 
-		let value = params[k as keyof typeof params];
+		let value = params[k as keyof typeof params]
 
 		if (name === "orderings") {
-			const scopedValue = params[name];
+			const scopedValue = params[name]
 
 			if (scopedValue != null) {
 				// TODO: Remove the following warning when `orderings` strings are no longer supported.
@@ -351,18 +351,18 @@ export const buildQueryURL = (
 						`[@prismicio/client] A string value was provided to the \`orderings\` query parameter. Strings are deprecated. Please convert it to an array of objects. For more details, see ${devMsg(
 							"orderings-must-be-an-array-of-objects",
 						)}`,
-					);
+					)
 				}
 
 				const v = castArray(scopedValue)
 					.map((ordering) => castOrderingToString(ordering))
-					.join(",");
+					.join(",")
 
-				value = `[${v}]`;
+				value = `[${v}]`
 			}
 		} else if (name === "routes") {
 			if (typeof params[name] === "object") {
-				value = JSON.stringify(castArray(params[name]));
+				value = JSON.stringify(castArray(params[name]))
 			}
 		}
 
@@ -370,9 +370,9 @@ export const buildQueryURL = (
 			url.searchParams.set(
 				name,
 				castArray<string | number | Route | Ordering>(value).join(","),
-			);
+			)
 		}
 	}
 
-	return url.toString();
-};
+	return url.toString()
+}

@@ -1,4 +1,4 @@
-import type { AnyRegularField, AnySlicePrimaryField } from "./types";
+import type { AnyRegularField, AnySlicePrimaryField } from "./types"
 
 /**
  * A shared Slice variation.
@@ -14,8 +14,8 @@ export interface SharedSliceVariation<
 		AnyRegularField
 	>,
 > {
-	variation: Variation;
-	version: string;
-	primary: PrimaryFields;
-	items: ItemsFields[];
+	variation: Variation
+	version: string
+	primary: PrimaryFields
+	items: ItemsFields[]
 }

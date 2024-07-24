@@ -1,17 +1,14 @@
-import {
-	BuildWidthSrcSetParams,
-	buildURL,
-	buildWidthSrcSet,
-} from "imgix-url-builder";
+import type { BuildWidthSrcSetParams } from "imgix-url-builder"
+import { buildURL, buildWidthSrcSet } from "imgix-url-builder"
 
-import type { ImageFieldImage } from "../types/value/image";
+import type { ImageFieldImage } from "../types/value/image"
 
-import * as isFilled from "./isFilled";
+import * as isFilled from "./isFilled"
 
 /**
  * The default widths used to generate a `srcset` value.
  */
-const DEFAULT_WIDTHS = [640, 828, 1200, 2048, 3840];
+const DEFAULT_WIDTHS = [640, 828, 1200, 2048, 3840]
 
 /**
  * The return type of `asImageWidthSrcSet()`.
@@ -24,22 +21,22 @@ type AsImageWidthSrcSetReturnType<
 				/**
 				 * The image field's image URL with Imgix URL parameters (if given).
 				 */
-				src: string;
+				src: string
 
 				/**
 				 * A width-based `srcset` attribute value for the image field's image
 				 * with Imgix URL parameters (if given).
 				 */
-				srcset: string;
+				srcset: string
 			}
-		: null;
+		: null
 
 /**
  * Configuration for `asImageWidthSrcSet()`.
  */
 type AsImageWidthSrcSetConfig = Omit<BuildWidthSrcSetParams, "widths"> & {
-	widths?: "thumbnails" | BuildWidthSrcSetParams["widths"];
-};
+	widths?: "thumbnails" | BuildWidthSrcSetParams["widths"]
+}
 
 /**
  * Creates a width-based `srcset` from an image field with optional image
@@ -58,7 +55,7 @@ type AsImageWidthSrcSetConfig = Omit<BuildWidthSrcSetParams, "widths"> & {
  * const srcset = asImageWidthSrcSet(document.data.imageField, {
  * 	widths: [400, 800, 1600],
  * 	sat: -100,
- * });
+ * })
  * // => {
  * //   src:    'https://images.prismic.io/repo/image.png?sat=-100',
  * //   srcset: 'https://images.prismic.io/repo/image.png?sat=-100&width=400 400w, ' +
@@ -91,7 +88,7 @@ export const asImageWidthSrcSet = <
 			widths = DEFAULT_WIDTHS,
 			// eslint-disable-next-line prefer-const
 			...imgixParams
-		} = config;
+		} = config
 		const {
 			url,
 			dimensions,
@@ -100,18 +97,18 @@ export const asImageWidthSrcSet = <
 			copyright: _copyright,
 			edit: _edit,
 			...responsiveViews
-		} = field;
+		} = field
 
 		// The Prismic Rest API will always return thumbnail values if
 		// the base size is filled.
 		const responsiveViewObjects: ImageFieldImage<"filled">[] =
-			Object.values(responsiveViews);
+			Object.values(responsiveViews)
 
 		// If this `asImageWidthSrcSet()` call is configured to use
 		// thumbnail widths, but the field does not have thumbnails, we
 		// fall back to the default set of widths.
 		if (widths === "thumbnails" && responsiveViewObjects.length < 1) {
-			widths = DEFAULT_WIDTHS;
+			widths = DEFAULT_WIDTHS
 		}
 
 		return {
@@ -129,15 +126,15 @@ export const asImageWidthSrcSet = <
 								return buildWidthSrcSet(thumbnail.url, {
 									...imgixParams,
 									widths: [thumbnail.dimensions.width],
-								});
+								})
 							}),
 						].join(", ")
 					: buildWidthSrcSet(field.url, {
 							...imgixParams,
 							widths,
 						}),
-		} as AsImageWidthSrcSetReturnType<Field>;
+		} as AsImageWidthSrcSetReturnType<Field>
 	} else {
-		return null as AsImageWidthSrcSetReturnType<Field>;
+		return null as AsImageWidthSrcSetReturnType<Field>
 	}
-};
+}

@@ -1,3 +1,3 @@
-import { PrismicRichTextError } from "./PrismicRichTextError";
+import { PrismicRichTextError } from "./PrismicRichTextError"
 
 export class PrismicRichTextSerializerError extends PrismicRichTextError {}

@@ -1,7 +1,7 @@
-import type { RichTextField } from "../types/value/richText";
-import { RichTextFunctionSerializer, TreeNode } from "./types";
+import type { RichTextField } from "../types/value/richText"
+import type { RichTextFunctionSerializer, TreeNode } from "./types"
 
-import { asTree } from "./asTree";
+import { asTree } from "./asTree"
 
 /**
  * Serializes a rich text or title field with a given serializer
@@ -26,29 +26,29 @@ export const serialize = <SerializerReturnType>(
 	return serializeTreeNodes<SerializerReturnType>(
 		asTree(richTextField).children,
 		serializer,
-	);
-};
+	)
+}
 
 const serializeTreeNodes = <T>(
 	nodes: TreeNode[],
 	serializer: RichTextFunctionSerializer<T>,
 ): T[] => {
-	const serializedTreeNodes: T[] = [];
+	const serializedTreeNodes: T[] = []
 
 	for (let i = 0; i < nodes.length; i++) {
-		const treeNode = nodes[i];
+		const treeNode = nodes[i]
 		const serializedTreeNode = serializer(
 			treeNode.type,
 			treeNode.node,
 			treeNode.text,
 			serializeTreeNodes(treeNode.children, serializer),
 			treeNode.key,
-		);
+		)
 
 		if (serializedTreeNode != null) {
-			serializedTreeNodes.push(serializedTreeNode);
+			serializedTreeNodes.push(serializedTreeNode)
 		}
 	}
 
-	return serializedTreeNodes;
-};
+	return serializedTreeNodes
+}

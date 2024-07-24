@@ -15,13 +15,13 @@ The official JavaScript + TypeScript client library for [Prismic][prismic].
 - Built for browser and server usage.
 
 ```typescript
-import * as prismic from "@prismicio/client";
+import * as prismic from "@prismicio/client"
 
 // Create a client
-const client = prismic.createClient("my-repository");
+const client = prismic.createClient("my-repository")
 
 // Then query for your content
-const blogPosts = await client.getAllByType("blog_post");
+const blogPosts = await client.getAllByType("blog_post")
 ```
 
 ## Install

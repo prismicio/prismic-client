@@ -1,4 +1,4 @@
-import type { FieldState, Simplify } from "./types";
+import type { FieldState, Simplify } from "./types"
 
 /**
  * An individual image within an image field. The base image and each thumbnail
@@ -9,32 +9,32 @@ import type { FieldState, Simplify } from "./types";
  * @see {@link ImageField} for a full image field type.
  */
 export type ImageFieldImage<State extends FieldState = FieldState> =
-	State extends "empty" ? EmptyImageFieldImage : FilledImageFieldImage;
+	State extends "empty" ? EmptyImageFieldImage : FilledImageFieldImage
 
 export interface FilledImageFieldImage {
-	id: string;
-	url: string;
+	id: string
+	url: string
 	dimensions: {
-		width: number;
-		height: number;
-	};
+		width: number
+		height: number
+	}
 	edit: {
-		x: number;
-		y: number;
-		zoom: number;
-		background: string;
-	};
-	alt: string | null;
-	copyright: string | null;
+		x: number
+		y: number
+		zoom: number
+		background: string
+	}
+	alt: string | null
+	copyright: string | null
 }
 
 export interface EmptyImageFieldImage {
-	id?: null;
-	url?: null;
-	dimensions?: null;
-	edit?: null;
-	alt?: null;
-	copyright?: null;
+	id?: null
+	url?: null
+	dimensions?: null
+	edit?: null
+	alt?: null
+	copyright?: null
 }
 
 /**
@@ -75,4 +75,4 @@ export type ImageField<
 					Record<Extract<ThumbnailNames, string>, ImageFieldImage<State>>
 			: ImageFieldImage<State> &
 					Record<Extract<ThumbnailNames, string>, ImageFieldImage<State>>
-	>;
+	>

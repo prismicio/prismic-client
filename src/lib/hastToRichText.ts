@@ -1,32 +1,32 @@
-import { Element, Root } from "hast";
-import { whitespace } from "hast-util-whitespace";
-import { toString } from "mdast-util-to-string";
-import { visit } from "unist-util-visit";
-import { VFile } from "vfile";
+import type { Element, Root } from "hast"
+import { whitespace } from "hast-util-whitespace"
+import { toString } from "mdast-util-to-string"
+import { visit } from "unist-util-visit"
+import type { VFile } from "vfile"
 
-import {
+import type {
 	RTBlockNode,
 	RTInlineNode,
 	RTLabelNode,
 	RTTextNode,
 	RichTextField,
-	RichTextNodeType,
-} from "../types/value/richText";
+} from "../types/value/richText"
+import { RichTextNodeType } from "../types/value/richText"
 
-import { PrismicRichTextSerializerError } from "../errors/PrismicRichTextSerializerError";
+import { PrismicRichTextSerializerError } from "../errors/PrismicRichTextSerializerError"
 
-import {
+import type {
 	RichTextHTMLMapSerializer,
 	RichTextHTMLMapSerializerFunction,
 	RichTextHTMLMapSerializerShorthand,
-} from "../helpers/unstable_htmlAsRichText";
+} from "../helpers/unstable_htmlAsRichText"
 
-import { RichTextFieldBuilder } from "./RichTextFieldBuilder";
+import { RichTextFieldBuilder } from "./RichTextFieldBuilder"
 import {
 	serializeEmbed,
 	serializeImage,
 	serializeSpan,
-} from "./hastSerializerHelpers";
+} from "./hastSerializerHelpers"
 
 /**
  * Pick keys from a type, distributing the operation over a union.
@@ -38,7 +38,7 @@ import {
 type DistributedPick<
 	ObjectType,
 	KeyType extends keyof ObjectType,
-> = ObjectType extends unknown ? Pick<ObjectType, KeyType> : never;
+> = ObjectType extends unknown ? Pick<ObjectType, KeyType> : never
 
 const DEFAULT_SERIALIZER: RichTextHTMLMapSerializer = {
 	h1: "heading1",
@@ -58,10 +58,10 @@ const DEFAULT_SERIALIZER: RichTextHTMLMapSerializer = {
 	img: "image",
 	iframe: "embed",
 	a: "hyperlink",
-};
+}
 
-const VFILE_RULE = "failed-to-serialize-node";
-const VFILE_SOURCE = "prismic";
+const VFILE_RULE = "failed-to-serialize-node"
+const VFILE_SOURCE = "prismic"
 
 /**
  * Configuration that determines the output of `toRichText`.
@@ -71,15 +71,15 @@ export type HASTToRichTextConfig = {
 	 * An optional HTML to rich text serializer. Will be merged with the default
 	 * HTML to rich text serializer.
 	 */
-	serializer?: RichTextHTMLMapSerializer;
+	serializer?: RichTextHTMLMapSerializer
 
 	/**
 	 * Whether or not the text processed should be marked as right-to-left.
 	 *
 	 * @defaultValue `false`
 	 */
-	direction?: "ltr" | "rtl";
-};
+	direction?: "ltr" | "rtl"
+}
 
 /**
  * Transfor a hast tree to a rich text field.
@@ -95,29 +95,29 @@ export const hastToRichText = (
 	file: VFile,
 	config?: HASTToRichTextConfig,
 ): RichTextField => {
-	const builder = new RichTextFieldBuilder();
+	const builder = new RichTextFieldBuilder()
 
 	// Merge the default serializer with the user-provided one.
 	const serializer = {
 		...DEFAULT_SERIALIZER,
 		...config?.serializer,
-	};
+	}
 
 	// Keep track of the last text node type to append text nodes to in
 	// case of an image or an embed node is present inside a paragraph.
-	let lastRTTextNodeType: RTTextNode["type"] = RichTextNodeType.paragraph;
+	let lastRTTextNodeType: RTTextNode["type"] = RichTextNodeType.paragraph
 
 	// Keep track of the last list type to know whether we need to append
 	// `list-item` or `o-list-item` nodes.
 	let lastListType: "group-list-item" | "group-o-list-item" | undefined =
-		undefined;
+		undefined
 
 	visit(tree, (node) => {
 		if (node.type === "element") {
 			// Transforms line break elements to line breaks
 			if (node.tagName === "br") {
 				try {
-					builder.appendText("\n");
+					builder.appendText("\n")
 				} catch (error) {
 					// noop
 				}
@@ -126,27 +126,27 @@ export const hastToRichText = (
 			// Resolves the serializer responsible for the current node.
 			let serializerOrShorthand:
 				| RichTextHTMLMapSerializerShorthand
-				| RichTextHTMLMapSerializerFunction;
+				| RichTextHTMLMapSerializerFunction
 
 			// We give priority to CSS selectors over tag names.
 			if (node.matchesSerializer && node.matchesSerializer in serializer) {
-				serializerOrShorthand = serializer[node.matchesSerializer];
+				serializerOrShorthand = serializer[node.matchesSerializer]
 			} else if (node.tagName in serializer) {
-				serializerOrShorthand = serializer[node.tagName];
+				serializerOrShorthand = serializer[node.tagName]
 			} else {
-				return;
+				return
 			}
 
-			let shorthand: RichTextHTMLMapSerializerShorthand;
+			let shorthand: RichTextHTMLMapSerializerShorthand
 			if (typeof serializerOrShorthand === "function") {
 				const shorthandOrNode = serializerOrShorthand({
 					node,
 					context: { listType: lastListType },
-				});
+				})
 
 				if (!shorthandOrNode) {
 					// Exit on unhandled node.
-					return;
+					return
 				} else if (
 					typeof shorthandOrNode === "object" &&
 					"type" in shorthandOrNode
@@ -157,39 +157,39 @@ export const hastToRichText = (
 						case RichTextNodeType.em:
 						case RichTextNodeType.label:
 						case RichTextNodeType.hyperlink: {
-							const length = toString(node).trimEnd().length;
+							const length = toString(node).trimEnd().length
 
 							try {
-								builder.appendSpan(shorthandOrNode, length);
+								builder.appendSpan(shorthandOrNode, length)
 							} catch (error) {
 								// Happens when we extract an image/embed node inside an RTTextNode and that
 								// the next children is a span. The last RT node type is then an image/embed
 								// node, so we need to resume a new RT text node.
-								builder.appendTextNode(lastRTTextNodeType, config?.direction);
-								builder.appendSpan(shorthandOrNode, length);
+								builder.appendTextNode(lastRTTextNodeType, config?.direction)
+								builder.appendSpan(shorthandOrNode, length)
 							}
 
-							return;
+							return
 						}
 
 						case RichTextNodeType.image:
 						case RichTextNodeType.embed:
-							builder.appendNode(shorthandOrNode);
+							builder.appendNode(shorthandOrNode)
 
-							return;
+							return
 
 						default:
-							lastRTTextNodeType = shorthandOrNode.type;
-							builder.appendNode(shorthandOrNode);
+							lastRTTextNodeType = shorthandOrNode.type
+							builder.appendNode(shorthandOrNode)
 
-							return;
+							return
 					}
 				}
 
 				// Else it's a shorthand.
-				shorthand = shorthandOrNode;
+				shorthand = shorthandOrNode
 			} else {
-				shorthand = serializerOrShorthand;
+				shorthand = serializerOrShorthand
 			}
 
 			let match:
@@ -197,11 +197,11 @@ export const hastToRichText = (
 						RTBlockNode | Exclude<RTInlineNode, RTLabelNode>,
 						"type"
 				  >
-				| { type: "label"; data: { label: string } };
+				| { type: "label"; data: { label: string } }
 			if (typeof shorthand === "string") {
-				match = { type: shorthand };
+				match = { type: shorthand }
 			} else {
-				match = { type: RichTextNodeType.label, data: shorthand };
+				match = { type: RichTextNodeType.label, data: shorthand }
 			}
 
 			try {
@@ -216,40 +216,40 @@ export const hastToRichText = (
 					case RichTextNodeType.preformatted:
 					case RichTextNodeType.listItem:
 					case RichTextNodeType.oListItem:
-						lastRTTextNodeType = match.type;
-						builder.appendTextNode(match.type, config?.direction);
-						break;
+						lastRTTextNodeType = match.type
+						builder.appendTextNode(match.type, config?.direction)
+						break
 
 					case RichTextNodeType.list:
 					case RichTextNodeType.oList:
-						lastListType = match.type;
-						break;
+						lastListType = match.type
+						break
 
 					case RichTextNodeType.image:
-						builder.appendNode(serializeImage(node));
-						break;
+						builder.appendNode(serializeImage(node))
+						break
 
 					case RichTextNodeType.embed:
-						builder.appendNode(serializeEmbed(node));
-						break;
+						builder.appendNode(serializeEmbed(node))
+						break
 
 					case RichTextNodeType.strong:
 					case RichTextNodeType.em:
 					case RichTextNodeType.label:
 					case RichTextNodeType.hyperlink: {
-						const span = serializeSpan(node, match);
-						const length = toString(node).trimEnd().length;
+						const span = serializeSpan(node, match)
+						const length = toString(node).trimEnd().length
 
 						try {
-							builder.appendSpan(span, length);
+							builder.appendSpan(span, length)
 						} catch (error) {
 							// Happens when we extract an image/embed node inside an RTTextNode and that
 							// the next children is a span. The last RT node type is then an image/embed
 							// node, so we need to resume a new RT text node.
-							builder.appendTextNode(lastRTTextNodeType, config?.direction);
-							builder.appendSpan(span, length);
+							builder.appendTextNode(lastRTTextNodeType, config?.direction)
+							builder.appendSpan(span, length)
 						}
-						break;
+						break
 					}
 
 					default:
@@ -257,7 +257,7 @@ export const hastToRichText = (
 							`Unknown rich text node type: \`${
 								(match as { type: string }).type
 							}\``,
-						);
+						)
 				}
 			} catch (error) {
 				if (error instanceof PrismicRichTextSerializerError) {
@@ -266,29 +266,29 @@ export const hastToRichText = (
 						place: node.position,
 						ruleId: VFILE_RULE,
 						source: VFILE_SOURCE,
-					});
+					})
 
-					return;
+					return
 				}
 
-				throw error;
+				throw error
 			}
 		} else if (node.type === "text") {
 			if (!whitespace(node)) {
 				try {
-					builder.appendText(node.value);
+					builder.appendText(node.value)
 				} catch (error) {
 					// Happens when we extract an image/embed node inside an RTTextNode. The last RT
 					// node type is then an image/embed node, so we need to resume a new RT text node.
-					builder.appendTextNode(lastRTTextNodeType, config?.direction);
-					builder.appendText(node.value);
+					builder.appendTextNode(lastRTTextNodeType, config?.direction)
+					builder.appendText(node.value)
 				}
 			}
 		}
 
 		// We ignore the following node types:
 		// root, doctype, comment, raw
-	});
+	})
 
-	return builder.build();
-};
+	return builder.build()
+}

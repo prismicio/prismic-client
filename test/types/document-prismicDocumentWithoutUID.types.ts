@@ -1,22 +1,22 @@
-import { expectNever, expectType } from "ts-expect";
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismic from "../../src";
+import type * as prismic from "../../src"
 
-(value: prismic.PrismicDocumentWithoutUID): true => {
+;(value: prismic.PrismicDocumentWithoutUID): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				expectNever(value);
+				expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 
 expectType<prismic.PrismicDocumentWithoutUID>({
 	id: "string",
@@ -39,7 +39,7 @@ expectType<prismic.PrismicDocumentWithoutUID>({
 		},
 	],
 	data: {},
-});
+})
 
 /**
  * Does not support string UID value.
@@ -59,7 +59,7 @@ expectType<prismic.PrismicDocumentWithoutUID>({
 	lang: "string",
 	alternate_languages: [],
 	data: {},
-});
+})
 
 /**
  * Supports nullable URL.
@@ -78,7 +78,7 @@ expectType<prismic.PrismicDocumentWithoutUID>({
 	lang: "string",
 	alternate_languages: [],
 	data: {},
-});
+})
 
 /**
  * Supports custom data interface.
@@ -101,15 +101,15 @@ expectType<prismic.PrismicDocumentWithoutUID<{ foo: prismic.BooleanField }>>({
 		// @ts-expect-error - Only given fields are valid.
 		bar: false,
 	},
-});
+})
 
 /**
  * Custom data interface supports Group and Slice Zone fields.
  */
 expectType<
 	prismic.PrismicDocumentWithoutUID<{
-		group: prismic.GroupField;
-		sliceZone: prismic.SliceZone;
+		group: prismic.GroupField
+		sliceZone: prismic.SliceZone
 	}>
 >({
 	id: "string",
@@ -128,7 +128,7 @@ expectType<
 		group: [],
 		sliceZone: [],
 	},
-});
+})
 
 /**
  * Supports custom type.
@@ -147,7 +147,7 @@ expectType<prismic.PrismicDocumentWithoutUID<Record<string, never>, "foo">>({
 	lang: "string",
 	alternate_languages: [],
 	data: {},
-});
+})
 expectType<prismic.PrismicDocumentWithoutUID<Record<string, never>, "foo">>({
 	id: "string",
 	uid: null,
@@ -163,7 +163,7 @@ expectType<prismic.PrismicDocumentWithoutUID<Record<string, never>, "foo">>({
 	lang: "string",
 	alternate_languages: [],
 	data: {},
-});
+})
 
 /**
  * Supports custom language.
@@ -184,7 +184,7 @@ expectType<
 	lang: "fr-fr",
 	alternate_languages: [],
 	data: {},
-});
+})
 expectType<
 	prismic.PrismicDocumentWithoutUID<Record<string, never>, string, "fr-fr">
 >({
@@ -202,4 +202,4 @@ expectType<
 	lang: "string",
 	alternate_languages: [],
 	data: {},
-});
+})

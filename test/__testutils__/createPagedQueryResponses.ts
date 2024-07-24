@@ -1,24 +1,24 @@
-import { TestContext } from "vitest";
+import type { TestContext } from "vitest"
 
-import * as prismic from "../../src";
+import type * as prismic from "../../src"
 
 type CreatePagedQueryResponsesArgs = {
-	ctx: TestContext;
-	pages?: number;
-	pageSize?: number;
-};
+	ctx: TestContext
+	pages?: number
+	pageSize?: number
+}
 
 export const createPagedQueryResponses = ({
 	ctx,
 	pages = 2,
 	pageSize = 1,
 }: CreatePagedQueryResponsesArgs): prismic.Query[] => {
-	const documents = [];
+	const documents = []
 	for (let i = 0; i < pages * pageSize; i++) {
-		documents.push(ctx.mock.value.document());
+		documents.push(ctx.mock.value.document())
 	}
 
-	const responses = [];
+	const responses = []
 
 	for (let page = 1; page <= pages; page++) {
 		responses.push(
@@ -27,8 +27,8 @@ export const createPagedQueryResponses = ({
 				page,
 				documents,
 			}),
-		);
+		)
 	}
 
-	return responses;
-};
+	return responses
+}

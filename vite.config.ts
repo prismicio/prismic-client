@@ -1,5 +1,5 @@
-import { defineConfig } from "vite";
-import sdk from "vite-plugin-sdk";
+import { defineConfig } from "vite"
+import sdk from "vite-plugin-sdk"
 
 export default defineConfig({
 	plugins: [sdk()],
@@ -19,4 +19,4 @@ export default defineConfig({
 		},
 		setupFiles: ["./test/__setup__"],
 	},
-});
+})

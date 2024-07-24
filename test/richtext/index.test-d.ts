@@ -1,7 +1,7 @@
-import { expectTypeOf, it } from "vitest";
+import { expectTypeOf, it } from "vitest"
 
-import * as lib from "../../src/richtext";
+import * as lib from "../../src/richtext"
 
 it("returns string", () => {
-	expectTypeOf(lib.asText).returns.toBeString();
-});
+	expectTypeOf(lib.asText).returns.toBeString()
+})

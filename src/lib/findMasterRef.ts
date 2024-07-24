@@ -1,6 +1,6 @@
-import { Ref } from "../types/api/ref";
+import type { Ref } from "../types/api/ref"
 
-import { findRef } from "./findRef";
+import { findRef } from "./findRef"
 
 /**
  * Returns the master ref from a list of given refs.
@@ -12,5 +12,5 @@ import { findRef } from "./findRef";
  * @throws If a matching ref cannot be found.
  */
 export const findMasterRef = (refs: Ref[]): Ref => {
-	return findRef(refs, (ref) => ref.isMasterRef);
-};
+	return findRef(refs, (ref) => ref.isMasterRef)
+}

@@ -1,4 +1,4 @@
-import type { FieldState } from "./types";
+import type { FieldState } from "./types"
 
 /**
  * An integration field.
@@ -11,4 +11,4 @@ import type { FieldState } from "./types";
 export type IntegrationField<
 	Data extends Record<string, unknown> = Record<string, unknown>,
 	State extends FieldState = FieldState,
-> = State extends "empty" ? null : Data;
+> = State extends "empty" ? null : Data

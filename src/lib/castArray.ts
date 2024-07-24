@@ -10,5 +10,5 @@
  * @returns `a` as an array.
  */
 export const castArray = <A>(a: A | A[]): A[] => {
-	return Array.isArray(a) ? a : [a];
-};
+	return Array.isArray(a) ? a : [a]
+}

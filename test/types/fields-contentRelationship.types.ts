@@ -1,22 +1,22 @@
-import { expectNever, expectType } from "ts-expect";
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismic from "../../src";
+import * as prismic from "../../src"
 
-(value: prismic.ContentRelationshipField): true => {
+;(value: prismic.ContentRelationshipField): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				return expectNever(value);
+				return expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 
 /**
  * Filled state.
@@ -32,7 +32,7 @@ expectType<prismic.ContentRelationshipField>({
 	slug: "string",
 	isBroken: true,
 	data: undefined,
-});
+})
 expectType<prismic.ContentRelationshipField<string, string, never, "filled">>({
 	link_type: prismic.LinkType.Document,
 	id: "string",
@@ -44,7 +44,7 @@ expectType<prismic.ContentRelationshipField<string, string, never, "filled">>({
 	slug: "string",
 	isBroken: true,
 	data: undefined,
-});
+})
 expectType<prismic.ContentRelationshipField<string, string, never, "empty">>({
 	link_type: prismic.LinkType.Document,
 	// @ts-expect-error - Empty fields cannot contain a filled value.
@@ -57,23 +57,23 @@ expectType<prismic.ContentRelationshipField<string, string, never, "empty">>({
 	slug: "string",
 	isBroken: true,
 	data: undefined,
-});
+})
 
 /**
  * Empty state.
  */
 expectType<prismic.ContentRelationshipField>({
 	link_type: prismic.LinkType.Document,
-});
+})
 expectType<prismic.ContentRelationshipField<string, string, never, "empty">>({
 	link_type: prismic.LinkType.Document,
-});
+})
 expectType<prismic.ContentRelationshipField<string, string, never, "filled">>(
 	// @ts-expect-error - Filled fields cannot contain an empty value.
 	{
 		link_type: prismic.LinkType.Document,
 	},
-);
+)
 
 /**
  * Supports custom document type.
@@ -84,7 +84,7 @@ expectType<prismic.ContentRelationshipField<"foo">>({
 	type: "foo",
 	tags: [],
 	lang: "string",
-});
+})
 expectType<prismic.ContentRelationshipField<"foo">>({
 	link_type: prismic.LinkType.Document,
 	id: "string",
@@ -92,7 +92,7 @@ expectType<prismic.ContentRelationshipField<"foo">>({
 	type: "string",
 	tags: [],
 	lang: "string",
-});
+})
 
 /**
  * Supports custom document language.
@@ -103,7 +103,7 @@ expectType<prismic.ContentRelationshipField<string, "fr-fr">>({
 	type: "string",
 	tags: [],
 	lang: "fr-fr",
-});
+})
 expectType<prismic.ContentRelationshipField<string, "fr-fr">>({
 	link_type: prismic.LinkType.Document,
 	id: "string",
@@ -111,7 +111,7 @@ expectType<prismic.ContentRelationshipField<string, "fr-fr">>({
 	tags: [],
 	// @ts-expect-error - Document language must match the given type.
 	lang: "string",
-});
+})
 
 /**
  * Supports custom document data.
@@ -133,4 +133,4 @@ expectType<
 		// @ts-expect-error - Only given fields are valid.
 		bar: false,
 	},
-});
+})

@@ -1,22 +1,22 @@
-import { expectNever, expectType } from "ts-expect";
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismic from "../../src";
+import type * as prismic from "../../src"
 
-(value: prismic.Slice): true => {
+;(value: prismic.Slice): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				expectNever(value);
+				expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 
 expectType<prismic.Slice>({
 	id: "id",
@@ -24,7 +24,7 @@ expectType<prismic.Slice>({
 	slice_label: null,
 	primary: {},
 	items: [],
-});
+})
 
 /**
  * Supports Slice labels.
@@ -35,7 +35,7 @@ expectType<prismic.Slice>({
 	slice_label: "string",
 	primary: {},
 	items: [],
-});
+})
 
 /**
  * Supports custom Slice type API ID.
@@ -46,7 +46,7 @@ expectType<prismic.Slice<"foo">>({
 	slice_label: "string",
 	primary: {},
 	items: [],
-});
+})
 expectType<prismic.Slice<"foo">>({
 	id: "id",
 	// @ts-expect-error - Slice type must match the given type.
@@ -54,7 +54,7 @@ expectType<prismic.Slice<"foo">>({
 	slice_label: "string",
 	primary: {},
 	items: [],
-});
+})
 
 /**
  * Supports custom primary fields type.
@@ -69,7 +69,7 @@ expectType<prismic.Slice<string, { foo: prismic.BooleanField }>>({
 		bar: false,
 	},
 	items: [],
-});
+})
 
 /**
  * Custom primary fields may only contain group-compatible fields.
@@ -79,7 +79,7 @@ expectType<
 		string,
 		// @ts-expect-error - Groups are invalid within primary fields.
 		{
-			group: prismic.GroupField;
+			group: prismic.GroupField
 		}
 	>
 >({
@@ -90,13 +90,13 @@ expectType<
 		group: [],
 	},
 	items: [],
-});
+})
 expectType<
 	prismic.Slice<
 		string,
 		// @ts-expect-error - Slice Zones are invalid within primary fields.
 		{
-			sliceZone: prismic.SliceZone;
+			sliceZone: prismic.SliceZone
 		}
 	>
 >({
@@ -107,7 +107,7 @@ expectType<
 		sliceZone: [],
 	},
 	items: [],
-});
+})
 
 /**
  * Supports custom items fields type.
@@ -132,7 +132,7 @@ expectType<
 			baz: false,
 		},
 	],
-});
+})
 
 /**
  * Custom item fields may only contain group-compatible fields.
@@ -143,7 +143,7 @@ expectType<
 		{ foo: prismic.BooleanField },
 		// @ts-expect-error - Groups are invalid within item fields.
 		{
-			group: prismic.GroupField;
+			group: prismic.GroupField
 		}
 	>
 >({
@@ -154,14 +154,14 @@ expectType<
 		foo: true,
 	},
 	items: [],
-});
+})
 expectType<
 	prismic.Slice<
 		string,
 		{ foo: prismic.BooleanField },
 		// @ts-expect-error - Slice Zones are invalid within item fields.
 		{
-			sliceZone: prismic.SliceZone;
+			sliceZone: prismic.SliceZone
 		}
 	>
 >({
@@ -172,4 +172,4 @@ expectType<
 		foo: true,
 	},
 	items: [],
-});
+})

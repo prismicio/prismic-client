@@ -9,10 +9,10 @@
  */
 export const isRepositoryEndpoint = (input: string): boolean => {
 	try {
-		new URL(input);
+		new URL(input)
 
-		return true;
+		return true
 	} catch {
-		return false;
+		return false
 	}
-};
+}

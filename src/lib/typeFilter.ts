@@ -1,4 +1,4 @@
-import { filter } from "../filter";
+import { filter } from "../filter"
 
 /**
  * Creates a filter to filter content by document type.
@@ -8,5 +8,5 @@ import { filter } from "../filter";
  * @returns A filter that can be used in a Prismic REST API V2 request.
  */
 export const typeFilter = (documentType: string): string => {
-	return filter.at("document.type", documentType);
-};
+	return filter.at("document.type", documentType)
+}

@@ -1,4 +1,4 @@
-import { NotFoundError } from "./NotFoundError";
+import { NotFoundError } from "./NotFoundError"
 
 export class RepositoryNotFoundError<
 	TResponse = undefined,

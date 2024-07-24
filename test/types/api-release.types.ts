@@ -1,8 +1,9 @@
-import { TypeEqual, expectType } from "ts-expect";
+import type { TypeEqual } from "ts-expect"
+import { expectType } from "ts-expect"
 
-import * as prismic from "../../src";
+import type * as prismic from "../../src"
 
 /**
  * Equivelant to Ref.
  */
-expectType<TypeEqual<prismic.Release, prismic.Ref>>(true);
+expectType<TypeEqual<prismic.Release, prismic.Ref>>(true)

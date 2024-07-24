@@ -1,13 +1,17 @@
-import { Element } from "hast";
-import { toHtml } from "hast-util-to-html";
+import type { Element } from "hast"
+import { toHtml } from "hast-util-to-html"
 
-import { OEmbedType } from "../types/value/embed";
-import { LinkType } from "../types/value/link";
-import { RTEmbedNode, RTImageNode, RTLinkNode } from "../types/value/richText";
+import { OEmbedType } from "../types/value/embed"
+import { LinkType } from "../types/value/link"
+import type {
+	RTEmbedNode,
+	RTImageNode,
+	RTLinkNode,
+} from "../types/value/richText"
 
-import { PrismicRichTextSerializerError } from "../errors/PrismicRichTextSerializerError";
+import { PrismicRichTextSerializerError } from "../errors/PrismicRichTextSerializerError"
 
-import { RTPartialInlineNode } from "./RichTextFieldBuilder";
+import type { RTPartialInlineNode } from "./RichTextFieldBuilder"
 
 /**
  * Serializes a hast {@link Element} node to a {@link RTImageNode}.
@@ -17,43 +21,43 @@ import { RTPartialInlineNode } from "./RichTextFieldBuilder";
  * @returns Equivalent {@link RTImageNode}.
  */
 export const serializeImage = (node: Element): RTImageNode => {
-	const src = node.properties?.src as string | undefined;
+	const src = node.properties?.src as string | undefined
 
 	if (!src) {
 		throw new PrismicRichTextSerializerError(
 			"Element of type `img` is missing an `src` attribute",
-		);
+		)
 	}
 
-	const url = new URL(src, "https://noop.com");
+	const url = new URL(src, "https://noop.com")
 
-	let width = node.properties?.width as number | undefined;
-	let height = node.properties?.height as number | undefined;
-	let x = 0;
-	let y = 0;
-	let zoom = 1;
+	let width = node.properties?.width as number | undefined
+	let height = node.properties?.height as number | undefined
+	let x = 0
+	let y = 0
+	let zoom = 1
 
 	// Attempt to infer the image dimensions from the URL imgix parameters.
 	if (url.hostname === "images.prismic.io") {
 		if (url.searchParams.has("w")) {
-			width = Number(url.searchParams.get("w"));
+			width = Number(url.searchParams.get("w"))
 		}
 
 		if (url.searchParams.has("h")) {
-			height = Number(url.searchParams.get("h"));
+			height = Number(url.searchParams.get("h"))
 		}
 
 		if (url.searchParams.has("rect")) {
 			const [rectX, rextY, rectW, _rectH] = url.searchParams
 				.get("rect")!
-				.split(",");
+				.split(",")
 
-			x = Number(rectX);
-			y = Number(rextY);
+			x = Number(rectX)
+			y = Number(rextY)
 
 			// This is not perfect but it's supposed to work on images without constraints.
 			if (width) {
-				zoom = Math.max(1, width / Number(rectW));
+				zoom = Math.max(1, width / Number(rectW))
 			}
 		}
 	}
@@ -69,8 +73,8 @@ export const serializeImage = (node: Element): RTImageNode => {
 		// See: https://github.com/prismicio/prismic-client/pull/342#discussion_r1683650185
 		dimensions: { width: width as number, height: height as number },
 		edit: { x, y, zoom, background: "transparent" },
-	};
-};
+	}
+}
 
 /**
  * Serializes a hast {@link Element} node to a {@link RTEmbedNode}.
@@ -80,12 +84,12 @@ export const serializeImage = (node: Element): RTImageNode => {
  * @returns Equivalent {@link RTEmbedNode}.
  */
 export const serializeEmbed = (node: Element): RTEmbedNode => {
-	const src = node.properties?.src as string | undefined;
+	const src = node.properties?.src as string | undefined
 
 	if (!src) {
 		throw new PrismicRichTextSerializerError(
 			"Element of type `embed` is missing an `src` attribute",
-		);
+		)
 	}
 
 	const oembedBase = {
@@ -93,26 +97,26 @@ export const serializeEmbed = (node: Element): RTEmbedNode => {
 		embed_url: src,
 		html: toHtml(node),
 		title: node.properties?.title as string | undefined,
-	};
+	}
 
-	const width = node.properties?.width as number | undefined;
-	const height = node.properties?.height as number | undefined;
+	const width = node.properties?.width as number | undefined
+	const height = node.properties?.height as number | undefined
 
 	// Remove the children of the embed node as we don't want to process them.
-	node.children = [];
+	node.children = []
 
 	if (width && height) {
 		return {
 			type: "embed",
 			oembed: { ...oembedBase, type: OEmbedType.Rich, width, height },
-		};
+		}
 	} else {
 		return {
 			type: "embed",
 			oembed: { ...oembedBase, type: OEmbedType.Link },
-		};
+		}
 	}
-};
+}
 
 /**
  * Serializes a hast {@link Element} node to a {@link RTPartialInlineNode}.
@@ -132,11 +136,11 @@ export const serializeSpan = (
 		rtPartialInlineNode.type === "hyperlink" &&
 		!("data" in rtPartialInlineNode)
 	) {
-		const url = node.properties?.href as string | undefined;
+		const url = node.properties?.href as string | undefined
 		if (!url) {
 			throw new PrismicRichTextSerializerError(
 				"Element of type `hyperlink` is missing an `href` attribute",
-			);
+			)
 		}
 
 		return {
@@ -146,8 +150,8 @@ export const serializeSpan = (
 				url,
 				target: node.properties?.target as string | undefined,
 			},
-		};
+		}
 	}
 
-	return rtPartialInlineNode;
-};
+	return rtPartialInlineNode
+}

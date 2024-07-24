@@ -1,22 +1,19 @@
-import { expect, it } from "vitest";
+import { expect, it } from "vitest"
 
-import { LinkType, asHTML } from "../../src";
-import {
-	unstable_htmlAsRichText,
-	unstable_markdownAsRichText,
-} from "../../src";
-import type { HTMLAsRichTextConfig } from "../../src/helpers/unstable_htmlAsRichText";
-import type { MarkdownAsRichTextConfig } from "../../src/helpers/unstable_markdownAsRichText";
+import { LinkType, asHTML } from "../../src"
+import { unstable_htmlAsRichText, unstable_markdownAsRichText } from "../../src"
+import type { HTMLAsRichTextConfig } from "../../src/helpers/unstable_htmlAsRichText"
+import type { MarkdownAsRichTextConfig } from "../../src/helpers/unstable_markdownAsRichText"
 
 type TestAsRichTextHelperArgs<TConfig> = {
-	input: string;
+	input: string
 
-	config?: TConfig;
+	config?: TConfig
 
 	/**
 	 * Warnings that are expected to be present in the output.
 	 */
-	expectWarnings?: string[];
+	expectWarnings?: string[]
 
 	/**
 	 * The rich text format is a lossy representation of HTML. Namely it does not
@@ -27,8 +24,8 @@ type TestAsRichTextHelperArgs<TConfig> = {
 	 * output to exactly match the input. This flag can be used to tell it to
 	 * expect the output to not match the input instead.
 	 */
-	expectHTMLToMatchInputExactly?: boolean;
-};
+	expectHTMLToMatchInputExactly?: boolean
+}
 
 const testAsRichTextHelperFactory = <
 	THelper extends
@@ -46,9 +43,9 @@ const testAsRichTextHelperFactory = <
 	helper: THelper,
 ): void => {
 	it(description, () => {
-		const output = helper(args.input, args.config);
+		const output = helper(args.input, args.config)
 
-		expect(output.result).toMatchSnapshot();
+		expect(output.result).toMatchSnapshot()
 
 		const outputAsHTML = asHTML(output.result, {
 			serializer: {
@@ -59,9 +56,9 @@ const testAsRichTextHelperFactory = <
 					const maybeTarget =
 						node.data.link_type === LinkType.Web && node.data.target
 							? ` target="${node.data.target}"`
-							: "";
+							: ""
 
-					return `<a href="${node.data.url}"${maybeTarget}>${children}</a>`;
+					return `<a href="${node.data.url}"${maybeTarget}>${children}</a>`
 				},
 				// A simplified image serializer so that we don't have to
 				// wrap the images in a `div` element like the default
@@ -72,29 +69,29 @@ const testAsRichTextHelperFactory = <
 				// attributes the default serializer applies.
 				embed: ({ node }) => node.oembed.html,
 			},
-		});
+		})
 
 		expect(output.warnings.sort()).toStrictEqual(
 			args.expectWarnings?.sort() ?? [],
-		);
+		)
 
 		if (
 			typeof args.expectHTMLToMatchInputExactly === "undefined" ||
 			args.expectHTMLToMatchInputExactly
 		) {
-			expect(outputAsHTML).toBe(args.input);
+			expect(outputAsHTML).toBe(args.input)
 		} else {
-			expect(outputAsHTML).not.toBe(args.input);
+			expect(outputAsHTML).not.toBe(args.input)
 		}
-	});
-};
+	})
+}
 
 export const testHTMLAsRichTextHelper = (
 	description: string,
 	args: TestAsRichTextHelperArgs<HTMLAsRichTextConfig>,
 ): void => {
-	testAsRichTextHelperFactory(description, args, unstable_htmlAsRichText);
-};
+	testAsRichTextHelperFactory(description, args, unstable_htmlAsRichText)
+}
 
 export const testMarkdownAsRichTextHelper = (
 	description: string,
@@ -107,5 +104,5 @@ export const testMarkdownAsRichTextHelper = (
 		description,
 		{ ...args, expectHTMLToMatchInputExactly: !args.input },
 		unstable_markdownAsRichText,
-	);
-};
+	)
+}

@@ -7,5 +7,5 @@
  *   otherwise.
  */
 export const isRepositoryName = (input: string): boolean => {
-	return /^[a-zA-Z0-9][-a-zA-Z0-9]{2,}[a-zA-Z0-9]$/.test(input);
-};
+	return /^[a-zA-Z0-9][-a-zA-Z0-9]{2,}[a-zA-Z0-9]$/.test(input)
+}

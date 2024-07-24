@@ -5,20 +5,18 @@ import {
 	serializePreFormatted,
 	serializeSpan,
 	serializeStandardTag,
-} from "../lib/serializerHelpers";
+} from "../lib/serializerHelpers"
 
-import type { RichTextField } from "../types/value/richText";
+import type { RichTextField } from "../types/value/richText"
 
-import {
+import type {
 	RichTextFunctionSerializer,
 	RichTextMapSerializer,
 	RichTextMapSerializerFunction,
-	composeSerializers,
-	serialize,
-	wrapMapSerializer,
-} from "../richtext";
+} from "../richtext"
+import { composeSerializers, serialize, wrapMapSerializer } from "../richtext"
 
-import { LinkResolverFunction } from "./asLink";
+import type { LinkResolverFunction } from "./asLink"
 
 /**
  * Serializes a node from a rich text or title field with a function to HTML.
@@ -35,7 +33,7 @@ export type HTMLRichTextFunctionSerializer = (
 	text: Parameters<RichTextFunctionSerializer<string>>[2],
 	children: Parameters<RichTextFunctionSerializer<string>>[3][number],
 	key: Parameters<RichTextFunctionSerializer<string>>[4],
-) => string | null | undefined;
+) => string | null | undefined
 
 /**
  * Serializes a node from a rich text or title field with a map to HTML
@@ -49,8 +47,8 @@ export type HTMLRichTextFunctionSerializer = (
 export type HTMLRichTextMapSerializer = {
 	[P in keyof RichTextMapSerializer<string>]: P extends RichTextMapSerializer<string>["span"]
 		? HTMLStrictRichTextMapSerializer[P]
-		: HTMLStrictRichTextMapSerializer[P] | HTMLRichTextMapSerializerShorthand;
-};
+		: HTMLStrictRichTextMapSerializer[P] | HTMLRichTextMapSerializerShorthand
+}
 
 /**
  * Serializes a node from a rich text or title field with a map to HTML
@@ -63,15 +61,15 @@ export type HTMLRichTextMapSerializer = {
  */
 export type HTMLStrictRichTextMapSerializer = {
 	[P in keyof RichTextMapSerializer<string>]: (payload: {
-		type: Parameters<HTMLRichTextMapSerializerFunction<P>>[0]["type"];
-		node: Parameters<HTMLRichTextMapSerializerFunction<P>>[0]["node"];
-		text: Parameters<HTMLRichTextMapSerializerFunction<P>>[0]["text"];
+		type: Parameters<HTMLRichTextMapSerializerFunction<P>>[0]["type"]
+		node: Parameters<HTMLRichTextMapSerializerFunction<P>>[0]["node"]
+		text: Parameters<HTMLRichTextMapSerializerFunction<P>>[0]["text"]
 		children: Parameters<
 			HTMLRichTextMapSerializerFunction<P>
-		>[0]["children"][number];
-		key: Parameters<HTMLRichTextMapSerializerFunction<P>>[0]["key"];
-	}) => string | null | undefined;
-};
+		>[0]["children"][number]
+		key: Parameters<HTMLRichTextMapSerializerFunction<P>>[0]["key"]
+	}) => string | null | undefined
+}
 
 /**
  * A {@link RichTextMapSerializerFunction} type specifically for
@@ -85,7 +83,7 @@ type HTMLRichTextMapSerializerFunction<
 	string,
 	ExtractNodeGeneric<RichTextMapSerializer<string>[BlockType]>,
 	ExtractTextTypeGeneric<RichTextMapSerializer<string>[BlockType]>
->;
+>
 
 /**
  * Returns the `Node` generic from {@link RichTextMapSerializerFunction}.
@@ -102,7 +100,7 @@ type ExtractNodeGeneric<T> =
 		any
 	>
 		? U
-		: never;
+		: never
 
 /**
  * Returns the `TextType` generic from {@link RichTextMapSerializerFunction}.
@@ -119,7 +117,7 @@ type ExtractTextTypeGeneric<T> =
 		infer U
 	>
 		? U
-		: never;
+		: never
 
 /**
  * A shorthand definition for {@link HTMLRichTextMapSerializer} element types.
@@ -128,13 +126,13 @@ export type HTMLRichTextMapSerializerShorthand = {
 	/**
 	 * Classes to apply to the element type.
 	 */
-	class?: string;
+	class?: string
 
 	/**
 	 * Other attributes to apply to the element type.
 	 */
-	[Attribute: string]: string | boolean | null | undefined;
-};
+	[Attribute: string]: string | boolean | null | undefined
+}
 
 /**
  * Serializes a node from a rich text or title field with a map or a function to
@@ -145,7 +143,7 @@ export type HTMLRichTextMapSerializerShorthand = {
  */
 export type HTMLRichTextSerializer =
 	| HTMLRichTextMapSerializer
-	| HTMLRichTextFunctionSerializer;
+	| HTMLRichTextFunctionSerializer
 
 /**
  * Creates a HTML rich text serializer with a given link resolver and provide
@@ -171,12 +169,12 @@ const createHTMLRichTextSerializer = (
 					(
 						nodeSerializerOrShorthand as HTMLStrictRichTextMapSerializer[BlockType]
 					)?.(payload) || defaultWithShorthand(payload)
-				);
-			}) as NonNullable<HTMLStrictRichTextMapSerializer[BlockType]>;
+				)
+			}) as NonNullable<HTMLStrictRichTextMapSerializer[BlockType]>
 		}
 
-		return defaultWithShorthand;
-	};
+		return defaultWithShorthand
+	}
 
 	const mapSerializer: Required<HTMLStrictRichTextMapSerializer> = {
 		heading1: useSerializerOrDefault<"heading1">(
@@ -252,10 +250,10 @@ const createHTMLRichTextSerializer = (
 			serializeStandardTag<"label">("span", serializer?.label),
 		),
 		span: useSerializerOrDefault<"span">(serializer?.span, serializeSpan()),
-	};
+	}
 
-	return wrapMapSerializerWithStringChildren(mapSerializer);
-};
+	return wrapMapSerializerWithStringChildren(mapSerializer)
+}
 
 /**
  * Wraps a map serializer into a regular function serializer. The given map
@@ -269,10 +267,10 @@ const createHTMLRichTextSerializer = (
 const wrapMapSerializerWithStringChildren = (
 	mapSerializer: HTMLStrictRichTextMapSerializer,
 ): RichTextFunctionSerializer<string> => {
-	const modifiedMapSerializer = {} as RichTextMapSerializer<string>;
+	const modifiedMapSerializer = {} as RichTextMapSerializer<string>
 
 	for (const tag in mapSerializer) {
-		const tagSerializer = mapSerializer[tag as keyof typeof mapSerializer];
+		const tagSerializer = mapSerializer[tag as keyof typeof mapSerializer]
 
 		if (tagSerializer) {
 			modifiedMapSerializer[tag as keyof typeof mapSerializer] = (payload) => {
@@ -280,13 +278,13 @@ const wrapMapSerializerWithStringChildren = (
 					...payload,
 					// @ts-expect-error - merging blockSerializer types causes TS to bail to a never type
 					children: payload.children.join(""),
-				});
-			};
+				})
+			}
 		}
 	}
 
-	return wrapMapSerializer(modifiedMapSerializer);
-};
+	return wrapMapSerializer(modifiedMapSerializer)
+}
 
 /**
  * Configuration that determines the output of `asHTML()`.
@@ -296,14 +294,14 @@ type AsHTMLConfig = {
 	 * An optional link resolver function to resolve links. Without it you're
 	 * expected to use the `routes` options from the API.
 	 */
-	linkResolver?: LinkResolverFunction | null;
+	linkResolver?: LinkResolverFunction | null
 
 	/**
 	 * An optional rich text serializer, unhandled cases will fallback to the
 	 * default serializer
 	 */
-	serializer?: HTMLRichTextSerializer | null;
-};
+	serializer?: HTMLRichTextSerializer | null
+}
 
 // TODO: Remove when we remove support for deprecated tuple-style configuration.
 /**
@@ -312,13 +310,13 @@ type AsHTMLConfig = {
 type AsHTMLDeprecatedTupleConfig = [
 	linkResolver?: LinkResolverFunction | null,
 	serializer?: HTMLRichTextSerializer | null,
-];
+]
 
 /**
  * The return type of `asHTML()`.
  */
 type AsHTMLReturnType<Field extends RichTextField | null | undefined> =
-	Field extends RichTextField ? string : null;
+	Field extends RichTextField ? string : null
 
 // TODO: Remove overload when we remove support for deprecated tuple-style configuration.
 export const asHTML: {
@@ -335,7 +333,7 @@ export const asHTML: {
 	<Field extends RichTextField | null | undefined>(
 		richTextField: Field,
 		config?: AsHTMLConfig,
-	): AsHTMLReturnType<Field>;
+	): AsHTMLReturnType<Field>
 
 	/**
 	 * Serializes a rich text or title field to an HTML string.
@@ -355,7 +353,7 @@ export const asHTML: {
 	<Field extends RichTextField | null | undefined>(
 		richTextField: Field,
 		...config: AsHTMLDeprecatedTupleConfig
-	): AsHTMLReturnType<Field>;
+	): AsHTMLReturnType<Field>
 } = <Field extends RichTextField | null | undefined>(
 	richTextField: Field,
 	// TODO: Rename to `config` when we remove support for deprecated tuple-style configuration.
@@ -363,8 +361,8 @@ export const asHTML: {
 ): AsHTMLReturnType<Field> => {
 	if (richTextField) {
 		// TODO: Remove when we remove support for deprecated tuple-style configuration.
-		const [configObjectOrLinkResolver, maybeSerializer] = configObjectOrTuple;
-		let config: AsHTMLConfig;
+		const [configObjectOrLinkResolver, maybeSerializer] = configObjectOrTuple
+		let config: AsHTMLConfig
 		if (
 			typeof configObjectOrLinkResolver === "function" ||
 			configObjectOrLinkResolver == null
@@ -372,12 +370,12 @@ export const asHTML: {
 			config = {
 				linkResolver: configObjectOrLinkResolver,
 				serializer: maybeSerializer,
-			};
+			}
 		} else {
-			config = { ...configObjectOrLinkResolver };
+			config = { ...configObjectOrLinkResolver }
 		}
 
-		let serializer: RichTextFunctionSerializer<string>;
+		let serializer: RichTextFunctionSerializer<string>
 		if (config.serializer) {
 			if (typeof config.serializer === "function") {
 				serializer = composeSerializers(
@@ -391,21 +389,21 @@ export const asHTML: {
 							key,
 						),
 					createHTMLRichTextSerializer(config.linkResolver),
-				);
+				)
 			} else {
 				serializer = createHTMLRichTextSerializer(
 					config.linkResolver,
 					config.serializer,
-				);
+				)
 			}
 		} else {
-			serializer = createHTMLRichTextSerializer(config.linkResolver);
+			serializer = createHTMLRichTextSerializer(config.linkResolver)
 		}
 
 		return serialize(richTextField, serializer).join(
 			"",
-		) as AsHTMLReturnType<Field>;
+		) as AsHTMLReturnType<Field>
 	} else {
-		return null as AsHTMLReturnType<Field>;
+		return null as AsHTMLReturnType<Field>
 	}
-};
+}

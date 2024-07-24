@@ -1,31 +1,31 @@
-import { expectNever, expectType } from "ts-expect";
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes";
+import type * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes"
 
-import * as prismic from "../../src";
+import * as prismic from "../../src"
 
-(value: prismic.CustomTypeModelLinkField): true => {
+;(value: prismic.CustomTypeModelLinkField): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				expectNever(value);
+				expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 
 expectType<prismic.CustomTypeModelLinkField>({
 	type: prismic.CustomTypeModelFieldType.Link,
 	config: {
 		label: "string",
 	},
-});
+})
 
 /**
  * Supports optional placeholder.
@@ -36,7 +36,7 @@ expectType<prismic.CustomTypeModelLinkField>({
 		label: "string",
 		placeholder: "string",
 	},
-});
+})
 
 /**
  * Supports optional null `select` option.
@@ -47,7 +47,7 @@ expectType<prismic.CustomTypeModelLinkField>({
 		label: "string",
 		select: null,
 	},
-});
+})
 
 /**
  * Supports optional allowTargetBlank.
@@ -58,14 +58,14 @@ expectType<prismic.CustomTypeModelLinkField>({
 		label: "string",
 		allowTargetBlank: true,
 	},
-});
+})
 
 /**
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
-expectType<prismic.CustomTypeModelLinkField>({} as prismicTICustomTypes.Link);
+expectType<prismic.CustomTypeModelLinkField>({} as prismicTICustomTypes.Link)
 
 /**
  * `@prismicio/types-internal` extends `@prismicio/types`
  */
-expectType<prismicTICustomTypes.Link>({} as prismic.CustomTypeModelLinkField);
+expectType<prismicTICustomTypes.Link>({} as prismic.CustomTypeModelLinkField)

@@ -1,9 +1,9 @@
-import type { AnyRegularField, FieldState } from "./types";
+import type { AnyRegularField, FieldState } from "./types"
 
-import type { ContentRelationshipField } from "./contentRelationship";
-import type { GroupField } from "./group";
-import type { LinkToMediaField } from "./linkToMedia";
-import type { SliceZone } from "./sliceZone";
+import type { ContentRelationshipField } from "./contentRelationship"
+import type { GroupField } from "./group"
+import type { LinkToMediaField } from "./linkToMedia"
+import type { SliceZone } from "./sliceZone"
 
 /**
  * Link types
@@ -13,7 +13,7 @@ export const LinkType = {
 	Document: "Document",
 	Media: "Media",
 	Web: "Web",
-} as const;
+} as const
 
 /**
  * For link fields that haven't been filled
@@ -23,16 +23,16 @@ export const LinkType = {
 export type EmptyLinkField<
 	Type extends (typeof LinkType)[keyof typeof LinkType] = typeof LinkType.Any,
 > = {
-	link_type: Type | string;
-};
+	link_type: Type | string
+}
 
 /**
  * Link that points to external website
  */
 export interface FilledLinkToWebField {
-	link_type: typeof LinkType.Web;
-	url: string;
-	target?: string;
+	link_type: typeof LinkType.Web
+	url: string
+	target?: string
 }
 
 /**
@@ -56,4 +56,4 @@ export type LinkField<
 	:
 			| ContentRelationshipField<TypeEnum, LangEnum, DataInterface, State>
 			| FilledLinkToWebField
-			| LinkToMediaField<State>;
+			| LinkToMediaField<State>

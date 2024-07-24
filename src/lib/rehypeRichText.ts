@@ -1,16 +1,17 @@
-import { Element, Root } from "hast";
-import { select, selectAll } from "hast-util-select";
-import rehypeMinifyWhitespace from "rehype-minify-whitespace";
-import { Plugin, Processor } from "unified";
-import { remove } from "unist-util-remove";
-import { SKIP, visit } from "unist-util-visit";
-import { VFile } from "vfile";
+import type { Element, Root } from "hast"
+import { select, selectAll } from "hast-util-select"
+import rehypeMinifyWhitespace from "rehype-minify-whitespace"
+import type { Plugin, Processor } from "unified"
+import { remove } from "unist-util-remove"
+import { SKIP, visit } from "unist-util-visit"
+import type { VFile } from "vfile"
 
-import { CustomTypeModelRichTextField } from "../types/model/richText";
-import { RichTextField } from "../types/value/richText";
+import type { CustomTypeModelRichTextField } from "../types/model/richText"
+import type { RichTextField } from "../types/value/richText"
 
-import { filterRichTextField } from "./filterRichTextField";
-import { HASTToRichTextConfig, hastToRichText } from "./hastToRichText";
+import { filterRichTextField } from "./filterRichTextField"
+import type { HASTToRichTextConfig } from "./hastToRichText"
+import { hastToRichText } from "./hastToRichText"
 
 /**
  * Configuration options for {@link rehypeRichText}.
@@ -24,7 +25,7 @@ export type RehypeRichTextConfig = {
 	 *
 	 * @defaultValue `":root"` - The top-level element of the document.
 	 */
-	container?: string;
+	container?: string
 
 	/**
 	 * A list of CSS selectors to exclude matching nodes from the document to
@@ -34,7 +35,7 @@ export type RehypeRichTextConfig = {
 	 *
 	 * @defaultValue `[]` - No nodes are excluded.
 	 */
-	exclude?: string[];
+	exclude?: string[]
 
 	/**
 	 * A list of CSS selectors to include only matching nodes from the document to
@@ -44,7 +45,7 @@ export type RehypeRichTextConfig = {
 	 *
 	 * @defaultValue `[]` - All nodes are included.
 	 */
-	include?: string[];
+	include?: string[]
 
 	/**
 	 * A rich text or title field model definition. When provided the serializer
@@ -52,8 +53,8 @@ export type RehypeRichTextConfig = {
 	 *
 	 * @defaultValue `undefined` - No filtering is applied.
 	 */
-	model?: CustomTypeModelRichTextField;
-} & HASTToRichTextConfig;
+	model?: CustomTypeModelRichTextField
+} & HASTToRichTextConfig
 
 /**
  * A unified plugin that compiles a hast tree to a Prismic rich text field.
@@ -77,7 +78,7 @@ export const rehypeRichText: Plugin<
 		undefined,
 		Root,
 		RichTextField
-	>;
+	>
 
 	// We need to exclude nodes _before_ we minify the tree as excluding
 	// nodes could end up in more whitespaces to trim.
@@ -85,48 +86,48 @@ export const rehypeRichText: Plugin<
 		return (tree: Root) => {
 			// Extract container node if any is specified.
 			if (config?.container) {
-				const element = select(config.container, tree);
+				const element = select(config.container, tree)
 
 				if (!element) {
 					throw new Error(
 						`No container matching \`${config?.container}\` could be found in the input AST.`,
-					);
+					)
 				}
 
 				// We cannot reassign the tree itself, so we instead replace
 				// its children with the found element.
-				tree.children = [element];
+				tree.children = [element]
 			}
 
 			// Remove excluded nodes if any are specified
 			if (config?.exclude) {
 				// We join selector to only run one query
-				const nodesToExclude = selectAll(config.exclude.join(", "), tree);
+				const nodesToExclude = selectAll(config.exclude.join(", "), tree)
 
-				remove(tree, (node) => nodesToExclude.includes(node as Element));
+				remove(tree, (node) => nodesToExclude.includes(node as Element))
 			}
 
 			// Include only nodes to include
 			if (config?.include) {
-				const nodesToInclude: Element[] = [];
+				const nodesToInclude: Element[] = []
 
 				// We join selector to only run one query
-				const selector = config.include.join(", ");
-				const rawNodesToInclude = selectAll(selector, tree);
+				const selector = config.include.join(", ")
+				const rawNodesToInclude = selectAll(selector, tree)
 
 				// We walk the tree to exclude matching nodes that are children of other matching nodes.
 				visit(tree, (node) => {
 					if (rawNodesToInclude.includes(node as Element)) {
-						nodesToInclude.push(node as Element);
+						nodesToInclude.push(node as Element)
 
 						// Stop traversing this part of the tree since we found its matching parent node.
-						return SKIP;
+						return SKIP
 					}
-				});
+				})
 
 				// We cannot reassign the tree itself, so we instead replace
 				// its children with the found element.
-				tree.children = nodesToInclude;
+				tree.children = nodesToInclude
 			}
 
 			// Mark nodes matching CSS selectors
@@ -136,38 +137,38 @@ export const rehypeRichText: Plugin<
 					// Here we want to match anything that's not a valid HTML tag name and treat
 					// it as a CSS selector. See: https://regex101.com/r/LILLWH/1
 					if (!/^[a-z]+[1-6]?$/.test(key)) {
-						const matches = selectAll(key, tree);
+						const matches = selectAll(key, tree)
 
 						for (let i = 0; i < matches.length; i++) {
-							matches[i].matchesSerializer = key;
+							matches[i].matchesSerializer = key
 						}
 					}
 				}
 			}
-		};
-	});
+		}
+	})
 
 	// `rehypeRichText` _depends_ on `rehypeMinifyWhitespace`, that's why it's
 	// registered within the plugin rather than on the processor directly.
-	self.use(rehypeMinifyWhitespace);
+	self.use(rehypeMinifyWhitespace)
 
-	self.compiler = compiler;
+	self.compiler = compiler
 
 	function compiler(tree: Root, file: VFile): RichTextField {
-		const richTextField = hastToRichText(tree, file, config);
+		const richTextField = hastToRichText(tree, file, config)
 
 		if (config?.model) {
-			return filterRichTextField(richTextField, config.model);
+			return filterRichTextField(richTextField, config.model)
 		}
 
-		return richTextField;
+		return richTextField
 	}
-};
+}
 
 declare module "unified" {
 	// Register unified processor the result type.
 	interface CompileResultMap {
-		RichTextField: RichTextField;
+		RichTextField: RichTextField
 	}
 }
 
@@ -178,6 +179,6 @@ declare module "hast" {
 		 * A serializer this node matches to. Nodes are marked with this property
 		 * when they match a CSS selector from the serializer map.
 		 */
-		matchesSerializer?: string;
+		matchesSerializer?: string
 	}
 }

@@ -1,4 +1,4 @@
-import { RTTextNode, RichTextField } from "../types/value/richText";
+import type { RTTextNode, RichTextField } from "../types/value/richText"
 
 /**
  * Serializes a rich text or title field to a plain text string
@@ -14,14 +14,14 @@ export const asText = (
 	richTextField: RichTextField,
 	separator = " ",
 ): string => {
-	let result = "";
+	let result = ""
 
 	for (let i = 0; i < richTextField.length; i++) {
 		if ("text" in richTextField[i]) {
 			result +=
-				(result ? separator : "") + (richTextField[i] as RTTextNode).text;
+				(result ? separator : "") + (richTextField[i] as RTTextNode).text
 		}
 	}
 
-	return result;
-};
+	return result
+}

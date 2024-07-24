@@ -1,4 +1,4 @@
-import type { FieldState } from "./types";
+import type { FieldState } from "./types"
 
 /**
  * A key text field
@@ -8,4 +8,4 @@ import type { FieldState } from "./types";
  * @see More details: {@link https://prismic.io/docs/key-text}
  */
 export type KeyTextField<State extends FieldState = FieldState> =
-	State extends "empty" ? null | "" : string;
+	State extends "empty" ? null | "" : string

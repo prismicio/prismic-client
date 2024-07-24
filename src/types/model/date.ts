@@ -1,4 +1,4 @@
-import type { CustomTypeModelFieldType } from "./types";
+import type { CustomTypeModelFieldType } from "./types"
 
 /**
  * A date custom type field.
@@ -6,10 +6,10 @@ import type { CustomTypeModelFieldType } from "./types";
  * More details: {@link https://prismic.io/docs/date}
  */
 export interface CustomTypeModelDateField {
-	type: typeof CustomTypeModelFieldType.Date;
+	type: typeof CustomTypeModelFieldType.Date
 	config?: {
-		label?: string | null;
-		placeholder?: string;
-		default?: string;
-	};
+		label?: string | null
+		placeholder?: string
+		default?: string
+	}
 }

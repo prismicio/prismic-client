@@ -1,4 +1,3 @@
-import * as prismic from "../../src";
+import type * as prismic from "../../src"
 
-export const linkResolver: prismic.LinkResolverFunction = (doc) =>
-	`/${doc.uid}`;
+export const linkResolver: prismic.LinkResolverFunction = (doc) => `/${doc.uid}`

@@ -1,29 +1,30 @@
-import { TestContext, expect } from "vitest";
+import type { TestContext } from "vitest"
+import { expect } from "vitest"
 
-import { rest } from "msw";
+import { rest } from "msw"
 
-import { createRepositoryName } from "./createRepositoryName";
+import { createRepositoryName } from "./createRepositoryName"
 
-import * as prismic from "../../src";
+import type * as prismic from "../../src"
 
-const DEFAULT_DELAY = 0;
+const DEFAULT_DELAY = 0
 
 type MockPrismicRestAPIV2Args = {
-	ctx: TestContext;
-	accessToken?: string;
-	repositoryResponse?: prismic.Repository;
-	queryResponse?: prismic.Query | prismic.Query[];
-	queryRequiredParams?: Record<string, string | string[]>;
-	queryDelay?: number;
-};
+	ctx: TestContext
+	accessToken?: string
+	repositoryResponse?: prismic.Repository
+	queryResponse?: prismic.Query | prismic.Query[]
+	queryRequiredParams?: Record<string, string | string[]>
+	queryDelay?: number
+}
 
 export const mockPrismicRestAPIV2 = (args: MockPrismicRestAPIV2Args): void => {
-	const repositoryName = createRepositoryName();
-	const repositoryEndpoint = `https://${repositoryName}.cdn.prismic.io/api/v2`;
+	const repositoryName = createRepositoryName()
+	const repositoryEndpoint = `https://${repositoryName}.cdn.prismic.io/api/v2`
 	const queryEndpoint = new URL(
 		"documents/search",
 		repositoryEndpoint + "/",
-	).toString();
+	).toString()
 
 	args.ctx.server.use(
 		rest.get(repositoryEndpoint, (req, res, ctx) => {
@@ -38,48 +39,47 @@ export const mockPrismicRestAPIV2 = (args: MockPrismicRestAPIV2Args): void => {
 						oauth_initiate: "oauth_initiate",
 						oauth_token: "oauth_token",
 					}),
-				);
+				)
 			}
 
-			const response =
-				args.repositoryResponse || args.ctx.mock.api.repository();
+			const response = args.repositoryResponse || args.ctx.mock.api.repository()
 
-			return res(ctx.json(response));
+			return res(ctx.json(response))
 		}),
 		rest.get(queryEndpoint, (req, res, ctx) => {
 			if (args.queryRequiredParams) {
 				for (const paramKey in args.queryRequiredParams) {
-					const requiredValue = args.queryRequiredParams[paramKey];
+					const requiredValue = args.queryRequiredParams[paramKey]
 
 					expect(req.url.searchParams.getAll(paramKey)).toStrictEqual(
 						Array.isArray(requiredValue) ? requiredValue : [requiredValue],
-					);
+					)
 				}
 			}
 
 			if (Array.isArray(args.queryResponse)) {
-				const page = Number.parseInt(req.url.searchParams.get("page") || "1");
+				const page = Number.parseInt(req.url.searchParams.get("page") || "1")
 
-				const response = args.queryResponse[page - 1];
+				const response = args.queryResponse[page - 1]
 
 				if (!response) {
 					throw new Error(
 						`A query response was not generated for \`page=${page}\`.`,
-					);
+					)
 				}
 
 				return res(
 					ctx.delay(args.queryDelay || DEFAULT_DELAY),
 					ctx.json(response),
-				);
+				)
 			} else {
-				const response = args.queryResponse || args.ctx.mock.api.query();
+				const response = args.queryResponse || args.ctx.mock.api.query()
 
 				return res(
 					ctx.delay(args.queryDelay || DEFAULT_DELAY),
 					ctx.json(response),
-				);
+				)
 			}
 		}),
-	);
-};
+	)
+}

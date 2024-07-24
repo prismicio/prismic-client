@@ -1,31 +1,31 @@
-import { expectNever, expectType } from "ts-expect";
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismic from "../../src";
+import type * as prismic from "../../src"
 
-(value: prismic.SliceZone): true => {
+;(value: prismic.SliceZone): true => {
 	if (!Array.isArray(value)) {
-		return expectNever(value);
+		return expectNever(value)
 	}
 
 	switch (typeof value[0]) {
 		case "object": {
 			if (value[0] === null) {
-				expectNever(value[0]);
+				expectNever(value[0])
 			}
 
-			return true;
+			return true
 		}
 
 		// When the field is empty, value[0] is undefined.
 		case "undefined": {
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value[0]);
+			return expectNever(value[0])
 		}
 	}
-};
+}
 
 /**
  * Filled state. It does not use FieldState like other fields; an array with
@@ -50,13 +50,13 @@ expectType<prismic.SliceZone>([
 		primary: {},
 		items: [],
 	},
-]);
+])
 
 /**
  * Empty state. It does not use FieldState like other fields; an empty array
  * implicity signals an empty state.
  */
-expectType<prismic.SliceZone>([]);
+expectType<prismic.SliceZone>([])
 
 /**
  * Supports custom Slice definitions.
@@ -69,7 +69,7 @@ expectType<prismic.SliceZone<prismic.Slice<"foo">>>([
 		primary: {},
 		items: [],
 	},
-]);
+])
 expectType<prismic.SliceZone<prismic.Slice<"foo">>>([
 	{
 		id: "id",
@@ -79,7 +79,7 @@ expectType<prismic.SliceZone<prismic.Slice<"foo">>>([
 		primary: {},
 		items: [],
 	},
-]);
+])
 
 /**
  * Supports custom shared Slice definitions.
@@ -94,7 +94,7 @@ expectType<prismic.SliceZone<prismic.SharedSlice<"foo">>>([
 		primary: {},
 		items: [],
 	},
-]);
+])
 expectType<prismic.SliceZone<prismic.SharedSlice<"foo">>>([
 	{
 		id: "id",
@@ -106,4 +106,4 @@ expectType<prismic.SliceZone<prismic.SharedSlice<"foo">>>([
 		primary: {},
 		items: [],
 	},
-]);
+])

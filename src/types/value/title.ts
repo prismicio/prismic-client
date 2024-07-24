@@ -1,4 +1,4 @@
-import type { FieldState } from "./types";
+import type { FieldState } from "./types"
 
 import type {
 	RTHeading1Node,
@@ -7,7 +7,7 @@ import type {
 	RTHeading4Node,
 	RTHeading5Node,
 	RTHeading6Node,
-} from "./richText";
+} from "./richText"
 
 /**
  * A title field.
@@ -27,6 +27,6 @@ export type TitleField<State extends FieldState = FieldState> =
 					| RTHeading6Node,
 					"spans"
 				> & {
-					spans: [];
+					spans: []
 				},
-			];
+			]

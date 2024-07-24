@@ -1,5 +1,5 @@
-import { LinkType } from "../../src";
-import { RichTextMapSerializer } from "../../src/richtext";
+import { LinkType } from "../../src"
+import type { RichTextMapSerializer } from "../../src/richtext"
 
 export const htmlRichTextMapSerializer: RichTextMapSerializer<string> = {
 	heading1: ({ children }) => `<h1>${children.join("")}</h1>`,
@@ -23,21 +23,21 @@ export const htmlRichTextMapSerializer: RichTextMapSerializer<string> = {
 			case LinkType.Web: {
 				return `<a href="${node.data.url}" target="${
 					node.data.target
-				}">${children.join("")}</a>`;
+				}">${children.join("")}</a>`
 			}
 
 			case LinkType.Document: {
 				return `<a href="linkResolver(${node.data.id})">${children.join(
 					"",
-				)}</a>`;
+				)}</a>`
 			}
 
 			case LinkType.Media: {
-				return `<a href="${node.data.url}">${children.join("")}</a>`;
+				return `<a href="${node.data.url}">${children.join("")}</a>`
 			}
 		}
 	},
 	label: ({ node, children }) =>
 		`<span class="${node.data.label}">${children.join("")}</span>`,
 	span: ({ text }) => (text ? text.replace("\n", "<br/>") : ""),
-};
+}

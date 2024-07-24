@@ -1,20 +1,21 @@
-import { Element } from "hast";
-import rehypeParse from "rehype-parse";
-import { unified } from "unified";
+import type { Element } from "hast"
+import rehypeParse from "rehype-parse"
+import { unified } from "unified"
 
-import { RTPartialInlineNode } from "../lib/RichTextFieldBuilder";
-import { RehypeRichTextConfig, rehypeRichText } from "../lib/rehypeRichText";
+import type { RTPartialInlineNode } from "../lib/RichTextFieldBuilder"
+import type { RehypeRichTextConfig } from "../lib/rehypeRichText"
+import { rehypeRichText } from "../lib/rehypeRichText"
 
-import {
+import type {
 	RTInlineNode,
 	RTNode,
 	RichTextField,
 	RichTextNodeTypes,
-} from "../types/value/richText";
+} from "../types/value/richText"
 
 // Used for TSDocs only.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { HTMLRichTextMapSerializer, asHTML } from "./asHTML";
+import type { HTMLRichTextMapSerializer, asHTML } from "./asHTML"
 
 /**
  * A shorthand definition for {@link RichTextHTMLMapSerializer} rich text node
@@ -30,7 +31,7 @@ import type { HTMLRichTextMapSerializer, asHTML } from "./asHTML";
  */
 export type RichTextHTMLMapSerializerShorthand =
 	| Exclude<RichTextNodeTypes, "label" | "span">
-	| { label: string };
+	| { label: string }
 
 /**
  * The payload provided to a {@link RichTextHTMLMapSerializerFunction}.
@@ -39,7 +40,7 @@ type RichTextHTMLMapSerializerFunctionPayload = {
 	/**
 	 * The hast {@link Element} node to serialize.
 	 */
-	node: Element;
+	node: Element
 
 	/**
 	 * Additional context information to help with the serialization.
@@ -48,9 +49,9 @@ type RichTextHTMLMapSerializerFunctionPayload = {
 		/**
 		 * The list type of the last list node encountered if any.
 		 */
-		listType?: "group-list-item" | "group-o-list-item";
-	};
-};
+		listType?: "group-list-item" | "group-o-list-item"
+	}
+}
 
 /**
  * Serializes a hast {@link Element} node to a
@@ -68,7 +69,7 @@ export type RichTextHTMLMapSerializerFunction = (
 	| RTNode
 	| RTInlineNode
 	| RTPartialInlineNode
-	| undefined;
+	| undefined
 
 /**
  * Serializes a hast {@link Element} node matching the given HTML tag name or CSS
@@ -82,20 +83,20 @@ export type RichTextHTMLMapSerializerFunction = (
 export type RichTextHTMLMapSerializer = Record<
 	string,
 	RichTextHTMLMapSerializerShorthand | RichTextHTMLMapSerializerFunction
->;
+>
 
 /**
  * Configuration that determines the output of {@link htmlAsRichText}.
  */
-export type HTMLAsRichTextConfig = RehypeRichTextConfig;
+export type HTMLAsRichTextConfig = RehypeRichTextConfig
 
 /**
  * The return type of {@link htmlAsRichText}.
  */
 type HTMLAsRichTextReturnType = {
-	result: RichTextField;
-	warnings: string[];
-};
+	result: RichTextField
+	warnings: string[]
+}
 
 /**
  * Converts an HTML string to a rich text field.
@@ -115,7 +116,7 @@ export const unstable_htmlAsRichText = (
 	const { result, messages } = unified()
 		.use(rehypeParse, { emitParseErrors: true, missingDoctype: 0 })
 		.use(rehypeRichText, config)
-		.processSync(html);
+		.processSync(html)
 
-	return { result, warnings: messages.map((message) => message.toString()) };
-};
+	return { result, warnings: messages.map((message) => message.toString()) }
+}

@@ -1,24 +1,24 @@
-import { expectNever, expectType } from "ts-expect";
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes";
+import type * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes"
 
-import * as prismic from "../../src";
+import * as prismic from "../../src"
 
-(value: prismic.CustomTypeModelContentRelationshipField): true => {
+;(value: prismic.CustomTypeModelContentRelationshipField): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				expectNever(value);
+				expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 
 expectType<prismic.CustomTypeModelContentRelationshipField>({
 	type: prismic.CustomTypeModelFieldType.Link,
@@ -26,7 +26,7 @@ expectType<prismic.CustomTypeModelContentRelationshipField>({
 		label: "string",
 		select: prismic.CustomTypeModelLinkSelectType.Document,
 	},
-});
+})
 
 /**
  * Supports optional placeholder.
@@ -38,7 +38,7 @@ expectType<prismic.CustomTypeModelContentRelationshipField>({
 		placeholder: "string",
 		select: prismic.CustomTypeModelLinkSelectType.Document,
 	},
-});
+})
 
 /**
  * Supports optional `customtypes` property.
@@ -50,7 +50,7 @@ expectType<prismic.CustomTypeModelContentRelationshipField>({
 		select: prismic.CustomTypeModelLinkSelectType.Document,
 		customtypes: ["string"],
 	},
-});
+})
 
 /**
  * Supports custom `customtypes` values.
@@ -66,7 +66,7 @@ expectType<prismic.CustomTypeModelContentRelationshipField<"foo">>({
 			"bar",
 		],
 	},
-});
+})
 
 /**
  * Supports optional `tags` property.
@@ -78,7 +78,7 @@ expectType<prismic.CustomTypeModelContentRelationshipField>({
 		select: prismic.CustomTypeModelLinkSelectType.Document,
 		tags: ["string"],
 	},
-});
+})
 
 /**
  * Supports custom `tags` values.
@@ -94,7 +94,7 @@ expectType<prismic.CustomTypeModelContentRelationshipField<string, "foo">>({
 			"bar",
 		],
 	},
-});
+})
 
 /**
  * `@prismicio/types` extends `@prismicio/types-internal`
@@ -105,13 +105,13 @@ expectType<prismic.CustomTypeModelContentRelationshipField>(
 		// to match a Content Relationship field;
 		// `@prismicio/types-internal` does not contain a Content
 		// Relationship-specific type.
-		config?: { select: "document" };
+		config?: { select: "document" }
 	},
-);
+)
 
 /**
  * `@prismicio/types-internal` extends `@prismicio/types`
  */
 expectType<prismicTICustomTypes.Link>(
 	{} as prismic.CustomTypeModelContentRelationshipField,
-);
+)

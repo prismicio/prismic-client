@@ -1,15 +1,15 @@
-import { expectNever } from "ts-expect";
+import { expectNever } from "ts-expect"
 
-import * as prismic from "../../src";
+import type * as prismic from "../../src"
 
-(value: prismic.BooleanField): true => {
+;(value: prismic.BooleanField): true => {
 	switch (typeof value) {
 		case "boolean": {
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}

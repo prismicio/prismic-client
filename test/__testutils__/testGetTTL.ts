@@ -1,11 +1,11 @@
-import { expect, it } from "vitest";
+import { expect, it } from "vitest"
 
-import { rest } from "msw";
+import { rest } from "msw"
 
-import { createTestClient } from "./createClient";
-import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2";
+import { createTestClient } from "./createClient"
+import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2"
 
-import * as prismic from "../../src";
+import type * as prismic from "../../src"
 
 /**
  * The number of milliseconds in which repository metadata is considered valid.
@@ -18,18 +18,18 @@ import * as prismic from "../../src";
  * note that changing `REPOSITORY_CACHE_TTL` in the public code may have an
  * effect on tests using this test-specific constant.
  */
-export const REPOSITORY_CACHE_TTL = 5000;
+export const REPOSITORY_CACHE_TTL = 5000
 
 type GetContext = {
-	repositoryResponse?: Partial<prismic.Repository>;
-	getRef(repository: prismic.Repository): string;
-};
+	repositoryResponse?: Partial<prismic.Repository>
+	getRef(repository: prismic.Repository): string
+}
 
 type TestGetWithinTTLArgs = {
-	getContext: GetContext;
-	beforeFirstGet: (args: { client: prismic.Client }) => void;
-	requestParams?: Parameters<prismic.Client["get"]>[0];
-};
+	getContext: GetContext
+	beforeFirstGet: (args: { client: prismic.Client }) => void
+	requestParams?: Parameters<prismic.Client["get"]>[0]
+}
 
 export const testGetWithinTTL = (
 	description: string,
@@ -39,9 +39,9 @@ export const testGetWithinTTL = (
 		const repositoryResponse = {
 			...ctx.mock.api.repository(),
 			...args.getContext.repositoryResponse,
-		};
-		const ref = args.getContext.getRef(repositoryResponse);
-		const queryResponse = ctx.mock.api.query();
+		}
+		const ref = args.getContext.getRef(repositoryResponse)
+		const queryResponse = ctx.mock.api.query()
 
 		mockPrismicRestAPIV2({
 			repositoryResponse,
@@ -50,37 +50,37 @@ export const testGetWithinTTL = (
 				ref,
 			},
 			ctx,
-		});
+		})
 
-		const client = createTestClient();
+		const client = createTestClient()
 
 		if (args.beforeFirstGet) {
-			args.beforeFirstGet({ client });
+			args.beforeFirstGet({ client })
 		}
 
-		const res1 = await client.get();
+		const res1 = await client.get()
 
 		// We're setting the next repository metadata response to include a different ref.
 		// Notice that we aren't setting a new query handler. The next query should
 		// use the previous ref.
 		ctx.server.use(
 			rest.get(client.endpoint, (_req, res, serverCtx) => {
-				return res(serverCtx.json(ctx.mock.api.repository()));
+				return res(serverCtx.json(ctx.mock.api.repository()))
 			}),
-		);
+		)
 
-		const res2 = await client.get();
+		const res2 = await client.get()
 
-		expect(res1).toStrictEqual(queryResponse);
-		expect(res2).toStrictEqual(queryResponse);
-	});
-};
+		expect(res1).toStrictEqual(queryResponse)
+		expect(res2).toStrictEqual(queryResponse)
+	})
+}
 
 type TestGetOutsideTTLArgs = {
-	getContext1: GetContext;
-	getContext2: GetContext;
-	beforeFirstGet: (args: { client: prismic.Client }) => void;
-};
+	getContext1: GetContext
+	getContext2: GetContext
+	beforeFirstGet: (args: { client: prismic.Client }) => void
+}
 
 export const testGetOutsideTTL = (
 	description: string,
@@ -92,16 +92,16 @@ export const testGetOutsideTTL = (
 			const repositoryResponse1 = {
 				...ctx.mock.api.repository(),
 				...args.getContext1.repositoryResponse,
-			};
-			const ref1 = args.getContext1.getRef(repositoryResponse1);
-			const queryResponse1 = ctx.mock.api.query();
+			}
+			const ref1 = args.getContext1.getRef(repositoryResponse1)
+			const queryResponse1 = ctx.mock.api.query()
 
 			const repositoryResponse2 = {
 				...ctx.mock.api.repository(),
 				...args.getContext2.repositoryResponse,
-			};
-			const ref2 = args.getContext2.getRef(repositoryResponse2);
-			const queryResponse2 = ctx.mock.api.query();
+			}
+			const ref2 = args.getContext2.getRef(repositoryResponse2)
+			const queryResponse2 = ctx.mock.api.query()
 
 			mockPrismicRestAPIV2({
 				repositoryResponse: repositoryResponse1,
@@ -110,20 +110,20 @@ export const testGetOutsideTTL = (
 					ref: ref1,
 				},
 				ctx,
-			});
+			})
 
-			const client = createTestClient();
+			const client = createTestClient()
 
 			if (args.beforeFirstGet) {
-				args.beforeFirstGet({ client });
+				args.beforeFirstGet({ client })
 			}
 
-			const res1 = await client.get();
+			const res1 = await client.get()
 
 			// We wait for the cached ref's TTL to expire.
 			await new Promise((res) =>
 				setTimeout(() => res(undefined), REPOSITORY_CACHE_TTL + 1),
-			);
+			)
 
 			// We're setting the next repository metadata response to include a different ref.
 			// We're also using a new query handler using the new master ref.
@@ -134,13 +134,13 @@ export const testGetOutsideTTL = (
 					ref: ref2,
 				},
 				ctx,
-			});
+			})
 
-			const res2 = await client.get();
+			const res2 = await client.get()
 
-			expect(res1).toStrictEqual(queryResponse1);
-			expect(res2).toStrictEqual(queryResponse2);
+			expect(res1).toStrictEqual(queryResponse1)
+			expect(res2).toStrictEqual(queryResponse2)
 		},
 		REPOSITORY_CACHE_TTL * 2,
-	);
-};
+	)
+}

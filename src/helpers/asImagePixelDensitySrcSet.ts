@@ -1,17 +1,14 @@
-import {
-	BuildPixelDensitySrcSetParams,
-	buildPixelDensitySrcSet,
-	buildURL,
-} from "imgix-url-builder";
+import type { BuildPixelDensitySrcSetParams } from "imgix-url-builder"
+import { buildPixelDensitySrcSet, buildURL } from "imgix-url-builder"
 
-import type { ImageFieldImage } from "../types/value/image";
+import type { ImageFieldImage } from "../types/value/image"
 
-import { imageThumbnail as isImageThumbnailFilled } from "./isFilled";
+import { imageThumbnail as isImageThumbnailFilled } from "./isFilled"
 
 /**
  * The default pixel densities used to generate a `srcset` value.
  */
-const DEFAULT_PIXEL_DENSITIES = [1, 2, 3];
+const DEFAULT_PIXEL_DENSITIES = [1, 2, 3]
 
 /**
  * Configuration for `asImagePixelDensitySrcSet()`.
@@ -20,7 +17,7 @@ type AsImagePixelDensitySrcSetConfig = Omit<
 	BuildPixelDensitySrcSetParams,
 	"pixelDensities"
 > &
-	Partial<Pick<BuildPixelDensitySrcSetParams, "pixelDensities">>;
+	Partial<Pick<BuildPixelDensitySrcSetParams, "pixelDensities">>
 
 /**
  * The return type of `asImagePixelDensitySrcSet()`.
@@ -33,15 +30,15 @@ type AsImagePixelDensitySrcSetReturnType<
 				/**
 				 * The image field's image URL with Imgix URL parameters (if given).
 				 */
-				src: string;
+				src: string
 
 				/**
 				 * A pixel-densitye-based `srcset` attribute value for the image field's
 				 * image with Imgix URL parameters (if given).
 				 */
-				srcset: string;
+				srcset: string
 			}
-		: null;
+		: null
 
 /**
  * Creates a pixel-density-based `srcset` from an image field with optional
@@ -56,7 +53,7 @@ type AsImagePixelDensitySrcSetReturnType<
  * const srcset = asImagePixelDensitySrcSet(document.data.imageField, {
  * 	pixelDensities: [1, 2],
  * 	sat: -100,
- * });
+ * })
  * // => {
  * //   src:    'https://images.prismic.io/repo/image.png?sat=-100',
  * //   srcset: 'https://images.prismic.io/repo/image.png?sat=-100&dpr=1 1x, ' +
@@ -83,7 +80,7 @@ export const asImagePixelDensitySrcSet = <
 	if (field && isImageThumbnailFilled(field)) {
 		// We are using destructuring to omit `pixelDensities` from the
 		// object we will pass to `buildURL()`.
-		const { pixelDensities = DEFAULT_PIXEL_DENSITIES, ...imgixParams } = config;
+		const { pixelDensities = DEFAULT_PIXEL_DENSITIES, ...imgixParams } = config
 
 		return {
 			src: buildURL(field.url, imgixParams),
@@ -91,8 +88,8 @@ export const asImagePixelDensitySrcSet = <
 				...imgixParams,
 				pixelDensities,
 			}),
-		} as AsImagePixelDensitySrcSetReturnType<Field>;
+		} as AsImagePixelDensitySrcSetReturnType<Field>
 	} else {
-		return null as AsImagePixelDensitySrcSetReturnType<Field>;
+		return null as AsImagePixelDensitySrcSetReturnType<Field>
 	}
-};
+}

@@ -1,27 +1,28 @@
-import { TypeOf, expectNever, expectType } from "ts-expect";
+import type { TypeOf } from "ts-expect"
+import { expectNever, expectType } from "ts-expect"
 
-import * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes";
+import type * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes"
 
-import * as prismic from "../../src";
-
+import * as prismic from "../../src"
 /**
  * CustomTypeModel
  */
-(value: prismic.CustomTypeModel): true => {
+
+;(value: prismic.CustomTypeModel): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				expectNever(value);
+				expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 expectType<prismic.CustomTypeModel>({
 	id: "string",
 	label: "string",
@@ -37,7 +38,7 @@ expectType<prismic.CustomTypeModel>({
 		},
 	},
 	status: true,
-});
+})
 expectType<prismic.CustomTypeModel<"foo">>({
 	id: "foo",
 	label: "string",
@@ -53,7 +54,7 @@ expectType<prismic.CustomTypeModel<"foo">>({
 		},
 	},
 	status: true,
-});
+})
 expectType<prismic.CustomTypeModel<"foo">>({
 	// @ts-expect-error - ID must match the given type.
 	id: "string",
@@ -70,14 +71,14 @@ expectType<prismic.CustomTypeModel<"foo">>({
 		},
 	},
 	status: true,
-});
+})
 expectType<
 	prismic.CustomTypeModel<
 		string,
 		{
 			Foo: {
-				foo: prismic.CustomTypeModelBooleanField;
-			};
+				foo: prismic.CustomTypeModelBooleanField
+			}
 		}
 	>
 >({
@@ -104,26 +105,26 @@ expectType<
 		},
 	},
 	status: true,
-});
+})
 
 /**
  * CustomTypeModelDefinition
  */
-(value: prismic.CustomTypeModelDefinition): true => {
+;(value: prismic.CustomTypeModelDefinition): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				expectNever(value);
+				expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 expectType<prismic.CustomTypeModelDefinition>({
 	Foo: {
 		foo: {
@@ -133,7 +134,7 @@ expectType<prismic.CustomTypeModelDefinition>({
 			},
 		},
 	},
-});
+})
 expectType<prismic.CustomTypeModelDefinition<"Foo">>({
 	Foo: {
 		foo: {
@@ -152,26 +153,26 @@ expectType<prismic.CustomTypeModelDefinition<"Foo">>({
 			},
 		},
 	},
-});
+})
 
 /**
  * CustomTypeModelTab
  */
-(value: prismic.CustomTypeModelTab): true => {
+;(value: prismic.CustomTypeModelTab): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
-				expectNever(value);
+				expectNever(value)
 			}
 
-			return true;
+			return true
 		}
 
 		default: {
-			return expectNever(value);
+			return expectNever(value)
 		}
 	}
-};
+}
 expectType<prismic.CustomTypeModelTab>({
 	foo: {
 		type: prismic.CustomTypeModelFieldType.Boolean,
@@ -179,7 +180,7 @@ expectType<prismic.CustomTypeModelTab>({
 			label: "string",
 		},
 	},
-});
+})
 expectType<
 	prismic.CustomTypeModelTab<{ foo: prismic.CustomTypeModelBooleanField }>
 >({
@@ -196,7 +197,7 @@ expectType<
 			label: "string",
 		},
 	},
-});
+})
 
 /**
  * CustomTypeModelFieldForGroup supports any field compatible with a Group.
@@ -206,133 +207,133 @@ expectType<
 		prismic.CustomTypeModelFieldForGroup,
 		prismic.CustomTypeModelBooleanField
 	>
->(true);
+>(true)
 expectType<
 	TypeOf<
 		prismic.CustomTypeModelFieldForGroup,
 		prismic.CustomTypeModelColorField
 	>
->(true);
+>(true)
 expectType<
 	TypeOf<prismic.CustomTypeModelFieldForGroup, prismic.CustomTypeModelDateField>
->(true);
+>(true)
 expectType<
 	TypeOf<
 		prismic.CustomTypeModelFieldForGroup,
 		prismic.CustomTypeModelEmbedField
 	>
->(true);
+>(true)
 expectType<
 	TypeOf<
 		prismic.CustomTypeModelFieldForGroup,
 		prismic.CustomTypeModelGeoPointField
 	>
->(true);
+>(true)
 expectType<
 	TypeOf<
 		prismic.CustomTypeModelFieldForGroup,
 		prismic.CustomTypeModelImageField
 	>
->(true);
+>(true)
 expectType<
 	TypeOf<
 		prismic.CustomTypeModelFieldForGroup,
 		prismic.CustomTypeModelIntegrationField
 	>
->(true);
+>(true)
 expectType<
 	TypeOf<
 		prismic.CustomTypeModelFieldForGroup,
 		prismic.CustomTypeModelKeyTextField
 	>
->(true);
+>(true)
 expectType<
 	TypeOf<prismic.CustomTypeModelFieldForGroup, prismic.CustomTypeModelLinkField>
->(true);
+>(true)
 expectType<
 	TypeOf<
 		prismic.CustomTypeModelFieldForGroup,
 		prismic.CustomTypeModelLinkToMediaField
 	>
->(true);
+>(true)
 expectType<
 	TypeOf<
 		prismic.CustomTypeModelFieldForGroup,
 		prismic.CustomTypeModelNestedGroupField
 	>
->(true);
+>(true)
 expectType<
 	TypeOf<
 		prismic.CustomTypeModelFieldForGroup,
 		prismic.CustomTypeModelNumberField
 	>
->(true);
+>(true)
 expectType<
 	TypeOf<
 		prismic.CustomTypeModelFieldForGroup,
 		prismic.CustomTypeModelRichTextField
 	>
->(true);
+>(true)
 expectType<
 	TypeOf<
 		prismic.CustomTypeModelFieldForGroup,
 		prismic.CustomTypeModelSelectField
 	>
->(true);
+>(true)
 expectType<
 	TypeOf<
 		prismic.CustomTypeModelFieldForGroup,
 		prismic.CustomTypeModelTimestampField
 	>
->(true);
+>(true)
 expectType<
 	TypeOf<
 		prismic.CustomTypeModelFieldForGroup,
 		prismic.CustomTypeModelTitleField
 	>
->(true);
+>(true)
 
 /**
  * CustomTypeModelFieldForGroup excludes any fields not compatible with a Group.
  */
 expectType<
 	TypeOf<prismic.CustomTypeModelFieldForGroup, prismic.CustomTypeModelUIDField>
->(false);
+>(false)
 expectType<
 	TypeOf<
 		prismic.CustomTypeModelFieldForGroup,
 		prismic.CustomTypeModelSliceZoneField
 	>
->(false);
+>(false)
 expectType<
 	TypeOf<
 		prismic.CustomTypeModelFieldForGroup,
 		prismic.CustomTypeModelGroupField
 	>
->(false);
+>(false)
 
 /**
  * CustomTypeModelField includes any field.
  */
 expectType<
 	TypeOf<prismic.CustomTypeModelField, prismic.CustomTypeModelFieldForGroup>
->(true);
+>(true)
 expectType<
 	TypeOf<prismic.CustomTypeModelField, prismic.CustomTypeModelUIDField>
->(true);
+>(true)
 expectType<
 	TypeOf<prismic.CustomTypeModelField, prismic.CustomTypeModelGroupField>
->(true);
+>(true)
 expectType<
 	TypeOf<prismic.CustomTypeModelField, prismic.CustomTypeModelSliceZoneField>
->(true);
+>(true)
 
 /**
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
-expectType<prismic.CustomTypeModel>({} as prismicTICustomTypes.CustomType);
+expectType<prismic.CustomTypeModel>({} as prismicTICustomTypes.CustomType)
 
 /**
  * `@prismicio/types-internal` extends `@prismicio/types`
  */
-expectType<prismicTICustomTypes.CustomType>({} as prismic.CustomTypeModel);
+expectType<prismicTICustomTypes.CustomType>({} as prismic.CustomTypeModel)
