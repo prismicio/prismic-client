@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.7.5-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.7.4...v7.7.5-alpha.0) (2024-07-26)
+
+
+### Bug Fixes
+
+* preserve commonjs compatibility ([fdbdab3](https://github.com/prismicio/prismic-client/commit/fdbdab3e7f47a30db9d99aeee5e8a60422b9004f))
+
 ### [7.7.4](https://github.com/prismicio/prismic-client/compare/v7.7.3...v7.7.4) (2024-07-24)
 
 
