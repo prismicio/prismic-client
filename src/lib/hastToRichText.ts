@@ -1,5 +1,5 @@
 import type { Element, Root } from "hast"
-import { toString } from "mdast-util-to-string"
+import { toString } from "hast-util-to-string"
 import { visit } from "unist-util-visit"
 import type { VFile } from "vfile"
 

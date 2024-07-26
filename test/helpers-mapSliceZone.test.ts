@@ -36,14 +36,10 @@ const generateTestData = (ctx: TestContext) => {
 it("maps a Slice Zone", async (ctx) => {
 	const { sliceZone, model1, model2 } = generateTestData(ctx)
 
-	const actual = await mapSliceZone(
-		// @ts-expect-error Remove this comment after v7.3.0 is published.
-		sliceZone,
-		{
-			[model1.id]: () => ({ foo: "bar" }),
-			[model2.id]: () => ({ baz: "qux" }),
-		},
-	)
+	const actual = await mapSliceZone(sliceZone, {
+		[model1.id]: () => ({ foo: "bar" }),
+		[model2.id]: () => ({ baz: "qux" }),
+	})
 
 	expect(actual).toStrictEqual([
 		{ __mapped: true, id: undefined, slice_type: model1.id, foo: "bar" },
@@ -54,14 +50,10 @@ it("maps a Slice Zone", async (ctx) => {
 it("supports mapping functions that return undefined", async (ctx) => {
 	const { sliceZone, model1, model2 } = generateTestData(ctx)
 
-	const actual = await mapSliceZone(
-		// @ts-expect-error Remove this comment after v7.3.0 is published.
-		sliceZone,
-		{
-			[model1.id]: () => void 0,
-			[model2.id]: () => void 0,
-		},
-	)
+	const actual = await mapSliceZone(sliceZone, {
+		[model1.id]: () => void 0,
+		[model2.id]: () => void 0,
+	})
 
 	expect(actual).toStrictEqual([
 		{ __mapped: true, id: undefined, slice_type: model1.id },
@@ -72,14 +64,10 @@ it("supports mapping functions that return undefined", async (ctx) => {
 it("supports async mapping functions", async (ctx) => {
 	const { sliceZone, model1, model2 } = generateTestData(ctx)
 
-	const actual = await mapSliceZone(
-		// @ts-expect-error Remove this comment after v7.3.0 is published.
-		sliceZone,
-		{
-			[model1.id]: async () => ({ foo: "bar" }),
-			[model2.id]: async () => ({ baz: "qux" }),
-		},
-	)
+	const actual = await mapSliceZone(sliceZone, {
+		[model1.id]: async () => ({ foo: "bar" }),
+		[model2.id]: async () => ({ baz: "qux" }),
+	})
 
 	expect(actual).toStrictEqual([
 		{ __mapped: true, id: undefined, slice_type: model1.id, foo: "bar" },
@@ -90,14 +78,10 @@ it("supports async mapping functions", async (ctx) => {
 it("supports overriding id and slice_type properties", async (ctx) => {
 	const { sliceZone, model1, model2 } = generateTestData(ctx)
 
-	const actual = await mapSliceZone(
-		// @ts-expect-error Remove this comment after v7.3.0 is published.
-		sliceZone,
-		{
-			[model1.id]: async () => ({ id: "foo", slice_type: "bar" }),
-			[model2.id]: async () => ({ id: "baz", slice_type: "qux" }),
-		},
-	)
+	const actual = await mapSliceZone(sliceZone, {
+		[model1.id]: async () => ({ id: "foo", slice_type: "bar" }),
+		[model2.id]: async () => ({ id: "baz", slice_type: "qux" }),
+	})
 
 	expect(actual).toStrictEqual([
 		{ __mapped: true, id: "foo", slice_type: "bar" },
@@ -111,14 +95,10 @@ it("provides Slice data to mapping functions", async (ctx) => {
 	const mapper1 = vi.fn()
 	const mapper2 = vi.fn()
 
-	await mapSliceZone(
-		// @ts-expect-error Remove this comment after v7.3.0 is published.
-		sliceZone,
-		{
-			[model1.id]: mapper1,
-			[model2.id]: mapper2,
-		},
-	)
+	await mapSliceZone(sliceZone, {
+		[model1.id]: mapper1,
+		[model2.id]: mapper2,
+	})
 
 	expect(mapper1).toHaveBeenCalledWith({
 		context: undefined,
@@ -143,7 +123,6 @@ it("supports context", async (ctx) => {
 	const context = { foo: "bar" }
 
 	await mapSliceZone(
-		// @ts-expect-error Remove this comment after v7.3.0 is published.
 		sliceZone,
 		{
 			[model1.id]: mapper1,
@@ -169,16 +148,12 @@ it("supports context", async (ctx) => {
 it("supports lazy-loaded mapping functions", async (ctx) => {
 	const { sliceZone, model1, model2 } = generateTestData(ctx)
 
-	const actual = await mapSliceZone(
-		// @ts-expect-error Remove this comment after v7.3.0 is published.
-		sliceZone,
-		{
-			// Simulates `import()` with a named `default` export.
-			[model1.id]: async () => ({ default: () => ({ foo: "bar" }) }),
-			// Simulates `import()` with a default export.
-			[model2.id]: async () => () => ({ baz: "qux" }),
-		},
-	)
+	const actual = await mapSliceZone(sliceZone, {
+		// Simulates `import()` with a named `default` export.
+		[model1.id]: async () => ({ default: () => ({ foo: "bar" }) }),
+		// Simulates `import()` with a default export.
+		[model2.id]: async () => () => ({ baz: "qux" }),
+	})
 
 	expect(actual).toStrictEqual([
 		{ __mapped: true, id: undefined, slice_type: model1.id, foo: "bar" },
@@ -189,13 +164,9 @@ it("supports lazy-loaded mapping functions", async (ctx) => {
 it("skips Slices without a mapping function", async (ctx) => {
 	const { sliceZone, model1 } = generateTestData(ctx)
 
-	const actual = await mapSliceZone(
-		// @ts-expect-error Remove this comment after v7.3.0 is published.
-		sliceZone,
-		{
-			[model1.id]: () => void 0,
-		},
-	)
+	const actual = await mapSliceZone(sliceZone, {
+		[model1.id]: () => void 0,
+	})
 
 	expect(actual).toStrictEqual([
 		{ __mapped: true, id: undefined, slice_type: model1.id },
