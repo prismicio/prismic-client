@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.8.0](https://github.com/prismicio/prismic-client/compare/v7.7.4...v7.8.0) (2024-08-01)
+
+
+### Features
+
+* remove `*AsRichText` helpers ([#347](https://github.com/prismicio/prismic-client/issues/347)) ([cbd234b](https://github.com/prismicio/prismic-client/commit/cbd234b3a3cc72822ce1fe71dd39a85ce1860bcf))
+
 ### [7.7.4](https://github.com/prismicio/prismic-client/compare/v7.7.3...v7.7.4) (2024-07-24)
 
 
