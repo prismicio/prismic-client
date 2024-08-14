@@ -1,5 +1,6 @@
 import type { CustomTypeModelFieldType } from "./types"
 
+import type { CustomTypeModelKeyTextField } from "./keyText"
 import type { CustomTypeModelLinkSelectType } from "./link"
 
 /**
@@ -18,5 +19,6 @@ export interface CustomTypeModelContentRelationshipField<
 		select: typeof CustomTypeModelLinkSelectType.Document
 		customtypes?: readonly CustomTypeIDs[]
 		tags?: readonly Tags[]
+		text?: CustomTypeModelKeyTextField
 	}
 }

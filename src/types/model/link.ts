@@ -1,5 +1,7 @@
 import type { CustomTypeModelFieldType } from "./types"
 
+import type { CustomTypeModelKeyTextField } from "./keyText"
+
 /**
  * A link custom type field.
  *
@@ -13,6 +15,7 @@ export interface CustomTypeModelLinkField {
 		select?:
 			| null
 			| (typeof CustomTypeModelLinkSelectType)[keyof typeof CustomTypeModelLinkSelectType]
+		text?: CustomTypeModelKeyTextField
 		allowTargetBlank?: boolean
 	}
 }

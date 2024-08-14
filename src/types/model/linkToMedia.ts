@@ -1,5 +1,6 @@
 import type { CustomTypeModelFieldType } from "./types"
 
+import type { CustomTypeModelKeyTextField } from "./keyText"
 import type { CustomTypeModelLinkSelectType } from "./link"
 
 /**
@@ -13,5 +14,6 @@ export interface CustomTypeModelLinkToMediaField {
 		label?: string | null
 		placeholder?: string
 		select: typeof CustomTypeModelLinkSelectType.Media
+		text?: CustomTypeModelKeyTextField
 	}
 }
