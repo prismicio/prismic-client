@@ -30,6 +30,7 @@ expectType<prismic.LinkToMediaField>({
 	size: "string",
 	height: "string",
 	width: "string",
+	text: "string",
 })
 expectType<prismic.LinkToMediaField<"filled">>({
 	id: "string",
@@ -40,6 +41,7 @@ expectType<prismic.LinkToMediaField<"filled">>({
 	size: "string",
 	height: "string",
 	width: "string",
+	text: "string",
 })
 expectType<prismic.LinkToMediaField<"empty">>({
 	link_type: prismic.LinkType.Media,
@@ -51,6 +53,7 @@ expectType<prismic.LinkToMediaField<"empty">>({
 	size: "string",
 	height: "string",
 	width: "string",
+	text: "string",
 })
 
 /**

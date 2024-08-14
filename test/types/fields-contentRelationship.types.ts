@@ -32,6 +32,7 @@ expectType<prismic.ContentRelationshipField>({
 	slug: "string",
 	isBroken: true,
 	data: undefined,
+	text: "string",
 })
 expectType<prismic.ContentRelationshipField<string, string, never, "filled">>({
 	link_type: prismic.LinkType.Document,
@@ -44,6 +45,7 @@ expectType<prismic.ContentRelationshipField<string, string, never, "filled">>({
 	slug: "string",
 	isBroken: true,
 	data: undefined,
+	text: "string",
 })
 expectType<prismic.ContentRelationshipField<string, string, never, "empty">>({
 	link_type: prismic.LinkType.Document,
@@ -57,6 +59,7 @@ expectType<prismic.ContentRelationshipField<string, string, never, "empty">>({
 	slug: "string",
 	isBroken: true,
 	data: undefined,
+	text: "string",
 })
 
 /**

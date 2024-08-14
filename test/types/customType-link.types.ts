@@ -61,6 +61,19 @@ expectType<prismic.CustomTypeModelLinkField>({
 })
 
 /**
+ * Supports optional `text` property.
+ */
+expectType<prismic.CustomTypeModelLinkField>({
+	type: prismic.CustomTypeModelFieldType.Link,
+	config: {
+		label: "string",
+		text: {
+			type: prismic.CustomTypeModelFieldType.Text,
+		},
+	},
+})
+
+/**
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
 expectType<prismic.CustomTypeModelLinkField>({} as prismicTICustomTypes.Link)

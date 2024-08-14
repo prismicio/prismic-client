@@ -97,6 +97,20 @@ expectType<prismic.CustomTypeModelContentRelationshipField<string, "foo">>({
 })
 
 /**
+ * Supports optional `text` property.
+ */
+expectType<prismic.CustomTypeModelContentRelationshipField>({
+	type: prismic.CustomTypeModelFieldType.Link,
+	config: {
+		label: "string",
+		select: prismic.CustomTypeModelLinkSelectType.Document,
+		text: {
+			type: prismic.CustomTypeModelFieldType.Text,
+		},
+	},
+})
+
+/**
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
 expectType<prismic.CustomTypeModelContentRelationshipField>(

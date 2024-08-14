@@ -41,6 +41,20 @@ expectType<prismic.CustomTypeModelLinkToMediaField>({
 })
 
 /**
+ * Supports optional `text` property.
+ */
+expectType<prismic.CustomTypeModelLinkToMediaField>({
+	type: prismic.CustomTypeModelFieldType.Link,
+	config: {
+		label: "string",
+		select: prismic.CustomTypeModelLinkSelectType.Media,
+		text: {
+			type: prismic.CustomTypeModelFieldType.Text,
+		},
+	},
+})
+
+/**
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
 expectType<prismic.CustomTypeModelLinkToMediaField>(
