@@ -44,4 +44,5 @@ export interface FilledContentRelationshipField<
 	slug?: string
 	isBroken?: boolean
 	data?: DataInterface
+	text?: string
 }

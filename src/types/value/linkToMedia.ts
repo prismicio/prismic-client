@@ -24,4 +24,5 @@ export interface FilledLinkToMediaField {
 	size: string
 	height?: string | null
 	width?: string | null
+	text?: string
 }

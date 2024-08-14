@@ -33,6 +33,7 @@ export interface FilledLinkToWebField {
 	link_type: typeof LinkType.Web
 	url: string
 	target?: string
+	text?: string
 }
 
 /**
