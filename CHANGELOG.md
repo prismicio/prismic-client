@@ -2,19 +2,6 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [7.9.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.8.0...v7.9.0-alpha.0) (2024-08-14)
-
-
-### Features
-
-* add text property to link models ([40d0e0b](https://github.com/prismicio/prismic-client/commit/40d0e0be3ce8038cd36e8cdf3350ffa9893ada98))
-* add text to link value models ([8459d75](https://github.com/prismicio/prismic-client/commit/8459d75608c1af8319adafd2b3bf73555569a434))
-
-
-### Chore
-
-* update package version ([c06b383](https://github.com/prismicio/prismic-client/commit/c06b383ff41f01e253641c7852a4e9701725bdba))
-
 ## [7.8.0](https://github.com/prismicio/prismic-client/compare/v7.7.4...v7.8.0) (2024-08-01)
 
 
