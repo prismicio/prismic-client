@@ -24,6 +24,8 @@ import { RefExpiredError } from "./errors/RefExpiredError"
 import { RefNotFoundError } from "./errors/RefNotFoundError"
 import { RepositoryNotFoundError } from "./errors/RepositoryNotFoundError"
 
+import { version } from "../package.json"
+
 import type { LinkResolverFunction } from "./helpers/asLink"
 import { asLink } from "./helpers/asLink"
 
@@ -65,6 +67,16 @@ export const GET_ALL_QUERY_DELAY = 500
  * The API allows up to 200 requests per second.
  */
 const DEFUALT_RETRY_AFTER_MS = 1000
+
+/**
+ * The header used to indicate if the client is in development mode to the API.
+ */
+export const PRISMIC_DEV_HEADER = "x-prismic-dev"
+
+/**
+ * The header used to indicate the version of the client to the API.
+ */
+export const PRISMIC_CLIENT_VERSION_HEADER = "x-prismic-client"
 
 /**
  * Extracts one or more Prismic document types that match a given Prismic
@@ -459,6 +471,19 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	fetchFn: FetchLike
 
 	fetchOptions?: RequestInitLike
+
+	/**
+	 * Internal headers sent to Prismic APIs with each request.
+	 */
+	private internalFetchHeaders: Required<RequestInitLike>["headers"] =
+		process.env.NODE_ENV === "development"
+			? {
+					[PRISMIC_DEV_HEADER]: "1",
+					[PRISMIC_CLIENT_VERSION_HEADER]: version,
+				}
+			: {
+					[PRISMIC_CLIENT_VERSION_HEADER]: version,
+				}
 
 	/**
 	 * Default parameters that will be sent with each query. These parameters can
@@ -1823,6 +1848,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			...this.fetchOptions,
 			...params.fetchOptions,
 			headers: {
+				...this.internalFetchHeaders,
 				...this.fetchOptions?.headers,
 				...params.fetchOptions?.headers,
 			},

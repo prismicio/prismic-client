@@ -1,17 +1,33 @@
 import { expect, it, vi } from "vitest"
 
+import type { RequestInit } from "node-fetch"
 import fetch from "node-fetch"
 
 import { createTestClient } from "./createClient"
 import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2"
 
 import type * as prismic from "../../src"
+import {
+	PRISMIC_CLIENT_VERSION_HEADER,
+	PRISMIC_DEV_HEADER,
+} from "../../src/createClient"
 
 type TestFetchOptionsArgs = {
 	run: (
 		client: prismic.Client,
 		params?: Parameters<prismic.Client["get"]>[0],
 	) => Promise<unknown>
+}
+
+const cleanupInternalHeaders = (init: RequestInit | undefined) => {
+	if (init?.headers) {
+		if (PRISMIC_DEV_HEADER in init.headers) {
+			delete init.headers[PRISMIC_DEV_HEADER]
+		}
+		if (PRISMIC_CLIENT_VERSION_HEADER in init.headers) {
+			delete init.headers[PRISMIC_CLIENT_VERSION_HEADER]
+		}
+	}
 }
 
 export const testFetchOptions = (
@@ -55,6 +71,7 @@ export const testFetchOptions = (
 		await args.run(client)
 
 		for (const [input, init] of fetchSpy.mock.calls) {
+			cleanupInternalHeaders(init)
 			expect(init, input.toString()).toStrictEqual(fetchOptions)
 		}
 	})
@@ -95,6 +112,7 @@ export const testFetchOptions = (
 		await args.run(client, { fetchOptions })
 
 		for (const [input, init] of fetchSpy.mock.calls) {
+			cleanupInternalHeaders(init)
 			expect(init, input.toString()).toStrictEqual(fetchOptions)
 		}
 	})
