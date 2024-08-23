@@ -325,6 +325,26 @@ export type {
 	CustomTypeModelFieldForSlicePrimary,
 } from "./types/model/types"
 
+// Migrations - Types representing Prismic migration API content values.
+export { MigrationFieldType } from "./types/migration/fields"
+
+export type {
+	MigrationPrismicDocument,
+	RichTextFieldToMigrationField,
+} from "./types/migration/document"
+
+export type {
+	MigrationImageField,
+	MigrationLinkToMediaField,
+	MigrationContentRelationshipField,
+	MigrationLinkField,
+} from "./types/migration/fields"
+
+export type {
+	MigrationRTImageNode,
+	MigrationRTLinkNode,
+} from "./types/migration/richText"
+
 // API - Types representing Prismic Rest API V2 responses.
 export type { Query } from "./types/api/query"
 

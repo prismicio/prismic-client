@@ -94,7 +94,7 @@ type FieldsToMigrationFields<
 type MakeUIDOptional<TMigrationDocument extends { uid: string | null }> =
 	TMigrationDocument["uid"] extends string
 		? TMigrationDocument
-		: Omit<TMigrationDocument, "uid"> & { uid?: TMigrationDocument["uid"] }
+		: Omit<TMigrationDocument, "uid"> & Partial<Pick<TMigrationDocument, "uid">>
 
 /**
  * A Prismic document compatible with the migration API.

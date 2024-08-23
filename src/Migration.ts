@@ -8,6 +8,23 @@ import {
 } from "./types/migration/fields"
 import type { PrismicDocument } from "./types/value/document"
 
+/**
+ * Extracts one or more Prismic document types that match a given Prismic
+ * document type. If no matches are found, no extraction is performed and the
+ * union of all provided Prismic document types are returned.
+ *
+ * @typeParam TMigrationDocuments - Prismic migration document types from which
+ *   to extract.
+ * @typeParam TType - Type(s) to match `TMigrationDocuments` against.
+ */
+type ExtractMigrationDocumentType<
+	TMigrationDocuments extends MigrationPrismicDocument,
+	TType extends TMigrationDocuments["type"],
+> =
+	Extract<TMigrationDocuments, { type: TType }> extends never
+		? TMigrationDocuments
+		: Extract<TMigrationDocuments, { type: TType }>
+
 type CreateAssetReturnType = MigrationImageField & {
 	image: MigrationImageField
 	linkToMedia: MigrationLinkToMediaField
@@ -98,7 +115,9 @@ export class Migration<
 		}
 	}
 
-	createDocument(document: TMigrationDocuments): TMigrationDocuments {
+	createDocument<TType extends TMigrationDocuments["type"]>(
+		document: ExtractMigrationDocumentType<TMigrationDocuments, TType>,
+	): ExtractMigrationDocumentType<TMigrationDocuments, TType> {
 		this.#documents.push(document)
 
 		if (!(document.type in this.#documentsByUID)) {
