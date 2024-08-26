@@ -5,10 +5,10 @@ import type {
 	BulkDeleteAssetsParams,
 	GetAssetsParams,
 	GetAssetsResult,
-	PatchAssetsParams,
-	PatchAssetsResult,
-	PostAssetsParams,
-	PostAssetsResult,
+	PatchAssetParams,
+	PatchAssetResult,
+	PostAssetParams,
+	PostAssetResult,
 } from "./types/api/asset/asset"
 import type {
 	GetTagsResult,
@@ -16,11 +16,43 @@ import type {
 	PostTagResult,
 	Tag,
 } from "./types/api/asset/tag"
+import type { PutDocumentResult } from "./types/api/migration/document"
+import {
+	type PostDocumentParams,
+	type PostDocumentResult,
+	type PutDocumentParams,
+} from "./types/api/migration/document"
+import type { MigrationAsset } from "./types/migration/asset"
+import type {
+	MigrationPrismicDocument,
+	MigrationPrismicDocumentParams,
+} from "./types/migration/document"
+import type { FilledContentRelationshipField } from "./types/value/contentRelationship"
 import type { PrismicDocument } from "./types/value/document"
+import { LinkType } from "./types/value/link"
 
-import type { FetchParams } from "./BaseClient"
+import { PrismicError } from "./errors/PrismicError"
+
+import type { FetchParams, RequestInitLike } from "./BaseClient"
 import { Client } from "./Client"
 import type { ClientConfig } from "./Client"
+import type { Migration } from "./Migration"
+
+/**
+ * Extracts one or more Prismic document types that match a given Prismic
+ * document type. If no matches are found, no extraction is performed and the
+ * union of all provided Prismic document types are returned.
+ *
+ * @typeParam TDocuments - Prismic document types from which to extract.
+ * @typeParam TDocumentType - Type(s) to match `TDocuments` against.
+ */
+type ExtractDocumentType<
+	TDocuments extends { type: string },
+	TDocumentType extends TDocuments["type"],
+> =
+	Extract<TDocuments, { type: TDocumentType }> extends never
+		? TDocuments
+		: Extract<TDocuments, { type: TDocumentType }>
 
 type GetAssetsReturnType = {
 	results: Asset[]
@@ -90,6 +122,290 @@ export class WriteClient<
 		}
 	}
 
+	async migrate(
+		migration: Migration<TDocuments>,
+		{
+			reporter,
+			...params
+		}: { reporter?: (message: string) => void } & FetchParams = {},
+	): Promise<void> {
+		const _assets = await this.migrateCreateAssets(migration, {
+			reporter: (message) => reporter?.(`01_createAssets - ${message}`),
+			...params,
+		})
+
+		const _documents = await this.migrationCreateDocuments(migration, {
+			reporter: (message) => reporter?.(`02_createDocuments - ${message}`),
+			...params,
+		})
+	}
+
+	private async migrateCreateAssets(
+		migration: Migration<TDocuments>,
+		{
+			reporter,
+			...fetchParams
+		}: { reporter?: (message: string) => void } & FetchParams = {},
+	): Promise<Map<MigrationAsset["id"], Asset>> {
+		const assets = new Map<MigrationAsset["id"], Asset>()
+
+		// Get all existing assets
+		let getAssetsResult: GetAssetsReturnType | undefined = undefined
+		do {
+			if (getAssetsResult) {
+				getAssetsResult = await getAssetsResult.next!()
+			} else {
+				getAssetsResult = await this.getAssets({
+					pageSize: 100,
+					...fetchParams,
+				})
+			}
+
+			for (const asset of getAssetsResult.results) {
+				assets.set(asset.id, asset)
+			}
+		} while (getAssetsResult?.next)
+
+		reporter?.(`Found ${assets.size} existing assets`)
+
+		// Create assets
+		if (migration.assets.size) {
+			let i = 0
+			for (const [_, { id, file, filename, ...params }] of migration.assets) {
+				reporter?.(`Creating asset - ${++i}/${migration.assets.size}`)
+
+				if (typeof id !== "string" || !assets.has(id)) {
+					let resolvedFile: PostAssetParams["file"] | File
+					if (typeof file === "string") {
+						let url: URL | undefined
+						try {
+							url = new URL(file)
+						} catch (error) {
+							// noop
+						}
+
+						if (url) {
+							resolvedFile = await this.fetchForeignAsset(
+								url.toString(),
+								fetchParams,
+							)
+						} else {
+							resolvedFile = file
+						}
+					} else if (file instanceof URL) {
+						resolvedFile = await this.fetchForeignAsset(
+							file.toString(),
+							fetchParams,
+						)
+					} else {
+						resolvedFile = file
+					}
+
+					const asset = await this.createAsset(resolvedFile, filename, {
+						...params,
+						...fetchParams,
+					})
+
+					assets.set(id, asset)
+				}
+			}
+
+			reporter?.(`Created ${i} assets`)
+		} else {
+			reporter?.(`No assets to create`)
+		}
+
+		return assets
+	}
+
+	private async migrationCreateDocuments(
+		migration: Migration<TDocuments>,
+		{
+			reporter,
+			...fetchParams
+		}: { reporter?: (message: string) => void } & FetchParams = {},
+	): Promise<
+		Map<
+			| string
+			| TDocuments
+			| MigrationPrismicDocument
+			| MigrationPrismicDocument<TDocuments>,
+			FilledContentRelationshipField
+		>
+	> {
+		// Should this be a function of `Client`?
+		// Resolve master locale
+		const repository = await this.getRepository(fetchParams)
+		const masterLocale = repository.languages.find((lang) => lang.is_master)!.id
+		reporter?.(`Resolved master locale \`${masterLocale}\``)
+
+		// Get all existing documents
+		const existingDocuments = await this.dangerouslyGetAll(fetchParams)
+
+		reporter?.(`Found ${existingDocuments.length} existing documents`)
+
+		const documents: Map<
+			| string
+			| TDocuments
+			| MigrationPrismicDocument
+			| MigrationPrismicDocument<TDocuments>,
+			FilledContentRelationshipField
+		> = new Map()
+		for (const document of existingDocuments) {
+			const contentRelationship = {
+				link_type: LinkType.Document,
+				id: document.id,
+				uid: document.uid ?? undefined,
+				type: document.type,
+				tags: document.tags,
+				lang: document.lang,
+				url: undefined,
+				slug: undefined,
+				isBroken: false,
+				data: undefined,
+			}
+
+			documents.set(document, contentRelationship)
+			documents.set(document.id, contentRelationship)
+		}
+
+		const masterLocaleDocuments: {
+			document: MigrationPrismicDocument<TDocuments>
+			params: MigrationPrismicDocumentParams
+		}[] = []
+		const nonMasterLocaleDocuments: {
+			document: MigrationPrismicDocument<TDocuments>
+			params: MigrationPrismicDocumentParams
+		}[] = []
+
+		for (const { document, params } of migration.documents) {
+			if (document.lang === masterLocale) {
+				masterLocaleDocuments.push({ document, params })
+			} else {
+				nonMasterLocaleDocuments.push({ document, params })
+			}
+		}
+
+		// Create master locale documents first
+		let i = 0
+		let created = 0
+		if (masterLocaleDocuments.length) {
+			for (const { document, params } of masterLocaleDocuments) {
+				if (document.id && documents.has(document.id)) {
+					reporter?.(
+						`Skipping existing master locale document \`${params.documentName}\` - ${++i}/${masterLocaleDocuments.length}`,
+					)
+
+					documents.set(document, documents.get(document.id)!)
+				} else {
+					created++
+					reporter?.(
+						`Creating master locale document \`${params.documentName}\` - ${++i}/${masterLocaleDocuments.length}`,
+					)
+
+					const { id } = await this.createDocument(
+						{ ...document, data: {} },
+						params.documentName,
+						{
+							...params,
+							...fetchParams,
+						},
+					)
+
+					documents.set(document, {
+						link_type: LinkType.Document,
+						id,
+						uid: document.uid ?? undefined,
+						type: document.type,
+						tags: document.tags ?? [],
+						lang: document.lang,
+						url: undefined,
+						slug: undefined,
+						isBroken: false,
+						data: undefined,
+					})
+				}
+			}
+		}
+
+		if (created > 0) {
+			reporter?.(`Created ${created} master locale documents`)
+		} else {
+			reporter?.(`No master locale documents to create`)
+		}
+
+		// Create non-master locale documents
+		i = 0
+		created = 0
+		if (nonMasterLocaleDocuments.length) {
+			for (const { document, params } of nonMasterLocaleDocuments) {
+				if (document.id && documents.has(document.id)) {
+					reporter?.(
+						`Skipping existing non-master locale document \`${params.documentName}\` - ${++i}/${nonMasterLocaleDocuments.length}`,
+					)
+
+					documents.set(document, documents.get(document.id)!)
+				} else {
+					created++
+					reporter?.(
+						`Creating non-master locale document \`${params.documentName}\` - ${++i}/${nonMasterLocaleDocuments.length}`,
+					)
+
+					let masterLanguageDocumentID: string | undefined
+					if (params.masterLanguageDocument) {
+						if (typeof params.masterLanguageDocument === "function") {
+							const masterLanguageDocument =
+								await params.masterLanguageDocument()
+
+							if (masterLanguageDocument) {
+								masterLanguageDocument
+								masterLanguageDocumentID = documents.get(
+									masterLanguageDocument,
+								)?.id
+							}
+						} else {
+							masterLanguageDocumentID = params.masterLanguageDocument.id
+						}
+					} else if (document.alternate_languages) {
+						masterLanguageDocumentID = document.alternate_languages.find(
+							({ lang }) => lang === masterLocale,
+						)?.id
+					}
+
+					const { id } = await this.createDocument(
+						{ ...document, data: {} },
+						params.documentName,
+						{
+							masterLanguageDocumentID,
+							...fetchParams,
+						},
+					)
+
+					documents.set(document, {
+						link_type: LinkType.Document,
+						id,
+						uid: document.uid ?? undefined,
+						type: document.type,
+						tags: document.tags ?? [],
+						lang: document.lang,
+						url: undefined,
+						slug: undefined,
+						isBroken: false,
+						data: undefined,
+					})
+				}
+			}
+		}
+
+		if (created > 0) {
+			reporter?.(`Created ${created} non-master locale documents`)
+		} else {
+			reporter?.(`No non-master locale documents to create`)
+		}
+
+		return documents
+	}
+
 	async getAssets({
 		pageSize,
 		cursor,
@@ -104,17 +420,31 @@ export class WriteClient<
 			tags = await this.resolveAssetTagIDs(tags, params)
 		}
 
-		const url = this.buildWriteQueryURL<GetAssetsParams>(
-			new URL("assets", this.assetAPIEndpoint),
-			{
-				pageSize,
-				cursor,
-				assetType,
-				keyword,
-				ids,
-				tags,
-			},
-		)
+		const url = new URL("assets", this.assetAPIEndpoint)
+
+		if (pageSize) {
+			url.searchParams.set("pageSize", pageSize.toString())
+		}
+
+		if (cursor) {
+			url.searchParams.set("cursor", cursor)
+		}
+
+		if (assetType) {
+			url.searchParams.set("assetType", assetType)
+		}
+
+		if (keyword) {
+			url.searchParams.set("keyword", keyword)
+		}
+
+		if (ids) {
+			ids.forEach((id) => url.searchParams.append("ids", id))
+		}
+
+		if (tags) {
+			tags.forEach((tag) => url.searchParams.append("tags", tag))
+		}
 
 		const {
 			items,
@@ -122,7 +452,7 @@ export class WriteClient<
 			missing_ids,
 			cursor: nextCursor,
 		} = await this.fetch<GetAssetsResult>(
-			url,
+			url.toString(),
 			this.buildWriteQueryParams({ params }),
 		)
 
@@ -145,8 +475,8 @@ export class WriteClient<
 		}
 	}
 
-	async createAsset(
-		file: PostAssetsParams["file"],
+	private async createAsset(
+		file: PostAssetParams["file"] | File,
 		filename: string,
 		{
 			notes,
@@ -178,7 +508,7 @@ export class WriteClient<
 			formData.append("alt", alt)
 		}
 
-		const asset = await this.fetch<PostAssetsResult>(
+		const asset = await this.fetch<PostAssetResult>(
 			url.toString(),
 			this.buildWriteQueryParams({
 				method: "POST",
@@ -194,7 +524,7 @@ export class WriteClient<
 		return asset
 	}
 
-	async updateAsset(
+	private async updateAsset(
 		id: string,
 		{
 			notes,
@@ -203,11 +533,9 @@ export class WriteClient<
 			filename,
 			tags,
 			...params
-		}: PatchAssetsParams & FetchParams = {},
+		}: PatchAssetParams & FetchParams = {},
 	): Promise<Asset> {
-		const url = this.buildWriteQueryURL(
-			new URL(`assets/${id}`, this.assetAPIEndpoint),
-		)
+		const url = new URL(`assets/${id}`, this.assetAPIEndpoint)
 
 		// Resolve tags if any and create missing ones
 		if (tags && tags.length) {
@@ -217,9 +545,9 @@ export class WriteClient<
 			})
 		}
 
-		return this.fetch<PatchAssetsResult>(
-			url,
-			this.buildWriteQueryParams<PatchAssetsParams>({
+		return this.fetch<PatchAssetResult>(
+			url.toString(),
+			this.buildWriteQueryParams<PatchAssetParams>({
 				method: "PATCH",
 				body: {
 					notes,
@@ -233,33 +561,29 @@ export class WriteClient<
 		)
 	}
 
-	async deleteAsset(
+	private async deleteAsset(
 		assetOrID: string | Asset,
 		params?: FetchParams,
 	): Promise<void> {
-		const url = this.buildWriteQueryURL(
-			new URL(
-				`assets/${typeof assetOrID === "string" ? assetOrID : assetOrID.id}`,
-				this.assetAPIEndpoint,
-			),
+		const url = new URL(
+			`assets/${typeof assetOrID === "string" ? assetOrID : assetOrID.id}`,
+			this.assetAPIEndpoint,
 		)
 
 		await this.fetch(
-			url,
+			url.toString(),
 			this.buildWriteQueryParams({ method: "DELETE", params }),
 		)
 	}
 
-	async deleteAssets(
+	private async deleteAssets(
 		assetsOrIDs: (string | Asset)[],
 		params?: FetchParams,
 	): Promise<void> {
-		const url = this.buildWriteQueryURL(
-			new URL("assets/bulk-delete", this.assetAPIEndpoint),
-		)
+		const url = new URL("assets/bulk-delete", this.assetAPIEndpoint)
 
 		await this.fetch(
-			url,
+			url.toString(),
 			this.buildWriteQueryParams<BulkDeleteAssetsParams>({
 				method: "POST",
 				body: {
@@ -270,6 +594,32 @@ export class WriteClient<
 				params,
 			}),
 		)
+	}
+
+	private async fetchForeignAsset(
+		url: string,
+		params: FetchParams = {},
+	): Promise<Blob> {
+		const requestInit: RequestInitLike = {
+			...this.fetchOptions,
+			...params.fetchOptions,
+			headers: {
+				...this.fetchOptions?.headers,
+				...params.fetchOptions?.headers,
+			},
+			signal:
+				params.fetchOptions?.signal ||
+				params.signal ||
+				this.fetchOptions?.signal,
+		}
+
+		const res = await this.fetchFn(url, requestInit)
+
+		if (!res.ok) {
+			throw new PrismicError("Could not fetch foreign asset", url, undefined)
+		}
+
+		return res.blob()
 	}
 
 	private _resolveAssetTagIDsLimit = pLimit({ limit: 1 })
@@ -320,10 +670,10 @@ export class WriteClient<
 		name: string,
 		params?: FetchParams,
 	): Promise<Tag> {
-		const url = this.buildWriteQueryURL(new URL("tags", this.assetAPIEndpoint))
+		const url = new URL("tags", this.assetAPIEndpoint)
 
 		return this.fetch<PostTagResult>(
-			url,
+			url.toString(),
 			this.buildWriteQueryParams<PostTagParams>({
 				method: "POST",
 				body: { name },
@@ -333,31 +683,71 @@ export class WriteClient<
 	}
 
 	private async getAssetTags(params?: FetchParams): Promise<Tag[]> {
-		const url = this.buildWriteQueryURL(new URL("tags", this.assetAPIEndpoint))
+		const url = new URL("tags", this.assetAPIEndpoint)
 
 		const { items } = await this.fetch<GetTagsResult>(
-			url,
+			url.toString(),
 			this.buildWriteQueryParams({ params }),
 		)
 
 		return items
 	}
 
-	private buildWriteQueryURL<TSearchParams extends Record<string, unknown>>(
-		url: URL,
-		searchParams?: TSearchParams,
-	): string {
-		if (searchParams) {
-			Object.entries(searchParams).forEach(([key, value]) => {
-				if (Array.isArray(value)) {
-					value.forEach((item) => url.searchParams.append(key, item.toString()))
-				} else if (value) {
-					url.searchParams.set(key, value.toString())
-				}
-			})
-		}
+	private async createDocument<TType extends TDocuments["type"]>(
+		document: MigrationPrismicDocument<ExtractDocumentType<TDocuments, TType>>,
+		documentName: MigrationPrismicDocumentParams["documentName"],
+		{
+			masterLanguageDocumentID,
+			...params
+		}: { masterLanguageDocumentID?: string } & FetchParams = {},
+	): Promise<{ id: string }> {
+		const url = new URL("documents", this.migrationAPIEndpoint)
 
-		return url.toString()
+		const result = await this.fetch<PostDocumentResult>(
+			url.toString(),
+			this.buildWriteQueryParams<PostDocumentParams>({
+				method: "POST",
+				body: {
+					title: documentName,
+					type: document.type,
+					uid: document.uid || undefined,
+					lang: document.lang,
+					alternate_language_id: masterLanguageDocumentID,
+					tags: document.tags,
+					data: document.data,
+				},
+				params,
+			}),
+		)
+
+		return { id: result.id }
+	}
+
+	private async updateDocument<TType extends TDocuments["type"]>(
+		id: string,
+		document: Pick<
+			MigrationPrismicDocument<ExtractDocumentType<TDocuments, TType>>,
+			"uid" | "tags" | "data"
+		> & {
+			documentName?: MigrationPrismicDocumentParams["documentName"]
+		},
+		params?: FetchParams,
+	): Promise<void> {
+		const url = new URL(`documents/${id}`, this.migrationAPIEndpoint)
+
+		await this.fetch<PutDocumentResult>(
+			url.toString(),
+			this.buildWriteQueryParams<PutDocumentParams>({
+				method: "PUT",
+				body: {
+					title: document.documentName,
+					uid: document.uid || undefined,
+					tags: document.tags,
+					data: document.data,
+				},
+				params,
+			}),
+		)
 	}
 
 	private buildWriteQueryParams<TBody = FormData | Record<string, unknown>>({

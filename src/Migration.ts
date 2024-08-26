@@ -46,13 +46,19 @@ export class Migration<
 	TMigrationDocuments extends
 		MigrationPrismicDocument<TDocuments> = MigrationPrismicDocument<TDocuments>,
 > {
-	#documents: {
+	/**
+	 * @internal
+	 */
+	documents: {
 		document: TMigrationDocuments
 		params: MigrationPrismicDocumentParams
 	}[] = []
 	#indexedDocuments: Record<string, Record<string, TMigrationDocuments>> = {}
 
-	#assets: Map<MigrationAsset["file"], MigrationAsset> = new Map()
+	/**
+	 * @internal
+	 */
+	assets: Map<MigrationAsset["file"], MigrationAsset> = new Map()
 
 	constructor() {}
 
@@ -105,7 +111,7 @@ export class Migration<
 			}
 		}
 
-		this.#assets.set(asset.id, asset)
+		this.assets.set(asset.id, asset)
 
 		return {
 			migrationType: MigrationFieldType.Image,
@@ -126,7 +132,7 @@ export class Migration<
 		documentName: MigrationPrismicDocumentParams["documentName"],
 		params: Omit<MigrationPrismicDocumentParams, "documentName"> = {},
 	): ExtractMigrationDocumentType<TMigrationDocuments, TType> {
-		this.#documents.push({
+		this.documents.push({
 			document,
 			params: { documentName, ...params },
 		})

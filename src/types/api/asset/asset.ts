@@ -79,16 +79,16 @@ export type GetAssetsResult = {
 	is_opensearch_result: boolean
 }
 
-export type PostAssetsParams = {
+export type PostAssetParams = {
 	file: BlobPart
 	notes?: string
 	credits?: string
 	alt?: string
 }
 
-export type PostAssetsResult = Asset
+export type PostAssetResult = Asset
 
-export type PatchAssetsParams = {
+export type PatchAssetParams = {
 	notes?: string
 	credits?: string
 	alt?: string
@@ -96,7 +96,7 @@ export type PatchAssetsParams = {
 	tags?: string[]
 }
 
-export type PatchAssetsResult = Asset
+export type PatchAssetResult = Asset
 
 export type BulkDeleteAssetsParams = {
 	ids: string[]

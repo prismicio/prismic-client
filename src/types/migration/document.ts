@@ -118,15 +118,18 @@ export type MigrationPrismicDocument<
 				uid: TDocument["uid"]
 
 				/**
-				 * Tags associated with document.
-				 */
-				// Made optional compared to the original type.
-				tags?: TDocument["tags"]
-
-				/**
 				 * Language of document.
 				 */
 				lang: TLang
+
+				/**
+				 * The identifier for the document. Used for compatibily with the
+				 * content API.
+				 *
+				 * @internal
+				 */
+				// Made optional compared to the original type.
+				id?: TDocument["id"]
 
 				/**
 				 * Alternate language documents from Prismic content API. Used as a
@@ -137,6 +140,12 @@ export type MigrationPrismicDocument<
 				 */
 				// Made optional compared to the original type.
 				alternate_languages?: TDocument["alternate_languages"]
+
+				/**
+				 * Tags associated with document.
+				 */
+				// Made optional compared to the original type.
+				tags?: TDocument["tags"]
 
 				/**
 				 * Data contained in the document.

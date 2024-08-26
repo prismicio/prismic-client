@@ -29,7 +29,7 @@ expectType<prismic.Repository>({
 		},
 	],
 	integrationFieldsRef: "string",
-	languages: [{ id: "string", name: "string" }],
+	languages: [{ id: "string", name: "string", is_master: true }],
 	types: { foo: "string" },
 	tags: ["string"],
 	forms: {

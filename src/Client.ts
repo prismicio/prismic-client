@@ -1697,11 +1697,6 @@ export class Client<
 	): Promise<T> {
 		const res = await super.fetch(url, params)
 
-		console.log(res.status, params.fetchOptions?.method || "GET", url)
-		if (res.status === 429) {
-			console.log(url, params, res)
-		}
-
 		if (res.status !== 404 && res.status !== 429 && res.json == null) {
 			throw new PrismicError(undefined, url, res.json)
 		}
