@@ -20,7 +20,6 @@ import type * as prismic from "../../src"
 }
 
 expectType<prismic.MigrationPrismicDocument>({
-	title: "",
 	uid: "",
 	type: "",
 	lang: "",
@@ -31,7 +30,6 @@ expectType<prismic.MigrationPrismicDocument>({
  * Supports any field when generic.
  */
 expectType<prismic.MigrationPrismicDocument>({
-	title: "",
 	uid: "",
 	type: "",
 	lang: "",
@@ -63,7 +61,6 @@ type MigrationDocuments = prismic.MigrationPrismicDocument<Documents>
  * Infers data type from document type.
  */
 expectType<MigrationDocuments>({
-	title: "",
 	uid: "",
 	type: "foo",
 	lang: "",
@@ -72,7 +69,6 @@ expectType<MigrationDocuments>({
 
 // @ts-expect-error - `FooDocument` has no `bar` field in `data`
 expectType<MigrationDocuments>({
-	title: "",
 	uid: "",
 	type: "foo",
 	lang: "",
@@ -82,7 +78,6 @@ expectType<MigrationDocuments>({
 })
 
 expectType<MigrationDocuments>({
-	title: "",
 	uid: "",
 	type: "bar",
 	lang: "",
@@ -93,7 +88,6 @@ expectType<MigrationDocuments>({
 
 // @ts-expect-error - `bar` is missing in `data`
 expectType<MigrationDocuments>({
-	title: "",
 	uid: "",
 	type: "bar",
 	lang: "",
@@ -140,7 +134,6 @@ type MigrationAdvancedDocuments =
 
 // Static
 expectType<MigrationAdvancedDocuments>({
-	title: "",
 	uid: "",
 	type: "static",
 	lang: "",
@@ -158,7 +151,6 @@ expectType<MigrationAdvancedDocuments>({
 
 // Group
 expectType<MigrationAdvancedDocuments>({
-	title: "",
 	uid: "",
 	type: "group",
 	lang: "",
@@ -180,7 +172,6 @@ expectType<MigrationAdvancedDocuments>({
 
 // Slice
 expectType<MigrationAdvancedDocuments>({
-	title: "",
 	uid: "",
 	type: "slice",
 	lang: "",

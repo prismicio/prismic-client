@@ -107,26 +107,6 @@ export type MigrationPrismicDocument<
 	TDocument extends PrismicDocument<infer TData, infer TType, infer TLang>
 		? MakeUIDOptional<{
 				/**
-				 * Title of the document displayed in the editor.
-				 */
-				title: string
-
-				/**
-				 * A link to the master language document.
-				 */
-				// We're forced to inline `MigrationContentRelationshipField` here, otherwise
-				// it creates a circular reference to itself which makes TypeScript unhappy.
-				// (but I think it's weird and it doesn't make sense :thinking:)
-				masterLanguageDocument?:
-					| PrismicDocument
-					| MigrationPrismicDocument
-					| (() =>
-							| Promise<PrismicDocument | MigrationPrismicDocument | undefined>
-							| PrismicDocument
-							| MigrationPrismicDocument
-							| undefined)
-
-				/**
 				 * Type of the document.
 				 */
 				type: TType
@@ -150,8 +130,8 @@ export type MigrationPrismicDocument<
 
 				/**
 				 * Alternate language documents from Prismic content API. Used as a
-				 * substitute to the `masterLanguageDocument` property when the latter
-				 * is not available.
+				 * substitute to the `masterLanguageDocument` options when the latter is
+				 * not available.
 				 *
 				 * @internal
 				 */
@@ -164,3 +144,30 @@ export type MigrationPrismicDocument<
 				data: FieldsToMigrationFields<TData>
 			}>
 		: never
+
+/**
+ * Parameters used when creating a Prismic document with the migration API.
+ *
+ * @see More details on the migraiton API: {@link https://prismic.io/docs/migration-api-technical-reference}
+ */
+export type MigrationPrismicDocumentParams = {
+	/**
+	 * Name of the document displayed in the editor.
+	 */
+	documentName: string
+
+	/**
+	 * A link to the master language document.
+	 */
+	// We're forced to inline `MigrationContentRelationshipField` here, otherwise
+	// it creates a circular reference to itself which makes TypeScript unhappy.
+	// (but I think it's weird and it doesn't make sense :thinking:)
+	masterLanguageDocument?:
+		| PrismicDocument
+		| MigrationPrismicDocument
+		| (() =>
+				| Promise<PrismicDocument | MigrationPrismicDocument | undefined>
+				| PrismicDocument
+				| MigrationPrismicDocument
+				| undefined)
+}

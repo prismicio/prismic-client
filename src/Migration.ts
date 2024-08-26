@@ -1,6 +1,9 @@
 import type { Asset } from "./types/api/asset/asset"
 import type { MigrationAsset } from "./types/migration/asset"
-import type { MigrationPrismicDocument } from "./types/migration/document"
+import type {
+	MigrationPrismicDocument,
+	MigrationPrismicDocumentParams,
+} from "./types/migration/document"
 import {
 	MigrationFieldType,
 	type MigrationImageField,
@@ -43,8 +46,11 @@ export class Migration<
 	TMigrationDocuments extends
 		MigrationPrismicDocument<TDocuments> = MigrationPrismicDocument<TDocuments>,
 > {
-	#documents: TMigrationDocuments[] = []
-	#documentsByUID: Record<string, Record<string, TMigrationDocuments>> = {}
+	#documents: {
+		document: TMigrationDocuments
+		params: MigrationPrismicDocumentParams
+	}[] = []
+	#indexedDocuments: Record<string, Record<string, TMigrationDocuments>> = {}
 
 	#assets: Map<MigrationAsset["file"], MigrationAsset> = new Map()
 
@@ -54,7 +60,7 @@ export class Migration<
 	createAsset(
 		file: MigrationAsset["file"],
 		filename: MigrationAsset["filename"],
-		options?: {
+		params?: {
 			notes?: string
 			credits?: string
 			alt?: string
@@ -117,13 +123,18 @@ export class Migration<
 
 	createDocument<TType extends TMigrationDocuments["type"]>(
 		document: ExtractMigrationDocumentType<TMigrationDocuments, TType>,
+		documentName: MigrationPrismicDocumentParams["documentName"],
+		params: Omit<MigrationPrismicDocumentParams, "documentName"> = {},
 	): ExtractMigrationDocumentType<TMigrationDocuments, TType> {
-		this.#documents.push(document)
+		this.#documents.push({
+			document,
+			params: { documentName, ...params },
+		})
 
-		if (!(document.type in this.#documentsByUID)) {
-			this.#documentsByUID[document.type] = {}
+		if (!(document.type in this.#indexedDocuments)) {
+			this.#indexedDocuments[document.type] = {}
 		}
-		this.#documentsByUID[document.type][document.uid || SINGLE_KEY] = document
+		this.#indexedDocuments[document.type][document.uid || SINGLE_KEY] = document
 
 		return document
 	}
@@ -135,7 +146,7 @@ export class Migration<
 			{ type: TType }
 		> = Extract<TMigrationDocuments, { type: TType }>,
 	>(documentType: TType, uid: string): TMigrationDocument | undefined {
-		return this.#documentsByUID[documentType]?.[uid] as
+		return this.#indexedDocuments[documentType]?.[uid] as
 			| TMigrationDocument
 			| undefined
 	}
@@ -147,7 +158,7 @@ export class Migration<
 			{ type: TType }
 		> = Extract<TMigrationDocuments, { type: TType }>,
 	>(documentType: TType): TMigrationDocument | undefined | undefined {
-		return this.#documentsByUID[documentType]?.[SINGLE_KEY] as
+		return this.#indexedDocuments[documentType]?.[SINGLE_KEY] as
 			| TMigrationDocument
 			| undefined
 	}

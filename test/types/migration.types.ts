@@ -78,25 +78,29 @@ expectType<
  */
 
 // Default
-const defaultCreateDocument = defaultMigration.createDocument({
-	title: "",
-	type: "",
-	uid: "",
-	lang: "",
-	data: {},
-})
+const defaultCreateDocument = defaultMigration.createDocument(
+	{
+		type: "",
+		uid: "",
+		lang: "",
+		data: {},
+	},
+	"",
+)
 expectType<
 	TypeEqual<typeof defaultCreateDocument, prismic.MigrationPrismicDocument>
 >(true)
 
 // Documents
-const documentsCreateDocument = documentsMigration.createDocument({
-	title: "",
-	type: "foo",
-	uid: "",
-	lang: "",
-	data: {},
-})
+const documentsCreateDocument = documentsMigration.createDocument(
+	{
+		type: "foo",
+		uid: "",
+		lang: "",
+		data: {},
+	},
+	"",
+)
 expectType<
 	TypeEqual<
 		typeof documentsCreateDocument,
