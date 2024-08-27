@@ -2,6 +2,7 @@ import type { AnyRegularField, FieldState } from "./types"
 
 import type { ContentRelationshipField } from "./contentRelationship"
 import type { GroupField } from "./group"
+import type { KeyTextField } from "./keyText"
 import type { LinkToMediaField } from "./linkToMedia"
 import type { SliceZone } from "./sliceZone"
 
@@ -33,7 +34,7 @@ export interface FilledLinkToWebField {
 	link_type: typeof LinkType.Web
 	url: string
 	target?: string
-	text?: string
+	text?: KeyTextField
 }
 
 /**

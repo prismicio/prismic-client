@@ -1,5 +1,6 @@
 import type { FieldState } from "./types"
 
+import type { KeyTextField } from "./keyText"
 import type { EmptyLinkField, LinkType } from "./link"
 
 /**
@@ -24,5 +25,5 @@ export interface FilledLinkToMediaField {
 	size: string
 	height?: string | null
 	width?: string | null
-	text?: string
+	text?: KeyTextField
 }
