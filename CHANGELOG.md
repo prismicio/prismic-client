@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.9.0-alpha.1](https://github.com/prismicio/prismic-client/compare/v7.9.0-alpha.0...v7.9.0-alpha.1) (2024-08-27)
+
+
+### Features
+
+* use KeyTextField for link text value definition ([1a4c51a](https://github.com/prismicio/prismic-client/commit/1a4c51a389ed4d06cf69c3edcb215559ba91fe99))
+
+
+### Chore
+
+* remove changelog for alpha ([50fc797](https://github.com/prismicio/prismic-client/commit/50fc797372726c0abc575b9f1b0a56d5db939bb1))
+
 ## [7.8.0](https://github.com/prismicio/prismic-client/compare/v7.7.4...v7.8.0) (2024-08-01)
 
 
