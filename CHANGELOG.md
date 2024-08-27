@@ -2,13 +2,6 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [7.9.0-alpha.2](https://github.com/prismicio/prismic-client/compare/v7.9.0-alpha.1...v7.9.0-alpha.2) (2024-08-27)
-
-
-### Chore
-
-* revert previous changes ([c53de86](https://github.com/prismicio/prismic-client/commit/c53de86a7ed749f0f9d8999b9e58564d9a8efe35))
-
 ## [7.9.0-alpha.1](https://github.com/prismicio/prismic-client/compare/v7.9.0-alpha.0...v7.9.0-alpha.1) (2024-08-27)
 
 
@@ -20,6 +13,20 @@ All notable changes to this project will be documented in this file. See [standa
 ### Chore
 
 * remove changelog for alpha ([50fc797](https://github.com/prismicio/prismic-client/commit/50fc797372726c0abc575b9f1b0a56d5db939bb1))
+
+### [7.8.1](https://github.com/prismicio/prismic-client/compare/v7.8.0...v7.8.1) (2024-08-27)
+
+
+### Bug Fixes
+
+* add missing `is_master` property on repository type ([0289698](https://github.com/prismicio/prismic-client/commit/0289698cc9ca7ed5b264f71f2a9f8d39e3710058))
+
+## [7.9.0-alpha.2](https://github.com/prismicio/prismic-client/compare/v7.9.0-alpha.1...v7.9.0-alpha.2) (2024-08-27)
+
+
+### Chore
+
+* revert previous changes ([c53de86](https://github.com/prismicio/prismic-client/commit/c53de86a7ed749f0f9d8999b9e58564d9a8efe35))
 
 ## [7.8.0](https://github.com/prismicio/prismic-client/compare/v7.7.4...v7.8.0) (2024-08-01)
 
