@@ -21,4 +21,5 @@ import type * as prismic from "../../src"
 expectType<prismic.Language>({
 	id: "string",
 	name: "string",
+	is_master: true,
 })
