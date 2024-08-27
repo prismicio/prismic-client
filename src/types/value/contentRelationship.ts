@@ -1,7 +1,6 @@
 import type { AnyRegularField, FieldState } from "./types"
 
 import type { GroupField } from "./group"
-import type { KeyTextField } from "./keyText"
 import type { EmptyLinkField, LinkType } from "./link"
 import type { SliceZone } from "./sliceZone"
 
@@ -45,5 +44,5 @@ export interface FilledContentRelationshipField<
 	slug?: string
 	isBroken?: boolean
 	data?: DataInterface
-	text?: KeyTextField
+	text?: string
 }
