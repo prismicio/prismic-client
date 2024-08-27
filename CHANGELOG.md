@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.9.0-alpha.2](https://github.com/prismicio/prismic-client/compare/v7.9.0-alpha.1...v7.9.0-alpha.2) (2024-08-27)
+
+
+### Chore
+
+* revert previous changes ([c53de86](https://github.com/prismicio/prismic-client/commit/c53de86a7ed749f0f9d8999b9e58564d9a8efe35))
+
 ## [7.9.0-alpha.1](https://github.com/prismicio/prismic-client/compare/v7.9.0-alpha.0...v7.9.0-alpha.1) (2024-08-27)
 
 
