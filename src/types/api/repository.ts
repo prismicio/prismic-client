@@ -93,7 +93,7 @@ export interface Language {
 	name: string
 
 	/**
-	 * Whether or not the language is the default language for the repository.
+	 * Whether or not the language is the default language of the repository.
 	 */
 	is_master: boolean
 }
