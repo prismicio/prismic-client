@@ -50,11 +50,9 @@ type RegularFieldToMigrationField<TField extends AnyRegularField> =
 					: never)
 	| TField
 
-type GroupFieldToMigrationField<
+export type GroupFieldToMigrationField<
 	TField extends GroupField | Slice["items"] | SharedSlice["items"],
-> = {
-	[Index in keyof TField]: FieldsToMigrationFields<TField[Index]>
-}
+> = FieldsToMigrationFields<TField[number]>[]
 
 type SliceToMigrationField<TField extends Slice | SharedSlice> = Omit<
 	TField,
@@ -64,11 +62,10 @@ type SliceToMigrationField<TField extends Slice | SharedSlice> = Omit<
 	items: GroupFieldToMigrationField<TField["items"]>
 }
 
-type SliceZoneToMigrationField<TField extends SliceZone> = {
-	[Index in keyof TField]: SliceToMigrationField<TField[Index]>
-}
+export type SliceZoneToMigrationField<TField extends SliceZone> =
+	SliceToMigrationField<TField[number]>[]
 
-type FieldToMigrationField<
+export type FieldToMigrationField<
 	TField extends AnyRegularField | GroupField | SliceZone,
 > = TField extends AnyRegularField
 	? RegularFieldToMigrationField<TField>
@@ -78,7 +75,7 @@ type FieldToMigrationField<
 			? SliceZoneToMigrationField<TField>
 			: never
 
-type FieldsToMigrationFields<
+export type FieldsToMigrationFields<
 	TFields extends Record<string, AnyRegularField | GroupField | SliceZone>,
 > = {
 	[Key in keyof TFields]: FieldToMigrationField<TFields[Key]>
@@ -102,9 +99,9 @@ type MakeUIDOptional<TMigrationDocument extends { uid: string | null }> =
  * @see More details on the migraiton API: {@link https://prismic.io/docs/migration-api-technical-reference}
  */
 export type MigrationPrismicDocument<
-	TDocument extends PrismicDocument = PrismicDocument,
+	TDocuments extends PrismicDocument = PrismicDocument,
 > =
-	TDocument extends PrismicDocument<infer TData, infer TType, infer TLang>
+	TDocuments extends PrismicDocument<infer TData, infer TType, infer TLang>
 		? MakeUIDOptional<{
 				/**
 				 * Type of the document.
@@ -115,7 +112,7 @@ export type MigrationPrismicDocument<
 				 * The unique identifier for the document. Guaranteed to be unique among
 				 * all Prismic documents of the same type.
 				 */
-				uid: TDocument["uid"]
+				uid: TDocuments["uid"]
 
 				/**
 				 * Language of document.
@@ -129,7 +126,7 @@ export type MigrationPrismicDocument<
 				 * @internal
 				 */
 				// Made optional compared to the original type.
-				id?: TDocument["id"]
+				id?: TDocuments["id"]
 
 				/**
 				 * Alternate language documents from Prismic content API. Used as a
@@ -139,13 +136,13 @@ export type MigrationPrismicDocument<
 				 * @internal
 				 */
 				// Made optional compared to the original type.
-				alternate_languages?: TDocument["alternate_languages"]
+				alternate_languages?: TDocuments["alternate_languages"]
 
 				/**
 				 * Tags associated with document.
 				 */
 				// Made optional compared to the original type.
-				tags?: TDocument["tags"]
+				tags?: TDocuments["tags"]
 
 				/**
 				 * Data contained in the document.

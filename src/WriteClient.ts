@@ -1,8 +1,9 @@
 import { pLimit } from "./lib/pLimit"
+import type { AssetMap, DocumentMap } from "./lib/patchMigrationDocumentData"
+import { patchMigrationDocumentData } from "./lib/patchMigrationDocumentData"
 
 import type {
 	Asset,
-	BulkDeleteAssetsParams,
 	GetAssetsParams,
 	GetAssetsResult,
 	PatchAssetParams,
@@ -22,14 +23,11 @@ import {
 	type PostDocumentResult,
 	type PutDocumentParams,
 } from "./types/api/migration/document"
-import type { MigrationAsset } from "./types/migration/asset"
 import type {
 	MigrationPrismicDocument,
 	MigrationPrismicDocumentParams,
 } from "./types/migration/document"
-import type { FilledContentRelationshipField } from "./types/value/contentRelationship"
 import type { PrismicDocument } from "./types/value/document"
-import { LinkType } from "./types/value/link"
 
 import { PrismicError } from "./errors/PrismicError"
 
@@ -129,15 +127,24 @@ export class WriteClient<
 			...params
 		}: { reporter?: (message: string) => void } & FetchParams = {},
 	): Promise<void> {
-		const _assets = await this.migrateCreateAssets(migration, {
+		const assets = await this.migrateCreateAssets(migration, {
 			reporter: (message) => reporter?.(`01_createAssets - ${message}`),
 			...params,
 		})
 
-		const _documents = await this.migrationCreateDocuments(migration, {
+		const documents = await this.migrateCreateDocuments(migration, {
 			reporter: (message) => reporter?.(`02_createDocuments - ${message}`),
 			...params,
 		})
+
+		await this.migrateUpdateDocuments(migration, assets, documents, {
+			reporter: (message) => reporter?.(`03_updateDocuments - ${message}`),
+			...params,
+		})
+
+		reporter?.(
+			`Migration complete, migrated ${migration.documents.length} documents and ${migration.assets.size} assets`,
+		)
 	}
 
 	private async migrateCreateAssets(
@@ -146,8 +153,8 @@ export class WriteClient<
 			reporter,
 			...fetchParams
 		}: { reporter?: (message: string) => void } & FetchParams = {},
-	): Promise<Map<MigrationAsset["id"], Asset>> {
-		const assets = new Map<MigrationAsset["id"], Asset>()
+	): Promise<AssetMap> {
+		const assets: AssetMap = new Map()
 
 		// Get all existing assets
 		let getAssetsResult: GetAssetsReturnType | undefined = undefined
@@ -218,21 +225,13 @@ export class WriteClient<
 		return assets
 	}
 
-	private async migrationCreateDocuments(
+	private async migrateCreateDocuments(
 		migration: Migration<TDocuments>,
 		{
 			reporter,
 			...fetchParams
 		}: { reporter?: (message: string) => void } & FetchParams = {},
-	): Promise<
-		Map<
-			| string
-			| TDocuments
-			| MigrationPrismicDocument
-			| MigrationPrismicDocument<TDocuments>,
-			FilledContentRelationshipField
-		>
-	> {
+	): Promise<DocumentMap<TDocuments>> {
 		// Should this be a function of `Client`?
 		// Resolve master locale
 		const repository = await this.getRepository(fetchParams)
@@ -244,29 +243,11 @@ export class WriteClient<
 
 		reporter?.(`Found ${existingDocuments.length} existing documents`)
 
-		const documents: Map<
-			| string
-			| TDocuments
-			| MigrationPrismicDocument
-			| MigrationPrismicDocument<TDocuments>,
-			FilledContentRelationshipField
-		> = new Map()
+		const documents: DocumentMap<TDocuments> = new Map()
 		for (const document of existingDocuments) {
-			const contentRelationship = {
-				link_type: LinkType.Document,
-				id: document.id,
-				uid: document.uid ?? undefined,
-				type: document.type,
-				tags: document.tags,
-				lang: document.lang,
-				url: undefined,
-				slug: undefined,
-				isBroken: false,
-				data: undefined,
-			}
-
-			documents.set(document, contentRelationship)
-			documents.set(document.id, contentRelationship)
+			// Index on document and document ID
+			documents.set(document, document)
+			documents.set(document.id, document)
 		}
 
 		const masterLocaleDocuments: {
@@ -296,6 +277,7 @@ export class WriteClient<
 						`Skipping existing master locale document \`${params.documentName}\` - ${++i}/${masterLocaleDocuments.length}`,
 					)
 
+					// Index the migration document
 					documents.set(document, documents.get(document.id)!)
 				} else {
 					created++
@@ -304,6 +286,7 @@ export class WriteClient<
 					)
 
 					const { id } = await this.createDocument(
+						// We'll upload docuements data later on.
 						{ ...document, data: {} },
 						params.documentName,
 						{
@@ -312,18 +295,7 @@ export class WriteClient<
 						},
 					)
 
-					documents.set(document, {
-						link_type: LinkType.Document,
-						id,
-						uid: document.uid ?? undefined,
-						type: document.type,
-						tags: document.tags ?? [],
-						lang: document.lang,
-						url: undefined,
-						slug: undefined,
-						isBroken: false,
-						data: undefined,
-					})
+					documents.set(document, { ...document, id })
 				}
 			}
 		}
@@ -351,6 +323,7 @@ export class WriteClient<
 						`Creating non-master locale document \`${params.documentName}\` - ${++i}/${nonMasterLocaleDocuments.length}`,
 					)
 
+					// Resolve master language document ID
 					let masterLanguageDocumentID: string | undefined
 					if (params.masterLanguageDocument) {
 						if (typeof params.masterLanguageDocument === "function") {
@@ -358,7 +331,6 @@ export class WriteClient<
 								await params.masterLanguageDocument()
 
 							if (masterLanguageDocument) {
-								masterLanguageDocument
 								masterLanguageDocumentID = documents.get(
 									masterLanguageDocument,
 								)?.id
@@ -373,6 +345,7 @@ export class WriteClient<
 					}
 
 					const { id } = await this.createDocument(
+						// We'll upload docuements data later on.
 						{ ...document, data: {} },
 						params.documentName,
 						{
@@ -381,18 +354,7 @@ export class WriteClient<
 						},
 					)
 
-					documents.set(document, {
-						link_type: LinkType.Document,
-						id,
-						uid: document.uid ?? undefined,
-						type: document.type,
-						tags: document.tags ?? [],
-						lang: document.lang,
-						url: undefined,
-						slug: undefined,
-						isBroken: false,
-						data: undefined,
-					})
+					documents.set(document, { ...document, id })
 				}
 			}
 		}
@@ -404,6 +366,38 @@ export class WriteClient<
 		}
 
 		return documents
+	}
+
+	private async migrateUpdateDocuments(
+		migration: Migration<TDocuments>,
+		assets: AssetMap,
+		documents: DocumentMap<TDocuments>,
+		{
+			reporter,
+			...fetchParams
+		}: { reporter?: (message: string) => void } & FetchParams = {},
+	): Promise<void> {
+		if (migration.documents.length) {
+			let i = 0
+			for (const { document, params } of migration.documents) {
+				reporter?.(
+					`Updating document \`${params.documentName}\` - ${++i}/${migration.documents.length}`,
+				)
+
+				const id = documents.get(document)!.id
+				const data = await patchMigrationDocumentData(
+					document.data,
+					assets,
+					documents,
+				)
+
+				await this.updateDocument(id, { data }, fetchParams)
+			}
+
+			reporter?.(`Updated ${i} documents`)
+		} else {
+			reporter?.(`No documents to update`)
+		}
 	}
 
 	async getAssets({
@@ -561,40 +555,43 @@ export class WriteClient<
 		)
 	}
 
-	private async deleteAsset(
-		assetOrID: string | Asset,
-		params?: FetchParams,
-	): Promise<void> {
-		const url = new URL(
-			`assets/${typeof assetOrID === "string" ? assetOrID : assetOrID.id}`,
-			this.assetAPIEndpoint,
-		)
+	// We don't want to expose those utilities for now,
+	// and we don't have any internal use for them yet.
 
-		await this.fetch(
-			url.toString(),
-			this.buildWriteQueryParams({ method: "DELETE", params }),
-		)
-	}
+	// private async deleteAsset(
+	// 	assetOrID: string | Asset,
+	// 	params?: FetchParams,
+	// ): Promise<void> {
+	// 	const url = new URL(
+	// 		`assets/${typeof assetOrID === "string" ? assetOrID : assetOrID.id}`,
+	// 		this.assetAPIEndpoint,
+	// 	)
 
-	private async deleteAssets(
-		assetsOrIDs: (string | Asset)[],
-		params?: FetchParams,
-	): Promise<void> {
-		const url = new URL("assets/bulk-delete", this.assetAPIEndpoint)
+	// 	await this.fetch(
+	// 		url.toString(),
+	// 		this.buildWriteQueryParams({ method: "DELETE", params }),
+	// 	)
+	// }
 
-		await this.fetch(
-			url.toString(),
-			this.buildWriteQueryParams<BulkDeleteAssetsParams>({
-				method: "POST",
-				body: {
-					ids: assetsOrIDs.map((assetOrID) =>
-						typeof assetOrID === "string" ? assetOrID : assetOrID.id,
-					),
-				},
-				params,
-			}),
-		)
-	}
+	// private async deleteAssets(
+	// 	assetsOrIDs: (string | Asset)[],
+	// 	params?: FetchParams,
+	// ): Promise<void> {
+	// 	const url = new URL("assets/bulk-delete", this.assetAPIEndpoint)
+
+	// 	await this.fetch(
+	// 		url.toString(),
+	// 		this.buildWriteQueryParams<BulkDeleteAssetsParams>({
+	// 			method: "POST",
+	// 			body: {
+	// 				ids: assetsOrIDs.map((assetOrID) =>
+	// 					typeof assetOrID === "string" ? assetOrID : assetOrID.id,
+	// 				),
+	// 			},
+	// 			params,
+	// 		}),
+	// 	)
+	// }
 
 	private async fetchForeignAsset(
 		url: string,
