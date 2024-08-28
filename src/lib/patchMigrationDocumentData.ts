@@ -1,7 +1,6 @@
 import type { Asset } from "../types/api/asset/asset"
 import type { MigrationAsset } from "../types/migration/asset"
 import type {
-	FieldToMigrationField,
 	FieldsToMigrationFields,
 	GroupFieldToMigrationField,
 	MigrationPrismicDocument,
@@ -28,6 +27,8 @@ import type { SliceZone } from "../types/value/sliceZone"
 import type { AnyRegularField } from "../types/value/types"
 
 import * as isFilled from "../helpers/isFilled"
+
+import * as is from "./migrationIsField"
 
 /**
  * A map of asset IDs to asset used to resolve assets when patching migration
@@ -140,129 +141,6 @@ const inheritQueryParams = (url: string, original: string): string => {
 	const queryParams = original.split("?")[1] || ""
 
 	return `${url.split("?")[0]}${queryParams ? `?${queryParams}` : ""}`
-}
-
-/**
- * Check if a field is a slice zone.
- *
- * @remarks
- * This is not an official helper function and it's only designed to work in the
- * case of migration fields.
- */
-const isSliceZone = (
-	field: FieldToMigrationField<AnyRegularField | GroupField | SliceZone>,
-): field is SliceZoneToMigrationField<SliceZone> => {
-	return (
-		Array.isArray(field) &&
-		field.every((item) => "slice_type" in item && "id" in item)
-	)
-}
-
-/**
- * Check if a field is a rich text field.
- *
- * @remarks
- * This is not an official helper function and it's only designed to work in the
- * case of migration fields.
- */
-const isRichText = (
-	field: FieldToMigrationField<AnyRegularField | GroupField | SliceZone>,
-): field is RichTextFieldToMigrationField<RichTextField> => {
-	return (
-		Array.isArray(field) &&
-		field.every(
-			(item) =>
-				("type" in item && typeof item.type === "string") ||
-				("migrationType" in item &&
-					item.migrationType === MigrationFieldType.Image),
-		)
-	)
-}
-
-/**
- * Check if a field is a group field.
- *
- * @remarks
- * This is not an official helper function and it's only designed to work in the
- * case of migration fields.
- */
-const isGroup = (
-	field: FieldToMigrationField<AnyRegularField | GroupField | SliceZone>,
-): field is GroupFieldToMigrationField<GroupField> => {
-	return !isSliceZone(field) && !isRichText(field) && Array.isArray(field)
-}
-
-/**
- * Check if a field is a link field.
- *
- * @remarks
- * This is not an official helper function and it's only designed to work in the
- * case of migration fields.
- */
-const isLink = (
-	field: FieldToMigrationField<AnyRegularField | GroupField | SliceZone>,
-): field is MigrationLinkField | LinkField => {
-	if (typeof field === "function") {
-		// Lazy content relationship field
-		return true
-	} else if (field && typeof field === "object" && !("version" in field)) {
-		if (
-			"migrationType" in field &&
-			field.migrationType === MigrationFieldType.LinkToMedia
-		) {
-			// Migration link to media field
-			return true
-		} else if (
-			"type" in field &&
-			"lang" in field &&
-			typeof field.lang === "string" &&
-			field.id
-		) {
-			// Content relationship field declared using another repository document
-			return true
-		} else if (
-			"link_type" in field &&
-			(field.link_type === LinkType.Document ||
-				field.link_type === LinkType.Media ||
-				field.link_type === LinkType.Web)
-		) {
-			// Regular link field
-			return true
-		}
-	}
-
-	return false
-}
-
-/**
- * Check if a field is an image field.
- *
- * @remarks
- * This is not an official helper function and it's only designed to work in the
- * case of migration fields.
- */
-const isImage = (
-	field: FieldToMigrationField<AnyRegularField | GroupField | SliceZone>,
-): field is MigrationImageField | ImageField => {
-	if (field && typeof field === "object" && !("version" in field)) {
-		if (
-			"migrationType" in field &&
-			field.migrationType === MigrationFieldType.Image
-		) {
-			// Migration image field
-			return true
-		} else if (
-			"id" in field &&
-			"dimensions" in field &&
-			field.dimensions &&
-			isFilled.image(field)
-		) {
-			// Regular image field
-			return true
-		}
-	}
-
-	return false
 }
 
 /**
@@ -546,15 +424,15 @@ const patchRecord = async <
 	const result: Record<string, AnyRegularField | GroupField | SliceZone> = {}
 
 	for (const [key, field] of Object.entries(record)) {
-		if (isSliceZone(field)) {
+		if (is.sliceZone(field)) {
 			result[key] = await patchSliceZone(field, assets, documents)
-		} else if (isRichText(field)) {
+		} else if (is.richText(field)) {
 			result[key] = await patchRichText(field, assets, documents)
-		} else if (isGroup(field)) {
+		} else if (is.group(field)) {
 			result[key] = await patchGroup(field, assets, documents)
-		} else if (isLink(field)) {
+		} else if (is.link(field)) {
 			result[key] = await patchLink(field, assets, documents)
-		} else if (isImage(field)) {
+		} else if (is.image(field)) {
 			result[key] = patchImage(field, assets)
 		} else {
 			result[key] = field
