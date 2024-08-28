@@ -123,9 +123,9 @@ const documentToContentRelationship = <
 	return {
 		link_type: LinkType.Document,
 		id: document.id,
-		uid: document.uid ?? undefined,
+		uid: document.uid || undefined,
 		type: document.type,
-		tags: document.tags ?? [],
+		tags: document.tags || [],
 		lang: document.lang,
 		url: undefined,
 		slug: undefined,
@@ -390,17 +390,23 @@ const patchImage = (
 
 				if (Object.keys(thumbnails).length > 0) {
 					for (const name in thumbnails) {
-						const { url, dimensions, edit, alt } = (
+						const maybeThumbnail = (
 							thumbnails as Record<string, FilledImageFieldImage>
 						)[name]
 
-						result[name] = {
-							id: asset.id,
-							url: inheritQueryParams(asset.url, url),
-							dimensions,
-							edit,
-							alt: alt || null,
-							copyright: asset.credits || null,
+						if (is.image(maybeThumbnail)) {
+							const { url, dimensions, edit, alt } = (
+								thumbnails as Record<string, FilledImageFieldImage>
+							)[name]
+
+							result[name] = {
+								id: asset.id,
+								url: inheritQueryParams(asset.url, url),
+								dimensions,
+								edit,
+								alt: alt || null,
+								copyright: asset.credits || null,
+							}
 						}
 					}
 				}

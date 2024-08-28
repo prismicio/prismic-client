@@ -295,6 +295,10 @@ export class WriteClient<
 						},
 					)
 
+					// Index old ID for Prismic to Prismic migration
+					if (document.id) {
+						documents.set(document.id, { ...document, id })
+					}
 					documents.set(document, { ...document, id })
 				}
 			}
@@ -384,14 +388,14 @@ export class WriteClient<
 					`Updating document \`${params.documentName}\` - ${++i}/${migration.documents.length}`,
 				)
 
-				const id = documents.get(document)!.id
+				const { id, uid } = documents.get(document)!
 				const data = await patchMigrationDocumentData(
 					document.data,
 					assets,
 					documents,
 				)
 
-				await this.updateDocument(id, { data }, fetchParams)
+				await this.updateDocument(id, { uid, data }, fetchParams)
 			}
 
 			reporter?.(`Updated ${i} documents`)
@@ -488,7 +492,12 @@ export class WriteClient<
 		const url = new URL("assets", this.assetAPIEndpoint)
 
 		const formData = new FormData()
-		formData.append("file", new File([file], filename))
+		formData.append(
+			"file",
+			new File([file], filename, {
+				type: file instanceof File ? file.type : undefined,
+			}),
+		)
 
 		if (notes) {
 			formData.append("notes", notes)
@@ -596,7 +605,7 @@ export class WriteClient<
 	private async fetchForeignAsset(
 		url: string,
 		params: FetchParams = {},
-	): Promise<Blob> {
+	): Promise<File> {
 		const requestInit: RequestInitLike = {
 			...this.fetchOptions,
 			...params.fetchOptions,
@@ -616,7 +625,11 @@ export class WriteClient<
 			throw new PrismicError("Could not fetch foreign asset", url, undefined)
 		}
 
-		return res.blob()
+		const blob = await res.blob()
+
+		return new File([blob], "", {
+			type: res.headers.get("content-type") || "",
+		})
 	}
 
 	private _resolveAssetTagIDsLimit = pLimit({ limit: 1 })
@@ -703,6 +716,7 @@ export class WriteClient<
 		const result = await this.fetch<PostDocumentResult>(
 			url.toString(),
 			this.buildWriteQueryParams<PostDocumentParams>({
+				isMigrationAPI: true,
 				method: "POST",
 				body: {
 					title: documentName,
@@ -735,6 +749,7 @@ export class WriteClient<
 		await this.fetch<PutDocumentResult>(
 			url.toString(),
 			this.buildWriteQueryParams<PutDocumentParams>({
+				isMigrationAPI: true,
 				method: "PUT",
 				body: {
 					title: document.documentName,

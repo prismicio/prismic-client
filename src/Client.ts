@@ -1698,7 +1698,7 @@ export class Client<
 		const res = await super.fetch(url, params)
 
 		if (res.status !== 404 && res.status !== 429 && res.json == null) {
-			throw new PrismicError(undefined, url, res.json)
+			throw new PrismicError(undefined, url, res.json || res.text)
 		}
 
 		switch (res.status) {

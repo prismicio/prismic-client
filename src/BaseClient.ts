@@ -73,6 +73,7 @@ export interface ResponseLike {
 	headers: HeadersLike
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	json(): Promise<any>
+	text(): Promise<string>
 	blob(): Promise<Blob>
 }
 
@@ -159,6 +160,7 @@ type FetchJobResult<TJSON = any> = {
 	status: number
 	headers: HeadersLike
 	json: TJSON
+	text?: string
 }
 
 export class BaseClient {
@@ -306,16 +308,27 @@ export class BaseClient {
 			// response.
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			let json: any = undefined
-			try {
-				json = await res.json()
-			} catch {
-				// noop
+			let text: string | undefined = undefined
+			if (res.ok) {
+				try {
+					json = await res.json()
+				} catch {
+					// noop
+				}
+			} else {
+				try {
+					text = await res.text()
+					json = JSON.stringify(text)
+				} catch {
+					// noop
+				}
 			}
 
 			return {
 				status: res.status,
 				headers: res.headers,
 				json,
+				text,
 			}
 		})
 	}
