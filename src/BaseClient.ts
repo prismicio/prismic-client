@@ -318,7 +318,7 @@ export class BaseClient {
 			} else {
 				try {
 					text = await res.text()
-					json = JSON.stringify(text)
+					json = JSON.parse(text)
 				} catch {
 					// noop
 				}
