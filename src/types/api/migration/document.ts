@@ -1,5 +1,13 @@
 import type { PrismicDocument } from "../../value/document"
 
+/**
+ * An object representing the parameters required when creating a document
+ * through the migration API.
+ *
+ * @typeParam TDocument - Type of the Prismic document to create.
+ *
+ * @see Prismic migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
+ */
 export type PostDocumentParams<
 	TDocument extends PrismicDocument = PrismicDocument,
 > =
@@ -17,6 +25,13 @@ export type PostDocumentParams<
 			}
 		: never
 
+/**
+ * Result of creating a document with the migration API.
+ *
+ * @typeParam TDocument - Type of the created Prismic document.
+ *
+ * @see Prismic asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+ */
 export type PostDocumentResult<
 	TDocument extends PrismicDocument = PrismicDocument,
 > =
@@ -32,6 +47,14 @@ export type PostDocumentResult<
 				: Record<string, never>)
 		: never
 
+/**
+ * An object representing the parameters required when updating a document
+ * through the migration API.
+ *
+ * @typeParam TDocument - Type of the Prismic document to update.
+ *
+ * @see Prismic migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
+ */
 export type PutDocumentParams<
 	TDocument extends PrismicDocument = PrismicDocument,
 > = {
@@ -45,6 +68,13 @@ export type PutDocumentParams<
 	data: TDocument["data"] | Record<string, never>
 }
 
+/**
+ * Result of updating a document with the migration API.
+ *
+ * @typeParam TDocument - Type of the updated Prismic document.
+ *
+ * @see Prismic asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+ */
 export type PutDocumentResult<
 	TDocument extends PrismicDocument = PrismicDocument,
 > = PostDocumentResult<TDocument>

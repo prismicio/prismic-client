@@ -5,8 +5,8 @@ import type {
 	SliceZoneToMigrationField,
 } from "../types/migration/document"
 import type {
-	MigrationImageField,
-	MigrationLinkField,
+	ImageMigrationField,
+	LinkMigrationField,
 } from "../types/migration/fields"
 import { MigrationFieldType } from "../types/migration/fields"
 import type { GroupField } from "../types/value/group"
@@ -20,9 +20,14 @@ import type { AnyRegularField } from "../types/value/types"
 import * as isFilled from "../helpers/isFilled"
 
 /**
- * Check if a field is a slice zone.
+ * Checks if a field is a slice zone.
  *
- * @remarks
+ * @param field - Field to check.
+ *
+ * @returns `true` if `field` is a slice zone migration field, `false`
+ *   otherwise.
+ *
+ * @internal
  * This is not an official helper function and it's only designed to work in the
  * case of migration fields.
  */
@@ -36,9 +41,13 @@ export const sliceZone = (
 }
 
 /**
- * Check if a field is a rich text field.
+ * Checks if a field is a rich text field.
  *
- * @remarks
+ * @param field - Field to check.
+ *
+ * @returns `true` if `field` is a rich text migration field, `false` otherwise.
+ *
+ * @internal
  * This is not an official helper function and it's only designed to work in the
  * case of migration fields.
  */
@@ -57,9 +66,13 @@ export const richText = (
 }
 
 /**
- * Check if a field is a group field.
+ * Checks if a field is a group field.
  *
- * @remarks
+ * @param field - Field to check.
+ *
+ * @returns `true` if `field` is a group migration field, `false` otherwise.
+ *
+ * @internal
  * This is not an official helper function and it's only designed to work in the
  * case of migration fields.
  */
@@ -70,15 +83,19 @@ export const group = (
 }
 
 /**
- * Check if a field is a link field.
+ * Checks if a field is a link field.
  *
- * @remarks
+ * @param field - Field to check.
+ *
+ * @returns `true` if `field` is a link migration field, `false` otherwise.
+ *
+ * @internal
  * This is not an official helper function and it's only designed to work in the
  * case of migration fields.
  */
 export const link = (
 	field: FieldToMigrationField<AnyRegularField | GroupField | SliceZone>,
-): field is MigrationLinkField | LinkField => {
+): field is LinkMigrationField | LinkField => {
 	if (typeof field === "function") {
 		// Lazy content relationship field
 		return true
@@ -112,15 +129,19 @@ export const link = (
 }
 
 /**
- * Check if a field is an image field.
+ * Checks if a field is an image field.
  *
- * @remarks
+ * @param field - Field to check.
+ *
+ * @returns `true` if `field` is an image migration field, `false` otherwise.
+ *
+ * @internal
  * This is not an official helper function and it's only designed to work in the
  * case of migration fields.
  */
 export const image = (
 	field: FieldToMigrationField<AnyRegularField | GroupField | SliceZone>,
-): field is MigrationImageField | ImageField => {
+): field is ImageMigrationField | ImageField => {
 	if (field && typeof field === "object" && !("version" in field)) {
 		if (
 			"migrationType" in field &&

@@ -3,23 +3,21 @@ import type { MigrationAsset } from "../types/migration/asset"
 import type {
 	FieldsToMigrationFields,
 	GroupFieldToMigrationField,
-	MigrationPrismicDocument,
+	PrismicMigrationDocument,
 	RichTextFieldToMigrationField,
 	SliceZoneToMigrationField,
 } from "../types/migration/document"
 import type {
-	MigrationImageField,
-	MigrationLinkField,
+	ImageMigrationField,
+	LinkMigrationField,
 } from "../types/migration/fields"
 import { MigrationFieldType } from "../types/migration/fields"
-import type { FilledContentRelationshipField } from "../types/value/contentRelationship"
 import type { PrismicDocument } from "../types/value/document"
 import type { GroupField, NestedGroupField } from "../types/value/group"
 import type { FilledImageFieldImage, ImageField } from "../types/value/image"
 import { LinkType } from "../types/value/link"
 import type { LinkField } from "../types/value/link"
-import type { LinkToMediaField } from "../types/value/linkToMedia"
-import type { RTImageNode, RTInlineNode } from "../types/value/richText"
+import type { RTInlineNode } from "../types/value/richText"
 import { type RichTextField, RichTextNodeType } from "../types/value/richText"
 import type { SharedSlice } from "../types/value/sharedSlice"
 import type { Slice } from "../types/value/slice"
@@ -28,7 +26,8 @@ import type { AnyRegularField } from "../types/value/types"
 
 import * as isFilled from "../helpers/isFilled"
 
-import * as is from "./migrationIsField"
+import * as is from "./isMigrationField"
+import * as to from "./toField"
 
 /**
  * A map of asset IDs to asset used to resolve assets when patching migration
@@ -43,99 +42,27 @@ export type AssetMap = Map<MigrationAsset["id"], Asset>
  * relationship field used to resolve content relationships when patching
  * migration Prismic documents.
  *
+ * @typeParam TDocuments - Type of Prismic documents in the repository.
+ *
  * @internal
  */
 export type DocumentMap<TDocuments extends PrismicDocument = PrismicDocument> =
 	Map<
 		| string
 		| TDocuments
-		| MigrationPrismicDocument
-		| MigrationPrismicDocument<TDocuments>,
+		| PrismicMigrationDocument
+		| PrismicMigrationDocument<TDocuments>,
 		| PrismicDocument
-		| (Omit<MigrationPrismicDocument<PrismicDocument>, "id"> & { id: string })
+		| (Omit<PrismicMigrationDocument<PrismicDocument>, "id"> & { id: string })
 	>
 
 /**
- * Convert an asset to an image field.
- */
-const assetToImageField = ({
-	id,
-	url,
-	width,
-	height,
-	alt,
-	credits,
-}: Asset): ImageField<never, "filled"> => {
-	return {
-		id,
-		url,
-		dimensions: { width: width!, height: height! },
-		edit: { x: 0, y: 0, zoom: 0, background: "transparent" },
-		alt: alt || null,
-		copyright: credits || null,
-	}
-}
-
-/**
- * Convert an asset to a link to media field.
- */
-const assetToLinkToMediaField = ({
-	id,
-	filename,
-	kind,
-	url,
-	size,
-	width,
-	height,
-}: Asset): LinkToMediaField<"filled"> => {
-	return {
-		id,
-		link_type: LinkType.Media,
-		name: filename,
-		kind,
-		url,
-		size: `${size}`,
-		width: width ? `${width}` : undefined,
-		height: height ? `${height}` : undefined,
-	}
-}
-
-/**
- * Convert an asset to an RT image node.
- */
-const assetToRTImageNode = (asset: Asset): RTImageNode => {
-	return {
-		...assetToImageField(asset),
-		type: RichTextNodeType.image,
-	}
-}
-
-/**
- * Convert a document to a content relationship field.
- */
-const documentToContentRelationship = <
-	TDocuments extends PrismicDocument = PrismicDocument,
->(
-	document:
-		| TDocuments
-		| (Omit<MigrationPrismicDocument, "id"> & { id: string }),
-): FilledContentRelationshipField => {
-	return {
-		link_type: LinkType.Document,
-		id: document.id,
-		uid: document.uid || undefined,
-		type: document.type,
-		tags: document.tags || [],
-		lang: document.lang,
-		url: undefined,
-		slug: undefined,
-		isBroken: false,
-		data: undefined,
-	}
-}
-
-/**
- * Inherit query parameters from an original URL to a new URL.
+ * Inherits query parameters from an original URL to a new URL.
+ *
+ * @param url - The new URL.
+ * @param original - The original URL to inherit query parameters from.
+ *
+ * @returns The new URL with query parameters inherited from the original URL.
  */
 const inheritQueryParams = (url: string, original: string): string => {
 	const queryParams = original.split("?")[1] || ""
@@ -144,7 +71,15 @@ const inheritQueryParams = (url: string, original: string): string => {
 }
 
 /**
- * Patch a slice zone.
+ * Patches references in a slice zone field.
+ *
+ * @typeParam TDocuments - Type of Prismic documents in the repository.
+ *
+ * @param sliceZone - The slice zone to patch.
+ * @param assets - A map of assets available in the Prismic repository.
+ * @param documents - A map of documents available in the Prismic repository.
+ *
+ * @returns The patched slice zone.
  */
 const patchSliceZone = async <
 	TDocuments extends PrismicDocument = PrismicDocument,
@@ -177,7 +112,15 @@ const patchSliceZone = async <
 }
 
 /**
- * Patch a rich text field.
+ * Patches references in a rich text field.
+ *
+ * @typeParam TDocuments - Type of Prismic documents in the repository.
+ *
+ * @param richText - The rich text field to patch.
+ * @param assets - A map of assets available in the Prismic repository.
+ * @param documents - A map of documents available in the Prismic repository.
+ *
+ * @returns The patched rich text field.
  */
 const patchRichText = async <
 	TDocuments extends PrismicDocument = PrismicDocument,
@@ -234,7 +177,7 @@ const patchRichText = async <
 
 			if (asset) {
 				result.push({
-					...assetToRTImageNode(asset),
+					...to.rtImageNode(asset),
 					linkTo: isFilled.link(linkTo) ? linkTo : undefined,
 				})
 			}
@@ -245,7 +188,15 @@ const patchRichText = async <
 }
 
 /**
- * Patch a group field.
+ * Patches references in a group field.
+ *
+ * @typeParam TDocuments - Type of Prismic documents in the repository.
+ *
+ * @param group - The group field to patch.
+ * @param assets - A map of assets available in the Prismic repository.
+ * @param documents - A map of documents available in the Prismic repository.
+ *
+ * @returns The patched group field.
  */
 const patchGroup = async <
 	TMigrationGroup extends GroupFieldToMigrationField<
@@ -280,10 +231,18 @@ const patchGroup = async <
 }
 
 /**
- * Patch a link field.
+ * Patches references in a link field.
+ *
+ * @typeParam TDocuments - Type of Prismic documents in the repository.
+ *
+ * @param link - The link field to patch.
+ * @param assets - A map of assets available in the Prismic repository.
+ * @param documents - A map of documents available in the Prismic repository.
+ *
+ * @returns The patched link field.
  */
 const patchLink = async <TDocuments extends PrismicDocument = PrismicDocument>(
-	link: MigrationLinkField | LinkField,
+	link: LinkMigrationField | LinkField,
 	assets: AssetMap,
 	documents: DocumentMap<TDocuments>,
 ): Promise<LinkField> => {
@@ -296,14 +255,14 @@ const patchLink = async <TDocuments extends PrismicDocument = PrismicDocument>(
 				const maybeRelationship = documents.get(resolved)
 
 				if (maybeRelationship) {
-					return documentToContentRelationship(maybeRelationship)
+					return to.contentRelationship(maybeRelationship)
 				}
 			}
 		} else if ("migrationType" in link) {
 			// Migration link field
 			const asset = assets.get(link.id)
 			if (asset) {
-				return assetToLinkToMediaField(asset)
+				return to.linkToMediaField(asset)
 			}
 		} else if ("link_type" in link) {
 			switch (link.link_type) {
@@ -334,7 +293,7 @@ const patchLink = async <TDocuments extends PrismicDocument = PrismicDocument>(
 			const maybeRelationship = documents.get(link.id)
 
 			if (maybeRelationship) {
-				return documentToContentRelationship(maybeRelationship)
+				return to.contentRelationship(maybeRelationship)
 			}
 		}
 	}
@@ -345,10 +304,15 @@ const patchLink = async <TDocuments extends PrismicDocument = PrismicDocument>(
 }
 
 /**
- * Patch an image field.
+ * Patches references in an image field.
+ *
+ * @param image - The image field to patch.
+ * @param assets - A map of assets available in the Prismic repository.
+ *
+ * @returns The patched image field.
  */
 const patchImage = (
-	image: MigrationImageField | ImageField,
+	image: ImageMigrationField | ImageField,
 	assets: AssetMap,
 ): ImageField => {
 	if (image) {
@@ -359,7 +323,7 @@ const patchImage = (
 			// Migration image field
 			const asset = assets.get(image.id)
 			if (asset) {
-				return assetToImageField(asset)
+				return to.imageField(asset)
 			}
 		} else if (
 			"dimensions" in image &&
@@ -419,6 +383,18 @@ const patchImage = (
 	return {}
 }
 
+/**
+ * Patches references in a record of Prismic field.
+ *
+ * @typeParam TFields - Type of the record of Prismic fields.
+ * @typeParam TDocuments - Type of Prismic documents in the repository.
+ *
+ * @param record - The link field to patch.
+ * @param assets - A map of assets available in the Prismic repository.
+ * @param documents - A map of documents available in the Prismic repository.
+ *
+ * @returns The patched record.
+ */
 const patchRecord = async <
 	TFields extends Record<string, AnyRegularField | GroupField | SliceZone>,
 	TDocuments extends PrismicDocument = PrismicDocument,
@@ -448,10 +424,21 @@ const patchRecord = async <
 	return result as TFields
 }
 
+/**
+ * Patches references in a document's data.
+ *
+ * @typeParam TDocuments - Type of Prismic documents in the repository.
+ *
+ * @param data - The document data to patch.
+ * @param assets - A map of assets available in the Prismic repository.
+ * @param documents - A map of documents available in the Prismic repository.
+ *
+ * @returns The patched document data.
+ */
 export const patchMigrationDocumentData = async <
 	TDocuments extends PrismicDocument = PrismicDocument,
 >(
-	data: MigrationPrismicDocument<TDocuments>["data"],
+	data: PrismicMigrationDocument<TDocuments>["data"],
 	assets: AssetMap,
 	documents: DocumentMap<TDocuments>,
 ): Promise<TDocuments["data"]> => {

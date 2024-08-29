@@ -41,36 +41,36 @@ expectType<TypeEqual<FooDocument[], prismic.PrismicDocument[]>>(false)
 
 // Default
 const defaultCreateAsset = defaultMigration.createAsset("url", "name")
-expectType<TypeOf<prismic.MigrationImageField, typeof defaultCreateAsset>>(true)
+expectType<TypeOf<prismic.ImageMigrationField, typeof defaultCreateAsset>>(true)
 expectType<
-	TypeEqual<typeof defaultCreateAsset.image, prismic.MigrationImageField>
+	TypeEqual<typeof defaultCreateAsset.image, prismic.ImageMigrationField>
 >(true)
 expectType<
 	TypeEqual<
 		typeof defaultCreateAsset.linkToMedia,
-		prismic.MigrationLinkToMediaField
+		prismic.LinkToMediaMigrationField
 	>
 >(true)
 expectType<
-	TypeOf<prismic.MigrationLinkField, typeof defaultCreateAsset.linkToMedia>
+	TypeOf<prismic.LinkMigrationField, typeof defaultCreateAsset.linkToMedia>
 >(true)
 
 // Documents
 const documentsCreateAsset = defaultMigration.createAsset("url", "name")
-expectType<TypeOf<prismic.MigrationImageField, typeof documentsCreateAsset>>(
+expectType<TypeOf<prismic.ImageMigrationField, typeof documentsCreateAsset>>(
 	true,
 )
 expectType<
-	TypeEqual<typeof documentsCreateAsset.image, prismic.MigrationImageField>
+	TypeEqual<typeof documentsCreateAsset.image, prismic.ImageMigrationField>
 >(true)
 expectType<
 	TypeEqual<
 		typeof documentsCreateAsset.linkToMedia,
-		prismic.MigrationLinkToMediaField
+		prismic.LinkToMediaMigrationField
 	>
 >(true)
 expectType<
-	TypeOf<prismic.MigrationLinkField, typeof documentsCreateAsset.linkToMedia>
+	TypeOf<prismic.LinkMigrationField, typeof documentsCreateAsset.linkToMedia>
 >(true)
 
 /**
@@ -88,7 +88,7 @@ const defaultCreateDocument = defaultMigration.createDocument(
 	"",
 )
 expectType<
-	TypeEqual<typeof defaultCreateDocument, prismic.MigrationPrismicDocument>
+	TypeEqual<typeof defaultCreateDocument, prismic.PrismicMigrationDocument>
 >(true)
 
 // Documents
@@ -104,6 +104,6 @@ const documentsCreateDocument = documentsMigration.createDocument(
 expectType<
 	TypeEqual<
 		typeof documentsCreateDocument,
-		prismic.MigrationPrismicDocument<FooDocument>
+		prismic.PrismicMigrationDocument<FooDocument>
 	>
 >(true)

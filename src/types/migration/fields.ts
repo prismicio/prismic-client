@@ -9,7 +9,7 @@ import type { LinkField } from "../value/link"
 import type { LinkToMediaField } from "../value/linkToMedia"
 
 import type { MigrationAsset } from "./asset"
-import type { MigrationPrismicDocument } from "./document"
+import type { PrismicMigrationDocument } from "./document"
 
 export const MigrationFieldType = {
 	Image: "image",
@@ -19,7 +19,7 @@ export const MigrationFieldType = {
 /**
  * An alternate version of the {@link ImageField} for use with the migration API.
  */
-export type MigrationImageField =
+export type ImageMigrationField =
 	| (MigrationAsset & {
 			migrationType: typeof MigrationFieldType.Image
 	  })
@@ -29,7 +29,7 @@ export type MigrationImageField =
  * An alternate version of the {@link LinkToMediaField} for use with the
  * migration API.
  */
-export type MigrationLinkToMediaField =
+export type LinkToMediaMigrationField =
 	| (MigrationAsset & {
 			migrationType: typeof MigrationFieldType.LinkToMedia
 	  })
@@ -39,18 +39,18 @@ export type MigrationLinkToMediaField =
  * An alternate version of the {@link ContentRelationshipField} for use with the
  * migration API.
  */
-export type MigrationContentRelationshipField =
+export type ContentRelationshipMigrationField =
 	| PrismicDocument
 	| (() =>
-			| Promise<PrismicDocument | MigrationPrismicDocument | undefined>
+			| Promise<PrismicDocument | PrismicMigrationDocument | undefined>
 			| PrismicDocument
-			| MigrationPrismicDocument
+			| PrismicMigrationDocument
 			| undefined)
 	| undefined
 
 /**
  * An alternate version of the {@link LinkField} for use with the migration API.
  */
-export type MigrationLinkField =
-	| MigrationLinkToMediaField
-	| MigrationContentRelationshipField
+export type LinkMigrationField =
+	| LinkToMediaMigrationField
+	| ContentRelationshipMigrationField

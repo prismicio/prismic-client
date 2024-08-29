@@ -1,16 +1,16 @@
-import * as is from "./lib/migrationIsField"
+import * as is from "./lib/isMigrationField"
 
 import type { Asset } from "./types/api/asset/asset"
 import type { MigrationAsset } from "./types/migration/asset"
 import type {
 	FieldsToMigrationFields,
-	MigrationPrismicDocument,
-	MigrationPrismicDocumentParams,
+	PrismicMigrationDocument,
+	PrismicMigrationDocumentParams,
 } from "./types/migration/document"
 import {
+	type ImageMigrationField,
+	type LinkToMediaMigrationField,
 	MigrationFieldType,
-	type MigrationImageField,
-	type MigrationLinkToMediaField,
 } from "./types/migration/fields"
 import type { PrismicDocument } from "./types/value/document"
 import type { GroupField } from "./types/value/group"
@@ -102,16 +102,16 @@ const discoverAssets = (
  * @typeParam TType - Type(s) to match `TMigrationDocuments` against.
  */
 type ExtractMigrationDocumentType<
-	TMigrationDocuments extends MigrationPrismicDocument,
+	TMigrationDocuments extends PrismicMigrationDocument,
 	TType extends TMigrationDocuments["type"],
 > =
 	Extract<TMigrationDocuments, { type: TType }> extends never
 		? TMigrationDocuments
 		: Extract<TMigrationDocuments, { type: TType }>
 
-type CreateAssetReturnType = MigrationImageField & {
-	image: MigrationImageField
-	linkToMedia: MigrationLinkToMediaField
+type CreateAssetReturnType = ImageMigrationField & {
+	image: ImageMigrationField
+	linkToMedia: LinkToMediaMigrationField
 }
 
 const SINGLE_KEY = "__SINGLE__"
@@ -125,14 +125,14 @@ const SINGLE_KEY = "__SINGLE__"
 export class Migration<
 	TDocuments extends PrismicDocument = PrismicDocument,
 	TMigrationDocuments extends
-		MigrationPrismicDocument<TDocuments> = MigrationPrismicDocument<TDocuments>,
+		PrismicMigrationDocument<TDocuments> = PrismicMigrationDocument<TDocuments>,
 > {
 	/**
 	 * @internal
 	 */
 	documents: {
 		document: TMigrationDocuments
-		params: MigrationPrismicDocumentParams
+		params: PrismicMigrationDocumentParams
 	}[] = []
 	#indexedDocuments: Record<string, Record<string, TMigrationDocuments>> = {}
 
@@ -194,7 +194,7 @@ export class Migration<
 
 				asset = {
 					id: fileOrAsset.id,
-					file: fileOrAsset.url,
+					file: url,
 					filename,
 					notes: undefined,
 					credits,
@@ -224,7 +224,22 @@ export class Migration<
 			}
 		}
 
-		this.assets.set(asset.id, asset)
+		const maybeAsset = this.assets.get(asset.id)
+
+		if (maybeAsset) {
+			// Consolidate existing asset with new asset value if possible
+			this.assets.set(asset.id, {
+				...maybeAsset,
+				notes: asset.notes || maybeAsset.notes,
+				credits: asset.credits || maybeAsset.credits,
+				alt: asset.alt || maybeAsset.alt,
+				tags: Array.from(
+					new Set([...(maybeAsset.tags || []), ...(asset.tags || [])]),
+				),
+			})
+		} else {
+			this.assets.set(asset.id, asset)
+		}
 
 		return {
 			migrationType: MigrationFieldType.Image,
@@ -242,8 +257,8 @@ export class Migration<
 
 	createDocument<TType extends TMigrationDocuments["type"]>(
 		document: ExtractMigrationDocumentType<TMigrationDocuments, TType>,
-		documentName: MigrationPrismicDocumentParams["documentName"],
-		params: Omit<MigrationPrismicDocumentParams, "documentName"> = {},
+		documentName: PrismicMigrationDocumentParams["documentName"],
+		params: Omit<PrismicMigrationDocumentParams, "documentName"> = {},
 	): ExtractMigrationDocumentType<TMigrationDocuments, TType> {
 		this.documents.push({
 			document,

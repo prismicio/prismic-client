@@ -329,20 +329,20 @@ export type {
 export { MigrationFieldType } from "./types/migration/fields"
 
 export type {
-	MigrationPrismicDocument,
+	PrismicMigrationDocument,
 	RichTextFieldToMigrationField,
 } from "./types/migration/document"
 
 export type {
-	MigrationImageField,
-	MigrationLinkToMediaField,
-	MigrationContentRelationshipField,
-	MigrationLinkField,
+	ImageMigrationField,
+	LinkToMediaMigrationField,
+	ContentRelationshipMigrationField,
+	LinkMigrationField,
 } from "./types/migration/fields"
 
 export type {
-	MigrationRTImageNode,
-	MigrationRTLinkNode,
+	RTImageMigrationNode,
+	RTLinkMigrationNode,
 } from "./types/migration/richText"
 
 // API - Types representing Prismic Rest API V2 responses.

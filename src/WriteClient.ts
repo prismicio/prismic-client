@@ -24,8 +24,8 @@ import {
 	type PutDocumentParams,
 } from "./types/api/migration/document"
 import type {
-	MigrationPrismicDocument,
-	MigrationPrismicDocumentParams,
+	PrismicMigrationDocument,
+	PrismicMigrationDocumentParams,
 } from "./types/migration/document"
 import type { PrismicDocument } from "./types/value/document"
 
@@ -35,6 +35,8 @@ import type { FetchParams, RequestInitLike } from "./BaseClient"
 import { Client } from "./Client"
 import type { ClientConfig } from "./Client"
 import type { Migration } from "./Migration"
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { createMigration } from "./createMigration"
 
 /**
  * Extracts one or more Prismic document types that match a given Prismic
@@ -52,10 +54,29 @@ type ExtractDocumentType<
 		? TDocuments
 		: Extract<TDocuments, { type: TDocumentType }>
 
+/**
+ * A query response from the Prismic asset API. The response contains pagination
+ * metadata and a list of matching results for the query.
+ */
 type GetAssetsReturnType = {
+	/**
+	 * Found assets for the query.
+	 */
 	results: Asset[]
+
+	/**
+	 * Total number of assets found for the query.
+	 */
 	total_results_size: number
+
+	/**
+	 * IDs of assets that were not found when filtering by IDs.
+	 */
 	missing_ids?: string[]
+
+	/**
+	 * A function to fectch the next page of assets if available.
+	 */
 	next?: () => Promise<GetAssetsReturnType>
 }
 
@@ -120,6 +141,15 @@ export class WriteClient<
 		}
 	}
 
+	/**
+	 * Creates a migration release on the Prismic repository based on the provided
+	 * prepared migration.
+	 *
+	 * @param migration - A migration prepared with {@link createMigration}.
+	 * @param params - An event listener and additional fetch parameters.
+	 *
+	 * @see Prismic migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
+	 */
 	async migrate(
 		migration: Migration<TDocuments>,
 		{
@@ -147,6 +177,16 @@ export class WriteClient<
 		)
 	}
 
+	/**
+	 * Creates assets in the Prismic repository's media library.
+	 *
+	 * @param migration - A migration prepared with {@link createMigration}.
+	 * @param params - An event listener and additional fetch parameters.
+	 *
+	 * @returns A map of assets available in the Prismic repository.
+	 *
+	 * @internal This method is one of the step performed by the {@link migrate} method.
+	 */
 	private async migrateCreateAssets(
 		migration: Migration<TDocuments>,
 		{
@@ -225,6 +265,16 @@ export class WriteClient<
 		return assets
 	}
 
+	/**
+	 * Creates documents in the Prismic repository's migration release.
+	 *
+	 * @param migration - A migration prepared with {@link createMigration}.
+	 * @param params - An event listener and additional fetch parameters.
+	 *
+	 * @returns A map of documents available in the Prismic repository.
+	 *
+	 * @internal This method is one of the step performed by the {@link migrate} method.
+	 */
 	private async migrateCreateDocuments(
 		migration: Migration<TDocuments>,
 		{
@@ -250,31 +300,28 @@ export class WriteClient<
 			documents.set(document.id, document)
 		}
 
-		const masterLocaleDocuments: {
-			document: MigrationPrismicDocument<TDocuments>
-			params: MigrationPrismicDocumentParams
-		}[] = []
-		const nonMasterLocaleDocuments: {
-			document: MigrationPrismicDocument<TDocuments>
-			params: MigrationPrismicDocumentParams
+		const sortedDocuments: {
+			document: PrismicMigrationDocument<TDocuments>
+			params: PrismicMigrationDocumentParams
 		}[] = []
 
+		// We create an array with non-master locale documents last because
+		// we need their master locale document to be created first.
 		for (const { document, params } of migration.documents) {
 			if (document.lang === masterLocale) {
-				masterLocaleDocuments.push({ document, params })
+				sortedDocuments.unshift({ document, params })
 			} else {
-				nonMasterLocaleDocuments.push({ document, params })
+				sortedDocuments.push({ document, params })
 			}
 		}
 
-		// Create master locale documents first
 		let i = 0
 		let created = 0
-		if (masterLocaleDocuments.length) {
-			for (const { document, params } of masterLocaleDocuments) {
+		if (sortedDocuments.length) {
+			for (const { document, params } of sortedDocuments) {
 				if (document.id && documents.has(document.id)) {
 					reporter?.(
-						`Skipping existing master locale document \`${params.documentName}\` - ${++i}/${masterLocaleDocuments.length}`,
+						`Skipping existing document \`${params.documentName}\` - ${++i}/${sortedDocuments.length}`,
 					)
 
 					// Index the migration document
@@ -282,15 +329,38 @@ export class WriteClient<
 				} else {
 					created++
 					reporter?.(
-						`Creating master locale document \`${params.documentName}\` - ${++i}/${masterLocaleDocuments.length}`,
+						`Creating document \`${params.documentName}\` - ${++i}/${sortedDocuments.length}`,
 					)
+
+					// Resolve master language document ID for non-master locale documents
+					let masterLanguageDocumentID: string | undefined
+					if (document.lang !== masterLocale) {
+						if (params.masterLanguageDocument) {
+							if (typeof params.masterLanguageDocument === "function") {
+								const masterLanguageDocument =
+									await params.masterLanguageDocument()
+
+								if (masterLanguageDocument) {
+									masterLanguageDocumentID = documents.get(
+										masterLanguageDocument,
+									)?.id
+								}
+							} else {
+								masterLanguageDocumentID = params.masterLanguageDocument.id
+							}
+						} else if (document.alternate_languages) {
+							masterLanguageDocumentID = document.alternate_languages.find(
+								({ lang }) => lang === masterLocale,
+							)?.id
+						}
+					}
 
 					const { id } = await this.createDocument(
 						// We'll upload docuements data later on.
 						{ ...document, data: {} },
 						params.documentName,
 						{
-							...params,
+							masterLanguageDocumentID,
 							...fetchParams,
 						},
 					)
@@ -305,73 +375,25 @@ export class WriteClient<
 		}
 
 		if (created > 0) {
-			reporter?.(`Created ${created} master locale documents`)
+			reporter?.(`Created ${created} documents`)
 		} else {
-			reporter?.(`No master locale documents to create`)
-		}
-
-		// Create non-master locale documents
-		i = 0
-		created = 0
-		if (nonMasterLocaleDocuments.length) {
-			for (const { document, params } of nonMasterLocaleDocuments) {
-				if (document.id && documents.has(document.id)) {
-					reporter?.(
-						`Skipping existing non-master locale document \`${params.documentName}\` - ${++i}/${nonMasterLocaleDocuments.length}`,
-					)
-
-					documents.set(document, documents.get(document.id)!)
-				} else {
-					created++
-					reporter?.(
-						`Creating non-master locale document \`${params.documentName}\` - ${++i}/${nonMasterLocaleDocuments.length}`,
-					)
-
-					// Resolve master language document ID
-					let masterLanguageDocumentID: string | undefined
-					if (params.masterLanguageDocument) {
-						if (typeof params.masterLanguageDocument === "function") {
-							const masterLanguageDocument =
-								await params.masterLanguageDocument()
-
-							if (masterLanguageDocument) {
-								masterLanguageDocumentID = documents.get(
-									masterLanguageDocument,
-								)?.id
-							}
-						} else {
-							masterLanguageDocumentID = params.masterLanguageDocument.id
-						}
-					} else if (document.alternate_languages) {
-						masterLanguageDocumentID = document.alternate_languages.find(
-							({ lang }) => lang === masterLocale,
-						)?.id
-					}
-
-					const { id } = await this.createDocument(
-						// We'll upload docuements data later on.
-						{ ...document, data: {} },
-						params.documentName,
-						{
-							masterLanguageDocumentID,
-							...fetchParams,
-						},
-					)
-
-					documents.set(document, { ...document, id })
-				}
-			}
-		}
-
-		if (created > 0) {
-			reporter?.(`Created ${created} non-master locale documents`)
-		} else {
-			reporter?.(`No non-master locale documents to create`)
+			reporter?.(`No documents to create`)
 		}
 
 		return documents
 	}
 
+	/**
+	 * Updates documents in the Prismic repository's migration release with their
+	 * patched data.
+	 *
+	 * @param migration - A migration prepared with {@link createMigration}.
+	 * @param assets - A map of assets available in the Prismic repository.
+	 * @param documents - A map of documents available in the Prismic repository.
+	 * @param params - An event listener and additional fetch parameters.
+	 *
+	 * @internal This method is one of the step performed by the {@link migrate} method.
+	 */
 	private async migrateUpdateDocuments(
 		migration: Migration<TDocuments>,
 		assets: AssetMap,
@@ -404,6 +426,13 @@ export class WriteClient<
 		}
 	}
 
+	/**
+	 * Queries assets from the Prismic repository's media library.
+	 *
+	 * @param params - Parameters to filter, sort, and paginate results.
+	 *
+	 * @returns A paginated response containing the result of the query.
+	 */
 	async getAssets({
 		pageSize,
 		cursor,
@@ -451,7 +480,7 @@ export class WriteClient<
 			cursor: nextCursor,
 		} = await this.fetch<GetAssetsResult>(
 			url.toString(),
-			this.buildWriteQueryParams({ params }),
+			this.buildAssetAPIQueryParams({ params }),
 		)
 
 		return {
@@ -473,6 +502,15 @@ export class WriteClient<
 		}
 	}
 
+	/**
+	 * Creates an asset in the Prismic media library.
+	 *
+	 * @param file - The file to upload as an asset.
+	 * @param filename - The filename of the asset.
+	 * @param params - Additional asset data and fetch parameters.
+	 *
+	 * @returns The created asset.
+	 */
 	private async createAsset(
 		file: PostAssetParams["file"] | File,
 		filename: string,
@@ -513,7 +551,7 @@ export class WriteClient<
 
 		const asset = await this.fetch<PostAssetResult>(
 			url.toString(),
-			this.buildWriteQueryParams({
+			this.buildAssetAPIQueryParams({
 				method: "POST",
 				body: formData,
 				params,
@@ -527,6 +565,14 @@ export class WriteClient<
 		return asset
 	}
 
+	/**
+	 * Updates an asset in the Prismic media library.
+	 *
+	 * @param id - The ID of the asset to update.
+	 * @param params - The asset data to update and additional fetch parameters.
+	 *
+	 * @returns The updated asset.
+	 */
 	private async updateAsset(
 		id: string,
 		{
@@ -550,7 +596,7 @@ export class WriteClient<
 
 		return this.fetch<PatchAssetResult>(
 			url.toString(),
-			this.buildWriteQueryParams<PatchAssetParams>({
+			this.buildAssetAPIQueryParams<PatchAssetParams>({
 				method: "PATCH",
 				body: {
 					notes,
@@ -567,6 +613,12 @@ export class WriteClient<
 	// We don't want to expose those utilities for now,
 	// and we don't have any internal use for them yet.
 
+	/**
+	 * Deletes an asset from the Prismic media library.
+	 *
+	 * @param assetOrID - The asset or ID of the asset to delete.
+	 * @param params - Additional fetch parameters.
+	 */
 	// private async deleteAsset(
 	// 	assetOrID: string | Asset,
 	// 	params?: FetchParams,
@@ -578,10 +630,16 @@ export class WriteClient<
 
 	// 	await this.fetch(
 	// 		url.toString(),
-	// 		this.buildWriteQueryParams({ method: "DELETE", params }),
+	// 		this.buildAssetAPIQueryParams({ method: "DELETE", params }),
 	// 	)
 	// }
 
+	/**
+	 * Deletes multiple assets from the Prismic media library.
+	 *
+	 * @param assetsOrIDs - An array of asset IDs or assets to delete.
+	 * @param params - Additional fetch parameters.
+	 */
 	// private async deleteAssets(
 	// 	assetsOrIDs: (string | Asset)[],
 	// 	params?: FetchParams,
@@ -590,7 +648,7 @@ export class WriteClient<
 
 	// 	await this.fetch(
 	// 		url.toString(),
-	// 		this.buildWriteQueryParams<BulkDeleteAssetsParams>({
+	// 		this.buildAssetAPIQueryParams<BulkDeleteAssetsParams>({
 	// 			method: "POST",
 	// 			body: {
 	// 				ids: assetsOrIDs.map((assetOrID) =>
@@ -602,6 +660,14 @@ export class WriteClient<
 	// 	)
 	// }
 
+	/**
+	 * Fetches a foreign asset from a URL.
+	 *
+	 * @param url - The URL of the asset to fetch.
+	 * @param params - Additional fetch parameters.
+	 *
+	 * @returns A file representing the fetched asset.
+	 */
 	private async fetchForeignAsset(
 		url: string,
 		params: FetchParams = {},
@@ -632,7 +698,20 @@ export class WriteClient<
 		})
 	}
 
+	/**
+	 * {@link resolveAssetTagIDs} rate limiter.
+	 */
 	private _resolveAssetTagIDsLimit = pLimit({ limit: 1 })
+
+	/**
+	 * Resolves asset tag IDs from tag names or IDs.
+	 *
+	 * @param tagNamesOrIDs - An array of tag names or IDs to resolve.
+	 * @param params - Whether or not missing tags should be created and
+	 *   additional fetch parameters.
+	 *
+	 * @returns An array of resolved tag IDs.
+	 */
 	private async resolveAssetTagIDs(
 		tagNamesOrIDs: string[] = [],
 		{ createTags, ...params }: { createTags?: boolean } & FetchParams = {},
@@ -676,6 +755,17 @@ export class WriteClient<
 		})
 	}
 
+	/**
+	 * Creates a tag in the asset API.
+	 *
+	 * @remarks
+	 * Tags should be at least 3 characters long and 20 characters at most.
+	 *
+	 * @param name - The name of the tag to create.
+	 * @param params - Additional fetch parameters.
+	 *
+	 * @returns The created tag.
+	 */
 	private async createAssetTag(
 		name: string,
 		params?: FetchParams,
@@ -684,7 +774,7 @@ export class WriteClient<
 
 		return this.fetch<PostTagResult>(
 			url.toString(),
-			this.buildWriteQueryParams<PostTagParams>({
+			this.buildAssetAPIQueryParams<PostTagParams>({
 				method: "POST",
 				body: { name },
 				params,
@@ -692,20 +782,42 @@ export class WriteClient<
 		)
 	}
 
+	/**
+	 * Queries existing tags from the asset API.
+	 *
+	 * @param params - Additional fetch parameters.
+	 *
+	 * @returns An array of existing tags.
+	 */
 	private async getAssetTags(params?: FetchParams): Promise<Tag[]> {
 		const url = new URL("tags", this.assetAPIEndpoint)
 
 		const { items } = await this.fetch<GetTagsResult>(
 			url.toString(),
-			this.buildWriteQueryParams({ params }),
+			this.buildAssetAPIQueryParams({ params }),
 		)
 
 		return items
 	}
 
+	/**
+	 * Creates a document in the repository's migration release.
+	 *
+	 * @typeParam TType - Type of Prismic documents to create.
+	 *
+	 * @param document - The document data to create.
+	 * @param documentName - The name of the document to create which will be
+	 *   displayed in the editor.
+	 * @param params - Document master language document ID and additional fetch
+	 *   parameters.
+	 *
+	 * @returns The ID of the created document.
+	 *
+	 * @see Prismic migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
+	 */
 	private async createDocument<TType extends TDocuments["type"]>(
-		document: MigrationPrismicDocument<ExtractDocumentType<TDocuments, TType>>,
-		documentName: MigrationPrismicDocumentParams["documentName"],
+		document: PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>>,
+		documentName: PrismicMigrationDocumentParams["documentName"],
 		{
 			masterLanguageDocumentID,
 			...params
@@ -715,8 +827,7 @@ export class WriteClient<
 
 		const result = await this.fetch<PostDocumentResult>(
 			url.toString(),
-			this.buildWriteQueryParams<PostDocumentParams>({
-				isMigrationAPI: true,
+			this.buildMigrationAPIQueryParams<PostDocumentParams>({
 				method: "POST",
 				body: {
 					title: documentName,
@@ -734,13 +845,24 @@ export class WriteClient<
 		return { id: result.id }
 	}
 
+	/**
+	 * Updates an existing document in the repository's migration release.
+	 *
+	 * @typeParam TType - Type of Prismic documents to update.
+	 *
+	 * @param id - The ID of the document to update.
+	 * @param document - The document data to update.
+	 * @param params - Additional fetch parameters.
+	 *
+	 * @see Prismic migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
+	 */
 	private async updateDocument<TType extends TDocuments["type"]>(
 		id: string,
 		document: Pick<
-			MigrationPrismicDocument<ExtractDocumentType<TDocuments, TType>>,
+			PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>>,
 			"uid" | "tags" | "data"
 		> & {
-			documentName?: MigrationPrismicDocumentParams["documentName"]
+			documentName?: PrismicMigrationDocumentParams["documentName"]
 		},
 		params?: FetchParams,
 	): Promise<void> {
@@ -748,8 +870,7 @@ export class WriteClient<
 
 		await this.fetch<PutDocumentResult>(
 			url.toString(),
-			this.buildWriteQueryParams<PutDocumentParams>({
-				isMigrationAPI: true,
+			this.buildMigrationAPIQueryParams({
 				method: "PUT",
 				body: {
 					title: document.documentName,
@@ -762,15 +883,71 @@ export class WriteClient<
 		)
 	}
 
-	private buildWriteQueryParams<TBody = FormData | Record<string, unknown>>({
+	/**
+	 * Builds fetch parameters for the asset API.
+	 *
+	 * @typeParam TBody - Type of the body to send in the fetch request.
+	 *
+	 * @param params - Method, body, and additional fetch parameters.
+	 *
+	 * @returns An object that can be fetched to interact with the asset API.
+	 *
+	 * @see Prismic asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+	 */
+	private buildAssetAPIQueryParams<TBody = FormData | Record<string, unknown>>({
 		method,
 		body,
-		isMigrationAPI,
 		params,
 	}: {
 		method?: string
 		body?: TBody
-		isMigrationAPI?: boolean
+		params?: FetchParams
+	}): FetchParams {
+		const headers: Record<string, string> = {
+			...params?.fetchOptions?.headers,
+			authorization: `Bearer ${this.writeToken}`,
+			repository: this.repositoryName,
+		}
+
+		let _body: FormData | string | undefined
+		if (body instanceof FormData) {
+			_body = body
+		} else if (body) {
+			_body = JSON.stringify(body)
+			headers["content-type"] = "application/json"
+		}
+
+		return {
+			...params,
+			fetchOptions: {
+				...params?.fetchOptions,
+				method,
+				body: _body,
+				headers,
+			},
+		}
+	}
+
+	/**
+	 * Builds fetch parameters for the migration API.
+	 *
+	 * @typeParam TBody - Type of the body to send in the fetch request.
+	 *
+	 * @param params - Method, body, and additional fetch options.
+	 *
+	 * @returns An object that can be fetched to interact with the migration API.
+	 *
+	 * @see Prismic migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
+	 */
+	private buildMigrationAPIQueryParams<
+		TBody extends PostDocumentParams | PutDocumentParams,
+	>({
+		method,
+		body,
+		params,
+	}: {
+		method?: string
+		body: TBody
 		params?: FetchParams
 	}): FetchParams {
 		return {
@@ -778,19 +955,13 @@ export class WriteClient<
 			fetchOptions: {
 				...params?.fetchOptions,
 				method,
-				body: body
-					? body instanceof FormData
-						? body
-						: JSON.stringify(body)
-					: undefined,
+				body: JSON.stringify(body),
 				headers: {
 					...params?.fetchOptions?.headers,
-					authorization: `Bearer ${this.writeToken}`,
+					"content-type": "application/json",
 					repository: this.repositoryName,
-					...(body instanceof FormData
-						? {}
-						: { "content-type": "application/json" }),
-					...(isMigrationAPI ? { "x-api-key": this.migrationAPIKey } : {}),
+					authorization: `Bearer ${this.writeToken}`,
+					"x-api-key": this.migrationAPIKey,
 				},
 			},
 		}

@@ -15,41 +15,69 @@ import type { SharedSlice } from "../value/sharedSlice"
 import type { Slice } from "../value/slice"
 import type { SliceZone } from "../value/sliceZone"
 
-import type { MigrationImageField, MigrationLinkField } from "./fields"
-import type { MigrationRTImageNode, MigrationRTLinkNode } from "./richText"
+import type { ImageMigrationField, LinkMigrationField } from "./fields"
+import type { RTImageMigrationNode, RTLinkMigrationNode } from "./richText"
 
+/**
+ * A utility type that converts a rich text text node to a rich text text
+ * migration node.
+ *
+ * @typeParam TRTNode - Rich text text node type to convert.
+ */
 type RichTextTextNodeToMigrationField<TRTNode extends RTTextNode> = Omit<
 	TRTNode,
 	"spans"
 > & {
-	spans: (RTInlineNode | MigrationRTLinkNode)[]
+	spans: (RTInlineNode | RTLinkMigrationNode)[]
 }
 
+/**
+ * A utility type that converts a rich text block node to a rich text block
+ * migration node.
+ *
+ * @typeParam TRTNode - Rich text block node type to convert.
+ */
 type RichTextBlockNodeToMigrationField<TRTNode extends RTBlockNode> =
 	TRTNode extends RTImageNode
 		?
-				| MigrationRTImageNode
+				| RTImageMigrationNode
 				| (Omit<RTImageNode, "linkTo"> & {
-						linkTo?: RTImageNode["linkTo"] | MigrationLinkField
+						linkTo?: RTImageNode["linkTo"] | LinkMigrationField
 				  })
 		: TRTNode extends RTTextNode
 			? RichTextTextNodeToMigrationField<TRTNode>
 			: TRTNode
 
+/**
+ * A utility type that converts a rich text field to a rich text migration
+ * field.
+ *
+ * @typeParam TField - Rich text field type to convert.
+ */
 export type RichTextFieldToMigrationField<TField extends RichTextField> = {
 	[Index in keyof TField]: RichTextBlockNodeToMigrationField<TField[Index]>
 }
 
+/**
+ * A utility type that converts a regular field to a regular migration field.
+ *
+ * @typeParam TField - Regular field type to convert.
+ */
 type RegularFieldToMigrationField<TField extends AnyRegularField> =
 	| (TField extends ImageField
-			? MigrationImageField
+			? ImageMigrationField
 			: TField extends LinkField
-				? MigrationLinkField
+				? LinkMigrationField
 				: TField extends RichTextField
 					? RichTextFieldToMigrationField<TField>
 					: never)
 	| TField
 
+/**
+ * A utility type that converts a group field to a group migration field.
+ *
+ * @typeParam TField - Group field type to convert.
+ */
 export type GroupFieldToMigrationField<
 	TField extends GroupField | Slice["items"] | SharedSlice["items"],
 > = FieldsToMigrationFields<TField[number]>[]
@@ -62,9 +90,19 @@ type SliceToMigrationField<TField extends Slice | SharedSlice> = Omit<
 	items: GroupFieldToMigrationField<TField["items"]>
 }
 
+/**
+ * A utility type that converts a field to a migration field.
+ *
+ * @typeParam TField - Field type to convert.
+ */
 export type SliceZoneToMigrationField<TField extends SliceZone> =
 	SliceToMigrationField<TField[number]>[]
 
+/**
+ * A utility type that converts a field to a migration field.
+ *
+ * @typeParam TField - Field type to convert.
+ */
 export type FieldToMigrationField<
 	TField extends AnyRegularField | GroupField | SliceZone,
 > = TField extends AnyRegularField
@@ -75,6 +113,12 @@ export type FieldToMigrationField<
 			? SliceZoneToMigrationField<TField>
 			: never
 
+/**
+ * A utility type that converts a record of fields to a record of migration
+ * fields.
+ *
+ * @typeParam TFields - Type of the record of Prismic fields.
+ */
 export type FieldsToMigrationFields<
 	TFields extends Record<string, AnyRegularField | GroupField | SliceZone>,
 > = {
@@ -82,7 +126,7 @@ export type FieldsToMigrationFields<
 }
 
 /**
- * Makes the UID of `MigrationPrismicDocument` optional on custom types without
+ * Makes the UID of `PrismicMigrationDocument` optional on custom types without
  * UID. TypeScript fails to infer correct types if done with a type
  * intersection.
  *
@@ -98,10 +142,10 @@ type MakeUIDOptional<TMigrationDocument extends { uid: string | null }> =
  *
  * @see More details on the migraiton API: {@link https://prismic.io/docs/migration-api-technical-reference}
  */
-export type MigrationPrismicDocument<
-	TDocuments extends PrismicDocument = PrismicDocument,
+export type PrismicMigrationDocument<
+	TDocument extends PrismicDocument = PrismicDocument,
 > =
-	TDocuments extends PrismicDocument<infer TData, infer TType, infer TLang>
+	TDocument extends PrismicDocument<infer TData, infer TType, infer TLang>
 		? MakeUIDOptional<{
 				/**
 				 * Type of the document.
@@ -112,7 +156,7 @@ export type MigrationPrismicDocument<
 				 * The unique identifier for the document. Guaranteed to be unique among
 				 * all Prismic documents of the same type.
 				 */
-				uid: TDocuments["uid"]
+				uid: TDocument["uid"]
 
 				/**
 				 * Language of document.
@@ -126,7 +170,7 @@ export type MigrationPrismicDocument<
 				 * @internal
 				 */
 				// Made optional compared to the original type.
-				id?: TDocuments["id"]
+				id?: TDocument["id"]
 
 				/**
 				 * Alternate language documents from Prismic content API. Used as a
@@ -136,13 +180,13 @@ export type MigrationPrismicDocument<
 				 * @internal
 				 */
 				// Made optional compared to the original type.
-				alternate_languages?: TDocuments["alternate_languages"]
+				alternate_languages?: TDocument["alternate_languages"]
 
 				/**
 				 * Tags associated with document.
 				 */
 				// Made optional compared to the original type.
-				tags?: TDocuments["tags"]
+				tags?: TDocument["tags"]
 
 				/**
 				 * Data contained in the document.
@@ -156,7 +200,7 @@ export type MigrationPrismicDocument<
  *
  * @see More details on the migraiton API: {@link https://prismic.io/docs/migration-api-technical-reference}
  */
-export type MigrationPrismicDocumentParams = {
+export type PrismicMigrationDocumentParams = {
 	/**
 	 * Name of the document displayed in the editor.
 	 */
@@ -165,15 +209,15 @@ export type MigrationPrismicDocumentParams = {
 	/**
 	 * A link to the master language document.
 	 */
-	// We're forced to inline `MigrationContentRelationshipField` here, otherwise
+	// We're forced to inline `ContentRelationshipMigrationField` here, otherwise
 	// it creates a circular reference to itself which makes TypeScript unhappy.
 	// (but I think it's weird and it doesn't make sense :thinking:)
 	masterLanguageDocument?:
 		| PrismicDocument
-		| MigrationPrismicDocument
+		| PrismicMigrationDocument
 		| (() =>
-				| Promise<PrismicDocument | MigrationPrismicDocument | undefined>
+				| Promise<PrismicDocument | PrismicMigrationDocument | undefined>
 				| PrismicDocument
-				| MigrationPrismicDocument
+				| PrismicMigrationDocument
 				| undefined)
 }

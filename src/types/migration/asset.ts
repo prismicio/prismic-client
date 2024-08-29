@@ -1,5 +1,5 @@
 /**
- * An asset to be uploaded to Prismic media library
+ * An asset to be uploaded to Prismic media library.
  */
 export type MigrationAsset = {
 	/**
