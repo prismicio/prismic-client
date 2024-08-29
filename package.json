@@ -82,8 +82,8 @@
 		"imgix-url-builder": "^0.0.5"
 	},
 	"devDependencies": {
-		"@prismicio/mock": "^0.3.7",
-		"@prismicio/types-internal": "^2.6.0",
+		"@prismicio/mock": "^0.3.8-alpha.1",
+		"@prismicio/types-internal": "2.7.0-alpha.2",
 		"@size-limit/preset-small-lib": "^11.1.4",
 		"@trivago/prettier-plugin-sort-imports": "^4.3.0",
 		"@typescript-eslint/eslint-plugin": "^6.21.0",
@@ -111,5 +111,10 @@
 	},
 	"publishConfig": {
 		"access": "public"
+	},
+	"overrides": {
+		"@prismicio/mock": {
+			"@prismicio/client": "7.9.0-alpha.2"
+		}
 	}
 }

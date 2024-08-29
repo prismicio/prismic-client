@@ -39,11 +39,13 @@ it("resolves a link to document field with route resolver", (ctx) => {
 		href: field.url,
 		target: undefined,
 		rel: undefined,
+		text: undefined,
 	})
 	expect(asLinkAttrs(field, { linkResolver: () => "/linkResolver" })).toEqual({
 		href: "/linkResolver",
 		target: undefined,
 		rel: undefined,
+		text: undefined,
 	})
 })
 
@@ -55,11 +57,13 @@ it("resolves a link to document field without route resolver", (ctx) => {
 		href: undefined,
 		target: undefined,
 		rel: undefined,
+		text: undefined,
 	})
 	expect(asLinkAttrs(field, { linkResolver: () => "/linkResolver" })).toEqual({
 		href: "/linkResolver",
 		target: undefined,
 		rel: undefined,
+		text: undefined,
 	})
 })
 
@@ -70,11 +74,13 @@ it("resolves a link to web field", (ctx) => {
 		href: field.url,
 		target: undefined,
 		rel: "noreferrer",
+		text: undefined,
 	})
 	expect(asLinkAttrs(field, { linkResolver: () => "/linkResolver" })).toEqual({
 		href: field.url,
 		target: undefined,
 		rel: "noreferrer",
+		text: undefined,
 	})
 })
 
@@ -85,11 +91,30 @@ it("returns correct target when field has a target", (ctx) => {
 		href: field.url,
 		target: field.target,
 		rel: "noreferrer",
+		text: undefined,
 	})
 	expect(asLinkAttrs(field, { linkResolver: () => "/linkResolver" })).toEqual({
 		href: field.url,
 		target: field.target,
 		rel: "noreferrer",
+		text: undefined,
+	})
+})
+
+it("returns correct text when field has text", (ctx) => {
+	const field = ctx.mock.value.link({ type: "Web", withText: true })
+
+	expect(asLinkAttrs(field)).toEqual({
+		href: field.url,
+		target: undefined,
+		rel: "noreferrer",
+		text: field.text,
+	})
+	expect(asLinkAttrs(field, { linkResolver: () => "/linkResolver" })).toEqual({
+		href: field.url,
+		target: undefined,
+		rel: "noreferrer",
+		text: field.text,
 	})
 })
 
@@ -100,11 +125,64 @@ it("resolves a link to media field", (ctx) => {
 		href: field.url,
 		target: undefined,
 		rel: "noreferrer",
+		text: undefined,
 	})
 	expect(asLinkAttrs(field, { linkResolver: () => "/linkResolver" })).toEqual({
 		href: field.url,
 		target: undefined,
 		rel: "noreferrer",
+		text: undefined,
+	})
+})
+
+it("returns correct text when a link to media field has display text", (ctx) => {
+	const field = ctx.mock.value.link({ type: "Media", withText: true })
+
+	expect(asLinkAttrs(field)).toEqual({
+		href: field.url,
+		target: undefined,
+		rel: "noreferrer",
+		text: field.text,
+	})
+	expect(asLinkAttrs(field, { linkResolver: () => "/linkResolver" })).toEqual({
+		href: field.url,
+		target: undefined,
+		rel: "noreferrer",
+		text: field.text,
+	})
+})
+
+it("resolves a content relationship field", (ctx) => {
+	const field = ctx.mock.value.link({ type: "Document" })
+
+	expect(asLinkAttrs(field)).toEqual({
+		href: field.url,
+		target: undefined,
+		rel: "noreferrer",
+		text: undefined,
+	})
+	expect(asLinkAttrs(field, { linkResolver: () => "/linkResolver" })).toEqual({
+		href: "/linkResolver",
+		target: undefined,
+		rel: undefined,
+		text: undefined,
+	})
+})
+
+it("returns correct text when a content relationship field has display text", (ctx) => {
+	const field = ctx.mock.value.link({ type: "Document", withText: true })
+
+	expect(asLinkAttrs(field)).toEqual({
+		href: field.url,
+		target: undefined,
+		rel: "noreferrer",
+		text: field.text,
+	})
+	expect(asLinkAttrs(field, { linkResolver: () => "/linkResolver" })).toEqual({
+		href: "/linkResolver",
+		target: undefined,
+		rel: undefined,
+		text: field.text,
 	})
 })
 
@@ -116,11 +194,13 @@ it("resolves a document", (ctx) => {
 		href: doc.url,
 		target: undefined,
 		rel: undefined,
+		text: undefined,
 	})
 	expect(asLinkAttrs(doc, { linkResolver: () => "/linkResolver" })).toEqual({
 		href: "/linkResolver",
 		target: undefined,
 		rel: undefined,
+		text: undefined,
 	})
 })
 
