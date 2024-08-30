@@ -40,6 +40,7 @@ export const pLimit = ({
 }): LimitFunction => {
 	const queue: AnyFunction[] = []
 	let activeCount = 0
+	let lastCompletion = 0
 
 	const resumeNext = () => {
 		if (activeCount < limit && queue.length > 0) {
@@ -60,8 +61,10 @@ export const pLimit = ({
 		resolve: (value: unknown) => void,
 		arguments_: unknown[],
 	) => {
-		if (interval) {
-			await sleep(interval)
+		const timeSinceLastCompletion = Date.now() - lastCompletion
+
+		if (interval && timeSinceLastCompletion < interval) {
+			await sleep(interval - timeSinceLastCompletion)
 		}
 		const result = (async () => function_(...arguments_))()
 
@@ -70,6 +73,8 @@ export const pLimit = ({
 		try {
 			await result
 		} catch {}
+
+		lastCompletion = Date.now()
 
 		next()
 	}
