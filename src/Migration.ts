@@ -23,6 +23,8 @@ import type { AnyRegularField } from "./types/value/types"
 
 import * as isFilled from "./helpers/isFilled"
 
+import { validateAssetMetadata } from "./WriteClient"
+
 /**
  * Discover assets in a record of Prismic fields.
  *
@@ -223,6 +225,8 @@ export class Migration<
 				tags,
 			}
 		}
+
+		validateAssetMetadata(asset)
 
 		const maybeAsset = this.assets.get(asset.id)
 

@@ -1,3 +1,4 @@
+import { devMsg } from "./lib/devMsg"
 import { pLimit } from "./lib/pLimit"
 import type { AssetMap, DocumentMap } from "./lib/patchMigrationDocumentData"
 import { patchMigrationDocumentData } from "./lib/patchMigrationDocumentData"
@@ -81,6 +82,115 @@ type GetAssetsReturnType = {
 }
 
 /**
+ * Additional parameters for creating an asset in the Prismic media library.
+ */
+type CreateAssetParams = {
+	/**
+	 * Asset notes.
+	 */
+	notes?: string
+
+	/**
+	 * Asset credits.
+	 */
+	credits?: string
+
+	/**
+	 * Asset alt text.
+	 */
+	alt?: string
+
+	/**
+	 * Asset tags.
+	 */
+	tags?: string[]
+}
+
+/**
+ * Max length for asset notes accepted by the API.
+ */
+const ASSET_NOTES_MAX_LENGTH = 500
+
+/**
+ * Max length for asset credits accepted by the API.
+ */
+const ASSET_CREDITS_MAX_LENGTH = 500
+
+/**
+ * Max length for asset alt text accepted by the API.
+ */
+const ASSET_ALT_MAX_LENGTH = 500
+
+/**
+ * Checks if a string is an asset tag ID.
+ *
+ * @param maybeAssetTagID - A string that's maybe an asset tag ID.
+ *
+ * @returns `true` if the string is an asset tag ID, `false` otherwise.
+ */
+const isAssetTagID = (maybeAssetTagID: string): boolean => {
+	// Taken from @sinclair/typebox which is the uuid type checker of the asset API
+	// See: https://github.com/sinclairzx81/typebox/blob/e36f5658e3a56d8c32a711aa616ec8bb34ca14b4/test/runtime/compiler/validate.ts#L15
+	// Tag is already a tag ID
+	return /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(
+		maybeAssetTagID,
+	)
+}
+
+/**
+ * Validates an asset's metadata, throwing an error if any of the metadata are
+ * invalid.
+ *
+ * @param assetMetadata - The asset metadata to validate.
+ *
+ * @internal
+ */
+export const validateAssetMetadata = ({
+	notes,
+	credits,
+	alt,
+	tags,
+}: CreateAssetParams): void => {
+	const errors: string[] = []
+
+	if (notes && notes.length > ASSET_NOTES_MAX_LENGTH) {
+		errors.push(
+			`\`notes\` must be at most ${ASSET_NOTES_MAX_LENGTH} characters`,
+		)
+	}
+
+	if (credits && credits.length > ASSET_CREDITS_MAX_LENGTH) {
+		errors.push(
+			`\`credits\` must be at most ${ASSET_CREDITS_MAX_LENGTH} characters`,
+		)
+	}
+
+	if (alt && alt.length > ASSET_ALT_MAX_LENGTH) {
+		errors.push(`\`alt\` must be at most ${ASSET_ALT_MAX_LENGTH} characters`)
+	}
+
+	if (
+		tags &&
+		tags.length &&
+		tags.some(
+			(tag) => !isAssetTagID(tag) && (tag.length < 3 || tag.length > 20),
+		)
+	) {
+		errors.push(
+			`all \`tags\`'s tag must be at least 3 characters long and 20 characters at most`,
+		)
+	}
+
+	if (errors.length) {
+		throw new PrismicError(
+			`Errors validating asset metadata: ${errors.join(", ")}`,
+			undefined,
+			{ notes, credits, alt, tags },
+		)
+	}
+}
+
+/**
  * Configuration for clients that determine how content is queried.
  */
 export type WriteClientConfig = {
@@ -128,6 +238,12 @@ export class WriteClient<
 	 */
 	constructor(repositoryName: string, options: WriteClientConfig) {
 		super(repositoryName, options)
+
+		if (typeof window !== "undefined") {
+			console.warn(
+				`[@prismicio/client] Prismic write client appears to be running in a browser environment. This is not recommended as it exposes your write token and migration API key. Consider using Prismic write client in a server environment only, preferring the regular client for browser environement. For more details, see ${devMsg("avoid-write-client-in-browser")}`,
+			)
+		}
 
 		this.writeToken = options.writeToken
 		this.migrationAPIKey = options.migrationAPIKey
@@ -520,13 +636,10 @@ export class WriteClient<
 			alt,
 			tags,
 			...params
-		}: {
-			notes?: string
-			credits?: string
-			alt?: string
-			tags?: string[]
-		} & FetchParams = {},
+		}: CreateAssetParams & FetchParams = {},
 	): Promise<Asset> {
+		validateAssetMetadata({ notes, credits, alt, tags })
+
 		const url = new URL("assets", this.assetAPIEndpoint)
 
 		const formData = new FormData()
@@ -584,6 +697,8 @@ export class WriteClient<
 			...params
 		}: PatchAssetParams & FetchParams = {},
 	): Promise<Asset> {
+		validateAssetMetadata({ notes, credits, alt, tags })
+
 		const url = new URL(`assets/${id}`, this.assetAPIEndpoint)
 
 		// Resolve tags if any and create missing ones
@@ -725,14 +840,7 @@ export class WriteClient<
 
 			const resolvedTagIDs = []
 			for (const tagNameOrID of tagNamesOrIDs) {
-				// Taken from @sinclair/typebox which is the uuid type checker of the asset API
-				// See: https://github.com/sinclairzx81/typebox/blob/e36f5658e3a56d8c32a711aa616ec8bb34ca14b4/test/runtime/compiler/validate.ts#L15
-				// Tag is already a tag ID
-				if (
-					/^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(
-						tagNameOrID,
-					)
-				) {
+				if (isAssetTagID(tagNameOrID)) {
 					resolvedTagIDs.push(tagNameOrID)
 					continue
 				}
@@ -770,6 +878,14 @@ export class WriteClient<
 		name: string,
 		params?: FetchParams,
 	): Promise<Tag> {
+		if (name.length < 3 || name.length > 20) {
+			throw new PrismicError(
+				"Asset tag name must be at least 3 characters long and 20 characters at most",
+				undefined,
+				{ name },
+			)
+		}
+
 		const url = new URL("tags", this.assetAPIEndpoint)
 
 		return this.fetch<PostTagResult>(
