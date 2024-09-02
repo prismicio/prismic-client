@@ -44,7 +44,7 @@ export type PostDocumentResult<
 				lang: TLang
 			} & (TDocument["uid"] extends string
 				? { uid: TDocument["uid"] }
-				: Record<string, never>)
+				: { uid?: TDocument["uid"] })
 		: never
 
 /**

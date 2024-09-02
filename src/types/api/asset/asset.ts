@@ -1,4 +1,4 @@
-import type { Tag } from "./tag"
+import type { AssetTag } from "./tag"
 
 /**
  * Asset types.
@@ -88,7 +88,7 @@ export type Asset = {
 	/**
 	 * Asset tags.
 	 */
-	tags?: Tag[]
+	tags?: AssetTag[]
 
 	/**
 	 * @internal

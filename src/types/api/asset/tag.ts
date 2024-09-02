@@ -3,7 +3,7 @@
  *
  * @see Prismic asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
-export type Tag = {
+export type AssetTag = {
 	/**
 	 * Tag ID.
 	 */
@@ -40,14 +40,14 @@ export type Tag = {
  *
  * @see Prismic asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
-export type GetTagsResult = { items: Tag[] }
+export type GetAssetTagsResult = { items: AssetTag[] }
 
 /**
  * Parameters for creating a tag in the asset API.
  *
  * @see Prismic asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
-export type PostTagParams = {
+export type PostAssetTagParams = {
 	name: string
 }
 
@@ -56,4 +56,4 @@ export type PostTagParams = {
  *
  * @see Prismic asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
-export type PostTagResult = Tag
+export type PostAssetTagResult = AssetTag
