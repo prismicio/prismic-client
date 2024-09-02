@@ -149,6 +149,82 @@ it("constructor warns if a non-.cdn prismic.io endpoint is given", () => {
 	process.env.NODE_ENV = originalNodeEnv
 })
 
+it("contructor warns if an endpoint is given along the `apiEndpoint` option and they do not match", () => {
+	const fetch = vi.fn()
+
+	const originalNodeEnv = process.env.NODE_ENV
+	process.env.NODE_ENV = "development"
+
+	const consoleWarnSpy = vi
+		.spyOn(console, "warn")
+		.mockImplementation(() => void 0)
+
+	prismic.createClient("https://example.com/my-repo-name", {
+		apiEndpoint: "https://example.com/my-repo-name/prismic",
+		fetch,
+	})
+	expect(consoleWarnSpy).toHaveBeenNthCalledWith(
+		2,
+		expect.stringMatching(/prefer-repository-name/i),
+	)
+	consoleWarnSpy.mockClear()
+
+	prismic.createClient("https://example-prismic-repo.cdn.prismic.io/api/v2", {
+		apiEndpoint: "https://example.com/my-repo-name/prismic",
+		fetch,
+	})
+	expect(consoleWarnSpy).toHaveBeenNthCalledWith(
+		1,
+		expect.stringMatching(/prefer-repository-name/i),
+	)
+	consoleWarnSpy.mockClear()
+
+	prismic.createClient("https://example.com/my-repo-name/prismic", {
+		apiEndpoint: "https://example.com/my-repo-name/prismic",
+		fetch,
+	})
+	expect(consoleWarnSpy).toHaveBeenNthCalledWith(
+		1,
+		expect.stringMatching(/prefer-repository-name/i),
+	)
+	consoleWarnSpy.mockClear()
+
+	prismic.createClient("my-repo-name", {
+		apiEndpoint: "https://example.com/my-repo-name/prismic",
+		fetch,
+	})
+	expect(consoleWarnSpy).not.toHaveBeenCalledWith(
+		expect.stringMatching(/prefer-repository-name/i),
+	)
+
+	consoleWarnSpy.mockRestore()
+
+	process.env.NODE_ENV = originalNodeEnv
+})
+
+it("contructor warns if an endpoint is given and the repository name could not be inferred", () => {
+	const fetch = vi.fn()
+
+	const consoleWarnSpy = vi
+		.spyOn(console, "warn")
+		.mockImplementation(() => void 0)
+
+	prismic.createClient("https://example.com/my-repo-name/prismic", { fetch })
+	expect(consoleWarnSpy).toHaveBeenCalledWith(
+		expect.stringMatching(/prefer-repository-name/i),
+	)
+	consoleWarnSpy.mockClear()
+
+	prismic.createClient("https://example-prismic-repo.cdn.prismic.io/api/v2", {
+		fetch,
+	})
+	expect(consoleWarnSpy).not.toHaveBeenCalledWith(
+		expect.stringMatching(/prefer-repository-name/i),
+	)
+
+	consoleWarnSpy.mockRestore()
+})
+
 it("constructor throws if fetch is unavailable", () => {
 	const endpoint = prismic.getRepositoryEndpoint("qwerty")
 
@@ -195,6 +271,51 @@ it("constructor throws if provided fetch is not a function", () => {
 	).toThrowError(prismic.PrismicError)
 
 	globalThis.fetch = originalFetch
+})
+
+it("throws is `repositoryName` is not available but accessed", () => {
+	const fetch = vi.fn()
+
+	const consoleWarnSpy = vi
+		.spyOn(console, "warn")
+		.mockImplementation(() => void 0)
+
+	const client = prismic.createClient(
+		"https://example.com/my-repo-name/prismic",
+		{ fetch },
+	)
+
+	expect(() => {
+		client.repositoryName
+	}).toThrowError(/prefer-repository-name/i)
+
+	const client2 = prismic.createClient("my-repo-name", {
+		fetch,
+		apiEndpoint: "https://example.com/my-repo-name/prismic",
+	})
+
+	expect(() => {
+		client2.repositoryName
+	}).not.toThrowError()
+
+	consoleWarnSpy.mockRestore()
+})
+
+// TODO: Remove when alias gets removed
+it("aliases `endpoint` (deprecated) to `apiEndpoint`", () => {
+	const fetch = vi.fn()
+
+	const client = prismic.createClient(
+		"https://example-prismic-repo.cdn.prismic.io/api/v2",
+		{ fetch },
+	)
+
+	expect(client.apiEndpoint).toBe(client.endpoint)
+
+	const otherEndpoint = "https://other-prismic-repo.cdn.prismic.io/api/v2"
+	client.endpoint = otherEndpoint
+
+	expect(client.apiEndpoint).toBe(otherEndpoint)
 })
 
 it("uses globalThis.fetch if available", async () => {
