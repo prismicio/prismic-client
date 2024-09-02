@@ -26,7 +26,7 @@ import * as isFilled from "./helpers/isFilled"
 import { validateAssetMetadata } from "./WriteClient"
 
 /**
- * Discover assets in a record of Prismic fields.
+ * Discovers assets in a record of Prismic fields.
  *
  * @param record - Record of Prismic fields to loook for assets in.
  * @param onAsset - Callback that is called for each asset found.
@@ -184,8 +184,8 @@ export class Migration<
 				const filename =
 					"name" in fileOrAsset
 						? fileOrAsset.name
-						: url.split("_").pop() ||
-							fileOrAsset.alt?.slice(0, 500) ||
+						: url.split("/").pop()?.split("_").pop() ||
+							fileOrAsset.alt ||
 							"unknown"
 				const credits =
 					"copyright" in fileOrAsset && fileOrAsset.copyright
