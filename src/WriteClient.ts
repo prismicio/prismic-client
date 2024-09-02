@@ -13,10 +13,10 @@ import type {
 	PostAssetResult,
 } from "./types/api/asset/asset"
 import type {
-	GetTagsResult,
-	PostTagParams,
-	PostTagResult,
-	Tag,
+	AssetTag,
+	GetAssetTagsResult,
+	PostAssetTagParams,
+	PostAssetTagResult,
 } from "./types/api/asset/tag"
 import type { PutDocumentResult } from "./types/api/migration/document"
 import {
@@ -239,7 +239,7 @@ export class WriteClient<
 	constructor(repositoryName: string, options: WriteClientConfig) {
 		super(repositoryName, options)
 
-		if (typeof window !== "undefined") {
+		if (typeof globalThis.window !== "undefined") {
 			console.warn(
 				`[@prismicio/client] Prismic write client appears to be running in a browser environment. This is not recommended as it exposes your write token and migration API key. Consider using Prismic write client in a server environment only, preferring the regular client for browser environement. For more details, see ${devMsg("avoid-write-client-in-browser")}`,
 			)
@@ -833,7 +833,7 @@ export class WriteClient<
 	): Promise<string[]> {
 		return this._resolveAssetTagIDsLimit(async () => {
 			const existingTags = await this.getAssetTags(params)
-			const existingTagMap: Record<string, Tag> = {}
+			const existingTagMap: Record<string, AssetTag> = {}
 			for (const tag of existingTags) {
 				existingTagMap[tag.name] = tag
 			}
@@ -877,7 +877,7 @@ export class WriteClient<
 	private async createAssetTag(
 		name: string,
 		params?: FetchParams,
-	): Promise<Tag> {
+	): Promise<AssetTag> {
 		if (name.length < 3 || name.length > 20) {
 			throw new PrismicError(
 				"Asset tag name must be at least 3 characters long and 20 characters at most",
@@ -888,9 +888,9 @@ export class WriteClient<
 
 		const url = new URL("tags", this.assetAPIEndpoint)
 
-		return this.fetch<PostTagResult>(
+		return this.fetch<PostAssetTagResult>(
 			url.toString(),
-			this.buildAssetAPIQueryParams<PostTagParams>({
+			this.buildAssetAPIQueryParams<PostAssetTagParams>({
 				method: "POST",
 				body: { name },
 				params,
@@ -905,10 +905,10 @@ export class WriteClient<
 	 *
 	 * @returns An array of existing tags.
 	 */
-	private async getAssetTags(params?: FetchParams): Promise<Tag[]> {
+	private async getAssetTags(params?: FetchParams): Promise<AssetTag[]> {
 		const url = new URL("tags", this.assetAPIEndpoint)
 
-		const { items } = await this.fetch<GetTagsResult>(
+		const { items } = await this.fetch<GetAssetTagsResult>(
 			url.toString(),
 			this.buildAssetAPIQueryParams({ params }),
 		)
