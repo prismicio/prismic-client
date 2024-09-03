@@ -816,7 +816,7 @@ export class WriteClient<
 	/**
 	 * {@link resolveAssetTagIDs} rate limiter.
 	 */
-	private _resolveAssetTagIDsLimit = pLimit({ limit: 1 })
+	private _resolveAssetTagIDsLimit = pLimit()
 
 	/**
 	 * Resolves asset tag IDs from tag names or IDs.

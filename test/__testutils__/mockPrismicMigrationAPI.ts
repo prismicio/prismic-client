@@ -2,8 +2,7 @@ import type { TestContext } from "vitest"
 
 import { rest } from "msw"
 
-import { createRepositoryName } from "./createRepositoryName"
-
+import type { WriteClient } from "../../src"
 import type {
 	PostDocumentParams,
 	PostDocumentResult,
@@ -11,27 +10,30 @@ import type {
 	PutDocumentResult,
 } from "../../src/types/api/migration/document"
 
-type MockPrismicMigrationAPIV2Args = {
+type MockPrismicMigrationAPIArgs = {
 	ctx: TestContext
-	writeToken: string
-	migrationAPIKey: string
+	client: WriteClient
+	writeToken?: string
+	migrationAPIKey?: string
 	expectedID?: string
 }
 
-export const mockPrismicRestAPIV2 = (
-	args: MockPrismicMigrationAPIV2Args,
+export const mockPrismicMigrationAPI = (
+	args: MockPrismicMigrationAPIArgs,
 ): void => {
-	const repositoryName = createRepositoryName()
-	const migrationAPIEndpoint = `https://migration.prismic.io`
+	const repositoryName = args.client.repositoryName
+	const migrationAPIEndpoint = args.client.migrationAPIEndpoint
+	const writeToken = args.writeToken || args.client.writeToken
+	const migrationAPIKey = args.migrationAPIKey || args.client.migrationAPIKey
 
 	args.ctx.server.use(
-		rest.post(`${migrationAPIEndpoint}/documents`, async (req, res, ctx) => {
+		rest.post(`${migrationAPIEndpoint}documents`, async (req, res, ctx) => {
 			if (
-				req.headers.get("authorization") !== `Bearer ${args.writeToken}` ||
-				req.headers.get("x-apy-key") !== args.migrationAPIKey ||
+				req.headers.get("authorization") !== `Bearer ${writeToken}` ||
+				req.headers.get("x-api-key") !== migrationAPIKey ||
 				req.headers.get("repository") !== repositoryName
 			) {
-				return res(ctx.status(401))
+				return res(ctx.status(403), ctx.json({ Message: "forbidden" }))
 			}
 
 			const id = args.expectedID || args.ctx.mock.value.document().id
@@ -47,16 +49,13 @@ export const mockPrismicRestAPIV2 = (
 
 			return res(ctx.status(201), ctx.json(response))
 		}),
-	)
-
-	args.ctx.server.use(
-		rest.put(`${migrationAPIEndpoint}/documents/:id`, async (req, res, ctx) => {
+		rest.put(`${migrationAPIEndpoint}documents/:id`, async (req, res, ctx) => {
 			if (
-				req.headers.get("authorization") !== `Bearer ${args.writeToken}` ||
-				req.headers.get("x-apy-key") !== args.migrationAPIKey ||
+				req.headers.get("authorization") !== `Bearer ${writeToken}` ||
+				req.headers.get("x-api-key") !== migrationAPIKey ||
 				req.headers.get("repository") !== repositoryName
 			) {
-				return res(ctx.status(401))
+				return res(ctx.status(403), ctx.json({ Message: "forbidden" }))
 			}
 
 			if (req.params.id !== args.expectedID) {

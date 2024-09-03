@@ -32,20 +32,15 @@ export type LimitFunction = {
 }
 
 export const pLimit = ({
-	limit,
 	interval,
-}: {
-	limit: number
-	interval?: number
-}): LimitFunction => {
+}: { interval?: number } = {}): LimitFunction => {
 	const queue: AnyFunction[] = []
 	let activeCount = 0
 	let lastCompletion = 0
 
 	const resumeNext = () => {
-		if (activeCount < limit && queue.length > 0) {
+		if (activeCount === 0 && queue.length > 0) {
 			queue.shift()?.()
-			// Since `pendingCount` has been decreased by one, increase `activeCount` by one.
 			activeCount++
 		}
 	}
@@ -96,7 +91,7 @@ export const pLimit = ({
 			// needs to happen asynchronously as well to get an up-to-date value for `activeCount`.
 			await Promise.resolve()
 
-			if (activeCount < limit) {
+			if (activeCount === 0) {
 				resumeNext()
 			}
 		})()

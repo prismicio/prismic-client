@@ -1,12 +1,12 @@
-import type { TestContext } from "vitest"
+import { type TestContext } from "vitest"
 
 import { rest } from "msw"
 
-import { createRepositoryName } from "./createRepositoryName"
-
+import type { WriteClient } from "../../src"
 import type {
 	Asset,
 	GetAssetsResult,
+	PatchAssetParams,
 	PostAssetResult,
 } from "../../src/types/api/asset/asset"
 import type {
@@ -16,17 +16,20 @@ import type {
 	PostAssetTagResult,
 } from "../../src/types/api/asset/tag"
 
-type MockPrismicMigrationAPIV2Args = {
+type MockPrismicAssetAPIArgs = {
 	ctx: TestContext
-	writeToken: string
+	client: WriteClient
+	writeToken?: string
 	expectedAsset?: Asset
 	expectedAssets?: Asset[]
 	expectedTag?: AssetTag
 	expectedTags?: AssetTag[]
+	expectedCursor?: string
+	getRequiredParams?: Record<string, string | string[]>
 }
 
 const DEFAULT_TAG: AssetTag = {
-	id: "091daea1-4954-46c9-a819-faabb69464ea",
+	id: "88888888-4444-4444-4444-121212121212",
 	name: "fooTag",
 	uploader_id: "uploaded_id",
 	created_at: 0,
@@ -54,19 +57,30 @@ const DEFAULT_ASSET: Asset = {
 	tags: [],
 }
 
-export const mockPrismicRestAPIV2 = (
-	args: MockPrismicMigrationAPIV2Args,
-): void => {
-	const repositoryName = createRepositoryName()
-	const assetAPIEndpoint = `https://asset-api.prismic.io`
+export const mockPrismicAssetAPI = (args: MockPrismicAssetAPIArgs): void => {
+	const repositoryName = args.client.repositoryName
+	const assetAPIEndpoint = args.client.assetAPIEndpoint
+	const writeToken = args.writeToken || args.client.writeToken
 
 	args.ctx.server.use(
-		rest.get(`${assetAPIEndpoint}/assets`, async (req, res, ctx) => {
+		rest.get(`${assetAPIEndpoint}assets`, async (req, res, ctx) => {
 			if (
-				req.headers.get("authorization") !== `Bearer ${args.writeToken}` ||
+				req.headers.get("authorization") !== `Bearer ${writeToken}` ||
 				req.headers.get("repository") !== repositoryName
 			) {
-				return res(ctx.status(401))
+				return res(ctx.status(401), ctx.json({ error: "unauthorized" }))
+			}
+
+			if (args.getRequiredParams) {
+				for (const paramKey in args.getRequiredParams) {
+					const requiredValue = args.getRequiredParams[paramKey]
+
+					args.ctx
+						.expect(req.url.searchParams.getAll(paramKey))
+						.toStrictEqual(
+							Array.isArray(requiredValue) ? requiredValue : [requiredValue],
+						)
+				}
 			}
 
 			const items: Asset[] = args.expectedAssets || [DEFAULT_ASSET]
@@ -75,51 +89,49 @@ export const mockPrismicRestAPIV2 = (
 				total: items.length,
 				items,
 				is_opensearch_result: false,
-				cursor: undefined,
+				cursor: args.expectedCursor,
 				missing_ids: [],
 			}
 
 			return res(ctx.json(response))
 		}),
-	)
-
-	args.ctx.server.use(
-		rest.post(`${assetAPIEndpoint}/assets`, async (req, res, ctx) => {
+		rest.post(`${assetAPIEndpoint}assets`, async (req, res, ctx) => {
 			if (
-				req.headers.get("authorization") !== `Bearer ${args.writeToken}` ||
+				req.headers.get("authorization") !== `Bearer ${writeToken}` ||
 				req.headers.get("repository") !== repositoryName
 			) {
-				return res(ctx.status(401))
+				return res(ctx.status(401), ctx.json({ error: "unauthorized" }))
 			}
 
 			const response: PostAssetResult = args.expectedAsset || DEFAULT_ASSET
 
 			return res(ctx.json(response))
 		}),
-	)
-
-	args.ctx.server.use(
-		rest.patch(`${assetAPIEndpoint}/assets/:id`, async (req, res, ctx) => {
+		rest.patch(`${assetAPIEndpoint}assets/:id`, async (req, res, ctx) => {
 			if (
-				req.headers.get("authorization") !== `Bearer ${args.writeToken}` ||
+				req.headers.get("authorization") !== `Bearer ${writeToken}` ||
 				req.headers.get("repository") !== repositoryName
 			) {
-				return res(ctx.status(401))
+				return res(ctx.status(401), ctx.json({ error: "unauthorized" }))
 			}
+			const { tags, ...body } = await req.json<PatchAssetParams>()
 
-			const response: PostAssetResult = args.expectedAsset || DEFAULT_ASSET
+			const response: PostAssetResult = {
+				...(args.expectedAsset || DEFAULT_ASSET),
+				...body,
+				tags: tags?.length
+					? tags.map((id) => ({ ...DEFAULT_TAG, id }))
+					: (args.expectedAsset || DEFAULT_ASSET).tags,
+			}
 
 			return res(ctx.json(response))
 		}),
-	)
-
-	args.ctx.server.use(
-		rest.get(`${assetAPIEndpoint}/tags`, async (req, res, ctx) => {
+		rest.get(`${assetAPIEndpoint}tags`, async (req, res, ctx) => {
 			if (
-				req.headers.get("authorization") !== `Bearer ${args.writeToken}` ||
+				req.headers.get("authorization") !== `Bearer ${writeToken}` ||
 				req.headers.get("repository") !== repositoryName
 			) {
-				return res(ctx.status(401))
+				return res(ctx.status(401), ctx.json({ error: "unauthorized" }))
 			}
 
 			const items: AssetTag[] = args.expectedTags || [DEFAULT_TAG]
@@ -128,24 +140,23 @@ export const mockPrismicRestAPIV2 = (
 
 			return res(ctx.json(response))
 		}),
-	)
-
-	args.ctx.server.use(
-		rest.post(`${assetAPIEndpoint}/tags`, async (req, res, ctx) => {
+		rest.post(`${assetAPIEndpoint}tags`, async (req, res, ctx) => {
 			if (
-				req.headers.get("authorization") !== `Bearer ${args.writeToken}` ||
+				req.headers.get("authorization") !== `Bearer ${writeToken}` ||
 				req.headers.get("repository") !== repositoryName
 			) {
-				return res(ctx.status(401))
+				return res(ctx.status(401), ctx.json({ error: "unauthorized" }))
 			}
 
 			const body = await req.json<PostAssetTagParams>()
+
 			const response: PostAssetTagResult = args.expectedTag || {
 				...DEFAULT_TAG,
+				id: `${`${Date.now()}`.slice(-8)}-4954-46c9-a819-faabb69464ea`,
 				name: body.name,
 			}
 
-			return res(ctx.json(201), ctx.json(response))
+			return res(ctx.status(201), ctx.json(response))
 		}),
 	)
 }

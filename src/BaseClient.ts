@@ -3,6 +3,13 @@ import { type LimitFunction, pLimit } from "./lib/pLimit"
 import { PrismicError } from "./errors/PrismicError"
 
 /**
+ * The default delay used with APIs not providing rate limit headers.
+ *
+ * @internal
+ */
+export const UNKNOWN_RATE_LIMIT_DELAY = 1500
+
+/**
  * A universal API to make network requests. A subset of the `fetch()` API.
  *
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/fetch}
@@ -241,25 +248,13 @@ export class BaseClient {
 
 		if (!this.queuedFetchJobs[hostname]) {
 			this.queuedFetchJobs[hostname] = pLimit({
-				limit: 1,
-				interval: 1500,
+				interval: UNKNOWN_RATE_LIMIT_DELAY,
 			})
 		}
 
-		const job = this.queuedFetchJobs[hostname](() =>
+		return this.queuedFetchJobs[hostname](() =>
 			this.createFetchJob(url, requestInit),
 		)
-
-		job.finally(() => {
-			if (
-				this.queuedFetchJobs[hostname] &&
-				this.queuedFetchJobs[hostname].queueSize === 0
-			) {
-				delete this.queuedFetchJobs[hostname]
-			}
-		})
-
-		return job
 	}
 
 	private dedupeFetch(

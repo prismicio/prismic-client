@@ -1,9 +1,10 @@
+import type { TaskContext } from "vitest"
 import { expect } from "vitest"
 
 import * as crypto from "node:crypto"
 
-export const createRepositoryName = (): string => {
-	const seed = expect.getState().currentTestName
+export const createRepositoryName = (ctx?: TaskContext): string => {
+	const seed = ctx?.task.name || expect.getState().currentTestName
 	if (!seed) {
 		throw new Error(
 			`createRepositoryName() can only be called within a Vitest test.`,
