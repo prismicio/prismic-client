@@ -2,6 +2,17 @@ import { castArray } from "./lib/castArray"
 import { devMsg } from "./lib/devMsg"
 
 /**
+ * The query parameter used to indicate if the client is in development mode to
+ * the API.
+ */
+export const PRISMIC_DEV_PARAM = "x-d"
+
+/**
+ * The query parameter used to indicate the version of the client to the API.
+ */
+export const PRISMIC_CLIENT_VERSION_PARAM = "x-c"
+
+/**
  * Create a union of the given object's values, and optionally specify which
  * keys to get the values from.
  *
@@ -192,6 +203,20 @@ export interface QueryParams {
 	 * {@link https://prismic.io/docs/route-resolver}
 	 */
 	brokenRoute?: string
+
+	/**
+	 * Whether or not the client is running in a development environment.
+	 *
+	 * @internal
+	 */
+	[PRISMIC_DEV_PARAM]?: number
+
+	/**
+	 * The client version used to make the request.
+	 *
+	 * @internal
+	 */
+	[PRISMIC_CLIENT_VERSION_PARAM]?: string
 }
 
 /**

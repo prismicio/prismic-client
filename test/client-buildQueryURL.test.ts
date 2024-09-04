@@ -23,6 +23,8 @@ it("builds a query URL using the master ref", async (ctx) => {
 		ref,
 	})
 	url.searchParams.delete("integrationFieldsRef")
+	url.searchParams.delete("x-c")
+	url.searchParams.delete("x-d")
 	url.searchParams.sort()
 	expectedSearchParams.sort()
 
@@ -52,6 +54,8 @@ it("includes params if provided", async (ctx) => {
 	})
 
 	url.searchParams.delete("integrationFieldsRef")
+	url.searchParams.delete("x-c")
+	url.searchParams.delete("x-d")
 	url.searchParams.sort()
 	expectedSearchParams.sort()
 
@@ -81,6 +85,8 @@ it("includes default params if provided", async (ctx) => {
 	})
 
 	url.searchParams.delete("integrationFieldsRef")
+	url.searchParams.delete("x-c")
+	url.searchParams.delete("x-d")
 	url.searchParams.sort()
 	expectedSearchParams.sort()
 
@@ -114,6 +120,8 @@ it("merges params and default params if provided", async (ctx) => {
 	})
 
 	url.searchParams.delete("integrationFieldsRef")
+	url.searchParams.delete("x-c")
+	url.searchParams.delete("x-d")
 	url.searchParams.sort()
 	expectedSearchParams.sort()
 
