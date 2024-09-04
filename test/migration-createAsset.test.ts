@@ -4,9 +4,10 @@ import * as prismic from "../src"
 import type { Asset } from "../src/types/api/asset/asset"
 import { AssetType } from "../src/types/api/asset/asset"
 
-// Skip test on Node 16 and 18
-const hasFileConstructor = typeof File === "function"
-const it = _it.skipIf(!hasFileConstructor)
+// Skip test on Node 16 and 18 (File and FormData support)
+const isNode16 = process.version.startsWith("v16")
+const isNode18 = process.version.startsWith("v18")
+const it = _it.skipIf(isNode16 || isNode18)
 
 it("creates an asset from a url", () => {
 	const migration = prismic.createMigration()

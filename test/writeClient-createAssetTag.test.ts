@@ -1,4 +1,4 @@
-import { expect, it } from "vitest"
+import { it as _it, expect } from "vitest"
 
 import { createTestWriteClient } from "./__testutils__/createWriteClient"
 import { mockPrismicAssetAPI } from "./__testutils__/mockPrismicAssetAPI"
@@ -6,6 +6,10 @@ import { mockPrismicAssetAPI } from "./__testutils__/mockPrismicAssetAPI"
 import { ForbiddenError } from "../src"
 import { UNKNOWN_RATE_LIMIT_DELAY } from "../src/BaseClient"
 import type { AssetTag } from "../src/types/api/asset/tag"
+
+// Skip test on Node 16 (FormData support)
+const isNode16 = process.version.startsWith("v16")
+const it = _it.skipIf(isNode16)
 
 it.concurrent("creates a tag", async (ctx) => {
 	const client = createTestWriteClient({ ctx })

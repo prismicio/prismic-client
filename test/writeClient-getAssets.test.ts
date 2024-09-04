@@ -1,10 +1,14 @@
-import { expect, it } from "vitest"
+import { it as _it, expect } from "vitest"
 
 import { createTestWriteClient } from "./__testutils__/createWriteClient"
 import { mockPrismicAssetAPI } from "./__testutils__/mockPrismicAssetAPI"
 
 import { ForbiddenError } from "../src"
 import { AssetType } from "../src/types/api/asset/asset"
+
+// Skip test on Node 16 (FormData support)
+const isNode16 = process.version.startsWith("v16")
+const it = _it.skipIf(isNode16)
 
 it.concurrent("get assets", async (ctx) => {
 	const client = createTestWriteClient({ ctx })

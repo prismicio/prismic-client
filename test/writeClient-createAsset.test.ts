@@ -7,9 +7,10 @@ import { ForbiddenError } from "../src"
 import { UNKNOWN_RATE_LIMIT_DELAY } from "../src/BaseClient"
 import type { AssetTag } from "../src/types/api/asset/tag"
 
-// Skip test on Node 16 and 18
-const hasFileConstructor = typeof File === "function"
-const it = _it.skipIf(!hasFileConstructor)
+// Skip test on Node 16 and 18 (File and FormData support)
+const isNode16 = process.version.startsWith("v16")
+const isNode18 = process.version.startsWith("v18")
+const it = _it.skipIf(isNode16 || isNode18)
 
 it.concurrent("creates an asset from string content", async (ctx) => {
 	const client = createTestWriteClient({ ctx })

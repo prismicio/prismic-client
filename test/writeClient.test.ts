@@ -4,6 +4,7 @@ import * as prismic from "../src"
 
 it("`createWriteClient` creates a write client", () => {
 	const client = prismic.createWriteClient("qwerty", {
+		fetch: vi.fn(),
 		writeToken: "xxx",
 		migrationAPIKey: "yyy",
 	})
@@ -20,6 +21,7 @@ it("constructor warns if running in a browser-like environment", () => {
 		.mockImplementation(() => void 0)
 
 	prismic.createWriteClient("qwerty", {
+		fetch: vi.fn(),
 		writeToken: "xxx",
 		migrationAPIKey: "yyy",
 	})
@@ -34,6 +36,7 @@ it("constructor warns if running in a browser-like environment", () => {
 
 it("uses provided asset API endpoint and adds `/` suffix", () => {
 	const client = prismic.createWriteClient("qwerty", {
+		fetch: vi.fn(),
 		assetAPIEndpoint: "https://example.com",
 		writeToken: "xxx",
 		migrationAPIKey: "yyy",
@@ -44,6 +47,7 @@ it("uses provided asset API endpoint and adds `/` suffix", () => {
 
 it("uses provided migration API endpoint and adds `/` suffix", () => {
 	const client = prismic.createWriteClient("qwerty", {
+		fetch: vi.fn(),
 		migrationAPIEndpoint: "https://example.com",
 		writeToken: "xxx",
 		migrationAPIKey: "yyy",
