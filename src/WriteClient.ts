@@ -24,6 +24,7 @@ import {
 	type PostDocumentResult,
 	type PutDocumentParams,
 } from "./types/api/migration/document"
+import type { MigrationAsset } from "./types/migration/asset"
 import type {
 	PrismicMigrationDocument,
 	PrismicMigrationDocumentParams,
@@ -54,6 +55,101 @@ type ExtractDocumentType<
 	Extract<TDocuments, { type: TDocumentType }> extends never
 		? TDocuments
 		: Extract<TDocuments, { type: TDocumentType }>
+
+/**
+ * Utility type to construct events reported by the migration process.
+ */
+type ReporterEvent<TType extends string, TData = never> = TData extends never
+	? { type: TType }
+	: {
+			type: TType
+			data: TData
+		}
+
+/**
+ * A map of event types and their data reported by the migration process.
+ */
+type ReporterEventMap = {
+	start: {
+		pending: {
+			documents: number
+			assets: number
+		}
+	}
+	end: {
+		migrated: {
+			documents: number
+			assets: number
+		}
+	}
+	"assets:existing": {
+		existing: number
+	}
+	"assets:skipping": {
+		reason: string
+		index: number
+		remaining: number
+		total: number
+		asset: MigrationAsset
+	}
+	"assets:creating": {
+		index: number
+		remaining: number
+		total: number
+		asset: MigrationAsset
+	}
+	"assets:created": {
+		created: number
+		assets: AssetMap
+	}
+	"documents:masterLocale": {
+		masterLocale: string
+	}
+	"documents:existing": {
+		existing: number
+	}
+	"documents:skipping": {
+		reason: string
+		index: number
+		remaining: number
+		total: number
+		document: PrismicMigrationDocument
+		documentParams: PrismicMigrationDocumentParams
+	}
+	"documents:creating": {
+		index: number
+		remaining: number
+		total: number
+		document: PrismicMigrationDocument
+		documentParams: PrismicMigrationDocumentParams
+	}
+	"documents:created": {
+		created: number
+		documents: DocumentMap
+	}
+	"documents:updating": {
+		index: number
+		remaining: number
+		total: number
+		document: PrismicMigrationDocument
+		documentParams: PrismicMigrationDocumentParams
+	}
+	"documents:updated": {
+		updated: number
+	}
+}
+
+/**
+ * Available event types reported by the migration process.
+ */
+type ReporterEventTypes = keyof ReporterEventMap
+
+/**
+ * All events reported by the migration process.
+ */
+type ReporterEvents = {
+	[K in ReporterEventTypes]: ReporterEvent<K, ReporterEventMap[K]>
+}[ReporterEventTypes]
 
 /**
  * A query response from the Prismic asset API. The response contains pagination
@@ -271,26 +367,33 @@ export class WriteClient<
 		{
 			reporter,
 			...params
-		}: { reporter?: (message: string) => void } & FetchParams = {},
+		}: { reporter?: (event: ReporterEvents) => void } & FetchParams = {},
 	): Promise<void> {
-		const assets = await this.migrateCreateAssets(migration, {
-			reporter: (message) => reporter?.(`01_createAssets - ${message}`),
-			...params,
+		reporter?.({
+			type: "start",
+			data: {
+				pending: {
+					documents: migration.documents.length,
+					assets: migration.assets.size,
+				},
+			},
 		})
 
-		const documents = await this.migrateCreateDocuments(migration, {
-			reporter: (message) => reporter?.(`02_createDocuments - ${message}`),
-			...params,
-		})
+		const assets = await this.migrateCreateAssets(migration, params)
 
-		await this.migrateUpdateDocuments(migration, assets, documents, {
-			reporter: (message) => reporter?.(`03_updateDocuments - ${message}`),
-			...params,
-		})
+		const documents = await this.migrateCreateDocuments(migration, params)
 
-		reporter?.(
-			`Migration complete, migrated ${migration.documents.length} documents and ${migration.assets.size} assets`,
-		)
+		await this.migrateUpdateDocuments(migration, assets, documents, params)
+
+		reporter?.({
+			type: "end",
+			data: {
+				migrated: {
+					documents: migration.documents.length,
+					assets: migration.assets.size,
+				},
+			},
+		})
 	}
 
 	/**
@@ -308,7 +411,7 @@ export class WriteClient<
 		{
 			reporter,
 			...fetchParams
-		}: { reporter?: (message: string) => void } & FetchParams = {},
+		}: { reporter?: (event: ReporterEvents) => void } & FetchParams = {},
 	): Promise<AssetMap> {
 		const assets: AssetMap = new Map()
 
@@ -329,15 +432,46 @@ export class WriteClient<
 			}
 		} while (getAssetsResult?.next)
 
-		reporter?.(`Found ${assets.size} existing assets`)
+		reporter?.({
+			type: "assets:existing",
+			data: {
+				existing: assets.size,
+			},
+		})
 
 		// Create assets
+		let i = 0
+		let created = 0
 		if (migration.assets.size) {
-			let i = 0
-			for (const [_, { id, file, filename, ...params }] of migration.assets) {
-				reporter?.(`Creating asset - ${++i}/${migration.assets.size}`)
+			for (const [_, migrationAsset] of migration.assets) {
+				if (
+					typeof migrationAsset.id === "string" &&
+					assets.has(migrationAsset.id)
+				) {
+					reporter?.({
+						type: "assets:skipping",
+						data: {
+							reason: "already exists",
+							index: ++i,
+							remaining: migration.assets.size - i,
+							total: migration.assets.size,
+							asset: migrationAsset,
+						},
+					})
+				} else {
+					created++
+					reporter?.({
+						type: "assets:creating",
+						data: {
+							index: ++i,
+							remaining: migration.assets.size - i,
+							total: migration.assets.size,
+							asset: migrationAsset,
+						},
+					})
 
-				if (typeof id !== "string" || !assets.has(id)) {
+					const { id, file, filename, ...params } = migrationAsset
+
 					let resolvedFile: PostAssetParams["file"] | File
 					if (typeof file === "string") {
 						let url: URL | undefined
@@ -372,11 +506,15 @@ export class WriteClient<
 					assets.set(id, asset)
 				}
 			}
-
-			reporter?.(`Created ${i} assets`)
-		} else {
-			reporter?.(`No assets to create`)
 		}
+
+		reporter?.({
+			type: "assets:created",
+			data: {
+				created,
+				assets,
+			},
+		})
 
 		return assets
 	}
@@ -396,18 +534,27 @@ export class WriteClient<
 		{
 			reporter,
 			...fetchParams
-		}: { reporter?: (message: string) => void } & FetchParams = {},
+		}: { reporter?: (event: ReporterEvents) => void } & FetchParams = {},
 	): Promise<DocumentMap<TDocuments>> {
 		// Should this be a function of `Client`?
 		// Resolve master locale
 		const repository = await this.getRepository(fetchParams)
 		const masterLocale = repository.languages.find((lang) => lang.is_master)!.id
-		reporter?.(`Resolved master locale \`${masterLocale}\``)
+		reporter?.({
+			type: "documents:masterLocale",
+			data: {
+				masterLocale,
+			},
+		})
 
 		// Get all existing documents
 		const existingDocuments = await this.dangerouslyGetAll(fetchParams)
-
-		reporter?.(`Found ${existingDocuments.length} existing documents`)
+		reporter?.({
+			type: "documents:existing",
+			data: {
+				existing: existingDocuments.length,
+			},
+		})
 
 		const documents: DocumentMap<TDocuments> = new Map()
 		for (const document of existingDocuments) {
@@ -436,17 +583,32 @@ export class WriteClient<
 		if (sortedDocuments.length) {
 			for (const { document, params } of sortedDocuments) {
 				if (document.id && documents.has(document.id)) {
-					reporter?.(
-						`Skipping existing document \`${params.documentName}\` - ${++i}/${sortedDocuments.length}`,
-					)
+					reporter?.({
+						type: "documents:skipping",
+						data: {
+							reason: "already exists",
+							index: ++i,
+							remaining: sortedDocuments.length - i,
+							total: sortedDocuments.length,
+							document,
+							documentParams: params,
+						},
+					})
 
 					// Index the migration document
 					documents.set(document, documents.get(document.id)!)
 				} else {
 					created++
-					reporter?.(
-						`Creating document \`${params.documentName}\` - ${++i}/${sortedDocuments.length}`,
-					)
+					reporter?.({
+						type: "documents:creating",
+						data: {
+							index: ++i,
+							remaining: sortedDocuments.length - i,
+							total: sortedDocuments.length,
+							document,
+							documentParams: params,
+						},
+					})
 
 					// Resolve master language document ID for non-master locale documents
 					let masterLanguageDocumentID: string | undefined
@@ -490,11 +652,13 @@ export class WriteClient<
 			}
 		}
 
-		if (created > 0) {
-			reporter?.(`Created ${created} documents`)
-		} else {
-			reporter?.(`No documents to create`)
-		}
+		reporter?.({
+			type: "documents:created",
+			data: {
+				created,
+				documents,
+			},
+		})
 
 		return documents
 	}
@@ -517,29 +681,43 @@ export class WriteClient<
 		{
 			reporter,
 			...fetchParams
-		}: { reporter?: (message: string) => void } & FetchParams = {},
+		}: { reporter?: (event: ReporterEvents) => void } & FetchParams = {},
 	): Promise<void> {
-		if (migration.documents.length) {
-			let i = 0
-			for (const { document, params } of migration.documents) {
-				reporter?.(
-					`Updating document \`${params.documentName}\` - ${++i}/${migration.documents.length}`,
-				)
+		let i = 0
+		for (const { document, params } of migration.documents) {
+			reporter?.({
+				type: "documents:updating",
+				data: {
+					index: ++i,
+					remaining: migration.documents.length - i,
+					total: migration.documents.length,
+					document,
+					documentParams: params,
+				},
+			})
 
-				const { id, uid } = documents.get(document)!
-				const data = await patchMigrationDocumentData(
-					document.data,
-					assets,
-					documents,
-				)
+			const { id, uid } = documents.get(document)!
+			const data = await patchMigrationDocumentData(
+				document.data,
+				assets,
+				documents,
+			)
 
-				await this.updateDocument(id, { uid, data }, fetchParams)
-			}
-
-			reporter?.(`Updated ${i} documents`)
-		} else {
-			reporter?.(`No documents to update`)
+			await this.updateDocument(
+				id,
+				// We need to forward again document name and tags to update them
+				// in case the document already existed during the previous step.
+				{ documentName: params.documentName, uid, tags: document.tags, data },
+				fetchParams,
+			)
 		}
+
+		reporter?.({
+			type: "documents:updated",
+			data: {
+				updated: migration.documents.length,
+			},
+		})
 	}
 
 	/**
