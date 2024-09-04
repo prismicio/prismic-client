@@ -61,7 +61,12 @@ it("image", (ctx) => {
 	expect(isFilled.image(null)).toBe(false)
 	expect(isFilled.image(undefined)).toBe(false)
 	expect(isFilled.image({})).toBe(false)
-	expect(isFilled.image(ctx.mock.value.image())).toBe(true)
+	expect(
+		isFilled.image(
+			// @ts-expect-error Remove this comment after v7.3.0 is published.
+			ctx.mock.value.image(),
+		),
+	).toBe(true)
 })
 
 it("image thumbnail", () => {
@@ -132,7 +137,12 @@ it("rich text", (ctx) => {
 	expect(isFilled.richText([{ type: "paragraph", text: "", spans: [] }])).toBe(
 		false,
 	)
-	expect(isFilled.richText(ctx.mock.value.richText())).toBe(true)
+	expect(
+		isFilled.richText(
+			// @ts-expect-error Remove this comment after v7.3.0 is published.
+			ctx.mock.value.richText(),
+		),
+	).toBe(true)
 })
 
 it("select", (ctx) => {
