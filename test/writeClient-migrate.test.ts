@@ -2,7 +2,6 @@ import { it as _it, expect, vi } from "vitest"
 
 import { createTestWriteClient } from "./__testutils__/createWriteClient"
 import { mockPrismicAssetAPI } from "./__testutils__/mockPrismicAssetAPI"
-import { mockPrismicMigrationAPI } from "./__testutils__/mockPrismicMigrationAPI"
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
 
 import * as prismic from "../src"
