@@ -62,7 +62,7 @@ it.concurrent("creates an asset with an existing tag ID", async (ctx) => {
 		last_modified: 0,
 	}
 
-	mockPrismicAssetAPI({ ctx, client, expectedTags: [tag] })
+	mockPrismicAssetAPI({ ctx, client, existingTags: [tag] })
 
 	// @ts-expect-error - testing purposes
 	const asset = await client.createAsset("file", "foo.jpg", {
@@ -82,7 +82,7 @@ it.concurrent("creates an asset with an existing tag name", async (ctx) => {
 		last_modified: 0,
 	}
 
-	mockPrismicAssetAPI({ ctx, client, expectedTags: [tag] })
+	mockPrismicAssetAPI({ ctx, client, existingTags: [tag] })
 
 	// @ts-expect-error - testing purposes
 	const asset = await client.createAsset("file", "foo.jpg", {
@@ -102,7 +102,7 @@ it.concurrent("creates an asset with a new tag name", async (ctx) => {
 		last_modified: 0,
 	}
 
-	mockPrismicAssetAPI({ ctx, client, expectedTag: tag })
+	mockPrismicAssetAPI({ ctx, client, newTags: [tag] })
 
 	// @ts-expect-error - testing purposes
 	const asset = await client.createAsset("file", "foo.jpg", {

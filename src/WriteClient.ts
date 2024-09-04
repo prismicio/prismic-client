@@ -59,7 +59,10 @@ type ExtractDocumentType<
 /**
  * Utility type to construct events reported by the migration process.
  */
-type ReporterEvent<TType extends string, TData = never> = TData extends never
+type MigrateReporterEvent<
+	TType extends string,
+	TData = never,
+> = TData extends never
 	? { type: TType }
 	: {
 			type: TType
@@ -69,7 +72,7 @@ type ReporterEvent<TType extends string, TData = never> = TData extends never
 /**
  * A map of event types and their data reported by the migration process.
  */
-type ReporterEventMap = {
+type MigrateReporterEventMap = {
 	start: {
 		pending: {
 			documents: number
@@ -142,14 +145,18 @@ type ReporterEventMap = {
 /**
  * Available event types reported by the migration process.
  */
-type ReporterEventTypes = keyof ReporterEventMap
+type MigrateReporterEventTypes = keyof MigrateReporterEventMap
 
 /**
- * All events reported by the migration process.
+ * All events reported by the migration process. Events can be listened to by
+ * providing a `reporter` function to the `migrate` method.
  */
-type ReporterEvents = {
-	[K in ReporterEventTypes]: ReporterEvent<K, ReporterEventMap[K]>
-}[ReporterEventTypes]
+export type MigrateReporterEvents = {
+	[K in MigrateReporterEventTypes]: MigrateReporterEvent<
+		K,
+		MigrateReporterEventMap[K]
+	>
+}[MigrateReporterEventTypes]
 
 /**
  * A query response from the Prismic asset API. The response contains pagination
@@ -364,12 +371,11 @@ export class WriteClient<
 	 */
 	async migrate(
 		migration: Migration<TDocuments>,
-		{
-			reporter,
-			...params
-		}: { reporter?: (event: ReporterEvents) => void } & FetchParams = {},
+		params: {
+			reporter?: (event: MigrateReporterEvents) => void
+		} & FetchParams = {},
 	): Promise<void> {
-		reporter?.({
+		params.reporter?.({
 			type: "start",
 			data: {
 				pending: {
@@ -385,7 +391,7 @@ export class WriteClient<
 
 		await this.migrateUpdateDocuments(migration, assets, documents, params)
 
-		reporter?.({
+		params.reporter?.({
 			type: "end",
 			data: {
 				migrated: {
@@ -411,7 +417,7 @@ export class WriteClient<
 		{
 			reporter,
 			...fetchParams
-		}: { reporter?: (event: ReporterEvents) => void } & FetchParams = {},
+		}: { reporter?: (event: MigrateReporterEvents) => void } & FetchParams = {},
 	): Promise<AssetMap> {
 		const assets: AssetMap = new Map()
 
@@ -534,7 +540,7 @@ export class WriteClient<
 		{
 			reporter,
 			...fetchParams
-		}: { reporter?: (event: ReporterEvents) => void } & FetchParams = {},
+		}: { reporter?: (event: MigrateReporterEvents) => void } & FetchParams = {},
 	): Promise<DocumentMap<TDocuments>> {
 		// Should this be a function of `Client`?
 		// Resolve master locale
@@ -681,7 +687,7 @@ export class WriteClient<
 		{
 			reporter,
 			...fetchParams
-		}: { reporter?: (event: ReporterEvents) => void } & FetchParams = {},
+		}: { reporter?: (event: MigrateReporterEvents) => void } & FetchParams = {},
 	): Promise<void> {
 		let i = 0
 		for (const { document, params } of migration.documents) {

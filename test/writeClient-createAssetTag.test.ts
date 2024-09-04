@@ -14,19 +14,19 @@ const it = _it.skipIf(isNode16)
 it.concurrent("creates a tag", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
-	const expectedTag: AssetTag = {
+	const newTag: AssetTag = {
 		id: "00000000-4444-4444-4444-121212121212",
 		name: "foo",
 		created_at: 0,
 		last_modified: 0,
 	}
 
-	mockPrismicAssetAPI({ ctx, client, expectedTag })
+	mockPrismicAssetAPI({ ctx, client, newTags: [newTag] })
 
 	// @ts-expect-error - testing purposes
-	const tag = await client.createAssetTag(expectedTag.name)
+	const tag = await client.createAssetTag(newTag.name)
 
-	expect(tag).toStrictEqual(expectedTag)
+	expect(tag).toStrictEqual(newTag)
 })
 
 it.concurrent("throws if tag is invalid", async (ctx) => {

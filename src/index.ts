@@ -53,7 +53,7 @@ export * as cookie from "./cookie"
 export type { CreateClient } from "./createClient"
 export type { ClientConfig } from "./Client"
 export type { CreateWriteClient } from "./createWriteClient"
-export type { WriteClientConfig } from "./WriteClient"
+export type { WriteClientConfig, MigrateReporterEvents } from "./WriteClient"
 export type {
 	AbortSignalLike,
 	FetchLike,

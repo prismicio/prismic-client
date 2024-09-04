@@ -112,7 +112,7 @@ it.concurrent("supports `tags` parameter (id)", async (ctx) => {
 	mockPrismicAssetAPI({
 		ctx,
 		client,
-		expectedTags: [
+		existingTags: [
 			{
 				id: "00000000-4444-4444-4444-121212121212",
 				name: "foo",
@@ -148,7 +148,7 @@ it.concurrent("supports `tags` parameter (name)", async (ctx) => {
 	mockPrismicAssetAPI({
 		ctx,
 		client,
-		expectedTags: [
+		existingTags: [
 			{
 				id: "00000000-4444-4444-4444-121212121212",
 				name: "foo",
@@ -181,7 +181,7 @@ it.concurrent("supports `tags` parameter (missing)", async (ctx) => {
 	mockPrismicAssetAPI({
 		ctx,
 		client,
-		expectedTags: [
+		existingTags: [
 			{
 				id: "00000000-4444-4444-4444-121212121212",
 				name: "foo",
@@ -207,14 +207,13 @@ it.concurrent("returns `next` when next `cursor` is available", async (ctx) => {
 
 	ctx.expect(next1).toBeUndefined()
 
-	const cursor = "foo"
-	mockPrismicAssetAPI({ ctx, client, expectedCursor: cursor })
+	mockPrismicAssetAPI({ ctx, client, existingAssets: [[], []] })
 
 	const { next: next2 } = await client.getAssets()
 
 	ctx.expect(next2).toBeInstanceOf(Function)
 
-	mockPrismicAssetAPI({ ctx, client, getRequiredParams: { cursor } })
+	mockPrismicAssetAPI({ ctx, client, getRequiredParams: { cursor: "1" } })
 
 	const { results } = await next2!()
 	ctx.expect(results).toBeInstanceOf(Array)
