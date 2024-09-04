@@ -1,8 +1,12 @@
-import { expect, it } from "vitest"
+import { it as _it, expect } from "vitest"
 
 import * as prismic from "../src"
 import type { Asset } from "../src/types/api/asset/asset"
 import { AssetType } from "../src/types/api/asset/asset"
+
+// Skip test on Node 16 and 18
+const hasFileConstructor = typeof File === "function"
+const it = _it.skipIf(!hasFileConstructor)
 
 it("creates an asset from a url", () => {
 	const migration = prismic.createMigration()

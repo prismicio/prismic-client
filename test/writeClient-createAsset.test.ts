@@ -1,4 +1,4 @@
-import { expect, it } from "vitest"
+import { it as _it, expect } from "vitest"
 
 import { createTestWriteClient } from "./__testutils__/createWriteClient"
 import { mockPrismicAssetAPI } from "./__testutils__/mockPrismicAssetAPI"
@@ -6,6 +6,10 @@ import { mockPrismicAssetAPI } from "./__testutils__/mockPrismicAssetAPI"
 import { ForbiddenError } from "../src"
 import { UNKNOWN_RATE_LIMIT_DELAY } from "../src/BaseClient"
 import type { AssetTag } from "../src/types/api/asset/tag"
+
+// Skip test on Node 16 and 18
+const hasFileConstructor = typeof File === "function"
+const it = _it.skipIf(!hasFileConstructor)
 
 it.concurrent("creates an asset from string content", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
