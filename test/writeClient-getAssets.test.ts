@@ -228,7 +228,7 @@ it.concurrent("throws forbidden error on invalid credentials", async (ctx) => {
 	await expect(() => client.getAssets()).rejects.toThrow(ForbiddenError)
 })
 
-it.concurrent("supports abort controller", async (ctx) => {
+it.concurrent("is abortable with an AbortController", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
 	const controller = new AbortController()
@@ -241,4 +241,17 @@ it.concurrent("supports abort controller", async (ctx) => {
 			fetchOptions: { signal: controller.signal },
 		}),
 	).rejects.toThrow(/aborted/i)
+})
+
+it.concurrent("supports custom headers", async (ctx) => {
+	const client = createTestWriteClient({ ctx })
+
+	const headers = { "x-custom": "foo" }
+
+	mockPrismicAssetAPI({ ctx, client, requiredHeaders: headers })
+
+	const { results } = await client.getAssets({ fetchOptions: { headers } })
+
+	ctx.expect(results).toBeInstanceOf(Array)
+	ctx.expect.assertions(2)
 })

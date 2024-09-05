@@ -1,5 +1,6 @@
 import type { TestContext } from "vitest"
 
+import type { RestRequest } from "msw"
 import { rest } from "msw"
 
 import type { PrismicDocument, WriteClient } from "../../src"
@@ -15,6 +16,7 @@ type MockPrismicMigrationAPIArgs = {
 	client: WriteClient
 	writeToken?: string
 	migrationAPIKey?: string
+	requiredHeaders?: Record<string, string>
 	existingDocuments?: (PostDocumentResult | PrismicDocument)[] | number
 	newDocuments?: { id: string; masterLanguageDocumentID?: string }[]
 }
@@ -32,6 +34,16 @@ export const mockPrismicMigrationAPI = (
 	const migrationAPIKey = args.migrationAPIKey || args.client.migrationAPIKey
 
 	const documentsDatabase: Record<string, PostDocumentResult> = {}
+
+	const validateHeaders = (req: RestRequest) => {
+		if (args.requiredHeaders) {
+			for (const name in args.requiredHeaders) {
+				const requiredValue = args.requiredHeaders[name]
+
+				args.ctx.expect(req.headers.get(name)).toBe(requiredValue)
+			}
+		}
+	}
 
 	if (args.existingDocuments) {
 		if (typeof args.existingDocuments === "number") {
@@ -72,6 +84,8 @@ export const mockPrismicMigrationAPI = (
 				return res(ctx.status(403), ctx.json({ Message: "forbidden" }))
 			}
 
+			validateHeaders(req)
+
 			const body = await req.json<PostDocumentParams>()
 
 			const newDocument = args.newDocuments?.shift()
@@ -104,6 +118,8 @@ export const mockPrismicMigrationAPI = (
 			) {
 				return res(ctx.status(403), ctx.json({ Message: "forbidden" }))
 			}
+
+			validateHeaders(req)
 
 			const document = documentsDatabase[req.params.id as string]
 

@@ -1,5 +1,6 @@
 import { type TestContext } from "vitest"
 
+import type { RestRequest } from "msw"
 import { rest } from "msw"
 
 import type { WriteClient } from "../../src"
@@ -20,6 +21,7 @@ type MockPrismicAssetAPIArgs = {
 	ctx: TestContext
 	client: WriteClient
 	writeToken?: string
+	requiredHeaders?: Record<string, string>
 	getRequiredParams?: Record<string, string | string[]>
 	existingAssets?: Asset[][] | number[]
 	newAssets?: Asset[]
@@ -85,6 +87,16 @@ export const mockPrismicAssetAPI = (
 		}) || []
 	const tagsDatabase: AssetTag[] = args.existingTags || []
 
+	const validateHeaders = (req: RestRequest) => {
+		if (args.requiredHeaders) {
+			for (const name in args.requiredHeaders) {
+				const requiredValue = args.requiredHeaders[name]
+
+				args.ctx.expect(req.headers.get(name)).toBe(requiredValue)
+			}
+		}
+	}
+
 	args.ctx.server.use(
 		rest.get(`${assetAPIEndpoint}assets`, async (req, res, ctx) => {
 			if (
@@ -106,15 +118,25 @@ export const mockPrismicAssetAPI = (
 				}
 			}
 
+			validateHeaders(req)
+
 			const index = Number.parseInt(req.url.searchParams.get("cursor") ?? "0")
 			const items: Asset[] = assetsDatabase[index] || []
+
+			let missing_ids: string[] | undefined
+			const ids = req.url.searchParams.getAll("ids")
+			if (ids.length) {
+				missing_ids = ids.filter((id) =>
+					assetsDatabase.flat().find((item) => item.id === id),
+				)
+			}
 
 			const response: GetAssetsResult = {
 				total: items.length,
 				items,
 				is_opensearch_result: false,
 				cursor: assetsDatabase[index + 1] ? `${index + 1}` : undefined,
-				missing_ids: [],
+				missing_ids,
 			}
 
 			return res(ctx.json(response))
@@ -126,6 +148,8 @@ export const mockPrismicAssetAPI = (
 			) {
 				return res(ctx.status(401), ctx.json({ error: "unauthorized" }))
 			}
+
+			validateHeaders(req)
 
 			const response: PostAssetResult =
 				args.newAssets?.shift() ?? mockAsset(args.ctx)
@@ -142,6 +166,9 @@ export const mockPrismicAssetAPI = (
 			) {
 				return res(ctx.status(401), ctx.json({ error: "unauthorized" }))
 			}
+
+			validateHeaders(req)
+
 			const { tags, ...body } = await req.json<PatchAssetParams>()
 
 			const asset = assetsDatabase
@@ -179,6 +206,8 @@ export const mockPrismicAssetAPI = (
 				return res(ctx.status(401), ctx.json({ error: "unauthorized" }))
 			}
 
+			validateHeaders(req)
+
 			const items: AssetTag[] = tagsDatabase
 
 			const response: GetAssetTagsResult = { items }
@@ -192,6 +221,8 @@ export const mockPrismicAssetAPI = (
 			) {
 				return res(ctx.status(401), ctx.json({ error: "unauthorized" }))
 			}
+
+			validateHeaders(req)
 
 			const body = await req.json<PostAssetTagParams>()
 

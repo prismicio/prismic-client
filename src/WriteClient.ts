@@ -1002,7 +1002,7 @@ export class WriteClient<
 		const blob = await res.blob()
 
 		return new File([blob], "", {
-			type: res.headers.get("content-type") || "",
+			type: res.headers.get("content-type") || undefined,
 		})
 	}
 

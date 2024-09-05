@@ -48,7 +48,7 @@ it.concurrent("throws forbidden error on invalid credentials", async (ctx) => {
 
 // It seems like p-limit and node-fetch are not happy friends :/
 // https://github.com/sindresorhus/p-limit/issues/64
-it.skip("supports abort controller", async (ctx) => {
+it.skip("is abortable with an AbortController", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
 	const controller = new AbortController()
@@ -69,6 +69,35 @@ it.skip("supports abort controller", async (ctx) => {
 			{ fetchOptions: { signal: controller.signal } },
 		),
 	).rejects.toThrow(/aborted/i)
+})
+
+it.concurrent("supports custom headers", async (ctx) => {
+	const client = createTestWriteClient({ ctx })
+
+	const headers = { "x-custom": "foo" }
+	const newDocument = { id: "foo" }
+
+	mockPrismicMigrationAPI({
+		ctx,
+		client,
+		requiredHeaders: headers,
+		newDocuments: [newDocument],
+	})
+
+	// @ts-expect-error - testing purposes
+	const { id } = await client.createDocument(
+		{
+			type: "type",
+			uid: "uid",
+			lang: "lang",
+			data: {},
+		},
+		"Foo",
+		{ fetchOptions: { headers } },
+	)
+
+	ctx.expect(id).toBe(newDocument.id)
+	ctx.expect.assertions(2)
 })
 
 it.concurrent("respects unknown rate limit", async (ctx) => {

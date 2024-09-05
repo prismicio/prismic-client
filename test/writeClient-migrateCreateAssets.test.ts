@@ -247,7 +247,7 @@ it.concurrent(
 
 		ctx.server.use(
 			rest.get(asset.url.split("?")[0], (_req, res, ctx) => {
-				return res(ctx.set("content-type", ""), ctx.text("foo"))
+				return res(ctx.body("foo"))
 			}),
 		)
 
