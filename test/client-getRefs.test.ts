@@ -13,7 +13,7 @@ it("returns all refs", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.getRefs()
 
 	expect(res).toStrictEqual(repositoryResponse.refs)

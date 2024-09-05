@@ -11,7 +11,7 @@ import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
 
 it("resolves a query", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository()
-	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`
+	const graphqlURL = `https://${createRepositoryName(ctx)}.cdn.prismic.io/graphql`
 	const graphqlResponse = { foo: "bar" }
 
 	mockPrismicRestAPIV2({
@@ -26,7 +26,7 @@ it("resolves a query", async (ctx) => {
 		}),
 	)
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.graphQLFetch(graphqlURL)
 	const json = await res.json()
 
@@ -38,7 +38,7 @@ it("merges provided headers with defaults", async (ctx) => {
 	repositoryResponse.integrationFieldsRef = ctx.mock.api.ref().ref
 	const ref = "custom-ref"
 
-	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`
+	const graphqlURL = `https://${createRepositoryName(ctx)}.cdn.prismic.io/graphql`
 	const graphqlResponse = { foo: "bar" }
 
 	mockPrismicRestAPIV2({
@@ -57,7 +57,7 @@ it("merges provided headers with defaults", async (ctx) => {
 		}),
 	)
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.graphQLFetch(graphqlURL, {
 		headers: {
 			"Prismic-Ref": ref,
@@ -73,7 +73,7 @@ it("includes Authorization header if access token is provided", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository()
 	repositoryResponse.integrationFieldsRef = ctx.mock.api.ref().ref
 
-	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`
+	const graphqlURL = `https://${createRepositoryName(ctx)}.cdn.prismic.io/graphql`
 	const graphqlResponse = { foo: "bar" }
 
 	mockPrismicRestAPIV2({
@@ -92,7 +92,7 @@ it("includes Authorization header if access token is provided", async (ctx) => {
 		}),
 	)
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.graphQLFetch(graphqlURL)
 	const json = await res.json()
 
@@ -104,7 +104,7 @@ it("includes integration fields header if ref is available", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository()
 	const accessToken = "accessToken"
 
-	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`
+	const graphqlURL = `https://${createRepositoryName(ctx)}.cdn.prismic.io/graphql`
 	const graphqlResponse = { foo: "bar" }
 
 	mockPrismicRestAPIV2({
@@ -123,7 +123,7 @@ it("includes integration fields header if ref is available", async (ctx) => {
 		}),
 	)
 
-	const client = createTestClient({ clientConfig: { accessToken } })
+	const client = createTestClient({ clientConfig: { accessToken }, ctx })
 	const res = await client.graphQLFetch(graphqlURL)
 	const json = await res.json()
 
@@ -133,7 +133,7 @@ it("includes integration fields header if ref is available", async (ctx) => {
 it("optimizes queries by removing whitespace", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository()
 
-	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`
+	const graphqlURL = `https://${createRepositoryName(ctx)}.cdn.prismic.io/graphql`
 	const graphqlResponse = { foo: "bar" }
 
 	const graphqlURLWithUncompressedQuery = new URL(graphqlURL)
@@ -168,7 +168,7 @@ it("optimizes queries by removing whitespace", async (ctx) => {
 		}),
 	)
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.graphQLFetch(
 		graphqlURLWithUncompressedQuery.toString(),
 	)
@@ -181,7 +181,7 @@ it("includes a ref URL parameter to cache-bust", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository()
 	const ref = getMasterRef(repositoryResponse)
 
-	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`
+	const graphqlURL = `https://${createRepositoryName(ctx)}.cdn.prismic.io/graphql`
 	const graphqlResponse = { foo: "bar" }
 
 	mockPrismicRestAPIV2({
@@ -199,7 +199,7 @@ it("includes a ref URL parameter to cache-bust", async (ctx) => {
 		}),
 	)
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.graphQLFetch(graphqlURL)
 	const json = await res.json()
 
@@ -214,7 +214,7 @@ it("is abortable with an AbortController", async (ctx) => {
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	await expect(async () => {
 		await client.graphQLFetch("https://foo.cdn.prismic.io/graphql", {
@@ -226,7 +226,7 @@ it("is abortable with an AbortController", async (ctx) => {
 testConcurrentMethod("does not share concurrent equivalent network requests", {
 	run: (client, params) =>
 		client.graphQLFetch(
-			`https://${createRepositoryName()}.cdn.prismic.io/graphql`,
+			`https://${client.repositoryName}.cdn.prismic.io/graphql`,
 			params,
 		),
 	mode: "NOT-SHARED___graphQL",

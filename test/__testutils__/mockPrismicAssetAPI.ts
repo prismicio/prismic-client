@@ -21,10 +21,15 @@ type MockPrismicAssetAPIArgs = {
 	client: WriteClient
 	writeToken?: string
 	getRequiredParams?: Record<string, string | string[]>
-	existingAssets?: Asset[][]
+	existingAssets?: Asset[][] | number[]
 	newAssets?: Asset[]
 	existingTags?: AssetTag[]
 	newTags?: AssetTag[]
+}
+
+type MockPrismicAssetAPIReturnType = {
+	assetsDatabase: Asset[][]
+	tagsDatabase: AssetTag[]
 }
 
 const DEFAULT_ASSET: Asset = {
@@ -47,12 +52,37 @@ const DEFAULT_ASSET: Asset = {
 	tags: [],
 }
 
-export const mockPrismicAssetAPI = (args: MockPrismicAssetAPIArgs): void => {
+export const mockAsset = (ctx: TestContext): Asset => {
+	const { id, url, alt, copyright } = ctx.mock.value.image({
+		state: "filled",
+	})
+
+	return {
+		...DEFAULT_ASSET,
+		id,
+		url,
+		alt: alt ?? undefined,
+		credits: copyright ?? undefined,
+	}
+}
+
+export const mockPrismicAssetAPI = (
+	args: MockPrismicAssetAPIArgs,
+): MockPrismicAssetAPIReturnType => {
 	const repositoryName = args.client.repositoryName
 	const assetAPIEndpoint = args.client.assetAPIEndpoint
 	const writeToken = args.writeToken || args.client.writeToken
 
-	const assetsDatabase: Asset[][] = args.existingAssets || []
+	const assetsDatabase: Asset[][] =
+		args.existingAssets?.map((assets) => {
+			if (typeof assets === "number") {
+				return Array(assets)
+					.fill(1)
+					.map(() => mockAsset(args.ctx))
+			}
+
+			return assets
+		}) || []
 	const tagsDatabase: AssetTag[] = args.existingTags || []
 
 	args.ctx.server.use(
@@ -97,7 +127,8 @@ export const mockPrismicAssetAPI = (args: MockPrismicAssetAPIArgs): void => {
 				return res(ctx.status(401), ctx.json({ error: "unauthorized" }))
 			}
 
-			const response: PostAssetResult = args.newAssets?.pop() ?? DEFAULT_ASSET
+			const response: PostAssetResult =
+				args.newAssets?.shift() ?? mockAsset(args.ctx)
 
 			// Save the asset in DB
 			assetsDatabase.push([response])
@@ -180,4 +211,9 @@ export const mockPrismicAssetAPI = (args: MockPrismicAssetAPIArgs): void => {
 			return res(ctx.status(201), ctx.json(response))
 		}),
 	)
+
+	return {
+		assetsDatabase,
+		tagsDatabase,
+	}
 }

@@ -18,7 +18,7 @@ it("returns a Release by label", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.getReleaseByLabel(ref2.label)
 
 	expect(res).toStrictEqual(ref2)
@@ -27,7 +27,7 @@ it("returns a Release by label", async (ctx) => {
 it("throws if Release could not be found", async (ctx) => {
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	await expect(() =>
 		client.getReleaseByLabel("non-existant"),

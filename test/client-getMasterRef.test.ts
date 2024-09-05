@@ -17,7 +17,7 @@ it("returns the master ref", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.getMasterRef()
 
 	expect(res).toStrictEqual(masterRef)

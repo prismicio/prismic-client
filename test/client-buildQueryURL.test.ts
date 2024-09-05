@@ -15,7 +15,7 @@ it("builds a query URL using the master ref", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.buildQueryURL()
 	const url = new URL(res)
 
@@ -40,7 +40,7 @@ it("includes params if provided", async (ctx) => {
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.buildQueryURL(params)
 	const url = new URL(res)
 
@@ -69,7 +69,7 @@ it("includes default params if provided", async (ctx) => {
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient({ clientConfig })
+	const client = createTestClient({ clientConfig, ctx })
 	const res = await client.buildQueryURL()
 	const url = new URL(res)
 
@@ -101,7 +101,7 @@ it("merges params and default params if provided", async (ctx) => {
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient({ clientConfig })
+	const client = createTestClient({ clientConfig, ctx })
 	const res = await client.buildQueryURL(params)
 	const url = new URL(res)
 

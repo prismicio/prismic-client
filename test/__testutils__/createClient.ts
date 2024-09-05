@@ -1,3 +1,5 @@
+import type { TaskContext } from "vitest"
+
 import fetch from "node-fetch"
 
 import { createRepositoryName } from "./createRepositoryName"
@@ -14,13 +16,14 @@ type CreateTestClientArgs = (
 			apiEndpoint?: string
 	  }
 ) & {
+	ctx: TaskContext
 	clientConfig?: prismic.ClientConfig
 }
 
 export const createTestClient = (
-	args: CreateTestClientArgs = {},
+	args: CreateTestClientArgs,
 ): prismic.Client => {
-	const repositoryName = args.repositoryName || createRepositoryName()
+	const repositoryName = args.repositoryName || createRepositoryName(args.ctx)
 
 	return prismic.createClient(args.apiEndpoint || repositoryName, {
 		fetch,

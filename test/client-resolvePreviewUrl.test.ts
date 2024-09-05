@@ -32,7 +32,7 @@ it("resolves a preview url in the browser", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.resolvePreviewURL({
 		linkResolver: (document) => `/${document.uid}`,
 		defaultURL: "defaultURL",
@@ -67,7 +67,7 @@ it("resolves a preview url using a server req object", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	client.enableAutoPreviewsFromReq(req)
 	const res = await client.resolvePreviewURL({
 		linkResolver: (document) => `/${document.uid}`,
@@ -102,7 +102,7 @@ it("resolves a preview url using a Web API-based server req object", async (ctx)
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	client.enableAutoPreviewsFromReq(req)
 	const res = await client.resolvePreviewURL({
 		linkResolver: (document) => `/${document.uid}`,
@@ -135,7 +135,7 @@ it("resolves a preview url using a Web API-based server req object containing a 
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	client.enableAutoPreviewsFromReq(req)
 	const res = await client.resolvePreviewURL({
 		linkResolver: (document) => `/${document.uid}`,
@@ -168,7 +168,7 @@ it("allows providing an explicit documentId and previewToken", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	client.enableAutoPreviewsFromReq(req)
 	const res = await client.resolvePreviewURL({
 		linkResolver: (document) => `/${document.uid}`,
@@ -180,14 +180,14 @@ it("allows providing an explicit documentId and previewToken", async (ctx) => {
 	expect(res).toBe(`/${document.uid}`)
 })
 
-it("returns defaultURL if current url does not contain preview params in browser", async () => {
+it("returns defaultURL if current url does not contain preview params in browser", async (ctx) => {
 	const defaultURL = "defaultURL"
 
 	// Set a global Location object without the parameters we need for automatic
 	// preview support.
 	globalThis.location = { ...globalThis.location, search: "" }
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.resolvePreviewURL({
 		linkResolver: (document) => `/${document.uid}`,
 		defaultURL,
@@ -199,11 +199,11 @@ it("returns defaultURL if current url does not contain preview params in browser
 	globalThis.location = undefined
 })
 
-it("returns defaultURL if req does not contain preview params in server req object", async () => {
+it("returns defaultURL if req does not contain preview params in server req object", async (ctx) => {
 	const defaultURL = "defaultURL"
 	const req = {}
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	client.enableAutoPreviewsFromReq(req)
 	const res = await client.resolvePreviewURL({
 		linkResolver: (document) => `/${document.uid}`,
@@ -213,10 +213,10 @@ it("returns defaultURL if req does not contain preview params in server req obje
 	expect(res).toBe(defaultURL)
 })
 
-it("returns defaultURL if no preview context is available", async () => {
+it("returns defaultURL if no preview context is available", async (ctx) => {
 	const defaultURL = "defaultURL"
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.resolvePreviewURL({
 		linkResolver: (document) => `/${document.uid}`,
 		defaultURL,
@@ -245,7 +245,7 @@ it("returns defaultURL if resolved URL is not a string", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.resolvePreviewURL({
 		linkResolver: () => null,
 		defaultURL,

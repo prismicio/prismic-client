@@ -345,7 +345,7 @@ it("uses the master ref by default", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.get()
 
 	expect(res).toStrictEqual(queryResponse)
@@ -361,7 +361,7 @@ it("supports manual string ref", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient({ clientConfig: { ref } })
+	const client = createTestClient({ clientConfig: { ref }, ctx })
 	const res = await client.get()
 
 	expect(res).toStrictEqual(queryResponse)
@@ -377,7 +377,7 @@ it("supports manual thunk ref", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient({ clientConfig: { ref: () => ref } })
+	const client = createTestClient({ clientConfig: { ref: () => ref }, ctx })
 	const res = await client.get()
 
 	expect(res).toStrictEqual(queryResponse)
@@ -394,7 +394,10 @@ it("uses master ref if ref thunk param returns non-string value", async (ctx) =>
 		ctx,
 	})
 
-	const client = createTestClient({ clientConfig: { ref: () => undefined } })
+	const client = createTestClient({
+		clientConfig: { ref: () => undefined },
+		ctx,
+	})
 	const res = await client.get()
 
 	expect(res).toStrictEqual(queryResponse)
@@ -415,7 +418,7 @@ it("uses browser preview ref if available", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.get()
 
 	expect(res).toStrictEqual(queryResponse)
@@ -439,7 +442,7 @@ it("uses req preview ref if available", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	client.enableAutoPreviewsFromReq(req)
 	const res = await client.get()
 
@@ -463,7 +466,7 @@ it("supports req with Web APIs", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	client.enableAutoPreviewsFromReq(req)
 	const res = await client.get()
 
@@ -485,7 +488,7 @@ it("ignores req without cookies", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	client.enableAutoPreviewsFromReq(req)
 	const res = await client.get()
 
@@ -502,7 +505,7 @@ it("does not use preview ref if auto previews are disabled", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository()
 	const queryResponse = prismicM.api.query({ seed: ctx.task.name })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	// Disable auto previews and ensure the default ref is being used. Note that
 	// the global cookie has already been set by this point, which should be
@@ -551,7 +554,7 @@ it("uses the integration fields ref if the repository provides it", async (ctx) 
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.get()
 
 	expect(res).toStrictEqual(queryResponse)
@@ -571,7 +574,7 @@ it("ignores the integration fields ref if the repository provides a null value",
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.get()
 
 	expect(res).toStrictEqual(queryResponse)
@@ -606,7 +609,7 @@ it("uses client-provided routes in queries", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient({ clientConfig: { routes } })
+	const client = createTestClient({ clientConfig: { routes }, ctx })
 	const res = await client.get()
 
 	expect(res).toStrictEqual(queryResponse)
@@ -625,7 +628,7 @@ it("uses client-provided brokenRoute in queries", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient({ clientConfig: { brokenRoute } })
+	const client = createTestClient({ clientConfig: { brokenRoute }, ctx })
 	const res = await client.get()
 
 	expect(res).toStrictEqual(queryResponse)
@@ -637,7 +640,7 @@ it("throws ForbiddenError if access token is invalid for repository metadata", a
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	await expect(() => client.getRepository()).rejects.toThrowError(
 		/invalid access token/i,
@@ -653,7 +656,7 @@ it("throws ForbiddenError if access token is invalid for query", async (ctx) => 
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	await expect(() => client.get()).rejects.toThrowError(/invalid access token/i)
 	await expect(() => client.get()).rejects.toThrowError(prismic.ForbiddenError)
@@ -666,7 +669,7 @@ it("throws ForbiddenError if response code is 403", async (ctx) => {
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"documents/search",
@@ -704,7 +707,7 @@ it("throws ParsingError if response code is 400 with parsing-error type", async 
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"documents/search",
@@ -726,7 +729,7 @@ it("throws PrismicError if response code is 400 but is not a parsing error", asy
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"documents/search",
@@ -747,7 +750,7 @@ it("throws PrismicError if response is not 200, 400, 401, 403, or 404", async (c
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"./documents/search",
@@ -767,7 +770,7 @@ it("throws PrismicError if response is not 200, 400, 401, 403, or 404", async (c
 it("throws PrismicError if response is not JSON", async (ctx) => {
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"documents/search",
@@ -785,7 +788,7 @@ it("throws PrismicError if response is not JSON", async (ctx) => {
 })
 
 it("throws RepositoryNotFoundError if repository does not exist", async (ctx) => {
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	ctx.server.use(
 		msw.rest.get(client.endpoint, (_req, res, ctx) => {
@@ -807,7 +810,7 @@ it("throws RefNotFoundError if ref does not exist", async (ctx) => {
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"./documents/search",
@@ -834,7 +837,7 @@ it("throws RefExpiredError if ref is expired", async (ctx) => {
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"./documents/search",
@@ -861,7 +864,7 @@ it("throws PreviewTokenExpiredError if preview token is expired", async (ctx) =>
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"./documents/search",
@@ -888,7 +891,7 @@ it("throws NotFoundError if the 404 error is unknown", async (ctx) => {
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"./documents/search",
@@ -923,7 +926,7 @@ it("retries after `retry-after` milliseconds if response code is 429", async (ct
 		queryResponse,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"documents/search",
@@ -986,7 +989,7 @@ it("retries after 1000 milliseconds if response code is 429 and an invalid `retr
 		queryResponse,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"documents/search",
@@ -1033,7 +1036,7 @@ it("throws if a non-2xx response is returned even after retrying", async (ctx) =
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"documents/search",
