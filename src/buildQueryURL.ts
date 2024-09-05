@@ -1,16 +1,18 @@
 import { castArray } from "./lib/castArray"
 import { devMsg } from "./lib/devMsg"
 
+import { version } from "../package.json"
+
 /**
  * The query parameter used to indicate if the client is in development mode to
  * the API.
  */
-export const PRISMIC_DEV_PARAM = "x-d"
+const PRISMIC_DEV_PARAM = "x-d"
 
 /**
  * The query parameter used to indicate the version of the client to the API.
  */
-export const PRISMIC_CLIENT_VERSION_PARAM = "x-c"
+const PRISMIC_CLIENT_VERSION_PARAM = "x-c"
 
 /**
  * Create a union of the given object's values, and optionally specify which
@@ -203,20 +205,6 @@ export interface QueryParams {
 	 * {@link https://prismic.io/docs/route-resolver}
 	 */
 	brokenRoute?: string
-
-	/**
-	 * Whether or not the client is running in a development environment.
-	 *
-	 * @internal
-	 */
-	[PRISMIC_DEV_PARAM]?: number
-
-	/**
-	 * The client version used to make the request.
-	 *
-	 * @internal
-	 */
-	[PRISMIC_CLIENT_VERSION_PARAM]?: string
 }
 
 /**
@@ -397,6 +385,12 @@ export const buildQueryURL = (
 				castArray<string | number | Route | Ordering>(value).join(","),
 			)
 		}
+	}
+
+	url.searchParams.set(PRISMIC_CLIENT_VERSION_PARAM, `js-${version}`)
+
+	if (process.env.NODE_ENV === "development") {
+		url.searchParams.set(PRISMIC_DEV_PARAM, "1")
 	}
 
 	return url.toString()

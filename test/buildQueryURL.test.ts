@@ -1,12 +1,15 @@
 import { expect, it, vi } from "vitest"
 
+import { version } from "../package.json"
+
 import * as prismic from "../src"
 
 const endpoint = prismic.getRepositoryEndpoint("qwerty")
+const xClientVersionParam = `&x-c=js-${version}`
 
 it("includes ref", () => {
 	expect(prismic.buildQueryURL(endpoint, { ref: "ref" })).toBe(
-		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref",
+		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref${xClientVersionParam}`,
 	)
 })
 
@@ -19,7 +22,7 @@ it("supports single filter", () => {
 			}),
 		),
 	).toBe(
-		"https://qwerty.cdn.prismic.io/api/v2/documents/search?q=[[has(my.document.title)]]&ref=ref",
+		`https://qwerty.cdn.prismic.io/api/v2/documents/search?q=[[has(my.document.title)]]&ref=ref${xClientVersionParam}`,
 	)
 
 	// TODO: Remove when we remove support for deprecated `predicates` argument.
@@ -31,7 +34,7 @@ it("supports single filter", () => {
 			}),
 		),
 	).toBe(
-		"https://qwerty.cdn.prismic.io/api/v2/documents/search?q=[[has(my.document.title)]]&ref=ref",
+		`https://qwerty.cdn.prismic.io/api/v2/documents/search?q=[[has(my.document.title)]]&ref=ref${xClientVersionParam}`,
 	)
 })
 
@@ -47,7 +50,7 @@ it("supports multiple filters", () => {
 			}),
 		),
 	).toBe(
-		"https://qwerty.cdn.prismic.io/api/v2/documents/search?q=[[has(my.document.title)]]&q=[[has(my.document.subtitle)]]&ref=ref",
+		`https://qwerty.cdn.prismic.io/api/v2/documents/search?q=[[has(my.document.title)]]&q=[[has(my.document.subtitle)]]&ref=ref${xClientVersionParam}`,
 	)
 
 	// TODO: Remove when we remove support for deprecated `predicates` argument.
@@ -62,7 +65,7 @@ it("supports multiple filters", () => {
 			}),
 		),
 	).toBe(
-		"https://qwerty.cdn.prismic.io/api/v2/documents/search?q=[[has(my.document.title)]]&q=[[has(my.document.subtitle)]]&ref=ref",
+		`https://qwerty.cdn.prismic.io/api/v2/documents/search?q=[[has(my.document.title)]]&q=[[has(my.document.subtitle)]]&ref=ref${xClientVersionParam}`,
 	)
 })
 
@@ -85,7 +88,7 @@ it("supports params", () => {
 			}),
 		),
 	).toBe(
-		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&access_token=accessToken&pageSize=1&page=1&after=after&fetch=fetch&fetchLinks=fetchLinks&graphQuery=graphQuery&lang=lang&orderings=[orderings]&routes=routes&brokenRoute=brokenRoute",
+		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&access_token=accessToken&pageSize=1&page=1&after=after&fetch=fetch&fetchLinks=fetchLinks&graphQuery=graphQuery&lang=lang&orderings=[orderings]&routes=routes&brokenRoute=brokenRoute${xClientVersionParam}`,
 	)
 })
 
@@ -105,7 +108,9 @@ it("ignores nullish params", () => {
 				orderings: undefined,
 			}),
 		),
-	).toBe("https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref")
+	).toBe(
+		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref${xClientVersionParam}`,
+	)
 })
 
 it("supports array fetch param", () => {
@@ -117,7 +122,7 @@ it("supports array fetch param", () => {
 			}),
 		),
 	).toBe(
-		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&fetch=title,subtitle",
+		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&fetch=title,subtitle${xClientVersionParam}`,
 	)
 })
 
@@ -130,7 +135,7 @@ it("supports array fetchLinks param", () => {
 			}),
 		),
 	).toBe(
-		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&fetchLinks=page.link,page.second_link",
+		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&fetchLinks=page.link,page.second_link${xClientVersionParam}`,
 	)
 })
 
@@ -144,7 +149,7 @@ it("supports empty orderings param", () => {
 			}),
 		),
 	).toBe(
-		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[]",
+		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[]${xClientVersionParam}`,
 	)
 
 	expect(
@@ -155,7 +160,7 @@ it("supports empty orderings param", () => {
 			}),
 		),
 	).toBe(
-		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[]",
+		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[]${xClientVersionParam}`,
 	)
 })
 
@@ -169,7 +174,7 @@ it("supports array orderings param", () => {
 			}),
 		),
 	).toBe(
-		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[page.title,page.subtitle]",
+		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[page.title,page.subtitle]${xClientVersionParam}`,
 	)
 })
 
@@ -183,7 +188,7 @@ it("supports setting direction of ordering param", () => {
 			}),
 		),
 	).toBe(
-		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[page.title,page.subtitle]",
+		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[page.title,page.subtitle]${xClientVersionParam}`,
 	)
 
 	expect(
@@ -198,7 +203,7 @@ it("supports setting direction of ordering param", () => {
 			}),
 		),
 	).toBe(
-		"https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[page.title+desc,page.subtitle+desc]",
+		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[page.title+desc,page.subtitle+desc]${xClientVersionParam}`,
 	)
 })
 
@@ -219,7 +224,7 @@ it("supports single item routes param", () => {
 	).toBe(
 		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&routes=[${JSON.stringify(
 			route,
-		)}]`,
+		)}]${xClientVersionParam}`,
 	)
 })
 
@@ -247,8 +252,26 @@ it("supports array routes param", () => {
 	).toBe(
 		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&routes=${JSON.stringify(
 			routes,
-		)}`,
+		)}${xClientVersionParam}`,
 	)
+})
+
+it("forwards `x-c` header in production", () => {
+	expect(prismic.buildQueryURL(endpoint, { ref: "ref" })).toBe(
+		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref${xClientVersionParam}`,
+	)
+})
+
+it("forwards `x-c` and `x-d` headers in development", () => {
+	const originalEnv = { ...process.env }
+
+	process.env.NODE_ENV = "development"
+
+	expect(prismic.buildQueryURL(endpoint, { ref: "ref" })).toBe(
+		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref${xClientVersionParam}&x-d=1`,
+	)
+
+	process.env = originalEnv
 })
 
 it("warns if NODE_ENV is development and a string is provided to `orderings`", () => {

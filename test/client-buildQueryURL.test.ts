@@ -4,7 +4,11 @@ import { createTestClient } from "./__testutils__/createClient"
 import { getMasterRef } from "./__testutils__/getMasterRef"
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
 
+import { version } from "../package.json"
+
 import type * as prismic from "../src"
+
+const xClientVersion = `js-${version}`
 
 it("builds a query URL using the master ref", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository()
@@ -21,16 +25,48 @@ it("builds a query URL using the master ref", async (ctx) => {
 
 	const expectedSearchParams = new URLSearchParams({
 		ref,
+		"x-c": xClientVersion,
 	})
 	url.searchParams.delete("integrationFieldsRef")
-	url.searchParams.delete("x-c")
-	url.searchParams.delete("x-d")
 	url.searchParams.sort()
 	expectedSearchParams.sort()
 
 	expect(url.host).toBe(new URL(client.endpoint).host)
 	expect(url.pathname).toBe("/api/v2/documents/search")
 	expect(url.searchParams.toString()).toBe(expectedSearchParams.toString())
+})
+
+it("builds a query URL using the master ref in development mode", async (ctx) => {
+	const originalEnv = { ...process.env }
+
+	process.env.NODE_ENV = "development"
+
+	const repositoryResponse = ctx.mock.api.repository()
+	const ref = getMasterRef(repositoryResponse)
+
+	mockPrismicRestAPIV2({
+		repositoryResponse,
+		ctx,
+	})
+
+	const client = createTestClient()
+	const res = await client.buildQueryURL()
+	const url = new URL(res)
+
+	const expectedSearchParams = new URLSearchParams({
+		ref,
+		"x-c": xClientVersion,
+		"x-d": "1",
+	})
+	url.searchParams.delete("integrationFieldsRef")
+	url.searchParams.sort()
+	expectedSearchParams.sort()
+
+	expect(url.host).toBe(new URL(client.endpoint).host)
+	expect(url.pathname).toBe("/api/v2/documents/search")
+	expect(url.searchParams.toString()).toBe(expectedSearchParams.toString())
+
+	process.env = originalEnv
 })
 
 it("includes params if provided", async (ctx) => {
@@ -51,11 +87,10 @@ it("includes params if provided", async (ctx) => {
 		lang: params.lang?.toString() ?? "",
 		// TODO: Remove when Authorization header support works in browsers with CORS.
 		access_token: params.accessToken ?? "",
+		"x-c": xClientVersion,
 	})
 
 	url.searchParams.delete("integrationFieldsRef")
-	url.searchParams.delete("x-c")
-	url.searchParams.delete("x-d")
 	url.searchParams.sort()
 	expectedSearchParams.sort()
 
@@ -82,11 +117,10 @@ it("includes default params if provided", async (ctx) => {
 		lang: clientConfig.defaultParams?.lang?.toString() ?? "",
 		// TODO: Remove when Authorization header support works in browsers with CORS.
 		access_token: clientConfig.accessToken ?? "",
+		"x-c": xClientVersion,
 	})
 
 	url.searchParams.delete("integrationFieldsRef")
-	url.searchParams.delete("x-c")
-	url.searchParams.delete("x-d")
 	url.searchParams.sort()
 	expectedSearchParams.sort()
 
@@ -117,11 +151,10 @@ it("merges params and default params if provided", async (ctx) => {
 		page: clientConfig.defaultParams?.page?.toString() ?? "",
 		// TODO: Remove when Authorization header support works in browsers with CORS.
 		access_token: clientConfig.accessToken ?? "",
+		"x-c": xClientVersion,
 	})
 
 	url.searchParams.delete("integrationFieldsRef")
-	url.searchParams.delete("x-c")
-	url.searchParams.delete("x-d")
 	url.searchParams.sort()
 	expectedSearchParams.sort()
 

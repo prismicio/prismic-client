@@ -24,17 +24,11 @@ import { RefExpiredError } from "./errors/RefExpiredError"
 import { RefNotFoundError } from "./errors/RefNotFoundError"
 import { RepositoryNotFoundError } from "./errors/RepositoryNotFoundError"
 
-import { version } from "../package.json"
-
 import type { LinkResolverFunction } from "./helpers/asLink"
 import { asLink } from "./helpers/asLink"
 
 import type { BuildQueryURLArgs } from "./buildQueryURL"
-import {
-	PRISMIC_CLIENT_VERSION_PARAM,
-	PRISMIC_DEV_PARAM,
-	buildQueryURL,
-} from "./buildQueryURL"
+import { buildQueryURL } from "./buildQueryURL"
 import { filter } from "./filter"
 import { getRepositoryEndpoint } from "./getRepositoryEndpoint"
 import { getRepositoryName } from "./getRepositoryName"
@@ -465,22 +459,6 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	fetchFn: FetchLike
 
 	fetchOptions?: RequestInitLike
-
-	/**
-	 * Internal parameters that will be sent with each query.
-	 */
-	private internalDefaultParams: Omit<
-		BuildQueryURLArgs,
-		"ref" | "integrationFieldsRef" | "accessToken" | "routes"
-	> =
-		process.env.NODE_ENV === "development"
-			? {
-					[PRISMIC_DEV_PARAM]: 1,
-					[PRISMIC_CLIENT_VERSION_PARAM]: version,
-				}
-			: {
-					[PRISMIC_CLIENT_VERSION_PARAM]: version,
-				}
 
 	/**
 	 * Default parameters that will be sent with each query. These parameters can
@@ -1437,7 +1415,6 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			undefined
 
 		return buildQueryURL(this.endpoint, {
-			...this.internalDefaultParams,
 			...this.defaultParams,
 			...params,
 			ref,
