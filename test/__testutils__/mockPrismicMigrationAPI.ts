@@ -22,7 +22,10 @@ type MockPrismicMigrationAPIArgs = {
 }
 
 type MockPrismicMigrationAPIReturnType = {
-	documentsDatabase: Record<string, PostDocumentResult>
+	documentsDatabase: Record<
+		string,
+		PostDocumentResult & Pick<PrismicDocument, "data">
+	>
 }
 
 export const mockPrismicMigrationAPI = (
@@ -33,7 +36,10 @@ export const mockPrismicMigrationAPI = (
 	const writeToken = args.writeToken || args.client.writeToken
 	const migrationAPIKey = args.migrationAPIKey || args.client.migrationAPIKey
 
-	const documentsDatabase: Record<string, PostDocumentResult> = {}
+	const documentsDatabase: Record<
+		string,
+		PostDocumentResult & Pick<PrismicDocument, "data">
+	> = {}
 
 	const validateHeaders = (req: RestRequest) => {
 		if (args.requiredHeaders) {
@@ -55,12 +61,13 @@ export const mockPrismicMigrationAPI = (
 					lang: document.lang,
 					type: document.type,
 					uid: document.uid,
+					data: document.data,
 				}
 			}
 		} else {
 			for (const document of args.existingDocuments) {
 				if ("title" in document) {
-					documentsDatabase[document.id] = document
+					documentsDatabase[document.id] = { ...document, data: {} }
 				} else {
 					documentsDatabase[document.id] = {
 						title: args.ctx.mock.value.keyText({ state: "filled" }),
@@ -68,6 +75,7 @@ export const mockPrismicMigrationAPI = (
 						lang: document.lang,
 						type: document.type,
 						uid: document.uid,
+						data: document.data,
 					}
 				}
 			}
@@ -106,7 +114,7 @@ export const mockPrismicMigrationAPI = (
 			}
 
 			// Save the document in DB
-			documentsDatabase[id] = response
+			documentsDatabase[id] = { ...response, data: body.data }
 
 			return res(ctx.status(201), ctx.json(response))
 		}),
@@ -138,7 +146,10 @@ export const mockPrismicMigrationAPI = (
 			}
 
 			// Update the document in DB
-			documentsDatabase[req.params.id as string] = response
+			documentsDatabase[req.params.id as string] = {
+				...response,
+				data: body.data,
+			}
 
 			return res(ctx.json(response))
 		}),

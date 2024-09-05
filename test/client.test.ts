@@ -93,6 +93,10 @@ it("constructor throws if a prismic.io endpoint is given that is not for Rest AP
 		prismic.createClient("https://qwerty.cdn.prismic.io/api/v1", { fetch })
 	}).toThrowError(prismic.PrismicError)
 
+	const consoleWarnSpy = vi
+		.spyOn(console, "warn")
+		.mockImplementation(() => void 0)
+
 	expect(() => {
 		prismic.createClient("https://example.com/custom/endpoint", { fetch })
 	}, "Non-prismic.io endpoints are not checked").not.toThrow()
@@ -104,6 +108,8 @@ it("constructor throws if a prismic.io endpoint is given that is not for Rest AP
 	expect(() => {
 		prismic.createClient(prismic.getRepositoryEndpoint("qwerty"), { fetch })
 	}, "An endpoint created with getRepositoryEndpoint does not throw").not.toThrow()
+
+	consoleWarnSpy.mockRestore()
 
 	process.env.NODE_ENV = originalNodeEnv
 })

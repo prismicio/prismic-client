@@ -140,11 +140,13 @@ it.concurrent("creates new documents", async (ctx) => {
 	migration.createDocument(document, "foo")
 
 	let documents: DocumentMap | undefined
-	const reporter = vi.fn((event) => {
-		if (event.type === "documents:created") {
-			documents = event.data.documents
-		}
-	})
+	const reporter = vi.fn<(event: prismic.MigrateReporterEvents) => void>(
+		(event) => {
+			if (event.type === "documents:created") {
+				documents = event.data.documents
+			}
+		},
+	)
 
 	await client.migrate(migration, { reporter })
 
@@ -184,11 +186,13 @@ it.concurrent(
 		migration.createDocument(document, "foo", { masterLanguageDocument })
 
 		let documents: DocumentMap | undefined
-		const reporter = vi.fn((event) => {
-			if (event.type === "documents:created") {
-				documents = event.data.documents
-			}
-		})
+		const reporter = vi.fn<(event: prismic.MigrateReporterEvents) => void>(
+			(event) => {
+				if (event.type === "documents:created") {
+					documents = event.data.documents
+				}
+			},
+		)
 
 		await client.migrate(migration, { reporter })
 
@@ -239,11 +243,13 @@ it.concurrent(
 		})
 
 		let documents: DocumentMap | undefined
-		const reporter = vi.fn((event) => {
-			if (event.type === "documents:created") {
-				documents = event.data.documents
-			}
-		})
+		const reporter = vi.fn<(event: prismic.MigrateReporterEvents) => void>(
+			(event) => {
+				if (event.type === "documents:created") {
+					documents = event.data.documents
+				}
+			},
+		)
 
 		await client.migrate(migration, { reporter })
 
@@ -299,11 +305,13 @@ it.concurrent(
 		})
 
 		let documents: DocumentMap | undefined
-		const reporter = vi.fn((event) => {
-			if (event.type === "documents:created") {
-				documents = event.data.documents
-			}
-		})
+		const reporter = vi.fn<(event: prismic.MigrateReporterEvents) => void>(
+			(event) => {
+				if (event.type === "documents:created") {
+					documents = event.data.documents
+				}
+			},
+		)
 
 		await client.migrate(migration, { reporter })
 
@@ -346,11 +354,13 @@ it.concurrent(
 		migration.createDocument(document, "foo")
 
 		let documents: DocumentMap | undefined
-		const reporter = vi.fn((event) => {
-			if (event.type === "documents:created") {
-				documents = event.data.documents
-			}
-		})
+		const reporter = vi.fn<(event: prismic.MigrateReporterEvents) => void>(
+			(event) => {
+				if (event.type === "documents:created") {
+					documents = event.data.documents
+				}
+			},
+		)
 
 		await client.migrate(migration, { reporter })
 
@@ -398,11 +408,13 @@ it.concurrent("creates master locale documents first", async (ctx) => {
 	migration.createDocument(masterLanguageDocument, "foo")
 
 	let documents: DocumentMap | undefined
-	const reporter = vi.fn((event) => {
-		if (event.type === "documents:created") {
-			documents = event.data.documents
-		}
-	})
+	const reporter = vi.fn<(event: prismic.MigrateReporterEvents) => void>(
+		(event) => {
+			if (event.type === "documents:created") {
+				documents = event.data.documents
+			}
+		},
+	)
 
 	await client.migrate(migration, { reporter })
 

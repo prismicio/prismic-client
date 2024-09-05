@@ -448,69 +448,67 @@ export class WriteClient<
 		// Create assets
 		let i = 0
 		let created = 0
-		if (migration.assets.size) {
-			for (const [_, migrationAsset] of migration.assets) {
-				if (
-					typeof migrationAsset.id === "string" &&
-					assets.has(migrationAsset.id)
-				) {
-					reporter?.({
-						type: "assets:skipping",
-						data: {
-							reason: "already exists",
-							current: ++i,
-							remaining: migration.assets.size - i,
-							total: migration.assets.size,
-							asset: migrationAsset,
-						},
-					})
-				} else {
-					created++
-					reporter?.({
-						type: "assets:creating",
-						data: {
-							current: ++i,
-							remaining: migration.assets.size - i,
-							total: migration.assets.size,
-							asset: migrationAsset,
-						},
-					})
+		for (const [_, migrationAsset] of migration.assets) {
+			if (
+				typeof migrationAsset.id === "string" &&
+				assets.has(migrationAsset.id)
+			) {
+				reporter?.({
+					type: "assets:skipping",
+					data: {
+						reason: "already exists",
+						current: ++i,
+						remaining: migration.assets.size - i,
+						total: migration.assets.size,
+						asset: migrationAsset,
+					},
+				})
+			} else {
+				created++
+				reporter?.({
+					type: "assets:creating",
+					data: {
+						current: ++i,
+						remaining: migration.assets.size - i,
+						total: migration.assets.size,
+						asset: migrationAsset,
+					},
+				})
 
-					const { id, file, filename, ...params } = migrationAsset
+				const { id, file, filename, ...params } = migrationAsset
 
-					let resolvedFile: PostAssetParams["file"] | File
-					if (typeof file === "string") {
-						let url: URL | undefined
-						try {
-							url = new URL(file)
-						} catch (error) {
-							// noop
-						}
+				let resolvedFile: PostAssetParams["file"] | File
+				if (typeof file === "string") {
+					let url: URL | undefined
+					try {
+						url = new URL(file)
+					} catch (error) {
+						// noop
+					}
 
-						if (url) {
-							resolvedFile = await this.fetchForeignAsset(
-								url.toString(),
-								fetchParams,
-							)
-						} else {
-							resolvedFile = file
-						}
-					} else if (file instanceof URL) {
+					if (url) {
 						resolvedFile = await this.fetchForeignAsset(
-							file.toString(),
+							url.toString(),
 							fetchParams,
 						)
 					} else {
 						resolvedFile = file
 					}
-
-					const asset = await this.createAsset(resolvedFile, filename, {
-						...params,
-						...fetchParams,
-					})
-
-					assets.set(id, asset)
+				} else if (file instanceof URL) {
+					resolvedFile = await this.fetchForeignAsset(
+						file.toString(),
+						fetchParams,
+					)
+				} else {
+					resolvedFile = file
 				}
+
+				const asset = await this.createAsset(resolvedFile, filename, {
+					...params,
+					...fetchParams,
+				})
+
+				assets.set(id, asset)
 			}
 		}
 
@@ -585,85 +583,83 @@ export class WriteClient<
 
 		let i = 0
 		let created = 0
-		if (sortedDocuments.length) {
-			for (const { document, params } of sortedDocuments) {
-				if (document.id && documents.has(document.id)) {
-					reporter?.({
-						type: "documents:skipping",
-						data: {
-							reason: "already exists",
-							current: ++i,
-							remaining: sortedDocuments.length - i,
-							total: sortedDocuments.length,
-							document,
-							documentParams: params,
-						},
-					})
+		for (const { document, params } of sortedDocuments) {
+			if (document.id && documents.has(document.id)) {
+				reporter?.({
+					type: "documents:skipping",
+					data: {
+						reason: "already exists",
+						current: ++i,
+						remaining: sortedDocuments.length - i,
+						total: sortedDocuments.length,
+						document,
+						documentParams: params,
+					},
+				})
 
-					// Index the migration document
-					documents.set(document, documents.get(document.id)!)
-				} else {
-					created++
-					reporter?.({
-						type: "documents:creating",
-						data: {
-							current: ++i,
-							remaining: sortedDocuments.length - i,
-							total: sortedDocuments.length,
-							document,
-							documentParams: params,
-						},
-					})
+				// Index the migration document
+				documents.set(document, documents.get(document.id)!)
+			} else {
+				created++
+				reporter?.({
+					type: "documents:creating",
+					data: {
+						current: ++i,
+						remaining: sortedDocuments.length - i,
+						total: sortedDocuments.length,
+						document,
+						documentParams: params,
+					},
+				})
 
-					// Resolve master language document ID for non-master locale documents
-					let masterLanguageDocumentID: string | undefined
-					if (document.lang !== masterLocale) {
-						if (params.masterLanguageDocument) {
-							if (typeof params.masterLanguageDocument === "function") {
-								const masterLanguageDocument =
-									await params.masterLanguageDocument()
+				// Resolve master language document ID for non-master locale documents
+				let masterLanguageDocumentID: string | undefined
+				if (document.lang !== masterLocale) {
+					if (params.masterLanguageDocument) {
+						if (typeof params.masterLanguageDocument === "function") {
+							const masterLanguageDocument =
+								await params.masterLanguageDocument()
 
-								if (masterLanguageDocument) {
-									// `masterLanguageDocument` is an existing document
-									if (masterLanguageDocument.id) {
-										masterLanguageDocumentID = documents.get(
-											masterLanguageDocument.id,
-										)?.id
-									}
-
-									// `masterLanguageDocument` is a new document
-									if (!masterLanguageDocumentID) {
-										masterLanguageDocumentID = documents.get(
-											masterLanguageDocument,
-										)?.id
-									}
+							if (masterLanguageDocument) {
+								// `masterLanguageDocument` is an existing document
+								if (masterLanguageDocument.id) {
+									masterLanguageDocumentID = documents.get(
+										masterLanguageDocument.id,
+									)?.id
 								}
-							} else {
-								masterLanguageDocumentID = params.masterLanguageDocument.id
+
+								// `masterLanguageDocument` is a new document
+								if (!masterLanguageDocumentID) {
+									masterLanguageDocumentID = documents.get(
+										masterLanguageDocument,
+									)?.id
+								}
 							}
-						} else if (document.alternate_languages) {
-							masterLanguageDocumentID = document.alternate_languages.find(
-								({ lang }) => lang === masterLocale,
-							)?.id
+						} else {
+							masterLanguageDocumentID = params.masterLanguageDocument.id
 						}
+					} else if (document.alternate_languages) {
+						masterLanguageDocumentID = document.alternate_languages.find(
+							({ lang }) => lang === masterLocale,
+						)?.id
 					}
-
-					const { id } = await this.createDocument(
-						// We'll upload docuements data later on.
-						{ ...document, data: {} },
-						params.documentName,
-						{
-							masterLanguageDocumentID,
-							...fetchParams,
-						},
-					)
-
-					// Index old ID for Prismic to Prismic migration
-					if (document.id) {
-						documents.set(document.id, { ...document, id })
-					}
-					documents.set(document, { ...document, id })
 				}
+
+				const { id } = await this.createDocument(
+					// We'll upload docuements data later on.
+					{ ...document, data: {} },
+					params.documentName,
+					{
+						masterLanguageDocumentID,
+						...fetchParams,
+					},
+				)
+
+				// Index old ID for Prismic to Prismic migration
+				if (document.id) {
+					documents.set(document.id, { ...document, id })
+				}
+				documents.set(document, { ...document, id })
 			}
 		}
 

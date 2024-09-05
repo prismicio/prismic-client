@@ -286,7 +286,7 @@ it.concurrent(
 
 		ctx.server.use(
 			rest.get(asset.url.split("?")[0], (_req, res, ctx) => {
-				return res(ctx.set("content-type", ""), ctx.text("foo"))
+				return res(ctx.text("foo"))
 			}),
 		)
 
@@ -311,6 +311,52 @@ it.concurrent(
 		})
 	},
 )
+
+it.concurrent("creates new asset with metadata", async (ctx) => {
+	const client = createTestWriteClient({ ctx })
+
+	const assetMetadata = {
+		notes: "foo",
+		alt: "bar",
+		credits: "baz",
+	}
+	const asset = mockAsset(ctx, assetMetadata)
+	const dummyFileData = "foo"
+
+	const existingTags = [
+		{
+			id: "00000000-4444-4444-4444-121212121212",
+			name: "qux",
+			created_at: 0,
+			last_modified: 0,
+		},
+	]
+
+	mockPrismicRestAPIV2({ ctx })
+	const { assetsDatabase, tagsDatabase } = mockPrismicAssetAPI({
+		ctx,
+		client,
+		existingTags,
+		newAssets: [asset],
+	})
+	mockPrismicMigrationAPI({ ctx, client })
+
+	const migration = prismic.createMigration()
+	migration.createAsset(dummyFileData, asset.filename, {
+		...assetMetadata,
+		tags: ["qux", "quux"],
+	})
+
+	const reporter = vi.fn()
+
+	await client.migrate(migration, { reporter })
+
+	const newAsset = assetsDatabase[0][0]
+	expect(newAsset.notes).toBe(assetMetadata.notes)
+	expect(newAsset.alt).toBe(assetMetadata.alt)
+	expect(newAsset.credits).toBe(assetMetadata.credits)
+	expect(newAsset.tags).toStrictEqual(tagsDatabase)
+})
 
 it.concurrent(
 	"throws on fetch error when creating a new asset from a file URL",

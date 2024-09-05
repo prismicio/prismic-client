@@ -35,36 +35,35 @@ type MockPrismicAssetAPIReturnType = {
 }
 
 const DEFAULT_ASSET: Asset = {
-	id: "Yz7kzxAAAB0AREK7",
-	uploader_id: "uploader_id",
+	id: "default",
+	uploader_id: "",
 	created_at: 0,
 	last_modified: 0,
 	kind: "image",
-	filename: "foo.jpg",
+	filename: "default.jpg",
 	extension: "jpg",
-	url: "https://example.com/foo.jpg",
+	url: "https://example.com/default.jpg",
 	width: 1,
 	height: 1,
 	size: 1,
-	notes: "notes",
-	credits: "credits",
-	alt: "alt",
-	origin_url: "origin_url",
+	notes: "",
+	credits: "",
+	alt: "",
+	origin_url: "",
 	search_highlight: { filename: [], notes: [], credits: [], alt: [] },
 	tags: [],
 }
 
-export const mockAsset = (ctx: TestContext): Asset => {
-	const { id, url, alt, copyright } = ctx.mock.value.image({
+export const mockAsset = (ctx: TestContext, assets?: Partial<Asset>): Asset => {
+	const { id, url } = ctx.mock.value.image({
 		state: "filled",
 	})
 
 	return {
 		...DEFAULT_ASSET,
+		...assets,
 		id,
 		url,
-		alt: alt ?? undefined,
-		credits: copyright ?? undefined,
 	}
 }
 
@@ -170,7 +169,6 @@ export const mockPrismicAssetAPI = (
 			validateHeaders(req)
 
 			const { tags, ...body } = await req.json<PatchAssetParams>()
-
 			const asset = assetsDatabase
 				.flat()
 				.find((asset) => asset.id === req.params.id)
@@ -209,7 +207,6 @@ export const mockPrismicAssetAPI = (
 			validateHeaders(req)
 
 			const items: AssetTag[] = tagsDatabase
-
 			const response: GetAssetTagsResult = { items }
 
 			return res(ctx.json(response))
@@ -225,7 +222,6 @@ export const mockPrismicAssetAPI = (
 			validateHeaders(req)
 
 			const body = await req.json<PostAssetTagParams>()
-
 			const tag: AssetTag = {
 				id: `${`${Date.now()}`.slice(-8)}-4444-4444-4444-121212121212`,
 				created_at: Date.now(),
