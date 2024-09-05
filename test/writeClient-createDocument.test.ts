@@ -9,9 +9,9 @@ import { UNKNOWN_RATE_LIMIT_DELAY } from "../src/BaseClient"
 it.concurrent("creates a document", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
-	const expectedID = "foo"
+	const newDocument = { id: "foo" }
 
-	mockPrismicMigrationAPI({ ctx, client, expectedID })
+	mockPrismicMigrationAPI({ ctx, client, newDocuments: [newDocument] })
 
 	// @ts-expect-error - testing purposes
 	const { id } = await client.createDocument(
@@ -24,7 +24,7 @@ it.concurrent("creates a document", async (ctx) => {
 		"Foo",
 	)
 
-	expect(id).toBe(expectedID)
+	expect(id).toBe(newDocument.id)
 })
 
 it.concurrent("throws forbidden error on invalid credentials", async (ctx) => {
@@ -54,7 +54,7 @@ it.skip("supports abort controller", async (ctx) => {
 	const controller = new AbortController()
 	controller.abort()
 
-	mockPrismicMigrationAPI({ ctx, client, expectedID: "foo" })
+	mockPrismicMigrationAPI({ ctx, client })
 
 	await expect(() =>
 		// @ts-expect-error - testing purposes
@@ -74,9 +74,7 @@ it.skip("supports abort controller", async (ctx) => {
 it.concurrent("respects unknown rate limit", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
-	const expectedID = "foo"
-
-	mockPrismicMigrationAPI({ ctx, client, expectedID })
+	mockPrismicMigrationAPI({ ctx, client })
 
 	const args = [
 		{

@@ -9,13 +9,17 @@ import { UNKNOWN_RATE_LIMIT_DELAY } from "../src/BaseClient"
 it.concurrent("updates a document", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
-	const expectedID = "foo"
+	const { documentsDatabase } = mockPrismicMigrationAPI({
+		ctx,
+		client,
+		existingDocuments: 1,
+	})
 
-	mockPrismicMigrationAPI({ ctx, client, expectedID })
+	const document = Object.values(documentsDatabase)[0]
 
 	await expect(
 		// @ts-expect-error - testing purposes
-		client.updateDocument(expectedID, {
+		client.updateDocument(document.id, {
 			uid: "uid",
 			data: {},
 		}),
@@ -25,7 +29,7 @@ it.concurrent("updates a document", async (ctx) => {
 it.concurrent("throws not found error on not found ID", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
-	mockPrismicMigrationAPI({ ctx, client, expectedID: "not-found" })
+	mockPrismicMigrationAPI({ ctx, client })
 
 	await expect(() =>
 		// @ts-expect-error - testing purposes
@@ -39,12 +43,16 @@ it.concurrent("throws not found error on not found ID", async (ctx) => {
 it.concurrent("respects unknown rate limit", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
-	const expectedID = "foo"
+	const { documentsDatabase } = mockPrismicMigrationAPI({
+		ctx,
+		client,
+		existingDocuments: 1,
+	})
 
-	mockPrismicMigrationAPI({ ctx, client, expectedID })
+	const document = Object.values(documentsDatabase)[0]
 
 	const args = [
-		expectedID,
+		document.id,
 		{
 			uid: "uid",
 			data: {},
@@ -83,17 +91,21 @@ it.concurrent("throws forbidden error on invalid credentials", async (ctx) => {
 it.skip("supports abort controller", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
-	const expectedID = "foo"
-
 	const controller = new AbortController()
 	controller.abort()
 
-	mockPrismicMigrationAPI({ ctx, client, expectedID })
+	const { documentsDatabase } = mockPrismicMigrationAPI({
+		ctx,
+		client,
+		existingDocuments: 1,
+	})
+
+	const document = Object.values(documentsDatabase)[0]
 
 	await expect(() =>
 		// @ts-expect-error - testing purposes
 		client.updateDocument(
-			expectedID,
+			document.id,
 			{
 				uid: "uid",
 				data: {},
