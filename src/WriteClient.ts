@@ -90,13 +90,13 @@ type MigrateReporterEventMap = {
 	}
 	"assets:skipping": {
 		reason: string
-		index: number
+		current: number
 		remaining: number
 		total: number
 		asset: MigrationAsset
 	}
 	"assets:creating": {
-		index: number
+		current: number
 		remaining: number
 		total: number
 		asset: MigrationAsset
@@ -113,14 +113,14 @@ type MigrateReporterEventMap = {
 	}
 	"documents:skipping": {
 		reason: string
-		index: number
+		current: number
 		remaining: number
 		total: number
 		document: PrismicMigrationDocument
 		documentParams: PrismicMigrationDocumentParams
 	}
 	"documents:creating": {
-		index: number
+		current: number
 		remaining: number
 		total: number
 		document: PrismicMigrationDocument
@@ -131,7 +131,7 @@ type MigrateReporterEventMap = {
 		documents: DocumentMap
 	}
 	"documents:updating": {
-		index: number
+		current: number
 		remaining: number
 		total: number
 		document: PrismicMigrationDocument
@@ -458,7 +458,7 @@ export class WriteClient<
 						type: "assets:skipping",
 						data: {
 							reason: "already exists",
-							index: ++i,
+							current: ++i,
 							remaining: migration.assets.size - i,
 							total: migration.assets.size,
 							asset: migrationAsset,
@@ -469,7 +469,7 @@ export class WriteClient<
 					reporter?.({
 						type: "assets:creating",
 						data: {
-							index: ++i,
+							current: ++i,
 							remaining: migration.assets.size - i,
 							total: migration.assets.size,
 							asset: migrationAsset,
@@ -564,8 +564,7 @@ export class WriteClient<
 
 		const documents: DocumentMap<TDocuments> = new Map()
 		for (const document of existingDocuments) {
-			// Index on document and document ID
-			documents.set(document, document)
+			// Index on  document ID
 			documents.set(document.id, document)
 		}
 
@@ -593,7 +592,7 @@ export class WriteClient<
 						type: "documents:skipping",
 						data: {
 							reason: "already exists",
-							index: ++i,
+							current: ++i,
 							remaining: sortedDocuments.length - i,
 							total: sortedDocuments.length,
 							document,
@@ -608,7 +607,7 @@ export class WriteClient<
 					reporter?.({
 						type: "documents:creating",
 						data: {
-							index: ++i,
+							current: ++i,
 							remaining: sortedDocuments.length - i,
 							total: sortedDocuments.length,
 							document,
@@ -625,9 +624,19 @@ export class WriteClient<
 									await params.masterLanguageDocument()
 
 								if (masterLanguageDocument) {
-									masterLanguageDocumentID = documents.get(
-										masterLanguageDocument,
-									)?.id
+									// `masterLanguageDocument` is an existing document
+									if (masterLanguageDocument.id) {
+										masterLanguageDocumentID = documents.get(
+											masterLanguageDocument.id,
+										)?.id
+									}
+
+									// `masterLanguageDocument` is a new document
+									if (!masterLanguageDocumentID) {
+										masterLanguageDocumentID = documents.get(
+											masterLanguageDocument,
+										)?.id
+									}
 								}
 							} else {
 								masterLanguageDocumentID = params.masterLanguageDocument.id
@@ -694,7 +703,7 @@ export class WriteClient<
 			reporter?.({
 				type: "documents:updating",
 				data: {
-					index: ++i,
+					current: ++i,
 					remaining: migration.documents.length - i,
 					total: migration.documents.length,
 					document,

@@ -17,6 +17,9 @@ export interface CreateWriteClient {
  * Creates a Prismic client that can be used to query and write content to a
  * repository.
  *
+ * @remarks
+ * This client only works with Node 20 or later.
+ *
  * @example
  *
  * ```ts
