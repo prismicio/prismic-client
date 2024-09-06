@@ -4,9 +4,10 @@ import { rest } from "msw"
 
 import { createTestWriteClient } from "./__testutils__/createWriteClient"
 
-// Skip test on Node 16 and 18 (File  support)
+// Skip test on Node 16 and 18 (File and FormData support)
 const isNode16 = process.version.startsWith("v16")
-const it = _it.skipIf(isNode16)
+const isNode18 = process.version.startsWith("v18")
+const it = _it.skipIf(isNode16 || isNode18)
 
 it.concurrent("fetches a foreign asset with content type", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
