@@ -1,0 +1,1324 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`patches link to media fields > existing > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "height": "1",
+        "id": "id-existing",
+        "kind": "image",
+        "link_type": "Media",
+        "name": "default.jpg",
+        "size": "1",
+        "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=2560&h=1440&fit=crop",
+        "width": "1",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > existing > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "2ff58c741ba",
+      "items": [
+        {
+          "field": {
+            "height": "1",
+            "id": "id-existing",
+            "kind": "image",
+            "link_type": "Media",
+            "name": "default.jpg",
+            "size": "1",
+            "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+            "width": "1",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "height": "1",
+          "id": "id-existing",
+          "kind": "image",
+          "link_type": "Media",
+          "name": "default.jpg",
+          "size": "1",
+          "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+          "width": "1",
+        },
+        "group": [
+          {
+            "field": {
+              "height": "1",
+              "id": "id-existing",
+              "kind": "image",
+              "link_type": "Media",
+              "name": "default.jpg",
+              "size": "1",
+              "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+              "width": "1",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "at",
+      "variation": "tortor",
+      "version": "a79b9dd",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > existing > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "e93cc3e4f28",
+      "items": [
+        {
+          "field": {
+            "height": "1",
+            "id": "id-existing",
+            "kind": "image",
+            "link_type": "Media",
+            "name": "default.jpg",
+            "size": "1",
+            "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
+            "width": "1",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "height": "1",
+          "id": "id-existing",
+          "kind": "image",
+          "link_type": "Media",
+          "name": "default.jpg",
+          "size": "1",
+          "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
+          "width": "1",
+        },
+      },
+      "slice_label": "Pellentesque",
+      "slice_type": "nulla_posuere",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > existing > static zone 1`] = `
+{
+  "field": {
+    "height": "1",
+    "id": "id-existing",
+    "kind": "image",
+    "link_type": "Media",
+    "name": "default.jpg",
+    "size": "1",
+    "url": "https://images.unsplash.com/photo-1553531384-397c80973a0b?w=4335&h=6502&fit=crop",
+    "width": "1",
+  },
+}
+`;
+
+exports[`patches link to media fields > existingNonImage > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "id": "id-existing",
+        "kind": "document",
+        "link_type": "Media",
+        "name": "foo.pdf",
+        "size": "1",
+        "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=2560&h=1440&fit=crop",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > existingNonImage > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "2ff58c741ba",
+      "items": [
+        {
+          "field": {
+            "id": "id-existing",
+            "kind": "document",
+            "link_type": "Media",
+            "name": "foo.pdf",
+            "size": "1",
+            "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "id-existing",
+          "kind": "document",
+          "link_type": "Media",
+          "name": "foo.pdf",
+          "size": "1",
+          "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+        },
+        "group": [
+          {
+            "field": {
+              "id": "id-existing",
+              "kind": "document",
+              "link_type": "Media",
+              "name": "foo.pdf",
+              "size": "1",
+              "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "at",
+      "variation": "tortor",
+      "version": "a79b9dd",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > existingNonImage > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "e93cc3e4f28",
+      "items": [
+        {
+          "field": {
+            "id": "id-existing",
+            "kind": "document",
+            "link_type": "Media",
+            "name": "foo.pdf",
+            "size": "1",
+            "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "id-existing",
+          "kind": "document",
+          "link_type": "Media",
+          "name": "foo.pdf",
+          "size": "1",
+          "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
+        },
+      },
+      "slice_label": "Pellentesque",
+      "slice_type": "nulla_posuere",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > existingNonImage > static zone 1`] = `
+{
+  "field": {
+    "id": "id-existing",
+    "kind": "document",
+    "link_type": "Media",
+    "name": "foo.pdf",
+    "size": "1",
+    "url": "https://images.unsplash.com/photo-1553531384-397c80973a0b?w=4335&h=6502&fit=crop",
+  },
+}
+`;
+
+exports[`patches link to media fields > new > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "height": "1",
+        "id": "ef95d5daa4d",
+        "kind": "image",
+        "link_type": "Media",
+        "name": "default.jpg",
+        "size": "1",
+        "url": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=2560&h=1705&fit=crop",
+        "width": "1",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > new > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "2ff58c741ba",
+      "items": [
+        {
+          "field": {
+            "height": "1",
+            "id": "f2c3f8bfc90",
+            "kind": "image",
+            "link_type": "Media",
+            "name": "default.jpg",
+            "size": "1",
+            "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
+            "width": "1",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "height": "1",
+          "id": "f2c3f8bfc90",
+          "kind": "image",
+          "link_type": "Media",
+          "name": "default.jpg",
+          "size": "1",
+          "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
+          "width": "1",
+        },
+        "group": [
+          {
+            "field": {
+              "height": "1",
+              "id": "f2c3f8bfc90",
+              "kind": "image",
+              "link_type": "Media",
+              "name": "default.jpg",
+              "size": "1",
+              "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
+              "width": "1",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "at",
+      "variation": "tortor",
+      "version": "a79b9dd",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > new > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "e93cc3e4f28",
+      "items": [
+        {
+          "field": {
+            "height": "1",
+            "id": "45306297c5e",
+            "kind": "image",
+            "link_type": "Media",
+            "name": "default.jpg",
+            "size": "1",
+            "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+            "width": "1",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "height": "1",
+          "id": "45306297c5e",
+          "kind": "image",
+          "link_type": "Media",
+          "name": "default.jpg",
+          "size": "1",
+          "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+          "width": "1",
+        },
+      },
+      "slice_label": "Pellentesque",
+      "slice_type": "nulla_posuere",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > new > static zone 1`] = `
+{
+  "field": {
+    "height": "1",
+    "id": "c5c95f8d3ac",
+    "kind": "image",
+    "link_type": "Media",
+    "name": "default.jpg",
+    "size": "1",
+    "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+    "width": "1",
+  },
+}
+`;
+
+exports[`patches link to media fields > otherRepository > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "height": "1715",
+        "id": "fdb33894dcf",
+        "kind": "purus",
+        "link_type": "Media",
+        "name": "nulla.example",
+        "size": "2039",
+        "url": "https://db0f6f37ebeb6ea09489124345af2a45.example.com/foo.png",
+        "width": "2091",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > otherRepository > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "2ff58c741ba",
+      "items": [
+        {
+          "field": {
+            "height": "2741",
+            "id": "ba97bfb16bf",
+            "kind": "quis",
+            "link_type": "Media",
+            "name": "senectus.example",
+            "size": "844",
+            "url": "https://515f7ca1126821ccd3eb8b013a857528.example.com/foo.png",
+            "width": "749",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "height": "1276",
+          "id": "ba97bfb16bf",
+          "kind": "ullamcorper",
+          "link_type": "Media",
+          "name": "fringilla.example",
+          "size": "818",
+          "url": "https://515f7ca1126821ccd3eb8b013a857528.example.com/foo.png",
+          "width": "2024",
+        },
+        "group": [
+          {
+            "field": {
+              "height": "2964",
+              "id": "ba97bfb16bf",
+              "kind": "pellentesque",
+              "link_type": "Media",
+              "name": "cras.example",
+              "size": "1564",
+              "url": "https://515f7ca1126821ccd3eb8b013a857528.example.com/foo.png",
+              "width": "599",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "at",
+      "variation": "tortor",
+      "version": "a79b9dd",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > otherRepository > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "e93cc3e4f28",
+      "items": [
+        {
+          "field": {
+            "height": "1500",
+            "id": "a57963dc361",
+            "kind": "quam",
+            "link_type": "Media",
+            "name": "integer.example",
+            "size": "1043",
+            "url": "https://6d52012dca4fc77aa554f25430aef501.example.com/foo.png",
+            "width": "737",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "height": "761",
+          "id": "a57963dc361",
+          "kind": "nibh",
+          "link_type": "Media",
+          "name": "ac.example",
+          "size": "2757",
+          "url": "https://6d52012dca4fc77aa554f25430aef501.example.com/foo.png",
+          "width": "1300",
+        },
+      },
+      "slice_label": "Pellentesque",
+      "slice_type": "nulla_posuere",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > otherRepository > static zone 1`] = `
+{
+  "field": {
+    "height": "740",
+    "id": "97acc6e9abf",
+    "kind": "suspendisse",
+    "link_type": "Media",
+    "name": "elementum.example",
+    "size": "556",
+    "url": "https://7713b5e0c356963c79ccf86c6ff1710c.example.com/foo.png",
+    "width": "2883",
+  },
+}
+`;
+
+exports[`patches link to media fields > otherRepositoryNotFoundID > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "link_type": "Any",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > otherRepositoryNotFoundID > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "2ff58c741ba",
+      "items": [
+        {
+          "field": {
+            "link_type": "Any",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "link_type": "Any",
+        },
+        "group": [
+          {
+            "field": {
+              "link_type": "Any",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "at",
+      "variation": "tortor",
+      "version": "a79b9dd",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > otherRepositoryNotFoundID > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "e93cc3e4f28",
+      "items": [
+        {
+          "field": {
+            "link_type": "Any",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "link_type": "Any",
+        },
+      },
+      "slice_label": "Pellentesque",
+      "slice_type": "nulla_posuere",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > otherRepositoryNotFoundID > static zone 1`] = `
+{
+  "field": {
+    "link_type": "Any",
+  },
+}
+`;
+
+exports[`patches link to media fields > richTextExisting > group 1`] = `
+{
+  "group": [
+    {
+      "field": [
+        {
+          "spans": [
+            {
+              "end": 5,
+              "start": 0,
+              "type": "strong",
+            },
+            {
+              "data": {
+                "height": "1",
+                "id": "id-existing",
+                "kind": "image",
+                "link_type": "Media",
+                "name": "default.jpg",
+                "size": "1",
+                "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=2560&h=1440&fit=crop",
+                "width": "1",
+              },
+              "end": 5,
+              "start": 0,
+              "type": "hyperlink",
+            },
+          ],
+          "text": "lorem",
+          "type": "paragraph",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > richTextExisting > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "2ff58c741ba",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [
+                {
+                  "end": 5,
+                  "start": 0,
+                  "type": "strong",
+                },
+                {
+                  "data": {
+                    "height": "1",
+                    "id": "id-existing",
+                    "kind": "image",
+                    "link_type": "Media",
+                    "name": "default.jpg",
+                    "size": "1",
+                    "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+                    "width": "1",
+                  },
+                  "end": 5,
+                  "start": 0,
+                  "type": "hyperlink",
+                },
+              ],
+              "text": "lorem",
+              "type": "paragraph",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [
+              {
+                "end": 5,
+                "start": 0,
+                "type": "strong",
+              },
+              {
+                "data": {
+                  "height": "1",
+                  "id": "id-existing",
+                  "kind": "image",
+                  "link_type": "Media",
+                  "name": "default.jpg",
+                  "size": "1",
+                  "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+                  "width": "1",
+                },
+                "end": 5,
+                "start": 0,
+                "type": "hyperlink",
+              },
+            ],
+            "text": "lorem",
+            "type": "paragraph",
+          },
+        ],
+        "group": [
+          {
+            "field": [
+              {
+                "spans": [
+                  {
+                    "end": 5,
+                    "start": 0,
+                    "type": "strong",
+                  },
+                  {
+                    "data": {
+                      "height": "1",
+                      "id": "id-existing",
+                      "kind": "image",
+                      "link_type": "Media",
+                      "name": "default.jpg",
+                      "size": "1",
+                      "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+                      "width": "1",
+                    },
+                    "end": 5,
+                    "start": 0,
+                    "type": "hyperlink",
+                  },
+                ],
+                "text": "lorem",
+                "type": "paragraph",
+              },
+            ],
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "at",
+      "variation": "tortor",
+      "version": "a79b9dd",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > richTextExisting > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "e93cc3e4f28",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [
+                {
+                  "end": 5,
+                  "start": 0,
+                  "type": "strong",
+                },
+                {
+                  "data": {
+                    "height": "1",
+                    "id": "id-existing",
+                    "kind": "image",
+                    "link_type": "Media",
+                    "name": "default.jpg",
+                    "size": "1",
+                    "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
+                    "width": "1",
+                  },
+                  "end": 5,
+                  "start": 0,
+                  "type": "hyperlink",
+                },
+              ],
+              "text": "lorem",
+              "type": "paragraph",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [
+              {
+                "end": 5,
+                "start": 0,
+                "type": "strong",
+              },
+              {
+                "data": {
+                  "height": "1",
+                  "id": "id-existing",
+                  "kind": "image",
+                  "link_type": "Media",
+                  "name": "default.jpg",
+                  "size": "1",
+                  "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
+                  "width": "1",
+                },
+                "end": 5,
+                "start": 0,
+                "type": "hyperlink",
+              },
+            ],
+            "text": "lorem",
+            "type": "paragraph",
+          },
+        ],
+      },
+      "slice_label": "Pellentesque",
+      "slice_type": "nulla_posuere",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > richTextExisting > static zone 1`] = `
+{
+  "field": [
+    {
+      "spans": [
+        {
+          "end": 5,
+          "start": 0,
+          "type": "strong",
+        },
+        {
+          "data": {
+            "height": "1",
+            "id": "id-existing",
+            "kind": "image",
+            "link_type": "Media",
+            "name": "default.jpg",
+            "size": "1",
+            "url": "https://images.unsplash.com/photo-1553531384-397c80973a0b?w=4335&h=6502&fit=crop",
+            "width": "1",
+          },
+          "end": 5,
+          "start": 0,
+          "type": "hyperlink",
+        },
+      ],
+      "text": "lorem",
+      "type": "paragraph",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > richTextNew > group 1`] = `
+{
+  "group": [
+    {
+      "field": [
+        {
+          "spans": [
+            {
+              "end": 5,
+              "start": 0,
+              "type": "strong",
+            },
+            {
+              "data": {
+                "height": "1",
+                "id": "ef95d5daa4d",
+                "kind": "image",
+                "link_type": "Media",
+                "name": "default.jpg",
+                "size": "1",
+                "url": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=2560&h=1705&fit=crop",
+                "width": "1",
+              },
+              "end": 5,
+              "start": 0,
+              "type": "hyperlink",
+            },
+          ],
+          "text": "lorem",
+          "type": "paragraph",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > richTextNew > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "2ff58c741ba",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [
+                {
+                  "end": 5,
+                  "start": 0,
+                  "type": "strong",
+                },
+                {
+                  "data": {
+                    "height": "1",
+                    "id": "f2c3f8bfc90",
+                    "kind": "image",
+                    "link_type": "Media",
+                    "name": "default.jpg",
+                    "size": "1",
+                    "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
+                    "width": "1",
+                  },
+                  "end": 5,
+                  "start": 0,
+                  "type": "hyperlink",
+                },
+              ],
+              "text": "lorem",
+              "type": "paragraph",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [
+              {
+                "end": 5,
+                "start": 0,
+                "type": "strong",
+              },
+              {
+                "data": {
+                  "height": "1",
+                  "id": "f2c3f8bfc90",
+                  "kind": "image",
+                  "link_type": "Media",
+                  "name": "default.jpg",
+                  "size": "1",
+                  "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
+                  "width": "1",
+                },
+                "end": 5,
+                "start": 0,
+                "type": "hyperlink",
+              },
+            ],
+            "text": "lorem",
+            "type": "paragraph",
+          },
+        ],
+        "group": [
+          {
+            "field": [
+              {
+                "spans": [
+                  {
+                    "end": 5,
+                    "start": 0,
+                    "type": "strong",
+                  },
+                  {
+                    "data": {
+                      "height": "1",
+                      "id": "f2c3f8bfc90",
+                      "kind": "image",
+                      "link_type": "Media",
+                      "name": "default.jpg",
+                      "size": "1",
+                      "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
+                      "width": "1",
+                    },
+                    "end": 5,
+                    "start": 0,
+                    "type": "hyperlink",
+                  },
+                ],
+                "text": "lorem",
+                "type": "paragraph",
+              },
+            ],
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "at",
+      "variation": "tortor",
+      "version": "a79b9dd",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > richTextNew > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "e93cc3e4f28",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [
+                {
+                  "end": 5,
+                  "start": 0,
+                  "type": "strong",
+                },
+                {
+                  "data": {
+                    "height": "1",
+                    "id": "45306297c5e",
+                    "kind": "image",
+                    "link_type": "Media",
+                    "name": "default.jpg",
+                    "size": "1",
+                    "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+                    "width": "1",
+                  },
+                  "end": 5,
+                  "start": 0,
+                  "type": "hyperlink",
+                },
+              ],
+              "text": "lorem",
+              "type": "paragraph",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [
+              {
+                "end": 5,
+                "start": 0,
+                "type": "strong",
+              },
+              {
+                "data": {
+                  "height": "1",
+                  "id": "45306297c5e",
+                  "kind": "image",
+                  "link_type": "Media",
+                  "name": "default.jpg",
+                  "size": "1",
+                  "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+                  "width": "1",
+                },
+                "end": 5,
+                "start": 0,
+                "type": "hyperlink",
+              },
+            ],
+            "text": "lorem",
+            "type": "paragraph",
+          },
+        ],
+      },
+      "slice_label": "Pellentesque",
+      "slice_type": "nulla_posuere",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > richTextNew > static zone 1`] = `
+{
+  "field": [
+    {
+      "spans": [
+        {
+          "end": 5,
+          "start": 0,
+          "type": "strong",
+        },
+        {
+          "data": {
+            "height": "1",
+            "id": "c5c95f8d3ac",
+            "kind": "image",
+            "link_type": "Media",
+            "name": "default.jpg",
+            "size": "1",
+            "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+            "width": "1",
+          },
+          "end": 5,
+          "start": 0,
+          "type": "hyperlink",
+        },
+      ],
+      "text": "lorem",
+      "type": "paragraph",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > richTextOtherRepository > group 1`] = `
+{
+  "group": [
+    {
+      "field": [
+        {
+          "spans": [
+            {
+              "end": 5,
+              "start": 0,
+              "type": "strong",
+            },
+            {
+              "data": {
+                "height": "1715",
+                "id": "fdb33894dcf",
+                "kind": "purus",
+                "link_type": "Media",
+                "name": "nulla.example",
+                "size": "2039",
+                "url": "https://db0f6f37ebeb6ea09489124345af2a45.example.com/foo.png",
+                "width": "2091",
+              },
+              "end": 5,
+              "start": 0,
+              "type": "hyperlink",
+            },
+          ],
+          "text": "lorem",
+          "type": "paragraph",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > richTextOtherRepository > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "2ff58c741ba",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [
+                {
+                  "end": 5,
+                  "start": 0,
+                  "type": "strong",
+                },
+                {
+                  "data": {
+                    "height": "2741",
+                    "id": "ba97bfb16bf",
+                    "kind": "quis",
+                    "link_type": "Media",
+                    "name": "senectus.example",
+                    "size": "844",
+                    "url": "https://515f7ca1126821ccd3eb8b013a857528.example.com/foo.png",
+                    "width": "749",
+                  },
+                  "end": 5,
+                  "start": 0,
+                  "type": "hyperlink",
+                },
+              ],
+              "text": "lorem",
+              "type": "paragraph",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [
+              {
+                "end": 5,
+                "start": 0,
+                "type": "strong",
+              },
+              {
+                "data": {
+                  "height": "1276",
+                  "id": "ba97bfb16bf",
+                  "kind": "ullamcorper",
+                  "link_type": "Media",
+                  "name": "fringilla.example",
+                  "size": "818",
+                  "url": "https://515f7ca1126821ccd3eb8b013a857528.example.com/foo.png",
+                  "width": "2024",
+                },
+                "end": 5,
+                "start": 0,
+                "type": "hyperlink",
+              },
+            ],
+            "text": "lorem",
+            "type": "paragraph",
+          },
+        ],
+        "group": [
+          {
+            "field": [
+              {
+                "spans": [
+                  {
+                    "end": 5,
+                    "start": 0,
+                    "type": "strong",
+                  },
+                  {
+                    "data": {
+                      "height": "2964",
+                      "id": "ba97bfb16bf",
+                      "kind": "pellentesque",
+                      "link_type": "Media",
+                      "name": "cras.example",
+                      "size": "1564",
+                      "url": "https://515f7ca1126821ccd3eb8b013a857528.example.com/foo.png",
+                      "width": "599",
+                    },
+                    "end": 5,
+                    "start": 0,
+                    "type": "hyperlink",
+                  },
+                ],
+                "text": "lorem",
+                "type": "paragraph",
+              },
+            ],
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "at",
+      "variation": "tortor",
+      "version": "a79b9dd",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > richTextOtherRepository > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "e93cc3e4f28",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [
+                {
+                  "end": 5,
+                  "start": 0,
+                  "type": "strong",
+                },
+                {
+                  "data": {
+                    "height": "1500",
+                    "id": "a57963dc361",
+                    "kind": "quam",
+                    "link_type": "Media",
+                    "name": "integer.example",
+                    "size": "1043",
+                    "url": "https://6d52012dca4fc77aa554f25430aef501.example.com/foo.png",
+                    "width": "737",
+                  },
+                  "end": 5,
+                  "start": 0,
+                  "type": "hyperlink",
+                },
+              ],
+              "text": "lorem",
+              "type": "paragraph",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [
+              {
+                "end": 5,
+                "start": 0,
+                "type": "strong",
+              },
+              {
+                "data": {
+                  "height": "761",
+                  "id": "a57963dc361",
+                  "kind": "nibh",
+                  "link_type": "Media",
+                  "name": "ac.example",
+                  "size": "2757",
+                  "url": "https://6d52012dca4fc77aa554f25430aef501.example.com/foo.png",
+                  "width": "1300",
+                },
+                "end": 5,
+                "start": 0,
+                "type": "hyperlink",
+              },
+            ],
+            "text": "lorem",
+            "type": "paragraph",
+          },
+        ],
+      },
+      "slice_label": "Pellentesque",
+      "slice_type": "nulla_posuere",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > richTextOtherRepository > static zone 1`] = `
+{
+  "field": [
+    {
+      "spans": [
+        {
+          "end": 5,
+          "start": 0,
+          "type": "strong",
+        },
+        {
+          "data": {
+            "height": "740",
+            "id": "97acc6e9abf",
+            "kind": "suspendisse",
+            "link_type": "Media",
+            "name": "elementum.example",
+            "size": "556",
+            "url": "https://7713b5e0c356963c79ccf86c6ff1710c.example.com/foo.png",
+            "width": "2883",
+          },
+          "end": 5,
+          "start": 0,
+          "type": "hyperlink",
+        },
+      ],
+      "text": "lorem",
+      "type": "paragraph",
+    },
+  ],
+}
+`;

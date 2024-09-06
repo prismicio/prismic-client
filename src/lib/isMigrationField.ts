@@ -17,8 +17,6 @@ import type { RichTextField } from "../types/value/richText"
 import type { SliceZone } from "../types/value/sliceZone"
 import type { AnyRegularField } from "../types/value/types"
 
-import * as isFilled from "../helpers/isFilled"
-
 /**
  * Checks if a field is a slice zone.
  *
@@ -149,12 +147,7 @@ export const image = (
 		) {
 			// Migration image field
 			return true
-		} else if (
-			"id" in field &&
-			"dimensions" in field &&
-			field.dimensions &&
-			isFilled.image(field)
-		) {
+		} else if ("id" in field && "url" in field && "dimensions" in field) {
 			// Regular image field
 			return true
 		}

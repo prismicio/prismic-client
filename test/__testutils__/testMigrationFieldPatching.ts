@@ -1,9 +1,11 @@
 import type { TestContext } from "vitest"
 import { it as _it, describe, vi } from "vitest"
 
+import { rest } from "msw"
+
 import { createPagedQueryResponses } from "./createPagedQueryResponses"
 import { createTestWriteClient } from "./createWriteClient"
-import { mockPrismicAssetAPI } from "./mockPrismicAssetAPI"
+import { mockAsset, mockPrismicAssetAPI } from "./mockPrismicAssetAPI"
 import { mockPrismicMigrationAPI } from "./mockPrismicMigrationAPI"
 import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2"
 
@@ -23,6 +25,7 @@ type GetDataArgs = {
 	migrationDocuments: (Omit<prismic.PrismicMigrationDocument, "uid"> & {
 		uid: string
 	})[]
+	mockedDomain: string
 }
 
 type InternalTestMigrationFieldPatchingArgs = {
@@ -48,6 +51,7 @@ const internalTestMigrationFieldPatching = (
 			pages: 1,
 			pageSize: 1,
 		})
+		queryResponse[0].results[0].id = "id-existing"
 
 		const otherDocument = {
 			...ctx.mock.value.document(),
@@ -55,17 +59,26 @@ const internalTestMigrationFieldPatching = (
 		}
 		const newDocument = ctx.mock.value.document()
 
+		const newID = "id-new"
+
 		mockPrismicRestAPIV2({ ctx, repositoryResponse: repository, queryResponse })
 		const { assetsDatabase } = mockPrismicAssetAPI({
 			ctx,
 			client,
-			existingAssets: [1],
+			existingAssets: [[mockAsset(ctx, { id: "id-existing" })]],
 		})
 		const { documentsDatabase } = mockPrismicMigrationAPI({
 			ctx,
 			client,
-			newDocuments: [otherDocument, newDocument],
+			newDocuments: [{ id: "id-migration" }, { id: newID }],
 		})
+
+		const mockedDomain = `https://${client.repositoryName}.example.com`
+		ctx.server.use(
+			rest.get(`${mockedDomain}/:path`, (__testutils__req, res, ctx) =>
+				res(ctx.text("foo")),
+			),
+		)
 
 		const migration = prismic.createMigration()
 
@@ -75,6 +88,7 @@ const internalTestMigrationFieldPatching = (
 			existingAssets: assetsDatabase.flat(),
 			existingDocuments: queryResponse[0].results,
 			migrationDocuments: [otherDocument],
+			mockedDomain,
 		})
 
 		migration.createDocument(otherDocument, "other")
@@ -85,7 +99,7 @@ const internalTestMigrationFieldPatching = (
 		await vi.runAllTimersAsync()
 		await migrationProcess
 
-		const { data } = documentsDatabase[newDocument.id]
+		const { data } = documentsDatabase[newID]
 
 		if (args.expectStrictEqual) {
 			ctx.expect(data).toStrictEqual(newDocument.data)
@@ -93,6 +107,7 @@ const internalTestMigrationFieldPatching = (
 			ctx.expect(data).toMatchSnapshot()
 		}
 
+		vi.useRealTimers()
 		vi.restoreAllMocks()
 	})
 }
@@ -176,16 +191,7 @@ export const testMigrationSimpleFieldPatching = (
 	})
 }
 
-export const testMigrationImageFieldPatching = (
-	description: string,
-	cases: TestMigrationFieldPatchingFactoryCases,
-): void => {
-	testMigrationFieldPatchingFactory(description, cases, {
-		expectStrictEqual: false,
-	})
-}
-
-export const testMigrationLinkFieldPatching = (
+export const testMigrationFieldPatching = (
 	description: string,
 	cases: TestMigrationFieldPatchingFactoryCases,
 ): void => {

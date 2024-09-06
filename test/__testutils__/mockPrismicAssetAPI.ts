@@ -61,9 +61,9 @@ export const mockAsset = (ctx: TestContext, assets?: Partial<Asset>): Asset => {
 
 	return {
 		...DEFAULT_ASSET,
-		...assets,
 		id,
 		url,
+		...assets,
 	}
 }
 
