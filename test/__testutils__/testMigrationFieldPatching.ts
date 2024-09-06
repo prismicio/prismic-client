@@ -107,7 +107,6 @@ const internalTestMigrationFieldPatching = (
 			ctx.expect(data).toMatchSnapshot()
 		}
 
-		vi.useRealTimers()
 		vi.restoreAllMocks()
 	})
 }

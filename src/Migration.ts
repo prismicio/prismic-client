@@ -143,8 +143,6 @@ export class Migration<
 	 */
 	assets: Map<MigrationAsset["file"], MigrationAsset> = new Map()
 
-	constructor() {}
-
 	createAsset(
 		asset: Asset | FilledImageFieldImage | FilledLinkToMediaField,
 	): CreateAssetReturnType

@@ -24,24 +24,10 @@ it("creates a document", () => {
 	})
 })
 
-it("creates a document from an existing Prismic document", () => {
+it("creates a document from an existing Prismic document", (ctx) => {
 	const migration = prismic.createMigration()
 
-	const document: prismic.PrismicDocument = {
-		id: "id",
-		type: "type",
-		uid: "uid",
-		lang: "lang",
-		url: "url",
-		href: "href",
-		slugs: [],
-		tags: [],
-		linked_documents: [],
-		first_publication_date: "0-0-0T0:0:0+0",
-		last_publication_date: "0-0-0T0:0:0+0",
-		alternate_languages: [],
-		data: {},
-	}
+	const document = ctx.mock.value.document()
 	const documentName = "documentName"
 
 	migration.createDocument(document, documentName)

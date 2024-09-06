@@ -170,7 +170,7 @@ type FetchJobResult<TJSON = any> = {
 	text?: string
 }
 
-export class BaseClient {
+export abstract class BaseClient {
 	/**
 	 * The function used to make network requests to the Prismic REST API. In
 	 * environments where a global `fetch` function does not exist, such as
