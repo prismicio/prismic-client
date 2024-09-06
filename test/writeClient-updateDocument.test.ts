@@ -144,3 +144,22 @@ it.concurrent("supports custom headers", async (ctx) => {
 		.resolves.toBeUndefined()
 	ctx.expect.assertions(2)
 })
+
+it("throws fetch errors as-is", async (ctx) => {
+	const client = createTestWriteClient({
+		ctx,
+		clientConfig: {
+			fetch: () => {
+				throw new Error(ctx.task.name)
+			},
+		},
+	})
+
+	await expect(() =>
+		// @ts-expect-error - testing purposes
+		client.updateDocument("foo", {
+			uid: "uid",
+			data: {},
+		}),
+	).rejects.toThrowError(ctx.task.name)
+})

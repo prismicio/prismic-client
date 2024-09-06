@@ -10,11 +10,6 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export type LimitFunction = {
 	/**
-	 * The number of queued items waiting to be executed.
-	 */
-	readonly queueSize: number
-
-	/**
 	 * @param fn - Promise-returning/async function.
 	 * @param arguments - Any arguments to pass through to `fn`. Support for
 	 *   passing arguments on to the `fn` is provided in order to be able to avoid
@@ -97,16 +92,8 @@ export const pLimit = ({
 		})()
 	}
 
-	const generator = (function_: AnyFunction, ...arguments_: unknown[]) =>
-		new Promise((resolve) => {
+	return ((function_: AnyFunction, ...arguments_: unknown[]) =>
+		new Promise<unknown>((resolve) => {
 			enqueue(function_, resolve, arguments_)
-		})
-
-	Object.defineProperties(generator, {
-		queueSize: {
-			get: () => queue.length,
-		},
-	})
-
-	return generator as LimitFunction
+		})) as LimitFunction
 }

@@ -243,3 +243,19 @@ it.concurrent("respects unknown rate limit", async (ctx) => {
 
 	expect(Date.now() - start).toBeGreaterThanOrEqual(UNKNOWN_RATE_LIMIT_DELAY)
 })
+
+it("throws fetch errors as-is", async (ctx) => {
+	const client = createTestWriteClient({
+		ctx,
+		clientConfig: {
+			fetch: () => {
+				throw new Error(ctx.task.name)
+			},
+		},
+	})
+
+	await expect(() =>
+		// @ts-expect-error - testing purposes
+		client.createAsset("foo", "foo.png"),
+	).rejects.toThrowError(ctx.task.name)
+})
