@@ -9,7 +9,6 @@ import * as prismic from "@prismicio/client";
 
 const writeClient = prismic.createWriteClient("example-prismic-repo", {
 	writeToken: "xxx"
-	migrationAPIKey: "yyy"
 })
 ```
 

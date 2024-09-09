@@ -21,7 +21,6 @@ export const createTestWriteClient = (
 	return prismic.createWriteClient(repositoryName, {
 		fetch,
 		writeToken: "xxx",
-		migrationAPIKey: "yyy",
 		// We create unique endpoints so we can run tests concurrently
 		assetAPIEndpoint: `https://${repositoryName}.asset-api.prismic.io`,
 		migrationAPIEndpoint: `https://${repositoryName}.migration.prismic.io`,

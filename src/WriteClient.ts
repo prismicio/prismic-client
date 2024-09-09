@@ -225,6 +225,18 @@ const ASSET_CREDITS_MAX_LENGTH = 500
 const ASSET_ALT_MAX_LENGTH = 500
 
 /**
+ * Prismic migration API demo keys.
+ */
+const MIGRATION_API_DEMO_KEYS = [
+	"cSaZlfkQlF9C6CEAM2Del6MNX9WonlV86HPbeEJL",
+	"pZCexCajUQ4jriYwIGSxA1drZrFxDyFf1S0D1K0P",
+	"Yc0mfrkGDw8gaaGKTrzwC3QUZDajv6k73DA99vWN",
+	"ySzSEbVMAb5S1oSCQfbVG4mbh9Cb8wlF7BCvKI0L",
+	"g2DA3EKWvx8uxVYcNFrmT5nJpon1Vi9V4XcOibJD",
+	"CCNIlI0Vz41J66oFwsHUXaZa6NYFIY6z7aDF62Bc",
+]
+
+/**
  * Checks if a string is an asset tag ID.
  *
  * @param maybeAssetTagID - A string that's maybe an asset tag ID.
@@ -297,12 +309,45 @@ export const validateAssetMetadata = ({
  * Configuration for clients that determine how content is queried.
  */
 export type WriteClientConfig = {
+	/**
+	 * A Prismic write token that allows writing content to the repository.
+	 */
 	writeToken: string
 
-	migrationAPIKey: string
+	/**
+	 * An explicit Prismic migration API key that allows working with the
+	 * migration API. If none is provided, the client will pick a random one to
+	 * authenticate your requests.
+	 *
+	 * @remarks
+	 * Those keys are the same for all Prismic users. They are only useful while
+	 * the migration API is in beta to reduce load. It should be one of:
+	 *
+	 * - `cSaZlfkQlF9C6CEAM2Del6MNX9WonlV86HPbeEJL`
+	 * - `pZCexCajUQ4jriYwIGSxA1drZrFxDyFf1S0D1K0P`
+	 * - `Yc0mfrkGDw8gaaGKTrzwC3QUZDajv6k73DA99vWN`
+	 * - `ySzSEbVMAb5S1oSCQfbVG4mbh9Cb8wlF7BCvKI0L`
+	 * - `g2DA3EKWvx8uxVYcNFrmT5nJpon1Vi9V4XcOibJD`
+	 * - `CCNIlI0Vz41J66oFwsHUXaZa6NYFIY6z7aDF62Bc`
+	 */
+	migrationAPIKey?: string
 
+	/**
+	 * The Prismic asset API endpoint.
+	 *
+	 * @defaultValue `"https://asset-api.prismic.io/"`
+	 *
+	 * @see Prismic asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+	 */
 	assetAPIEndpoint?: string
 
+	/**
+	 * The Prismic migration API endpoint.
+	 *
+	 * @defaultValue `"https://migration.prismic.io/"`
+	 *
+	 * @see Prismic migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
+	 */
 	migrationAPIEndpoint?: string
 } & ClientConfig
 
@@ -349,7 +394,11 @@ export class WriteClient<
 		}
 
 		this.writeToken = options.writeToken
-		this.migrationAPIKey = options.migrationAPIKey
+		this.migrationAPIKey =
+			options.migrationAPIKey ||
+			MIGRATION_API_DEMO_KEYS[
+				Math.floor(Math.random() * MIGRATION_API_DEMO_KEYS.length)
+			]
 
 		if (options.assetAPIEndpoint) {
 			this.assetAPIEndpoint = `${options.assetAPIEndpoint}/`
