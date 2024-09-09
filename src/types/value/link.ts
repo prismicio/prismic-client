@@ -24,6 +24,7 @@ export type EmptyLinkField<
 	Type extends (typeof LinkType)[keyof typeof LinkType] = typeof LinkType.Any,
 > = {
 	link_type: Type | string
+	text?: string
 }
 
 /**

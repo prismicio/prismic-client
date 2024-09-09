@@ -79,6 +79,25 @@ expectType<prismic.ContentRelationshipField<string, string, never, "filled">>(
 )
 
 /**
+ * Empty state with text.
+ */
+expectType<prismic.ContentRelationshipField>({
+	link_type: prismic.LinkType.Document,
+	text: "string",
+})
+expectType<prismic.ContentRelationshipField<string, string, never, "empty">>({
+	link_type: prismic.LinkType.Document,
+	text: "string",
+})
+expectType<prismic.ContentRelationshipField<string, string, never, "filled">>(
+	// @ts-expect-error - Filled fields cannot contain an empty value.
+	{
+		link_type: prismic.LinkType.Document,
+		text: "string",
+	},
+)
+
+/**
  * Supports custom document type.
  */
 expectType<prismic.ContentRelationshipField<"foo">>({

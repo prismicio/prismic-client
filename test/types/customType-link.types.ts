@@ -67,9 +67,7 @@ expectType<prismic.CustomTypeModelLinkField>({
 	type: prismic.CustomTypeModelFieldType.Link,
 	config: {
 		label: "string",
-		text: {
-			type: prismic.CustomTypeModelFieldType.Text,
-		},
+		allowText: true,
 	},
 })
 

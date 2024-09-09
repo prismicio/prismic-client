@@ -48,9 +48,7 @@ expectType<prismic.CustomTypeModelLinkToMediaField>({
 	config: {
 		label: "string",
 		select: prismic.CustomTypeModelLinkSelectType.Media,
-		text: {
-			type: prismic.CustomTypeModelFieldType.Text,
-		},
+		allowText: true,
 	},
 })
 
