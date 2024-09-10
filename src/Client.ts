@@ -406,12 +406,8 @@ export class Client<
 				hostname.endsWith(".prismic.io") &&
 				!hostname.endsWith(".cdn.prismic.io")
 			) {
-				const repositoryName = getRepositoryName(documentAPIEndpoint)
-				const dotCDNEndpoint = getRepositoryEndpoint(repositoryName)
 				console.warn(
-					`[@prismicio/client] A non-.cdn endpoint was provided to create a client with (\`${documentAPIEndpoint}\`). Non-.cdn endpoints can have unexpected side-effects and cause performance issues when querying Prismic. Please convert it to the \`.cdn\` alternative (\`${dotCDNEndpoint}\`) or use the repository name directly instead (\`${repositoryName}\`). For more details, see ${devMsg(
-						"endpoint-must-use-cdn",
-					)}`,
+					`[@prismicio/client] The client was created with a non-CDN endpoint. Convert it to the CDN endpoint for better performance. For more details, see ${devMsg("endpoint-must-use-cdn")}`,
 				)
 			}
 
@@ -422,7 +418,7 @@ export class Client<
 				repositoryNameOrEndpoint !== options.documentAPIEndpoint
 			) {
 				console.warn(
-					`[@prismicio/client] A repository endpoint was provided to create a client with (\`${repositoryNameOrEndpoint}\`) along with a different \`documentAPIEndpoint\` options. The \`documentAPIEndpoint\` option will be preferred over the repository endpoint to query content. Please create the client using your repository name, and the \`documentAPIEndpoint\` option if necessary, instead. For more details, see ${devMsg("prefer-repository-name")}`,
+					`[@prismicio/client] Multiple incompatible endpoints were provided. Create the client using a repository name to prevent this error. For more details, see ${devMsg("prefer-repository-name")}`,
 				)
 			}
 		}
@@ -433,7 +429,7 @@ export class Client<
 				this.repositoryName = getRepositoryName(repositoryNameOrEndpoint)
 			} catch (error) {
 				console.warn(
-					`[@prismicio/client] Could not infer the repository name from the repository endpoint that was provided to create the client with (\`${repositoryNameOrEndpoint}\`). Methods requiring the repository name to work will be disabled. Please create the client using your repository name, and the \`documentAPIEndpoint\` option if necessary, to ensure all methods are enabled. For more details, see ${devMsg("prefer-repository-name")}`,
+					`[@prismicio/client] A repository name could not be inferred from the provided endpoint (\`${repositoryNameOrEndpoint}\`). Some methods will be disabled. Create the client using a repository name to prevent this warning. For more details, see ${devMsg("prefer-repository-name")}`,
 				)
 			}
 		} else {

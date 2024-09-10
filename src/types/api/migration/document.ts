@@ -30,7 +30,7 @@ export type PostDocumentParams<
  *
  * @typeParam TDocument - Type of the created Prismic document.
  *
- * @see Prismic asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+ * @see Prismic Asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
 export type PostDocumentResult<
 	TDocument extends PrismicDocument = PrismicDocument,
@@ -73,7 +73,7 @@ export type PutDocumentParams<
  *
  * @typeParam TDocument - Type of the updated Prismic document.
  *
- * @see Prismic asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+ * @see Prismic Asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
 export type PutDocumentResult<
 	TDocument extends PrismicDocument = PrismicDocument,

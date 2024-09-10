@@ -32,7 +32,7 @@ it("constructor warns if running in a browser-like environment", () => {
 	globalThis.window = originalWindow
 })
 
-it("uses provided asset API endpoint and adds `/` suffix", () => {
+it("uses provided Asset API endpoint and adds `/` suffix", () => {
 	const client = prismic.createWriteClient("qwerty", {
 		fetch: vi.fn(),
 		assetAPIEndpoint: "https://example.com",

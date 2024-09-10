@@ -18,12 +18,12 @@ export interface CreateWriteClient {
  * repository.
  *
  * @remarks
- * This client only works with Node 20 or later.
+ * This client works in environments supporting File, Blob, and FormData,
+ * including Node.js 20 and later.
  *
  * @example
  *
  * ```ts
- * // With a repository name.
  * createWriteClient("qwerty", { writeToken: "***" })
  * ```
  *

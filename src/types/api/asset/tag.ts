@@ -1,7 +1,7 @@
 /**
- * An object representing an tag used by the asset API.
+ * An object representing an tag used by the Asset API.
  *
- * @see Prismic asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+ * @see Prismic Asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
 export type AssetTag = {
 	/**
@@ -36,24 +36,24 @@ export type AssetTag = {
 }
 
 /**
- * An object representing the result of querying tags from the asset API.
+ * An object representing the result of querying tags from the Asset API.
  *
- * @see Prismic asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+ * @see Prismic Asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
 export type GetAssetTagsResult = { items: AssetTag[] }
 
 /**
- * Parameters for creating a tag in the asset API.
+ * Parameters for creating a tag in the Asset API.
  *
- * @see Prismic asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+ * @see Prismic Asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
 export type PostAssetTagParams = {
 	name: string
 }
 
 /**
- * Result of creating a tag in the asset API.
+ * Result of creating a tag in the Asset API.
  *
- * @see Prismic asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+ * @see Prismic Asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
 export type PostAssetTagResult = AssetTag

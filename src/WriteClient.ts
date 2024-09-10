@@ -159,7 +159,7 @@ export type MigrateReporterEvents = {
 }[MigrateReporterEventTypes]
 
 /**
- * A query response from the Prismic asset API. The response contains pagination
+ * A query response from the Prismic Asset API. The response contains pagination
  * metadata and a list of matching results for the query.
  */
 type GetAssetsReturnType = {
@@ -244,7 +244,7 @@ const MIGRATION_API_DEMO_KEYS = [
  * @returns `true` if the string is an asset tag ID, `false` otherwise.
  */
 const isAssetTagID = (maybeAssetTagID: string): boolean => {
-	// Taken from @sinclair/typebox which is the uuid type checker of the asset API
+	// Taken from @sinclair/typebox which is the uuid type checker of the Asset API
 	// See: https://github.com/sinclairzx81/typebox/blob/e36f5658e3a56d8c32a711aa616ec8bb34ca14b4/test/runtime/compiler/validate.ts#L15
 	// Tag is already a tag ID
 	return /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(
@@ -333,11 +333,11 @@ export type WriteClientConfig = {
 	migrationAPIKey?: string
 
 	/**
-	 * The Prismic asset API endpoint.
+	 * The Prismic Asset API endpoint.
 	 *
 	 * @defaultValue `"https://asset-api.prismic.io/"`
 	 *
-	 * @see Prismic asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+	 * @see Prismic Asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
 	 */
 	assetAPIEndpoint?: string
 
@@ -1102,7 +1102,7 @@ export class WriteClient<
 	}
 
 	/**
-	 * Creates a tag in the asset API.
+	 * Creates a tag in the Asset API.
 	 *
 	 * @remarks
 	 * Tags should be at least 3 characters long and 20 characters at most.
@@ -1137,7 +1137,7 @@ export class WriteClient<
 	}
 
 	/**
-	 * Queries existing tags from the asset API.
+	 * Queries existing tags from the Asset API.
 	 *
 	 * @param params - Additional fetch parameters.
 	 *
@@ -1238,15 +1238,15 @@ export class WriteClient<
 	}
 
 	/**
-	 * Builds fetch parameters for the asset API.
+	 * Builds fetch parameters for the Asset API.
 	 *
 	 * @typeParam TBody - Type of the body to send in the fetch request.
 	 *
 	 * @param params - Method, body, and additional fetch parameters.
 	 *
-	 * @returns An object that can be fetched to interact with the asset API.
+	 * @returns An object that can be fetched to interact with the Asset API.
 	 *
-	 * @see Prismic asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+	 * @see Prismic Asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
 	 */
 	private buildAssetAPIQueryParams<TBody = FormData | Record<string, unknown>>({
 		method,
