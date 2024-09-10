@@ -225,7 +225,7 @@ const ASSET_CREDITS_MAX_LENGTH = 500
 const ASSET_ALT_MAX_LENGTH = 500
 
 /**
- * Prismic migration API demo keys.
+ * Prismic Migration API demo keys.
  */
 const MIGRATION_API_DEMO_KEYS = [
 	"cSaZlfkQlF9C6CEAM2Del6MNX9WonlV86HPbeEJL",
@@ -315,13 +315,13 @@ export type WriteClientConfig = {
 	writeToken: string
 
 	/**
-	 * An explicit Prismic migration API key that allows working with the
-	 * migration API. If none is provided, the client will pick a random one to
+	 * An explicit Prismic Migration API key that allows working with the
+	 * Migration API. If none is provided, the client will pick a random one to
 	 * authenticate your requests.
 	 *
 	 * @remarks
 	 * Those keys are the same for all Prismic users. They are only useful while
-	 * the migration API is in beta to reduce load. It should be one of:
+	 * the Migration API is in beta to reduce load. It should be one of:
 	 *
 	 * - `cSaZlfkQlF9C6CEAM2Del6MNX9WonlV86HPbeEJL`
 	 * - `pZCexCajUQ4jriYwIGSxA1drZrFxDyFf1S0D1K0P`
@@ -342,11 +342,11 @@ export type WriteClientConfig = {
 	assetAPIEndpoint?: string
 
 	/**
-	 * The Prismic migration API endpoint.
+	 * The Prismic Migration API endpoint.
 	 *
 	 * @defaultValue `"https://migration.prismic.io/"`
 	 *
-	 * @see Prismic migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
+	 * @see Prismic Migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
 	 */
 	migrationAPIEndpoint?: string
 } & ClientConfig
@@ -389,7 +389,7 @@ export class WriteClient<
 
 		if (typeof globalThis.window !== "undefined") {
 			console.warn(
-				`[@prismicio/client] Prismic write client appears to be running in a browser environment. This is not recommended as it exposes your write token and migration API key. Consider using Prismic write client in a server environment only, preferring the regular client for browser environement. For more details, see ${devMsg("avoid-write-client-in-browser")}`,
+				`[@prismicio/client] Prismic write client appears to be running in a browser environment. This is not recommended as it exposes your write token and Migration API key. Consider using Prismic write client in a server environment only, preferring the regular client for browser environement. For more details, see ${devMsg("avoid-write-client-in-browser")}`,
 			)
 		}
 
@@ -416,7 +416,7 @@ export class WriteClient<
 	 * @param migration - A migration prepared with {@link createMigration}.
 	 * @param params - An event listener and additional fetch parameters.
 	 *
-	 * @see Prismic migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
+	 * @see Prismic Migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
 	 */
 	async migrate(
 		migration: Migration<TDocuments>,
@@ -1167,7 +1167,7 @@ export class WriteClient<
 	 *
 	 * @returns The ID of the created document.
 	 *
-	 * @see Prismic migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
+	 * @see Prismic Migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
 	 */
 	private async createDocument<TType extends TDocuments["type"]>(
 		document: PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>>,
@@ -1208,7 +1208,7 @@ export class WriteClient<
 	 * @param document - The document data to update.
 	 * @param params - Additional fetch parameters.
 	 *
-	 * @see Prismic migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
+	 * @see Prismic Migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
 	 */
 	private async updateDocument<TType extends TDocuments["type"]>(
 		id: string,
@@ -1283,15 +1283,15 @@ export class WriteClient<
 	}
 
 	/**
-	 * Builds fetch parameters for the migration API.
+	 * Builds fetch parameters for the Migration API.
 	 *
 	 * @typeParam TBody - Type of the body to send in the fetch request.
 	 *
 	 * @param params - Method, body, and additional fetch options.
 	 *
-	 * @returns An object that can be fetched to interact with the migration API.
+	 * @returns An object that can be fetched to interact with the Migration API.
 	 *
-	 * @see Prismic migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
+	 * @see Prismic Migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
 	 */
 	private buildMigrationAPIQueryParams<
 		TBody extends PostDocumentParams | PutDocumentParams,

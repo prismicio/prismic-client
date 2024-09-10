@@ -138,7 +138,7 @@ type MakeUIDOptional<TMigrationDocument extends { uid: string | null }> =
 		: Omit<TMigrationDocument, "uid"> & Partial<Pick<TMigrationDocument, "uid">>
 
 /**
- * A Prismic document compatible with the migration API.
+ * A Prismic document compatible with the Migration API.
  *
  * @see More details on the migraiton API: {@link https://prismic.io/docs/migration-api-technical-reference}
  */
@@ -196,7 +196,7 @@ export type PrismicMigrationDocument<
 		: never
 
 /**
- * Parameters used when creating a Prismic document with the migration API.
+ * Parameters used when creating a Prismic document with the Migration API.
  *
  * @see More details on the migraiton API: {@link https://prismic.io/docs/migration-api-technical-reference}
  */

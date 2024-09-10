@@ -2,7 +2,7 @@
 
 `@prismicio/client`'s write client uses credentials to authenticate write queries to a Prismic repository.
 
-The repository write token and migration API key must be provided when creating a `@prismicio/client` write client like the following:
+The repository write token and Migration API key must be provided when creating a `@prismicio/client` write client like the following:
 
 ```typescript
 import * as prismic from "@prismicio/client";

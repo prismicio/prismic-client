@@ -16,7 +16,7 @@ it.concurrent("migrates nothing when migration is empty", async (ctx) => {
 
 	mockPrismicRestAPIV2({ ctx })
 	mockPrismicAssetAPI({ ctx, client })
-	// Not mocking migration API to test we're not calling it
+	// Not mocking Migration API to test we're not calling it
 	// mockPrismicMigrationAPI({ ctx, client })
 
 	const migration = prismic.createMigration()

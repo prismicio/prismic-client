@@ -17,7 +17,7 @@ export const MigrationFieldType = {
 } as const
 
 /**
- * An alternate version of the {@link ImageField} for use with the migration API.
+ * An alternate version of the {@link ImageField} for use with the Migration API.
  */
 export type ImageMigrationField =
 	| (MigrationAsset & {
@@ -27,7 +27,7 @@ export type ImageMigrationField =
 
 /**
  * An alternate version of the {@link LinkToMediaField} for use with the
- * migration API.
+ * Migration API.
  */
 export type LinkToMediaMigrationField =
 	| (MigrationAsset & {
@@ -37,7 +37,7 @@ export type LinkToMediaMigrationField =
 
 /**
  * An alternate version of the {@link ContentRelationshipField} for use with the
- * migration API.
+ * Migration API.
  */
 export type ContentRelationshipMigrationField =
 	| PrismicDocument
@@ -49,7 +49,7 @@ export type ContentRelationshipMigrationField =
 	| undefined
 
 /**
- * An alternate version of the {@link LinkField} for use with the migration API.
+ * An alternate version of the {@link LinkField} for use with the Migration API.
  */
 export type LinkMigrationField =
 	| LinkToMediaMigrationField

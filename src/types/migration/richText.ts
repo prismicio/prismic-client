@@ -4,7 +4,7 @@ import type { ImageMigrationField, LinkMigrationField } from "./fields"
 
 /**
  * An alternate version of {@link RTLinkNode} that supports
- * {@link LinkMigrationField} for use with the migration API.
+ * {@link LinkMigrationField} for use with the Migration API.
  */
 export type RTLinkMigrationNode = Omit<RTLinkNode, "data"> & {
 	data: LinkMigrationField
@@ -12,7 +12,7 @@ export type RTLinkMigrationNode = Omit<RTLinkNode, "data"> & {
 
 /**
  * An alternate version of {@link RTImageNode} that supports
- * {@link ImageMigrationField} for use with the migration API.
+ * {@link ImageMigrationField} for use with the Migration API.
  */
 export type RTImageMigrationNode = ImageMigrationField & {
 	linkTo?: RTImageNode["linkTo"] | LinkMigrationField

@@ -325,7 +325,7 @@ export type {
 	CustomTypeModelFieldForSlicePrimary,
 } from "./types/model/types"
 
-// Migrations - Types representing Prismic migration API content values.
+// Migrations - Types representing Prismic Migration API content values.
 export { MigrationFieldType } from "./types/migration/fields"
 
 export type {
