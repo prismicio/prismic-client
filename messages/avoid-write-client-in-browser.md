@@ -12,9 +12,9 @@ const writeClient = prismic.createWriteClient("example-prismic-repo", {
 })
 ```
 
-If the write client gets exposed to the browser, its credentials also do. This potentially exposes them to malicious actors.
+If the write client is exposed to the browser, so are its tokens. Malicious actors will have write access to your repository.
 
-When no write actions are to be performed, using a `@prismicio/client` regular client should be preferred. This client only has read access to a Prismic repository.
+Use the non-write client when write actions are not needed. The non-write client only has read access to the repository and can safely be used in the browser. Be aware the client's access token, if used, will be exposed in the browser.
 
 ```typescript
 import * as prismic from "@prismicio/client";
