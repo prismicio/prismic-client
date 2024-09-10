@@ -10,19 +10,19 @@ import * as prismic from "@prismicio/client";
 const client = prismic.createClient("example-prismic-repo")
 ```
 
-When proxying a Prismic API v2 repository endpoint (not recommended), the `apiEndpoint` option can be used to specify that endpoint.
+When proxying a Prismic API v2 repository endpoint (not recommended), the `documentAPIEndpoint` option can be used to specify that endpoint.
 
 ```typescript
 import * as prismic from "@prismicio/client"
 
 // ✅ Correct
 const client = prismic.createClient("my-repo-name", {
-	apiEndpoint: "https://example.com/my-prismic-proxy"
+	documentAPIEndpoint: "https://example.com/my-prismic-proxy"
 })
 
 // ❌ Incorrect: repository name can't be inferred from a proxied endpoint
 const client = prismic.createClient("https://example.com/my-prismic-proxy", {
-	apiEndpoint: "https://example.com/my-prismic-proxy"
+	documentAPIEndpoint: "https://example.com/my-prismic-proxy"
 })
 ```
 

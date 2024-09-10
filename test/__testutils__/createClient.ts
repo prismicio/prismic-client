@@ -9,11 +9,11 @@ import * as prismic from "../../src"
 type CreateTestClientArgs = (
 	| {
 			repositoryName?: string
-			apiEndpoint?: never
+			documentAPIEndpoint?: never
 	  }
 	| {
 			repositoryName?: never
-			apiEndpoint?: string
+			documentAPIEndpoint?: string
 	  }
 ) & {
 	ctx: TaskContext
@@ -25,7 +25,7 @@ export const createTestClient = (
 ): prismic.Client => {
 	const repositoryName = args.repositoryName || createRepositoryName(args.ctx)
 
-	return prismic.createClient(args.apiEndpoint || repositoryName, {
+	return prismic.createClient(args.documentAPIEndpoint || repositoryName, {
 		fetch,
 		...args.clientConfig,
 	})

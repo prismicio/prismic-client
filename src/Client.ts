@@ -165,7 +165,7 @@ export type ClientConfig = {
 	 *
 	 * @defaultValue `getRepositoryEndpoint(repositoryNameOrEndpoint)`
 	 */
-	apiEndpoint?: string
+	documentAPIEndpoint?: string
 
 	/**
 	 * The secure token for accessing the Prismic repository. This is only
@@ -274,7 +274,7 @@ export class Client<
 	get repositoryName(): string {
 		if (!this.#repositoryName) {
 			throw new PrismicError(
-				`This client instance was created using a repository endpoint and the repository name could not be infered from the it (\`${this.apiEndpoint}\`). The method you're trying to use relies on the repository name to work and is therefore disabled. Please create the client using your repository name, and the \`apiEndpoint\` option if necessary, to ensure all methods are enabled. For more details, see ${devMsg("prefer-repository-name")}`,
+				`A repository name is required for this method but one could not be inferred from the provided API endpoint (\`${this.documentAPIEndpoint}\`). To fix this error, provide a repository name when creating the client. For more details, see ${devMsg("prefer-repository-name")}`,
 				undefined,
 				undefined,
 			)
@@ -287,28 +287,28 @@ export class Client<
 	 * The Prismic REST API V2 endpoint for the repository (use
 	 * `prismic.getRepositoryEndpoint` for the default endpoint).
 	 */
-	apiEndpoint: string
+	documentAPIEndpoint: string
 
 	/**
 	 * The Prismic REST API V2 endpoint for the repository (use
 	 * `prismic.getRepositoryEndpoint` for the default endpoint).
 	 *
-	 * @deprecated Use `apiEndpoint` instead.
+	 * @deprecated Use `documentAPIEndpoint` instead.
 	 */
 	// TODO: Remove in v8.
 	set endpoint(value: string) {
-		this.apiEndpoint = value
+		this.documentAPIEndpoint = value
 	}
 
 	/**
 	 * The Prismic REST API V2 endpoint for the repository (use
 	 * `prismic.getRepositoryEndpoint` for the default endpoint).
 	 *
-	 * @deprecated Use `apiEndpoint` instead.
+	 * @deprecated Use `documentAPIEndpoint` instead.
 	 */
 	// TODO: Remove in v8.
 	get endpoint(): string {
-		return this.apiEndpoint
+		return this.documentAPIEndpoint
 	}
 
 	/**
@@ -383,13 +383,15 @@ export class Client<
 		super(options)
 
 		if (
-			(options.apiEndpoint || isRepositoryEndpoint(repositoryNameOrEndpoint)) &&
+			(options.documentAPIEndpoint ||
+				isRepositoryEndpoint(repositoryNameOrEndpoint)) &&
 			process.env.NODE_ENV === "development"
 		) {
-			const apiEndpoint = options.apiEndpoint || repositoryNameOrEndpoint
+			const documentAPIEndpoint =
+				options.documentAPIEndpoint || repositoryNameOrEndpoint
 
 			// Matches non-API v2 `.prismic.io` endpoints, see: https://regex101.com/r/xRsavu/1
-			if (/\.prismic\.io\/(?!api\/v2\/?)/i.test(apiEndpoint)) {
+			if (/\.prismic\.io\/(?!api\/v2\/?)/i.test(documentAPIEndpoint)) {
 				throw new PrismicError(
 					"@prismicio/client only supports Prismic Rest API V2. Please provide only the repository name to the first createClient() parameter or use the getRepositoryEndpoint() helper to generate a valid Rest API V2 endpoint URL.",
 					undefined,
@@ -397,46 +399,47 @@ export class Client<
 				)
 			}
 
-			const hostname = new URL(apiEndpoint).hostname.toLowerCase()
+			const hostname = new URL(documentAPIEndpoint).hostname.toLowerCase()
 
 			// Matches non-.cdn `.prismic.io` endpoints
 			if (
 				hostname.endsWith(".prismic.io") &&
 				!hostname.endsWith(".cdn.prismic.io")
 			) {
-				const repositoryName = getRepositoryName(apiEndpoint)
+				const repositoryName = getRepositoryName(documentAPIEndpoint)
 				const dotCDNEndpoint = getRepositoryEndpoint(repositoryName)
 				console.warn(
-					`[@prismicio/client] A non-.cdn endpoint was provided to create a client with (\`${apiEndpoint}\`). Non-.cdn endpoints can have unexpected side-effects and cause performance issues when querying Prismic. Please convert it to the \`.cdn\` alternative (\`${dotCDNEndpoint}\`) or use the repository name directly instead (\`${repositoryName}\`). For more details, see ${devMsg(
+					`[@prismicio/client] A non-.cdn endpoint was provided to create a client with (\`${documentAPIEndpoint}\`). Non-.cdn endpoints can have unexpected side-effects and cause performance issues when querying Prismic. Please convert it to the \`.cdn\` alternative (\`${dotCDNEndpoint}\`) or use the repository name directly instead (\`${repositoryName}\`). For more details, see ${devMsg(
 						"endpoint-must-use-cdn",
 					)}`,
 				)
 			}
 
-			// Warn if the user provided both a repository endpoint and an `apiEndpoint` and they are different
+			// Warn if the user provided both a repository endpoint and an `documentAPIEndpoint` and they are different
 			if (
-				options.apiEndpoint &&
+				options.documentAPIEndpoint &&
 				isRepositoryEndpoint(repositoryNameOrEndpoint) &&
-				repositoryNameOrEndpoint !== options.apiEndpoint
+				repositoryNameOrEndpoint !== options.documentAPIEndpoint
 			) {
 				console.warn(
-					`[@prismicio/client] A repository endpoint was provided to create a client with (\`${repositoryNameOrEndpoint}\`) along with a different \`apiEndpoint\` options. The \`apiEndpoint\` option will be preferred over the repository endpoint to query content. Please create the client using your repository name, and the \`apiEndpoint\` option if necessary, instead. For more details, see ${devMsg("prefer-repository-name")}`,
+					`[@prismicio/client] A repository endpoint was provided to create a client with (\`${repositoryNameOrEndpoint}\`) along with a different \`documentAPIEndpoint\` options. The \`documentAPIEndpoint\` option will be preferred over the repository endpoint to query content. Please create the client using your repository name, and the \`documentAPIEndpoint\` option if necessary, instead. For more details, see ${devMsg("prefer-repository-name")}`,
 				)
 			}
 		}
 
 		if (isRepositoryEndpoint(repositoryNameOrEndpoint)) {
-			this.apiEndpoint = repositoryNameOrEndpoint
+			this.documentAPIEndpoint = repositoryNameOrEndpoint
 			try {
 				this.repositoryName = getRepositoryName(repositoryNameOrEndpoint)
 			} catch (error) {
 				console.warn(
-					`[@prismicio/client] Could not infer the repository name from the repository endpoint that was provided to create the client with (\`${repositoryNameOrEndpoint}\`). Methods requiring the repository name to work will be disabled. Please create the client using your repository name, and the \`apiEndpoint\` option if necessary, to ensure all methods are enabled. For more details, see ${devMsg("prefer-repository-name")}`,
+					`[@prismicio/client] Could not infer the repository name from the repository endpoint that was provided to create the client with (\`${repositoryNameOrEndpoint}\`). Methods requiring the repository name to work will be disabled. Please create the client using your repository name, and the \`documentAPIEndpoint\` option if necessary, to ensure all methods are enabled. For more details, see ${devMsg("prefer-repository-name")}`,
 				)
 			}
 		} else {
-			this.apiEndpoint =
-				options.apiEndpoint || getRepositoryEndpoint(repositoryNameOrEndpoint)
+			this.documentAPIEndpoint =
+				options.documentAPIEndpoint ||
+				getRepositoryEndpoint(repositoryNameOrEndpoint)
 			this.repositoryName = repositoryNameOrEndpoint
 		}
 
@@ -1147,7 +1150,7 @@ export class Client<
 		// TODO: Restore when Authorization header support works in browsers with CORS.
 		// return await this.fetch<Repository>(this.endpoint);
 
-		const url = new URL(this.apiEndpoint)
+		const url = new URL(this.documentAPIEndpoint)
 
 		if (this.accessToken) {
 			url.searchParams.set("access_token", this.accessToken)
@@ -1290,7 +1293,7 @@ export class Client<
 				.integrationFieldsRef ||
 			undefined
 
-		return buildQueryURL(this.apiEndpoint, {
+		return buildQueryURL(this.documentAPIEndpoint, {
 			...this.defaultParams,
 			...params,
 			ref,
@@ -1737,7 +1740,7 @@ export class Client<
 			case 404: {
 				if (res.json === undefined) {
 					throw new RepositoryNotFoundError(
-						`Prismic repository not found. Check that "${this.apiEndpoint}" is pointing to the correct repository.`,
+						`Prismic repository not found. Check that "${this.documentAPIEndpoint}" is pointing to the correct repository.`,
 						url,
 						undefined,
 					)
