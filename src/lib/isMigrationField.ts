@@ -13,7 +13,7 @@ import type { GroupField } from "../types/value/group"
 import type { ImageField } from "../types/value/image"
 import type { LinkField } from "../types/value/link"
 import { LinkType } from "../types/value/link"
-import type { RichTextField } from "../types/value/richText"
+import { type RichTextField, RichTextNodeType } from "../types/value/richText"
 import type { SliceZone } from "../types/value/sliceZone"
 import type { AnyRegularField } from "../types/value/types"
 
@@ -54,12 +54,36 @@ export const richText = (
 ): field is RichTextFieldToMigrationField<RichTextField> => {
 	return (
 		Array.isArray(field) &&
-		field.every(
-			(item) =>
-				("type" in item && typeof item.type === "string") ||
-				("migrationType" in item &&
-					item.migrationType === MigrationFieldType.Image),
-		)
+		field.every((item) => {
+			if (
+				"migrationType" in item &&
+				item.migrationType === MigrationFieldType.Image
+			) {
+				return true
+			} else if ("type" in item && typeof item.type === "string") {
+				switch (item.type) {
+					case RichTextNodeType.heading1:
+					case RichTextNodeType.heading2:
+					case RichTextNodeType.heading3:
+					case RichTextNodeType.heading4:
+					case RichTextNodeType.heading5:
+					case RichTextNodeType.heading6:
+					case RichTextNodeType.paragraph:
+					case RichTextNodeType.preformatted:
+					case RichTextNodeType.listItem:
+					case RichTextNodeType.oListItem:
+						return "spans" in item && Array.isArray(item.spans)
+
+					case RichTextNodeType.image:
+						return "dimensions" in item
+
+					case RichTextNodeType.embed:
+						return "oembed" in item
+				}
+			}
+
+			return false
+		})
 	)
 }
 

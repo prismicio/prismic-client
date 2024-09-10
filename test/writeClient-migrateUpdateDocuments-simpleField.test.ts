@@ -21,6 +21,7 @@ testMigrationFieldPatching(
 		integration: ({ ctx }) => ctx.mock.value.integration({ state: "filled" }),
 		linkToWeb: ({ ctx }) =>
 			ctx.mock.value.link({ type: "Web", withTargetBlank: true }),
+		richTextMisleadingGroup: () => [{ type: "paragraph" }],
 	},
 	{ expectStrictEqual: true },
 )
