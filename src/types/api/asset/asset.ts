@@ -14,7 +14,7 @@ export const AssetType = {
 /**
  * An object representing an asset returned by the Asset API.
  *
- * @see Prismic Asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+ * @see Prismic Asset API technical reference: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
 export type Asset = {
 	/**
@@ -114,7 +114,7 @@ export type Asset = {
 /**
  * Available query parameters when querying assets from the Asset API.
  *
- * @see Prismic Asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+ * @see Prismic Asset API technical reference: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
 export type GetAssetsParams = {
 	// Pagination
@@ -152,7 +152,7 @@ export type GetAssetsParams = {
 /**
  * An object representing the result of querying assets from the Asset API.
  *
- * @see Prismic Asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+ * @see Prismic Asset API technical reference: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
 export type GetAssetsResult = {
 	items: Asset[]
@@ -165,7 +165,7 @@ export type GetAssetsResult = {
 /**
  * Parameters for uploading an asset to the Asset API.
  *
- * @see Prismic Asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+ * @see Prismic Asset API technical reference: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
 export type PostAssetParams = {
 	file: BlobPart
@@ -177,14 +177,14 @@ export type PostAssetParams = {
 /**
  * Result of uploading an asset to the Asset API.
  *
- * @see Prismic Asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+ * @see Prismic Asset API technical reference: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
 export type PostAssetResult = Asset
 
 /**
  * Parameters for updating an asset in the Asset API.
  *
- * @see Prismic Asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+ * @see Prismic Asset API technical reference: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
 export type PatchAssetParams = {
 	notes?: string
@@ -197,14 +197,14 @@ export type PatchAssetParams = {
 /**
  * Result of updating an asset in the Asset API.
  *
- * @see Prismic Asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+ * @see Prismic Asset API technical reference: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
 export type PatchAssetResult = Asset
 
 /**
  * Parameters for deleting an asset from the Asset API.
  *
- * @see Prismic Asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+ * @see Prismic Asset API technical reference: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
 export type BulkDeleteAssetsParams = {
 	ids: string[]

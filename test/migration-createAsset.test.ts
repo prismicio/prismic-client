@@ -101,44 +101,6 @@ it("creates an asset from an image field", () => {
 		alt: image.alt,
 		credits: image.copyright,
 	})
-
-	const image2: prismic.FilledImageFieldImage = {
-		...image,
-		id: "bar",
-		url: "https://example.com/",
-	}
-
-	migration.createAsset(image2)
-
-	expect(
-		migration.assets.get(image2.id),
-		"uses alt as filename fallback when filename cannot be inferred from URL",
-	).toEqual({
-		id: image2.id,
-		file: image2.url,
-		filename: image2.alt,
-		alt: image2.alt,
-		credits: image2.copyright,
-	})
-
-	const image3: prismic.FilledImageFieldImage = {
-		...image,
-		id: "qux",
-		alt: "",
-		url: "https://example.com/",
-	}
-
-	migration.createAsset(image3)
-
-	expect(
-		migration.assets.get(image3.id),
-		"uses default filename when filename cannot be inferred from URL and `alt` is not available",
-	).toEqual({
-		id: image3.id,
-		file: image3.url,
-		filename: "unknown",
-		credits: image3.copyright,
-	})
 })
 
 it("creates an asset from a link to media field", () => {
@@ -172,32 +134,26 @@ it("throws if asset has invalid metadata", () => {
 
 	expect(() => {
 		migration.createAsset(file, filename, { notes: "0".repeat(501) })
-	}, "notes").toThrowErrorMatchingInlineSnapshot(
-		`[Error: Errors validating asset metadata: \`notes\` must be at most 500 characters]`,
-	)
+	}, "notes").toThrowError(/`notes` must be at most 500 characters/i)
 
 	expect(() => {
 		migration.createAsset(file, filename, { credits: "0".repeat(501) })
-	}, "credits").toThrowErrorMatchingInlineSnapshot(
-		`[Error: Errors validating asset metadata: \`credits\` must be at most 500 characters]`,
-	)
+	}, "credits").toThrowError(/`credits` must be at most 500 characters/i)
 
 	expect(() => {
 		migration.createAsset(file, filename, { alt: "0".repeat(501) })
-	}, "alt").toThrowErrorMatchingInlineSnapshot(
-		`[Error: Errors validating asset metadata: \`alt\` must be at most 500 characters]`,
-	)
+	}, "alt").toThrowError(/`alt` must be at most 500 characters/i)
 
 	expect(() => {
 		migration.createAsset(file, filename, { tags: ["0"] })
-	}, "tags").toThrowErrorMatchingInlineSnapshot(
-		`[Error: Errors validating asset metadata: all \`tags\`'s tag must be at least 3 characters long and 20 characters at most]`,
+	}, "tags").toThrowError(
+		/tags must be at least 3 characters long and 20 characters at most/i,
 	)
 
 	expect(() => {
 		migration.createAsset(file, filename, { tags: ["0".repeat(21)] })
-	}, "tags").toThrowErrorMatchingInlineSnapshot(
-		`[Error: Errors validating asset metadata: all \`tags\`'s tag must be at least 3 characters long and 20 characters at most]`,
+	}, "tags").toThrowError(
+		/tags must be at least 3 characters long and 20 characters at most/i,
 	)
 
 	expect(() => {

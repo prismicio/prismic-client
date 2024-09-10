@@ -2,7 +2,7 @@ import { expect, it, vi } from "vitest"
 
 import * as prismic from "../src"
 
-it("`createWriteClient` creates a write client", () => {
+it("creates a write client with `createWriteClient`", () => {
 	const client = prismic.createWriteClient("qwerty", {
 		fetch: vi.fn(),
 		writeToken: "xxx",
@@ -11,7 +11,7 @@ it("`createWriteClient` creates a write client", () => {
 	expect(client).toBeInstanceOf(prismic.WriteClient)
 })
 
-it("constructor warns if running in a browser-like environment", () => {
+it("warns constructor in if running in a browser-like environment", () => {
 	const originalWindow = globalThis.window
 	globalThis.window = {} as Window & typeof globalThis
 

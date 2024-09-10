@@ -245,6 +245,253 @@ exports[`patches link fields > existing > static zone 1`] = `
 }
 `;
 
+exports[`patches link fields > lazyExisting > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "id": "id-existing",
+        "isBroken": false,
+        "lang": "laoreet",
+        "link_type": "Document",
+        "tags": [],
+        "type": "orci",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches link fields > lazyExisting > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "2ff58c741ba",
+      "items": [
+        {
+          "field": {
+            "id": "id-existing",
+            "isBroken": false,
+            "lang": "tortor,",
+            "link_type": "Document",
+            "tags": [
+              "Risus In",
+            ],
+            "type": "dui",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "id-existing",
+          "isBroken": false,
+          "lang": "tortor,",
+          "link_type": "Document",
+          "tags": [
+            "Risus In",
+          ],
+          "type": "dui",
+        },
+        "group": [
+          {
+            "field": {
+              "id": "id-existing",
+              "isBroken": false,
+              "lang": "tortor,",
+              "link_type": "Document",
+              "tags": [
+                "Risus In",
+              ],
+              "type": "dui",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "at",
+      "variation": "tortor",
+      "version": "a79b9dd",
+    },
+  ],
+}
+`;
+
+exports[`patches link fields > lazyExisting > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "e93cc3e4f28",
+      "items": [
+        {
+          "field": {
+            "id": "id-existing",
+            "isBroken": false,
+            "lang": "sapien",
+            "link_type": "Document",
+            "tags": [
+              "Aenean",
+            ],
+            "type": "amet",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "id-existing",
+          "isBroken": false,
+          "lang": "sapien",
+          "link_type": "Document",
+          "tags": [
+            "Aenean",
+          ],
+          "type": "amet",
+        },
+      },
+      "slice_label": "Pellentesque",
+      "slice_type": "nulla_posuere",
+    },
+  ],
+}
+`;
+
+exports[`patches link fields > lazyExisting > static zone 1`] = `
+{
+  "field": {
+    "id": "id-existing",
+    "isBroken": false,
+    "lang": "eget",
+    "link_type": "Document",
+    "tags": [],
+    "type": "phasellus",
+  },
+}
+`;
+
+exports[`patches link fields > lazyMigration > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "id": "id-migration",
+        "isBroken": false,
+        "lang": "a",
+        "link_type": "Document",
+        "tags": [
+          "Odio Eu",
+        ],
+        "type": "amet",
+        "uid": "Non sodales neque",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches link fields > lazyMigration > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "2ff58c741ba",
+      "items": [
+        {
+          "field": {
+            "id": "id-migration",
+            "isBroken": false,
+            "lang": "gravida",
+            "link_type": "Document",
+            "tags": [],
+            "type": "leo",
+            "uid": "Blandit volutpat maecenas",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "id-migration",
+          "isBroken": false,
+          "lang": "gravida",
+          "link_type": "Document",
+          "tags": [],
+          "type": "leo",
+          "uid": "Blandit volutpat maecenas",
+        },
+        "group": [
+          {
+            "field": {
+              "id": "id-migration",
+              "isBroken": false,
+              "lang": "gravida",
+              "link_type": "Document",
+              "tags": [],
+              "type": "leo",
+              "uid": "Blandit volutpat maecenas",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "at",
+      "variation": "tortor",
+      "version": "a79b9dd",
+    },
+  ],
+}
+`;
+
+exports[`patches link fields > lazyMigration > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "e93cc3e4f28",
+      "items": [
+        {
+          "field": {
+            "id": "id-migration",
+            "isBroken": false,
+            "lang": "ultrices",
+            "link_type": "Document",
+            "tags": [
+              "Ipsum Consequat",
+            ],
+            "type": "eget",
+            "uid": "Amet dictum sit",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "id-migration",
+          "isBroken": false,
+          "lang": "ultrices",
+          "link_type": "Document",
+          "tags": [
+            "Ipsum Consequat",
+          ],
+          "type": "eget",
+          "uid": "Amet dictum sit",
+        },
+      },
+      "slice_label": "Pellentesque",
+      "slice_type": "nulla_posuere",
+    },
+  ],
+}
+`;
+
+exports[`patches link fields > lazyMigration > static zone 1`] = `
+{
+  "field": {
+    "id": "id-migration",
+    "isBroken": false,
+    "lang": "nisi,",
+    "link_type": "Document",
+    "tags": [],
+    "type": "eros",
+    "uid": "Scelerisque mauris pellentesque",
+  },
+}
+`;
+
 exports[`patches link fields > migration > group 1`] = `
 {
   "group": [

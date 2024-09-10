@@ -2,7 +2,7 @@ import { expect, it } from "vitest"
 
 import * as prismic from "../src"
 
-it("returns indexed document", () => {
+it("returns a document of a given singleton type", () => {
 	const migration = prismic.createMigration()
 
 	const document = {
@@ -17,7 +17,7 @@ it("returns indexed document", () => {
 	expect(migration.getSingle(document.type)).toStrictEqual(document)
 })
 
-it("returns `undefined` is document is not found", () => {
+it("returns `undefined` if a document is not found", () => {
 	const migration = prismic.createMigration()
 
 	const document = {

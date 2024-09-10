@@ -41,6 +41,7 @@ export type LinkToMediaMigrationField =
  */
 export type ContentRelationshipMigrationField =
 	| PrismicDocument
+	| PrismicMigrationDocument
 	| (() =>
 			| Promise<PrismicDocument | PrismicMigrationDocument | undefined>
 			| PrismicDocument

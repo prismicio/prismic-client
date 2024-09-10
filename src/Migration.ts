@@ -1,4 +1,5 @@
 import * as is from "./lib/isMigrationField"
+import { validateAssetMetadata } from "./lib/validateAssetMetadata"
 
 import type { Asset } from "./types/api/asset/asset"
 import type { MigrationAsset } from "./types/migration/asset"
@@ -22,8 +23,6 @@ import type { SliceZone } from "./types/value/sliceZone"
 import type { AnyRegularField } from "./types/value/types"
 
 import * as isFilled from "./helpers/isFilled"
-
-import { validateAssetMetadata } from "./WriteClient"
 
 /**
  * Discovers assets in a record of Prismic fields.
@@ -116,7 +115,10 @@ type CreateAssetReturnType = ImageMigrationField & {
 	linkToMedia: LinkToMediaMigrationField
 }
 
-const SINGLE_KEY = "__SINGLE__"
+/**
+ * The symbol used to index documents that are singletons.
+ */
+const SINGLE_INDEX = "__SINGLE__"
 
 /**
  * A helper that allows preparing your migration to Prismic.
@@ -182,9 +184,7 @@ export class Migration<
 				const filename =
 					"name" in fileOrAsset
 						? fileOrAsset.name
-						: url.split("/").pop()?.split("_").pop() ||
-							fileOrAsset.alt ||
-							"unknown"
+						: url.split("/").pop()!.split("_").pop()!
 				const credits =
 					"copyright" in fileOrAsset && fileOrAsset.copyright
 						? fileOrAsset.copyright
@@ -259,19 +259,20 @@ export class Migration<
 
 	createDocument<TType extends TMigrationDocuments["type"]>(
 		document: ExtractMigrationDocumentType<TMigrationDocuments, TType>,
-		documentName: PrismicMigrationDocumentParams["documentName"],
-		params: Omit<PrismicMigrationDocumentParams, "documentName"> = {},
+		documentTitle: PrismicMigrationDocumentParams["documentTitle"],
+		params: Omit<PrismicMigrationDocumentParams, "documentTitle"> = {},
 	): ExtractMigrationDocumentType<TMigrationDocuments, TType> {
 		this.documents.push({
 			document,
-			params: { documentName, ...params },
+			params: { documentTitle, ...params },
 		})
 
 		// Index document
 		if (!(document.type in this.#indexedDocuments)) {
 			this.#indexedDocuments[document.type] = {}
 		}
-		this.#indexedDocuments[document.type][document.uid || SINGLE_KEY] = document
+		this.#indexedDocuments[document.type][document.uid || SINGLE_INDEX] =
+			document
 
 		// Find other assets in document
 		discoverAssets(document.data, this.createAsset.bind(this))
@@ -298,7 +299,7 @@ export class Migration<
 			{ type: TType }
 		> = Extract<TMigrationDocuments, { type: TType }>,
 	>(documentType: TType): TMigrationDocument | undefined | undefined {
-		return this.#indexedDocuments[documentType]?.[SINGLE_KEY] as
+		return this.#indexedDocuments[documentType]?.[SINGLE_INDEX] as
 			| TMigrationDocument
 			| undefined
 	}

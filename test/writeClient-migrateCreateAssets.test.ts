@@ -382,9 +382,7 @@ it.concurrent(
 
 		await expect(() =>
 			client.migrate(migration, { reporter }),
-		).rejects.toThrowErrorMatchingInlineSnapshot(
-			`[Error: Could not fetch foreign asset]`,
-		)
+		).rejects.toThrowError(/could not fetch foreign asset/i)
 
 		expect(reporter).toHaveBeenLastCalledWith({
 			type: "assets:creating",

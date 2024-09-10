@@ -108,7 +108,7 @@ it.concurrent("skips creating existing documents", async (ctx) => {
 			total: 1,
 			document,
 			documentParams: {
-				documentName: "foo",
+				documentTitle: "foo",
 			},
 		},
 	})
@@ -158,7 +158,7 @@ it.concurrent("creates new documents", async (ctx) => {
 			total: 1,
 			document,
 			documentParams: {
-				documentName: "foo",
+				documentTitle: "foo",
 			},
 		},
 	})
@@ -204,7 +204,7 @@ it.concurrent(
 				total: 1,
 				document,
 				documentParams: {
-					documentName: "foo",
+					documentTitle: "foo",
 					masterLanguageDocument,
 				},
 			},
@@ -261,7 +261,7 @@ it.concurrent(
 				total: 1,
 				document,
 				documentParams: {
-					documentName: "foo",
+					documentTitle: "foo",
 					masterLanguageDocument: expect.any(Function),
 				},
 			},
@@ -372,7 +372,7 @@ it.concurrent(
 				total: 1,
 				document,
 				documentParams: {
-					documentName: "foo",
+					documentTitle: "foo",
 				},
 			},
 		})

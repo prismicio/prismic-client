@@ -26,7 +26,7 @@ it.concurrent("supports `pageSize` parameter", async (ctx) => {
 	mockPrismicAssetAPI({
 		ctx,
 		client,
-		getRequiredParams: {
+		requiredGetParams: {
 			pageSize: "10",
 		},
 	})
@@ -42,13 +42,13 @@ it.concurrent("supports `pageSize` parameter", async (ctx) => {
 it.concurrent("supports `cursor` parameter", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
-	const getRequiredParams = {
+	const requiredGetParams = {
 		cursor: "foo",
 	}
 
-	mockPrismicAssetAPI({ ctx, client, getRequiredParams })
+	mockPrismicAssetAPI({ ctx, client, requiredGetParams })
 
-	const { results } = await client.getAssets(getRequiredParams)
+	const { results } = await client.getAssets(requiredGetParams)
 
 	ctx.expect(results).toBeInstanceOf(Array)
 	ctx.expect.assertions(2)
@@ -57,13 +57,13 @@ it.concurrent("supports `cursor` parameter", async (ctx) => {
 it.concurrent("supports `assetType` parameter", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
-	const getRequiredParams = {
+	const requiredGetParams = {
 		assetType: AssetType.Image,
 	}
 
-	mockPrismicAssetAPI({ ctx, client, getRequiredParams })
+	mockPrismicAssetAPI({ ctx, client, requiredGetParams })
 
-	const { results } = await client.getAssets(getRequiredParams)
+	const { results } = await client.getAssets(requiredGetParams)
 
 	ctx.expect(results).toBeInstanceOf(Array)
 	ctx.expect.assertions(2)
@@ -72,13 +72,13 @@ it.concurrent("supports `assetType` parameter", async (ctx) => {
 it.concurrent("supports `keyword` parameter", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
-	const getRequiredParams = {
+	const requiredGetParams = {
 		keyword: "foo",
 	}
 
-	mockPrismicAssetAPI({ ctx, client, getRequiredParams })
+	mockPrismicAssetAPI({ ctx, client, requiredGetParams })
 
-	const { results } = await client.getAssets(getRequiredParams)
+	const { results } = await client.getAssets(requiredGetParams)
 
 	ctx.expect(results).toBeInstanceOf(Array)
 	ctx.expect.assertions(2)
@@ -87,13 +87,13 @@ it.concurrent("supports `keyword` parameter", async (ctx) => {
 it.concurrent("supports `ids` parameter", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
-	const getRequiredParams = {
+	const requiredGetParams = {
 		ids: ["foo", "bar"],
 	}
 
-	mockPrismicAssetAPI({ ctx, client, getRequiredParams })
+	mockPrismicAssetAPI({ ctx, client, requiredGetParams })
 
-	const { results } = await client.getAssets(getRequiredParams)
+	const { results } = await client.getAssets(requiredGetParams)
 
 	ctx.expect(results).toBeInstanceOf(Array)
 	ctx.expect.assertions(2)
@@ -102,7 +102,7 @@ it.concurrent("supports `ids` parameter", async (ctx) => {
 it.concurrent("supports `tags` parameter (id)", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
-	const getRequiredParams = {
+	const requiredGetParams = {
 		tags: [
 			"00000000-4444-4444-4444-121212121212",
 			"10000000-4444-4444-4444-121212121212",
@@ -126,10 +126,10 @@ it.concurrent("supports `tags` parameter (id)", async (ctx) => {
 				last_modified: 0,
 			},
 		],
-		getRequiredParams,
+		requiredGetParams,
 	})
 
-	const { results } = await client.getAssets(getRequiredParams)
+	const { results } = await client.getAssets(requiredGetParams)
 
 	ctx.expect(results).toBeInstanceOf(Array)
 	ctx.expect.assertions(2)
@@ -138,7 +138,7 @@ it.concurrent("supports `tags` parameter (id)", async (ctx) => {
 it.concurrent("supports `tags` parameter (name)", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
-	const getRequiredParams = {
+	const requiredGetParams = {
 		tags: [
 			"00000000-4444-4444-4444-121212121212",
 			"10000000-4444-4444-4444-121212121212",
@@ -162,7 +162,7 @@ it.concurrent("supports `tags` parameter (name)", async (ctx) => {
 				last_modified: 0,
 			},
 		],
-		getRequiredParams,
+		requiredGetParams,
 	})
 
 	const { results } = await client.getAssets({ tags: ["foo", "bar"] })
@@ -174,7 +174,7 @@ it.concurrent("supports `tags` parameter (name)", async (ctx) => {
 it.concurrent("supports `tags` parameter (missing)", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
-	const getRequiredParams = {
+	const requiredGetParams = {
 		tags: ["00000000-4444-4444-4444-121212121212"],
 	}
 
@@ -189,7 +189,7 @@ it.concurrent("supports `tags` parameter (missing)", async (ctx) => {
 				last_modified: 0,
 			},
 		],
-		getRequiredParams,
+		requiredGetParams,
 	})
 
 	const { results } = await client.getAssets({ tags: ["foo", "bar"] })
@@ -213,7 +213,7 @@ it.concurrent("returns `next` when next `cursor` is available", async (ctx) => {
 
 	ctx.expect(next2).toBeInstanceOf(Function)
 
-	mockPrismicAssetAPI({ ctx, client, getRequiredParams: { cursor: "1" } })
+	mockPrismicAssetAPI({ ctx, client, requiredGetParams: { cursor: "1" } })
 
 	const { results } = await next2!()
 	ctx.expect(results).toBeInstanceOf(Array)

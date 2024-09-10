@@ -10,7 +10,7 @@ import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
 
 import * as prismic from "../src"
 
-it("createClient creates a Client", () => {
+it("creates a Client with `createClient`", () => {
 	const client = prismic.createClient("qwerty", {
 		fetch: vi.fn(),
 	})
@@ -36,7 +36,7 @@ it("creates a client with a Rest API V2 endpoint", () => {
 	expect(client.endpoint).toBe(endpoint)
 })
 
-it("client has correct default state", () => {
+it("has correct default state", () => {
 	const endpoint = prismic.getRepositoryEndpoint("qwerty")
 	const options: prismic.ClientConfig = {
 		accessToken: "accessToken",
@@ -54,7 +54,7 @@ it("client has correct default state", () => {
 	expect(client.defaultParams).toBe(options.defaultParams)
 })
 
-it("constructor throws if an invalid repository name is provided", () => {
+it("throws in constructor if an invalid repository name is provided", () => {
 	expect(() => {
 		prismic.createClient("invalid repository name", {
 			fetch: vi.fn(),
@@ -67,7 +67,7 @@ it("constructor throws if an invalid repository name is provided", () => {
 	}).toThrowError(prismic.PrismicError)
 })
 
-it("constructor throws if an invalid repository endpoint is provided", () => {
+it("throws in constructor if an invalid repository endpoint is provided", () => {
 	expect(() => {
 		prismic.createClient("https://invalid url.cdn.prismic.io/api/v2", {
 			fetch: vi.fn(),
@@ -80,7 +80,7 @@ it("constructor throws if an invalid repository endpoint is provided", () => {
 	}).toThrowError(prismic.PrismicError)
 })
 
-it("constructor throws if a prismic.io endpoint is given that is not for Rest API V2", () => {
+it("throws in constructor if a prismic.io endpoint is given that is not for Rest API V2", () => {
 	const fetch = vi.fn()
 
 	const originalNodeEnv = process.env.NODE_ENV
@@ -114,7 +114,7 @@ it("constructor throws if a prismic.io endpoint is given that is not for Rest AP
 	process.env.NODE_ENV = originalNodeEnv
 })
 
-it("constructor warns if a non-.cdn prismic.io endpoint is given", () => {
+it("warns in constructor if a non-.cdn prismic.io endpoint is given", () => {
 	const fetch = vi.fn()
 
 	const originalNodeEnv = process.env.NODE_ENV
@@ -155,7 +155,7 @@ it("constructor warns if a non-.cdn prismic.io endpoint is given", () => {
 	process.env.NODE_ENV = originalNodeEnv
 })
 
-it("contructor warns if an endpoint is given along the `documentAPIEndpoint` option and they do not match", () => {
+it("warns in constructor if an endpoint is given along the `documentAPIEndpoint` option and they do not match", () => {
 	const fetch = vi.fn()
 
 	const originalNodeEnv = process.env.NODE_ENV
@@ -208,7 +208,7 @@ it("contructor warns if an endpoint is given along the `documentAPIEndpoint` opt
 	process.env.NODE_ENV = originalNodeEnv
 })
 
-it("contructor warns if an endpoint is given and the repository name could not be inferred", () => {
+it("warns in constructor if an endpoint is given and the repository name could not be inferred", () => {
 	const fetch = vi.fn()
 
 	const consoleWarnSpy = vi
@@ -231,7 +231,7 @@ it("contructor warns if an endpoint is given and the repository name could not b
 	consoleWarnSpy.mockRestore()
 })
 
-it("constructor throws if fetch is unavailable", () => {
+it("throws in constructor if fetch is unavailable", () => {
 	const endpoint = prismic.getRepositoryEndpoint("qwerty")
 
 	const originalFetch = globalThis.fetch
@@ -248,7 +248,7 @@ it("constructor throws if fetch is unavailable", () => {
 	globalThis.fetch = originalFetch
 })
 
-it("constructor throws if provided fetch is not a function", () => {
+it("throws in constructor if provided fetch is not a function", () => {
 	const endpoint = prismic.getRepositoryEndpoint("qwerty")
 	const fetch = "not a function"
 
@@ -279,7 +279,7 @@ it("constructor throws if provided fetch is not a function", () => {
 	globalThis.fetch = originalFetch
 })
 
-it("throws is `repositoryName` is not available but accessed", () => {
+it("throws if `repositoryName` is not available but accessed", () => {
 	const fetch = vi.fn()
 
 	const consoleWarnSpy = vi

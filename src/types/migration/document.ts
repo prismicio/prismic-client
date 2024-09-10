@@ -204,7 +204,7 @@ export type PrismicMigrationDocumentParams = {
 	/**
 	 * Name of the document displayed in the editor.
 	 */
-	documentName: string
+	documentTitle: string
 
 	/**
 	 * A link to the master language document.

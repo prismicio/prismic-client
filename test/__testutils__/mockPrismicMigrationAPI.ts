@@ -83,76 +83,82 @@ export const mockPrismicMigrationAPI = (
 	}
 
 	args.ctx.server.use(
-		rest.post(`${migrationAPIEndpoint}documents`, async (req, res, ctx) => {
-			if (
-				req.headers.get("authorization") !== `Bearer ${writeToken}` ||
-				req.headers.get("x-api-key") !== migrationAPIKey ||
-				req.headers.get("repository") !== repositoryName
-			) {
-				return res(ctx.status(403), ctx.json({ Message: "forbidden" }))
-			}
+		rest.post(
+			new URL("documents", migrationAPIEndpoint).toString(),
+			async (req, res, ctx) => {
+				if (
+					req.headers.get("authorization") !== `Bearer ${writeToken}` ||
+					req.headers.get("x-api-key") !== migrationAPIKey ||
+					req.headers.get("repository") !== repositoryName
+				) {
+					return res(ctx.status(403), ctx.json({ Message: "forbidden" }))
+				}
 
-			validateHeaders(req)
+				validateHeaders(req)
 
-			const body = await req.json<PostDocumentParams>()
+				const body = await req.json<PostDocumentParams>()
 
-			const newDocument = args.newDocuments?.shift()
-			const id = newDocument?.id || args.ctx.mock.value.document().id
+				const newDocument = args.newDocuments?.shift()
+				const id = newDocument?.id || args.ctx.mock.value.document().id
 
-			if (newDocument?.masterLanguageDocumentID) {
-				args.ctx
-					.expect(body.alternate_language_id)
-					.toBe(newDocument.masterLanguageDocumentID)
-			}
+				if (newDocument?.masterLanguageDocumentID) {
+					args.ctx
+						.expect(body.alternate_language_id)
+						.toBe(newDocument.masterLanguageDocumentID)
+				}
 
-			const response: PostDocumentResult = {
-				title: body.title,
-				id,
-				lang: body.lang,
-				type: body.type,
-				uid: body.uid,
-			}
+				const response: PostDocumentResult = {
+					title: body.title,
+					id,
+					lang: body.lang,
+					type: body.type,
+					uid: body.uid,
+				}
 
-			// Save the document in DB
-			documentsDatabase[id] = { ...response, data: body.data }
+				// Save the document in DB
+				documentsDatabase[id] = { ...response, data: body.data }
 
-			return res(ctx.status(201), ctx.json(response))
-		}),
-		rest.put(`${migrationAPIEndpoint}documents/:id`, async (req, res, ctx) => {
-			if (
-				req.headers.get("authorization") !== `Bearer ${writeToken}` ||
-				req.headers.get("x-api-key") !== migrationAPIKey ||
-				req.headers.get("repository") !== repositoryName
-			) {
-				return res(ctx.status(403), ctx.json({ Message: "forbidden" }))
-			}
+				return res(ctx.status(201), ctx.json(response))
+			},
+		),
+		rest.put(
+			new URL("documents/:id", migrationAPIEndpoint).toString(),
+			async (req, res, ctx) => {
+				if (
+					req.headers.get("authorization") !== `Bearer ${writeToken}` ||
+					req.headers.get("x-api-key") !== migrationAPIKey ||
+					req.headers.get("repository") !== repositoryName
+				) {
+					return res(ctx.status(403), ctx.json({ Message: "forbidden" }))
+				}
 
-			validateHeaders(req)
+				validateHeaders(req)
 
-			const document = documentsDatabase[req.params.id as string]
+				const document = documentsDatabase[req.params.id as string]
 
-			if (!document) {
-				return res(ctx.status(404))
-			}
+				if (!document) {
+					return res(ctx.status(404))
+				}
 
-			const body = await req.json<PutDocumentParams>()
+				const body = await req.json<PutDocumentParams>()
 
-			const response: PutDocumentResult = {
-				title: body.title || document.title,
-				id: req.params.id as string,
-				lang: document.lang,
-				type: document.type,
-				uid: body.uid,
-			}
+				const response: PutDocumentResult = {
+					title: body.title || document.title,
+					id: req.params.id as string,
+					lang: document.lang,
+					type: document.type,
+					uid: body.uid,
+				}
 
-			// Update the document in DB
-			documentsDatabase[req.params.id as string] = {
-				...response,
-				data: body.data,
-			}
+				// Update the document in DB
+				documentsDatabase[req.params.id as string] = {
+					...response,
+					data: body.data,
+				}
 
-			return res(ctx.json(response))
-		}),
+				return res(ctx.json(response))
+			},
+		),
 	)
 
 	return { documentsDatabase }

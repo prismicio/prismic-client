@@ -16,14 +16,14 @@ it.concurrent("fetches a foreign asset with content type", async (ctx) => {
 
 	ctx.server.use(
 		rest.get(url, (_req, res, ctx) => {
-			return res(ctx.text("foo"))
+			return res(ctx.set("content-type", "image/png"), ctx.body("foo"))
 		}),
 	)
 
 	// @ts-expect-error - testing purposes
-	const file = await client.fetchForeignAsset(url)
+	const blob = await client.fetchForeignAsset(url)
 
-	expect(file.type).toBe("text/plain")
+	expect(blob.type).toBe("image/png")
 })
 
 it.concurrent("fetches a foreign asset with no content type", async (ctx) => {
@@ -38,9 +38,9 @@ it.concurrent("fetches a foreign asset with no content type", async (ctx) => {
 	)
 
 	// @ts-expect-error - testing purposes
-	const file = await client.fetchForeignAsset(url)
+	const blob = await client.fetchForeignAsset(url)
 
-	expect(file.type).toBe("")
+	expect(blob.type).toBe("")
 })
 
 it.concurrent("is abortable with an AbortController", async (ctx) => {
@@ -101,11 +101,11 @@ it.concurrent("supports custom headers", async (ctx) => {
 	)
 
 	// @ts-expect-error - testing purposes
-	const file = await client.fetchForeignAsset(url, {
+	const blob = await client.fetchForeignAsset(url, {
 		fetchOptions: { headers },
 	})
 
-	ctx.expect(file.type).toBe("text/plain")
+	ctx.expect(blob.type).toBe("text/plain")
 	ctx.expect.assertions(2)
 })
 
@@ -127,8 +127,8 @@ it.concurrent("supports global custom headers", async (ctx) => {
 	)
 
 	// @ts-expect-error - testing purposes
-	const file = await client.fetchForeignAsset(url)
+	const blob = await client.fetchForeignAsset(url)
 
-	ctx.expect(file.type).toBe("text/plain")
+	ctx.expect(blob.type).toBe("text/plain")
 	ctx.expect.assertions(2)
 })

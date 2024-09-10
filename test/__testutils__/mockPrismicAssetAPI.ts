@@ -22,7 +22,7 @@ type MockPrismicAssetAPIArgs = {
 	client: WriteClient
 	writeToken?: string
 	requiredHeaders?: Record<string, string>
-	getRequiredParams?: Record<string, string | string[]>
+	requiredGetParams?: Record<string, string | string[]>
 	existingAssets?: Asset[][] | number[]
 	newAssets?: Asset[]
 	existingTags?: AssetTag[]
@@ -97,146 +97,161 @@ export const mockPrismicAssetAPI = (
 	}
 
 	args.ctx.server.use(
-		rest.get(`${assetAPIEndpoint}assets`, async (req, res, ctx) => {
-			if (
-				req.headers.get("authorization") !== `Bearer ${writeToken}` ||
-				req.headers.get("repository") !== repositoryName
-			) {
-				return res(ctx.status(401), ctx.json({ error: "unauthorized" }))
-			}
-
-			if (args.getRequiredParams) {
-				for (const paramKey in args.getRequiredParams) {
-					const requiredValue = args.getRequiredParams[paramKey]
-
-					args.ctx
-						.expect(req.url.searchParams.getAll(paramKey))
-						.toStrictEqual(
-							Array.isArray(requiredValue) ? requiredValue : [requiredValue],
-						)
+		rest.get(
+			new URL("assets", assetAPIEndpoint).toString(),
+			async (req, res, ctx) => {
+				if (
+					req.headers.get("authorization") !== `Bearer ${writeToken}` ||
+					req.headers.get("repository") !== repositoryName
+				) {
+					return res(ctx.status(401), ctx.json({ error: "unauthorized" }))
 				}
-			}
 
-			validateHeaders(req)
+				if (args.requiredGetParams) {
+					for (const paramKey in args.requiredGetParams) {
+						const requiredValue = args.requiredGetParams[paramKey]
 
-			const index = Number.parseInt(req.url.searchParams.get("cursor") ?? "0")
-			const items: Asset[] = assetsDatabase[index] || []
-
-			let missing_ids: string[] | undefined
-			const ids = req.url.searchParams.getAll("ids")
-			if (ids.length) {
-				missing_ids = ids.filter((id) =>
-					assetsDatabase.flat().find((item) => item.id === id),
-				)
-			}
-
-			const response: GetAssetsResult = {
-				total: items.length,
-				items,
-				is_opensearch_result: false,
-				cursor: assetsDatabase[index + 1] ? `${index + 1}` : undefined,
-				missing_ids,
-			}
-
-			return res(ctx.json(response))
-		}),
-		rest.post(`${assetAPIEndpoint}assets`, async (req, res, ctx) => {
-			if (
-				req.headers.get("authorization") !== `Bearer ${writeToken}` ||
-				req.headers.get("repository") !== repositoryName
-			) {
-				return res(ctx.status(401), ctx.json({ error: "unauthorized" }))
-			}
-
-			validateHeaders(req)
-
-			const response: PostAssetResult =
-				args.newAssets?.shift() ?? mockAsset(args.ctx)
-
-			// Save the asset in DB
-			assetsDatabase.push([response])
-
-			return res(ctx.json(response))
-		}),
-		rest.patch(`${assetAPIEndpoint}assets/:id`, async (req, res, ctx) => {
-			if (
-				req.headers.get("authorization") !== `Bearer ${writeToken}` ||
-				req.headers.get("repository") !== repositoryName
-			) {
-				return res(ctx.status(401), ctx.json({ error: "unauthorized" }))
-			}
-
-			validateHeaders(req)
-
-			const { tags, ...body } = await req.json<PatchAssetParams>()
-			const asset = assetsDatabase
-				.flat()
-				.find((asset) => asset.id === req.params.id)
-
-			if (!asset) {
-				return res(ctx.status(404), ctx.json({ error: "not found" }))
-			}
-
-			const response: PostAssetResult = {
-				...asset,
-				...body,
-				tags: tags?.length
-					? tagsDatabase.filter((tag) => tags.includes(tag.id))
-					: asset.tags,
-			}
-
-			// Update asset in DB
-			for (const cursor in assetsDatabase) {
-				for (const asset in assetsDatabase[cursor]) {
-					if (assetsDatabase[cursor][asset].id === req.params.id) {
-						assetsDatabase[cursor][asset] = response
+						args.ctx
+							.expect(req.url.searchParams.getAll(paramKey))
+							.toStrictEqual(
+								Array.isArray(requiredValue) ? requiredValue : [requiredValue],
+							)
 					}
 				}
-			}
 
-			return res(ctx.json(response))
-		}),
-		rest.get(`${assetAPIEndpoint}tags`, async (req, res, ctx) => {
-			if (
-				req.headers.get("authorization") !== `Bearer ${writeToken}` ||
-				req.headers.get("repository") !== repositoryName
-			) {
-				return res(ctx.status(401), ctx.json({ error: "unauthorized" }))
-			}
+				validateHeaders(req)
 
-			validateHeaders(req)
+				const index = Number.parseInt(req.url.searchParams.get("cursor") ?? "0")
+				const items: Asset[] = assetsDatabase[index] || []
 
-			const items: AssetTag[] = tagsDatabase
-			const response: GetAssetTagsResult = { items }
+				let missing_ids: string[] | undefined
+				const ids = req.url.searchParams.getAll("ids")
+				if (ids.length) {
+					missing_ids = ids.filter((id) =>
+						assetsDatabase.flat().find((item) => item.id === id),
+					)
+				}
 
-			return res(ctx.json(response))
-		}),
-		rest.post(`${assetAPIEndpoint}tags`, async (req, res, ctx) => {
-			if (
-				req.headers.get("authorization") !== `Bearer ${writeToken}` ||
-				req.headers.get("repository") !== repositoryName
-			) {
-				return res(ctx.status(401), ctx.json({ error: "unauthorized" }))
-			}
+				const response: GetAssetsResult = {
+					total: items.length,
+					items,
+					is_opensearch_result: false,
+					cursor: assetsDatabase[index + 1] ? `${index + 1}` : undefined,
+					missing_ids,
+				}
 
-			validateHeaders(req)
+				return res(ctx.json(response))
+			},
+		),
+		rest.post(
+			new URL("assets", assetAPIEndpoint).toString(),
+			async (req, res, ctx) => {
+				if (
+					req.headers.get("authorization") !== `Bearer ${writeToken}` ||
+					req.headers.get("repository") !== repositoryName
+				) {
+					return res(ctx.status(401), ctx.json({ error: "unauthorized" }))
+				}
 
-			const body = await req.json<PostAssetTagParams>()
-			const tag: AssetTag = {
-				id: `${`${Date.now()}`.slice(-8)}-4444-4444-4444-121212121212`,
-				created_at: Date.now(),
-				last_modified: Date.now(),
-				name: body.name,
-				...args.newTags?.find((tag) => tag.name === body.name),
-			}
+				validateHeaders(req)
 
-			// Save the tag in DB
-			tagsDatabase.push(tag)
+				const response: PostAssetResult =
+					args.newAssets?.shift() ?? mockAsset(args.ctx)
 
-			const response: PostAssetTagResult = tag
+				// Save the asset in DB
+				assetsDatabase.push([response])
 
-			return res(ctx.status(201), ctx.json(response))
-		}),
+				return res(ctx.json(response))
+			},
+		),
+		rest.patch(
+			new URL("assets/:id", assetAPIEndpoint).toString(),
+			async (req, res, ctx) => {
+				if (
+					req.headers.get("authorization") !== `Bearer ${writeToken}` ||
+					req.headers.get("repository") !== repositoryName
+				) {
+					return res(ctx.status(401), ctx.json({ error: "unauthorized" }))
+				}
+
+				validateHeaders(req)
+
+				const { tags, ...body } = await req.json<PatchAssetParams>()
+				const asset = assetsDatabase
+					.flat()
+					.find((asset) => asset.id === req.params.id)
+
+				if (!asset) {
+					return res(ctx.status(404), ctx.json({ error: "not found" }))
+				}
+
+				const response: PostAssetResult = {
+					...asset,
+					...body,
+					tags: tags?.length
+						? tagsDatabase.filter((tag) => tags.includes(tag.id))
+						: asset.tags,
+				}
+
+				// Update asset in DB
+				for (const cursor in assetsDatabase) {
+					for (const asset in assetsDatabase[cursor]) {
+						if (assetsDatabase[cursor][asset].id === req.params.id) {
+							assetsDatabase[cursor][asset] = response
+						}
+					}
+				}
+
+				return res(ctx.json(response))
+			},
+		),
+		rest.get(
+			new URL("tags", assetAPIEndpoint).toString(),
+			async (req, res, ctx) => {
+				if (
+					req.headers.get("authorization") !== `Bearer ${writeToken}` ||
+					req.headers.get("repository") !== repositoryName
+				) {
+					return res(ctx.status(401), ctx.json({ error: "unauthorized" }))
+				}
+
+				validateHeaders(req)
+
+				const items: AssetTag[] = tagsDatabase
+				const response: GetAssetTagsResult = { items }
+
+				return res(ctx.json(response))
+			},
+		),
+		rest.post(
+			new URL("tags", assetAPIEndpoint).toString(),
+			async (req, res, ctx) => {
+				if (
+					req.headers.get("authorization") !== `Bearer ${writeToken}` ||
+					req.headers.get("repository") !== repositoryName
+				) {
+					return res(ctx.status(401), ctx.json({ error: "unauthorized" }))
+				}
+
+				validateHeaders(req)
+
+				const body = await req.json<PostAssetTagParams>()
+				const tag: AssetTag = {
+					id: `${`${Date.now()}`.slice(-8)}-4444-4444-4444-121212121212`,
+					created_at: Date.now(),
+					last_modified: Date.now(),
+					name: body.name,
+					...args.newTags?.find((tag) => tag.name === body.name),
+				}
+
+				// Save the tag in DB
+				tagsDatabase.push(tag)
+
+				const response: PostAssetTagResult = tag
+
+				return res(ctx.status(201), ctx.json(response))
+			},
+		),
 	)
 
 	return {

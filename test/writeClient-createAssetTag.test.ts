@@ -29,31 +29,6 @@ it.concurrent("creates a tag", async (ctx) => {
 	expect(tag).toStrictEqual(newTag)
 })
 
-it.concurrent("throws if tag is invalid", async (ctx) => {
-	const client = createTestWriteClient({ ctx })
-
-	mockPrismicAssetAPI({ ctx, client })
-
-	await expect(() =>
-		// @ts-expect-error - testing purposes
-		client.createAssetTag("0"),
-	).rejects.toThrowErrorMatchingInlineSnapshot(
-		`[Error: Asset tag name must be at least 3 characters long and 20 characters at most]`,
-	)
-
-	await expect(() =>
-		// @ts-expect-error - testing purposes
-		client.createAssetTag("0".repeat(21)),
-	).rejects.toThrowErrorMatchingInlineSnapshot(
-		`[Error: Asset tag name must be at least 3 characters long and 20 characters at most]`,
-	)
-
-	await expect(
-		// @ts-expect-error - testing purposes
-		client.createAssetTag("valid"),
-	).resolves.not.toBeUndefined()
-})
-
 it.concurrent("throws forbidden error on invalid credentials", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 

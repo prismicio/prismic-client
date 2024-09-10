@@ -107,8 +107,7 @@ export const link = (
 		} else if (
 			"type" in field &&
 			"lang" in field &&
-			typeof field.lang === "string" &&
-			field.id
+			typeof field.lang === "string"
 		) {
 			// Content relationship field declared using another repository document
 			return true

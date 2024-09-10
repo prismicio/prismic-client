@@ -4,7 +4,17 @@ import { RichTextNodeType } from "../src"
 
 testMigrationFieldPatching("patches link fields", {
 	existing: ({ existingDocuments }) => existingDocuments[0],
-	migration: ({ migration, migrationDocuments }) => {
+	migration: ({ migrationDocuments }) => {
+		delete migrationDocuments[0].id
+
+		return migrationDocuments[0]
+	},
+	lazyExisting: ({ existingDocuments }) => {
+		return () => existingDocuments[0]
+	},
+	lazyMigration: ({ migration, migrationDocuments }) => {
+		delete migrationDocuments[0].id
+
 		return () =>
 			migration.getByUID(migrationDocuments[0].type, migrationDocuments[0].uid)
 	},

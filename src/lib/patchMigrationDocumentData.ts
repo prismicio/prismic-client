@@ -247,18 +247,7 @@ const patchLink = async <TDocuments extends PrismicDocument = PrismicDocument>(
 	documents: DocumentMap<TDocuments>,
 ): Promise<LinkField> => {
 	if (link) {
-		if (typeof link === "function") {
-			const resolved = await link()
-
-			if (resolved) {
-				// Documents and migration documents are indexed.
-				const maybeRelationship = documents.get(resolved)
-
-				if (maybeRelationship) {
-					return to.contentRelationship(maybeRelationship)
-				}
-			}
-		} else if ("migrationType" in link) {
+		if ("migrationType" in link) {
 			// Migration link field
 			const asset = assets.get(link.id)
 			if (asset) {
@@ -290,10 +279,22 @@ const patchLink = async <TDocuments extends PrismicDocument = PrismicDocument>(
 					return link
 			}
 		} else {
-			const maybeRelationship = documents.get(link.id)
+			const resolved = typeof link === "function" ? await link() : link
 
-			if (maybeRelationship) {
-				return to.contentRelationship(maybeRelationship)
+			if (resolved) {
+				// Link might be represented by a document or a migration document...
+				let maybeRelationship = resolved.id
+					? documents.get(resolved.id)
+					: undefined
+
+				// ...or by a migration document
+				if (!maybeRelationship) {
+					maybeRelationship = documents.get(resolved)
+				}
+
+				if (maybeRelationship) {
+					return to.contentRelationship(maybeRelationship)
+				}
 			}
 		}
 	}

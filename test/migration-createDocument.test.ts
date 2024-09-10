@@ -14,13 +14,13 @@ it("creates a document", () => {
 		lang: "lang",
 		data: {},
 	}
-	const documentName = "documentName"
+	const documentTitle = "documentTitle"
 
-	migration.createDocument(document, documentName)
+	migration.createDocument(document, documentTitle)
 
 	expect(migration.documents[0]).toStrictEqual({
 		document,
-		params: { documentName },
+		params: { documentTitle },
 	})
 })
 
@@ -28,13 +28,13 @@ it("creates a document from an existing Prismic document", (ctx) => {
 	const migration = prismic.createMigration()
 
 	const document = ctx.mock.value.document()
-	const documentName = "documentName"
+	const documentTitle = "documentTitle"
 
-	migration.createDocument(document, documentName)
+	migration.createDocument(document, documentTitle)
 
 	expect(migration.documents[0]).toStrictEqual({
 		document,
-		params: { documentName },
+		params: { documentTitle },
 	})
 })
 
@@ -191,11 +191,11 @@ describe.each<{
 			lang: "lang",
 			data: { field },
 		}
-		const documentName = "documentName"
+		const documentTitle = "documentTitle"
 
 		expect(migration.assets.size).toBe(0)
 
-		migration.createDocument(document, documentName)
+		migration.createDocument(document, documentTitle)
 
 		expect(migration.assets.get(id)).toStrictEqual(expected)
 	})
@@ -211,11 +211,11 @@ describe.each<{
 			lang: "lang",
 			data: { group: [{ field }] },
 		}
-		const documentName = "documentName"
+		const documentTitle = "documentTitle"
 
 		expect(migration.assets.size).toBe(0)
 
-		migration.createDocument(document, documentName)
+		migration.createDocument(document, documentTitle)
 
 		expect(migration.assets.get(id)).toStrictEqual(expected)
 	})
@@ -241,11 +241,11 @@ describe.each<{
 			lang: "lang",
 			data: { slices },
 		}
-		const documentName = "documentName"
+		const documentTitle = "documentTitle"
 
 		expect(migration.assets.size).toBe(0)
 
-		migration.createDocument(document, documentName)
+		migration.createDocument(document, documentTitle)
 
 		expect(migration.assets.get(id)).toStrictEqual(expected)
 	})
@@ -271,11 +271,11 @@ describe.each<{
 			lang: "lang",
 			data: { slices },
 		}
-		const documentName = "documentName"
+		const documentTitle = "documentTitle"
 
 		expect(migration.assets.size).toBe(0)
 
-		migration.createDocument(document, documentName)
+		migration.createDocument(document, documentTitle)
 
 		expect(migration.assets.get(id)).toStrictEqual(expected)
 	})

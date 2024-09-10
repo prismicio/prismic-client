@@ -2,7 +2,7 @@ import { expect, it } from "vitest"
 
 import * as prismic from "../src"
 
-it("returns indexed document", () => {
+it("returns a document with a matching UID", () => {
 	const migration = prismic.createMigration()
 
 	const document = {
@@ -20,7 +20,7 @@ it("returns indexed document", () => {
 	)
 })
 
-it("returns `undefined` is document is not found", () => {
+it("returns `undefined` if a document is not found", () => {
 	const migration = prismic.createMigration()
 
 	const document = {

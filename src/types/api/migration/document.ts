@@ -1,4 +1,7 @@
-import type { PrismicDocument } from "../../value/document"
+import type {
+	PrismicDocument,
+	PrismicDocumentWithUID,
+} from "../../value/document"
 
 /**
  * An object representing the parameters required when creating a document
@@ -6,7 +9,7 @@ import type { PrismicDocument } from "../../value/document"
  *
  * @typeParam TDocument - Type of the Prismic document to create.
  *
- * @see Prismic Migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
+ * @see Prismic Migration API technical reference: {@link https://prismic.io/docs/migration-api-technical-reference}
  */
 export type PostDocumentParams<
 	TDocument extends PrismicDocument = PrismicDocument,
@@ -16,13 +19,14 @@ export type PostDocumentParams<
 				title: string
 
 				type: TType
-				uid?: string
 				lang: TLang
 				alternate_language_id?: string
 
 				tags?: string[]
 				data: TData | Record<string, never>
-			}
+			} & (TDocument extends PrismicDocumentWithUID
+				? { uid: TDocument["uid"] }
+				: { uid?: TDocument["uid"] })
 		: never
 
 /**
@@ -30,7 +34,7 @@ export type PostDocumentParams<
  *
  * @typeParam TDocument - Type of the created Prismic document.
  *
- * @see Prismic Asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+ * @see Prismic Asset API technical reference: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
 export type PostDocumentResult<
 	TDocument extends PrismicDocument = PrismicDocument,
@@ -53,7 +57,7 @@ export type PostDocumentResult<
  *
  * @typeParam TDocument - Type of the Prismic document to update.
  *
- * @see Prismic Migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
+ * @see Prismic Migration API technical reference: {@link https://prismic.io/docs/migration-api-technical-reference}
  */
 export type PutDocumentParams<
 	TDocument extends PrismicDocument = PrismicDocument,
@@ -73,7 +77,7 @@ export type PutDocumentParams<
  *
  * @typeParam TDocument - Type of the updated Prismic document.
  *
- * @see Prismic Asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+ * @see Prismic Asset API technical reference: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
 export type PutDocumentResult<
 	TDocument extends PrismicDocument = PrismicDocument,

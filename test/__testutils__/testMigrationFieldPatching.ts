@@ -30,7 +30,7 @@ type GetDataArgs = {
 
 type InternalTestMigrationFieldPatchingArgs = {
 	getData: (args: GetDataArgs) => prismic.PrismicMigrationDocument["data"]
-	expectStrictEqual: boolean
+	expectStrictEqual?: boolean
 }
 
 const internalTestMigrationFieldPatching = (
@@ -116,10 +116,10 @@ type TestMigrationFieldPatchingFactoryCases = Record<
 	(args: GetDataArgs) => prismic.PrismicMigrationDocument["data"][string]
 >
 
-const testMigrationFieldPatchingFactory = (
+export const testMigrationFieldPatching = (
 	description: string,
 	cases: TestMigrationFieldPatchingFactoryCases,
-	args: Omit<InternalTestMigrationFieldPatchingArgs, "getData">,
+	args: Omit<InternalTestMigrationFieldPatchingArgs, "getData"> = {},
 ): void => {
 	describe(description, () => {
 		for (const name in cases) {
@@ -178,23 +178,5 @@ const testMigrationFieldPatchingFactory = (
 				})
 			})
 		}
-	})
-}
-
-export const testMigrationSimpleFieldPatching = (
-	description: string,
-	cases: TestMigrationFieldPatchingFactoryCases,
-): void => {
-	testMigrationFieldPatchingFactory(description, cases, {
-		expectStrictEqual: true,
-	})
-}
-
-export const testMigrationFieldPatching = (
-	description: string,
-	cases: TestMigrationFieldPatchingFactoryCases,
-): void => {
-	testMigrationFieldPatchingFactory(description, cases, {
-		expectStrictEqual: false,
 	})
 }

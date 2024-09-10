@@ -1,4 +1,5 @@
 import { devMsg } from "./lib/devMsg"
+import { isAssetTagID } from "./lib/isAssetTagID"
 import { pLimit } from "./lib/pLimit"
 import type { AssetMap, DocumentMap } from "./lib/patchMigrationDocumentData"
 import { patchMigrationDocumentData } from "./lib/patchMigrationDocumentData"
@@ -187,7 +188,7 @@ type GetAssetsReturnType = {
 /**
  * Additional parameters for creating an asset in the Prismic media library.
  */
-type CreateAssetParams = {
+export type CreateAssetParams = {
 	/**
 	 * Asset notes.
 	 */
@@ -210,21 +211,6 @@ type CreateAssetParams = {
 }
 
 /**
- * Max length for asset notes accepted by the API.
- */
-const ASSET_NOTES_MAX_LENGTH = 500
-
-/**
- * Max length for asset credits accepted by the API.
- */
-const ASSET_CREDITS_MAX_LENGTH = 500
-
-/**
- * Max length for asset alt text accepted by the API.
- */
-const ASSET_ALT_MAX_LENGTH = 500
-
-/**
  * Prismic Migration API demo keys.
  */
 const MIGRATION_API_DEMO_KEYS = [
@@ -235,75 +221,6 @@ const MIGRATION_API_DEMO_KEYS = [
 	"g2DA3EKWvx8uxVYcNFrmT5nJpon1Vi9V4XcOibJD",
 	"CCNIlI0Vz41J66oFwsHUXaZa6NYFIY6z7aDF62Bc",
 ]
-
-/**
- * Checks if a string is an asset tag ID.
- *
- * @param maybeAssetTagID - A string that's maybe an asset tag ID.
- *
- * @returns `true` if the string is an asset tag ID, `false` otherwise.
- */
-const isAssetTagID = (maybeAssetTagID: string): boolean => {
-	// Taken from @sinclair/typebox which is the uuid type checker of the Asset API
-	// See: https://github.com/sinclairzx81/typebox/blob/e36f5658e3a56d8c32a711aa616ec8bb34ca14b4/test/runtime/compiler/validate.ts#L15
-	// Tag is already a tag ID
-	return /^(?:urn:uuid:)?[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(
-		maybeAssetTagID,
-	)
-}
-
-/**
- * Validates an asset's metadata, throwing an error if any of the metadata are
- * invalid.
- *
- * @param assetMetadata - The asset metadata to validate.
- *
- * @internal
- */
-export const validateAssetMetadata = ({
-	notes,
-	credits,
-	alt,
-	tags,
-}: CreateAssetParams): void => {
-	const errors: string[] = []
-
-	if (notes && notes.length > ASSET_NOTES_MAX_LENGTH) {
-		errors.push(
-			`\`notes\` must be at most ${ASSET_NOTES_MAX_LENGTH} characters`,
-		)
-	}
-
-	if (credits && credits.length > ASSET_CREDITS_MAX_LENGTH) {
-		errors.push(
-			`\`credits\` must be at most ${ASSET_CREDITS_MAX_LENGTH} characters`,
-		)
-	}
-
-	if (alt && alt.length > ASSET_ALT_MAX_LENGTH) {
-		errors.push(`\`alt\` must be at most ${ASSET_ALT_MAX_LENGTH} characters`)
-	}
-
-	if (
-		tags &&
-		tags.length &&
-		tags.some(
-			(tag) => !isAssetTagID(tag) && (tag.length < 3 || tag.length > 20),
-		)
-	) {
-		errors.push(
-			`all \`tags\`'s tag must be at least 3 characters long and 20 characters at most`,
-		)
-	}
-
-	if (errors.length) {
-		throw new PrismicError(
-			`Errors validating asset metadata: ${errors.join(", ")}`,
-			undefined,
-			{ notes, credits, alt, tags },
-		)
-	}
-}
 
 /**
  * Configuration for clients that determine how content is queried.
@@ -320,7 +237,7 @@ export type WriteClientConfig = {
 	 * authenticate your requests.
 	 *
 	 * @remarks
-	 * Those keys are the same for all Prismic users. They are only useful while
+	 * These keys are the same for all Prismic users. They are only useful while
 	 * the Migration API is in beta to reduce load. It should be one of:
 	 *
 	 * - `cSaZlfkQlF9C6CEAM2Del6MNX9WonlV86HPbeEJL`
@@ -337,7 +254,7 @@ export type WriteClientConfig = {
 	 *
 	 * @defaultValue `"https://asset-api.prismic.io/"`
 	 *
-	 * @see Prismic Asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+	 * @see Prismic Asset API technical reference: {@link https://prismic.io/docs/asset-api-technical-reference}
 	 */
 	assetAPIEndpoint?: string
 
@@ -346,7 +263,7 @@ export type WriteClientConfig = {
 	 *
 	 * @defaultValue `"https://migration.prismic.io/"`
 	 *
-	 * @see Prismic Migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
+	 * @see Prismic Migration API technical reference: {@link https://prismic.io/docs/migration-api-technical-reference}
 	 */
 	migrationAPIEndpoint?: string
 } & ClientConfig
@@ -416,7 +333,7 @@ export class WriteClient<
 	 * @param migration - A migration prepared with {@link createMigration}.
 	 * @param params - An event listener and additional fetch parameters.
 	 *
-	 * @see Prismic Migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
+	 * @see Prismic Migration API technical reference: {@link https://prismic.io/docs/migration-api-technical-reference}
 	 */
 	async migrate(
 		migration: Migration<TDocuments>,
@@ -589,7 +506,6 @@ export class WriteClient<
 			...fetchParams
 		}: { reporter?: (event: MigrateReporterEvents) => void } & FetchParams = {},
 	): Promise<DocumentMap<TDocuments>> {
-		// Should this be a function of `Client`?
 		// Resolve master locale
 		const repository = await this.getRepository(fetchParams)
 		const masterLocale = repository.languages.find((lang) => lang.is_master)!.id
@@ -697,7 +613,7 @@ export class WriteClient<
 				const { id } = await this.createDocument(
 					// We'll upload docuements data later on.
 					{ ...document, data: {} },
-					params.documentName,
+					params.documentTitle,
 					{
 						masterLanguageDocumentID,
 						...fetchParams,
@@ -767,7 +683,7 @@ export class WriteClient<
 				id,
 				// We need to forward again document name and tags to update them
 				// in case the document already existed during the previous step.
-				{ documentName: params.documentName, uid, tags: document.tags, data },
+				{ documentTitle: params.documentTitle, uid, tags: document.tags, data },
 				fetchParams,
 			)
 		}
@@ -876,8 +792,6 @@ export class WriteClient<
 			...params
 		}: CreateAssetParams & FetchParams = {},
 	): Promise<Asset> {
-		validateAssetMetadata({ notes, credits, alt, tags })
-
 		const url = new URL("assets", this.assetAPIEndpoint)
 
 		const formData = new FormData()
@@ -935,8 +849,6 @@ export class WriteClient<
 			...params
 		}: PatchAssetParams & FetchParams = {},
 	): Promise<Asset> {
-		validateAssetMetadata({ notes, credits, alt, tags })
-
 		const url = new URL(`assets/${id}`, this.assetAPIEndpoint)
 
 		// Resolve tags if any and create missing ones
@@ -1024,7 +936,7 @@ export class WriteClient<
 	private async fetchForeignAsset(
 		url: string,
 		params: FetchParams = {},
-	): Promise<File> {
+	): Promise<Blob> {
 		const requestInit: RequestInitLike = {
 			...this.fetchOptions,
 			...params.fetchOptions,
@@ -1044,11 +956,7 @@ export class WriteClient<
 			throw new PrismicError("Could not fetch foreign asset", url, undefined)
 		}
 
-		const blob = await res.blob()
-
-		return new File([blob], "", {
-			type: res.headers.get("content-type") || undefined,
-		})
+		return res.blob()
 	}
 
 	/**
@@ -1116,14 +1024,6 @@ export class WriteClient<
 		name: string,
 		params?: FetchParams,
 	): Promise<AssetTag> {
-		if (name.length < 3 || name.length > 20) {
-			throw new PrismicError(
-				"Asset tag name must be at least 3 characters long and 20 characters at most",
-				undefined,
-				{ name },
-			)
-		}
-
 		const url = new URL("tags", this.assetAPIEndpoint)
 
 		return this.fetch<PostAssetTagResult>(
@@ -1160,18 +1060,18 @@ export class WriteClient<
 	 * @typeParam TType - Type of Prismic documents to create.
 	 *
 	 * @param document - The document data to create.
-	 * @param documentName - The name of the document to create which will be
+	 * @param documentTitle - The name of the document to create which will be
 	 *   displayed in the editor.
 	 * @param params - Document master language document ID and additional fetch
 	 *   parameters.
 	 *
 	 * @returns The ID of the created document.
 	 *
-	 * @see Prismic Migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
+	 * @see Prismic Migration API technical reference: {@link https://prismic.io/docs/migration-api-technical-reference}
 	 */
 	private async createDocument<TType extends TDocuments["type"]>(
 		document: PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>>,
-		documentName: PrismicMigrationDocumentParams["documentName"],
+		documentTitle: PrismicMigrationDocumentParams["documentTitle"],
 		{
 			masterLanguageDocumentID,
 			...params
@@ -1184,7 +1084,7 @@ export class WriteClient<
 			this.buildMigrationAPIQueryParams<PostDocumentParams>({
 				method: "POST",
 				body: {
-					title: documentName,
+					title: documentTitle,
 					type: document.type,
 					uid: document.uid || undefined,
 					lang: document.lang,
@@ -1208,7 +1108,7 @@ export class WriteClient<
 	 * @param document - The document data to update.
 	 * @param params - Additional fetch parameters.
 	 *
-	 * @see Prismic Migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
+	 * @see Prismic Migration API technical reference: {@link https://prismic.io/docs/migration-api-technical-reference}
 	 */
 	private async updateDocument<TType extends TDocuments["type"]>(
 		id: string,
@@ -1216,7 +1116,7 @@ export class WriteClient<
 			PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>>,
 			"uid" | "tags" | "data"
 		> & {
-			documentName?: PrismicMigrationDocumentParams["documentName"]
+			documentTitle?: PrismicMigrationDocumentParams["documentTitle"]
 		},
 		params?: FetchParams,
 	): Promise<void> {
@@ -1227,7 +1127,7 @@ export class WriteClient<
 			this.buildMigrationAPIQueryParams({
 				method: "PUT",
 				body: {
-					title: document.documentName,
+					title: document.documentTitle,
 					uid: document.uid || undefined,
 					tags: document.tags,
 					data: document.data,
@@ -1246,7 +1146,7 @@ export class WriteClient<
 	 *
 	 * @returns An object that can be fetched to interact with the Asset API.
 	 *
-	 * @see Prismic Asset API technical references: {@link https://prismic.io/docs/asset-api-technical-reference}
+	 * @see Prismic Asset API technical reference: {@link https://prismic.io/docs/asset-api-technical-reference}
 	 */
 	private buildAssetAPIQueryParams<TBody = FormData | Record<string, unknown>>({
 		method,
@@ -1291,7 +1191,7 @@ export class WriteClient<
 	 *
 	 * @returns An object that can be fetched to interact with the Migration API.
 	 *
-	 * @see Prismic Migration API technical references: {@link https://prismic.io/docs/migration-api-technical-reference}
+	 * @see Prismic Migration API technical reference: {@link https://prismic.io/docs/migration-api-technical-reference}
 	 */
 	private buildMigrationAPIQueryParams<
 		TBody extends PostDocumentParams | PutDocumentParams,
