@@ -1,5 +1,4 @@
 import { devMsg } from "./lib/devMsg"
-import { isAssetTagID } from "./lib/isAssetTagID"
 import { pLimit } from "./lib/pLimit"
 import type { AssetMap, DocumentMap } from "./lib/patchMigrationDocumentData"
 import { patchMigrationDocumentData } from "./lib/patchMigrationDocumentData"
@@ -232,20 +231,11 @@ export type WriteClientConfig = {
 	writeToken: string
 
 	/**
-	 * An explicit Prismic Migration API key that allows working with the
-	 * Migration API. If none is provided, the client will pick a random one to
-	 * authenticate your requests.
+	 * A Prismic Migration API key that allows working with the Migration API.
 	 *
 	 * @remarks
-	 * These keys are the same for all Prismic users. They are only useful while
-	 * the Migration API is in beta to reduce load. It should be one of:
-	 *
-	 * - `cSaZlfkQlF9C6CEAM2Del6MNX9WonlV86HPbeEJL`
-	 * - `pZCexCajUQ4jriYwIGSxA1drZrFxDyFf1S0D1K0P`
-	 * - `Yc0mfrkGDw8gaaGKTrzwC3QUZDajv6k73DA99vWN`
-	 * - `ySzSEbVMAb5S1oSCQfbVG4mbh9Cb8wlF7BCvKI0L`
-	 * - `g2DA3EKWvx8uxVYcNFrmT5nJpon1Vi9V4XcOibJD`
-	 * - `CCNIlI0Vz41J66oFwsHUXaZa6NYFIY6z7aDF62Bc`
+	 * If no key is provided, the client will use one of the demo key available
+	 * which has stricter rate limiting rules enforced.
 	 */
 	migrationAPIKey?: string
 
@@ -345,8 +335,8 @@ export class WriteClient<
 			type: "start",
 			data: {
 				pending: {
-					documents: migration.documents.length,
-					assets: migration.assets.size,
+					documents: migration._documents.length,
+					assets: migration._assets.size,
 				},
 			},
 		})
@@ -361,8 +351,8 @@ export class WriteClient<
 			type: "end",
 			data: {
 				migrated: {
-					documents: migration.documents.length,
-					assets: migration.assets.size,
+					documents: migration._documents.length,
+					assets: migration._assets.size,
 				},
 			},
 		})
@@ -414,7 +404,7 @@ export class WriteClient<
 		// Create assets
 		let i = 0
 		let created = 0
-		for (const [_, migrationAsset] of migration.assets) {
+		for (const [_, migrationAsset] of migration._assets) {
 			if (
 				typeof migrationAsset.id === "string" &&
 				assets.has(migrationAsset.id)
@@ -424,8 +414,8 @@ export class WriteClient<
 					data: {
 						reason: "already exists",
 						current: ++i,
-						remaining: migration.assets.size - i,
-						total: migration.assets.size,
+						remaining: migration._assets.size - i,
+						total: migration._assets.size,
 						asset: migrationAsset,
 					},
 				})
@@ -435,8 +425,8 @@ export class WriteClient<
 					type: "assets:creating",
 					data: {
 						current: ++i,
-						remaining: migration.assets.size - i,
-						total: migration.assets.size,
+						remaining: migration._assets.size - i,
+						total: migration._assets.size,
 						asset: migrationAsset,
 					},
 				})
@@ -538,7 +528,7 @@ export class WriteClient<
 
 		// We create an array with non-master locale documents last because
 		// we need their master locale document to be created first.
-		for (const { document, params } of migration.documents) {
+		for (const { document, params } of migration._documents) {
 			if (document.lang === masterLocale) {
 				sortedDocuments.unshift({ document, params })
 			} else {
@@ -660,13 +650,13 @@ export class WriteClient<
 		}: { reporter?: (event: MigrateReporterEvents) => void } & FetchParams = {},
 	): Promise<void> {
 		let i = 0
-		for (const { document, params } of migration.documents) {
+		for (const { document, params } of migration._documents) {
 			reporter?.({
 				type: "documents:updating",
 				data: {
 					current: ++i,
-					remaining: migration.documents.length - i,
-					total: migration.documents.length,
+					remaining: migration._documents.length - i,
+					total: migration._documents.length,
 					document,
 					documentParams: params,
 				},
@@ -691,7 +681,7 @@ export class WriteClient<
 		reporter?.({
 			type: "documents:updated",
 			data: {
-				updated: migration.documents.length,
+				updated: migration._documents.length,
 			},
 		})
 	}
@@ -703,19 +693,20 @@ export class WriteClient<
 	 *
 	 * @returns A paginated response containing the result of the query.
 	 */
-	async getAssets({
+	private async getAssets({
 		pageSize,
 		cursor,
-		assetType,
-		keyword,
-		ids,
-		tags,
+		// assetType,
+		// keyword,
+		// ids,
+		// tags,
 		...params
-	}: GetAssetsParams & FetchParams = {}): Promise<GetAssetsReturnType> {
+	}: Pick<GetAssetsParams, "pageSize" | "cursor"> &
+		FetchParams = {}): Promise<GetAssetsReturnType> {
 		// Resolve tags if any
-		if (tags && tags.length) {
-			tags = await this.resolveAssetTagIDs(tags, params)
-		}
+		// if (tags && tags.length) {
+		// 	tags = await this.resolveAssetTagIDs(tags, params)
+		// }
 
 		const url = new URL("assets", this.assetAPIEndpoint)
 
@@ -727,26 +718,26 @@ export class WriteClient<
 			url.searchParams.set("cursor", cursor)
 		}
 
-		if (assetType) {
-			url.searchParams.set("assetType", assetType)
-		}
+		// if (assetType) {
+		// 	url.searchParams.set("assetType", assetType)
+		// }
 
-		if (keyword) {
-			url.searchParams.set("keyword", keyword)
-		}
+		// if (keyword) {
+		// 	url.searchParams.set("keyword", keyword)
+		// }
 
-		if (ids) {
-			ids.forEach((id) => url.searchParams.append("ids", id))
-		}
+		// if (ids) {
+		// 	ids.forEach((id) => url.searchParams.append("ids", id))
+		// }
 
-		if (tags) {
-			tags.forEach((tag) => url.searchParams.append("tags", tag))
-		}
+		// if (tags) {
+		// 	tags.forEach((tag) => url.searchParams.append("tags", tag))
+		// }
 
 		const {
 			items,
 			total,
-			missing_ids,
+			// missing_ids,
 			cursor: nextCursor,
 		} = await this.fetch<GetAssetsResult>(
 			url.toString(),
@@ -756,16 +747,16 @@ export class WriteClient<
 		return {
 			results: items,
 			total_results_size: total,
-			missing_ids: missing_ids || [],
+			// missing_ids: missing_ids || [],
 			next: nextCursor
 				? () =>
 						this.getAssets({
 							pageSize,
 							cursor: nextCursor,
-							assetType,
-							keyword,
-							ids,
-							tags,
+							// assetType,
+							// keyword,
+							// ids,
+							// tags,
 							...params,
 						})
 				: undefined,
@@ -965,16 +956,16 @@ export class WriteClient<
 	private _resolveAssetTagIDsLimit = pLimit()
 
 	/**
-	 * Resolves asset tag IDs from tag names or IDs.
+	 * Resolves asset tag IDs from tag names.
 	 *
-	 * @param tagNamesOrIDs - An array of tag names or IDs to resolve.
+	 * @param tagNames - An array of tag names to resolve.
 	 * @param params - Whether or not missing tags should be created and
 	 *   additional fetch parameters.
 	 *
 	 * @returns An array of resolved tag IDs.
 	 */
 	private async resolveAssetTagIDs(
-		tagNamesOrIDs: string[] = [],
+		tagNames: string[] = [],
 		{ createTags, ...params }: { createTags?: boolean } & FetchParams = {},
 	): Promise<string[]> {
 		return this._resolveAssetTagIDsLimit(async () => {
@@ -985,23 +976,15 @@ export class WriteClient<
 			}
 
 			const resolvedTagIDs = []
-			for (const tagNameOrID of tagNamesOrIDs) {
-				if (isAssetTagID(tagNameOrID)) {
-					resolvedTagIDs.push(tagNameOrID)
-					continue
-				}
-
+			for (const tagName of tagNames) {
 				// Tag does not exists yet, we create it if `createTags` is set
-				if (!existingTagMap[tagNameOrID] && createTags) {
-					existingTagMap[tagNameOrID] = await this.createAssetTag(
-						tagNameOrID,
-						params,
-					)
+				if (!existingTagMap[tagName] && createTags) {
+					existingTagMap[tagName] = await this.createAssetTag(tagName, params)
 				}
 
 				// Add tag if found
-				if (existingTagMap[tagNameOrID]) {
-					resolvedTagIDs.push(existingTagMap[tagNameOrID].id)
+				if (existingTagMap[tagName]) {
+					resolvedTagIDs.push(existingTagMap[tagName].id)
 				}
 			}
 

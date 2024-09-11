@@ -18,7 +18,7 @@ it("creates a document", () => {
 
 	migration.createDocument(document, documentTitle)
 
-	expect(migration.documents[0]).toStrictEqual({
+	expect(migration._documents[0]).toStrictEqual({
 		document,
 		params: { documentTitle },
 	})
@@ -32,7 +32,7 @@ it("creates a document from an existing Prismic document", (ctx) => {
 
 	migration.createDocument(document, documentTitle)
 
-	expect(migration.documents[0]).toStrictEqual({
+	expect(migration._documents[0]).toStrictEqual({
 		document,
 		params: { documentTitle },
 	})
@@ -193,11 +193,11 @@ describe.each<{
 		}
 		const documentTitle = "documentTitle"
 
-		expect(migration.assets.size).toBe(0)
+		expect(migration._assets.size).toBe(0)
 
 		migration.createDocument(document, documentTitle)
 
-		expect(migration.assets.get(id)).toStrictEqual(expected)
+		expect(migration._assets.get(id)).toStrictEqual(expected)
 	})
 
 	it("group fields", ({ mock }) => {
@@ -213,11 +213,11 @@ describe.each<{
 		}
 		const documentTitle = "documentTitle"
 
-		expect(migration.assets.size).toBe(0)
+		expect(migration._assets.size).toBe(0)
 
 		migration.createDocument(document, documentTitle)
 
-		expect(migration.assets.get(id)).toStrictEqual(expected)
+		expect(migration._assets.get(id)).toStrictEqual(expected)
 	})
 
 	it("slice's primary zone", ({ mock }) => {
@@ -243,11 +243,11 @@ describe.each<{
 		}
 		const documentTitle = "documentTitle"
 
-		expect(migration.assets.size).toBe(0)
+		expect(migration._assets.size).toBe(0)
 
 		migration.createDocument(document, documentTitle)
 
-		expect(migration.assets.get(id)).toStrictEqual(expected)
+		expect(migration._assets.get(id)).toStrictEqual(expected)
 	})
 
 	it("slice's repeatable zone", ({ mock }) => {
@@ -273,10 +273,10 @@ describe.each<{
 		}
 		const documentTitle = "documentTitle"
 
-		expect(migration.assets.size).toBe(0)
+		expect(migration._assets.size).toBe(0)
 
 		migration.createDocument(document, documentTitle)
 
-		expect(migration.assets.get(id)).toStrictEqual(expected)
+		expect(migration._assets.get(id)).toStrictEqual(expected)
 	})
 })

@@ -22,8 +22,7 @@ export interface CreateMigration {
  * createMigration()
  * ```
  *
- * @typeParam TDocuments - A map of Prismic document type IDs mapped to their
- *   TypeScript type.
+ * @typeParam TDocuments - A union of Prismic document types for the repository.
  *
  * @returns A migration instance to prepare your migration.
  */

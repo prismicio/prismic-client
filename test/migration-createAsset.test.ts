@@ -17,7 +17,7 @@ it("creates an asset from a url", () => {
 
 	migration.createAsset(file, filename)
 
-	expect(migration.assets.get(file)).toEqual({
+	expect(migration._assets.get(file)).toEqual({
 		id: file,
 		file,
 		filename,
@@ -32,7 +32,7 @@ it("creates an asset from a file", () => {
 
 	migration.createAsset(file, filename)
 
-	expect(migration.assets.get(file)).toEqual({
+	expect(migration._assets.get(file)).toEqual({
 		id: file,
 		file,
 		filename,
@@ -69,7 +69,7 @@ it("creates an asset from an existing asset", () => {
 
 	migration.createAsset(asset)
 
-	expect(migration.assets.get(asset.id)).toStrictEqual({
+	expect(migration._assets.get(asset.id)).toStrictEqual({
 		id: asset.id,
 		file: asset.url,
 		filename: asset.filename,
@@ -94,7 +94,7 @@ it("creates an asset from an image field", () => {
 
 	migration.createAsset(image)
 
-	expect(migration.assets.get(image.id)).toEqual({
+	expect(migration._assets.get(image.id)).toEqual({
 		id: image.id,
 		file: image.url,
 		filename: image.url.split("/").pop(),
@@ -119,7 +119,7 @@ it("creates an asset from a link to media field", () => {
 
 	migration.createAsset(link)
 
-	expect(migration.assets.get(link.id)).toEqual({
+	expect(migration._assets.get(link.id)).toEqual({
 		id: link.id,
 		file: link.url,
 		filename: link.name,
@@ -157,14 +157,7 @@ it("throws if asset has invalid metadata", () => {
 	)
 
 	expect(() => {
-		migration.createAsset(file, filename, {
-			tags: [
-				// Tag name
-				"012",
-				// Tag ID
-				"123e4567-e89b-12d3-a456-426614174000",
-			],
-		})
+		migration.createAsset(file, filename, { tags: ["012"] })
 	}, "tags").not.toThrowError()
 })
 
@@ -176,7 +169,7 @@ it("consolidates existing assets with additional metadata", () => {
 
 	migration.createAsset(file, filename)
 
-	expect(migration.assets.get(file)).toStrictEqual({
+	expect(migration._assets.get(file)).toStrictEqual({
 		id: file,
 		file,
 		filename,
@@ -193,7 +186,7 @@ it("consolidates existing assets with additional metadata", () => {
 		tags: ["tag"],
 	})
 
-	expect(migration.assets.get(file)).toStrictEqual({
+	expect(migration._assets.get(file)).toStrictEqual({
 		id: file,
 		file,
 		filename,
@@ -210,7 +203,7 @@ it("consolidates existing assets with additional metadata", () => {
 		tags: ["tag", "tag 2"],
 	})
 
-	expect(migration.assets.get(file)).toStrictEqual({
+	expect(migration._assets.get(file)).toStrictEqual({
 		id: file,
 		file,
 		filename,
@@ -222,7 +215,7 @@ it("consolidates existing assets with additional metadata", () => {
 
 	migration.createAsset(file, filename)
 
-	expect(migration.assets.get(file)).toStrictEqual({
+	expect(migration._assets.get(file)).toStrictEqual({
 		id: file,
 		file,
 		filename,

@@ -11,7 +11,7 @@ it("creates a write client with `createWriteClient`", () => {
 	expect(client).toBeInstanceOf(prismic.WriteClient)
 })
 
-it("warns constructor in if running in a browser-like environment", () => {
+it("warns in constructor if running in a browser-like environment", () => {
 	const originalWindow = globalThis.window
 	globalThis.window = {} as Window & typeof globalThis
 

@@ -98,6 +98,9 @@ export const mockPrismicMigrationAPI = (
 
 				const body = await req.json<PostDocumentParams>()
 
+				// New document is used when we need to have predictable document ID
+				// It's also used when we need to test for correct `alternate_language_id`
+				// because the API doesn't return it in the response.
 				const newDocument = args.newDocuments?.shift()
 				const id = newDocument?.id || args.ctx.mock.value.document().id
 

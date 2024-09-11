@@ -2,8 +2,6 @@ import { PrismicError } from "../errors/PrismicError"
 
 import type { CreateAssetParams } from "../WriteClient"
 
-import { isAssetTagID } from "./isAssetTagID"
-
 /**
  * Max length for asset notes accepted by the API.
  */
@@ -66,9 +64,7 @@ export const validateAssetMetadata = ({
 		tags.length &&
 		tags.some(
 			(tag) =>
-				!isAssetTagID(tag) &&
-				(tag.length < ASSET_TAG_MIN_LENGTH ||
-					tag.length > ASSET_TAG_MAX_LENGTH),
+				tag.length < ASSET_TAG_MIN_LENGTH || tag.length > ASSET_TAG_MAX_LENGTH,
 		)
 	) {
 		errors.push(

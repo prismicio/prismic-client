@@ -26,8 +26,7 @@ export interface CreateClient {
  * createClient("https://qwerty.cdn.prismic.io/api/v2")
  * ```
  *
- * @typeParam TDocuments - A map of Prismic document type IDs mapped to their
- *   TypeScript type.
+ * @typeParam TDocuments - A union of Prismic document types for the repository.
  *
  * @param repositoryNameOrEndpoint - The Prismic repository name or full Rest
  *   API V2 endpoint for the repository.

@@ -22,7 +22,6 @@ type MockPrismicAssetAPIArgs = {
 	client: WriteClient
 	writeToken?: string
 	requiredHeaders?: Record<string, string>
-	requiredGetParams?: Record<string, string | string[]>
 	existingAssets?: Asset[][] | number[]
 	newAssets?: Asset[]
 	existingTags?: AssetTag[]
@@ -105,18 +104,6 @@ export const mockPrismicAssetAPI = (
 					req.headers.get("repository") !== repositoryName
 				) {
 					return res(ctx.status(401), ctx.json({ error: "unauthorized" }))
-				}
-
-				if (args.requiredGetParams) {
-					for (const paramKey in args.requiredGetParams) {
-						const requiredValue = args.requiredGetParams[paramKey]
-
-						args.ctx
-							.expect(req.url.searchParams.getAll(paramKey))
-							.toStrictEqual(
-								Array.isArray(requiredValue) ? requiredValue : [requiredValue],
-							)
-					}
 				}
 
 				validateHeaders(req)

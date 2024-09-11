@@ -27,8 +27,7 @@ export interface CreateWriteClient {
  * createWriteClient("qwerty", { writeToken: "***" })
  * ```
  *
- * @typeParam TDocuments - A map of Prismic document type IDs mapped to their
- *   TypeScript type.
+ * @typeParam TDocuments - A union of Prismic document types for the repository.
  *
  * @param repositoryName - The Prismic repository name for the repository.
  * @param options - Configuration that determines how content will be queried

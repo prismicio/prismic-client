@@ -1,31 +1,31 @@
 import { PrismicError } from "./errors/PrismicError"
 
 /**
- * Get a Prismic repository's name from its standard Prismic Rest API V2 or
+ * Get a Prismic repository's name from its standard Prismic Document API or
  * GraphQL endpoint.
  *
- * @typeParam RepositoryEndpoint - Prismic Rest API V2 endpoint for the
- *   repository.
- *
- * @param repositoryEndpoint - Prismic Rest API V2 endpoint for the repository.
+ * @param repositoryEndpoint - Prismic Document API endpoint for the repository.
  *
  * @returns The Prismic repository's name.
  *
- * @throws {@link Error} Thrown if an invalid Prismic Rest API V2 endpoint is
+ * @throws {@link Error} Thrown if an invalid Prismic Document API endpoint is
  *   provided.
  */
 export const getRepositoryName = (repositoryEndpoint: string): string => {
 	try {
-		const parts = new URL(repositoryEndpoint).hostname.split(".")
+		const hostname = new URL(repositoryEndpoint).hostname
 
-		// [subdomain, domain, tld]
-		if (parts.length > 2) {
-			return parts[0]
+		if (
+			hostname.endsWith("prismic.io") || // Production
+			hostname.endsWith("wroom.io") || // Staging
+			hostname.endsWith("wroom.test") // Dev
+		) {
+			return hostname.split(".")[0]
 		}
 	} catch {}
 
 	throw new PrismicError(
-		`An invalid Prismic Rest API V2 endpoint was provided: ${repositoryEndpoint}`,
+		`An invalid Prismic Document API endpoint was provided: ${repositoryEndpoint}`,
 		undefined,
 		undefined,
 	)

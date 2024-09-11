@@ -134,7 +134,7 @@ export class Migration<
 	/**
 	 * @internal
 	 */
-	documents: {
+	_documents: {
 		document: TMigrationDocuments
 		params: PrismicMigrationDocumentParams
 	}[] = []
@@ -143,7 +143,7 @@ export class Migration<
 	/**
 	 * @internal
 	 */
-	assets: Map<MigrationAsset["file"], MigrationAsset> = new Map()
+	_assets: Map<MigrationAsset["file"], MigrationAsset> = new Map()
 
 	createAsset(
 		asset: Asset | FilledImageFieldImage | FilledLinkToMediaField,
@@ -226,11 +226,11 @@ export class Migration<
 
 		validateAssetMetadata(asset)
 
-		const maybeAsset = this.assets.get(asset.id)
+		const maybeAsset = this._assets.get(asset.id)
 
 		if (maybeAsset) {
 			// Consolidate existing asset with new asset value if possible
-			this.assets.set(asset.id, {
+			this._assets.set(asset.id, {
 				...maybeAsset,
 				notes: asset.notes || maybeAsset.notes,
 				credits: asset.credits || maybeAsset.credits,
@@ -240,7 +240,7 @@ export class Migration<
 				),
 			})
 		} else {
-			this.assets.set(asset.id, asset)
+			this._assets.set(asset.id, asset)
 		}
 
 		return {
@@ -262,7 +262,7 @@ export class Migration<
 		documentTitle: PrismicMigrationDocumentParams["documentTitle"],
 		params: Omit<PrismicMigrationDocumentParams, "documentTitle"> = {},
 	): ExtractMigrationDocumentType<TMigrationDocuments, TType> {
-		this.documents.push({
+		this._documents.push({
 			document,
 			params: { documentTitle, ...params },
 		})

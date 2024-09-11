@@ -101,13 +101,19 @@ it.concurrent("creates new asset from string file data", async (ctx) => {
 	const dummyFileData = "foo"
 
 	mockPrismicRestAPIV2({ ctx })
-	mockPrismicAssetAPI({ ctx, client, newAssets: [asset] })
+	const { assetsDatabase } = mockPrismicAssetAPI({
+		ctx,
+		client,
+		newAssets: [asset],
+	})
 	mockPrismicMigrationAPI({ ctx, client })
 
 	const migration = prismic.createMigration()
 	migration.createAsset(dummyFileData, asset.filename)
 
 	const reporter = vi.fn()
+
+	expect(assetsDatabase.flat()).toHaveLength(0)
 
 	await client.migrate(migration, { reporter })
 
@@ -123,6 +129,7 @@ it.concurrent("creates new asset from string file data", async (ctx) => {
 			}),
 		},
 	})
+	expect(assetsDatabase.flat()).toHaveLength(1)
 })
 
 it.concurrent("creates new asset from a File instance", async (ctx) => {
@@ -132,13 +139,19 @@ it.concurrent("creates new asset from a File instance", async (ctx) => {
 	const dummyFile = new File(["foo"], asset.filename)
 
 	mockPrismicRestAPIV2({ ctx })
-	mockPrismicAssetAPI({ ctx, client, newAssets: [asset] })
+	const { assetsDatabase } = mockPrismicAssetAPI({
+		ctx,
+		client,
+		newAssets: [asset],
+	})
 	mockPrismicMigrationAPI({ ctx, client })
 
 	const migration = prismic.createMigration()
 	migration.createAsset(dummyFile, asset.filename)
 
 	const reporter = vi.fn()
+
+	expect(assetsDatabase.flat()).toHaveLength(0)
 
 	await client.migrate(migration, { reporter })
 
@@ -154,6 +167,7 @@ it.concurrent("creates new asset from a File instance", async (ctx) => {
 			}),
 		},
 	})
+	expect(assetsDatabase.flat()).toHaveLength(1)
 })
 
 it.concurrent(
@@ -164,7 +178,11 @@ it.concurrent(
 		const asset = mockAsset(ctx)
 
 		mockPrismicRestAPIV2({ ctx })
-		mockPrismicAssetAPI({ ctx, client, newAssets: [asset] })
+		const { assetsDatabase } = mockPrismicAssetAPI({
+			ctx,
+			client,
+			newAssets: [asset],
+		})
 		mockPrismicMigrationAPI({ ctx, client })
 
 		ctx.server.use(
@@ -177,6 +195,8 @@ it.concurrent(
 		migration.createAsset(new URL(asset.url), asset.filename)
 
 		const reporter = vi.fn()
+
+		expect(assetsDatabase.flat()).toHaveLength(0)
 
 		await client.migrate(migration, { reporter })
 
@@ -192,6 +212,7 @@ it.concurrent(
 				}),
 			},
 		})
+		expect(assetsDatabase.flat()).toHaveLength(1)
 	},
 )
 
@@ -203,7 +224,11 @@ it.concurrent(
 		const asset = mockAsset(ctx)
 
 		mockPrismicRestAPIV2({ ctx })
-		mockPrismicAssetAPI({ ctx, client, newAssets: [asset] })
+		const { assetsDatabase } = mockPrismicAssetAPI({
+			ctx,
+			client,
+			newAssets: [asset],
+		})
 		mockPrismicMigrationAPI({ ctx, client })
 
 		ctx.server.use(
@@ -216,6 +241,8 @@ it.concurrent(
 		migration.createAsset(asset.url, asset.filename)
 
 		const reporter = vi.fn()
+
+		expect(assetsDatabase.flat()).toHaveLength(0)
 
 		await client.migrate(migration, { reporter })
 
@@ -231,6 +258,7 @@ it.concurrent(
 				}),
 			},
 		})
+		expect(assetsDatabase.flat()).toHaveLength(1)
 	},
 )
 
@@ -242,7 +270,11 @@ it.concurrent(
 		const asset = mockAsset(ctx)
 
 		mockPrismicRestAPIV2({ ctx })
-		mockPrismicAssetAPI({ ctx, client, newAssets: [asset] })
+		const { assetsDatabase } = mockPrismicAssetAPI({
+			ctx,
+			client,
+			newAssets: [asset],
+		})
 		mockPrismicMigrationAPI({ ctx, client })
 
 		ctx.server.use(
@@ -256,6 +288,8 @@ it.concurrent(
 
 		const reporter = vi.fn()
 
+		expect(assetsDatabase.flat()).toHaveLength(0)
+
 		await client.migrate(migration, { reporter })
 
 		expect(reporter).toHaveBeenCalledWith({
@@ -270,6 +304,7 @@ it.concurrent(
 				}),
 			},
 		})
+		expect(assetsDatabase.flat()).toHaveLength(1)
 	},
 )
 
@@ -281,7 +316,11 @@ it.concurrent(
 		const asset = mockAsset(ctx)
 
 		mockPrismicRestAPIV2({ ctx })
-		mockPrismicAssetAPI({ ctx, client, newAssets: [asset] })
+		const { assetsDatabase } = mockPrismicAssetAPI({
+			ctx,
+			client,
+			newAssets: [asset],
+		})
 		mockPrismicMigrationAPI({ ctx, client })
 
 		ctx.server.use(
@@ -294,6 +333,8 @@ it.concurrent(
 		migration.createAsset(asset.url, asset.filename)
 
 		const reporter = vi.fn()
+
+		expect(assetsDatabase.flat()).toHaveLength(0)
 
 		await client.migrate(migration, { reporter })
 
@@ -309,6 +350,7 @@ it.concurrent(
 				}),
 			},
 		})
+		expect(assetsDatabase.flat()).toHaveLength(1)
 	},
 )
 

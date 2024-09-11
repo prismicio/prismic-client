@@ -49,27 +49,8 @@ it.concurrent("creates an asset with metadata", async (ctx) => {
 		notes: "baz",
 	})
 
+	// TODO: Check that data are properly passed when we update MSW and get FormData support
 	expect(asset.id).toBeTypeOf("string")
-})
-
-it.concurrent("creates an asset with an existing tag ID", async (ctx) => {
-	const client = createTestWriteClient({ ctx })
-
-	const tag: AssetTag = {
-		id: "00000000-4444-4444-4444-121212121212",
-		name: "foo",
-		created_at: 0,
-		last_modified: 0,
-	}
-
-	mockPrismicAssetAPI({ ctx, client, existingTags: [tag] })
-
-	// @ts-expect-error - testing purposes
-	const asset = await client.createAsset("file", "foo.jpg", {
-		tags: [tag.id],
-	})
-
-	expect(asset.tags?.[0].id).toEqual(tag.id)
 })
 
 it.concurrent("creates an asset with an existing tag name", async (ctx) => {
