@@ -9,7 +9,7 @@ interface Preparable {
 	/**
 	 * @internal
 	 */
-	_prepare(args: {
+	_resolve(args: {
 		assets: AssetMap
 		documents: DocumentMap
 	}): Promise<void> | void
@@ -41,7 +41,7 @@ export abstract class MigrationField<
 		return this._field
 	}
 
-	abstract _prepare(args: {
+	abstract _resolve(args: {
 		assets: AssetMap
 		documents: DocumentMap
 	}): Promise<void> | void

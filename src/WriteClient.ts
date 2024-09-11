@@ -579,7 +579,7 @@ export class WriteClient<
 							migrationDocument.params.masterLanguageDocument,
 						)
 
-						await link._prepare({ documents })
+						await link._resolve({ documents })
 						masterLanguageDocumentID = link._field?.id
 					} else if (migrationDocument.document.alternate_languages) {
 						masterLanguageDocumentID =
@@ -655,7 +655,7 @@ export class WriteClient<
 			})
 
 			const { id, uid } = documents.get(migrationDocument)!
-			await migrationDocument._prepare({ assets, documents })
+			await migrationDocument._resolve({ assets, documents })
 
 			await this.updateDocument(
 				id,

@@ -272,12 +272,12 @@ export class MigrationDocument<
 	/**
 	 * @internal
 	 */
-	async _prepare(args: {
+	async _resolve(args: {
 		assets: AssetMap
 		documents: DocumentMap
 	}): Promise<void> {
 		for (const dependency of this.dependencies) {
-			await dependency._prepare(args)
+			await dependency._resolve(args)
 		}
 	}
 }

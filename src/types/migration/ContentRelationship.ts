@@ -29,7 +29,7 @@ export class MigrationContentRelationship extends MigrationField<FilledContentRe
 		this.unresolvedConfig = unresolvedConfig
 	}
 
-	async _prepare({ documents }: { documents: DocumentMap }): Promise<void> {
+	async _resolve({ documents }: { documents: DocumentMap }): Promise<void> {
 		const config =
 			typeof this.unresolvedConfig === "function"
 				? await this.unresolvedConfig()

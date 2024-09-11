@@ -144,7 +144,7 @@ export class MigrationImage extends MigrationAsset<FilledImageFieldImage> {
 		this.#thumbnails[name] = thumbnail
 	}
 
-	async _prepare({
+	async _resolve({
 		assets,
 		documents,
 	}: {
@@ -157,7 +157,7 @@ export class MigrationImage extends MigrationAsset<FilledImageFieldImage> {
 			this._field = assetToImage(asset, this._initialField)
 
 			for (const name in this.#thumbnails) {
-				await this.#thumbnails[name]._prepare({ assets, documents })
+				await this.#thumbnails[name]._resolve({ assets, documents })
 
 				const thumbnail = this.#thumbnails[name]._field
 				if (thumbnail) {
@@ -171,7 +171,7 @@ export class MigrationImage extends MigrationAsset<FilledImageFieldImage> {
 export class MigrationLinkToMedia extends MigrationAsset<
 	LinkToMediaField<"filled">
 > {
-	_prepare({ assets }: { assets: AssetMap }): void {
+	_resolve({ assets }: { assets: AssetMap }): void {
 		const asset = assets.get(this.config.id)
 
 		if (asset) {
@@ -197,7 +197,7 @@ export class MigrationRTImageNode extends MigrationAsset<RTImageNode> {
 		| FilledLinkToWebField
 		| undefined
 
-	async _prepare({
+	async _resolve({
 		assets,
 		documents,
 	}: {
@@ -207,7 +207,7 @@ export class MigrationRTImageNode extends MigrationAsset<RTImageNode> {
 		const asset = assets.get(this.config.id)
 
 		if (this.linkTo instanceof MigrationField) {
-			await this.linkTo._prepare({ assets, documents })
+			await this.linkTo._resolve({ assets, documents })
 		}
 
 		if (asset) {
