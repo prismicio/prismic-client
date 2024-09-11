@@ -8,7 +8,7 @@ import { mockPrismicMigrationAPI } from "./__testutils__/mockPrismicMigrationAPI
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
 
 import * as prismic from "../src"
-import type { DocumentMap } from "../src/lib/patchMigrationDocumentData"
+import type { DocumentMap } from "../src/types/migration/Document"
 
 // Skip test on Node 16 and 18 (File and FormData support)
 const isNode16 = process.version.startsWith("v16")
@@ -137,7 +137,7 @@ it.concurrent("creates new documents", async (ctx) => {
 
 	const migration = prismic.createMigration()
 
-	migration.createDocument(document, "foo")
+	const migrationDocument = migration.createDocument(document, "foo")
 
 	let documents: DocumentMap | undefined
 	const reporter = vi.fn<(event: prismic.MigrateReporterEvents) => void>(
@@ -162,28 +162,36 @@ it.concurrent("creates new documents", async (ctx) => {
 			},
 		},
 	})
-	expect(documents?.get(document)?.id).toBe(newDocument.id)
+	expect(documents?.get(migrationDocument)?.id).toBe(newDocument.id)
 })
 
 it.concurrent(
-	"creates new non-master locale document with direct reference",
+	"creates new non-master locale document with direct reference (existing document)",
 	async (ctx) => {
 		const client = createTestWriteClient({ ctx })
 
-		const masterLanguageDocument = ctx.mock.value.document()
+		const queryResponse = createPagedQueryResponses({
+			ctx,
+			pages: 1,
+			pageSize: 1,
+		})
+
+		const masterLanguageDocument = queryResponse[0].results[0]
 		const document = ctx.mock.value.document()
 		const newDocument = {
 			id: "foo",
 			masterLanguageDocumentID: masterLanguageDocument.id,
 		}
 
-		mockPrismicRestAPIV2({ ctx })
+		mockPrismicRestAPIV2({ ctx, queryResponse })
 		mockPrismicAssetAPI({ ctx, client })
 		mockPrismicMigrationAPI({ ctx, client, newDocuments: [newDocument] })
 
 		const migration = prismic.createMigration()
 
-		migration.createDocument(document, "foo", { masterLanguageDocument })
+		const migrationDocument = migration.createDocument(document, "foo", {
+			masterLanguageDocument,
+		})
 
 		let documents: DocumentMap | undefined
 		const reporter = vi.fn<(event: prismic.MigrateReporterEvents) => void>(
@@ -209,7 +217,62 @@ it.concurrent(
 				},
 			},
 		})
-		ctx.expect(documents?.get(document)?.id).toBe(newDocument.id)
+		ctx.expect(documents?.get(migrationDocument)?.id).toBe(newDocument.id)
+		ctx.expect.assertions(3)
+	},
+)
+
+it.concurrent(
+	"creates new non-master locale document with direct reference (new document)",
+	async (ctx) => {
+		const client = createTestWriteClient({ ctx })
+
+		const masterLanguageDocument =
+			ctx.mock.value.document() as prismic.PrismicMigrationDocument
+		const document =
+			ctx.mock.value.document() as prismic.PrismicMigrationDocument
+		const newDocuments = [
+			{
+				id: masterLanguageDocument.id!,
+			},
+			{
+				id: document.id!,
+				masterLanguageDocumentID: masterLanguageDocument.id!,
+			},
+		]
+
+		delete masterLanguageDocument.id
+		delete document.id
+
+		mockPrismicRestAPIV2({ ctx })
+		mockPrismicAssetAPI({ ctx, client })
+		mockPrismicMigrationAPI({ ctx, client, newDocuments: [...newDocuments] })
+
+		const migration = prismic.createMigration()
+
+		const masterLanguageMigrationDocument = migration.createDocument(
+			masterLanguageDocument,
+			"foo",
+		)
+		const migrationDocument = migration.createDocument(document, "bar", {
+			masterLanguageDocument: masterLanguageMigrationDocument,
+		})
+
+		let documents: DocumentMap | undefined
+		const reporter = vi.fn<(event: prismic.MigrateReporterEvents) => void>(
+			(event) => {
+				if (event.type === "documents:created") {
+					documents = event.data.documents
+				}
+			},
+		)
+
+		await client.migrate(migration, { reporter })
+
+		ctx
+			.expect(documents?.get(masterLanguageMigrationDocument)?.id)
+			.toBe(newDocuments[0].id)
+		ctx.expect(documents?.get(migrationDocument)?.id).toBe(newDocuments[1].id)
 		ctx.expect.assertions(3)
 	},
 )
@@ -238,7 +301,7 @@ it.concurrent(
 
 		const migration = prismic.createMigration()
 
-		migration.createDocument(document, "foo", {
+		const migrationDocument = migration.createDocument(document, "foo", {
 			masterLanguageDocument: () => masterLanguageDocument,
 		})
 
@@ -266,7 +329,7 @@ it.concurrent(
 				},
 			},
 		})
-		ctx.expect(documents?.get(document)?.id).toBe(newDocument.id)
+		ctx.expect(documents?.get(migrationDocument)?.id).toBe(newDocument.id)
 		ctx.expect.assertions(3)
 	},
 )
@@ -299,9 +362,12 @@ it.concurrent(
 
 		const migration = prismic.createMigration()
 
-		migration.createDocument(masterLanguageDocument, "foo")
-		migration.createDocument(document, "bar", {
-			masterLanguageDocument: () => masterLanguageDocument,
+		const masterLanguageMigrationDocument = migration.createDocument(
+			masterLanguageDocument,
+			"foo",
+		)
+		const migrationDocument = migration.createDocument(document, "bar", {
+			masterLanguageDocument: () => masterLanguageMigrationDocument,
 		})
 
 		let documents: DocumentMap | undefined
@@ -316,9 +382,9 @@ it.concurrent(
 		await client.migrate(migration, { reporter })
 
 		ctx
-			.expect(documents?.get(masterLanguageDocument)?.id)
+			.expect(documents?.get(masterLanguageMigrationDocument)?.id)
 			.toBe(newDocuments[0].id)
-		ctx.expect(documents?.get(document)?.id).toBe(newDocuments[1].id)
+		ctx.expect(documents?.get(migrationDocument)?.id).toBe(newDocuments[1].id)
 		ctx.expect.assertions(3)
 	},
 )
@@ -351,7 +417,7 @@ it.concurrent(
 
 		const migration = prismic.createMigration()
 
-		migration.createDocument(document, "foo")
+		const migrationDocument = migration.createDocument(document, "foo")
 
 		let documents: DocumentMap | undefined
 		const reporter = vi.fn<(event: prismic.MigrateReporterEvents) => void>(
@@ -376,7 +442,7 @@ it.concurrent(
 				},
 			},
 		})
-		ctx.expect(documents?.get(document)?.id).toBe(newDocument.id)
+		ctx.expect(documents?.get(migrationDocument)?.id).toBe(newDocument.id)
 		ctx.expect.assertions(3)
 	},
 )
@@ -404,8 +470,11 @@ it.concurrent("creates master locale documents first", async (ctx) => {
 
 	const migration = prismic.createMigration()
 
-	migration.createDocument(document, "bar")
-	migration.createDocument(masterLanguageDocument, "foo")
+	const migrationDocument = migration.createDocument(document, "bar")
+	const masterLanguageMigrationDocument = migration.createDocument(
+		masterLanguageDocument,
+		"foo",
+	)
 
 	let documents: DocumentMap | undefined
 	const reporter = vi.fn<(event: prismic.MigrateReporterEvents) => void>(
@@ -419,7 +488,7 @@ it.concurrent("creates master locale documents first", async (ctx) => {
 	await client.migrate(migration, { reporter })
 
 	ctx
-		.expect(documents?.get(masterLanguageDocument)?.id)
+		.expect(documents?.get(masterLanguageMigrationDocument)?.id)
 		.toBe(newDocuments[0].id)
-	ctx.expect(documents?.get(document)?.id).toBe(newDocuments[1].id)
+	ctx.expect(documents?.get(migrationDocument)?.id).toBe(newDocuments[1].id)
 })

@@ -369,14 +369,14 @@ exports[`patches link to media fields > otherRepository > group 1`] = `
   "group": [
     {
       "field": {
-        "height": "1715",
+        "height": "1",
         "id": "fdb33894dcf",
-        "kind": "purus",
+        "kind": "image",
         "link_type": "Media",
-        "name": "nulla.example",
-        "size": "2039",
-        "url": "https://db0f6f37ebeb6ea09489124345af2a45.example.com/foo.png",
-        "width": "2091",
+        "name": "default.jpg",
+        "size": "1",
+        "url": "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=4554&h=3036&fit=crop",
+        "width": "1",
       },
     },
   ],
@@ -391,39 +391,39 @@ exports[`patches link to media fields > otherRepository > shared slice 1`] = `
       "items": [
         {
           "field": {
-            "height": "2741",
+            "height": "1",
             "id": "ba97bfb16bf",
-            "kind": "quis",
+            "kind": "image",
             "link_type": "Media",
-            "name": "senectus.example",
-            "size": "844",
-            "url": "https://515f7ca1126821ccd3eb8b013a857528.example.com/foo.png",
-            "width": "749",
+            "name": "default.jpg",
+            "size": "1",
+            "url": "https://images.unsplash.com/reserve/HgZuGu3gSD6db21T3lxm_San%20Zenone.jpg?w=6373&h=4253&fit=crop",
+            "width": "1",
           },
         },
       ],
       "primary": {
         "field": {
-          "height": "1276",
+          "height": "1",
           "id": "ba97bfb16bf",
-          "kind": "ullamcorper",
+          "kind": "image",
           "link_type": "Media",
-          "name": "fringilla.example",
-          "size": "818",
-          "url": "https://515f7ca1126821ccd3eb8b013a857528.example.com/foo.png",
-          "width": "2024",
+          "name": "default.jpg",
+          "size": "1",
+          "url": "https://images.unsplash.com/reserve/HgZuGu3gSD6db21T3lxm_San%20Zenone.jpg?w=6373&h=4253&fit=crop",
+          "width": "1",
         },
         "group": [
           {
             "field": {
-              "height": "2964",
+              "height": "1",
               "id": "ba97bfb16bf",
-              "kind": "pellentesque",
+              "kind": "image",
               "link_type": "Media",
-              "name": "cras.example",
-              "size": "1564",
-              "url": "https://515f7ca1126821ccd3eb8b013a857528.example.com/foo.png",
-              "width": "599",
+              "name": "default.jpg",
+              "size": "1",
+              "url": "https://images.unsplash.com/reserve/HgZuGu3gSD6db21T3lxm_San%20Zenone.jpg?w=6373&h=4253&fit=crop",
+              "width": "1",
             },
           },
         ],
@@ -445,27 +445,27 @@ exports[`patches link to media fields > otherRepository > slice 1`] = `
       "items": [
         {
           "field": {
-            "height": "1500",
+            "height": "1",
             "id": "a57963dc361",
-            "kind": "quam",
+            "kind": "image",
             "link_type": "Media",
-            "name": "integer.example",
-            "size": "1043",
-            "url": "https://6d52012dca4fc77aa554f25430aef501.example.com/foo.png",
-            "width": "737",
+            "name": "default.jpg",
+            "size": "1",
+            "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
+            "width": "1",
           },
         },
       ],
       "primary": {
         "field": {
-          "height": "761",
+          "height": "1",
           "id": "a57963dc361",
-          "kind": "nibh",
+          "kind": "image",
           "link_type": "Media",
-          "name": "ac.example",
-          "size": "2757",
-          "url": "https://6d52012dca4fc77aa554f25430aef501.example.com/foo.png",
-          "width": "1300",
+          "name": "default.jpg",
+          "size": "1",
+          "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
+          "width": "1",
         },
       },
       "slice_label": "Pellentesque",
@@ -478,91 +478,14 @@ exports[`patches link to media fields > otherRepository > slice 1`] = `
 exports[`patches link to media fields > otherRepository > static zone 1`] = `
 {
   "field": {
-    "height": "740",
+    "height": "1",
     "id": "97acc6e9abf",
-    "kind": "suspendisse",
+    "kind": "image",
     "link_type": "Media",
-    "name": "elementum.example",
-    "size": "556",
-    "url": "https://7713b5e0c356963c79ccf86c6ff1710c.example.com/foo.png",
-    "width": "2883",
-  },
-}
-`;
-
-exports[`patches link to media fields > otherRepositoryNotFoundID > group 1`] = `
-{
-  "group": [
-    {
-      "field": {
-        "link_type": "Any",
-      },
-    },
-  ],
-}
-`;
-
-exports[`patches link to media fields > otherRepositoryNotFoundID > shared slice 1`] = `
-{
-  "slices": [
-    {
-      "id": "2ff58c741ba",
-      "items": [
-        {
-          "field": {
-            "link_type": "Any",
-          },
-        },
-      ],
-      "primary": {
-        "field": {
-          "link_type": "Any",
-        },
-        "group": [
-          {
-            "field": {
-              "link_type": "Any",
-            },
-          },
-        ],
-      },
-      "slice_label": null,
-      "slice_type": "at",
-      "variation": "tortor",
-      "version": "a79b9dd",
-    },
-  ],
-}
-`;
-
-exports[`patches link to media fields > otherRepositoryNotFoundID > slice 1`] = `
-{
-  "slices": [
-    {
-      "id": "e93cc3e4f28",
-      "items": [
-        {
-          "field": {
-            "link_type": "Any",
-          },
-        },
-      ],
-      "primary": {
-        "field": {
-          "link_type": "Any",
-        },
-      },
-      "slice_label": "Pellentesque",
-      "slice_type": "nulla_posuere",
-    },
-  ],
-}
-`;
-
-exports[`patches link to media fields > otherRepositoryNotFoundID > static zone 1`] = `
-{
-  "field": {
-    "link_type": "Any",
+    "name": "default.jpg",
+    "size": "1",
+    "url": "https://images.unsplash.com/photo-1553531384-397c80973a0b?w=4335&h=6502&fit=crop",
+    "width": "1",
   },
 }
 `;
@@ -1085,14 +1008,14 @@ exports[`patches link to media fields > richTextOtherRepository > group 1`] = `
             },
             {
               "data": {
-                "height": "1715",
+                "height": "1",
                 "id": "fdb33894dcf",
-                "kind": "purus",
+                "kind": "image",
                 "link_type": "Media",
-                "name": "nulla.example",
-                "size": "2039",
-                "url": "https://db0f6f37ebeb6ea09489124345af2a45.example.com/foo.png",
-                "width": "2091",
+                "name": "default.jpg",
+                "size": "1",
+                "url": "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=4554&h=3036&fit=crop",
+                "width": "1",
               },
               "end": 5,
               "start": 0,
@@ -1125,14 +1048,14 @@ exports[`patches link to media fields > richTextOtherRepository > shared slice 1
                 },
                 {
                   "data": {
-                    "height": "2741",
+                    "height": "1",
                     "id": "ba97bfb16bf",
-                    "kind": "quis",
+                    "kind": "image",
                     "link_type": "Media",
-                    "name": "senectus.example",
-                    "size": "844",
-                    "url": "https://515f7ca1126821ccd3eb8b013a857528.example.com/foo.png",
-                    "width": "749",
+                    "name": "default.jpg",
+                    "size": "1",
+                    "url": "https://images.unsplash.com/reserve/HgZuGu3gSD6db21T3lxm_San%20Zenone.jpg?w=6373&h=4253&fit=crop",
+                    "width": "1",
                   },
                   "end": 5,
                   "start": 0,
@@ -1156,14 +1079,14 @@ exports[`patches link to media fields > richTextOtherRepository > shared slice 1
               },
               {
                 "data": {
-                  "height": "1276",
+                  "height": "1",
                   "id": "ba97bfb16bf",
-                  "kind": "ullamcorper",
+                  "kind": "image",
                   "link_type": "Media",
-                  "name": "fringilla.example",
-                  "size": "818",
-                  "url": "https://515f7ca1126821ccd3eb8b013a857528.example.com/foo.png",
-                  "width": "2024",
+                  "name": "default.jpg",
+                  "size": "1",
+                  "url": "https://images.unsplash.com/reserve/HgZuGu3gSD6db21T3lxm_San%20Zenone.jpg?w=6373&h=4253&fit=crop",
+                  "width": "1",
                 },
                 "end": 5,
                 "start": 0,
@@ -1186,14 +1109,14 @@ exports[`patches link to media fields > richTextOtherRepository > shared slice 1
                   },
                   {
                     "data": {
-                      "height": "2964",
+                      "height": "1",
                       "id": "ba97bfb16bf",
-                      "kind": "pellentesque",
+                      "kind": "image",
                       "link_type": "Media",
-                      "name": "cras.example",
-                      "size": "1564",
-                      "url": "https://515f7ca1126821ccd3eb8b013a857528.example.com/foo.png",
-                      "width": "599",
+                      "name": "default.jpg",
+                      "size": "1",
+                      "url": "https://images.unsplash.com/reserve/HgZuGu3gSD6db21T3lxm_San%20Zenone.jpg?w=6373&h=4253&fit=crop",
+                      "width": "1",
                     },
                     "end": 5,
                     "start": 0,
@@ -1233,14 +1156,14 @@ exports[`patches link to media fields > richTextOtherRepository > slice 1`] = `
                 },
                 {
                   "data": {
-                    "height": "1500",
+                    "height": "1",
                     "id": "a57963dc361",
-                    "kind": "quam",
+                    "kind": "image",
                     "link_type": "Media",
-                    "name": "integer.example",
-                    "size": "1043",
-                    "url": "https://6d52012dca4fc77aa554f25430aef501.example.com/foo.png",
-                    "width": "737",
+                    "name": "default.jpg",
+                    "size": "1",
+                    "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
+                    "width": "1",
                   },
                   "end": 5,
                   "start": 0,
@@ -1264,14 +1187,14 @@ exports[`patches link to media fields > richTextOtherRepository > slice 1`] = `
               },
               {
                 "data": {
-                  "height": "761",
+                  "height": "1",
                   "id": "a57963dc361",
-                  "kind": "nibh",
+                  "kind": "image",
                   "link_type": "Media",
-                  "name": "ac.example",
-                  "size": "2757",
-                  "url": "https://6d52012dca4fc77aa554f25430aef501.example.com/foo.png",
-                  "width": "1300",
+                  "name": "default.jpg",
+                  "size": "1",
+                  "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
+                  "width": "1",
                 },
                 "end": 5,
                 "start": 0,
@@ -1302,14 +1225,14 @@ exports[`patches link to media fields > richTextOtherRepository > static zone 1`
         },
         {
           "data": {
-            "height": "740",
+            "height": "1",
             "id": "97acc6e9abf",
-            "kind": "suspendisse",
+            "kind": "image",
             "link_type": "Media",
-            "name": "elementum.example",
-            "size": "556",
-            "url": "https://7713b5e0c356963c79ccf86c6ff1710c.example.com/foo.png",
-            "width": "2883",
+            "name": "default.jpg",
+            "size": "1",
+            "url": "https://images.unsplash.com/photo-1553531384-397c80973a0b?w=4335&h=6502&fit=crop",
+            "width": "1",
           },
           "end": 5,
           "start": 0,

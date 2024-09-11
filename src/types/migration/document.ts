@@ -1,13 +1,15 @@
 import type { AnyRegularField } from "../value/types"
 
+import type { FilledContentRelationshipField } from "../value/contentRelationship"
 import type { PrismicDocument } from "../value/document"
 import type { GroupField } from "../value/group"
 import type { ImageField } from "../value/image"
-import type { LinkField } from "../value/link"
+import type { FilledLinkToMediaField } from "../value/linkToMedia"
 import type {
 	RTBlockNode,
 	RTImageNode,
 	RTInlineNode,
+	RTLinkNode,
 	RTTextNode,
 	RichTextField,
 } from "../value/richText"
@@ -15,114 +17,147 @@ import type { SharedSlice } from "../value/sharedSlice"
 import type { Slice } from "../value/slice"
 import type { SliceZone } from "../value/sliceZone"
 
-import type { ImageMigrationField, LinkMigrationField } from "./fields"
-import type { RTImageMigrationNode, RTLinkMigrationNode } from "./richText"
+import type {
+	AssetMap,
+	MigrationImage,
+	MigrationLinkToMedia,
+	MigrationRTImageNode,
+} from "./Asset"
+import type {
+	MigrationContentRelationship,
+	UnresolvedMigrationContentRelationshipConfig,
+} from "./ContentRelationship"
+import type { MigrationField } from "./Field"
 
 /**
- * A utility type that converts a rich text text node to a rich text text
- * migration node.
+ * A utility type that extends Rich text field node's spans with their migration
+ * node equivalent.
  *
  * @typeParam TRTNode - Rich text text node type to convert.
  */
-type RichTextTextNodeToMigrationField<TRTNode extends RTTextNode> = Omit<
-	TRTNode,
-	"spans"
-> & {
-	spans: (RTInlineNode | RTLinkMigrationNode)[]
+type RichTextTextNodeWithMigrationField<
+	TRTNode extends RTTextNode = RTTextNode,
+> = Omit<TRTNode, "spans"> & {
+	spans: (
+		| RTInlineNode
+		| (Omit<RTLinkNode, "data"> & {
+				data:
+					| MigrationLinkToMedia
+					| MigrationContentRelationship
+					| UnresolvedMigrationContentRelationshipConfig
+		  })
+	)[]
 }
 
 /**
- * A utility type that converts a rich text block node to a rich text block
- * migration node.
+ * A utility type that extends a Rich text field node with their migration node
+ * equivalent.
  *
  * @typeParam TRTNode - Rich text block node type to convert.
  */
-type RichTextBlockNodeToMigrationField<TRTNode extends RTBlockNode> =
-	TRTNode extends RTImageNode
-		?
-				| RTImageMigrationNode
-				| (Omit<RTImageNode, "linkTo"> & {
-						linkTo?: RTImageNode["linkTo"] | LinkMigrationField
-				  })
-		: TRTNode extends RTTextNode
-			? RichTextTextNodeToMigrationField<TRTNode>
-			: TRTNode
+export type RichTextBlockNodeWithMigrationField<
+	TRTNode extends RTBlockNode = RTBlockNode,
+> = TRTNode extends RTImageNode
+	? RTImageNode | MigrationRTImageNode
+	: TRTNode extends RTTextNode
+		? RichTextTextNodeWithMigrationField<TRTNode>
+		: TRTNode
 
 /**
- * A utility type that converts a rich text field to a rich text migration
- * field.
+ * A utility type that extends a Rich text field's nodes with their migration
+ * node equivalent.
  *
  * @typeParam TField - Rich text field type to convert.
  */
-export type RichTextFieldToMigrationField<TField extends RichTextField> = {
-	[Index in keyof TField]: RichTextBlockNodeToMigrationField<TField[Index]>
+export type RichTextFieldWithMigrationField<
+	TField extends RichTextField = RichTextField,
+> = {
+	[Index in keyof TField]: RichTextBlockNodeWithMigrationField<TField[Index]>
 }
 
 /**
- * A utility type that converts a regular field to a regular migration field.
+ * A utility type that extends a regular field with their migration field
+ * equivalent.
  *
  * @typeParam TField - Regular field type to convert.
  */
-type RegularFieldToMigrationField<TField extends AnyRegularField> =
+type RegularFieldWithMigrationField<
+	TField extends AnyRegularField = AnyRegularField,
+> =
 	| (TField extends ImageField
-			? ImageMigrationField
-			: TField extends LinkField
-				? LinkMigrationField
-				: TField extends RichTextField
-					? RichTextFieldToMigrationField<TField>
-					: never)
+			? MigrationImage | undefined
+			: TField extends FilledLinkToMediaField
+				? MigrationLinkToMedia | undefined
+				: TField extends FilledContentRelationshipField
+					?
+							| MigrationContentRelationship
+							| UnresolvedMigrationContentRelationshipConfig
+							| undefined
+					: TField extends RichTextField
+						? RichTextFieldWithMigrationField<TField>
+						: never)
 	| TField
 
 /**
- * A utility type that converts a group field to a group migration field.
+ * A utility type that extends a group's fields with their migration fields
+ * equivalent.
  *
  * @typeParam TField - Group field type to convert.
  */
-export type GroupFieldToMigrationField<
-	TField extends GroupField | Slice["items"] | SharedSlice["items"],
-> = FieldsToMigrationFields<TField[number]>[]
+type GroupFieldWithMigrationField<
+	TField extends GroupField | Slice["items"] | SharedSlice["items"] =
+		| GroupField
+		| Slice["items"]
+		| SharedSlice["items"],
+> = FieldsWithMigrationFields<TField[number]>[]
 
-type SliceToMigrationField<TField extends Slice | SharedSlice> = Omit<
-	TField,
-	"primary" | "items"
-> & {
-	primary: FieldsToMigrationFields<TField["primary"]>
-	items: GroupFieldToMigrationField<TField["items"]>
+type SliceWithMigrationField<
+	TField extends Slice | SharedSlice = Slice | SharedSlice,
+> = Omit<TField, "primary" | "items"> & {
+	primary: FieldsWithMigrationFields<TField["primary"]>
+	items: GroupFieldWithMigrationField<TField["items"]>
 }
 
 /**
- * A utility type that converts a field to a migration field.
+ * A utility type that extends a SliceZone's slices fields with their migration
+ * fields equivalent.
  *
  * @typeParam TField - Field type to convert.
  */
-export type SliceZoneToMigrationField<TField extends SliceZone> =
-	SliceToMigrationField<TField[number]>[]
+type SliceZoneWithMigrationField<TField extends SliceZone = SliceZone> =
+	SliceWithMigrationField<TField[number]>[]
 
 /**
- * A utility type that converts a field to a migration field.
+ * A utility type that extends any field with their migration field equivalent.
  *
  * @typeParam TField - Field type to convert.
  */
-export type FieldToMigrationField<
-	TField extends AnyRegularField | GroupField | SliceZone,
+export type FieldWithMigrationField<
+	TField extends AnyRegularField | GroupField | SliceZone =
+		| AnyRegularField
+		| GroupField
+		| SliceZone,
 > = TField extends AnyRegularField
-	? RegularFieldToMigrationField<TField>
+	? RegularFieldWithMigrationField<TField>
 	: TField extends GroupField
-		? GroupFieldToMigrationField<TField>
+		? GroupFieldWithMigrationField<TField>
 		: TField extends SliceZone
-			? SliceZoneToMigrationField<TField>
+			? SliceZoneWithMigrationField<TField>
 			: never
 
 /**
- * A utility type that converts a record of fields to a record of migration
- * fields.
+ * A utility type that extends a record of fields with their migration fields
+ * equivalent.
  *
  * @typeParam TFields - Type of the record of Prismic fields.
  */
-export type FieldsToMigrationFields<
-	TFields extends Record<string, AnyRegularField | GroupField | SliceZone>,
+export type FieldsWithMigrationFields<
+	TFields extends Record<
+		string,
+		AnyRegularField | GroupField | SliceZone
+	> = Record<string, AnyRegularField | GroupField | SliceZone>,
 > = {
-	[Key in keyof TFields]: FieldToMigrationField<TFields[Key]>
+	[Key in keyof TFields]: FieldWithMigrationField<TFields[Key]>
 }
 
 /**
@@ -191,7 +226,7 @@ export type PrismicMigrationDocument<
 				/**
 				 * Data contained in the document.
 				 */
-				data: FieldsToMigrationFields<TData>
+				data: FieldsWithMigrationFields<TData>
 			}>
 		: never
 
@@ -213,11 +248,52 @@ export type PrismicMigrationDocumentParams = {
 	// it creates a circular reference to itself which makes TypeScript unhappy.
 	// (but I think it's weird and it doesn't make sense :thinking:)
 	masterLanguageDocument?:
-		| PrismicDocument
-		| PrismicMigrationDocument
-		| (() =>
-				| Promise<PrismicDocument | PrismicMigrationDocument | undefined>
-				| PrismicDocument
-				| PrismicMigrationDocument
-				| undefined)
+		| UnresolvedMigrationContentRelationshipConfig
+		| undefined
 }
+
+export class MigrationDocument<
+	TDocument extends PrismicDocument = PrismicDocument,
+> {
+	document: PrismicMigrationDocument<TDocument>
+	params: PrismicMigrationDocumentParams
+	dependencies: MigrationField[]
+
+	constructor(
+		document: PrismicMigrationDocument<TDocument>,
+		params: PrismicMigrationDocumentParams,
+		dependencies: MigrationField[] = [],
+	) {
+		this.document = document
+		this.params = params
+		this.dependencies = dependencies
+	}
+
+	/**
+	 * @internal
+	 */
+	async _prepare(args: {
+		assets: AssetMap
+		documents: DocumentMap
+	}): Promise<void> {
+		for (const dependency of this.dependencies) {
+			await dependency._prepare(args)
+		}
+	}
+}
+
+/**
+ * A map of document IDs, documents, and migraiton documents to content
+ * relationship field used to resolve content relationships when patching
+ * migration Prismic documents.
+ *
+ * @typeParam TDocuments - Type of Prismic documents in the repository.
+ *
+ * @internal
+ */
+export type DocumentMap<TDocuments extends PrismicDocument = PrismicDocument> =
+	Map<
+		string | MigrationDocument | MigrationDocument<TDocuments>,
+		| PrismicDocument
+		| (Omit<PrismicMigrationDocument<PrismicDocument>, "id"> & { id: string })
+	>

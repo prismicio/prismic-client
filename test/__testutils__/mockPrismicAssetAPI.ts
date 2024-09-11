@@ -108,7 +108,7 @@ export const mockPrismicAssetAPI = (
 
 				validateHeaders(req)
 
-				const index = Number.parseInt(req.url.searchParams.get("cursor") ?? "0")
+				const index = Number.parseInt(req.url.searchParams.get("cursor") || "0")
 				const items: Asset[] = assetsDatabase[index] || []
 
 				let missing_ids: string[] | undefined
@@ -143,7 +143,7 @@ export const mockPrismicAssetAPI = (
 				validateHeaders(req)
 
 				const response: PostAssetResult =
-					args.newAssets?.shift() ?? mockAsset(args.ctx)
+					args.newAssets?.shift() || mockAsset(args.ctx)
 
 				// Save the asset in DB
 				assetsDatabase.push([response])

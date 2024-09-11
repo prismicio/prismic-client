@@ -9,10 +9,8 @@ import { mockPrismicMigrationAPI } from "./__testutils__/mockPrismicMigrationAPI
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
 
 import * as prismic from "../src"
-import type {
-	AssetMap,
-	DocumentMap,
-} from "../src/lib/patchMigrationDocumentData"
+import type { AssetMap } from "../src/types/migration/Asset"
+import type { DocumentMap } from "../src/types/migration/Document"
 
 // Skip test on Node 16 and 18 (File and FormData support)
 const isNode16 = process.version.startsWith("v16")

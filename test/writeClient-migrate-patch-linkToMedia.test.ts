@@ -4,9 +4,10 @@ import { RichTextNodeType } from "../src"
 import { AssetType } from "../src/types/api/asset/asset"
 
 testMigrationFieldPatching("patches link to media fields", {
-	new: ({ migration }) => migration.createAsset("foo", "foo.png").linkToMedia,
+	new: ({ migration }) =>
+		migration.createAsset("foo", "foo.png").asLinkToMedia(),
 	existing: ({ migration, existingAssets }) =>
-		migration.createAsset(existingAssets[0]).linkToMedia,
+		migration.createAsset(existingAssets[0]).asLinkToMedia(),
 	existingNonImage: ({ migration, existingAssets }) => {
 		existingAssets[0].filename = "foo.pdf"
 		existingAssets[0].extension = "pdf"
@@ -14,19 +15,13 @@ testMigrationFieldPatching("patches link to media fields", {
 		existingAssets[0].width = undefined
 		existingAssets[0].height = undefined
 
-		return migration.createAsset(existingAssets[0]).linkToMedia
+		return migration.createAsset(existingAssets[0]).asLinkToMedia()
 	},
 	otherRepository: ({ ctx, mockedDomain }) => {
 		return {
 			...ctx.mock.value.linkToMedia({ state: "filled" }),
 			id: "foo-id",
 			url: `${mockedDomain}/foo.png`,
-		}
-	},
-	otherRepositoryNotFoundID: ({ ctx }) => {
-		return {
-			...ctx.mock.value.linkToMedia({ state: "empty" }),
-			id: null,
 		}
 	},
 	richTextNew: ({ migration }) => [
@@ -39,7 +34,7 @@ testMigrationFieldPatching("patches link to media fields", {
 					type: RichTextNodeType.hyperlink,
 					start: 0,
 					end: 5,
-					data: migration.createAsset("foo", "foo.png").linkToMedia,
+					data: migration.createAsset("foo", "foo.png").asLinkToMedia(),
 				},
 			],
 		},
@@ -54,7 +49,7 @@ testMigrationFieldPatching("patches link to media fields", {
 					type: RichTextNodeType.hyperlink,
 					start: 0,
 					end: 5,
-					data: migration.createAsset(existingAssets[0]).linkToMedia,
+					data: migration.createAsset(existingAssets[0]).asLinkToMedia(),
 				},
 			],
 		},

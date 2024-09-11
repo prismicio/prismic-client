@@ -22,9 +22,7 @@ type GetDataArgs = {
 	migration: prismic.Migration
 	existingAssets: Asset[]
 	existingDocuments: prismic.PrismicDocument[]
-	migrationDocuments: (Omit<prismic.PrismicMigrationDocument, "uid"> & {
-		uid: string
-	})[]
+	migrationDocuments: prismic.MigrationDocument[]
 	mockedDomain: string
 }
 
@@ -82,16 +80,20 @@ const internalTestMigrationFieldPatching = (
 
 		const migration = prismic.createMigration()
 
+		const migrationOtherDocument = migration.createDocument(
+			otherDocument,
+			"other",
+		)
+
 		newDocument.data = args.getData({
 			ctx,
 			migration,
 			existingAssets: assetsDatabase.flat(),
 			existingDocuments: queryResponse[0].results,
-			migrationDocuments: [otherDocument],
+			migrationDocuments: [migrationOtherDocument],
 			mockedDomain,
 		})
 
-		migration.createDocument(otherDocument, "other")
 		migration.createDocument(newDocument, "new")
 
 		// We speed up the internal rate limiter to make these tests run faster (from 4500ms to nearly instant)

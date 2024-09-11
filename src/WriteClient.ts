@@ -1,7 +1,5 @@
 import { devMsg } from "./lib/devMsg"
 import { pLimit } from "./lib/pLimit"
-import type { AssetMap, DocumentMap } from "./lib/patchMigrationDocumentData"
-import { patchMigrationDocumentData } from "./lib/patchMigrationDocumentData"
 
 import type {
 	Asset,
@@ -24,11 +22,14 @@ import {
 	type PostDocumentResult,
 	type PutDocumentParams,
 } from "./types/api/migration/document"
-import type { MigrationAsset } from "./types/migration/asset"
+import type { AssetMap, MigrationAssetConfig } from "./types/migration/Asset"
+import { MigrationContentRelationship } from "./types/migration/ContentRelationship"
 import type {
+	DocumentMap,
+	MigrationDocument,
 	PrismicMigrationDocument,
 	PrismicMigrationDocumentParams,
-} from "./types/migration/document"
+} from "./types/migration/Document"
 import type { PrismicDocument } from "./types/value/document"
 
 import { PrismicError } from "./errors/PrismicError"
@@ -93,13 +94,13 @@ type MigrateReporterEventMap = {
 		current: number
 		remaining: number
 		total: number
-		asset: MigrationAsset
+		asset: MigrationAssetConfig
 	}
 	"assets:creating": {
 		current: number
 		remaining: number
 		total: number
-		asset: MigrationAsset
+		asset: MigrationAssetConfig
 	}
 	"assets:created": {
 		created: number
@@ -521,89 +522,77 @@ export class WriteClient<
 			documents.set(document.id, document)
 		}
 
-		const sortedDocuments: {
-			document: PrismicMigrationDocument<TDocuments>
-			params: PrismicMigrationDocumentParams
-		}[] = []
+		const sortedMigrationDocuments: MigrationDocument<TDocuments>[] = []
 
 		// We create an array with non-master locale documents last because
 		// we need their master locale document to be created first.
-		for (const { document, params } of migration._documents) {
-			if (document.lang === masterLocale) {
-				sortedDocuments.unshift({ document, params })
+		for (const migrationDocument of migration._documents) {
+			if (migrationDocument.document.lang === masterLocale) {
+				sortedMigrationDocuments.unshift(migrationDocument)
 			} else {
-				sortedDocuments.push({ document, params })
+				sortedMigrationDocuments.push(migrationDocument)
 			}
 		}
 
 		let i = 0
 		let created = 0
-		for (const { document, params } of sortedDocuments) {
-			if (document.id && documents.has(document.id)) {
+		for (const migrationDocument of sortedMigrationDocuments) {
+			if (
+				migrationDocument.document.id &&
+				documents.has(migrationDocument.document.id)
+			) {
 				reporter?.({
 					type: "documents:skipping",
 					data: {
 						reason: "already exists",
 						current: ++i,
-						remaining: sortedDocuments.length - i,
-						total: sortedDocuments.length,
-						document,
-						documentParams: params,
+						remaining: sortedMigrationDocuments.length - i,
+						total: sortedMigrationDocuments.length,
+						document: migrationDocument.document,
+						documentParams: migrationDocument.params,
 					},
 				})
 
 				// Index the migration document
-				documents.set(document, documents.get(document.id)!)
+				documents.set(
+					migrationDocument,
+					documents.get(migrationDocument.document.id)!,
+				)
 			} else {
 				created++
 				reporter?.({
 					type: "documents:creating",
 					data: {
 						current: ++i,
-						remaining: sortedDocuments.length - i,
-						total: sortedDocuments.length,
-						document,
-						documentParams: params,
+						remaining: sortedMigrationDocuments.length - i,
+						total: sortedMigrationDocuments.length,
+						document: migrationDocument.document,
+						documentParams: migrationDocument.params,
 					},
 				})
 
 				// Resolve master language document ID for non-master locale documents
 				let masterLanguageDocumentID: string | undefined
-				if (document.lang !== masterLocale) {
-					if (params.masterLanguageDocument) {
-						if (typeof params.masterLanguageDocument === "function") {
-							const masterLanguageDocument =
-								await params.masterLanguageDocument()
+				if (migrationDocument.document.lang !== masterLocale) {
+					if (migrationDocument.params.masterLanguageDocument) {
+						const link = new MigrationContentRelationship(
+							migrationDocument.params.masterLanguageDocument,
+						)
 
-							if (masterLanguageDocument) {
-								// `masterLanguageDocument` is an existing document
-								if (masterLanguageDocument.id) {
-									masterLanguageDocumentID = documents.get(
-										masterLanguageDocument.id,
-									)?.id
-								}
-
-								// `masterLanguageDocument` is a new document
-								if (!masterLanguageDocumentID) {
-									masterLanguageDocumentID = documents.get(
-										masterLanguageDocument,
-									)?.id
-								}
-							}
-						} else {
-							masterLanguageDocumentID = params.masterLanguageDocument.id
-						}
-					} else if (document.alternate_languages) {
-						masterLanguageDocumentID = document.alternate_languages.find(
-							({ lang }) => lang === masterLocale,
-						)?.id
+						await link._prepare({ documents })
+						masterLanguageDocumentID = link._field?.id
+					} else if (migrationDocument.document.alternate_languages) {
+						masterLanguageDocumentID =
+							migrationDocument.document.alternate_languages.find(
+								({ lang }) => lang === masterLocale,
+							)?.id
 					}
 				}
 
 				const { id } = await this.createDocument(
 					// We'll upload docuements data later on.
-					{ ...document, data: {} },
-					params.documentTitle,
+					{ ...migrationDocument.document, data: {} },
+					migrationDocument.params.documentTitle,
 					{
 						masterLanguageDocumentID,
 						...fetchParams,
@@ -611,10 +600,13 @@ export class WriteClient<
 				)
 
 				// Index old ID for Prismic to Prismic migration
-				if (document.id) {
-					documents.set(document.id, { ...document, id })
+				if (migrationDocument.document.id) {
+					documents.set(migrationDocument.document.id, {
+						...migrationDocument.document,
+						id,
+					})
 				}
-				documents.set(document, { ...document, id })
+				documents.set(migrationDocument, { ...migrationDocument.document, id })
 			}
 		}
 
@@ -650,30 +642,31 @@ export class WriteClient<
 		}: { reporter?: (event: MigrateReporterEvents) => void } & FetchParams = {},
 	): Promise<void> {
 		let i = 0
-		for (const { document, params } of migration._documents) {
+		for (const migrationDocument of migration._documents) {
 			reporter?.({
 				type: "documents:updating",
 				data: {
 					current: ++i,
 					remaining: migration._documents.length - i,
 					total: migration._documents.length,
-					document,
-					documentParams: params,
+					document: migrationDocument.document,
+					documentParams: migrationDocument.params,
 				},
 			})
 
-			const { id, uid } = documents.get(document)!
-			const data = await patchMigrationDocumentData(
-				document.data,
-				assets,
-				documents,
-			)
+			const { id, uid } = documents.get(migrationDocument)!
+			await migrationDocument._prepare({ assets, documents })
 
 			await this.updateDocument(
 				id,
 				// We need to forward again document name and tags to update them
 				// in case the document already existed during the previous step.
-				{ documentTitle: params.documentTitle, uid, tags: document.tags, data },
+				{
+					documentTitle: migrationDocument.params.documentTitle,
+					uid,
+					tags: migrationDocument.document.tags,
+					data: migrationDocument.document.data,
+				},
 				fetchParams,
 			)
 		}

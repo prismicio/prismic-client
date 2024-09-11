@@ -326,24 +326,19 @@ export type {
 } from "./types/model/types"
 
 // Migrations - Types representing Prismic Migration API content values.
-export { MigrationFieldType } from "./types/migration/fields"
-
 export type {
+	MigrationDocument,
 	PrismicMigrationDocument,
-	RichTextFieldToMigrationField,
-} from "./types/migration/document"
+	RichTextFieldWithMigrationField,
+} from "./types/migration/Document"
 
 export type {
-	ImageMigrationField,
-	LinkToMediaMigrationField,
-	ContentRelationshipMigrationField,
-	LinkMigrationField,
-} from "./types/migration/fields"
+	MigrationImage,
+	MigrationLinkToMedia,
+	MigrationRTImageNode,
+} from "./types/migration/Asset"
 
-export type {
-	RTImageMigrationNode,
-	RTLinkMigrationNode,
-} from "./types/migration/richText"
+export type { MigrationContentRelationship } from "./types/migration/ContentRelationship"
 
 // API - Types representing Prismic Rest API V2 responses.
 export type { Query } from "./types/api/query"

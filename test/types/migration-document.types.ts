@@ -100,8 +100,6 @@ expectType<MigrationDocuments>({
 type Fields = {
 	image: prismic.ImageField
 	migrationImage: prismic.ImageField
-	link: prismic.LinkField
-	migrationLink: prismic.LinkField
 	linkToMedia: prismic.LinkToMediaField
 	migrationLinkToMedia: prismic.LinkToMediaField
 	contentRelationship: prismic.ContentRelationshipField
@@ -139,13 +137,11 @@ expectType<MigrationAdvancedDocuments>({
 	lang: "",
 	data: {
 		image: {} as prismic.ImageField,
-		migrationImage: {} as prismic.ImageMigrationField,
-		link: {} as prismic.LinkField,
-		migrationLink: {} as prismic.LinkMigrationField,
+		migrationImage: {} as prismic.MigrationImage,
 		linkToMedia: {} as prismic.LinkToMediaField,
-		migrationLinkToMedia: {} as prismic.LinkToMediaMigrationField,
+		migrationLinkToMedia: {} as prismic.MigrationLinkToMedia,
 		contentRelationship: {} as prismic.ContentRelationshipField,
-		migrationContentRelationship: {} as prismic.ContentRelationshipField,
+		migrationContentRelationship: {} as prismic.MigrationContentRelationship,
 	},
 })
 
@@ -158,13 +154,12 @@ expectType<MigrationAdvancedDocuments>({
 		group: [
 			{
 				image: {} as prismic.ImageField,
-				migrationImage: {} as prismic.ImageMigrationField,
-				link: {} as prismic.LinkField,
-				migrationLink: {} as prismic.LinkMigrationField,
+				migrationImage: {} as prismic.MigrationImage,
 				linkToMedia: {} as prismic.LinkToMediaField,
-				migrationLinkToMedia: {} as prismic.LinkToMediaMigrationField,
+				migrationLinkToMedia: {} as prismic.MigrationLinkToMedia,
 				contentRelationship: {} as prismic.ContentRelationshipField,
-				migrationContentRelationship: {} as prismic.ContentRelationshipField,
+				migrationContentRelationship:
+					{} as prismic.MigrationContentRelationship,
 			},
 		],
 	},
@@ -185,38 +180,33 @@ expectType<MigrationAdvancedDocuments>({
 				version: "",
 				primary: {
 					image: {} as prismic.ImageField,
-					migrationImage: {} as prismic.ImageMigrationField,
-					link: {} as prismic.LinkField,
-					migrationLink: {} as prismic.LinkMigrationField,
+					migrationImage: {} as prismic.MigrationImage,
 					linkToMedia: {} as prismic.LinkToMediaField,
-					migrationLinkToMedia: {} as prismic.LinkToMediaMigrationField,
+					migrationLinkToMedia: {} as prismic.MigrationLinkToMedia,
 					contentRelationship: {} as prismic.ContentRelationshipField,
-					migrationContentRelationship: {} as prismic.ContentRelationshipField,
+					migrationContentRelationship:
+						{} as prismic.MigrationContentRelationship,
 					group: [
 						{
 							image: {} as prismic.ImageField,
-							migrationImage: {} as prismic.ImageMigrationField,
-							link: {} as prismic.LinkField,
-							migrationLink: {} as prismic.LinkMigrationField,
+							migrationImage: {} as prismic.MigrationImage,
 							linkToMedia: {} as prismic.LinkToMediaField,
-							migrationLinkToMedia: {} as prismic.LinkToMediaMigrationField,
+							migrationLinkToMedia: {} as prismic.MigrationLinkToMedia,
 							contentRelationship: {} as prismic.ContentRelationshipField,
 							migrationContentRelationship:
-								{} as prismic.ContentRelationshipField,
+								{} as prismic.MigrationContentRelationship,
 						},
 					],
 				},
 				items: [
 					{
 						image: {} as prismic.ImageField,
-						migrationImage: {} as prismic.ImageMigrationField,
-						link: {} as prismic.LinkField,
-						migrationLink: {} as prismic.LinkMigrationField,
+						migrationImage: {} as prismic.MigrationImage,
 						linkToMedia: {} as prismic.LinkToMediaField,
-						migrationLinkToMedia: {} as prismic.LinkToMediaMigrationField,
+						migrationLinkToMedia: {} as prismic.MigrationLinkToMedia,
 						contentRelationship: {} as prismic.ContentRelationshipField,
 						migrationContentRelationship:
-							{} as prismic.ContentRelationshipField,
+							{} as prismic.MigrationContentRelationship,
 					},
 				],
 			},

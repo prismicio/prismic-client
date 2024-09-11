@@ -3,7 +3,8 @@ import { describe, expect, it } from "vitest"
 import type { MockFactory } from "@prismicio/mock"
 
 import * as prismic from "../src"
-import type { MigrationAsset } from "../src/types/migration/asset"
+import type { MigrationAssetConfig } from "../src/types/migration/Asset"
+import { MigrationDocument } from "../src/types/migration/Document"
 
 it("creates a document", () => {
 	const migration = prismic.createMigration()
@@ -18,10 +19,9 @@ it("creates a document", () => {
 
 	migration.createDocument(document, documentTitle)
 
-	expect(migration._documents[0]).toStrictEqual({
-		document,
-		params: { documentTitle },
-	})
+	expect(migration._documents[0]).toStrictEqual(
+		new MigrationDocument(document, { documentTitle }),
+	)
 })
 
 it("creates a document from an existing Prismic document", (ctx) => {
@@ -32,10 +32,9 @@ it("creates a document from an existing Prismic document", (ctx) => {
 
 	migration.createDocument(document, documentTitle)
 
-	expect(migration._documents[0]).toStrictEqual({
-		document,
-		params: { documentTitle },
-	})
+	expect(migration._documents[0]).toStrictEqual(
+		new MigrationDocument(document, { documentTitle }),
+	)
 })
 
 describe.each<{
@@ -46,7 +45,7 @@ describe.each<{
 			| prismic.FilledImageFieldImage
 			| prismic.FilledLinkToMediaField
 			| prismic.RichTextField<"filled">
-		expected: MigrationAsset
+		expected: MigrationAssetConfig
 	}
 }>([
 	{
@@ -58,8 +57,8 @@ describe.each<{
 				id: image.id,
 				field: image,
 				expected: {
-					alt: image.alt ?? undefined,
-					credits: image.copyright ?? undefined,
+					alt: image.alt || undefined,
+					credits: image.copyright || undefined,
 					file: image.url.split("?")[0],
 					filename: image.url.split("/").pop()!.split("?")[0],
 					id: image.id,
@@ -104,8 +103,8 @@ describe.each<{
 				id: image.id,
 				field: richText,
 				expected: {
-					alt: image.alt ?? undefined,
-					credits: image.copyright ?? undefined,
+					alt: image.alt || undefined,
+					credits: image.copyright || undefined,
 					file: image.url.split("?")[0],
 					filename: image.url.split("/").pop()!.split("?")[0],
 					id: image.id,

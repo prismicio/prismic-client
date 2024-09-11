@@ -41,36 +41,85 @@ expectType<TypeEqual<FooDocument[], prismic.PrismicDocument[]>>(false)
 
 // Default
 const defaultCreateAsset = defaultMigration.createAsset("url", "name")
-expectType<TypeOf<prismic.ImageMigrationField, typeof defaultCreateAsset>>(true)
-expectType<
-	TypeEqual<typeof defaultCreateAsset.image, prismic.ImageMigrationField>
->(true)
+expectType<TypeOf<prismic.MigrationImage, typeof defaultCreateAsset>>(true)
+
 expectType<
 	TypeEqual<
-		typeof defaultCreateAsset.linkToMedia,
-		prismic.LinkToMediaMigrationField
+		ReturnType<typeof defaultCreateAsset.asImage>,
+		prismic.MigrationImage
 	>
 >(true)
 expectType<
-	TypeOf<prismic.LinkMigrationField, typeof defaultCreateAsset.linkToMedia>
+	TypeOf<prismic.MigrationImage, ReturnType<typeof defaultCreateAsset.asImage>>
+>(true)
+
+expectType<
+	TypeEqual<
+		ReturnType<typeof defaultCreateAsset.asLinkToMedia>,
+		prismic.MigrationLinkToMedia
+	>
+>(true)
+expectType<
+	TypeOf<
+		prismic.MigrationLinkToMedia,
+		ReturnType<typeof defaultCreateAsset.asLinkToMedia>
+	>
+>(true)
+
+expectType<
+	TypeEqual<
+		ReturnType<typeof defaultCreateAsset.asRTImageNode>,
+		prismic.MigrationRTImageNode
+	>
+>(true)
+expectType<
+	TypeOf<
+		prismic.MigrationRTImageNode,
+		ReturnType<typeof defaultCreateAsset.asRTImageNode>
+	>
 >(true)
 
 // Documents
 const documentsCreateAsset = defaultMigration.createAsset("url", "name")
-expectType<TypeOf<prismic.ImageMigrationField, typeof documentsCreateAsset>>(
-	true,
-)
-expectType<
-	TypeEqual<typeof documentsCreateAsset.image, prismic.ImageMigrationField>
->(true)
+expectType<TypeOf<prismic.MigrationImage, typeof documentsCreateAsset>>(true)
+
 expectType<
 	TypeEqual<
-		typeof documentsCreateAsset.linkToMedia,
-		prismic.LinkToMediaMigrationField
+		ReturnType<typeof documentsCreateAsset.asImage>,
+		prismic.MigrationImage
 	>
 >(true)
 expectType<
-	TypeOf<prismic.LinkMigrationField, typeof documentsCreateAsset.linkToMedia>
+	TypeOf<
+		prismic.MigrationImage,
+		ReturnType<typeof documentsCreateAsset.asImage>
+	>
+>(true)
+
+expectType<
+	TypeEqual<
+		ReturnType<typeof documentsCreateAsset.asLinkToMedia>,
+		prismic.MigrationLinkToMedia
+	>
+>(true)
+expectType<
+	TypeOf<
+		prismic.MigrationLinkToMedia,
+		ReturnType<typeof documentsCreateAsset.asLinkToMedia>
+	>
+>(true)
+
+expectType<
+	TypeEqual<
+		ReturnType<typeof documentsCreateAsset.asRTImageNode>,
+		prismic.MigrationRTImageNode
+	>
+>(true)
+expectType<
+	TypeOf<
+		prismic.MigrationRTImageNode,
+		ReturnType<typeof documentsCreateAsset.asRTImageNode>
+	>
 >(true)
 
 /**
@@ -87,9 +136,9 @@ const defaultCreateDocument = defaultMigration.createDocument(
 	},
 	"",
 )
-expectType<
-	TypeEqual<typeof defaultCreateDocument, prismic.PrismicMigrationDocument>
->(true)
+expectType<TypeEqual<typeof defaultCreateDocument, prismic.MigrationDocument>>(
+	true,
+)
 
 // Documents
 const documentsCreateDocument = documentsMigration.createDocument(
@@ -104,6 +153,6 @@ const documentsCreateDocument = documentsMigration.createDocument(
 expectType<
 	TypeEqual<
 		typeof documentsCreateDocument,
-		prismic.PrismicMigrationDocument<FooDocument>
+		prismic.MigrationDocument<FooDocument>
 	>
 >(true)

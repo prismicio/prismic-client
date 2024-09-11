@@ -1,0 +1,1253 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`patches rich text image nodes > existing > group 1`] = `
+{
+  "group": [
+    {
+      "field": [
+        {
+          "spans": [],
+          "text": "Nulla Aliquet Porttitor Lacus Luctus",
+          "type": "heading2",
+        },
+        {
+          "alt": null,
+          "copyright": null,
+          "dimensions": {
+            "height": 1,
+            "width": 1,
+          },
+          "edit": {
+            "background": "transparent",
+            "x": 0,
+            "y": 0,
+            "zoom": 1,
+          },
+          "id": "id-existing",
+          "type": "image",
+          "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=2560&h=1440&fit=crop",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > existing > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "2ff58c741ba",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [],
+              "text": "Eu Mi",
+              "type": "heading3",
+            },
+            {
+              "alt": null,
+              "copyright": null,
+              "dimensions": {
+                "height": 1,
+                "width": 1,
+              },
+              "edit": {
+                "background": "transparent",
+                "x": 0,
+                "y": 0,
+                "zoom": 1,
+              },
+              "id": "id-existing",
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [],
+            "text": "Fringilla Phasellus Faucibus Scelerisque Eleifend Donec Pretium",
+            "type": "heading3",
+          },
+          {
+            "alt": null,
+            "copyright": null,
+            "dimensions": {
+              "height": 1,
+              "width": 1,
+            },
+            "edit": {
+              "background": "transparent",
+              "x": 0,
+              "y": 0,
+              "zoom": 1,
+            },
+            "id": "id-existing",
+            "type": "image",
+            "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+          },
+        ],
+        "group": [
+          {
+            "field": [
+              {
+                "spans": [],
+                "text": "Arcu",
+                "type": "heading1",
+              },
+              {
+                "alt": null,
+                "copyright": null,
+                "dimensions": {
+                  "height": 1,
+                  "width": 1,
+                },
+                "edit": {
+                  "background": "transparent",
+                  "x": 0,
+                  "y": 0,
+                  "zoom": 1,
+                },
+                "id": "id-existing",
+                "type": "image",
+                "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+              },
+            ],
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "at",
+      "variation": "tortor",
+      "version": "a79b9dd",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > existing > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "e93cc3e4f28",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [],
+              "text": "Habitasse platea dictumst quisque sagittis purus sit",
+              "type": "o-list-item",
+            },
+            {
+              "alt": null,
+              "copyright": null,
+              "dimensions": {
+                "height": 1,
+                "width": 1,
+              },
+              "edit": {
+                "background": "transparent",
+                "x": 0,
+                "y": 0,
+                "zoom": 1,
+              },
+              "id": "id-existing",
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [],
+            "text": "Ac Orci Phasellus Egestas Tellus",
+            "type": "heading5",
+          },
+          {
+            "alt": null,
+            "copyright": null,
+            "dimensions": {
+              "height": 1,
+              "width": 1,
+            },
+            "edit": {
+              "background": "transparent",
+              "x": 0,
+              "y": 0,
+              "zoom": 1,
+            },
+            "id": "id-existing",
+            "type": "image",
+            "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
+          },
+        ],
+      },
+      "slice_label": "Pellentesque",
+      "slice_type": "nulla_posuere",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > existing > static zone 1`] = `
+{
+  "field": [
+    {
+      "spans": [],
+      "text": "Elementum Integer",
+      "type": "heading6",
+    },
+    {
+      "alt": null,
+      "copyright": null,
+      "dimensions": {
+        "height": 1,
+        "width": 1,
+      },
+      "edit": {
+        "background": "transparent",
+        "x": 0,
+        "y": 0,
+        "zoom": 1,
+      },
+      "id": "id-existing",
+      "type": "image",
+      "url": "https://images.unsplash.com/photo-1553531384-397c80973a0b?w=4335&h=6502&fit=crop",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > new > group 1`] = `
+{
+  "group": [
+    {
+      "field": [
+        {
+          "spans": [],
+          "text": "Nulla Aliquet Porttitor Lacus Luctus",
+          "type": "heading2",
+        },
+        {
+          "alt": null,
+          "copyright": null,
+          "dimensions": {
+            "height": 1,
+            "width": 1,
+          },
+          "edit": {
+            "background": "transparent",
+            "x": 0,
+            "y": 0,
+            "zoom": 1,
+          },
+          "id": "cdfdd322ca9",
+          "type": "image",
+          "url": "https://images.unsplash.com/photo-1431794062232-2a99a5431c6c?w=6000&h=4000&fit=crop",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > new > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "2ff58c741ba",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [],
+              "text": "Eu Mi",
+              "type": "heading3",
+            },
+            {
+              "alt": null,
+              "copyright": null,
+              "dimensions": {
+                "height": 1,
+                "width": 1,
+              },
+              "edit": {
+                "background": "transparent",
+                "x": 0,
+                "y": 0,
+                "zoom": 1,
+              },
+              "id": "bc31787853a",
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=4554&h=3036&fit=crop",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [],
+            "text": "Fringilla Phasellus Faucibus Scelerisque Eleifend Donec Pretium",
+            "type": "heading3",
+          },
+          {
+            "alt": null,
+            "copyright": null,
+            "dimensions": {
+              "height": 1,
+              "width": 1,
+            },
+            "edit": {
+              "background": "transparent",
+              "x": 0,
+              "y": 0,
+              "zoom": 1,
+            },
+            "id": "bc31787853a",
+            "type": "image",
+            "url": "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=4554&h=3036&fit=crop",
+          },
+        ],
+        "group": [
+          {
+            "field": [
+              {
+                "spans": [],
+                "text": "Arcu",
+                "type": "heading1",
+              },
+              {
+                "alt": null,
+                "copyright": null,
+                "dimensions": {
+                  "height": 1,
+                  "width": 1,
+                },
+                "edit": {
+                  "background": "transparent",
+                  "x": 0,
+                  "y": 0,
+                  "zoom": 1,
+                },
+                "id": "bc31787853a",
+                "type": "image",
+                "url": "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=4554&h=3036&fit=crop",
+              },
+            ],
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "at",
+      "variation": "tortor",
+      "version": "a79b9dd",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > new > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "e93cc3e4f28",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [],
+              "text": "Habitasse platea dictumst quisque sagittis purus sit",
+              "type": "o-list-item",
+            },
+            {
+              "alt": null,
+              "copyright": null,
+              "dimensions": {
+                "height": 1,
+                "width": 1,
+              },
+              "edit": {
+                "background": "transparent",
+                "x": 0,
+                "y": 0,
+                "zoom": 1,
+              },
+              "id": "7963dc361cc",
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=4554&h=3036&fit=crop",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [],
+            "text": "Ac Orci Phasellus Egestas Tellus",
+            "type": "heading5",
+          },
+          {
+            "alt": null,
+            "copyright": null,
+            "dimensions": {
+              "height": 1,
+              "width": 1,
+            },
+            "edit": {
+              "background": "transparent",
+              "x": 0,
+              "y": 0,
+              "zoom": 1,
+            },
+            "id": "7963dc361cc",
+            "type": "image",
+            "url": "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=4554&h=3036&fit=crop",
+          },
+        ],
+      },
+      "slice_label": "Pellentesque",
+      "slice_type": "nulla_posuere",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > new > static zone 1`] = `
+{
+  "field": [
+    {
+      "spans": [],
+      "text": "Elementum Integer",
+      "type": "heading6",
+    },
+    {
+      "alt": null,
+      "copyright": null,
+      "dimensions": {
+        "height": 1,
+        "width": 1,
+      },
+      "edit": {
+        "background": "transparent",
+        "x": 0,
+        "y": 0,
+        "zoom": 1,
+      },
+      "id": "0bbad670dad",
+      "type": "image",
+      "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > newLinkTo > group 1`] = `
+{
+  "group": [
+    {
+      "field": [
+        {
+          "spans": [],
+          "text": "Nulla Aliquet Porttitor Lacus Luctus",
+          "type": "heading2",
+        },
+        {
+          "alt": null,
+          "copyright": null,
+          "dimensions": {
+            "height": 1,
+            "width": 1,
+          },
+          "edit": {
+            "background": "transparent",
+            "x": 0,
+            "y": 0,
+            "zoom": 1,
+          },
+          "id": "cdfdd322ca9",
+          "linkTo": {
+            "id": "id-existing",
+            "isBroken": false,
+            "lang": "laoreet",
+            "link_type": "Document",
+            "tags": [],
+            "type": "orci",
+          },
+          "type": "image",
+          "url": "https://images.unsplash.com/photo-1431794062232-2a99a5431c6c?w=6000&h=4000&fit=crop",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > newLinkTo > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "2ff58c741ba",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [],
+              "text": "Eu Mi",
+              "type": "heading3",
+            },
+            {
+              "alt": null,
+              "copyright": null,
+              "dimensions": {
+                "height": 1,
+                "width": 1,
+              },
+              "edit": {
+                "background": "transparent",
+                "x": 0,
+                "y": 0,
+                "zoom": 1,
+              },
+              "id": "bc31787853a",
+              "linkTo": {
+                "id": "id-existing",
+                "isBroken": false,
+                "lang": "tortor,",
+                "link_type": "Document",
+                "tags": [
+                  "Risus In",
+                ],
+                "type": "dui",
+              },
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=4554&h=3036&fit=crop",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [],
+            "text": "Fringilla Phasellus Faucibus Scelerisque Eleifend Donec Pretium",
+            "type": "heading3",
+          },
+          {
+            "alt": null,
+            "copyright": null,
+            "dimensions": {
+              "height": 1,
+              "width": 1,
+            },
+            "edit": {
+              "background": "transparent",
+              "x": 0,
+              "y": 0,
+              "zoom": 1,
+            },
+            "id": "bc31787853a",
+            "linkTo": {
+              "id": "id-existing",
+              "isBroken": false,
+              "lang": "tortor,",
+              "link_type": "Document",
+              "tags": [
+                "Risus In",
+              ],
+              "type": "dui",
+            },
+            "type": "image",
+            "url": "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=4554&h=3036&fit=crop",
+          },
+        ],
+        "group": [
+          {
+            "field": [
+              {
+                "spans": [],
+                "text": "Arcu",
+                "type": "heading1",
+              },
+              {
+                "alt": null,
+                "copyright": null,
+                "dimensions": {
+                  "height": 1,
+                  "width": 1,
+                },
+                "edit": {
+                  "background": "transparent",
+                  "x": 0,
+                  "y": 0,
+                  "zoom": 1,
+                },
+                "id": "bc31787853a",
+                "linkTo": {
+                  "id": "id-existing",
+                  "isBroken": false,
+                  "lang": "tortor,",
+                  "link_type": "Document",
+                  "tags": [
+                    "Risus In",
+                  ],
+                  "type": "dui",
+                },
+                "type": "image",
+                "url": "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=4554&h=3036&fit=crop",
+              },
+            ],
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "at",
+      "variation": "tortor",
+      "version": "a79b9dd",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > newLinkTo > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "e93cc3e4f28",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [],
+              "text": "Habitasse platea dictumst quisque sagittis purus sit",
+              "type": "o-list-item",
+            },
+            {
+              "alt": null,
+              "copyright": null,
+              "dimensions": {
+                "height": 1,
+                "width": 1,
+              },
+              "edit": {
+                "background": "transparent",
+                "x": 0,
+                "y": 0,
+                "zoom": 1,
+              },
+              "id": "7963dc361cc",
+              "linkTo": {
+                "id": "id-existing",
+                "isBroken": false,
+                "lang": "sapien",
+                "link_type": "Document",
+                "tags": [
+                  "Aenean",
+                ],
+                "type": "amet",
+              },
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=4554&h=3036&fit=crop",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [],
+            "text": "Ac Orci Phasellus Egestas Tellus",
+            "type": "heading5",
+          },
+          {
+            "alt": null,
+            "copyright": null,
+            "dimensions": {
+              "height": 1,
+              "width": 1,
+            },
+            "edit": {
+              "background": "transparent",
+              "x": 0,
+              "y": 0,
+              "zoom": 1,
+            },
+            "id": "7963dc361cc",
+            "linkTo": {
+              "id": "id-existing",
+              "isBroken": false,
+              "lang": "sapien",
+              "link_type": "Document",
+              "tags": [
+                "Aenean",
+              ],
+              "type": "amet",
+            },
+            "type": "image",
+            "url": "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=4554&h=3036&fit=crop",
+          },
+        ],
+      },
+      "slice_label": "Pellentesque",
+      "slice_type": "nulla_posuere",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > newLinkTo > static zone 1`] = `
+{
+  "field": [
+    {
+      "spans": [],
+      "text": "Elementum Integer",
+      "type": "heading6",
+    },
+    {
+      "alt": null,
+      "copyright": null,
+      "dimensions": {
+        "height": 1,
+        "width": 1,
+      },
+      "edit": {
+        "background": "transparent",
+        "x": 0,
+        "y": 0,
+        "zoom": 1,
+      },
+      "id": "0bbad670dad",
+      "linkTo": {
+        "id": "id-existing",
+        "isBroken": false,
+        "lang": "eget",
+        "link_type": "Document",
+        "tags": [],
+        "type": "phasellus",
+      },
+      "type": "image",
+      "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > otherRepository > group 1`] = `
+{
+  "group": [
+    {
+      "field": [
+        {
+          "spans": [],
+          "text": "Nulla Aliquet Porttitor Lacus Luctus",
+          "type": "heading2",
+        },
+        {
+          "alt": "Donec enim diam vulputate ut pharetra sit amet aliquam id diam",
+          "copyright": null,
+          "dimensions": {
+            "height": 1,
+            "width": 1,
+          },
+          "edit": {
+            "background": "#7cfc26",
+            "x": 2977,
+            "y": -1163,
+            "zoom": 1.0472585898934068,
+          },
+          "id": "e8d0985c099",
+          "type": "image",
+          "url": "https://images.unsplash.com/photo-1553531384-397c80973a0b",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > otherRepository > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "2ff58c741ba",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [],
+              "text": "Facilisis",
+              "type": "heading3",
+            },
+            {
+              "alt": "Nullam vehicula ipsum a arcu cursus vitae congue mauris rhoncus aenean vel elit scelerisque",
+              "copyright": null,
+              "dimensions": {
+                "height": 1,
+                "width": 1,
+              },
+              "edit": {
+                "background": "#37ae3f",
+                "x": -1505,
+                "y": 902,
+                "zoom": 1.8328975606320652,
+              },
+              "id": "3fc0dfa9fe9",
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1431794062232-2a99a5431c6c",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [],
+            "text": "Fringilla Phasellus Faucibus Scelerisque Eleifend Donec Pretium",
+            "type": "heading3",
+          },
+          {
+            "alt": "Proin libero nunc consequat interdum varius",
+            "copyright": null,
+            "dimensions": {
+              "height": 1,
+              "width": 1,
+            },
+            "edit": {
+              "background": "#904f4f",
+              "x": 1462,
+              "y": 1324,
+              "zoom": 1.504938844941775,
+            },
+            "id": "3fc0dfa9fe9",
+            "type": "image",
+            "url": "https://images.unsplash.com/photo-1431794062232-2a99a5431c6c",
+          },
+        ],
+        "group": [
+          {
+            "field": [
+              {
+                "spans": [],
+                "text": "Egestas Integer Eget Aliquet Nibh",
+                "type": "heading5",
+              },
+              {
+                "alt": "Arcu cursus vitae congue mauris",
+                "copyright": null,
+                "dimensions": {
+                  "height": 1,
+                  "width": 1,
+                },
+                "edit": {
+                  "background": "#5f7a9b",
+                  "x": -119,
+                  "y": -2667,
+                  "zoom": 1.9681315715350518,
+                },
+                "id": "3fc0dfa9fe9",
+                "type": "image",
+                "url": "https://images.unsplash.com/photo-1431794062232-2a99a5431c6c",
+              },
+            ],
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "at",
+      "variation": "tortor",
+      "version": "a79b9dd",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > otherRepository > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "e93cc3e4f28",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [],
+              "text": "Amet",
+              "type": "heading5",
+            },
+            {
+              "alt": "Auctor neque vitae tempus quam",
+              "copyright": null,
+              "dimensions": {
+                "height": 1,
+                "width": 1,
+              },
+              "edit": {
+                "background": "#5bc5aa",
+                "x": -1072,
+                "y": -281,
+                "zoom": 1.3767766101231744,
+              },
+              "id": "f70ca27104d",
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [],
+            "text": "Ac Orci Phasellus Egestas Tellus",
+            "type": "heading5",
+          },
+          {
+            "alt": "Urna id volutpat lacus laoreet non curabitur gravida arcu ac tortor",
+            "copyright": null,
+            "dimensions": {
+              "height": 1,
+              "width": 1,
+            },
+            "edit": {
+              "background": "#4860cb",
+              "x": 280,
+              "y": -379,
+              "zoom": 1.2389796902982004,
+            },
+            "id": "f70ca27104d",
+            "type": "image",
+            "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff",
+          },
+        ],
+      },
+      "slice_label": "Pellentesque",
+      "slice_type": "nulla_posuere",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > otherRepository > static zone 1`] = `
+{
+  "field": [
+    {
+      "spans": [],
+      "text": "Elementum Integer",
+      "type": "heading6",
+    },
+    {
+      "alt": "Interdum velit euismod in pellentesque",
+      "copyright": null,
+      "dimensions": {
+        "height": 1,
+        "width": 1,
+      },
+      "edit": {
+        "background": "#ab1d17",
+        "x": 3605,
+        "y": 860,
+        "zoom": 1.9465488211593005,
+      },
+      "id": "04a95cc61c3",
+      "type": "image",
+      "url": "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > otherRepositoryLinkTo > group 1`] = `
+{
+  "group": [
+    {
+      "field": [
+        {
+          "spans": [],
+          "text": "Nulla Aliquet Porttitor Lacus Luctus",
+          "type": "heading2",
+        },
+        {
+          "alt": "Donec enim diam vulputate ut pharetra sit amet aliquam id diam",
+          "copyright": null,
+          "dimensions": {
+            "height": 1,
+            "width": 1,
+          },
+          "edit": {
+            "background": "#7cfc26",
+            "x": 2977,
+            "y": -1163,
+            "zoom": 1.0472585898934068,
+          },
+          "id": "e8d0985c099",
+          "linkTo": {
+            "id": "id-existing",
+            "isBroken": false,
+            "lang": "laoreet",
+            "link_type": "Document",
+            "tags": [],
+            "type": "orci",
+          },
+          "type": "image",
+          "url": "https://images.unsplash.com/photo-1553531384-397c80973a0b",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > otherRepositoryLinkTo > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "2ff58c741ba",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [],
+              "text": "Facilisis",
+              "type": "heading3",
+            },
+            {
+              "alt": "Nullam vehicula ipsum a arcu cursus vitae congue mauris rhoncus aenean vel elit scelerisque",
+              "copyright": null,
+              "dimensions": {
+                "height": 1,
+                "width": 1,
+              },
+              "edit": {
+                "background": "#37ae3f",
+                "x": -1505,
+                "y": 902,
+                "zoom": 1.8328975606320652,
+              },
+              "id": "3fc0dfa9fe9",
+              "linkTo": {
+                "id": "id-existing",
+                "isBroken": false,
+                "lang": "tortor,",
+                "link_type": "Document",
+                "tags": [
+                  "Risus In",
+                ],
+                "type": "dui",
+              },
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1431794062232-2a99a5431c6c",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [],
+            "text": "Fringilla Phasellus Faucibus Scelerisque Eleifend Donec Pretium",
+            "type": "heading3",
+          },
+          {
+            "alt": "Proin libero nunc consequat interdum varius",
+            "copyright": null,
+            "dimensions": {
+              "height": 1,
+              "width": 1,
+            },
+            "edit": {
+              "background": "#904f4f",
+              "x": 1462,
+              "y": 1324,
+              "zoom": 1.504938844941775,
+            },
+            "id": "3fc0dfa9fe9",
+            "linkTo": {
+              "id": "id-existing",
+              "isBroken": false,
+              "lang": "tortor,",
+              "link_type": "Document",
+              "tags": [
+                "Risus In",
+              ],
+              "type": "dui",
+            },
+            "type": "image",
+            "url": "https://images.unsplash.com/photo-1431794062232-2a99a5431c6c",
+          },
+        ],
+        "group": [
+          {
+            "field": [
+              {
+                "spans": [],
+                "text": "Egestas Integer Eget Aliquet Nibh",
+                "type": "heading5",
+              },
+              {
+                "alt": "Arcu cursus vitae congue mauris",
+                "copyright": null,
+                "dimensions": {
+                  "height": 1,
+                  "width": 1,
+                },
+                "edit": {
+                  "background": "#5f7a9b",
+                  "x": -119,
+                  "y": -2667,
+                  "zoom": 1.9681315715350518,
+                },
+                "id": "3fc0dfa9fe9",
+                "linkTo": {
+                  "id": "id-existing",
+                  "isBroken": false,
+                  "lang": "tortor,",
+                  "link_type": "Document",
+                  "tags": [
+                    "Risus In",
+                  ],
+                  "type": "dui",
+                },
+                "type": "image",
+                "url": "https://images.unsplash.com/photo-1431794062232-2a99a5431c6c",
+              },
+            ],
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "at",
+      "variation": "tortor",
+      "version": "a79b9dd",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > otherRepositoryLinkTo > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "e93cc3e4f28",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [],
+              "text": "Amet",
+              "type": "heading5",
+            },
+            {
+              "alt": "Auctor neque vitae tempus quam",
+              "copyright": null,
+              "dimensions": {
+                "height": 1,
+                "width": 1,
+              },
+              "edit": {
+                "background": "#5bc5aa",
+                "x": -1072,
+                "y": -281,
+                "zoom": 1.3767766101231744,
+              },
+              "id": "f70ca27104d",
+              "linkTo": {
+                "id": "id-existing",
+                "isBroken": false,
+                "lang": "sapien",
+                "link_type": "Document",
+                "tags": [
+                  "Aenean",
+                ],
+                "type": "amet",
+              },
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [],
+            "text": "Ac Orci Phasellus Egestas Tellus",
+            "type": "heading5",
+          },
+          {
+            "alt": "Urna id volutpat lacus laoreet non curabitur gravida arcu ac tortor",
+            "copyright": null,
+            "dimensions": {
+              "height": 1,
+              "width": 1,
+            },
+            "edit": {
+              "background": "#4860cb",
+              "x": 280,
+              "y": -379,
+              "zoom": 1.2389796902982004,
+            },
+            "id": "f70ca27104d",
+            "linkTo": {
+              "id": "id-existing",
+              "isBroken": false,
+              "lang": "sapien",
+              "link_type": "Document",
+              "tags": [
+                "Aenean",
+              ],
+              "type": "amet",
+            },
+            "type": "image",
+            "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff",
+          },
+        ],
+      },
+      "slice_label": "Pellentesque",
+      "slice_type": "nulla_posuere",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > otherRepositoryLinkTo > static zone 1`] = `
+{
+  "field": [
+    {
+      "spans": [],
+      "text": "Elementum Integer",
+      "type": "heading6",
+    },
+    {
+      "alt": "Interdum velit euismod in pellentesque",
+      "copyright": null,
+      "dimensions": {
+        "height": 1,
+        "width": 1,
+      },
+      "edit": {
+        "background": "#ab1d17",
+        "x": 3605,
+        "y": 860,
+        "zoom": 1.9465488211593005,
+      },
+      "id": "04a95cc61c3",
+      "linkTo": {
+        "id": "id-existing",
+        "isBroken": false,
+        "lang": "eget",
+        "link_type": "Document",
+        "tags": [],
+        "type": "phasellus",
+      },
+      "type": "image",
+      "url": "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5",
+    },
+  ],
+}
+`;

@@ -1,119 +1,33 @@
-import * as is from "./lib/isMigrationField"
+import { prepareMigrationRecord } from "./lib/prepareMigrationRecord"
 import { validateAssetMetadata } from "./lib/validateAssetMetadata"
 
 import type { Asset } from "./types/api/asset/asset"
-import type { MigrationAsset } from "./types/migration/asset"
+import type { MigrationAssetConfig } from "./types/migration/Asset"
+import { MigrationImage } from "./types/migration/Asset"
+import { MigrationDocument } from "./types/migration/Document"
 import type {
-	FieldsToMigrationFields,
 	PrismicMigrationDocument,
 	PrismicMigrationDocumentParams,
-} from "./types/migration/document"
-import {
-	type ImageMigrationField,
-	type LinkToMediaMigrationField,
-	MigrationFieldType,
-} from "./types/migration/fields"
+} from "./types/migration/Document"
 import type { PrismicDocument } from "./types/value/document"
-import type { GroupField } from "./types/value/group"
 import type { FilledImageFieldImage } from "./types/value/image"
-import { LinkType } from "./types/value/link"
 import type { FilledLinkToMediaField } from "./types/value/linkToMedia"
-import { RichTextNodeType } from "./types/value/richText"
-import type { SliceZone } from "./types/value/sliceZone"
-import type { AnyRegularField } from "./types/value/types"
-
-import * as isFilled from "./helpers/isFilled"
-
-/**
- * Discovers assets in a record of Prismic fields.
- *
- * @param record - Record of Prismic fields to loook for assets in.
- * @param onAsset - Callback that is called for each asset found.
- */
-const discoverAssets = (
-	record: FieldsToMigrationFields<
-		Record<string, AnyRegularField | GroupField | SliceZone>
-	>,
-	onAsset: (asset: FilledImageFieldImage | FilledLinkToMediaField) => void,
-) => {
-	for (const field of Object.values(record)) {
-		if (is.sliceZone(field)) {
-			for (const slice of field) {
-				discoverAssets(slice.primary, onAsset)
-				for (const item of slice.items) {
-					discoverAssets(item, onAsset)
-				}
-			}
-		} else if (is.richText(field)) {
-			for (const node of field) {
-				if ("type" in node) {
-					if (node.type === RichTextNodeType.image) {
-						onAsset(node)
-						if (
-							node.linkTo &&
-							"link_type" in node.linkTo &&
-							node.linkTo.link_type === LinkType.Media
-						) {
-							onAsset(node.linkTo)
-						}
-					} else if (node.type !== RichTextNodeType.embed) {
-						for (const span of node.spans) {
-							if (
-								span.type === "hyperlink" &&
-								span.data &&
-								"link_type" in span.data &&
-								span.data.link_type === LinkType.Media
-							) {
-								onAsset(span.data)
-							}
-						}
-					}
-				}
-			}
-		} else if (is.group(field)) {
-			for (const item of field) {
-				discoverAssets(item, onAsset)
-			}
-		} else if (
-			is.image(field) &&
-			field &&
-			"dimensions" in field &&
-			isFilled.image(field)
-		) {
-			onAsset(field)
-		} else if (
-			is.link(field) &&
-			field &&
-			"link_type" in field &&
-			field.link_type === LinkType.Media &&
-			isFilled.linkToMedia(field)
-		) {
-			onAsset(field)
-		}
-	}
-}
 
 /**
  * Extracts one or more Prismic document types that match a given Prismic
  * document type. If no matches are found, no extraction is performed and the
  * union of all provided Prismic document types are returned.
  *
- * @typeParam TMigrationDocuments - Prismic migration document types from which
- *   to extract.
- * @typeParam TType - Type(s) to match `TMigrationDocuments` against.
+ * @typeParam TDocuments - Prismic document types from which to extract.
+ * @typeParam TDocumentType - Type(s) to match `TDocuments` against.
  */
-type ExtractMigrationDocumentType<
-	TMigrationDocuments extends PrismicMigrationDocument,
-	TType extends TMigrationDocuments["type"],
+type ExtractDocumentType<
+	TDocuments extends PrismicDocument | PrismicMigrationDocument,
+	TDocumentType extends TDocuments["type"],
 > =
-	Extract<TMigrationDocuments, { type: TType }> extends never
-		? TMigrationDocuments
-		: Extract<TMigrationDocuments, { type: TType }>
-
-type CreateAssetReturnType = ImageMigrationField & {
-	image: ImageMigrationField
-	linkToMedia: LinkToMediaMigrationField
-}
+	Extract<TDocuments, { type: TDocumentType }> extends never
+		? TDocuments
+		: Extract<TDocuments, { type: TDocumentType }>
 
 /**
  * The symbol used to index documents that are singletons.
@@ -134,37 +48,37 @@ export class Migration<
 	/**
 	 * @internal
 	 */
-	_documents: {
-		document: TMigrationDocuments
-		params: PrismicMigrationDocumentParams
-	}[] = []
-	#indexedDocuments: Record<string, Record<string, TMigrationDocuments>> = {}
+	_assets: Map<MigrationAssetConfig["file"], MigrationAssetConfig> = new Map()
 
 	/**
 	 * @internal
 	 */
-	_assets: Map<MigrationAsset["file"], MigrationAsset> = new Map()
+	_documents: MigrationDocument<TDocuments>[] = []
+	#indexedDocuments: Record<
+		string,
+		Record<string, MigrationDocument<TDocuments>>
+	> = {}
 
 	createAsset(
 		asset: Asset | FilledImageFieldImage | FilledLinkToMediaField,
-	): CreateAssetReturnType
+	): MigrationImage
 	createAsset(
-		file: MigrationAsset["file"],
-		filename: MigrationAsset["filename"],
+		file: MigrationAssetConfig["file"],
+		filename: MigrationAssetConfig["filename"],
 		params?: {
 			notes?: string
 			credits?: string
 			alt?: string
 			tags?: string[]
 		},
-	): CreateAssetReturnType
+	): MigrationImage
 	createAsset(
 		fileOrAsset:
-			| MigrationAsset["file"]
+			| MigrationAssetConfig["file"]
 			| Asset
 			| FilledImageFieldImage
 			| FilledLinkToMediaField,
-		filename?: MigrationAsset["filename"],
+		filename?: MigrationAssetConfig["filename"],
 		{
 			notes,
 			credits,
@@ -176,8 +90,9 @@ export class Migration<
 			alt?: string
 			tags?: string[]
 		} = {},
-	): CreateAssetReturnType {
-		let asset: MigrationAsset
+	): MigrationImage {
+		let asset: MigrationAssetConfig
+		let maybeInitialField: FilledImageFieldImage | undefined
 		if (typeof fileOrAsset === "object" && "url" in fileOrAsset) {
 			if ("dimensions" in fileOrAsset || "link_type" in fileOrAsset) {
 				const url = fileOrAsset.url.split("?")[0]
@@ -191,6 +106,10 @@ export class Migration<
 						: undefined
 				const alt =
 					"alt" in fileOrAsset && fileOrAsset.alt ? fileOrAsset.alt : undefined
+
+				if ("dimensions" in fileOrAsset) {
+					maybeInitialField = fileOrAsset
+				}
 
 				asset = {
 					id: fileOrAsset.id,
@@ -243,64 +162,54 @@ export class Migration<
 			this._assets.set(asset.id, asset)
 		}
 
-		return {
-			migrationType: MigrationFieldType.Image,
-			...asset,
-			image: {
-				migrationType: MigrationFieldType.Image,
-				...asset,
-			},
-			linkToMedia: {
-				migrationType: MigrationFieldType.LinkToMedia,
-				...asset,
-			},
-		}
+		return new MigrationImage(this._assets.get(asset.id)!, maybeInitialField)
 	}
 
 	createDocument<TType extends TMigrationDocuments["type"]>(
-		document: ExtractMigrationDocumentType<TMigrationDocuments, TType>,
+		document: ExtractDocumentType<TMigrationDocuments, TType>,
 		documentTitle: PrismicMigrationDocumentParams["documentTitle"],
 		params: Omit<PrismicMigrationDocumentParams, "documentTitle"> = {},
-	): ExtractMigrationDocumentType<TMigrationDocuments, TType> {
-		this._documents.push({
-			document,
-			params: { documentTitle, ...params },
-		})
+	): MigrationDocument<ExtractDocumentType<TDocuments, TType>> {
+		const { record: data, dependencies } = prepareMigrationRecord(
+			document.data,
+			this.createAsset.bind(this),
+		)
+
+		const migrationDocument = new MigrationDocument(
+			{ ...document, data },
+			{
+				documentTitle,
+				...params,
+			},
+			dependencies,
+		)
+
+		this._documents.push(migrationDocument)
 
 		// Index document
 		if (!(document.type in this.#indexedDocuments)) {
 			this.#indexedDocuments[document.type] = {}
 		}
 		this.#indexedDocuments[document.type][document.uid || SINGLE_INDEX] =
-			document
+			migrationDocument
 
-		// Find other assets in document
-		discoverAssets(document.data, this.createAsset.bind(this))
-
-		return document
+		return migrationDocument
 	}
 
-	getByUID<
-		TType extends TMigrationDocuments["type"],
-		TMigrationDocument extends Extract<
-			TMigrationDocuments,
-			{ type: TType }
-		> = Extract<TMigrationDocuments, { type: TType }>,
-	>(documentType: TType, uid: string): TMigrationDocument | undefined {
+	getByUID<TType extends TMigrationDocuments["type"]>(
+		documentType: TType,
+		uid: string,
+	): MigrationDocument<ExtractDocumentType<TDocuments, TType>> | undefined {
 		return this.#indexedDocuments[documentType]?.[uid] as
-			| TMigrationDocument
+			| MigrationDocument
 			| undefined
 	}
 
-	getSingle<
-		TType extends TMigrationDocuments["type"],
-		TMigrationDocument extends Extract<
-			TMigrationDocuments,
-			{ type: TType }
-		> = Extract<TMigrationDocuments, { type: TType }>,
-	>(documentType: TType): TMigrationDocument | undefined | undefined {
+	getSingle<TType extends TMigrationDocuments["type"]>(
+		documentType: TType,
+	): MigrationDocument<ExtractDocumentType<TDocuments, TType>> | undefined {
 		return this.#indexedDocuments[documentType]?.[SINGLE_INDEX] as
-			| TMigrationDocument
+			| MigrationDocument
 			| undefined
 	}
 }

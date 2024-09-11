@@ -5,7 +5,7 @@ import { RichTextNodeType } from "../src"
 testMigrationFieldPatching("patches link fields", {
 	existing: ({ existingDocuments }) => existingDocuments[0],
 	migration: ({ migrationDocuments }) => {
-		delete migrationDocuments[0].id
+		delete migrationDocuments[0].document.id
 
 		return migrationDocuments[0]
 	},
@@ -13,21 +13,27 @@ testMigrationFieldPatching("patches link fields", {
 		return () => existingDocuments[0]
 	},
 	lazyMigration: ({ migration, migrationDocuments }) => {
-		delete migrationDocuments[0].id
+		delete migrationDocuments[0].document.id
 
 		return () =>
-			migration.getByUID(migrationDocuments[0].type, migrationDocuments[0].uid)
+			migration.getByUID(
+				migrationDocuments[0].document.type,
+				migrationDocuments[0].document.uid!,
+			)
 	},
 	migrationNoTags: ({ migration, migrationDocuments }) => {
-		migrationDocuments[0].tags = undefined
+		migrationDocuments[0].document.tags = undefined
 
 		return () =>
-			migration.getByUID(migrationDocuments[0].type, migrationDocuments[0].uid)
+			migration.getByUID(
+				migrationDocuments[0].document.type,
+				migrationDocuments[0].document.uid!,
+			)
 	},
 	otherRepositoryContentRelationship: ({ ctx, migrationDocuments }) => {
 		const contentRelationship = ctx.mock.value.link({ type: "Document" })
 		// `migrationDocuments` contains documents from "another repository"
-		contentRelationship.id = migrationDocuments[0].id!
+		contentRelationship.id = migrationDocuments[0].document.id!
 
 		return contentRelationship
 	},
@@ -45,27 +51,6 @@ testMigrationFieldPatching("patches link fields", {
 					data: existingDocuments[0],
 				},
 			],
-		},
-	],
-	richTextNewImageNodeLink: ({ ctx, migration, existingDocuments }) => [
-		...ctx.mock.value.richText({ pattern: "short", state: "filled" }),
-		{
-			...migration.createAsset("foo", "foo.png"),
-			linkTo: existingDocuments[0],
-		},
-	],
-	richTextOtherReposiotryImageNodeLink: ({
-		ctx,
-		mockedDomain,
-		existingDocuments,
-	}) => [
-		...ctx.mock.value.richText({ pattern: "short", state: "filled" }),
-		{
-			type: RichTextNodeType.image,
-			...ctx.mock.value.image({ state: "filled" }),
-			id: "foo-id",
-			url: `${mockedDomain}/foo.png`,
-			linkTo: existingDocuments[0],
 		},
 	],
 })

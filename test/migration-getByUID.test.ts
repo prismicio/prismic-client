@@ -13,10 +13,10 @@ it("returns a document with a matching UID", () => {
 	}
 	const documentName = "documentName"
 
-	migration.createDocument(document, documentName)
+	const migrationDocument = migration.createDocument(document, documentName)
 
 	expect(migration.getByUID(document.type, document.uid)).toStrictEqual(
-		document,
+		migrationDocument,
 	)
 })
 
