@@ -5,8 +5,16 @@ import type { LinkToMediaField } from "../value/linkToMedia"
 import { type RTImageNode, RichTextNodeType } from "../value/richText"
 
 import type { MigrationContentRelationship } from "./ContentRelationship"
-import type { DocumentMap } from "./Document"
+import type { ResolveArgs } from "./Field"
 import { MigrationField } from "./Field"
+
+/**
+ * Any type of image field handled by {@link MigrationAsset}
+ */
+type ImageLike =
+	| FilledImageFieldImage
+	| LinkToMediaField<"filled">
+	| RTImageNode
 
 /**
  * Converts an asset to an image field.
@@ -19,10 +27,7 @@ import { MigrationField } from "./Field"
  */
 const assetToImage = (
 	asset: Asset,
-	maybeInitialField?:
-		| FilledImageFieldImage
-		| LinkToMediaField<"filled">
-		| RTImageNode,
+	maybeInitialField?: ImageLike,
 ): FilledImageFieldImage => {
 	const parameters = (maybeInitialField?.url || asset.url).split("?")[1]
 	const url = `${asset.url.split("?")[0]}${parameters ? `?${parameters}` : ""}`
@@ -99,26 +104,11 @@ export type MigrationAssetConfig = {
 }
 
 export abstract class MigrationAsset<
-	TField extends
-		| FilledImageFieldImage
-		| LinkToMediaField<"filled">
-		| RTImageNode =
-		| FilledImageFieldImage
-		| LinkToMediaField<"filled">
-		| RTImageNode,
-> extends MigrationField<
-	TField,
-	FilledImageFieldImage | LinkToMediaField<"filled"> | RTImageNode
-> {
+	TField extends ImageLike = ImageLike,
+> extends MigrationField<TField, ImageLike> {
 	config: MigrationAssetConfig
 
-	constructor(
-		config: MigrationAssetConfig,
-		initialField?:
-			| FilledImageFieldImage
-			| LinkToMediaField<"filled">
-			| RTImageNode,
-	) {
+	constructor(config: MigrationAssetConfig, initialField?: ImageLike) {
 		super(initialField)
 
 		this.config = config
@@ -128,29 +118,38 @@ export abstract class MigrationAsset<
 		return new MigrationImage(this.config, this._initialField)
 	}
 
-	asLinkToMedia(): MigrationLinkToMedia {
-		return new MigrationLinkToMedia(this.config, this._initialField)
+	asLinkToMedia(text?: string): MigrationLinkToMedia {
+		return new MigrationLinkToMedia(this.config, this._initialField, text)
 	}
 
-	asRTImageNode(): MigrationRTImageNode {
-		return new MigrationRTImageNode(this.config, this._initialField)
+	asRTImageNode(
+		linkTo?:
+			| MigrationLinkToMedia
+			| MigrationContentRelationship
+			| FilledLinkToWebField,
+	): MigrationRTImageNode {
+		return new MigrationRTImageNode(this.config, this._initialField, linkTo)
 	}
 }
+
+/**
+ * A map of asset IDs to asset used to resolve assets when patching migration
+ * Prismic documents.
+ *
+ * @internal
+ */
+export type AssetMap = Map<MigrationAssetConfig["id"], Asset>
 
 export class MigrationImage extends MigrationAsset<FilledImageFieldImage> {
 	#thumbnails: Record<string, MigrationImage> = {}
 
-	addThumbnail(name: string, thumbnail: MigrationImage): void {
+	addThumbnail(name: string, thumbnail: MigrationImage): this {
 		this.#thumbnails[name] = thumbnail
+
+		return this
 	}
 
-	async _resolve({
-		assets,
-		documents,
-	}: {
-		assets: AssetMap
-		documents: DocumentMap
-	}): Promise<void> {
+	async _resolve({ assets, documents }: ResolveArgs): Promise<void> {
 		const asset = assets.get(this.config.id)
 
 		if (asset) {
@@ -171,7 +170,19 @@ export class MigrationImage extends MigrationAsset<FilledImageFieldImage> {
 export class MigrationLinkToMedia extends MigrationAsset<
 	LinkToMediaField<"filled">
 > {
-	_resolve({ assets }: { assets: AssetMap }): void {
+	text?: string
+
+	constructor(
+		config: MigrationAssetConfig,
+		initialField?: ImageLike,
+		text?: string,
+	) {
+		super(config, initialField)
+
+		this.text = text
+	}
+
+	_resolve({ assets }: ResolveArgs): void {
 		const asset = assets.get(this.config.id)
 
 		if (asset) {
@@ -185,25 +196,34 @@ export class MigrationLinkToMedia extends MigrationAsset<
 				height:
 					typeof asset.height === "number" ? `${asset.height}` : undefined,
 				width: typeof asset.width === "number" ? `${asset.width}` : undefined,
+				// TODO: Remove when link text PR is merged
+				// @ts-expect-error - Future-proofing for link text
+				text: this.text,
 			}
 		}
 	}
 }
 
 export class MigrationRTImageNode extends MigrationAsset<RTImageNode> {
-	linkTo:
+	linkTo?:
 		| MigrationLinkToMedia
 		| MigrationContentRelationship
 		| FilledLinkToWebField
-		| undefined
 
-	async _resolve({
-		assets,
-		documents,
-	}: {
-		assets: AssetMap
-		documents: DocumentMap
-	}): Promise<void> {
+	constructor(
+		config: MigrationAssetConfig,
+		initialField?: ImageLike,
+		linkTo?:
+			| MigrationLinkToMedia
+			| MigrationContentRelationship
+			| FilledLinkToWebField,
+	) {
+		super(config, initialField)
+
+		this.linkTo = linkTo
+	}
+
+	async _resolve({ assets, documents }: ResolveArgs): Promise<void> {
 		const asset = assets.get(this.config.id)
 
 		if (this.linkTo instanceof MigrationField) {
@@ -222,11 +242,3 @@ export class MigrationRTImageNode extends MigrationAsset<RTImageNode> {
 		}
 	}
 }
-
-/**
- * A map of asset IDs to asset used to resolve assets when patching migration
- * Prismic documents.
- *
- * @internal
- */
-export type AssetMap = Map<MigrationAssetConfig["id"], Asset>

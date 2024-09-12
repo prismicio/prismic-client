@@ -9,7 +9,7 @@ import { MigrationDocument } from "../src/types/migration/Document"
 it("creates a document", () => {
 	const migration = prismic.createMigration()
 
-	const document: prismic.PrismicMigrationDocument = {
+	const document: prismic.MigrationDocumentValue = {
 		type: "type",
 		uid: "uid",
 		lang: "lang",
@@ -184,7 +184,7 @@ describe.each<{
 
 		const { id, field, expected } = getField(mock)
 
-		const document: prismic.PrismicMigrationDocument = {
+		const document: prismic.MigrationDocumentValue = {
 			type: "type",
 			uid: "uid",
 			lang: "lang",
@@ -204,7 +204,7 @@ describe.each<{
 
 		const { id, field, expected } = getField(mock)
 
-		const document: prismic.PrismicMigrationDocument = {
+		const document: prismic.MigrationDocumentValue = {
 			type: "type",
 			uid: "uid",
 			lang: "lang",
@@ -234,7 +234,7 @@ describe.each<{
 			},
 		]
 
-		const document: prismic.PrismicMigrationDocument = {
+		const document: prismic.MigrationDocumentValue = {
 			type: "type",
 			uid: "uid",
 			lang: "lang",
@@ -264,7 +264,7 @@ describe.each<{
 			},
 		]
 
-		const document: prismic.PrismicMigrationDocument = {
+		const document: prismic.MigrationDocumentValue = {
 			type: "type",
 			uid: "uid",
 			lang: "lang",

@@ -2,34 +2,42 @@ import type { FilledContentRelationshipField } from "../value/contentRelationshi
 import type { PrismicDocument } from "../value/document"
 import { LinkType } from "../value/link"
 
-import type { DocumentMap, MigrationDocument } from "./Document"
+import type { MigrationDocument } from "./Document"
+import type { ResolveArgs } from "./Field"
 import { MigrationField } from "./Field"
 
-type MigrationContentRelationshipConfig =
-	| PrismicDocument
-	| MigrationDocument
+type MigrationContentRelationshipConfig<
+	TDocuments extends PrismicDocument = PrismicDocument,
+> =
+	| TDocuments
+	| MigrationDocument<TDocuments>
 	| FilledContentRelationshipField
 	| undefined
 
-export type UnresolvedMigrationContentRelationshipConfig =
-	| MigrationContentRelationshipConfig
+export type UnresolvedMigrationContentRelationshipConfig<
+	TDocuments extends PrismicDocument = PrismicDocument,
+> =
+	| MigrationContentRelationshipConfig<TDocuments>
 	| (() =>
-			| Promise<MigrationContentRelationshipConfig>
-			| MigrationContentRelationshipConfig)
+			| Promise<MigrationContentRelationshipConfig<TDocuments>>
+			| MigrationContentRelationshipConfig<TDocuments>)
 
 export class MigrationContentRelationship extends MigrationField<FilledContentRelationshipField> {
 	unresolvedConfig: UnresolvedMigrationContentRelationshipConfig
+	text?: string
 
 	constructor(
 		unresolvedConfig: UnresolvedMigrationContentRelationshipConfig,
 		initialField?: FilledContentRelationshipField,
+		text?: string,
 	) {
 		super(initialField)
 
 		this.unresolvedConfig = unresolvedConfig
+		this.text = text
 	}
 
-	async _resolve({ documents }: { documents: DocumentMap }): Promise<void> {
+	async _resolve({ documents }: ResolveArgs): Promise<void> {
 		const config =
 			typeof this.unresolvedConfig === "function"
 				? await this.unresolvedConfig()
@@ -48,6 +56,9 @@ export class MigrationContentRelationship extends MigrationField<FilledContentRe
 					tags: document.tags || [],
 					lang: document.lang,
 					isBroken: false,
+					// TODO: Remove when link text PR is merged
+					// @ts-expect-error - Future-proofing for link text
+					text: this.text,
 				}
 			}
 		}

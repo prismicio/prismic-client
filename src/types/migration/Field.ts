@@ -5,14 +5,16 @@ import type { RTBlockNode, RTInlineNode } from "../value/richText"
 import type { AssetMap } from "./Asset"
 import type { DocumentMap } from "./Document"
 
+export type ResolveArgs = {
+	assets: AssetMap
+	documents: DocumentMap
+}
+
 interface Preparable {
 	/**
 	 * @internal
 	 */
-	_resolve(args: {
-		assets: AssetMap
-		documents: DocumentMap
-	}): Promise<void> | void
+	_resolve(args: ResolveArgs): Promise<void> | void
 }
 
 export abstract class MigrationField<
@@ -26,12 +28,12 @@ export abstract class MigrationField<
 	/**
 	 * @internal
 	 */
-	_field: TField | undefined
+	_field?: TField
 
 	/**
 	 * @internal
 	 */
-	_initialField: TInitialField | undefined
+	_initialField?: TInitialField
 
 	constructor(initialField?: TInitialField) {
 		this._initialField = initialField
@@ -41,8 +43,5 @@ export abstract class MigrationField<
 		return this._field
 	}
 
-	abstract _resolve(args: {
-		assets: AssetMap
-		documents: DocumentMap
-	}): Promise<void> | void
+	abstract _resolve(args: ResolveArgs): Promise<void> | void
 }

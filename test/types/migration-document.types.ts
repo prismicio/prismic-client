@@ -3,7 +3,7 @@ import { expectNever, expectType } from "ts-expect"
 
 import type * as prismic from "../../src"
 
-;(value: prismic.PrismicMigrationDocument): true => {
+;(value: prismic.MigrationDocumentValue): true => {
 	switch (typeof value) {
 		case "object": {
 			if (value === null) {
@@ -19,7 +19,7 @@ import type * as prismic from "../../src"
 	}
 }
 
-expectType<prismic.PrismicMigrationDocument>({
+expectType<prismic.MigrationDocumentValue>({
 	uid: "",
 	type: "",
 	lang: "",
@@ -29,7 +29,7 @@ expectType<prismic.PrismicMigrationDocument>({
 /**
  * Supports any field when generic.
  */
-expectType<prismic.PrismicMigrationDocument>({
+expectType<prismic.MigrationDocumentValue>({
 	uid: "",
 	type: "",
 	lang: "",
@@ -39,12 +39,12 @@ expectType<prismic.PrismicMigrationDocument>({
 })
 
 /**
- * `PrismicDocument` is assignable to `PrismicMigrationDocument` with added
+ * `PrismicDocument` is assignable to `MigrationDocumentValue` with added
  * `title`.
  */
 expectType<
 	TypeOf<
-		prismic.PrismicMigrationDocument,
+		prismic.MigrationDocumentValue,
 		prismic.PrismicDocument & { title: string }
 	>
 >(true)
@@ -55,7 +55,7 @@ type BarDocument = prismic.PrismicDocument<{ bar: prismic.KeyTextField }, "bar">
 type BazDocument = prismic.PrismicDocument<Record<string, never>, "baz">
 type Documents = FooDocument | BarDocument | BazDocument
 
-type MigrationDocuments = prismic.PrismicMigrationDocument<Documents>
+type MigrationDocuments = prismic.MigrationDocumentValue<Documents>
 
 /**
  * Infers data type from document type.
@@ -128,7 +128,7 @@ type SliceDocument = prismic.PrismicDocument<
 >
 type AdvancedDocuments = StaticDocument | GroupDocument | SliceDocument
 type MigrationAdvancedDocuments =
-	prismic.PrismicMigrationDocument<AdvancedDocuments>
+	prismic.MigrationDocumentValue<AdvancedDocuments>
 
 // Static
 expectType<MigrationAdvancedDocuments>({

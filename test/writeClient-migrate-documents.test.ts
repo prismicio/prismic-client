@@ -93,7 +93,7 @@ it.concurrent("skips creating existing documents", async (ctx) => {
 
 	const migration = prismic.createMigration()
 
-	migration.createDocument(document, "foo")
+	const migrationDocument = migration.createDocument(document, "foo")
 
 	const reporter = vi.fn()
 
@@ -106,10 +106,7 @@ it.concurrent("skips creating existing documents", async (ctx) => {
 			current: 1,
 			remaining: 0,
 			total: 1,
-			document,
-			documentParams: {
-				documentTitle: "foo",
-			},
+			document: migrationDocument,
 		},
 	})
 	expect(reporter).toHaveBeenCalledWith({
@@ -156,10 +153,7 @@ it.concurrent("creates new documents", async (ctx) => {
 			current: 1,
 			remaining: 0,
 			total: 1,
-			document,
-			documentParams: {
-				documentTitle: "foo",
-			},
+			document: migrationDocument,
 		},
 	})
 	expect(documents?.get(migrationDocument)?.id).toBe(newDocument.id)
@@ -190,7 +184,9 @@ it.concurrent(
 		const migration = prismic.createMigration()
 
 		const migrationDocument = migration.createDocument(document, "foo", {
-			masterLanguageDocument,
+			masterLanguageDocument: migration.createContentRelationship(
+				masterLanguageDocument,
+			),
 		})
 
 		let documents: DocumentMap | undefined
@@ -210,11 +206,7 @@ it.concurrent(
 				current: 1,
 				remaining: 0,
 				total: 1,
-				document,
-				documentParams: {
-					documentTitle: "foo",
-					masterLanguageDocument,
-				},
+				document: migrationDocument,
 			},
 		})
 		ctx.expect(documents?.get(migrationDocument)?.id).toBe(newDocument.id)
@@ -228,9 +220,8 @@ it.concurrent(
 		const client = createTestWriteClient({ ctx })
 
 		const masterLanguageDocument =
-			ctx.mock.value.document() as prismic.PrismicMigrationDocument
-		const document =
-			ctx.mock.value.document() as prismic.PrismicMigrationDocument
+			ctx.mock.value.document() as prismic.MigrationDocumentValue
+		const document = ctx.mock.value.document() as prismic.MigrationDocumentValue
 		const newDocuments = [
 			{
 				id: masterLanguageDocument.id!,
@@ -255,7 +246,9 @@ it.concurrent(
 			"foo",
 		)
 		const migrationDocument = migration.createDocument(document, "bar", {
-			masterLanguageDocument: masterLanguageMigrationDocument,
+			masterLanguageDocument: migration.createContentRelationship(
+				masterLanguageMigrationDocument,
+			),
 		})
 
 		let documents: DocumentMap | undefined
@@ -302,7 +295,9 @@ it.concurrent(
 		const migration = prismic.createMigration()
 
 		const migrationDocument = migration.createDocument(document, "foo", {
-			masterLanguageDocument: () => masterLanguageDocument,
+			masterLanguageDocument: migration.createContentRelationship(
+				() => masterLanguageDocument,
+			),
 		})
 
 		let documents: DocumentMap | undefined
@@ -322,11 +317,7 @@ it.concurrent(
 				current: 1,
 				remaining: 0,
 				total: 1,
-				document,
-				documentParams: {
-					documentTitle: "foo",
-					masterLanguageDocument: expect.any(Function),
-				},
+				document: migrationDocument,
 			},
 		})
 		ctx.expect(documents?.get(migrationDocument)?.id).toBe(newDocument.id)
@@ -340,9 +331,8 @@ it.concurrent(
 		const client = createTestWriteClient({ ctx })
 
 		const masterLanguageDocument =
-			ctx.mock.value.document() as prismic.PrismicMigrationDocument
-		const document =
-			ctx.mock.value.document() as prismic.PrismicMigrationDocument
+			ctx.mock.value.document() as prismic.MigrationDocumentValue
+		const document = ctx.mock.value.document() as prismic.MigrationDocumentValue
 		const newDocuments = [
 			{
 				id: masterLanguageDocument.id!,
@@ -367,7 +357,9 @@ it.concurrent(
 			"foo",
 		)
 		const migrationDocument = migration.createDocument(document, "bar", {
-			masterLanguageDocument: () => masterLanguageMigrationDocument,
+			masterLanguageDocument: migration.createContentRelationship(
+				() => masterLanguageMigrationDocument,
+			),
 		})
 
 		let documents: DocumentMap | undefined
@@ -436,10 +428,7 @@ it.concurrent(
 				current: 1,
 				remaining: 0,
 				total: 1,
-				document,
-				documentParams: {
-					documentTitle: "foo",
-				},
+				document: migrationDocument,
 			},
 		})
 		ctx.expect(documents?.get(migrationDocument)?.id).toBe(newDocument.id)

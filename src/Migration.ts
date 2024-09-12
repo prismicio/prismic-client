@@ -4,10 +4,12 @@ import { validateAssetMetadata } from "./lib/validateAssetMetadata"
 import type { Asset } from "./types/api/asset/asset"
 import type { MigrationAssetConfig } from "./types/migration/Asset"
 import { MigrationImage } from "./types/migration/Asset"
+import type { UnresolvedMigrationContentRelationshipConfig } from "./types/migration/ContentRelationship"
+import { MigrationContentRelationship } from "./types/migration/ContentRelationship"
 import { MigrationDocument } from "./types/migration/Document"
 import type {
-	PrismicMigrationDocument,
-	PrismicMigrationDocumentParams,
+	MigrationDocumentParams,
+	MigrationDocumentValue,
 } from "./types/migration/Document"
 import type { PrismicDocument } from "./types/value/document"
 import type { FilledImageFieldImage } from "./types/value/image"
@@ -22,7 +24,7 @@ import type { FilledLinkToMediaField } from "./types/value/linkToMedia"
  * @typeParam TDocumentType - Type(s) to match `TDocuments` against.
  */
 type ExtractDocumentType<
-	TDocuments extends PrismicDocument | PrismicMigrationDocument,
+	TDocuments extends PrismicDocument | MigrationDocumentValue,
 	TDocumentType extends TDocuments["type"],
 > =
 	Extract<TDocuments, { type: TDocumentType }> extends never
@@ -43,7 +45,7 @@ const SINGLE_INDEX = "__SINGLE__"
 export class Migration<
 	TDocuments extends PrismicDocument = PrismicDocument,
 	TMigrationDocuments extends
-		PrismicMigrationDocument<TDocuments> = PrismicMigrationDocument<TDocuments>,
+		MigrationDocumentValue<TDocuments> = MigrationDocumentValue<TDocuments>,
 > {
 	/**
 	 * @internal
@@ -167,8 +169,8 @@ export class Migration<
 
 	createDocument<TType extends TMigrationDocuments["type"]>(
 		document: ExtractDocumentType<TMigrationDocuments, TType>,
-		documentTitle: PrismicMigrationDocumentParams["documentTitle"],
-		params: Omit<PrismicMigrationDocumentParams, "documentTitle"> = {},
+		documentTitle: string,
+		params: Omit<MigrationDocumentParams, "documentTitle"> = {},
 	): MigrationDocument<ExtractDocumentType<TDocuments, TType>> {
 		const { record: data, dependencies } = prepareMigrationRecord(
 			document.data,
@@ -194,6 +196,13 @@ export class Migration<
 			migrationDocument
 
 		return migrationDocument
+	}
+
+	createContentRelationship(
+		config: UnresolvedMigrationContentRelationshipConfig,
+		text?: string,
+	): MigrationContentRelationship {
+		return new MigrationContentRelationship(config, undefined, text)
 	}
 
 	getByUID<TType extends TMigrationDocuments["type"]>(

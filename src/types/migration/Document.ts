@@ -18,16 +18,12 @@ import type { Slice } from "../value/slice"
 import type { SliceZone } from "../value/sliceZone"
 
 import type {
-	AssetMap,
 	MigrationImage,
 	MigrationLinkToMedia,
 	MigrationRTImageNode,
 } from "./Asset"
-import type {
-	MigrationContentRelationship,
-	UnresolvedMigrationContentRelationshipConfig,
-} from "./ContentRelationship"
-import type { MigrationField } from "./Field"
+import type { MigrationContentRelationship } from "./ContentRelationship"
+import type { MigrationField, ResolveArgs } from "./Field"
 
 /**
  * A utility type that extends Rich text field node's spans with their migration
@@ -41,10 +37,7 @@ type RichTextTextNodeWithMigrationField<
 	spans: (
 		| RTInlineNode
 		| (Omit<RTLinkNode, "data"> & {
-				data:
-					| MigrationLinkToMedia
-					| MigrationContentRelationship
-					| UnresolvedMigrationContentRelationshipConfig
+				data: MigrationLinkToMedia | MigrationContentRelationship
 		  })
 	)[]
 }
@@ -89,10 +82,7 @@ type RegularFieldWithMigrationField<
 			: TField extends FilledLinkToMediaField
 				? MigrationLinkToMedia | undefined
 				: TField extends FilledContentRelationshipField
-					?
-							| MigrationContentRelationship
-							| UnresolvedMigrationContentRelationshipConfig
-							| undefined
+					? MigrationContentRelationship | undefined
 					: TField extends RichTextField
 						? RichTextFieldWithMigrationField<TField>
 						: never)
@@ -161,8 +151,8 @@ export type FieldsWithMigrationFields<
 }
 
 /**
- * Makes the UID of `PrismicMigrationDocument` optional on custom types without
- * UID. TypeScript fails to infer correct types if done with a type
+ * Makes the UID of {@link MigrationDocumentValue} optional on custom types
+ * without UID. TypeScript fails to infer correct types if done with a type
  * intersection.
  *
  * @internal
@@ -177,7 +167,7 @@ type MakeUIDOptional<TMigrationDocument extends { uid: string | null }> =
  *
  * @see More details on the migraiton API: {@link https://prismic.io/docs/migration-api-technical-reference}
  */
-export type PrismicMigrationDocument<
+export type MigrationDocumentValue<
 	TDocument extends PrismicDocument = PrismicDocument,
 > =
 	TDocument extends PrismicDocument<infer TData, infer TType, infer TLang>
@@ -235,7 +225,7 @@ export type PrismicMigrationDocument<
  *
  * @see More details on the migraiton API: {@link https://prismic.io/docs/migration-api-technical-reference}
  */
-export type PrismicMigrationDocumentParams = {
+export type MigrationDocumentParams = {
 	/**
 	 * Name of the document displayed in the editor.
 	 */
@@ -247,24 +237,22 @@ export type PrismicMigrationDocumentParams = {
 	// We're forced to inline `ContentRelationshipMigrationField` here, otherwise
 	// it creates a circular reference to itself which makes TypeScript unhappy.
 	// (but I think it's weird and it doesn't make sense :thinking:)
-	masterLanguageDocument?:
-		| UnresolvedMigrationContentRelationshipConfig
-		| undefined
+	masterLanguageDocument?: MigrationContentRelationship
 }
 
 export class MigrationDocument<
 	TDocument extends PrismicDocument = PrismicDocument,
 > {
-	document: PrismicMigrationDocument<TDocument>
-	params: PrismicMigrationDocumentParams
+	value: MigrationDocumentValue<TDocument>
+	params: MigrationDocumentParams
 	dependencies: MigrationField[]
 
 	constructor(
-		document: PrismicMigrationDocument<TDocument>,
-		params: PrismicMigrationDocumentParams,
+		value: MigrationDocumentValue<TDocument>,
+		params: MigrationDocumentParams,
 		dependencies: MigrationField[] = [],
 	) {
-		this.document = document
+		this.value = value
 		this.params = params
 		this.dependencies = dependencies
 	}
@@ -272,10 +260,7 @@ export class MigrationDocument<
 	/**
 	 * @internal
 	 */
-	async _resolve(args: {
-		assets: AssetMap
-		documents: DocumentMap
-	}): Promise<void> {
+	async _resolve(args: ResolveArgs): Promise<void> {
 		for (const dependency of this.dependencies) {
 			await dependency._resolve(args)
 		}
@@ -295,5 +280,5 @@ export type DocumentMap<TDocuments extends PrismicDocument = PrismicDocument> =
 	Map<
 		string | MigrationDocument | MigrationDocument<TDocuments>,
 		| PrismicDocument
-		| (Omit<PrismicMigrationDocument<PrismicDocument>, "id"> & { id: string })
+		| (Omit<MigrationDocumentValue<PrismicDocument>, "id"> & { id: string })
 	>

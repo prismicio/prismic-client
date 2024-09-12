@@ -2,9 +2,7 @@ import type {
 	MigrationImage,
 	MigrationLinkToMedia,
 } from "../types/migration/Asset"
-import type { UnresolvedMigrationContentRelationshipConfig } from "../types/migration/ContentRelationship"
 import { MigrationContentRelationship } from "../types/migration/ContentRelationship"
-import { MigrationDocument } from "../types/migration/Document"
 import { MigrationField } from "../types/migration/Field"
 import type { FilledImageFieldImage } from "../types/value/image"
 import type { FilledLinkToWebField } from "../types/value/link"
@@ -37,14 +35,17 @@ export const prepareMigrationRecord = <TRecord extends Record<string, unknown>>(
 		const field: unknown = record[key]
 
 		if (field instanceof MigrationField) {
+			// Existing migration fields
 			dependencies.push(field)
 			result[key] = field
 		} else if (is.linkToMedia(field)) {
+			// Link to media
 			const linkToMedia = onAsset(field).asLinkToMedia()
 
 			dependencies.push(linkToMedia)
 			result[key] = linkToMedia
 		} else if (is.rtImageNode(field)) {
+			// Rich text image nodes
 			const rtImageNode = onAsset(field).asRTImageNode()
 
 			if (field.linkTo) {
@@ -61,6 +62,7 @@ export const prepareMigrationRecord = <TRecord extends Record<string, unknown>>(
 			dependencies.push(rtImageNode)
 			result[key] = rtImageNode
 		} else if (is.image(field)) {
+			// Image fields
 			const image = onAsset(field).asImage()
 
 			const {
@@ -75,25 +77,21 @@ export const prepareMigrationRecord = <TRecord extends Record<string, unknown>>(
 
 			for (const name in thumbnails) {
 				if (is.image(thumbnails[name])) {
+					// Node thumbnails dependencies are tracked internally
 					image.addThumbnail(name, onAsset(thumbnails[name]).asImage())
 				}
 			}
 
 			dependencies.push(image)
 			result[key] = image
-		} else if (
-			is.contentRelationship(field) ||
-			is.document(field) ||
-			field instanceof MigrationDocument ||
-			typeof field === "function"
-		) {
-			const contentRelationship = new MigrationContentRelationship(
-				field as UnresolvedMigrationContentRelationshipConfig,
-			)
+		} else if (is.contentRelationship(field)) {
+			// Content relationships
+			const contentRelationship = new MigrationContentRelationship(field)
 
 			dependencies.push(contentRelationship)
 			result[key] = contentRelationship
 		} else if (Array.isArray(field)) {
+			// Traverse arrays
 			const array = []
 
 			for (const item of field) {
@@ -106,12 +104,14 @@ export const prepareMigrationRecord = <TRecord extends Record<string, unknown>>(
 
 			result[key] = array
 		} else if (field && typeof field === "object") {
+			// Traverse objects
 			const { record, dependencies: fieldDependencies } =
 				prepareMigrationRecord({ ...field }, onAsset)
 
 			dependencies.push(...fieldDependencies)
 			result[key] = record
 		} else {
+			// Primitives
 			result[key] = field
 		}
 	}

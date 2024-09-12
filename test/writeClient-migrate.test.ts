@@ -37,8 +37,7 @@ it.concurrent("performs migration", async (ctx) => {
 
 	const migration = prismic.createMigration()
 
-	const documentFoo: prismic.PrismicMigrationDocument =
-		ctx.mock.value.document()
+	const documentFoo: prismic.MigrationDocumentValue = ctx.mock.value.document()
 	documentFoo.data = {
 		image: migration.createAsset("foo", "foo.png"),
 		link: () => migration.getByUID("bar", "bar"),

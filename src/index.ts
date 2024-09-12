@@ -328,7 +328,7 @@ export type {
 // Migrations - Types representing Prismic Migration API content values.
 export type {
 	MigrationDocument,
-	PrismicMigrationDocument,
+	MigrationDocumentValue,
 	RichTextFieldWithMigrationField,
 } from "./types/migration/Document"
 
@@ -337,7 +337,6 @@ export type {
 	MigrationLinkToMedia,
 	MigrationRTImageNode,
 } from "./types/migration/Asset"
-
 export type { MigrationContentRelationship } from "./types/migration/ContentRelationship"
 
 // API - Types representing Prismic Rest API V2 responses.
