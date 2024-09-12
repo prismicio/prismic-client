@@ -11,7 +11,7 @@ import type { FilledLinkToMediaField } from "../types/value/linkToMedia"
 import * as is from "./isValue"
 
 /**
- * Replaces existings assets and links in a record of Prismic fields get all
+ * Replaces existings assets and links in a record of Prismic fields and get all
  * dependencies to them.
  *
  * @typeParam TRecord - Record of values to work with.
@@ -40,7 +40,9 @@ export const prepareMigrationRecord = <TRecord extends Record<string, unknown>>(
 			result[key] = field
 		} else if (is.linkToMedia(field)) {
 			// Link to media
-			const linkToMedia = onAsset(field).asLinkToMedia()
+			// TODO: Remove when link text PR is merged
+			// @ts-expect-error - Future-proofing for link text
+			const linkToMedia = onAsset(field).asLinkToMedia(field.text)
 
 			dependencies.push(linkToMedia)
 			result[key] = linkToMedia
@@ -86,7 +88,12 @@ export const prepareMigrationRecord = <TRecord extends Record<string, unknown>>(
 			result[key] = image
 		} else if (is.contentRelationship(field)) {
 			// Content relationships
-			const contentRelationship = new MigrationContentRelationship(field)
+			const contentRelationship = new MigrationContentRelationship(
+				field,
+				// TODO: Remove when link text PR is merged
+				// @ts-expect-error - Future-proofing for link text
+				field.text,
+			)
 
 			dependencies.push(contentRelationship)
 			result[key] = contentRelationship

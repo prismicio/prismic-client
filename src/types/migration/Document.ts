@@ -3,7 +3,7 @@ import type { AnyRegularField } from "../value/types"
 import type { FilledContentRelationshipField } from "../value/contentRelationship"
 import type { PrismicDocument } from "../value/document"
 import type { GroupField } from "../value/group"
-import type { ImageField } from "../value/image"
+import type { FilledImageFieldImage } from "../value/image"
 import type { FilledLinkToMediaField } from "../value/linkToMedia"
 import type {
 	RTBlockNode,
@@ -77,7 +77,7 @@ export type RichTextFieldWithMigrationField<
 type RegularFieldWithMigrationField<
 	TField extends AnyRegularField = AnyRegularField,
 > =
-	| (TField extends ImageField
+	| (TField extends FilledImageFieldImage
 			? MigrationImage | undefined
 			: TField extends FilledLinkToMediaField
 				? MigrationLinkToMedia | undefined
@@ -163,9 +163,9 @@ type MakeUIDOptional<TMigrationDocument extends { uid: string | null }> =
 		: Omit<TMigrationDocument, "uid"> & Partial<Pick<TMigrationDocument, "uid">>
 
 /**
- * A Prismic document compatible with the Migration API.
+ * A Prismic document value compatible with the Migration API.
  *
- * @see More details on the migraiton API: {@link https://prismic.io/docs/migration-api-technical-reference}
+ * @see More details on the Migration API: {@link https://prismic.io/docs/migration-api-technical-reference}
  */
 export type MigrationDocumentValue<
 	TDocument extends PrismicDocument = PrismicDocument,
@@ -223,7 +223,7 @@ export type MigrationDocumentValue<
 /**
  * Parameters used when creating a Prismic document with the Migration API.
  *
- * @see More details on the migraiton API: {@link https://prismic.io/docs/migration-api-technical-reference}
+ * @see More details on the Migration API: {@link https://prismic.io/docs/migration-api-technical-reference}
  */
 export type MigrationDocumentParams = {
 	/**
@@ -240,13 +240,53 @@ export type MigrationDocumentParams = {
 	masterLanguageDocument?: MigrationContentRelationship
 }
 
+/**
+ * A Prismic migration document instance.
+ *
+ * @see More details on the Migration API: {@link https://prismic.io/docs/migration-api-technical-reference}
+ */
 export class MigrationDocument<
 	TDocument extends PrismicDocument = PrismicDocument,
 > {
+	/**
+	 * The document value to be sent to the Migration API.
+	 */
 	value: MigrationDocumentValue<TDocument>
-	params: MigrationDocumentParams
-	dependencies: MigrationField[]
 
+	/**
+	 * Parameters to create/update the document with on the Migration API.
+	 */
+	params: MigrationDocumentParams
+
+	/**
+	 * Asset and content relationship fields that this document depends on.
+	 */
+	#dependencies: MigrationField[]
+
+	/**
+	 * The mode to use when creating or updating the document.
+	 *
+	 * - `auto`: Automatically determines if the document should be created or
+	 *   updated on the document's existence on the repository's Document API.
+	 * - `update`: Forces the document to only be updated. This is useful when the
+	 *   document only exists within the migration release which cannot be
+	 *   queried.
+	 *
+	 * @internal
+	 */
+	_mode: "auto" | "update" = "auto"
+
+	/**
+	 * Creates a Prismic migration document instance.
+	 *
+	 * @param value - The document value to be sent to the Migration API.
+	 * @param params - Parameters to create/update the document with on the
+	 *   Migration API.
+	 * @param dependencies - Asset and content relationship fields that this
+	 *   document depends on.
+	 *
+	 * @returns A Prismic migration document instance.
+	 */
 	constructor(
 		value: MigrationDocumentValue<TDocument>,
 		params: MigrationDocumentParams,
@@ -254,21 +294,26 @@ export class MigrationDocument<
 	) {
 		this.value = value
 		this.params = params
-		this.dependencies = dependencies
+		this.#dependencies = dependencies
 	}
 
 	/**
+	 * Resolves each dependencies of the document with the provided maps.
+	 *
+	 * @param args - A map of documents and a map of assets to resolve content
+	 *   with.
+	 *
 	 * @internal
 	 */
 	async _resolve(args: ResolveArgs): Promise<void> {
-		for (const dependency of this.dependencies) {
+		for (const dependency of this.#dependencies) {
 			await dependency._resolve(args)
 		}
 	}
 }
 
 /**
- * A map of document IDs, documents, and migraiton documents to content
+ * A map of document IDs, documents, and migration documents to content
  * relationship field used to resolve content relationships when patching
  * migration Prismic documents.
  *

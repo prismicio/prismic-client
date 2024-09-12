@@ -103,46 +103,91 @@ export type MigrationAssetConfig = {
 	tags?: string[]
 }
 
+/**
+ * A migration asset used with the Prismic Migration API.
+ *
+ * @typeParam TImageLike - Type of the image-like value.
+ */
 export abstract class MigrationAsset<
-	TField extends ImageLike = ImageLike,
-> extends MigrationField<TField, ImageLike> {
-	config: MigrationAssetConfig
+	TImageLike extends ImageLike = ImageLike,
+> extends MigrationField<TImageLike, ImageLike> {
+	/**
+	 * Configuration of the asset.
+	 *
+	 * @internal
+	 */
+	_config: MigrationAssetConfig
 
+	/**
+	 * Creates a migration asset used with the Prismic Migration API.
+	 *
+	 * @param config - Configuration of the asset.
+	 * @param initialField - The initial field value if any.
+	 *
+	 * @returns A migration asset instance.
+	 */
 	constructor(config: MigrationAssetConfig, initialField?: ImageLike) {
 		super(initialField)
 
-		this.config = config
+		this._config = config
 	}
 
+	/**
+	 * Marks the migration asset instance to be serialized as an image field.
+	 *
+	 * @returns A migration image instance.
+	 */
 	asImage(): MigrationImage {
-		return new MigrationImage(this.config, this._initialField)
+		return new MigrationImage(this._config, this._initialField)
 	}
 
+	/**
+	 * Marks the migration asset instance to be serialized as a link to media
+	 * field.
+	 *
+	 * @param text - Link text for the link to media field if any.
+	 *
+	 * @returns A migration link to media instance.
+	 */
 	asLinkToMedia(text?: string): MigrationLinkToMedia {
-		return new MigrationLinkToMedia(this.config, this._initialField, text)
+		return new MigrationLinkToMedia(this._config, text, this._initialField)
 	}
 
+	/**
+	 * Marks the migration asset instance to be serialized as a rich text image
+	 * node.
+	 *
+	 * @param linkTo - Image node's link if any.
+	 *
+	 * @returns A migration rich text image node instance.
+	 */
 	asRTImageNode(
 		linkTo?:
 			| MigrationLinkToMedia
 			| MigrationContentRelationship
 			| FilledLinkToWebField,
 	): MigrationRTImageNode {
-		return new MigrationRTImageNode(this.config, this._initialField, linkTo)
+		return new MigrationRTImageNode(this._config, linkTo, this._initialField)
 	}
 }
 
 /**
- * A map of asset IDs to asset used to resolve assets when patching migration
- * Prismic documents.
- *
- * @internal
+ * A migration image used with the Prismic Migration API.
  */
-export type AssetMap = Map<MigrationAssetConfig["id"], Asset>
-
 export class MigrationImage extends MigrationAsset<FilledImageFieldImage> {
+	/**
+	 * Thumbnails of the image.
+	 */
 	#thumbnails: Record<string, MigrationImage> = {}
 
+	/**
+	 * Adds a thumbnail to the migration image instance.
+	 *
+	 * @param name - Name of the thumbnail.
+	 * @param thumbnail - Thumbnail to add as a migration image instance.
+	 *
+	 * @returns The current migration image instance, useful for chaining.
+	 */
 	addThumbnail(name: string, thumbnail: MigrationImage): this {
 		this.#thumbnails[name] = thumbnail
 
@@ -150,7 +195,7 @@ export class MigrationImage extends MigrationAsset<FilledImageFieldImage> {
 	}
 
 	async _resolve({ assets, documents }: ResolveArgs): Promise<void> {
-		const asset = assets.get(this.config.id)
+		const asset = assets.get(this._config.id)
 
 		if (asset) {
 			this._field = assetToImage(asset, this._initialField)
@@ -167,15 +212,31 @@ export class MigrationImage extends MigrationAsset<FilledImageFieldImage> {
 	}
 }
 
+/**
+ * A migration link to media used with the Prismic Migration API.
+ */
 export class MigrationLinkToMedia extends MigrationAsset<
 	LinkToMediaField<"filled">
 > {
+	/**
+	 * Link text for the link to media field if any.
+	 */
 	text?: string
 
+	/**
+	 * Creates a migration link to media instance used with the Prismic Migration
+	 * API.
+	 *
+	 * @param config - Configuration of the asset.
+	 * @param text - Link text for the link to media field if any.
+	 * @param initialField - The initial field value if any.
+	 *
+	 * @returns A migration link to media instance.
+	 */
 	constructor(
 		config: MigrationAssetConfig,
-		initialField?: ImageLike,
 		text?: string,
+		initialField?: ImageLike,
 	) {
 		super(config, initialField)
 
@@ -183,7 +244,7 @@ export class MigrationLinkToMedia extends MigrationAsset<
 	}
 
 	_resolve({ assets }: ResolveArgs): void {
-		const asset = assets.get(this.config.id)
+		const asset = assets.get(this._config.id)
 
 		if (asset) {
 			this._field = {
@@ -204,19 +265,35 @@ export class MigrationLinkToMedia extends MigrationAsset<
 	}
 }
 
+/**
+ * A migration rich text image node used with the Prismic Migration API.
+ */
 export class MigrationRTImageNode extends MigrationAsset<RTImageNode> {
+	/**
+	 * Image node's link if any.
+	 */
 	linkTo?:
 		| MigrationLinkToMedia
 		| MigrationContentRelationship
 		| FilledLinkToWebField
 
+	/**
+	 * Creates a migration rich text image node instance used with the Prismic
+	 * Migration API.
+	 *
+	 * @param config - Configuration of the asset.
+	 * @param linkTo - Image node's link if any.
+	 * @param initialField - The initial field value if any.
+	 *
+	 * @returns A migration rich text image node instance.
+	 */
 	constructor(
 		config: MigrationAssetConfig,
-		initialField?: ImageLike,
 		linkTo?:
 			| MigrationLinkToMedia
 			| MigrationContentRelationship
 			| FilledLinkToWebField,
+		initialField?: ImageLike,
 	) {
 		super(config, initialField)
 
@@ -224,7 +301,7 @@ export class MigrationRTImageNode extends MigrationAsset<RTImageNode> {
 	}
 
 	async _resolve({ assets, documents }: ResolveArgs): Promise<void> {
-		const asset = assets.get(this.config.id)
+		const asset = assets.get(this._config.id)
 
 		if (this.linkTo instanceof MigrationField) {
 			await this.linkTo._resolve({ assets, documents })
@@ -242,3 +319,11 @@ export class MigrationRTImageNode extends MigrationAsset<RTImageNode> {
 		}
 	}
 }
+
+/**
+ * A map of asset IDs to asset used to resolve assets when patching migration
+ * Prismic documents.
+ *
+ * @internal
+ */
+export type AssetMap = Map<MigrationAssetConfig["id"], Asset>

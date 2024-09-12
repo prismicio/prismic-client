@@ -531,10 +531,10 @@ export class WriteClient<
 
 		let i = 0
 		let created = 0
-		for (const migrationDocument of sortedMigrationDocuments) {
+		for (const document of sortedMigrationDocuments) {
 			if (
-				migrationDocument.value.id &&
-				documents.has(migrationDocument.value.id)
+				document.value.id &&
+				(document._mode === "update" || documents.has(document.value.id))
 			) {
 				reporter?.({
 					type: "documents:skipping",
@@ -543,15 +543,12 @@ export class WriteClient<
 						current: ++i,
 						remaining: sortedMigrationDocuments.length - i,
 						total: sortedMigrationDocuments.length,
-						document: migrationDocument,
+						document: document,
 					},
 				})
 
 				// Index the migration document
-				documents.set(
-					migrationDocument,
-					documents.get(migrationDocument.value.id)!,
-				)
+				documents.set(document, documents.get(document.value.id)!)
 			} else {
 				created++
 				reporter?.({
@@ -560,30 +557,29 @@ export class WriteClient<
 						current: ++i,
 						remaining: sortedMigrationDocuments.length - i,
 						total: sortedMigrationDocuments.length,
-						document: migrationDocument,
+						document: document,
 					},
 				})
 
 				// Resolve master language document ID for non-master locale documents
 				let masterLanguageDocumentID: string | undefined
-				if (migrationDocument.value.lang !== masterLocale) {
-					if (migrationDocument.params.masterLanguageDocument) {
-						const link = migrationDocument.params.masterLanguageDocument
+				if (document.value.lang !== masterLocale) {
+					if (document.params.masterLanguageDocument) {
+						const link = document.params.masterLanguageDocument
 
 						await link._resolve({ documents, assets: new Map() })
 						masterLanguageDocumentID = link._field?.id
-					} else if (migrationDocument.value.alternate_languages) {
-						masterLanguageDocumentID =
-							migrationDocument.value.alternate_languages.find(
-								({ lang }) => lang === masterLocale,
-							)?.id
+					} else if (document.value.alternate_languages) {
+						masterLanguageDocumentID = document.value.alternate_languages.find(
+							({ lang }) => lang === masterLocale,
+						)?.id
 					}
 				}
 
 				const { id } = await this.createDocument(
 					// We'll upload docuements data later on.
-					{ ...migrationDocument.value, data: {} },
-					migrationDocument.params.documentTitle,
+					{ ...document.value, data: {} },
+					document.params.documentTitle,
 					{
 						masterLanguageDocumentID,
 						...fetchParams,
@@ -591,13 +587,13 @@ export class WriteClient<
 				)
 
 				// Index old ID for Prismic to Prismic migration
-				if (migrationDocument.value.id) {
-					documents.set(migrationDocument.value.id, {
-						...migrationDocument.value,
+				if (document.value.id) {
+					documents.set(document.value.id, {
+						...document.value,
 						id,
 					})
 				}
-				documents.set(migrationDocument, { ...migrationDocument.value, id })
+				documents.set(document, { ...document.value, id })
 			}
 		}
 
@@ -633,29 +629,29 @@ export class WriteClient<
 		}: { reporter?: (event: MigrateReporterEvents) => void } & FetchParams = {},
 	): Promise<void> {
 		let i = 0
-		for (const migrationDocument of migration._documents) {
+		for (const document of migration._documents) {
 			reporter?.({
 				type: "documents:updating",
 				data: {
 					current: ++i,
 					remaining: migration._documents.length - i,
 					total: migration._documents.length,
-					document: migrationDocument,
+					document: document,
 				},
 			})
 
-			const { id, uid } = documents.get(migrationDocument)!
-			await migrationDocument._resolve({ assets, documents })
+			const { id, uid } = documents.get(document)!
+			await document._resolve({ assets, documents })
 
 			await this.updateDocument(
 				id,
 				// We need to forward again document name and tags to update them
 				// in case the document already existed during the previous step.
 				{
-					documentTitle: migrationDocument.params.documentTitle,
+					documentTitle: document.params.documentTitle,
 					uid,
-					tags: migrationDocument.value.tags,
-					data: migrationDocument.value.data,
+					tags: document.value.tags,
+					data: document.value.data,
 				},
 				fetchParams,
 			)
@@ -1025,8 +1021,8 @@ export class WriteClient<
 	 *
 	 * @typeParam TType - Type of Prismic documents to create.
 	 *
-	 * @param document - The document data to create.
-	 * @param documentTitle - The name of the document to create which will be
+	 * @param document - The document to create.
+	 * @param documentTitle - The title of the document to create which will be
 	 *   displayed in the editor.
 	 * @param params - Document master language document ID and additional fetch
 	 *   parameters.
@@ -1071,7 +1067,7 @@ export class WriteClient<
 	 * @typeParam TType - Type of Prismic documents to update.
 	 *
 	 * @param id - The ID of the document to update.
-	 * @param document - The document data to update.
+	 * @param document - The document content to update.
 	 * @param params - Additional fetch parameters.
 	 *
 	 * @see Prismic Migration API technical reference: {@link https://prismic.io/docs/migration-api-technical-reference}

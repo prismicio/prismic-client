@@ -77,7 +77,48 @@ it.concurrent("discovers existing documents", async (ctx) => {
 	})
 })
 
-it.concurrent("skips creating existing documents", async (ctx) => {
+it.concurrent("skips creating existing documents (update)", async (ctx) => {
+	const client = createTestWriteClient({ ctx })
+
+	const queryResponse = createPagedQueryResponses({
+		ctx,
+		pages: 1,
+		pageSize: 1,
+	})
+	const document = queryResponse[0].results[0]
+
+	mockPrismicRestAPIV2({ ctx, queryResponse })
+	mockPrismicAssetAPI({ ctx, client })
+	mockPrismicMigrationAPI({ ctx, client, existingDocuments: [document] })
+
+	const migration = prismic.createMigration()
+
+	const migrationDocument = migration.updateDocument(document, "foo")
+
+	const reporter = vi.fn()
+
+	await client.migrate(migration, { reporter })
+
+	expect(reporter).toHaveBeenCalledWith({
+		type: "documents:skipping",
+		data: {
+			reason: "already exists",
+			current: 1,
+			remaining: 0,
+			total: 1,
+			document: migrationDocument,
+		},
+	})
+	expect(reporter).toHaveBeenCalledWith({
+		type: "documents:created",
+		data: {
+			created: 0,
+			documents: expect.anything(),
+		},
+	})
+})
+
+it.concurrent("skips creating existing documents (auto)", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
 	const queryResponse = createPagedQueryResponses({
