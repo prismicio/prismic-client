@@ -71,7 +71,10 @@ export class WriteClient<
 			...doc.document,
 			data: documentData,
 			title: doc.title,
-			alternate_language_id: alternateLanguageDocument?.id,
+			alternate_language_id:
+				"id" in alternateLanguageDocument
+					? alternateLanguageDocument.id
+					: undefined,
 		}
 
 		const response = await this.#fetch(
