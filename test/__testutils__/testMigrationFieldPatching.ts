@@ -22,12 +22,15 @@ type GetDataArgs = {
 	migration: prismic.Migration
 	existingAssets: Asset[]
 	existingDocuments: prismic.PrismicDocument[]
-	migrationDocuments: prismic.MigrationDocument[]
+	migrationDocuments: {
+		other: prismic.PrismicMigrationDocument
+		otherRepository: prismic.PrismicMigrationDocument
+	}
 	mockedDomain: string
 }
 
 type InternalTestMigrationFieldPatchingArgs = {
-	getData: (args: GetDataArgs) => prismic.MigrationDocumentValue["data"]
+	getData: (args: GetDataArgs) => prismic.ExistingPrismicDocument["data"]
 	expectStrictEqual?: boolean
 }
 
@@ -51,11 +54,15 @@ const internalTestMigrationFieldPatching = (
 		})
 		queryResponse[0].results[0].id = "id-existing"
 
-		const otherDocument = {
+		const { id: _id, ...otherDocument } = {
 			...ctx.mock.value.document(),
 			uid: ctx.mock.value.keyText(),
 		}
-		const newDocument = ctx.mock.value.document()
+		const otherRepositoryDocument = {
+			...ctx.mock.value.document(),
+			uid: ctx.mock.value.keyText(),
+		}
+		const { id: __id, ...newDocument } = ctx.mock.value.document()
 
 		const newID = "id-new"
 
@@ -68,7 +75,11 @@ const internalTestMigrationFieldPatching = (
 		const { documentsDatabase } = mockPrismicMigrationAPI({
 			ctx,
 			client,
-			newDocuments: [{ id: "id-migration" }, { id: newID }],
+			newDocuments: [
+				{ id: "id-other" },
+				{ id: "id-other-repository" },
+				{ id: newID },
+			],
 		})
 
 		const mockedDomain = `https://${client.repositoryName}.example.com`
@@ -85,12 +96,21 @@ const internalTestMigrationFieldPatching = (
 			"other",
 		)
 
+		const migrationOtherRepositoryDocument =
+			migration.createDocumentFromPrismic(
+				otherRepositoryDocument,
+				"other-repository",
+			)
+
 		newDocument.data = args.getData({
 			ctx,
 			migration,
 			existingAssets: assetsDatabase.flat(),
 			existingDocuments: queryResponse[0].results,
-			migrationDocuments: [migrationOtherDocument],
+			migrationDocuments: {
+				other: migrationOtherDocument,
+				otherRepository: migrationOtherRepositoryDocument,
+			},
 			mockedDomain,
 		})
 
@@ -115,7 +135,7 @@ const internalTestMigrationFieldPatching = (
 
 type TestMigrationFieldPatchingFactoryCases = Record<
 	string,
-	(args: GetDataArgs) => prismic.MigrationDocumentValue["data"][string]
+	(args: GetDataArgs) => prismic.ExistingPrismicDocument["data"][string]
 >
 
 export const testMigrationFieldPatching = (

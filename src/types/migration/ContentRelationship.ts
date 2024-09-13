@@ -2,7 +2,7 @@ import type { FilledContentRelationshipField } from "../value/contentRelationshi
 import type { PrismicDocument } from "../value/document"
 import { LinkType } from "../value/link"
 
-import type { MigrationDocument } from "./Document"
+import type { PrismicMigrationDocument } from "./Document"
 import type { ResolveArgs } from "./Field"
 import { MigrationField } from "./Field"
 
@@ -13,7 +13,7 @@ type MigrationContentRelationshipConfig<
 	TDocuments extends PrismicDocument = PrismicDocument,
 > =
 	| TDocuments
-	| MigrationDocument<TDocuments>
+	| PrismicMigrationDocument<TDocuments>
 	| FilledContentRelationshipField
 	| undefined
 

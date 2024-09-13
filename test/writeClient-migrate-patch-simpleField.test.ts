@@ -1,5 +1,7 @@
 import { testMigrationFieldPatching } from "./__testutils__/testMigrationFieldPatching"
 
+import { RichTextNodeType } from "../src"
+
 testMigrationFieldPatching(
 	"does not patch simple fields",
 	{
@@ -10,7 +12,9 @@ testMigrationFieldPatching(
 		number: ({ ctx }) => ctx.mock.value.number({ state: "filled" }),
 		keyText: ({ ctx }) => ctx.mock.value.keyText({ state: "filled" }),
 		richTextSimple: ({ ctx }) =>
-			ctx.mock.value.richText({ state: "filled", pattern: "long" }),
+			ctx.mock.value
+				.richText({ state: "filled", pattern: "long" })
+				.filter((node) => node.type !== RichTextNodeType.image),
 		select: ({ ctx }) =>
 			ctx.mock.value.select({
 				model: ctx.mock.model.select({ options: ["foo", "bar"] }),

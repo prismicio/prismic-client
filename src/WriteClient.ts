@@ -26,7 +26,8 @@ import type { AssetMap, MigrationAssetConfig } from "./types/migration/Asset"
 import type {
 	DocumentMap,
 	MigrationDocument,
-	MigrationDocumentValue,
+	PendingPrismicDocument,
+	PrismicMigrationDocument,
 } from "./types/migration/Document"
 import type { PrismicDocument } from "./types/value/document"
 
@@ -115,13 +116,13 @@ type MigrateReporterEventMap = {
 		current: number
 		remaining: number
 		total: number
-		document: MigrationDocument
+		document: PrismicMigrationDocument
 	}
 	"documents:creating": {
 		current: number
 		remaining: number
 		total: number
-		document: MigrationDocument
+		document: PrismicMigrationDocument
 	}
 	"documents:created": {
 		created: number
@@ -131,7 +132,7 @@ type MigrateReporterEventMap = {
 		current: number
 		remaining: number
 		total: number
-		document: MigrationDocument
+		document: PrismicMigrationDocument
 	}
 	"documents:updated": {
 		updated: number
@@ -517,12 +518,12 @@ export class WriteClient<
 			documents.set(document.id, document)
 		}
 
-		const sortedMigrationDocuments: MigrationDocument<TDocuments>[] = []
+		const sortedMigrationDocuments: PrismicMigrationDocument<TDocuments>[] = []
 
 		// We create an array with non-master locale documents last because
 		// we need their master locale document to be created first.
 		for (const migrationDocument of migration._documents) {
-			if (migrationDocument.value.lang === masterLocale) {
+			if (migrationDocument.document.lang === masterLocale) {
 				sortedMigrationDocuments.unshift(migrationDocument)
 			} else {
 				sortedMigrationDocuments.push(migrationDocument)
@@ -531,24 +532,24 @@ export class WriteClient<
 
 		let i = 0
 		let created = 0
-		for (const document of sortedMigrationDocuments) {
-			if (
-				document.value.id &&
-				(document._mode === "update" || documents.has(document.value.id))
-			) {
+		for (const migrationDocument of sortedMigrationDocuments) {
+			if (migrationDocument.document.id) {
 				reporter?.({
 					type: "documents:skipping",
 					data: {
-						reason: "already exists",
+						reason: "exists",
 						current: ++i,
 						remaining: sortedMigrationDocuments.length - i,
 						total: sortedMigrationDocuments.length,
-						document: document,
+						document: migrationDocument,
 					},
 				})
 
 				// Index the migration document
-				documents.set(document, documents.get(document.value.id)!)
+				documents.set(
+					migrationDocument,
+					documents.get(migrationDocument.document.id)!,
+				)
 			} else {
 				created++
 				reporter?.({
@@ -557,29 +558,28 @@ export class WriteClient<
 						current: ++i,
 						remaining: sortedMigrationDocuments.length - i,
 						total: sortedMigrationDocuments.length,
-						document: document,
+						document: migrationDocument,
 					},
 				})
 
 				// Resolve master language document ID for non-master locale documents
 				let masterLanguageDocumentID: string | undefined
-				if (document.value.lang !== masterLocale) {
-					if (document.params.masterLanguageDocument) {
-						const link = document.params.masterLanguageDocument
+				if (migrationDocument.masterLanguageDocument) {
+					const link = migrationDocument.masterLanguageDocument
 
-						await link._resolve({ documents, assets: new Map() })
-						masterLanguageDocumentID = link._field?.id
-					} else if (document.value.alternate_languages) {
-						masterLanguageDocumentID = document.value.alternate_languages.find(
+					await link._resolve({ documents, assets: new Map() })
+					masterLanguageDocumentID = link._field?.id
+				} else if (migrationDocument.originalPrismicDocument) {
+					masterLanguageDocumentID =
+						migrationDocument.originalPrismicDocument.alternate_languages.find(
 							({ lang }) => lang === masterLocale,
 						)?.id
-					}
 				}
 
 				const { id } = await this.createDocument(
 					// We'll upload docuements data later on.
-					{ ...document.value, data: {} },
-					document.params.documentTitle,
+					{ ...migrationDocument.document, data: {} },
+					migrationDocument.title,
 					{
 						masterLanguageDocumentID,
 						...fetchParams,
@@ -587,13 +587,13 @@ export class WriteClient<
 				)
 
 				// Index old ID for Prismic to Prismic migration
-				if (document.value.id) {
-					documents.set(document.value.id, {
-						...document.value,
+				if (migrationDocument.originalPrismicDocument) {
+					documents.set(migrationDocument.originalPrismicDocument.id, {
+						...migrationDocument.document,
 						id,
 					})
 				}
-				documents.set(document, { ...document.value, id })
+				documents.set(migrationDocument, { ...migrationDocument.document, id })
 			}
 		}
 
@@ -629,30 +629,25 @@ export class WriteClient<
 		}: { reporter?: (event: MigrateReporterEvents) => void } & FetchParams = {},
 	): Promise<void> {
 		let i = 0
-		for (const document of migration._documents) {
+		for (const migrationDocument of migration._documents) {
 			reporter?.({
 				type: "documents:updating",
 				data: {
 					current: ++i,
 					remaining: migration._documents.length - i,
 					total: migration._documents.length,
-					document: document,
+					document: migrationDocument,
 				},
 			})
 
-			const { id, uid } = documents.get(document)!
-			await document._resolve({ assets, documents })
+			const { id } = documents.get(migrationDocument)!
+			await migrationDocument._resolve({ assets, documents })
 
 			await this.updateDocument(
 				id,
 				// We need to forward again document name and tags to update them
 				// in case the document already existed during the previous step.
-				{
-					documentTitle: document.params.documentTitle,
-					uid,
-					tags: document.value.tags,
-					data: document.value.data,
-				},
+				migrationDocument.document,
 				fetchParams,
 			)
 		}
@@ -1032,7 +1027,7 @@ export class WriteClient<
 	 * @see Prismic Migration API technical reference: {@link https://prismic.io/docs/migration-api-technical-reference}
 	 */
 	private async createDocument<TType extends TDocuments["type"]>(
-		document: MigrationDocumentValue<ExtractDocumentType<TDocuments, TType>>,
+		document: PendingPrismicDocument<ExtractDocumentType<TDocuments, TType>>,
 		documentTitle: string,
 		{
 			masterLanguageDocumentID,
@@ -1074,10 +1069,7 @@ export class WriteClient<
 	 */
 	private async updateDocument<TType extends TDocuments["type"]>(
 		id: string,
-		document: Pick<
-			MigrationDocumentValue<ExtractDocumentType<TDocuments, TType>>,
-			"uid" | "tags" | "data"
-		> & {
+		document: MigrationDocument<ExtractDocumentType<TDocuments, TType>> & {
 			documentTitle?: string
 		},
 		params?: FetchParams,

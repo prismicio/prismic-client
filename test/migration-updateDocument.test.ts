@@ -1,7 +1,7 @@
 import { expect, it } from "vitest"
 
 import * as prismic from "../src"
-import { MigrationDocument } from "../src/types/migration/Document"
+import { PrismicMigrationDocument } from "../src/types/migration/Document"
 
 it("updates a document", (ctx) => {
 	const migration = prismic.createMigration()
@@ -11,7 +11,7 @@ it("updates a document", (ctx) => {
 
 	migration.updateDocument(document, documentTitle)
 
-	const expectedDocument = new MigrationDocument(document, { documentTitle })
-	expectedDocument._mode = "update"
-	expect(migration._documents[0]).toStrictEqual(expectedDocument)
+	expect(migration._documents[0]).toStrictEqual(
+		new PrismicMigrationDocument(document, documentTitle, { dependencies: [] }),
+	)
 })

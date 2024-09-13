@@ -327,9 +327,10 @@ export type {
 
 // Migrations - Types representing Prismic Migration API content values.
 export type {
-	MigrationDocument,
-	MigrationDocumentValue,
-	RichTextFieldWithMigrationField,
+	PrismicMigrationDocument,
+	PendingPrismicDocument,
+	ExistingPrismicDocument,
+	InjectMigrationSpecificTypes,
 } from "./types/migration/Document"
 
 export type {

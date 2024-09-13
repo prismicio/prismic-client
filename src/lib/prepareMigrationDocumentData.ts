@@ -22,7 +22,10 @@ import * as is from "./isValue"
  * @returns An object containing the record with replaced assets and links and a
  *   list of dependencies found and/or created.
  */
-export const prepareMigrationRecord = <TRecord extends Record<string, unknown>>(
+export const prepareMigrationDocumentData = <
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	TRecord extends Record<any, any>,
+>(
 	record: TRecord,
 	onAsset: (
 		asset: FilledImageFieldImage | FilledLinkToMediaField,
@@ -52,7 +55,7 @@ export const prepareMigrationRecord = <TRecord extends Record<string, unknown>>(
 
 			if (field.linkTo) {
 				// Node `linkTo` dependency is tracked internally
-				rtImageNode.linkTo = prepareMigrationRecord(
+				rtImageNode.linkTo = prepareMigrationDocumentData(
 					{ linkTo: field.linkTo },
 					onAsset,
 				).record.linkTo as
@@ -103,7 +106,7 @@ export const prepareMigrationRecord = <TRecord extends Record<string, unknown>>(
 
 			for (const item of field) {
 				const { record, dependencies: itemDependencies } =
-					prepareMigrationRecord({ item }, onAsset)
+					prepareMigrationDocumentData({ item }, onAsset)
 
 				array.push(record.item)
 				dependencies.push(...itemDependencies)
@@ -113,7 +116,7 @@ export const prepareMigrationRecord = <TRecord extends Record<string, unknown>>(
 		} else if (field && typeof field === "object") {
 			// Traverse objects
 			const { record, dependencies: fieldDependencies } =
-				prepareMigrationRecord({ ...field }, onAsset)
+				prepareMigrationDocumentData({ ...field }, onAsset)
 
 			dependencies.push(...fieldDependencies)
 			result[key] = record

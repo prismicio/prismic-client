@@ -1,13 +1,24 @@
-import type {
-	FieldWithMigrationField,
-	RichTextBlockNodeWithMigrationField,
-} from "../types/migration/Document"
+import type { InjectMigrationSpecificTypes } from "../types/migration/Document"
 import type { FilledContentRelationshipField } from "../types/value/contentRelationship"
 import type { PrismicDocument } from "../types/value/document"
+import type { GroupField } from "../types/value/group"
 import type { ImageField } from "../types/value/image"
 import { LinkType } from "../types/value/link"
 import type { FilledLinkToMediaField } from "../types/value/linkToMedia"
 import { type RTImageNode, RichTextNodeType } from "../types/value/richText"
+import type { SliceZone } from "../types/value/sliceZone"
+import type { AnyRegularField } from "../types/value/types"
+
+/**
+ * Unknown value to check if it's a specific field type.
+ *
+ * @remarks
+ * Explicit types are added to help ensure narrowing is done effectively.
+ */
+type UnknownValue =
+	| PrismicDocument
+	| InjectMigrationSpecificTypes<AnyRegularField | GroupField | SliceZone>
+	| unknown
 
 /**
  * Checks if a value is a link to media field.
@@ -20,11 +31,7 @@ import { type RTImageNode, RichTextNodeType } from "../types/value/richText"
  * This is not an official helper function and it's only designed to work with internal processes.
  */
 export const linkToMedia = (
-	value:
-		| PrismicDocument
-		| FieldWithMigrationField
-		| RichTextBlockNodeWithMigrationField
-		| unknown,
+	value: UnknownValue,
 ): value is FilledLinkToMediaField => {
 	if (value && typeof value === "object" && !("version" in value)) {
 		if (
@@ -36,6 +43,8 @@ export const linkToMedia = (
 			"url" in value &&
 			"size" in value
 		) {
+			value
+
 			return true
 		}
 	}
@@ -54,11 +63,7 @@ export const linkToMedia = (
  * This is not an official helper function and it's only designed to work with internal processes.
  */
 const imageLike = (
-	value:
-		| PrismicDocument
-		| FieldWithMigrationField
-		| RichTextBlockNodeWithMigrationField
-		| unknown,
+	value: UnknownValue,
 ): value is ImageField<string, "filled"> | RTImageNode => {
 	if (
 		value &&
@@ -92,11 +97,7 @@ const imageLike = (
  * This is not an official helper function and it's only designed to work with internal processes.
  */
 export const image = (
-	value:
-		| PrismicDocument
-		| FieldWithMigrationField
-		| RichTextBlockNodeWithMigrationField
-		| unknown,
+	value: UnknownValue,
 ): value is ImageField<string, "filled"> => {
 	if (
 		imageLike(value) &&
@@ -120,13 +121,7 @@ export const image = (
  * @internal
  * This is not an official helper function and it's only designed to work with internal processes.
  */
-export const rtImageNode = (
-	value:
-		| PrismicDocument
-		| FieldWithMigrationField
-		| RichTextBlockNodeWithMigrationField
-		| unknown,
-): value is RTImageNode => {
+export const rtImageNode = (value: UnknownValue): value is RTImageNode => {
 	if (
 		imageLike(value) &&
 		"type" in value &&
@@ -151,11 +146,7 @@ export const rtImageNode = (
  * This is not an official helper function and it's only designed to work with internal processes.
  */
 export const contentRelationship = (
-	value:
-		| PrismicDocument
-		| FieldWithMigrationField
-		| RichTextBlockNodeWithMigrationField
-		| unknown,
+	value: UnknownValue,
 ): value is FilledContentRelationshipField => {
 	if (value && typeof value === "object" && !("version" in value)) {
 		if (

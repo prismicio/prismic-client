@@ -77,7 +77,7 @@ it.concurrent("discovers existing documents", async (ctx) => {
 	})
 })
 
-it.concurrent("skips creating existing documents (update)", async (ctx) => {
+it.concurrent("skips creating existing documents", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
 	const queryResponse = createPagedQueryResponses({
@@ -102,48 +102,7 @@ it.concurrent("skips creating existing documents (update)", async (ctx) => {
 	expect(reporter).toHaveBeenCalledWith({
 		type: "documents:skipping",
 		data: {
-			reason: "already exists",
-			current: 1,
-			remaining: 0,
-			total: 1,
-			document: migrationDocument,
-		},
-	})
-	expect(reporter).toHaveBeenCalledWith({
-		type: "documents:created",
-		data: {
-			created: 0,
-			documents: expect.anything(),
-		},
-	})
-})
-
-it.concurrent("skips creating existing documents (auto)", async (ctx) => {
-	const client = createTestWriteClient({ ctx })
-
-	const queryResponse = createPagedQueryResponses({
-		ctx,
-		pages: 1,
-		pageSize: 1,
-	})
-	const document = queryResponse[0].results[0]
-
-	mockPrismicRestAPIV2({ ctx, queryResponse })
-	mockPrismicAssetAPI({ ctx, client })
-	mockPrismicMigrationAPI({ ctx, client, existingDocuments: [document] })
-
-	const migration = prismic.createMigration()
-
-	const migrationDocument = migration.createDocument(document, "foo")
-
-	const reporter = vi.fn()
-
-	await client.migrate(migration, { reporter })
-
-	expect(reporter).toHaveBeenCalledWith({
-		type: "documents:skipping",
-		data: {
-			reason: "already exists",
+			reason: "exists",
 			current: 1,
 			remaining: 0,
 			total: 1,
@@ -162,7 +121,7 @@ it.concurrent("skips creating existing documents (auto)", async (ctx) => {
 it.concurrent("creates new documents", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
-	const document = ctx.mock.value.document()
+	const { id: _id, ...document } = ctx.mock.value.document()
 	const newDocument = { id: "foo" }
 
 	mockPrismicRestAPIV2({ ctx })
@@ -212,7 +171,7 @@ it.concurrent(
 		})
 
 		const masterLanguageDocument = queryResponse[0].results[0]
-		const document = ctx.mock.value.document()
+		const { id: _id, ...document } = ctx.mock.value.document()
 		const newDocument = {
 			id: "foo",
 			masterLanguageDocumentID: masterLanguageDocument.id,
@@ -260,21 +219,18 @@ it.concurrent(
 	async (ctx) => {
 		const client = createTestWriteClient({ ctx })
 
-		const masterLanguageDocument =
-			ctx.mock.value.document() as prismic.MigrationDocumentValue
-		const document = ctx.mock.value.document() as prismic.MigrationDocumentValue
+		const { id: masterLanguageDocumentID, ...masterLanguageDocument } =
+			ctx.mock.value.document()
+		const { id: documentID, ...document } = ctx.mock.value.document()
 		const newDocuments = [
 			{
-				id: masterLanguageDocument.id!,
+				id: masterLanguageDocumentID,
 			},
 			{
-				id: document.id!,
-				masterLanguageDocumentID: masterLanguageDocument.id!,
+				id: documentID,
+				masterLanguageDocumentID: masterLanguageDocumentID,
 			},
 		]
-
-		delete masterLanguageDocument.id
-		delete document.id
 
 		mockPrismicRestAPIV2({ ctx })
 		mockPrismicAssetAPI({ ctx, client })
@@ -323,7 +279,7 @@ it.concurrent(
 		})
 
 		const masterLanguageDocument = queryResponse[0].results[0]
-		const document = ctx.mock.value.document()
+		const { id: _id, ...document } = ctx.mock.value.document()
 		const newDocument = {
 			id: "foo",
 			masterLanguageDocumentID: masterLanguageDocument.id,
@@ -371,21 +327,18 @@ it.concurrent(
 	async (ctx) => {
 		const client = createTestWriteClient({ ctx })
 
-		const masterLanguageDocument =
-			ctx.mock.value.document() as prismic.MigrationDocumentValue
-		const document = ctx.mock.value.document() as prismic.MigrationDocumentValue
+		const { id: masterLanguageDocumentID, ...masterLanguageDocument } =
+			ctx.mock.value.document()
+		const { id: documentID, ...document } = ctx.mock.value.document()
 		const newDocuments = [
 			{
-				id: masterLanguageDocument.id!,
+				id: masterLanguageDocumentID,
 			},
 			{
-				id: document.id!,
-				masterLanguageDocumentID: masterLanguageDocument.id!,
+				id: documentID,
+				masterLanguageDocumentID: masterLanguageDocumentID,
 			},
 		]
-
-		delete masterLanguageDocument.id
-		delete document.id
 
 		mockPrismicRestAPIV2({ ctx })
 		mockPrismicAssetAPI({ ctx, client })
@@ -450,7 +403,10 @@ it.concurrent(
 
 		const migration = prismic.createMigration()
 
-		const migrationDocument = migration.createDocument(document, "foo")
+		const migrationDocument = migration.createDocumentFromPrismic(
+			document,
+			"foo",
+		)
 
 		let documents: DocumentMap | undefined
 		const reporter = vi.fn<(event: prismic.MigrateReporterEvents) => void>(
@@ -482,15 +438,16 @@ it.concurrent("creates master locale documents first", async (ctx) => {
 
 	const { repository, masterLocale } = createRepository(ctx)
 
-	const masterLanguageDocument = ctx.mock.value.document()
+	const { id: masterLanguageDocumentID, ...masterLanguageDocument } =
+		ctx.mock.value.document()
 	masterLanguageDocument.lang = masterLocale
-	const document = ctx.mock.value.document()
+	const { id: documentID, ...document } = ctx.mock.value.document()
 	const newDocuments = [
 		{
-			id: masterLanguageDocument.id,
+			id: masterLanguageDocumentID,
 		},
 		{
-			id: document.id,
+			id: documentID,
 		},
 	]
 

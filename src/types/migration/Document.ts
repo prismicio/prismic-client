@@ -1,21 +1,8 @@
-import type { AnyRegularField } from "../value/types"
-
 import type { FilledContentRelationshipField } from "../value/contentRelationship"
-import type { PrismicDocument } from "../value/document"
-import type { GroupField } from "../value/group"
+import type { PrismicDocument, PrismicDocumentWithUID } from "../value/document"
 import type { FilledImageFieldImage } from "../value/image"
 import type { FilledLinkToMediaField } from "../value/linkToMedia"
-import type {
-	RTBlockNode,
-	RTImageNode,
-	RTInlineNode,
-	RTLinkNode,
-	RTTextNode,
-	RichTextField,
-} from "../value/richText"
-import type { SharedSlice } from "../value/sharedSlice"
-import type { Slice } from "../value/slice"
-import type { SliceZone } from "../value/sliceZone"
+import type { RTImageNode } from "../value/richText"
 
 import type {
 	MigrationImage,
@@ -26,237 +13,110 @@ import type { MigrationContentRelationship } from "./ContentRelationship"
 import type { MigrationField, ResolveArgs } from "./Field"
 
 /**
- * A utility type that extends Rich text field node's spans with their migration
- * node equivalent.
- *
- * @typeParam TRTNode - Rich text text node type to convert.
- */
-type RichTextTextNodeWithMigrationField<
-	TRTNode extends RTTextNode = RTTextNode,
-> = Omit<TRTNode, "spans"> & {
-	spans: (
-		| RTInlineNode
-		| (Omit<RTLinkNode, "data"> & {
-				data: MigrationLinkToMedia | MigrationContentRelationship
-		  })
-	)[]
-}
-
-/**
- * A utility type that extends a Rich text field node with their migration node
- * equivalent.
- *
- * @typeParam TRTNode - Rich text block node type to convert.
- */
-export type RichTextBlockNodeWithMigrationField<
-	TRTNode extends RTBlockNode = RTBlockNode,
-> = TRTNode extends RTImageNode
-	? RTImageNode | MigrationRTImageNode
-	: TRTNode extends RTTextNode
-		? RichTextTextNodeWithMigrationField<TRTNode>
-		: TRTNode
-
-/**
- * A utility type that extends a Rich text field's nodes with their migration
- * node equivalent.
- *
- * @typeParam TField - Rich text field type to convert.
- */
-export type RichTextFieldWithMigrationField<
-	TField extends RichTextField = RichTextField,
-> = {
-	[Index in keyof TField]: RichTextBlockNodeWithMigrationField<TField[Index]>
-}
-
-/**
- * A utility type that extends a regular field with their migration field
- * equivalent.
- *
- * @typeParam TField - Regular field type to convert.
- */
-type RegularFieldWithMigrationField<
-	TField extends AnyRegularField = AnyRegularField,
-> =
-	| (TField extends FilledImageFieldImage
-			? MigrationImage | undefined
-			: TField extends FilledLinkToMediaField
-				? MigrationLinkToMedia | undefined
-				: TField extends FilledContentRelationshipField
-					? MigrationContentRelationship | undefined
-					: TField extends RichTextField
-						? RichTextFieldWithMigrationField<TField>
-						: never)
-	| TField
-
-/**
- * A utility type that extends a group's fields with their migration fields
- * equivalent.
- *
- * @typeParam TField - Group field type to convert.
- */
-type GroupFieldWithMigrationField<
-	TField extends GroupField | Slice["items"] | SharedSlice["items"] =
-		| GroupField
-		| Slice["items"]
-		| SharedSlice["items"],
-> = FieldsWithMigrationFields<TField[number]>[]
-
-type SliceWithMigrationField<
-	TField extends Slice | SharedSlice = Slice | SharedSlice,
-> = Omit<TField, "primary" | "items"> & {
-	primary: FieldsWithMigrationFields<TField["primary"]>
-	items: GroupFieldWithMigrationField<TField["items"]>
-}
-
-/**
- * A utility type that extends a SliceZone's slices fields with their migration
+ * A utility type that extends any fields in a record with their migration
  * fields equivalent.
  *
- * @typeParam TField - Field type to convert.
+ * @typeParam T - Type of the record to extend.
  */
-type SliceZoneWithMigrationField<TField extends SliceZone = SliceZone> =
-	SliceWithMigrationField<TField[number]>[]
+export type InjectMigrationSpecificTypes<T> = T extends RTImageNode
+	? T | MigrationRTImageNode | undefined
+	: T extends FilledImageFieldImage
+		? T | MigrationImage | undefined
+		: T extends FilledLinkToMediaField
+			? T | MigrationLinkToMedia | undefined
+			: T extends FilledContentRelationshipField
+				? T | MigrationContentRelationship | undefined
+				: // eslint-disable-next-line @typescript-eslint/no-explicit-any
+					T extends Record<any, any>
+					? { [P in keyof T]: InjectMigrationSpecificTypes<T[P]> }
+					: T extends Array<infer U>
+						? Array<InjectMigrationSpecificTypes<U>>
+						: T
 
 /**
- * A utility type that extends any field with their migration field equivalent.
- *
- * @typeParam TField - Field type to convert.
+ * A utility type that ties the type and data of a Prismic document, creating a
+ * strict union.
  */
-export type FieldWithMigrationField<
-	TField extends AnyRegularField | GroupField | SliceZone =
-		| AnyRegularField
-		| GroupField
-		| SliceZone,
-> = TField extends AnyRegularField
-	? RegularFieldWithMigrationField<TField>
-	: TField extends GroupField
-		? GroupFieldWithMigrationField<TField>
-		: TField extends SliceZone
-			? SliceZoneWithMigrationField<TField>
-			: never
-
-/**
- * A utility type that extends a record of fields with their migration fields
- * equivalent.
- *
- * @typeParam TFields - Type of the record of Prismic fields.
- */
-export type FieldsWithMigrationFields<
-	TFields extends Record<
-		string,
-		AnyRegularField | GroupField | SliceZone
-	> = Record<string, AnyRegularField | GroupField | SliceZone>,
-> = {
-	[Key in keyof TFields]: FieldWithMigrationField<TFields[Key]>
-}
-
-/**
- * Makes the UID of {@link MigrationDocumentValue} optional on custom types
- * without UID. TypeScript fails to infer correct types if done with a type
- * intersection.
- *
- * @internal
- */
-type MakeUIDOptional<TMigrationDocument extends { uid: string | null }> =
-	TMigrationDocument["uid"] extends string
-		? TMigrationDocument
-		: Omit<TMigrationDocument, "uid"> & Partial<Pick<TMigrationDocument, "uid">>
-
-/**
- * A Prismic document value compatible with the Migration API.
- *
- * @see More details on the Migration API: {@link https://prismic.io/docs/migration-api-technical-reference}
- */
-export type MigrationDocumentValue<
-	TDocument extends PrismicDocument = PrismicDocument,
-> =
-	TDocument extends PrismicDocument<infer TData, infer TType, infer TLang>
-		? MakeUIDOptional<{
+type TiedDocumentTypeAndData<TDocument extends PrismicDocument> =
+	TDocument extends PrismicDocument<infer TData, infer TType>
+		? {
 				/**
 				 * Type of the document.
 				 */
 				type: TType
 
 				/**
-				 * The unique identifier for the document. Guaranteed to be unique among
-				 * all Prismic documents of the same type.
-				 */
-				uid: TDocument["uid"]
-
-				/**
-				 * Language of document.
-				 */
-				lang: TLang
-
-				/**
-				 * The identifier for the document. Used for compatibily with the
-				 * content API.
-				 *
-				 * @internal
-				 */
-				// Made optional compared to the original type.
-				id?: TDocument["id"]
-
-				/**
-				 * Alternate language documents from Prismic content API. Used as a
-				 * substitute to the `masterLanguageDocument` options when the latter is
-				 * not available.
-				 *
-				 * @internal
-				 */
-				// Made optional compared to the original type.
-				alternate_languages?: TDocument["alternate_languages"]
-
-				/**
-				 * Tags associated with document.
-				 */
-				// Made optional compared to the original type.
-				tags?: TDocument["tags"]
-
-				/**
 				 * Data contained in the document.
 				 */
-				data: FieldsWithMigrationFields<TData>
-			}>
+				data: InjectMigrationSpecificTypes<TData>
+			} & (TDocument extends PrismicDocumentWithUID
+				? Pick<TDocument, "uid">
+				: Partial<Pick<TDocument, "uid">>)
 		: never
 
 /**
- * Parameters used when creating a Prismic document with the Migration API.
+ * A pending Prismic document to be created with the Migration API.
  *
- * @see More details on the Migration API: {@link https://prismic.io/docs/migration-api-technical-reference}
+ * @typeParam TDocument - Type of the Prismic document.
  */
-export type MigrationDocumentParams = {
-	/**
-	 * Name of the document displayed in the editor.
-	 */
-	documentTitle: string
+export type PendingPrismicDocument<
+	TDocument extends PrismicDocument = PrismicDocument,
+> = Pick<TDocument, "lang"> &
+	Partial<Pick<TDocument, "tags">> &
+	TiedDocumentTypeAndData<TDocument>
 
-	/**
-	 * A link to the master language document.
-	 */
-	// We're forced to inline `ContentRelationshipMigrationField` here, otherwise
-	// it creates a circular reference to itself which makes TypeScript unhappy.
-	// (but I think it's weird and it doesn't make sense :thinking:)
-	masterLanguageDocument?: MigrationContentRelationship
-}
+/**
+ * An existing Prismic document to be updated with the Migration API.
+ *
+ * @typeParam TDocument - Type of the Prismic document.
+ */
+export type ExistingPrismicDocument<
+	TDocument extends PrismicDocument = PrismicDocument,
+> = Omit<TDocument, "uid" | "type" | "data"> &
+	TiedDocumentTypeAndData<TDocument>
+
+/**
+ * A Prismic document to be sent to the Migration API.
+ *
+ * @typeParam TDocument - Type of the Prismic document.
+ */
+export type MigrationDocument<
+	TDocument extends PrismicDocument = PrismicDocument,
+> = PendingPrismicDocument<TDocument> | ExistingPrismicDocument<TDocument>
 
 /**
  * A Prismic migration document instance.
  *
- * @see More details on the Migration API: {@link https://prismic.io/docs/migration-api-technical-reference}
+ * @typeParam TDocument - Type of the Prismic document.
  */
-export class MigrationDocument<
+export class PrismicMigrationDocument<
 	TDocument extends PrismicDocument = PrismicDocument,
 > {
 	/**
-	 * The document value to be sent to the Migration API.
+	 * The document to be sent to the Migration API.
 	 */
-	value: MigrationDocumentValue<TDocument>
+	document: MigrationDocument<TDocument> & Partial<Pick<TDocument, "id">>
 
 	/**
-	 * Parameters to create/update the document with on the Migration API.
+	 * The name of the document displayed in the editor.
 	 */
-	params: MigrationDocumentParams
+	title: string
+
+	// We're forced to inline `ContentRelationshipMigrationField` here, otherwise
+	// it creates a circular reference to itself which makes TypeScript unhappy.
+	// (but I think it's weird and it doesn't make sense :thinking:)
+	masterLanguageDocument?: MigrationContentRelationship
+
+	/**
+	 * Original Prismic document when the migration document came from another
+	 * Prismic repository.
+	 *
+	 * @remarks
+	 * When migrating a document from another repository, one might want to alter
+	 * it with migration specific types, hence accepting an
+	 * `ExistingPrismicDocument` instead of a regular `PrismicDocument`.
+	 */
+	originalPrismicDocument?: ExistingPrismicDocument<PrismicDocument>
 
 	/**
 	 * Asset and content relationship fields that this document depends on.
@@ -264,23 +124,11 @@ export class MigrationDocument<
 	#dependencies: MigrationField[]
 
 	/**
-	 * The mode to use when creating or updating the document.
-	 *
-	 * - `auto`: Automatically determines if the document should be created or
-	 *   updated on the document's existence on the repository's Document API.
-	 * - `update`: Forces the document to only be updated. This is useful when the
-	 *   document only exists within the migration release which cannot be
-	 *   queried.
-	 *
-	 * @internal
-	 */
-	_mode: "auto" | "update" = "auto"
-
-	/**
 	 * Creates a Prismic migration document instance.
 	 *
-	 * @param value - The document value to be sent to the Migration API.
-	 * @param params - Parameters to create/update the document with on the
+	 * @param document - The document to be sent to the Migration API.
+	 * @param title - The name of the document displayed in the editor.
+	 * @param options - Parameters to create/update the document with on the
 	 *   Migration API.
 	 * @param dependencies - Asset and content relationship fields that this
 	 *   document depends on.
@@ -288,13 +136,19 @@ export class MigrationDocument<
 	 * @returns A Prismic migration document instance.
 	 */
 	constructor(
-		value: MigrationDocumentValue<TDocument>,
-		params: MigrationDocumentParams,
-		dependencies: MigrationField[] = [],
+		document: MigrationDocument<TDocument>,
+		title: string,
+		options: {
+			masterLanguageDocument?: MigrationContentRelationship
+			originalPrismicDocument?: ExistingPrismicDocument<PrismicDocument>
+			dependencies: MigrationField[]
+		},
 	) {
-		this.value = value
-		this.params = params
-		this.#dependencies = dependencies
+		this.document = document
+		this.title = title
+		this.masterLanguageDocument = options.masterLanguageDocument
+		this.originalPrismicDocument = options.originalPrismicDocument
+		this.#dependencies = options.dependencies
 	}
 
 	/**
@@ -323,7 +177,6 @@ export class MigrationDocument<
  */
 export type DocumentMap<TDocuments extends PrismicDocument = PrismicDocument> =
 	Map<
-		string | MigrationDocument | MigrationDocument<TDocuments>,
-		| PrismicDocument
-		| (Omit<MigrationDocumentValue<PrismicDocument>, "id"> & { id: string })
+		string | PrismicMigrationDocument<TDocuments>,
+		PrismicDocument | (MigrationDocument<TDocuments> & Pick<TDocuments, "id">)
 	>

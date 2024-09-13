@@ -7,9 +7,18 @@ import * as prismic from "../../src"
 const defaultMigration = prismic.createMigration()
 
 // Migration Documents
-type FooDocument = prismic.PrismicDocument<Record<string, never>, "foo">
-type BarDocument = prismic.PrismicDocument<Record<string, never>, "bar">
-type BazDocument = prismic.PrismicDocument<Record<string, never>, "baz">
+type FooDocument = prismic.PrismicDocumentWithUID<
+	{ foo: prismic.KeyTextField },
+	"foo"
+>
+type BarDocument = prismic.PrismicDocumentWithUID<
+	{ bar: prismic.KeyTextField },
+	"bar"
+>
+type BazDocument = prismic.PrismicDocumentWithoutUID<
+	{ baz: prismic.KeyTextField },
+	"baz"
+>
 type Documents = FooDocument | BarDocument | BazDocument
 
 const documentsMigration = prismic.createMigration<Documents>()
@@ -123,7 +132,7 @@ expectType<
 >(true)
 
 /**
- * createDocument - basic
+ * createDocument
  */
 
 // Default
@@ -136,9 +145,9 @@ const defaultCreateDocument = defaultMigration.createDocument(
 	},
 	"",
 )
-expectType<TypeEqual<typeof defaultCreateDocument, prismic.MigrationDocument>>(
-	true,
-)
+expectType<
+	TypeEqual<typeof defaultCreateDocument, prismic.PrismicMigrationDocument>
+>(true)
 
 // Documents
 const documentsCreateDocument = documentsMigration.createDocument(
@@ -146,13 +155,404 @@ const documentsCreateDocument = documentsMigration.createDocument(
 		type: "foo",
 		uid: "",
 		lang: "",
-		data: {},
+		data: {
+			foo: "",
+		},
 	},
 	"",
 )
 expectType<
 	TypeEqual<
 		typeof documentsCreateDocument,
-		prismic.MigrationDocument<FooDocument>
+		prismic.PrismicMigrationDocument<FooDocument>
 	>
 >(true)
+
+documentsMigration.createDocument(
+	{
+		type: "baz",
+		lang: "",
+		data: {
+			baz: "",
+		},
+	},
+	"",
+)
+
+documentsMigration.createDocument(
+	{
+		type: "baz",
+		// @ts-expect-error - Type 'string' is not assignable to type 'null | undefined'.
+		uid: "",
+		lang: "",
+		data: {
+			baz: "",
+		},
+	},
+	"",
+)
+
+documentsMigration.createDocument(
+	{
+		type: "foo",
+		uid: "",
+		lang: "",
+		// @ts-expect-error - Property 'foo' is missing
+		data: {},
+	},
+	"",
+)
+
+documentsMigration.createDocument(
+	{
+		type: "foo",
+		uid: "",
+		lang: "",
+		data: {
+			// @ts-expect-error - Type 'number' is not assignable to type 'KeyTextField'
+			foo: 1,
+		},
+	},
+	"",
+)
+
+documentsMigration.createDocument(
+	{
+		type: "foo",
+		uid: "",
+		lang: "",
+		data: {
+			foo: "",
+			// @ts-expect-error - Object literal may only specify known properties
+			bar: "",
+		},
+	},
+	"",
+)
+/**
+ * updateDocument
+ */
+
+// Default
+const defaultUpdateDocument = defaultMigration.updateDocument(
+	{
+		id: "",
+		type: "",
+		lang: "",
+		data: {},
+		tags: [],
+		href: "",
+		url: "",
+		last_publication_date: `0-0-0T0:0:0+0`,
+		first_publication_date: `0-0-0T0:0:0+0`,
+		slugs: [],
+		alternate_languages: [],
+		linked_documents: [],
+	},
+	"",
+)
+expectType<
+	TypeEqual<typeof defaultUpdateDocument, prismic.PrismicMigrationDocument>
+>(true)
+
+// Documents
+const documentsUpdateDocument = documentsMigration.updateDocument(
+	{
+		id: "",
+		type: "foo",
+		uid: "",
+		lang: "",
+		data: {
+			foo: "",
+		},
+		tags: [],
+		href: "",
+		url: "",
+		last_publication_date: `0-0-0T0:0:0+0`,
+		first_publication_date: `0-0-0T0:0:0+0`,
+		slugs: [],
+		alternate_languages: [],
+		linked_documents: [],
+	},
+	"",
+)
+expectType<
+	TypeEqual<
+		typeof documentsUpdateDocument,
+		prismic.PrismicMigrationDocument<FooDocument>
+	>
+>(true)
+
+documentsMigration.updateDocument(
+	{
+		id: "",
+		type: "baz",
+		lang: "",
+		data: {
+			baz: "",
+		},
+		tags: [],
+		href: "",
+		url: "",
+		last_publication_date: `0-0-0T0:0:0+0`,
+		first_publication_date: `0-0-0T0:0:0+0`,
+		slugs: [],
+		alternate_languages: [],
+		linked_documents: [],
+	},
+	"",
+)
+
+documentsMigration.updateDocument(
+	{
+		id: "",
+		type: "baz",
+		// @ts-expect-error - Type 'string' is not assignable to type 'null | undefined'.
+		uid: "",
+		lang: "",
+		data: {
+			baz: "",
+		},
+		tags: [],
+		href: "",
+		url: "",
+		last_publication_date: `0-0-0T0:0:0+0`,
+		first_publication_date: `0-0-0T0:0:0+0`,
+		slugs: [],
+		alternate_languages: [],
+		linked_documents: [],
+	},
+	"",
+)
+
+documentsMigration.updateDocument(
+	{
+		id: "",
+		type: "foo",
+		uid: "",
+		lang: "",
+		// @ts-expect-error - Property 'foo' is missing
+		data: {},
+		tags: [],
+		href: "",
+		url: "",
+		last_publication_date: `0-0-0T0:0:0+0`,
+		first_publication_date: `0-0-0T0:0:0+0`,
+		slugs: [],
+		alternate_languages: [],
+		linked_documents: [],
+	},
+	"",
+)
+
+documentsMigration.updateDocument(
+	{
+		id: "",
+		type: "foo",
+		uid: "",
+		lang: "",
+		data: {
+			// @ts-expect-error - Type 'number' is not assignable to type 'KeyTextField'
+			foo: 1,
+		},
+		tags: [],
+		href: "",
+		url: "",
+		last_publication_date: `0-0-0T0:0:0+0`,
+		first_publication_date: `0-0-0T0:0:0+0`,
+		slugs: [],
+		alternate_languages: [],
+		linked_documents: [],
+	},
+	"",
+)
+
+documentsMigration.updateDocument(
+	{
+		id: "",
+		type: "foo",
+		uid: "",
+		lang: "",
+		data: {
+			foo: "",
+			// @ts-expect-error - Object literal may only specify known properties
+			bar: "",
+		},
+		tags: [],
+		href: "",
+		url: "",
+		last_publication_date: `0-0-0T0:0:0+0`,
+		first_publication_date: `0-0-0T0:0:0+0`,
+		slugs: [],
+		alternate_languages: [],
+		linked_documents: [],
+	},
+	"",
+)
+
+/**
+ * createDocumentFromPrismic
+ */
+
+// Default
+const defaultCreateFromPrismicDocument =
+	defaultMigration.createDocumentFromPrismic(
+		{
+			id: "",
+			type: "",
+			uid: "",
+			lang: "",
+			data: {},
+			tags: [],
+			href: "",
+			url: "",
+			last_publication_date: `0-0-0T0:0:0+0`,
+			first_publication_date: `0-0-0T0:0:0+0`,
+			slugs: [],
+			alternate_languages: [],
+			linked_documents: [],
+		},
+		"",
+	)
+expectType<
+	TypeEqual<
+		typeof defaultCreateFromPrismicDocument,
+		prismic.PrismicMigrationDocument
+	>
+>(true)
+
+// Documents
+const documentsCreateFromPrismicDocument =
+	documentsMigration.createDocumentFromPrismic(
+		{
+			id: "",
+			type: "foo",
+			uid: "",
+			lang: "",
+			data: {
+				foo: "",
+			},
+			tags: [],
+			href: "",
+			url: "",
+			last_publication_date: `0-0-0T0:0:0+0`,
+			first_publication_date: `0-0-0T0:0:0+0`,
+			slugs: [],
+			alternate_languages: [],
+			linked_documents: [],
+		},
+		"",
+	)
+expectType<
+	TypeEqual<
+		typeof documentsCreateFromPrismicDocument,
+		prismic.PrismicMigrationDocument<FooDocument>
+	>
+>(true)
+
+documentsMigration.createDocumentFromPrismic(
+	{
+		id: "",
+		type: "baz",
+		lang: "",
+		data: {
+			baz: "",
+		},
+		tags: [],
+		href: "",
+		url: "",
+		last_publication_date: `0-0-0T0:0:0+0`,
+		first_publication_date: `0-0-0T0:0:0+0`,
+		slugs: [],
+		alternate_languages: [],
+		linked_documents: [],
+	},
+	"",
+)
+
+documentsMigration.createDocumentFromPrismic(
+	{
+		id: "",
+		type: "baz",
+		// @ts-expect-error - Type 'string' is not assignable to type 'null | undefined'.
+		uid: "",
+		lang: "",
+		data: {
+			baz: "",
+		},
+		tags: [],
+		href: "",
+		url: "",
+		last_publication_date: `0-0-0T0:0:0+0`,
+		first_publication_date: `0-0-0T0:0:0+0`,
+		slugs: [],
+		alternate_languages: [],
+		linked_documents: [],
+	},
+	"",
+)
+
+documentsMigration.createDocumentFromPrismic(
+	{
+		id: "",
+		type: "foo",
+		uid: "",
+		lang: "",
+		// @ts-expect-error - Property 'foo' is missing
+		data: {},
+		tags: [],
+		href: "",
+		url: "",
+		last_publication_date: `0-0-0T0:0:0+0`,
+		first_publication_date: `0-0-0T0:0:0+0`,
+		slugs: [],
+		alternate_languages: [],
+		linked_documents: [],
+	},
+	"",
+)
+
+documentsMigration.createDocumentFromPrismic(
+	{
+		id: "",
+		type: "foo",
+		uid: "",
+		lang: "",
+		data: {
+			// @ts-expect-error - Type 'number' is not assignable to type 'KeyTextField'
+			foo: 1,
+		},
+		tags: [],
+		href: "",
+		url: "",
+		last_publication_date: `0-0-0T0:0:0+0`,
+		first_publication_date: `0-0-0T0:0:0+0`,
+		slugs: [],
+		alternate_languages: [],
+		linked_documents: [],
+	},
+	"",
+)
+
+documentsMigration.createDocumentFromPrismic(
+	{
+		id: "",
+		type: "foo",
+		uid: "",
+		lang: "",
+		data: {
+			foo: "",
+			// @ts-expect-error - Object literal may only specify known properties
+			bar: "",
+		},
+		tags: [],
+		href: "",
+		url: "",
+		last_publication_date: `0-0-0T0:0:0+0`,
+		first_publication_date: `0-0-0T0:0:0+0`,
+		slugs: [],
+		alternate_languages: [],
+		linked_documents: [],
+	},
+	"",
+)

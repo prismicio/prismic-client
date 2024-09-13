@@ -12,7 +12,7 @@ exports[`patches link fields > brokenLink > shared slice 1`] = `
 {
   "slices": [
     {
-      "id": "2ff58c741ba",
+      "id": "b9dd0f2c3f8",
       "items": [
         {},
       ],
@@ -22,9 +22,9 @@ exports[`patches link fields > brokenLink > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "at",
-      "variation": "tortor",
-      "version": "a79b9dd",
+      "slice_type": "dignissim",
+      "variation": "vitae",
+      "version": "bfc9053",
     },
   ],
 }
@@ -34,13 +34,13 @@ exports[`patches link fields > brokenLink > slice 1`] = `
 {
   "slices": [
     {
-      "id": "e93cc3e4f28",
+      "id": "306297c5eda",
       "items": [
         {},
       ],
       "primary": {},
-      "slice_label": "Pellentesque",
-      "slice_type": "nulla_posuere",
+      "slice_label": "Aliquet",
+      "slice_type": "vel",
     },
   ],
 }
@@ -69,7 +69,7 @@ exports[`patches link fields > existing > shared slice 1`] = `
 {
   "slices": [
     {
-      "id": "2ff58c741ba",
+      "id": "b9dd0f2c3f8",
       "items": [
         {
           "field": {
@@ -111,9 +111,9 @@ exports[`patches link fields > existing > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "at",
-      "variation": "tortor",
-      "version": "a79b9dd",
+      "slice_type": "dignissim",
+      "variation": "vitae",
+      "version": "bfc9053",
     },
   ],
 }
@@ -123,7 +123,7 @@ exports[`patches link fields > existing > slice 1`] = `
 {
   "slices": [
     {
-      "id": "e93cc3e4f28",
+      "id": "306297c5eda",
       "items": [
         {
           "field": {
@@ -150,8 +150,8 @@ exports[`patches link fields > existing > slice 1`] = `
           "type": "amet",
         },
       },
-      "slice_label": "Pellentesque",
-      "slice_type": "nulla_posuere",
+      "slice_label": "Aliquet",
+      "slice_type": "vel",
     },
   ],
 }
@@ -191,7 +191,7 @@ exports[`patches link fields > lazyExisting > shared slice 1`] = `
 {
   "slices": [
     {
-      "id": "2ff58c741ba",
+      "id": "b9dd0f2c3f8",
       "items": [
         {
           "field": {
@@ -233,9 +233,9 @@ exports[`patches link fields > lazyExisting > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "at",
-      "variation": "tortor",
-      "version": "a79b9dd",
+      "slice_type": "dignissim",
+      "variation": "vitae",
+      "version": "bfc9053",
     },
   ],
 }
@@ -245,7 +245,7 @@ exports[`patches link fields > lazyExisting > slice 1`] = `
 {
   "slices": [
     {
-      "id": "e93cc3e4f28",
+      "id": "306297c5eda",
       "items": [
         {
           "field": {
@@ -272,8 +272,8 @@ exports[`patches link fields > lazyExisting > slice 1`] = `
           "type": "amet",
         },
       },
-      "slice_label": "Pellentesque",
-      "slice_type": "nulla_posuere",
+      "slice_label": "Aliquet",
+      "slice_type": "vel",
     },
   ],
 }
@@ -297,7 +297,7 @@ exports[`patches link fields > lazyMigration > group 1`] = `
   "group": [
     {
       "field": {
-        "id": "id-migration",
+        "id": "id-other",
         "isBroken": false,
         "lang": "a",
         "link_type": "Document",
@@ -316,11 +316,11 @@ exports[`patches link fields > lazyMigration > shared slice 1`] = `
 {
   "slices": [
     {
-      "id": "2ff58c741ba",
+      "id": "b9dd0f2c3f8",
       "items": [
         {
           "field": {
-            "id": "id-migration",
+            "id": "id-other",
             "isBroken": false,
             "lang": "gravida",
             "link_type": "Document",
@@ -332,7 +332,7 @@ exports[`patches link fields > lazyMigration > shared slice 1`] = `
       ],
       "primary": {
         "field": {
-          "id": "id-migration",
+          "id": "id-other",
           "isBroken": false,
           "lang": "gravida",
           "link_type": "Document",
@@ -343,7 +343,7 @@ exports[`patches link fields > lazyMigration > shared slice 1`] = `
         "group": [
           {
             "field": {
-              "id": "id-migration",
+              "id": "id-other",
               "isBroken": false,
               "lang": "gravida",
               "link_type": "Document",
@@ -355,9 +355,9 @@ exports[`patches link fields > lazyMigration > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "at",
-      "variation": "tortor",
-      "version": "a79b9dd",
+      "slice_type": "dignissim",
+      "variation": "vitae",
+      "version": "bfc9053",
     },
   ],
 }
@@ -367,11 +367,11 @@ exports[`patches link fields > lazyMigration > slice 1`] = `
 {
   "slices": [
     {
-      "id": "e93cc3e4f28",
+      "id": "306297c5eda",
       "items": [
         {
           "field": {
-            "id": "id-migration",
+            "id": "id-other",
             "isBroken": false,
             "lang": "ultrices",
             "link_type": "Document",
@@ -385,7 +385,7 @@ exports[`patches link fields > lazyMigration > slice 1`] = `
       ],
       "primary": {
         "field": {
-          "id": "id-migration",
+          "id": "id-other",
           "isBroken": false,
           "lang": "ultrices",
           "link_type": "Document",
@@ -396,8 +396,8 @@ exports[`patches link fields > lazyMigration > slice 1`] = `
           "uid": "Amet dictum sit",
         },
       },
-      "slice_label": "Pellentesque",
-      "slice_type": "nulla_posuere",
+      "slice_label": "Aliquet",
+      "slice_type": "vel",
     },
   ],
 }
@@ -406,7 +406,7 @@ exports[`patches link fields > lazyMigration > slice 1`] = `
 exports[`patches link fields > lazyMigration > static zone 1`] = `
 {
   "field": {
-    "id": "id-migration",
+    "id": "id-other",
     "isBroken": false,
     "lang": "nisi,",
     "link_type": "Document",
@@ -422,7 +422,7 @@ exports[`patches link fields > migration > group 1`] = `
   "group": [
     {
       "field": {
-        "id": "id-migration",
+        "id": "id-other",
         "isBroken": false,
         "lang": "a",
         "link_type": "Document",
@@ -441,11 +441,11 @@ exports[`patches link fields > migration > shared slice 1`] = `
 {
   "slices": [
     {
-      "id": "2ff58c741ba",
+      "id": "b9dd0f2c3f8",
       "items": [
         {
           "field": {
-            "id": "id-migration",
+            "id": "id-other",
             "isBroken": false,
             "lang": "gravida",
             "link_type": "Document",
@@ -457,7 +457,7 @@ exports[`patches link fields > migration > shared slice 1`] = `
       ],
       "primary": {
         "field": {
-          "id": "id-migration",
+          "id": "id-other",
           "isBroken": false,
           "lang": "gravida",
           "link_type": "Document",
@@ -468,7 +468,7 @@ exports[`patches link fields > migration > shared slice 1`] = `
         "group": [
           {
             "field": {
-              "id": "id-migration",
+              "id": "id-other",
               "isBroken": false,
               "lang": "gravida",
               "link_type": "Document",
@@ -480,9 +480,9 @@ exports[`patches link fields > migration > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "at",
-      "variation": "tortor",
-      "version": "a79b9dd",
+      "slice_type": "dignissim",
+      "variation": "vitae",
+      "version": "bfc9053",
     },
   ],
 }
@@ -492,11 +492,11 @@ exports[`patches link fields > migration > slice 1`] = `
 {
   "slices": [
     {
-      "id": "e93cc3e4f28",
+      "id": "306297c5eda",
       "items": [
         {
           "field": {
-            "id": "id-migration",
+            "id": "id-other",
             "isBroken": false,
             "lang": "ultrices",
             "link_type": "Document",
@@ -510,7 +510,7 @@ exports[`patches link fields > migration > slice 1`] = `
       ],
       "primary": {
         "field": {
-          "id": "id-migration",
+          "id": "id-other",
           "isBroken": false,
           "lang": "ultrices",
           "link_type": "Document",
@@ -521,8 +521,8 @@ exports[`patches link fields > migration > slice 1`] = `
           "uid": "Amet dictum sit",
         },
       },
-      "slice_label": "Pellentesque",
-      "slice_type": "nulla_posuere",
+      "slice_label": "Aliquet",
+      "slice_type": "vel",
     },
   ],
 }
@@ -531,7 +531,7 @@ exports[`patches link fields > migration > slice 1`] = `
 exports[`patches link fields > migration > static zone 1`] = `
 {
   "field": {
-    "id": "id-migration",
+    "id": "id-other",
     "isBroken": false,
     "lang": "nisi,",
     "link_type": "Document",
@@ -547,7 +547,7 @@ exports[`patches link fields > migrationNoTags > group 1`] = `
   "group": [
     {
       "field": {
-        "id": "id-migration",
+        "id": "id-other",
         "isBroken": false,
         "lang": "a",
         "link_type": "Document",
@@ -564,11 +564,11 @@ exports[`patches link fields > migrationNoTags > shared slice 1`] = `
 {
   "slices": [
     {
-      "id": "2ff58c741ba",
+      "id": "b9dd0f2c3f8",
       "items": [
         {
           "field": {
-            "id": "id-migration",
+            "id": "id-other",
             "isBroken": false,
             "lang": "gravida",
             "link_type": "Document",
@@ -580,7 +580,7 @@ exports[`patches link fields > migrationNoTags > shared slice 1`] = `
       ],
       "primary": {
         "field": {
-          "id": "id-migration",
+          "id": "id-other",
           "isBroken": false,
           "lang": "gravida",
           "link_type": "Document",
@@ -591,7 +591,7 @@ exports[`patches link fields > migrationNoTags > shared slice 1`] = `
         "group": [
           {
             "field": {
-              "id": "id-migration",
+              "id": "id-other",
               "isBroken": false,
               "lang": "gravida",
               "link_type": "Document",
@@ -603,9 +603,9 @@ exports[`patches link fields > migrationNoTags > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "at",
-      "variation": "tortor",
-      "version": "a79b9dd",
+      "slice_type": "dignissim",
+      "variation": "vitae",
+      "version": "bfc9053",
     },
   ],
 }
@@ -615,11 +615,11 @@ exports[`patches link fields > migrationNoTags > slice 1`] = `
 {
   "slices": [
     {
-      "id": "e93cc3e4f28",
+      "id": "306297c5eda",
       "items": [
         {
           "field": {
-            "id": "id-migration",
+            "id": "id-other",
             "isBroken": false,
             "lang": "ultrices",
             "link_type": "Document",
@@ -631,7 +631,7 @@ exports[`patches link fields > migrationNoTags > slice 1`] = `
       ],
       "primary": {
         "field": {
-          "id": "id-migration",
+          "id": "id-other",
           "isBroken": false,
           "lang": "ultrices",
           "link_type": "Document",
@@ -640,8 +640,8 @@ exports[`patches link fields > migrationNoTags > slice 1`] = `
           "uid": "Amet dictum sit",
         },
       },
-      "slice_label": "Pellentesque",
-      "slice_type": "nulla_posuere",
+      "slice_label": "Aliquet",
+      "slice_type": "vel",
     },
   ],
 }
@@ -650,7 +650,7 @@ exports[`patches link fields > migrationNoTags > slice 1`] = `
 exports[`patches link fields > migrationNoTags > static zone 1`] = `
 {
   "field": {
-    "id": "id-migration",
+    "id": "id-other",
     "isBroken": false,
     "lang": "nisi,",
     "link_type": "Document",
@@ -666,15 +666,13 @@ exports[`patches link fields > otherRepositoryContentRelationship > group 1`] = 
   "group": [
     {
       "field": {
-        "id": "id-migration",
+        "id": "id-other-repository",
         "isBroken": false,
-        "lang": "a",
+        "lang": "faucibus",
         "link_type": "Document",
-        "tags": [
-          "Odio Eu",
-        ],
-        "type": "amet",
-        "uid": "Non sodales neque",
+        "tags": [],
+        "type": "lorem",
+        "uid": "Pharetra et ultrices",
       },
     },
   ],
@@ -685,48 +683,54 @@ exports[`patches link fields > otherRepositoryContentRelationship > shared slice
 {
   "slices": [
     {
-      "id": "2ff58c741ba",
+      "id": "b9dd0f2c3f8",
       "items": [
         {
           "field": {
-            "id": "id-migration",
+            "id": "id-other-repository",
             "isBroken": false,
-            "lang": "gravida",
+            "lang": "eu",
             "link_type": "Document",
-            "tags": [],
-            "type": "leo",
-            "uid": "Blandit volutpat maecenas",
+            "tags": [
+              "Pharetra",
+            ],
+            "type": "pellentesque",
+            "uid": "Volutpat ac tincidunt",
           },
         },
       ],
       "primary": {
         "field": {
-          "id": "id-migration",
+          "id": "id-other-repository",
           "isBroken": false,
-          "lang": "gravida",
+          "lang": "eu",
           "link_type": "Document",
-          "tags": [],
-          "type": "leo",
-          "uid": "Blandit volutpat maecenas",
+          "tags": [
+            "Pharetra",
+          ],
+          "type": "pellentesque",
+          "uid": "Volutpat ac tincidunt",
         },
         "group": [
           {
             "field": {
-              "id": "id-migration",
+              "id": "id-other-repository",
               "isBroken": false,
-              "lang": "gravida",
+              "lang": "eu",
               "link_type": "Document",
-              "tags": [],
-              "type": "leo",
-              "uid": "Blandit volutpat maecenas",
+              "tags": [
+                "Pharetra",
+              ],
+              "type": "pellentesque",
+              "uid": "Volutpat ac tincidunt",
             },
           },
         ],
       },
       "slice_label": null,
-      "slice_type": "at",
-      "variation": "tortor",
-      "version": "a79b9dd",
+      "slice_type": "dignissim",
+      "variation": "vitae",
+      "version": "bfc9053",
     },
   ],
 }
@@ -736,37 +740,37 @@ exports[`patches link fields > otherRepositoryContentRelationship > slice 1`] = 
 {
   "slices": [
     {
-      "id": "e93cc3e4f28",
+      "id": "306297c5eda",
       "items": [
         {
           "field": {
-            "id": "id-migration",
+            "id": "id-other-repository",
             "isBroken": false,
-            "lang": "ultrices",
+            "lang": "dignissim",
             "link_type": "Document",
             "tags": [
-              "Ipsum Consequat",
+              "Arcu Vitae",
             ],
-            "type": "eget",
-            "uid": "Amet dictum sit",
+            "type": "a",
+            "uid": "Tristique senectus et",
           },
         },
       ],
       "primary": {
         "field": {
-          "id": "id-migration",
+          "id": "id-other-repository",
           "isBroken": false,
-          "lang": "ultrices",
+          "lang": "dignissim",
           "link_type": "Document",
           "tags": [
-            "Ipsum Consequat",
+            "Arcu Vitae",
           ],
-          "type": "eget",
-          "uid": "Amet dictum sit",
+          "type": "a",
+          "uid": "Tristique senectus et",
         },
       },
-      "slice_label": "Pellentesque",
-      "slice_type": "nulla_posuere",
+      "slice_label": "Aliquet",
+      "slice_type": "vel",
     },
   ],
 }
@@ -775,13 +779,13 @@ exports[`patches link fields > otherRepositoryContentRelationship > slice 1`] = 
 exports[`patches link fields > otherRepositoryContentRelationship > static zone 1`] = `
 {
   "field": {
-    "id": "id-migration",
+    "id": "id-other-repository",
     "isBroken": false,
-    "lang": "nisi,",
+    "lang": "quam",
     "link_type": "Document",
     "tags": [],
-    "type": "eros",
-    "uid": "Scelerisque mauris pellentesque",
+    "type": "semper",
+    "uid": "Sed viverra ipsum",
   },
 }
 `;
@@ -825,7 +829,7 @@ exports[`patches link fields > richTextLinkNode > shared slice 1`] = `
 {
   "slices": [
     {
-      "id": "2ff58c741ba",
+      "id": "b9dd0f2c3f8",
       "items": [
         {
           "field": [
@@ -921,9 +925,9 @@ exports[`patches link fields > richTextLinkNode > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "at",
-      "variation": "tortor",
-      "version": "a79b9dd",
+      "slice_type": "dignissim",
+      "variation": "vitae",
+      "version": "bfc9053",
     },
   ],
 }
@@ -933,7 +937,7 @@ exports[`patches link fields > richTextLinkNode > slice 1`] = `
 {
   "slices": [
     {
-      "id": "e93cc3e4f28",
+      "id": "306297c5eda",
       "items": [
         {
           "field": [
@@ -996,8 +1000,8 @@ exports[`patches link fields > richTextLinkNode > slice 1`] = `
           },
         ],
       },
-      "slice_label": "Pellentesque",
-      "slice_type": "nulla_posuere",
+      "slice_label": "Aliquet",
+      "slice_type": "vel",
     },
   ],
 }

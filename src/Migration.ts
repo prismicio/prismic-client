@@ -1,4 +1,4 @@
-import { prepareMigrationRecord } from "./lib/prepareMigrationRecord"
+import { prepareMigrationDocumentData } from "./lib/prepareMigrationDocumentData"
 import { validateAssetMetadata } from "./lib/validateAssetMetadata"
 
 import type { Asset } from "./types/api/asset/asset"
@@ -6,10 +6,10 @@ import type { MigrationAssetConfig } from "./types/migration/Asset"
 import { MigrationImage } from "./types/migration/Asset"
 import type { UnresolvedMigrationContentRelationshipConfig } from "./types/migration/ContentRelationship"
 import { MigrationContentRelationship } from "./types/migration/ContentRelationship"
-import { MigrationDocument } from "./types/migration/Document"
+import { PrismicMigrationDocument } from "./types/migration/Document"
 import type {
-	MigrationDocumentParams,
-	MigrationDocumentValue,
+	ExistingPrismicDocument,
+	PendingPrismicDocument,
 } from "./types/migration/Document"
 import type { PrismicDocument } from "./types/value/document"
 import type { FilledImageFieldImage } from "./types/value/image"
@@ -24,7 +24,7 @@ import type { FilledLinkToMediaField } from "./types/value/linkToMedia"
  * @typeParam TDocumentType - Type(s) to match `TDocuments` against.
  */
 type ExtractDocumentType<
-	TDocuments extends PrismicDocument | MigrationDocumentValue,
+	TDocuments extends { type: string },
 	TDocumentType extends TDocuments["type"],
 > =
 	Extract<TDocuments, { type: TDocumentType }> extends never
@@ -32,21 +32,12 @@ type ExtractDocumentType<
 		: Extract<TDocuments, { type: TDocumentType }>
 
 /**
- * The symbol used to index documents that are singletons.
- */
-const SINGLE_INDEX = "__SINGLE__"
-
-/**
  * A helper that allows preparing your migration to Prismic.
  *
  * @typeParam TDocuments - Document types that are registered for the Prismic
  *   repository. Query methods will automatically be typed based on this type.
  */
-export class Migration<
-	TDocuments extends PrismicDocument = PrismicDocument,
-	TMigrationDocuments extends
-		MigrationDocumentValue<TDocuments> = MigrationDocumentValue<TDocuments>,
-> {
+export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	/**
 	 * Assets registered in the migration.
 	 *
@@ -59,16 +50,7 @@ export class Migration<
 	 *
 	 * @internal
 	 */
-	_documents: MigrationDocument<TDocuments>[] = []
-
-	/**
-	 * A map indexing documents by their type and UID used for quick lookups by
-	 * the {@link getByUID} and {@link getSingle} methods.
-	 */
-	#indexedDocuments: Record<
-		string,
-		Record<string, MigrationDocument<TDocuments>>
-	> = {}
+	_documents: PrismicMigrationDocument<TDocuments>[] = []
 
 	/**
 	 * Registers an asset to be created in the migration from an asset object.
@@ -248,42 +230,32 @@ export class Migration<
 	 * registers it in your migration. The document will be created when the
 	 * migration is executed through the `writeClient.migrate()` method.
 	 *
-	 * @typeParam TType - Type of Prismic documents to create.
+	 * @typeParam TType - Type of the Prismic document to create.
 	 *
 	 * @param document - The document to create.
-	 * @param documentTitle - The title of the document to create which will be
-	 *   displayed in the editor.
-	 * @param params - Document master language document ID.
+	 * @param title - The title of the document to create which will be displayed
+	 *   in the editor.
+	 * @param options - Document master language document ID.
 	 *
 	 * @returns A migration document instance.
 	 */
-	createDocument<TType extends TMigrationDocuments["type"]>(
-		document: ExtractDocumentType<TMigrationDocuments, TType>,
-		documentTitle: string,
-		params: Omit<MigrationDocumentParams, "documentTitle"> = {},
-	): MigrationDocument<ExtractDocumentType<TDocuments, TType>> {
-		const { record: data, dependencies } = prepareMigrationRecord(
-			document.data,
+	createDocument<TType extends TDocuments["type"]>(
+		document: ExtractDocumentType<PendingPrismicDocument<TDocuments>, TType>,
+		title: string,
+		options?: {
+			masterLanguageDocument?: MigrationContentRelationship
+		},
+	): PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>> {
+		const { record: data, dependencies } = prepareMigrationDocumentData(
+			document.data!,
 			this.createAsset.bind(this),
 		)
 
-		const migrationDocument = new MigrationDocument(
-			{ ...document, data },
-			{
-				documentTitle,
-				...params,
-			},
-			dependencies,
-		)
+		const migrationDocument = new PrismicMigrationDocument<
+			ExtractDocumentType<TDocuments, TType>
+		>({ ...document, data }, title, { ...options, dependencies })
 
 		this._documents.push(migrationDocument)
-
-		// Index document
-		if (!(document.type in this.#indexedDocuments)) {
-			this.#indexedDocuments[document.type] = {}
-		}
-		this.#indexedDocuments[document.type][document.uid || SINGLE_INDEX] =
-			migrationDocument
 
 		return migrationDocument
 	}
@@ -304,18 +276,63 @@ export class Migration<
 	 *
 	 * @returns A migration document instance.
 	 */
-	updateDocument<TType extends TMigrationDocuments["type"]>(
-		document: Omit<ExtractDocumentType<TMigrationDocuments, TType>, "id"> & {
-			id: string
-		},
-		documentTitle: string,
-	): MigrationDocument<ExtractDocumentType<TDocuments, TType>> {
-		const migrationDocument = this.createDocument(
-			document as ExtractDocumentType<TMigrationDocuments, TType>,
-			documentTitle,
+	updateDocument<TType extends TDocuments["type"]>(
+		document: ExtractDocumentType<ExistingPrismicDocument<TDocuments>, TType>,
+		title: string,
+	): PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>> {
+		const { record: data, dependencies } = prepareMigrationDocumentData(
+			document.data,
+			this.createAsset.bind(this),
 		)
 
-		migrationDocument._mode = "update"
+		const migrationDocument = new PrismicMigrationDocument<
+			ExtractDocumentType<TDocuments, TType>
+		>({ ...document, data }, title, { dependencies })
+
+		this._documents.push(migrationDocument)
+
+		return migrationDocument
+	}
+
+	/**
+	 * Registers a document to be created in the migration.
+	 *
+	 * @remarks
+	 * This method does not create the document in Prismic right away. Instead it
+	 * registers it in your migration. The document will be created when the
+	 * migration is executed through the `writeClient.migrate()` method.
+	 *
+	 * @param document - The document to create.
+	 * @param title - The title of the document to create which will be displayed
+	 *   in the editor.
+	 * @param options - Document master language document ID.
+	 *
+	 * @returns A migration document instance.
+	 */
+	createDocumentFromPrismic<TType extends TDocuments["type"]>(
+		document: ExtractDocumentType<ExistingPrismicDocument<TDocuments>, TType>,
+		title: string,
+	): PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>> {
+		const { record: data, dependencies } = prepareMigrationDocumentData(
+			document.data,
+			this.createAsset.bind(this),
+		)
+
+		const migrationDocument = new PrismicMigrationDocument(
+			{
+				type: document.type,
+				lang: document.lang,
+				uid: document.uid,
+				tags: document.tags,
+				data: data,
+			} as unknown as PendingPrismicDocument<
+				ExtractDocumentType<TDocuments, TType>
+			>,
+			title,
+			{ originalPrismicDocument: document, dependencies },
+		)
+
+		this._documents.push(migrationDocument)
 
 		return migrationDocument
 	}
@@ -352,19 +369,25 @@ export class Migration<
 	 *
 	 * @typeParam TType - Type of the Prismic document returned.
 	 *
-	 * @param documentType - The API ID of the document's custom type.
+	 * @param type - The API ID of the document's custom type.
 	 * @param uid - The UID of the document.
 	 *
 	 * @returns The migration document instance with a UID matching the `uid`
 	 *   parameter, if a matching document is found.
 	 */
-	getByUID<TType extends TMigrationDocuments["type"]>(
-		documentType: TType,
+	getByUID<TType extends TDocuments["type"]>(
+		type: TType,
 		uid: string,
-	): MigrationDocument<ExtractDocumentType<TDocuments, TType>> | undefined {
-		return this.#indexedDocuments[documentType]?.[uid] as
-			| MigrationDocument
-			| undefined
+	):
+		| PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>>
+		| undefined {
+		return this._documents.find(
+			(
+				doc,
+			): doc is PrismicMigrationDocument<
+				ExtractDocumentType<TDocuments, TType>
+			> => doc.document.type === type && doc.document.uid === uid,
+		)
 	}
 
 	/**
@@ -381,16 +404,54 @@ export class Migration<
 	 *
 	 * @typeParam TType - Type of the Prismic document returned.
 	 *
-	 * @param documentType - The API ID of the singleton custom type.
+	 * @param type - The API ID of the singleton custom type.
 	 *
 	 * @returns The migration document instance for the custom type, if a matching
 	 *   document is found.
 	 */
-	getSingle<TType extends TMigrationDocuments["type"]>(
-		documentType: TType,
-	): MigrationDocument<ExtractDocumentType<TDocuments, TType>> | undefined {
-		return this.#indexedDocuments[documentType]?.[SINGLE_INDEX] as
-			| MigrationDocument
-			| undefined
+	getSingle<TType extends TDocuments["type"]>(
+		type: TType,
+	):
+		| PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>>
+		| undefined {
+		return this._documents.find(
+			(
+				doc,
+			): doc is PrismicMigrationDocument<
+				ExtractDocumentType<TDocuments, TType>
+			> => doc.document.type === type,
+		)
 	}
+
+	/**
+	 * Queries a document from the migration instance for a specific original ID.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * const contentRelationship = migration.createContentRelationship(() =>
+	 * 	migration.getByOriginalID("YhdrDxIAACgAcp_b"),
+	 * )
+	 * ```
+	 *
+	 * @typeParam TType - Type of the Prismic document returned.
+	 *
+	 * @param id - The original ID of the Prismic document.
+	 *
+	 * @returns The migration document instance for the original ID, if a matching
+	 *   document is found.
+	 */
+	// getByOriginalID<TType extends TDocuments["type"]>(
+	// 	id: string,
+	// ):
+	// 	| PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>>
+	// 	| undefined {
+	// 	return this._documents.find(
+	// 		(
+	// 			doc,
+	// 		): doc is PrismicMigrationDocument<
+	// 			ExtractDocumentType<TDocuments, TType>
+	// 		> => doc.originalPrismicDocument?.id === id,
+	// 	)
+	// }
 }

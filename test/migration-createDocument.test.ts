@@ -4,12 +4,12 @@ import type { MockFactory } from "@prismicio/mock"
 
 import * as prismic from "../src"
 import type { MigrationAssetConfig } from "../src/types/migration/Asset"
-import { MigrationDocument } from "../src/types/migration/Document"
+import { PrismicMigrationDocument } from "../src/types/migration/Document"
 
 it("creates a document", () => {
 	const migration = prismic.createMigration()
 
-	const document: prismic.MigrationDocumentValue = {
+	const document: prismic.PendingPrismicDocument = {
 		type: "type",
 		uid: "uid",
 		lang: "lang",
@@ -20,7 +20,7 @@ it("creates a document", () => {
 	migration.createDocument(document, documentTitle)
 
 	expect(migration._documents[0]).toStrictEqual(
-		new MigrationDocument(document, { documentTitle }),
+		new PrismicMigrationDocument(document, documentTitle, { dependencies: [] }),
 	)
 })
 
@@ -33,7 +33,7 @@ it("creates a document from an existing Prismic document", (ctx) => {
 	migration.createDocument(document, documentTitle)
 
 	expect(migration._documents[0]).toStrictEqual(
-		new MigrationDocument(document, { documentTitle }),
+		new PrismicMigrationDocument(document, documentTitle, { dependencies: [] }),
 	)
 })
 
@@ -184,7 +184,7 @@ describe.each<{
 
 		const { id, field, expected } = getField(mock)
 
-		const document: prismic.MigrationDocumentValue = {
+		const document: prismic.PendingPrismicDocument = {
 			type: "type",
 			uid: "uid",
 			lang: "lang",
@@ -204,7 +204,7 @@ describe.each<{
 
 		const { id, field, expected } = getField(mock)
 
-		const document: prismic.MigrationDocumentValue = {
+		const document: prismic.PendingPrismicDocument = {
 			type: "type",
 			uid: "uid",
 			lang: "lang",
@@ -234,7 +234,7 @@ describe.each<{
 			},
 		]
 
-		const document: prismic.MigrationDocumentValue = {
+		const document: prismic.PendingPrismicDocument = {
 			type: "type",
 			uid: "uid",
 			lang: "lang",
@@ -264,7 +264,7 @@ describe.each<{
 			},
 		]
 
-		const document: prismic.MigrationDocumentValue = {
+		const document: prismic.PendingPrismicDocument = {
 			type: "type",
 			uid: "uid",
 			lang: "lang",

@@ -37,13 +37,14 @@ it.concurrent("performs migration", async (ctx) => {
 
 	const migration = prismic.createMigration()
 
-	const documentFoo: prismic.MigrationDocumentValue = ctx.mock.value.document()
+	const { id: _id, ...documentFoo } =
+		ctx.mock.value.document() as prismic.ExistingPrismicDocument
 	documentFoo.data = {
 		image: migration.createAsset("foo", "foo.png"),
 		link: () => migration.getByUID("bar", "bar"),
 	}
 
-	const documentBar = ctx.mock.value.document()
+	const { id: __id, ...documentBar } = ctx.mock.value.document()
 	documentBar.type = "bar"
 	documentBar.uid = "bar"
 
@@ -66,8 +67,7 @@ it.concurrent("performs migration", async (ctx) => {
 
 	expect(assets?.size).toBe(1)
 	expect(assetsDatabase.flat()).toHaveLength(1)
-	// Documents are indexed twice, on ID, and on reference
-	expect(documents?.size).toBe(4)
+	expect(documents?.size).toBe(2)
 	expect(Object.keys(documentsDatabase)).toHaveLength(2)
 
 	expect(reporter).toHaveBeenCalledWith({
