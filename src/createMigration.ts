@@ -95,10 +95,15 @@ export class Migration<TDocument extends PrismicDocument> {
 		)
 	}
 
-	getSingle(
-		type: TDocument["type"],
-	): PrismicMigrationDocument<TDocument> | undefined {
-		return this.documents.find((doc) => doc.document.type === type)
+	getSingle<TType extends TDocument["type"]>(
+		type: TType,
+	): PrismicMigrationDocument<Extract<TDocument, { type: TType }>> | undefined {
+		return this.documents.find(
+			(
+				doc,
+			): doc is PrismicMigrationDocument<Extract<TDocument, { type: TType }>> =>
+				doc.document.type === type,
+		)
 	}
 }
 
