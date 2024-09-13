@@ -58,6 +58,13 @@ export type {
 } from "./buildQueryURL"
 
 //=============================================================================
+// WriteClient - Write content to Prismic.
+//=============================================================================
+
+export { createMigration, Migration } from "./createMigration"
+export { createWriteClient, WriteClient } from "./createWriteClient"
+
+//=============================================================================
 // Helpers - Manipulate content from Prismic.
 //=============================================================================
 
