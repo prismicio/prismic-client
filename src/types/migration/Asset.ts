@@ -26,7 +26,7 @@ type ImageLike =
  *
  * @returns Equivalent image field.
  */
-const assetToImage = (
+export const assetToImage = (
 	asset: Asset,
 	maybeInitialField?: ImageLike,
 ): FilledImageFieldImage => {
@@ -55,6 +55,33 @@ const assetToImage = (
 		edit,
 		alt: alt,
 		copyright: asset.credits || null,
+	}
+}
+
+/**
+ * Converts an asset to a link to media field.
+ *
+ * @param asset - Asset to convert.
+ * @param text - Link text for the link to media field if any.
+ *
+ * @returns Equivalent link to media field.
+ */
+export const assetToLinkToMedia = (
+	asset: Asset,
+	text?: string,
+): LinkToMediaField<"filled"> => {
+	return {
+		id: asset.id,
+		link_type: LinkType.Media,
+		name: asset.filename,
+		kind: asset.kind,
+		url: asset.url,
+		size: `${asset.size}`,
+		height: typeof asset.height === "number" ? `${asset.height}` : undefined,
+		width: typeof asset.width === "number" ? `${asset.width}` : undefined,
+		// TODO: Remove when link text PR is merged
+		// @ts-expect-error - Future-proofing for link text
+		text,
 	}
 }
 
@@ -251,20 +278,7 @@ export class MigrationLinkToMedia extends MigrationAsset<
 		const asset = migration._assets.get(this.config.id)?.asset
 
 		if (asset) {
-			this._field = {
-				id: asset.id,
-				link_type: LinkType.Media,
-				name: asset.filename,
-				kind: asset.kind,
-				url: asset.url,
-				size: `${asset.size}`,
-				height:
-					typeof asset.height === "number" ? `${asset.height}` : undefined,
-				width: typeof asset.width === "number" ? `${asset.width}` : undefined,
-				// TODO: Remove when link text PR is merged
-				// @ts-expect-error - Future-proofing for link text
-				text: this.text,
-			}
+			this._field = assetToLinkToMedia(asset, this.text)
 		}
 	}
 }

@@ -315,6 +315,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 		const { record: data, dependencies } = prepareMigrationDocumentData(
 			document.data,
 			this.createAsset.bind(this),
+			true,
 		)
 
 		const doc = new PrismicMigrationDocument(

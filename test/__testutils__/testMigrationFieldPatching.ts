@@ -32,6 +32,7 @@ type GetDataArgs = {
 type InternalTestMigrationFieldPatchingArgs = {
 	getData: (args: GetDataArgs) => prismic.ExistingPrismicDocument["data"]
 	expectStrictEqual?: boolean
+	mode?: "new" | "fromPrismic"
 }
 
 const internalTestMigrationFieldPatching = (
@@ -62,7 +63,7 @@ const internalTestMigrationFieldPatching = (
 			...ctx.mock.value.document(),
 			uid: ctx.mock.value.keyText(),
 		}
-		const { id: __id, ...newDocument } = ctx.mock.value.document()
+		const { id: originalID, ...newDocument } = ctx.mock.value.document()
 
 		const newID = "id-new"
 
@@ -114,7 +115,14 @@ const internalTestMigrationFieldPatching = (
 			mockedDomain,
 		})
 
-		migration.createDocument(newDocument, "new")
+		if (!args.mode || args.mode === "new") {
+			migration.createDocument(newDocument, "new")
+		} else {
+			migration.createDocumentFromPrismic(
+				{ ...newDocument, id: originalID },
+				args.mode,
+			)
+		}
 
 		// We speed up the internal rate limiter to make these tests run faster (from 4500ms to nearly instant)
 		const migrationProcess = client.migrate(migration)

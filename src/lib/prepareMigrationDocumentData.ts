@@ -18,6 +18,8 @@ import * as is from "./isValue"
  *
  * @param record - Record of Prismic fields to work with.
  * @param onAsset - Callback that is called for each asset found.
+ * @param fromPrismic - Whether the record is from another Prismic repository or
+ *   not.
  *
  * @returns An object containing the record with replaced assets and links and a
  *   list of dependencies found and/or created.
@@ -30,6 +32,7 @@ export const prepareMigrationDocumentData = <
 	onAsset: (
 		asset: FilledImageFieldImage | FilledLinkToMediaField,
 	) => MigrationImage,
+	fromPrismic?: boolean,
 ): { record: TRecord; dependencies: MigrationField[] } => {
 	const result = {} as Record<string, unknown>
 	const dependencies: MigrationField[] = []
@@ -41,7 +44,7 @@ export const prepareMigrationDocumentData = <
 			// Existing migration fields
 			dependencies.push(field)
 			result[key] = field
-		} else if (is.linkToMedia(field)) {
+		} else if (fromPrismic && is.linkToMedia(field)) {
 			// Link to media
 			// TODO: Remove when link text PR is merged
 			// @ts-expect-error - Future-proofing for link text
@@ -49,7 +52,7 @@ export const prepareMigrationDocumentData = <
 
 			dependencies.push(linkToMedia)
 			result[key] = linkToMedia
-		} else if (is.rtImageNode(field)) {
+		} else if (fromPrismic && is.rtImageNode(field)) {
 			// Rich text image nodes
 			const rtImageNode = onAsset(field).asRTImageNode()
 
@@ -58,6 +61,7 @@ export const prepareMigrationDocumentData = <
 				rtImageNode.linkTo = prepareMigrationDocumentData(
 					{ linkTo: field.linkTo },
 					onAsset,
+					fromPrismic,
 				).record.linkTo as
 					| MigrationContentRelationship
 					| MigrationLinkToMedia
@@ -66,7 +70,7 @@ export const prepareMigrationDocumentData = <
 
 			dependencies.push(rtImageNode)
 			result[key] = rtImageNode
-		} else if (is.image(field)) {
+		} else if (fromPrismic && is.image(field)) {
 			// Image fields
 			const image = onAsset(field).asImage()
 
@@ -89,7 +93,7 @@ export const prepareMigrationDocumentData = <
 
 			dependencies.push(image)
 			result[key] = image
-		} else if (is.contentRelationship(field)) {
+		} else if (fromPrismic && is.contentRelationship(field)) {
 			// Content relationships
 			const contentRelationship = new MigrationContentRelationship(
 				field,
@@ -106,7 +110,7 @@ export const prepareMigrationDocumentData = <
 
 			for (const item of field) {
 				const { record, dependencies: itemDependencies } =
-					prepareMigrationDocumentData({ item }, onAsset)
+					prepareMigrationDocumentData({ item }, onAsset, fromPrismic)
 
 				array.push(record.item)
 				dependencies.push(...itemDependencies)
@@ -116,7 +120,7 @@ export const prepareMigrationDocumentData = <
 		} else if (field && typeof field === "object") {
 			// Traverse objects
 			const { record, dependencies: fieldDependencies } =
-				prepareMigrationDocumentData({ ...field }, onAsset)
+				prepareMigrationDocumentData({ ...field }, onAsset, fromPrismic)
 
 			dependencies.push(...fieldDependencies)
 			result[key] = record

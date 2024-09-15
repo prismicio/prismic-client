@@ -33,14 +33,6 @@ testMigrationFieldPatching("patches link fields", {
 			),
 		)
 	},
-	otherRepositoryContentRelationship: ({ ctx, migrationDocuments }) => {
-		const contentRelationship = ctx.mock.value.link({ type: "Document" })
-		// `migrationDocuments` contains documents from "another repository"
-		contentRelationship.id =
-			migrationDocuments.otherRepository.originalPrismicDocument!.id
-
-		return contentRelationship
-	},
 	brokenLink: () => {
 		return { type: "Document", isBroken: true }
 	},
@@ -60,3 +52,18 @@ testMigrationFieldPatching("patches link fields", {
 		},
 	],
 })
+
+testMigrationFieldPatching(
+	"patches link fields",
+	{
+		otherRepositoryContentRelationship: ({ ctx, migrationDocuments }) => {
+			const contentRelationship = ctx.mock.value.link({ type: "Document" })
+			// `migrationDocuments` contains documents from "another repository"
+			contentRelationship.id =
+				migrationDocuments.otherRepository.originalPrismicDocument!.id
+
+			return contentRelationship
+		},
+	},
+	{ mode: "fromPrismic" },
+)

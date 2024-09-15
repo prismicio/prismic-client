@@ -3,8 +3,6 @@ import { pLimit } from "./lib/pLimit"
 
 import type {
 	Asset,
-	GetAssetsParams,
-	GetAssetsResult,
 	PatchAssetParams,
 	PatchAssetResult,
 	PostAssetParams,
@@ -84,16 +82,6 @@ type MigrateReporterEventMap = {
 			assets: number
 		}
 	}
-	"assets:existing": {
-		existing: number
-	}
-	"assets:skipping": {
-		reason: string
-		current: number
-		remaining: number
-		total: number
-		asset: MigrationAsset
-	}
 	"assets:creating": {
 		current: number
 		remaining: number
@@ -141,32 +129,6 @@ export type MigrateReporterEvents = {
 		MigrateReporterEventMap[K]
 	>
 }[MigrateReporterEventTypes]
-
-/**
- * A query response from the Prismic Asset API. The response contains pagination
- * metadata and a list of matching results for the query.
- */
-type GetAssetsReturnType = {
-	/**
-	 * Found assets for the query.
-	 */
-	results: Asset[]
-
-	/**
-	 * Total number of assets found for the query.
-	 */
-	total_results_size: number
-
-	/**
-	 * IDs of assets that were not found when filtering by IDs.
-	 */
-	missing_ids?: string[]
-
-	/**
-	 * A function to fectch the next page of assets if available.
-	 */
-	next?: () => Promise<GetAssetsReturnType>
-}
 
 /**
  * Additional parameters for creating an asset in the Prismic media library.
@@ -355,101 +317,56 @@ export class WriteClient<
 			...fetchParams
 		}: { reporter?: (event: MigrateReporterEvents) => void } & FetchParams = {},
 	): Promise<void> {
-		const existingAssets = new Map<unknown, Asset>()
-
-		// Get all existing assets
-		let getAssetsResult: GetAssetsReturnType | undefined = undefined
-		do {
-			if (getAssetsResult) {
-				getAssetsResult = await getAssetsResult.next!()
-			} else {
-				getAssetsResult = await this.getAssets({
-					pageSize: 100,
-					...fetchParams,
-				})
-			}
-
-			for (const asset of getAssetsResult.results) {
-				existingAssets.set(asset.id, asset)
-			}
-		} while (getAssetsResult?.next)
-
-		reporter?.({
-			type: "assets:existing",
-			data: {
-				existing: existingAssets.size,
-			},
-		})
-
-		// Create assets
-		let i = 0
 		let created = 0
 		for (const [_, migrationAsset] of migration._assets) {
-			if (existingAssets.has(migrationAsset.config.id)) {
-				migrationAsset.asset = existingAssets.get(migrationAsset.config.id)
+			reporter?.({
+				type: "assets:creating",
+				data: {
+					current: ++created,
+					remaining: migration._assets.size - created,
+					total: migration._assets.size,
+					asset: migrationAsset,
+				},
+			})
 
-				// Is this essential for deduplication?
-				reporter?.({
-					type: "assets:skipping",
-					data: {
-						reason: "already exists",
-						current: ++i,
-						remaining: migration._assets.size - i,
-						total: migration._assets.size,
-						asset: migrationAsset,
-					},
-				})
-			} else {
-				created++
-				reporter?.({
-					type: "assets:creating",
-					data: {
-						current: ++i,
-						remaining: migration._assets.size - i,
-						total: migration._assets.size,
-						asset: migrationAsset,
-					},
-				})
+			const { file, filename, notes, credits, alt, tags } =
+				migrationAsset.config
 
-				const { file, filename, notes, credits, alt, tags } =
-					migrationAsset.config
+			let resolvedFile: PostAssetParams["file"] | File
+			if (typeof file === "string") {
+				let url: URL | undefined
+				try {
+					url = new URL(file)
+				} catch (error) {
+					// noop only on invalid URL, fetch errors will throw in the next if statement
+				}
 
-				let resolvedFile: PostAssetParams["file"] | File
-				if (typeof file === "string") {
-					let url: URL | undefined
-					try {
-						url = new URL(file)
-					} catch (error) {
-						// noop only on invalid URL, fetch errors will throw in the next if statement
-					}
-
-					if (url) {
-						// File is a URL, fetch it
-						resolvedFile = await this.fetchForeignAsset(
-							url.toString(),
-							fetchParams,
-						)
-					} else {
-						// File is actual file content, use it as-is
-						resolvedFile = file
-					}
-				} else if (file instanceof URL) {
-					// File is a URL instance, fetch it
+				if (url) {
+					// File is a URL, fetch it
 					resolvedFile = await this.fetchForeignAsset(
-						file.toString(),
+						url.toString(),
 						fetchParams,
 					)
 				} else {
+					// File is actual file content, use it as-is
 					resolvedFile = file
 				}
-
-				const asset = await this.createAsset(resolvedFile, filename, {
-					...{ notes, credits, alt, tags },
-					...fetchParams,
-				})
-
-				migrationAsset.asset = asset
+			} else if (file instanceof URL) {
+				// File is a URL instance, fetch it
+				resolvedFile = await this.fetchForeignAsset(
+					file.toString(),
+					fetchParams,
+				)
+			} else {
+				resolvedFile = file
 			}
+
+			const asset = await this.createAsset(resolvedFile, filename, {
+				...{ notes, credits, alt, tags },
+				...fetchParams,
+			})
+
+			migrationAsset.asset = asset
 		}
 
 		reporter?.({
@@ -591,83 +508,6 @@ export class WriteClient<
 	}
 
 	/**
-	 * Queries assets from the Prismic repository's media library.
-	 *
-	 * @param params - Parameters to filter, sort, and paginate results.
-	 *
-	 * @returns A paginated response containing the result of the query.
-	 */
-	private async getAssets({
-		pageSize,
-		cursor,
-		// assetType,
-		// keyword,
-		// ids,
-		// tags,
-		...params
-	}: Pick<GetAssetsParams, "pageSize" | "cursor"> &
-		FetchParams = {}): Promise<GetAssetsReturnType> {
-		// Resolve tags if any
-		// if (tags && tags.length) {
-		// 	tags = await this.resolveAssetTagIDs(tags, params)
-		// }
-
-		const url = new URL("assets", this.assetAPIEndpoint)
-
-		if (pageSize) {
-			url.searchParams.set("pageSize", pageSize.toString())
-		}
-
-		if (cursor) {
-			url.searchParams.set("cursor", cursor)
-		}
-
-		// if (assetType) {
-		// 	url.searchParams.set("assetType", assetType)
-		// }
-
-		// if (keyword) {
-		// 	url.searchParams.set("keyword", keyword)
-		// }
-
-		// if (ids) {
-		// 	ids.forEach((id) => url.searchParams.append("ids", id))
-		// }
-
-		// if (tags) {
-		// 	tags.forEach((tag) => url.searchParams.append("tags", tag))
-		// }
-
-		const {
-			items,
-			total,
-			// missing_ids,
-			cursor: nextCursor,
-		} = await this.fetch<GetAssetsResult>(
-			url.toString(),
-			this.buildAssetAPIQueryParams({ params }),
-		)
-
-		return {
-			results: items,
-			total_results_size: total,
-			// missing_ids: missing_ids || [],
-			next: nextCursor
-				? () =>
-						this.getAssets({
-							pageSize,
-							cursor: nextCursor,
-							// assetType,
-							// keyword,
-							// ids,
-							// tags,
-							...params,
-						})
-				: undefined,
-		}
-	}
-
-	/**
 	 * Creates an asset in the Prismic media library.
 	 *
 	 * @param file - The file to upload as an asset.
@@ -769,56 +609,6 @@ export class WriteClient<
 			}),
 		)
 	}
-
-	// We don't want to expose those utilities for now,
-	// and we don't have any internal use for them yet.
-
-	/**
-	 * Deletes an asset from the Prismic media library.
-	 *
-	 * @param assetOrID - The asset or ID of the asset to delete.
-	 * @param params - Additional fetch parameters.
-	 */
-	// private async deleteAsset(
-	// 	assetOrID: string | Asset,
-	// 	params?: FetchParams,
-	// ): Promise<void> {
-	// 	const url = new URL(
-	// 		`assets/${typeof assetOrID === "string" ? assetOrID : assetOrID.id}`,
-	// 		this.assetAPIEndpoint,
-	// 	)
-
-	// 	await this.fetch(
-	// 		url.toString(),
-	// 		this.buildAssetAPIQueryParams({ method: "DELETE", params }),
-	// 	)
-	// }
-
-	/**
-	 * Deletes multiple assets from the Prismic media library.
-	 *
-	 * @param assetsOrIDs - An array of asset IDs or assets to delete.
-	 * @param params - Additional fetch parameters.
-	 */
-	// private async deleteAssets(
-	// 	assetsOrIDs: (string | Asset)[],
-	// 	params?: FetchParams,
-	// ): Promise<void> {
-	// 	const url = new URL("assets/bulk-delete", this.assetAPIEndpoint)
-
-	// 	await this.fetch(
-	// 		url.toString(),
-	// 		this.buildAssetAPIQueryParams<BulkDeleteAssetsParams>({
-	// 			method: "POST",
-	// 			body: {
-	// 				ids: assetsOrIDs.map((assetOrID) =>
-	// 					typeof assetOrID === "string" ? assetOrID : assetOrID.id,
-	// 				),
-	// 			},
-	// 			params,
-	// 		}),
-	// 	)
-	// }
 
 	/**
 	 * Fetches a foreign asset from a URL.
