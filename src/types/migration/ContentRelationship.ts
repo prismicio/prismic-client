@@ -1,9 +1,10 @@
+import type { Migration } from "../../Migration"
+
 import type { FilledContentRelationshipField } from "../value/contentRelationship"
 import type { PrismicDocument } from "../value/document"
 import { LinkType } from "../value/link"
 
-import type { PrismicMigrationDocument } from "./Document"
-import type { ResolveArgs } from "./Field"
+import { PrismicMigrationDocument } from "./Document"
 import { MigrationField } from "./Field"
 
 /**
@@ -67,7 +68,7 @@ export class MigrationContentRelationship extends MigrationField<FilledContentRe
 		this.text = text
 	}
 
-	async _resolve({ documents }: ResolveArgs): Promise<void> {
+	async _resolve(migration: Migration): Promise<void> {
 		const config =
 			typeof this.#unresolvedConfig === "function"
 				? await this.#unresolvedConfig()
@@ -75,9 +76,12 @@ export class MigrationContentRelationship extends MigrationField<FilledContentRe
 
 		if (config) {
 			const document =
-				"id" in config ? documents.get(config.id) : documents.get(config)
+				config instanceof PrismicMigrationDocument
+					? config.document
+					: // Not sure we need `getByOriginalID` here
+						migration.getByOriginalID(config.id)?.document || config
 
-			if (document) {
+			if (document?.id) {
 				this._field = {
 					link_type: LinkType.Document,
 					id: document.id,

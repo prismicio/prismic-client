@@ -196,7 +196,7 @@ describe.each<{
 
 		migration.createDocument(document, documentTitle)
 
-		expect(migration._assets.get(id)).toStrictEqual(expected)
+		expect(migration._assets.get(id)?.config).toStrictEqual(expected)
 	})
 
 	it("group fields", ({ mock }) => {
@@ -216,7 +216,7 @@ describe.each<{
 
 		migration.createDocument(document, documentTitle)
 
-		expect(migration._assets.get(id)).toStrictEqual(expected)
+		expect(migration._assets.get(id)?.config).toStrictEqual(expected)
 	})
 
 	it("slice's primary zone", ({ mock }) => {
@@ -246,7 +246,7 @@ describe.each<{
 
 		migration.createDocument(document, documentTitle)
 
-		expect(migration._assets.get(id)).toStrictEqual(expected)
+		expect(migration._assets.get(id)?.config).toStrictEqual(expected)
 	})
 
 	it("slice's repeatable zone", ({ mock }) => {
@@ -276,6 +276,6 @@ describe.each<{
 
 		migration.createDocument(document, documentTitle)
 
-		expect(migration._assets.get(id)).toStrictEqual(expected)
+		expect(migration._assets.get(id)?.config).toStrictEqual(expected)
 	})
 })

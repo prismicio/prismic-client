@@ -1,3 +1,5 @@
+import type { Migration } from "../../Migration"
+
 import type { Asset } from "../api/asset/asset"
 import type { FilledImageFieldImage, ImageField } from "../value/image"
 import { type FilledLinkToWebField, LinkType } from "../value/link"
@@ -5,7 +7,6 @@ import type { LinkToMediaField } from "../value/linkToMedia"
 import { type RTImageNode, RichTextNodeType } from "../value/richText"
 
 import type { MigrationContentRelationship } from "./ContentRelationship"
-import type { ResolveArgs } from "./Field"
 import { MigrationField } from "./Field"
 
 /**
@@ -62,9 +63,7 @@ const assetToImage = (
  */
 export type MigrationAssetConfig = {
 	/**
-	 * ID of the asset used to reference it in Prismic documents.
-	 *
-	 * @internal
+	 * ID the assets is indexed with on the migration instance.
 	 */
 	id: string | URL | File | NonNullable<ConstructorParameters<File>[0]>[0]
 
@@ -116,7 +115,12 @@ export abstract class MigrationAsset<
 	 *
 	 * @internal
 	 */
-	_config: MigrationAssetConfig
+	config: MigrationAssetConfig
+
+	/**
+	 * Asset object from Prismic available once created.
+	 */
+	asset?: Asset
 
 	/**
 	 * Creates a migration asset used with the Prismic Migration API.
@@ -129,7 +133,7 @@ export abstract class MigrationAsset<
 	constructor(config: MigrationAssetConfig, initialField?: ImageLike) {
 		super(initialField)
 
-		this._config = config
+		this.config = config
 	}
 
 	/**
@@ -138,7 +142,7 @@ export abstract class MigrationAsset<
 	 * @returns A migration image instance.
 	 */
 	asImage(): MigrationImage {
-		return new MigrationImage(this._config, this._initialField)
+		return new MigrationImage(this.config, this._initialField)
 	}
 
 	/**
@@ -150,7 +154,7 @@ export abstract class MigrationAsset<
 	 * @returns A migration link to media instance.
 	 */
 	asLinkToMedia(text?: string): MigrationLinkToMedia {
-		return new MigrationLinkToMedia(this._config, text, this._initialField)
+		return new MigrationLinkToMedia(this.config, text, this._initialField)
 	}
 
 	/**
@@ -167,7 +171,7 @@ export abstract class MigrationAsset<
 			| MigrationContentRelationship
 			| FilledLinkToWebField,
 	): MigrationRTImageNode {
-		return new MigrationRTImageNode(this._config, linkTo, this._initialField)
+		return new MigrationRTImageNode(this.config, linkTo, this._initialField)
 	}
 }
 
@@ -194,14 +198,14 @@ export class MigrationImage extends MigrationAsset<FilledImageFieldImage> {
 		return this
 	}
 
-	async _resolve({ assets, documents }: ResolveArgs): Promise<void> {
-		const asset = assets.get(this._config.id)
+	async _resolve(migration: Migration): Promise<void> {
+		const asset = migration._assets.get(this.config.id)?.asset
 
 		if (asset) {
 			this._field = assetToImage(asset, this._initialField)
 
 			for (const name in this.#thumbnails) {
-				await this.#thumbnails[name]._resolve({ assets, documents })
+				await this.#thumbnails[name]._resolve(migration)
 
 				const thumbnail = this.#thumbnails[name]._field
 				if (thumbnail) {
@@ -243,8 +247,8 @@ export class MigrationLinkToMedia extends MigrationAsset<
 		this.text = text
 	}
 
-	_resolve({ assets }: ResolveArgs): void {
-		const asset = assets.get(this._config.id)
+	_resolve(migration: Migration): void {
+		const asset = migration._assets.get(this.config.id)?.asset
 
 		if (asset) {
 			this._field = {
@@ -300,11 +304,11 @@ export class MigrationRTImageNode extends MigrationAsset<RTImageNode> {
 		this.linkTo = linkTo
 	}
 
-	async _resolve({ assets, documents }: ResolveArgs): Promise<void> {
-		const asset = assets.get(this._config.id)
+	async _resolve(migration: Migration): Promise<void> {
+		const asset = migration._assets.get(this.config.id)?.asset
 
 		if (this.linkTo instanceof MigrationField) {
-			await this.linkTo._resolve({ assets, documents })
+			await this.linkTo._resolve(migration)
 		}
 
 		if (asset) {
@@ -319,11 +323,3 @@ export class MigrationRTImageNode extends MigrationAsset<RTImageNode> {
 		}
 	}
 }
-
-/**
- * A map of asset IDs to asset used to resolve assets when patching migration
- * Prismic documents.
- *
- * @internal
- */
-export type AssetMap = Map<MigrationAssetConfig["id"], Asset>

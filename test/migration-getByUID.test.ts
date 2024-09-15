@@ -13,11 +13,9 @@ it("returns a document with a matching UID", () => {
 	}
 	const documentName = "documentName"
 
-	const migrationDocument = migration.createDocument(document, documentName)
+	const doc = migration.createDocument(document, documentName)
 
-	expect(migration.getByUID(document.type, document.uid)).toStrictEqual(
-		migrationDocument,
-	)
+	expect(migration.getByUID(document.type, document.uid)).toStrictEqual(doc)
 })
 
 it("returns `undefined` if a document is not found", () => {

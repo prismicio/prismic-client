@@ -9,8 +9,6 @@ import { mockPrismicMigrationAPI } from "./__testutils__/mockPrismicMigrationAPI
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
 
 import * as prismic from "../src"
-import type { AssetMap } from "../src/types/migration/Asset"
-import type { DocumentMap } from "../src/types/migration/Document"
 
 // Skip test on Node 16 and 18 (File and FormData support)
 const isNode16 = process.version.startsWith("v16")
@@ -51,23 +49,13 @@ it.concurrent("performs migration", async (ctx) => {
 	migration.createDocument(documentFoo, "foo")
 	migration.createDocument(documentBar, "bar")
 
-	let documents: DocumentMap | undefined
-	let assets: AssetMap | undefined
-	const reporter = vi.fn<(event: prismic.MigrateReporterEvents) => void>(
-		(event) => {
-			if (event.type === "assets:created") {
-				assets = event.data.assets
-			} else if (event.type === "documents:created") {
-				documents = event.data.documents
-			}
-		},
-	)
+	const reporter = vi.fn()
 
 	await client.migrate(migration, { reporter })
 
-	expect(assets?.size).toBe(1)
+	expect(migration._assets?.size).toBe(1)
 	expect(assetsDatabase.flat()).toHaveLength(1)
-	expect(documents?.size).toBe(2)
+	expect(migration._documents.length).toBe(2)
 	expect(Object.keys(documentsDatabase)).toHaveLength(2)
 
 	expect(reporter).toHaveBeenCalledWith({
@@ -84,7 +72,6 @@ it.concurrent("performs migration", async (ctx) => {
 		type: "assets:created",
 		data: {
 			created: 1,
-			assets: expect.any(Map),
 		},
 	})
 
@@ -92,7 +79,6 @@ it.concurrent("performs migration", async (ctx) => {
 		type: "documents:created",
 		data: {
 			created: 2,
-			documents: expect.any(Map),
 		},
 	})
 
@@ -142,7 +128,6 @@ it.concurrent("migrates nothing when migration is empty", async (ctx) => {
 		type: "assets:created",
 		data: {
 			created: 0,
-			assets: expect.any(Map),
 		},
 	})
 
@@ -150,7 +135,6 @@ it.concurrent("migrates nothing when migration is empty", async (ctx) => {
 		type: "documents:created",
 		data: {
 			created: 0,
-			documents: expect.any(Map),
 		},
 	})
 

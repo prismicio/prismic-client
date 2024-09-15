@@ -17,7 +17,7 @@ it("creates an asset from a url", () => {
 
 	migration.createAsset(file, filename)
 
-	expect(migration._assets.get(file)).toEqual({
+	expect(migration._assets.get(file)?.config).toEqual({
 		id: file,
 		file,
 		filename,
@@ -32,7 +32,7 @@ it("creates an asset from a file", () => {
 
 	migration.createAsset(file, filename)
 
-	expect(migration._assets.get(file)).toEqual({
+	expect(migration._assets.get(file)?.config).toEqual({
 		id: file,
 		file,
 		filename,
@@ -69,7 +69,7 @@ it("creates an asset from an existing asset", () => {
 
 	migration.createAsset(asset)
 
-	expect(migration._assets.get(asset.id)).toStrictEqual({
+	expect(migration._assets.get(asset.id)?.config).toStrictEqual({
 		id: asset.id,
 		file: asset.url,
 		filename: asset.filename,
@@ -94,7 +94,7 @@ it("creates an asset from an image field", () => {
 
 	migration.createAsset(image)
 
-	expect(migration._assets.get(image.id)).toEqual({
+	expect(migration._assets.get(image.id)?.config).toEqual({
 		id: image.id,
 		file: image.url,
 		filename: image.url.split("/").pop(),
@@ -119,7 +119,7 @@ it("creates an asset from a link to media field", () => {
 
 	migration.createAsset(link)
 
-	expect(migration._assets.get(link.id)).toEqual({
+	expect(migration._assets.get(link.id)?.config).toEqual({
 		id: link.id,
 		file: link.url,
 		filename: link.name,
@@ -169,7 +169,7 @@ it("consolidates existing assets with additional metadata", () => {
 
 	migration.createAsset(file, filename)
 
-	expect(migration._assets.get(file)).toStrictEqual({
+	expect(migration._assets.get(file)?.config).toStrictEqual({
 		id: file,
 		file,
 		filename,
@@ -186,7 +186,7 @@ it("consolidates existing assets with additional metadata", () => {
 		tags: ["tag"],
 	})
 
-	expect(migration._assets.get(file)).toStrictEqual({
+	expect(migration._assets.get(file)?.config).toStrictEqual({
 		id: file,
 		file,
 		filename,
@@ -203,7 +203,7 @@ it("consolidates existing assets with additional metadata", () => {
 		tags: ["tag", "tag 2"],
 	})
 
-	expect(migration._assets.get(file)).toStrictEqual({
+	expect(migration._assets.get(file)?.config).toStrictEqual({
 		id: file,
 		file,
 		filename,
@@ -215,7 +215,7 @@ it("consolidates existing assets with additional metadata", () => {
 
 	migration.createAsset(file, filename)
 
-	expect(migration._assets.get(file)).toStrictEqual({
+	expect(migration._assets.get(file)?.config).toStrictEqual({
 		id: file,
 		file,
 		filename,

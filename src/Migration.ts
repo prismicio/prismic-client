@@ -3,6 +3,7 @@ import { validateAssetMetadata } from "./lib/validateAssetMetadata"
 
 import type { Asset } from "./types/api/asset/asset"
 import type { MigrationAssetConfig } from "./types/migration/Asset"
+import type { MigrationAsset } from "./types/migration/Asset"
 import { MigrationImage } from "./types/migration/Asset"
 import type { UnresolvedMigrationContentRelationshipConfig } from "./types/migration/ContentRelationship"
 import { MigrationContentRelationship } from "./types/migration/ContentRelationship"
@@ -43,7 +44,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *
 	 * @internal
 	 */
-	_assets: Map<MigrationAssetConfig["file"], MigrationAssetConfig> = new Map()
+	_assets: Map<MigrationAssetConfig["file"], MigrationAsset> = new Map()
 
 	/**
 	 * Documents registered in the migration.
@@ -143,7 +144,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 			tags?: string[]
 		} = {},
 	): MigrationImage {
-		let asset: MigrationAssetConfig
+		let config: MigrationAssetConfig
 		let maybeInitialField: FilledImageFieldImage | undefined
 		if (typeof fileOrAssetOrField === "object" && "url" in fileOrAssetOrField) {
 			if (
@@ -168,7 +169,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 					maybeInitialField = fileOrAssetOrField
 				}
 
-				asset = {
+				config = {
 					id: fileOrAssetOrField.id,
 					file: url,
 					filename,
@@ -178,7 +179,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 					tags: undefined,
 				}
 			} else {
-				asset = {
+				config = {
 					id: fileOrAssetOrField.id,
 					file: fileOrAssetOrField.url,
 					filename: fileOrAssetOrField.filename,
@@ -189,7 +190,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 				}
 			}
 		} else {
-			asset = {
+			config = {
 				id: fileOrAssetOrField,
 				file: fileOrAssetOrField,
 				filename: filename!,
@@ -200,26 +201,24 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 			}
 		}
 
-		validateAssetMetadata(asset)
+		validateAssetMetadata(config)
+		const migrationAsset = new MigrationImage(config, maybeInitialField)
 
-		const maybeAsset = this._assets.get(asset.id)
-
+		const maybeAsset = this._assets.get(config.id)
 		if (maybeAsset) {
 			// Consolidate existing asset with new asset value if possible
-			this._assets.set(asset.id, {
-				...maybeAsset,
-				notes: asset.notes || maybeAsset.notes,
-				credits: asset.credits || maybeAsset.credits,
-				alt: asset.alt || maybeAsset.alt,
-				tags: Array.from(
-					new Set([...(maybeAsset.tags || []), ...(asset.tags || [])]),
-				),
-			})
+			maybeAsset.config.notes = config.notes || maybeAsset.config.notes
+			maybeAsset.config.credits = config.credits || maybeAsset.config.credits
+			maybeAsset.config.alt = config.alt || maybeAsset.config.alt
+			maybeAsset.config.tags = Array.from(
+				new Set([...(config.tags || []), ...(maybeAsset.config.tags || [])]),
+			)
 		} else {
-			this._assets.set(asset.id, asset)
+			this._assets.set(config.id, migrationAsset)
 		}
 
-		return new MigrationImage(this._assets.get(asset.id)!, maybeInitialField)
+		// We returned a detached instance of the asset to serialize it properly
+		return migrationAsset
 	}
 
 	/**
@@ -251,13 +250,13 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 			this.createAsset.bind(this),
 		)
 
-		const migrationDocument = new PrismicMigrationDocument<
+		const doc = new PrismicMigrationDocument<
 			ExtractDocumentType<TDocuments, TType>
 		>({ ...document, data }, title, { ...options, dependencies })
 
-		this._documents.push(migrationDocument)
+		this._documents.push(doc)
 
-		return migrationDocument
+		return doc
 	}
 
 	/**
@@ -285,13 +284,13 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 			this.createAsset.bind(this),
 		)
 
-		const migrationDocument = new PrismicMigrationDocument<
+		const doc = new PrismicMigrationDocument<
 			ExtractDocumentType<TDocuments, TType>
 		>({ ...document, data }, title, { dependencies })
 
-		this._documents.push(migrationDocument)
+		this._documents.push(doc)
 
-		return migrationDocument
+		return doc
 	}
 
 	/**
@@ -318,7 +317,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 			this.createAsset.bind(this),
 		)
 
-		const migrationDocument = new PrismicMigrationDocument(
+		const doc = new PrismicMigrationDocument(
 			{
 				type: document.type,
 				lang: document.lang,
@@ -332,9 +331,9 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 			{ originalPrismicDocument: document, dependencies },
 		)
 
-		this._documents.push(migrationDocument)
+		this._documents.push(doc)
 
-		return migrationDocument
+		return doc
 	}
 
 	/**
@@ -441,17 +440,17 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * @returns The migration document instance for the original ID, if a matching
 	 *   document is found.
 	 */
-	// getByOriginalID<TType extends TDocuments["type"]>(
-	// 	id: string,
-	// ):
-	// 	| PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>>
-	// 	| undefined {
-	// 	return this._documents.find(
-	// 		(
-	// 			doc,
-	// 		): doc is PrismicMigrationDocument<
-	// 			ExtractDocumentType<TDocuments, TType>
-	// 		> => doc.originalPrismicDocument?.id === id,
-	// 	)
-	// }
+	getByOriginalID<TType extends TDocuments["type"]>(
+		id: string,
+	):
+		| PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>>
+		| undefined {
+		return this._documents.find(
+			(
+				doc,
+			): doc is PrismicMigrationDocument<
+				ExtractDocumentType<TDocuments, TType>
+			> => doc.originalPrismicDocument?.id === id,
+		)
+	}
 }

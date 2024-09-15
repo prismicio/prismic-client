@@ -1,3 +1,5 @@
+import type { Migration } from "../../Migration"
+
 import type { FilledContentRelationshipField } from "../value/contentRelationship"
 import type { PrismicDocument, PrismicDocumentWithUID } from "../value/document"
 import type { FilledImageFieldImage } from "../value/image"
@@ -10,7 +12,7 @@ import type {
 	MigrationRTImageNode,
 } from "./Asset"
 import type { MigrationContentRelationship } from "./ContentRelationship"
-import type { MigrationField, ResolveArgs } from "./Field"
+import type { MigrationField } from "./Field"
 
 /**
  * A utility type that extends any fields in a record with their migration
@@ -154,29 +156,14 @@ export class PrismicMigrationDocument<
 	/**
 	 * Resolves each dependencies of the document with the provided maps.
 	 *
-	 * @param args - A map of documents and a map of assets to resolve content
-	 *   with.
+	 * @param migration - A migration instance with documents and assets to use
+	 *   for resolving the field's value
 	 *
 	 * @internal
 	 */
-	async _resolve(args: ResolveArgs): Promise<void> {
+	async _resolve(migration: Migration): Promise<void> {
 		for (const dependency of this.#dependencies) {
-			await dependency._resolve(args)
+			await dependency._resolve(migration)
 		}
 	}
 }
-
-/**
- * A map of document IDs, documents, and migration documents to content
- * relationship field used to resolve content relationships when patching
- * migration Prismic documents.
- *
- * @typeParam TDocuments - Type of Prismic documents in the repository.
- *
- * @internal
- */
-export type DocumentMap<TDocuments extends PrismicDocument = PrismicDocument> =
-	Map<
-		string | PrismicMigrationDocument<TDocuments>,
-		PrismicDocument | (MigrationDocument<TDocuments> & Pick<TDocuments, "id">)
-	>

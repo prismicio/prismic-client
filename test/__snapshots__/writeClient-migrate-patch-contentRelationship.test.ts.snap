@@ -3,7 +3,12 @@
 exports[`patches link fields > brokenLink > group 1`] = `
 {
   "group": [
-    {},
+    {
+      "field": {
+        "isBroken": true,
+        "type": "Document",
+      },
+    },
   ],
 }
 `;
@@ -14,11 +19,25 @@ exports[`patches link fields > brokenLink > shared slice 1`] = `
     {
       "id": "b9dd0f2c3f8",
       "items": [
-        {},
+        {
+          "field": {
+            "isBroken": true,
+            "type": "Document",
+          },
+        },
       ],
       "primary": {
+        "field": {
+          "isBroken": true,
+          "type": "Document",
+        },
         "group": [
-          {},
+          {
+            "field": {
+              "isBroken": true,
+              "type": "Document",
+            },
+          },
         ],
       },
       "slice_label": null,
@@ -36,9 +55,19 @@ exports[`patches link fields > brokenLink > slice 1`] = `
     {
       "id": "306297c5eda",
       "items": [
-        {},
+        {
+          "field": {
+            "isBroken": true,
+            "type": "Document",
+          },
+        },
       ],
-      "primary": {},
+      "primary": {
+        "field": {
+          "isBroken": true,
+          "type": "Document",
+        },
+      },
       "slice_label": "Aliquet",
       "slice_type": "vel",
     },
@@ -46,7 +75,14 @@ exports[`patches link fields > brokenLink > slice 1`] = `
 }
 `;
 
-exports[`patches link fields > brokenLink > static zone 1`] = `{}`;
+exports[`patches link fields > brokenLink > static zone 1`] = `
+{
+  "field": {
+    "isBroken": true,
+    "type": "Document",
+  },
+}
+`;
 
 exports[`patches link fields > existing > group 1`] = `
 {

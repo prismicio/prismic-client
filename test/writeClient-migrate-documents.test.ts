@@ -8,7 +8,6 @@ import { mockPrismicMigrationAPI } from "./__testutils__/mockPrismicMigrationAPI
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
 
 import * as prismic from "../src"
-import type { DocumentMap } from "../src/types/migration/Document"
 
 // Skip test on Node 16 and 18 (File and FormData support)
 const isNode16 = process.version.startsWith("v16")
@@ -50,33 +49,6 @@ it.concurrent("infers master locale", async (ctx) => {
 	})
 })
 
-it.concurrent("discovers existing documents", async (ctx) => {
-	const client = createTestWriteClient({ ctx })
-
-	const queryResponse = createPagedQueryResponses({
-		ctx,
-		pages: 2,
-		pageSize: 1,
-	})
-
-	mockPrismicRestAPIV2({ ctx, queryResponse })
-	mockPrismicAssetAPI({ ctx, client })
-	mockPrismicMigrationAPI({ ctx, client })
-
-	const migration = prismic.createMigration()
-
-	const reporter = vi.fn()
-
-	await client.migrate(migration, { reporter })
-
-	expect(reporter).toHaveBeenCalledWith({
-		type: "documents:existing",
-		data: {
-			existing: 2,
-		},
-	})
-})
-
 it.concurrent("skips creating existing documents", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
@@ -93,27 +65,16 @@ it.concurrent("skips creating existing documents", async (ctx) => {
 
 	const migration = prismic.createMigration()
 
-	const migrationDocument = migration.updateDocument(document, "foo")
+	migration.updateDocument(document, "foo")
 
 	const reporter = vi.fn()
 
 	await client.migrate(migration, { reporter })
 
 	expect(reporter).toHaveBeenCalledWith({
-		type: "documents:skipping",
-		data: {
-			reason: "exists",
-			current: 1,
-			remaining: 0,
-			total: 1,
-			document: migrationDocument,
-		},
-	})
-	expect(reporter).toHaveBeenCalledWith({
 		type: "documents:created",
 		data: {
 			created: 0,
-			documents: expect.anything(),
 		},
 	})
 })
@@ -134,16 +95,9 @@ it.concurrent("creates new documents", async (ctx) => {
 
 	const migration = prismic.createMigration()
 
-	const migrationDocument = migration.createDocument(document, "foo")
+	const doc = migration.createDocument(document, "foo")
 
-	let documents: DocumentMap | undefined
-	const reporter = vi.fn<(event: prismic.MigrateReporterEvents) => void>(
-		(event) => {
-			if (event.type === "documents:created") {
-				documents = event.data.documents
-			}
-		},
-	)
+	const reporter = vi.fn()
 
 	await client.migrate(migration, { reporter })
 
@@ -153,10 +107,10 @@ it.concurrent("creates new documents", async (ctx) => {
 			current: 1,
 			remaining: 0,
 			total: 1,
-			document: migrationDocument,
+			document: doc,
 		},
 	})
-	expect(documents?.get(migrationDocument)?.id).toBe(newDocument.id)
+	expect(doc.document.id).toBe(newDocument.id)
 })
 
 it.concurrent(
@@ -183,20 +137,13 @@ it.concurrent(
 
 		const migration = prismic.createMigration()
 
-		const migrationDocument = migration.createDocument(document, "foo", {
+		const doc = migration.createDocument(document, "foo", {
 			masterLanguageDocument: migration.createContentRelationship(
 				masterLanguageDocument,
 			),
 		})
 
-		let documents: DocumentMap | undefined
-		const reporter = vi.fn<(event: prismic.MigrateReporterEvents) => void>(
-			(event) => {
-				if (event.type === "documents:created") {
-					documents = event.data.documents
-				}
-			},
-		)
+		const reporter = vi.fn()
 
 		await client.migrate(migration, { reporter })
 
@@ -206,10 +153,10 @@ it.concurrent(
 				current: 1,
 				remaining: 0,
 				total: 1,
-				document: migrationDocument,
+				document: doc,
 			},
 		})
-		ctx.expect(documents?.get(migrationDocument)?.id).toBe(newDocument.id)
+		ctx.expect(migration._documents[0].document.id).toBe(newDocument.id)
 		ctx.expect.assertions(3)
 	},
 )
@@ -242,27 +189,20 @@ it.concurrent(
 			masterLanguageDocument,
 			"foo",
 		)
-		const migrationDocument = migration.createDocument(document, "bar", {
+		const doc = migration.createDocument(document, "bar", {
 			masterLanguageDocument: migration.createContentRelationship(
 				masterLanguageMigrationDocument,
 			),
 		})
 
-		let documents: DocumentMap | undefined
-		const reporter = vi.fn<(event: prismic.MigrateReporterEvents) => void>(
-			(event) => {
-				if (event.type === "documents:created") {
-					documents = event.data.documents
-				}
-			},
-		)
+		const reporter = vi.fn()
 
 		await client.migrate(migration, { reporter })
 
 		ctx
-			.expect(documents?.get(masterLanguageMigrationDocument)?.id)
+			.expect(masterLanguageMigrationDocument.document.id)
 			.toBe(newDocuments[0].id)
-		ctx.expect(documents?.get(migrationDocument)?.id).toBe(newDocuments[1].id)
+		ctx.expect(doc.document.id).toBe(newDocuments[1].id)
 		ctx.expect.assertions(3)
 	},
 )
@@ -291,20 +231,13 @@ it.concurrent(
 
 		const migration = prismic.createMigration()
 
-		const migrationDocument = migration.createDocument(document, "foo", {
+		const doc = migration.createDocument(document, "foo", {
 			masterLanguageDocument: migration.createContentRelationship(
 				() => masterLanguageDocument,
 			),
 		})
 
-		let documents: DocumentMap | undefined
-		const reporter = vi.fn<(event: prismic.MigrateReporterEvents) => void>(
-			(event) => {
-				if (event.type === "documents:created") {
-					documents = event.data.documents
-				}
-			},
-		)
+		const reporter = vi.fn()
 
 		await client.migrate(migration, { reporter })
 
@@ -314,10 +247,10 @@ it.concurrent(
 				current: 1,
 				remaining: 0,
 				total: 1,
-				document: migrationDocument,
+				document: doc,
 			},
 		})
-		ctx.expect(documents?.get(migrationDocument)?.id).toBe(newDocument.id)
+		ctx.expect(doc.document.id).toBe(newDocument.id)
 		ctx.expect.assertions(3)
 	},
 )
@@ -350,27 +283,20 @@ it.concurrent(
 			masterLanguageDocument,
 			"foo",
 		)
-		const migrationDocument = migration.createDocument(document, "bar", {
+		const doc = migration.createDocument(document, "bar", {
 			masterLanguageDocument: migration.createContentRelationship(
 				() => masterLanguageMigrationDocument,
 			),
 		})
 
-		let documents: DocumentMap | undefined
-		const reporter = vi.fn<(event: prismic.MigrateReporterEvents) => void>(
-			(event) => {
-				if (event.type === "documents:created") {
-					documents = event.data.documents
-				}
-			},
-		)
+		const reporter = vi.fn()
 
 		await client.migrate(migration, { reporter })
 
 		ctx
-			.expect(documents?.get(masterLanguageMigrationDocument)?.id)
+			.expect(masterLanguageMigrationDocument.document.id)
 			.toBe(newDocuments[0].id)
-		ctx.expect(documents?.get(migrationDocument)?.id).toBe(newDocuments[1].id)
+		ctx.expect(doc.document.id).toBe(newDocuments[1].id)
 		ctx.expect.assertions(3)
 	},
 )
@@ -403,19 +329,9 @@ it.concurrent(
 
 		const migration = prismic.createMigration()
 
-		const migrationDocument = migration.createDocumentFromPrismic(
-			document,
-			"foo",
-		)
+		const doc = migration.createDocumentFromPrismic(document, "foo")
 
-		let documents: DocumentMap | undefined
-		const reporter = vi.fn<(event: prismic.MigrateReporterEvents) => void>(
-			(event) => {
-				if (event.type === "documents:created") {
-					documents = event.data.documents
-				}
-			},
-		)
+		const reporter = vi.fn()
 
 		await client.migrate(migration, { reporter })
 
@@ -425,10 +341,10 @@ it.concurrent(
 				current: 1,
 				remaining: 0,
 				total: 1,
-				document: migrationDocument,
+				document: doc,
 			},
 		})
-		ctx.expect(documents?.get(migrationDocument)?.id).toBe(newDocument.id)
+		ctx.expect(doc.document.id).toBe(newDocument.id)
 		ctx.expect.assertions(3)
 	},
 )
@@ -457,25 +373,18 @@ it.concurrent("creates master locale documents first", async (ctx) => {
 
 	const migration = prismic.createMigration()
 
-	const migrationDocument = migration.createDocument(document, "bar")
+	const doc = migration.createDocument(document, "bar")
 	const masterLanguageMigrationDocument = migration.createDocument(
 		masterLanguageDocument,
 		"foo",
 	)
 
-	let documents: DocumentMap | undefined
-	const reporter = vi.fn<(event: prismic.MigrateReporterEvents) => void>(
-		(event) => {
-			if (event.type === "documents:created") {
-				documents = event.data.documents
-			}
-		},
-	)
+	const reporter = vi.fn()
 
 	await client.migrate(migration, { reporter })
 
 	ctx
-		.expect(documents?.get(masterLanguageMigrationDocument)?.id)
+		.expect(masterLanguageMigrationDocument.document.id)
 		.toBe(newDocuments[0].id)
-	ctx.expect(documents?.get(migrationDocument)?.id).toBe(newDocuments[1].id)
+	ctx.expect(doc.document.id).toBe(newDocuments[1].id)
 })

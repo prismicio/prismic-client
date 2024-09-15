@@ -41,7 +41,9 @@ testMigrationFieldPatching("patches link fields", {
 
 		return contentRelationship
 	},
-	brokenLink: ({ ctx }) => ctx.mock.value.link({ type: "Document" }),
+	brokenLink: () => {
+		return { type: "Document", isBroken: true }
+	},
 	richTextLinkNode: ({ migration, existingDocuments }) => [
 		{
 			type: RichTextNodeType.paragraph,
