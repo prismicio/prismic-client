@@ -4,11 +4,11 @@ import { validateAssetMetadata } from "./lib/validateAssetMetadata"
 import type { Asset } from "./types/api/asset/asset"
 import type {
 	MigrationAssetConfig,
+	MigrationImage,
 	MigrationLinkToMedia,
 	MigrationRTImageNode,
 } from "./types/migration/Asset"
 import { PrismicMigrationAsset } from "./types/migration/Asset"
-import type { MigrationImage } from "./types/migration/Asset"
 import type { MigrationContentRelationship } from "./types/migration/ContentRelationship"
 import { PrismicMigrationDocument } from "./types/migration/Document"
 import type {
@@ -68,10 +68,9 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *
 	 * @param asset - An asset object from Prismic Asset API.
 	 *
-	 * @returns A migration asset field instance configured to be serialized as an
-	 *   image field by default.
+	 * @returns A migration asset field instance.
 	 */
-	createAsset(asset: Asset): MigrationImage
+	createAsset(asset: Asset): PrismicMigrationAsset
 
 	/**
 	 * Registers an asset to be created in the migration from an image or link to
@@ -85,12 +84,11 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * @param imageOrLinkToMediaField - An image or link to media field from
 	 *   Prismic Document API.
 	 *
-	 * @returns A migration asset field instance configured to be serialized as an
-	 *   image field by default.
+	 * @returns A migration asset field instance.
 	 */
 	createAsset(
 		imageOrLinkToMediaField: FilledImageFieldImage | FilledLinkToMediaField,
-	): MigrationImage
+	): PrismicMigrationAsset
 
 	/**
 	 * Registers an asset to be created in the migration from a file.
@@ -104,8 +102,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * @param filename - The filename of the asset.
 	 * @param params - Additional asset data.
 	 *
-	 * @returns A migration asset field instance configured to be serialized as an
-	 *   image field by default.
+	 * @returns A migration asset field instance.
 	 */
 	createAsset(
 		file: MigrationAssetConfig["file"],
@@ -116,7 +113,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 			alt?: string
 			tags?: string[]
 		},
-	): MigrationImage
+	): PrismicMigrationAsset
 
 	/**
 	 * Registers an asset to be created in the migration from a file, an asset
@@ -127,8 +124,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Instead it registers it in your migration. The asset will be created when
 	 * the migration is executed through the `writeClient.migrate()` method.
 	 *
-	 * @returns A migration asset field instance configured to be serialized as an
-	 *   image field by default.
+	 * @returns A migration asset field instance.
 	 */
 	createAsset(
 		fileOrAssetOrField:
@@ -148,7 +144,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 			alt?: string
 			tags?: string[]
 		} = {},
-	): MigrationImage {
+	): PrismicMigrationAsset {
 		let config: MigrationAssetConfig
 		let maybeInitialField: FilledImageFieldImage | undefined
 		if (typeof fileOrAssetOrField === "object" && "url" in fileOrAssetOrField) {
@@ -214,11 +210,11 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 		const maybeAsset = this._assets.get(config.id)
 		if (maybeAsset) {
 			// Consolidate existing asset with new asset value if possible
-			maybeAsset._config.notes = config.notes || maybeAsset._config.notes
-			maybeAsset._config.credits = config.credits || maybeAsset._config.credits
-			maybeAsset._config.alt = config.alt || maybeAsset._config.alt
-			maybeAsset._config.tags = Array.from(
-				new Set([...(config.tags || []), ...(maybeAsset._config.tags || [])]),
+			maybeAsset.config.notes = maybeAsset.config.notes || config.notes
+			maybeAsset.config.credits = maybeAsset.config.credits || config.credits
+			maybeAsset.config.alt = maybeAsset.config.alt || config.alt
+			maybeAsset.config.tags = Array.from(
+				new Set([...(maybeAsset.config.tags || []), ...(config.tags || [])]),
 			)
 		} else {
 			this._assets.set(config.id, migrationAsset)
@@ -443,7 +439,9 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 		}
 
 		if (is.filledImage(input)) {
-			const image = this.createAsset(input)
+			const image: MigrationImage = {
+				id: this.createAsset(input),
+			}
 
 			const {
 				id: _id,
@@ -457,7 +455,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 
 			for (const name in thumbnails) {
 				if (is.filledImage(thumbnails[name])) {
-					image.addThumbnail(name, this.createAsset(thumbnails[name]))
+					image[name] = this.createAsset(thumbnails[name])
 				}
 			}
 

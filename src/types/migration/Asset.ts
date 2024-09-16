@@ -6,14 +6,6 @@ import { type RTImageNode } from "../value/richText"
 import type { InjectMigrationSpecificTypes } from "./Document"
 
 /**
- * Any type of image field handled by {@link PrismicMigrationAsset}
- */
-type ImageLike =
-	| FilledImageFieldImage
-	| LinkToMediaField<"filled">
-	| RTImageNode
-
-/**
  * An asset to be uploaded to Prismic media library.
  */
 export type MigrationAssetConfig = {
@@ -60,7 +52,15 @@ export type MigrationAssetConfig = {
 /**
  * An image field in a migration.
  */
-export type MigrationImage = PrismicMigrationAsset
+export type MigrationImage =
+	| PrismicMigrationAsset
+	| ({
+			/**
+			 * A reference to the migration asset used to resolve the image field's
+			 * value.
+			 */
+			id: PrismicMigrationAsset
+	  } & Record<string, PrismicMigrationAsset>)
 
 /**
  * A link to media field in a migration.
@@ -99,37 +99,25 @@ export type MigrationRTImageNode = InjectMigrationSpecificTypes<
 
 /**
  * A migration asset used with the Prismic Migration API.
- *
- * @typeParam TImageLike - Type of the image-like value.
  */
 export class PrismicMigrationAsset {
 	/**
-	 * The initial field value this migration field was created with.
-	 *
-	 * @internal
+	 * Asset object from Prismic, available once created.
 	 */
-	_initialField?: ImageLike
+	asset?: Asset
 
 	/**
 	 * Configuration of the asset.
-	 *
-	 * @internal
 	 */
-	_config: MigrationAssetConfig
+	config: MigrationAssetConfig
 
 	/**
-	 * Asset object from Prismic, available once created.
-	 *
-	 * @internal
+	 * The initial field value this migration field was created with.
 	 */
-	_asset?: Asset
-
-	/**
-	 * Thumbnails of the image.
-	 *
-	 * @internal
-	 */
-	_thumbnails: Record<string, PrismicMigrationAsset> = {}
+	originalField?:
+		| FilledImageFieldImage
+		| LinkToMediaField<"filled">
+		| RTImageNode
 
 	/**
 	 * Creates a migration asset used with the Prismic Migration API.
@@ -139,26 +127,14 @@ export class PrismicMigrationAsset {
 	 *
 	 * @returns A migration asset instance.
 	 */
-	constructor(config: MigrationAssetConfig, initialField?: ImageLike) {
-		this._config = config
-		this._initialField = initialField
-	}
-
-	/**
-	 * Adds a thumbnail to the migration asset instance.
-	 *
-	 * @remarks
-	 * This is only useful if the migration asset instance represents an image
-	 * field.
-	 *
-	 * @param name - Name of the thumbnail.
-	 * @param thumbnail - Thumbnail to add as a migration image instance.
-	 *
-	 * @returns The current migration image instance, useful for chaining.
-	 */
-	addThumbnail(name: string, thumbnail: PrismicMigrationAsset): this {
-		this._thumbnails[name] = thumbnail
-
-		return this
+	constructor(
+		config: MigrationAssetConfig,
+		initialField?:
+			| FilledImageFieldImage
+			| LinkToMediaField<"filled">
+			| RTImageNode,
+	) {
+		this.config = config
+		this.originalField = initialField
 	}
 }

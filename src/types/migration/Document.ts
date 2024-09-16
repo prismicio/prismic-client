@@ -105,9 +105,9 @@ export class PrismicMigrationDocument<
 	 */
 	title: string
 
-	// We're forced to inline `ContentRelationshipMigrationField` here, otherwise
-	// it creates a circular reference to itself which makes TypeScript unhappy.
-	// (but I think it's weird and it doesn't make sense :thinking:)
+	/**
+	 * The link to the master language document to relate the document to if any.
+	 */
 	masterLanguageDocument?: MigrationContentRelationship
 
 	/**

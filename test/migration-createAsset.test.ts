@@ -17,7 +17,7 @@ it("creates an asset from a url", () => {
 
 	migration.createAsset(file, filename)
 
-	expect(migration._assets.get(file)?._config).toEqual({
+	expect(migration._assets.get(file)?.config).toEqual({
 		id: file,
 		file,
 		filename,
@@ -32,7 +32,7 @@ it("creates an asset from a file", () => {
 
 	migration.createAsset(file, filename)
 
-	expect(migration._assets.get(file)?._config).toEqual({
+	expect(migration._assets.get(file)?.config).toEqual({
 		id: file,
 		file,
 		filename,
@@ -69,7 +69,7 @@ it("creates an asset from an existing asset", () => {
 
 	migration.createAsset(asset)
 
-	expect(migration._assets.get(asset.id)?._config).toStrictEqual({
+	expect(migration._assets.get(asset.id)?.config).toStrictEqual({
 		id: asset.id,
 		file: asset.url,
 		filename: asset.filename,
@@ -94,7 +94,7 @@ it("creates an asset from an image field", () => {
 
 	migration.createAsset(image)
 
-	expect(migration._assets.get(image.id)?._config).toEqual({
+	expect(migration._assets.get(image.id)?.config).toEqual({
 		id: image.id,
 		file: image.url,
 		filename: image.url.split("/").pop(),
@@ -119,7 +119,7 @@ it("creates an asset from a link to media field", () => {
 
 	migration.createAsset(link)
 
-	expect(migration._assets.get(link.id)?._config).toEqual({
+	expect(migration._assets.get(link.id)?.config).toEqual({
 		id: link.id,
 		file: link.url,
 		filename: link.name,
@@ -169,7 +169,7 @@ it("consolidates existing assets with additional metadata", () => {
 
 	migration.createAsset(file, filename)
 
-	expect(migration._assets.get(file)?._config).toStrictEqual({
+	expect(migration._assets.get(file)?.config).toStrictEqual({
 		id: file,
 		file,
 		filename,
@@ -186,7 +186,7 @@ it("consolidates existing assets with additional metadata", () => {
 		tags: ["tag"],
 	})
 
-	expect(migration._assets.get(file)?._config).toStrictEqual({
+	expect(migration._assets.get(file)?.config).toStrictEqual({
 		id: file,
 		file,
 		filename,
@@ -203,25 +203,25 @@ it("consolidates existing assets with additional metadata", () => {
 		tags: ["tag", "tag 2"],
 	})
 
-	expect(migration._assets.get(file)?._config).toStrictEqual({
+	expect(migration._assets.get(file)?.config).toStrictEqual({
 		id: file,
 		file,
 		filename,
-		notes: "notes 2",
-		alt: "alt 2",
-		credits: "credits 2",
+		notes: "notes",
+		alt: "alt",
+		credits: "credits",
 		tags: ["tag", "tag 2"],
 	})
 
 	migration.createAsset(file, filename)
 
-	expect(migration._assets.get(file)?._config).toStrictEqual({
+	expect(migration._assets.get(file)?.config).toStrictEqual({
 		id: file,
 		file,
 		filename,
-		notes: "notes 2",
-		alt: "alt 2",
-		credits: "credits 2",
+		notes: "notes",
+		alt: "alt",
+		credits: "credits",
 		tags: ["tag", "tag 2"],
 	})
 })

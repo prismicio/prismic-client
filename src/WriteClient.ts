@@ -334,7 +334,7 @@ export class WriteClient<
 			})
 
 			const { file, filename, notes, credits, alt, tags } =
-				migrationAsset._config
+				migrationAsset.config
 
 			let resolvedFile: PostAssetParams["file"] | File
 			if (typeof file === "string") {
@@ -370,7 +370,7 @@ export class WriteClient<
 				...fetchParams,
 			})
 
-			migrationAsset._asset = asset
+			migrationAsset.asset = asset
 		}
 
 		reporter?.({

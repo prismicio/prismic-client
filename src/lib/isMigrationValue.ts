@@ -66,7 +66,15 @@ export const contentRelationship = (
  * This is not an official helper function and it's only designed to work with internal processes.
  */
 export const image = (value: UnknownValue): value is MigrationImage => {
-	return value instanceof PrismicMigrationAsset
+	return (
+		value instanceof PrismicMigrationAsset ||
+		(typeof value === "object" &&
+			value !== null &&
+			"id" in value &&
+			Object.values(value).every(
+				(maybeThumbnail) => maybeThumbnail instanceof PrismicMigrationAsset,
+			))
+	)
 }
 
 /**

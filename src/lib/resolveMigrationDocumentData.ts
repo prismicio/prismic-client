@@ -1,7 +1,8 @@
-import type {
-	MigrationImage,
-	MigrationLinkToMedia,
-	MigrationRTImageNode,
+import {
+	type MigrationImage,
+	type MigrationLinkToMedia,
+	type MigrationRTImageNode,
+	PrismicMigrationAsset,
 } from "../types/migration/Asset"
 import type {
 	MigrationContentRelationship,
@@ -73,8 +74,11 @@ export const resolveMigrationImage = (
 	migration: Migration,
 	withThumbnails?: boolean,
 ): FilledImageFieldImage | undefined => {
-	const asset = migration._assets.get(image._config.id)?._asset
-	const maybeInitialField = image._initialField
+	const { id: master, ...thumbnails } =
+		image instanceof PrismicMigrationAsset ? { id: image } : image
+
+	const asset = migration._assets.get(master.config.id)?.asset
+	const maybeInitialField = master.originalField
 
 	if (asset) {
 		const parameters = (maybeInitialField?.url || asset.url).split("?")[1]
@@ -88,19 +92,15 @@ export const resolveMigrationImage = (
 				? maybeInitialField?.edit
 				: { x: 0, y: 0, zoom: 1, background: "transparent" }
 
-		const alt =
-			(maybeInitialField && "alt" in maybeInitialField
-				? maybeInitialField.alt
-				: undefined) ||
-			asset.alt ||
-			null
+		// We give priority to the asset's specific alt text, then the image's general alt text
+		const alt = master.config.alt || asset.alt || null
 
-		const thumbnails: Record<string, FilledImageFieldImage> = {}
+		const resolvedThumbnails: Record<string, FilledImageFieldImage> = {}
 		if (withThumbnails) {
-			for (const [name, thumbnail] of Object.entries(image._thumbnails)) {
+			for (const [name, thumbnail] of Object.entries(thumbnails)) {
 				const resolvedThumbnail = resolveMigrationImage(thumbnail, migration)
 				if (resolvedThumbnail) {
-					thumbnails[name] = resolvedThumbnail
+					resolvedThumbnails[name] = resolvedThumbnail
 				}
 			}
 		}
@@ -112,7 +112,7 @@ export const resolveMigrationImage = (
 			edit,
 			alt: alt,
 			copyright: asset.credits || null,
-			...thumbnails,
+			...resolvedThumbnails,
 		}
 	}
 }
@@ -157,7 +157,7 @@ export const resolveMigrationLinkToMedia = (
 	linkToMedia: MigrationLinkToMedia,
 	migration: Migration,
 ): LinkToMediaField<"filled"> | undefined => {
-	const asset = migration._assets.get(linkToMedia.id._config.id)?._asset
+	const asset = migration._assets.get(linkToMedia.id.config.id)?.asset
 
 	if (asset) {
 		return {
