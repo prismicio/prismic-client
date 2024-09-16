@@ -37,8 +37,8 @@ export async function resolveMigrationContentRelationship(
 
 	if (relation instanceof PrismicMigrationDocument) {
 		return relation.document.id
-			? { link_type: "Document", id: relation.document.id }
-			: { link_type: "Document" }
+			? { link_type: LinkType.Document, id: relation.document.id }
+			: { link_type: LinkType.Document }
 	}
 
 	if (relation) {
@@ -54,10 +54,10 @@ export async function resolveMigrationContentRelationship(
 			}
 		}
 
-		return { link_type: "Document", id: relation.id }
+		return { link_type: LinkType.Document, id: relation.id }
 	}
 
-	return { link_type: "Document" }
+	return { link_type: LinkType.Document }
 }
 
 /**

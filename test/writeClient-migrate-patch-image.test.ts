@@ -6,6 +6,17 @@ testMigrationFieldPatching<MigrationImage | ImageField>(
 	"patches image fields",
 	{
 		new: ({ migration }) => migration.createAsset("foo", "foo.png"),
+		newLongForm: ({ migration }) => {
+			return {
+				id: migration.createAsset("foo", "foo.png"),
+			}
+		},
+		newThumbnails: ({ migration }) => {
+			return {
+				id: migration.createAsset("foo", "foo.png"),
+				square: migration.createAsset("foo", "foo.png"),
+			}
+		},
 		existing: ({ existingAssets }) => {
 			const asset = existingAssets[0]
 
@@ -22,16 +33,16 @@ testMigrationFieldPatching<MigrationImage | ImageField>(
 )
 
 testMigrationFieldPatching<ImageField>(
-	"patches image fields",
+	"patches image fields (from Prismic)",
 	{
-		otherRepository: ({ ctx, mockedDomain }) => {
+		simple: ({ ctx, mockedDomain }) => {
 			return {
 				...ctx.mock.value.image({ state: "filled" }),
 				id: "foo-id",
 				url: `${mockedDomain}/foo.png`,
 			}
 		},
-		otherRepositoryWithThumbnails: ({ ctx, mockedDomain }) => {
+		withThumbnails: ({ ctx, mockedDomain }) => {
 			const image = ctx.mock.value.image({ state: "filled" })
 			const id = "foo-id"
 
@@ -46,7 +57,7 @@ testMigrationFieldPatching<ImageField>(
 				},
 			}
 		},
-		otherRepositoryWithThumbnailsNoAlt: ({ ctx, mockedDomain }) => {
+		withThumbnailsNoAlt: ({ ctx, mockedDomain }) => {
 			const image = ctx.mock.value.image({ state: "filled" })
 			image.alt = null
 			const id = "foo-id"
@@ -62,7 +73,7 @@ testMigrationFieldPatching<ImageField>(
 				},
 			}
 		},
-		otherRepositoryWithTypeThumbnail: ({ ctx, mockedDomain }) => {
+		withSpecialTypeThumbnail: ({ ctx, mockedDomain }) => {
 			const image = ctx.mock.value.image({ state: "filled" })
 			const id = "foo-id"
 
@@ -77,7 +88,7 @@ testMigrationFieldPatching<ImageField>(
 				},
 			}
 		},
-		otherRepositoryEmpty: ({ ctx }) => ctx.mock.value.image({ state: "empty" }),
+		empty: ({ ctx }) => ctx.mock.value.image({ state: "empty" }),
 	},
 	{ mode: "fromPrismic" },
 )

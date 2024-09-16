@@ -7,7 +7,6 @@ import type {
 } from "../src"
 import { LinkType, RichTextNodeType } from "../src"
 import type { Asset } from "../src/types/api/asset/asset"
-import { AssetType } from "../src/types/api/asset/asset"
 import type { MigrationLinkToMedia } from "../src/types/migration/Asset"
 
 const assetToLinkToMedia = (
@@ -40,16 +39,24 @@ testMigrationFieldPatching<
 			id: migration.createAsset("foo", "foo.png"),
 		}
 	},
-	existing: ({ existingAssets }) => assetToLinkToMedia(existingAssets[0]),
-	existingNonImage: ({ existingAssets }) => {
-		existingAssets[0].filename = "foo.pdf"
-		existingAssets[0].extension = "pdf"
-		existingAssets[0].kind = AssetType.Document
-		existingAssets[0].width = undefined
-		existingAssets[0].height = undefined
-
-		return assetToLinkToMedia(existingAssets[0])
+	newWithText: ({ migration }) => {
+		return {
+			link_type: LinkType.Media,
+			id: migration.createAsset("foo", "foo.png"),
+			text: "foo",
+		}
 	},
+	newNonImage: ({ migration }) => {
+		const migrationAsset = migration.createAsset("foo", "foo.pdf", {
+			tags: ["__pdf__"],
+		})
+
+		return {
+			link_type: LinkType.Media,
+			id: migrationAsset,
+		}
+	},
+	existing: ({ existingAssets }) => assetToLinkToMedia(existingAssets[0]),
 	richTextNew: ({ migration }) => [
 		{
 			type: RichTextNodeType.paragraph,
@@ -86,16 +93,16 @@ testMigrationFieldPatching<
 })
 
 testMigrationFieldPatching<LinkToMediaField | RichTextField>(
-	"patches link to media fields",
+	"patches link to media fields (from Prismic)",
 	{
-		otherRepository: ({ ctx, mockedDomain }) => {
+		simple: ({ ctx, mockedDomain }) => {
 			return {
 				...ctx.mock.value.linkToMedia({ state: "filled" }),
 				id: "foo-id",
 				url: `${mockedDomain}/foo.png`,
 			}
 		},
-		richTextOtherRepository: ({ ctx, mockedDomain }) => [
+		inRichText: ({ ctx, mockedDomain }) => [
 			{
 				type: RichTextNodeType.paragraph,
 				text: "lorem",

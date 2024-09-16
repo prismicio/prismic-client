@@ -389,6 +389,14 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 		)
 	}
 
+	/**
+	 * Migrates a Prismic document data from another repository so that it can be
+	 * created through the current repository's Migration API.
+	 *
+	 * @param input - The Prismic document data to migrate.
+	 *
+	 * @returns The migrated Prismic document data.
+	 */
 	#migratePrismicDocumentData(input: unknown): unknown {
 		if (is.filledContentRelationship(input)) {
 			if (input.isBroken) {

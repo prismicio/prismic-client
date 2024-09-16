@@ -1,17 +1,395 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`patches link to media fields (from Prismic) > inRichText > group 1`] = `
+{
+  "group": [
+    {
+      "field": [
+        {
+          "spans": [
+            {
+              "end": 5,
+              "start": 0,
+              "type": "strong",
+            },
+            {
+              "data": {
+                "height": "1",
+                "id": "fc26fe8d098",
+                "kind": "image",
+                "link_type": "Media",
+                "name": "default.jpg",
+                "size": "1",
+                "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+                "width": "1",
+              },
+              "end": 5,
+              "start": 0,
+              "type": "hyperlink",
+            },
+          ],
+          "text": "lorem",
+          "type": "paragraph",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields (from Prismic) > inRichText > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [
+                {
+                  "end": 5,
+                  "start": 0,
+                  "type": "strong",
+                },
+                {
+                  "data": {
+                    "height": "1",
+                    "id": "961adcf1f5d",
+                    "kind": "image",
+                    "link_type": "Media",
+                    "name": "default.jpg",
+                    "size": "1",
+                    "url": "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=2200&h=1467&fit=crop",
+                    "width": "1",
+                  },
+                  "end": 5,
+                  "start": 0,
+                  "type": "hyperlink",
+                },
+              ],
+              "text": "lorem",
+              "type": "paragraph",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [
+              {
+                "end": 5,
+                "start": 0,
+                "type": "strong",
+              },
+              {
+                "data": {
+                  "height": "1",
+                  "id": "961adcf1f5d",
+                  "kind": "image",
+                  "link_type": "Media",
+                  "name": "default.jpg",
+                  "size": "1",
+                  "url": "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=2200&h=1467&fit=crop",
+                  "width": "1",
+                },
+                "end": 5,
+                "start": 0,
+                "type": "hyperlink",
+              },
+            ],
+            "text": "lorem",
+            "type": "paragraph",
+          },
+        ],
+        "group": [
+          {
+            "field": [
+              {
+                "spans": [
+                  {
+                    "end": 5,
+                    "start": 0,
+                    "type": "strong",
+                  },
+                  {
+                    "data": {
+                      "height": "1",
+                      "id": "961adcf1f5d",
+                      "kind": "image",
+                      "link_type": "Media",
+                      "name": "default.jpg",
+                      "size": "1",
+                      "url": "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=2200&h=1467&fit=crop",
+                      "width": "1",
+                    },
+                    "end": 5,
+                    "start": 0,
+                    "type": "hyperlink",
+                  },
+                ],
+                "text": "lorem",
+                "type": "paragraph",
+              },
+            ],
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields (from Prismic) > inRichText > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [
+                {
+                  "end": 5,
+                  "start": 0,
+                  "type": "strong",
+                },
+                {
+                  "data": {
+                    "height": "1",
+                    "id": "54f4a69ff72",
+                    "kind": "image",
+                    "link_type": "Media",
+                    "name": "default.jpg",
+                    "size": "1",
+                    "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=2560&h=1440&fit=crop",
+                    "width": "1",
+                  },
+                  "end": 5,
+                  "start": 0,
+                  "type": "hyperlink",
+                },
+              ],
+              "text": "lorem",
+              "type": "paragraph",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [
+              {
+                "end": 5,
+                "start": 0,
+                "type": "strong",
+              },
+              {
+                "data": {
+                  "height": "1",
+                  "id": "54f4a69ff72",
+                  "kind": "image",
+                  "link_type": "Media",
+                  "name": "default.jpg",
+                  "size": "1",
+                  "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=2560&h=1440&fit=crop",
+                  "width": "1",
+                },
+                "end": 5,
+                "start": 0,
+                "type": "hyperlink",
+              },
+            ],
+            "text": "lorem",
+            "type": "paragraph",
+          },
+        ],
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields (from Prismic) > inRichText > static zone 1`] = `
+{
+  "field": [
+    {
+      "spans": [
+        {
+          "end": 5,
+          "start": 0,
+          "type": "strong",
+        },
+        {
+          "data": {
+            "height": "1",
+            "id": "1d17b04a95c",
+            "kind": "image",
+            "link_type": "Media",
+            "name": "default.jpg",
+            "size": "1",
+            "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
+            "width": "1",
+          },
+          "end": 5,
+          "start": 0,
+          "type": "hyperlink",
+        },
+      ],
+      "text": "lorem",
+      "type": "paragraph",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields (from Prismic) > simple > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "height": "1",
+        "id": "fc26fe8d098",
+        "kind": "image",
+        "link_type": "Media",
+        "name": "default.jpg",
+        "size": "1",
+        "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+        "width": "1",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields (from Prismic) > simple > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": {
+            "height": "1",
+            "id": "961adcf1f5d",
+            "kind": "image",
+            "link_type": "Media",
+            "name": "default.jpg",
+            "size": "1",
+            "url": "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=2200&h=1467&fit=crop",
+            "width": "1",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "height": "1",
+          "id": "961adcf1f5d",
+          "kind": "image",
+          "link_type": "Media",
+          "name": "default.jpg",
+          "size": "1",
+          "url": "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=2200&h=1467&fit=crop",
+          "width": "1",
+        },
+        "group": [
+          {
+            "field": {
+              "height": "1",
+              "id": "961adcf1f5d",
+              "kind": "image",
+              "link_type": "Media",
+              "name": "default.jpg",
+              "size": "1",
+              "url": "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=2200&h=1467&fit=crop",
+              "width": "1",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields (from Prismic) > simple > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": {
+            "height": "1",
+            "id": "54f4a69ff72",
+            "kind": "image",
+            "link_type": "Media",
+            "name": "default.jpg",
+            "size": "1",
+            "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=2560&h=1440&fit=crop",
+            "width": "1",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "height": "1",
+          "id": "54f4a69ff72",
+          "kind": "image",
+          "link_type": "Media",
+          "name": "default.jpg",
+          "size": "1",
+          "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=2560&h=1440&fit=crop",
+          "width": "1",
+        },
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields (from Prismic) > simple > static zone 1`] = `
+{
+  "field": {
+    "height": "1",
+    "id": "1d17b04a95c",
+    "kind": "image",
+    "link_type": "Media",
+    "name": "default.jpg",
+    "size": "1",
+    "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
+    "width": "1",
+  },
+}
+`;
+
 exports[`patches link to media fields > existing > group 1`] = `
 {
   "group": [
     {
       "field": {
         "height": "1",
-        "id": "id-existing",
+        "id": "asset.id-existing",
         "kind": "image",
         "link_type": "Media",
         "name": "default.jpg",
         "size": "1",
-        "url": "https://images.unsplash.com/reserve/HgZuGu3gSD6db21T3lxm_San%20Zenone.jpg?w=6373&h=4253&fit=crop",
+        "url": "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=4554&h=3036&fit=crop",
         "width": "1",
       },
     },
@@ -23,17 +401,17 @@ exports[`patches link to media fields > existing > shared slice 1`] = `
 {
   "slices": [
     {
-      "id": "b9dd0f2c3f8",
+      "id": "9b9dd0f2c3f",
       "items": [
         {
           "field": {
             "height": "1",
-            "id": "id-existing",
+            "id": "asset.id-existing",
             "kind": "image",
             "link_type": "Media",
             "name": "default.jpg",
             "size": "1",
-            "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
+            "url": "https://images.unsplash.com/photo-1504567961542-e24d9439a724?w=4608&h=3456&fit=crop",
             "width": "1",
           },
         },
@@ -41,33 +419,33 @@ exports[`patches link to media fields > existing > shared slice 1`] = `
       "primary": {
         "field": {
           "height": "1",
-          "id": "id-existing",
+          "id": "asset.id-existing",
           "kind": "image",
           "link_type": "Media",
           "name": "default.jpg",
           "size": "1",
-          "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
+          "url": "https://images.unsplash.com/photo-1504567961542-e24d9439a724?w=4608&h=3456&fit=crop",
           "width": "1",
         },
         "group": [
           {
             "field": {
               "height": "1",
-              "id": "id-existing",
+              "id": "asset.id-existing",
               "kind": "image",
               "link_type": "Media",
               "name": "default.jpg",
               "size": "1",
-              "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
+              "url": "https://images.unsplash.com/photo-1504567961542-e24d9439a724?w=4608&h=3456&fit=crop",
               "width": "1",
             },
           },
         ],
       },
       "slice_label": null,
-      "slice_type": "dignissim",
-      "variation": "vitae",
-      "version": "bfc9053",
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
     },
   ],
 }
@@ -77,17 +455,17 @@ exports[`patches link to media fields > existing > slice 1`] = `
 {
   "slices": [
     {
-      "id": "306297c5eda",
+      "id": "5306297c5ed",
       "items": [
         {
           "field": {
             "height": "1",
-            "id": "id-existing",
+            "id": "asset.id-existing",
             "kind": "image",
             "link_type": "Media",
             "name": "default.jpg",
             "size": "1",
-            "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
+            "url": "https://images.unsplash.com/photo-1587502537745-84b86da1204f?w=6550&h=4367&fit=crop",
             "width": "1",
           },
         },
@@ -95,17 +473,17 @@ exports[`patches link to media fields > existing > slice 1`] = `
       "primary": {
         "field": {
           "height": "1",
-          "id": "id-existing",
+          "id": "asset.id-existing",
           "kind": "image",
           "link_type": "Media",
           "name": "default.jpg",
           "size": "1",
-          "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
+          "url": "https://images.unsplash.com/photo-1587502537745-84b86da1204f?w=6550&h=4367&fit=crop",
           "width": "1",
         },
       },
-      "slice_label": "Aliquet",
-      "slice_type": "vel",
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
     },
   ],
 }
@@ -115,125 +493,13 @@ exports[`patches link to media fields > existing > static zone 1`] = `
 {
   "field": {
     "height": "1",
-    "id": "id-existing",
+    "id": "asset.id-existing",
     "kind": "image",
     "link_type": "Media",
     "name": "default.jpg",
     "size": "1",
-    "url": "https://images.unsplash.com/photo-1587502537745-84b86da1204f?w=6550&h=4367&fit=crop",
+    "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
     "width": "1",
-  },
-}
-`;
-
-exports[`patches link to media fields > existingNonImage > group 1`] = `
-{
-  "group": [
-    {
-      "field": {
-        "id": "id-existing",
-        "kind": "document",
-        "link_type": "Media",
-        "name": "foo.pdf",
-        "size": "1",
-        "url": "https://images.unsplash.com/reserve/HgZuGu3gSD6db21T3lxm_San%20Zenone.jpg?w=6373&h=4253&fit=crop",
-      },
-    },
-  ],
-}
-`;
-
-exports[`patches link to media fields > existingNonImage > shared slice 1`] = `
-{
-  "slices": [
-    {
-      "id": "b9dd0f2c3f8",
-      "items": [
-        {
-          "field": {
-            "id": "id-existing",
-            "kind": "document",
-            "link_type": "Media",
-            "name": "foo.pdf",
-            "size": "1",
-            "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
-          },
-        },
-      ],
-      "primary": {
-        "field": {
-          "id": "id-existing",
-          "kind": "document",
-          "link_type": "Media",
-          "name": "foo.pdf",
-          "size": "1",
-          "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
-        },
-        "group": [
-          {
-            "field": {
-              "id": "id-existing",
-              "kind": "document",
-              "link_type": "Media",
-              "name": "foo.pdf",
-              "size": "1",
-              "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
-            },
-          },
-        ],
-      },
-      "slice_label": null,
-      "slice_type": "dignissim",
-      "variation": "vitae",
-      "version": "bfc9053",
-    },
-  ],
-}
-`;
-
-exports[`patches link to media fields > existingNonImage > slice 1`] = `
-{
-  "slices": [
-    {
-      "id": "306297c5eda",
-      "items": [
-        {
-          "field": {
-            "id": "id-existing",
-            "kind": "document",
-            "link_type": "Media",
-            "name": "foo.pdf",
-            "size": "1",
-            "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
-          },
-        },
-      ],
-      "primary": {
-        "field": {
-          "id": "id-existing",
-          "kind": "document",
-          "link_type": "Media",
-          "name": "foo.pdf",
-          "size": "1",
-          "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
-        },
-      },
-      "slice_label": "Aliquet",
-      "slice_type": "vel",
-    },
-  ],
-}
-`;
-
-exports[`patches link to media fields > existingNonImage > static zone 1`] = `
-{
-  "field": {
-    "id": "id-existing",
-    "kind": "document",
-    "link_type": "Media",
-    "name": "foo.pdf",
-    "size": "1",
-    "url": "https://images.unsplash.com/photo-1587502537745-84b86da1204f?w=6550&h=4367&fit=crop",
   },
 }
 `;
@@ -244,12 +510,12 @@ exports[`patches link to media fields > new > group 1`] = `
     {
       "field": {
         "height": "1",
-        "id": "dfdd322ca9d",
+        "id": "fdd322ca9d5",
         "kind": "image",
         "link_type": "Media",
         "name": "default.jpg",
         "size": "1",
-        "url": "https://images.unsplash.com/reserve/HgZuGu3gSD6db21T3lxm_San%20Zenone.jpg?w=6373&h=4253&fit=crop",
+        "url": "https://images.unsplash.com/photo-1587502537745-84b86da1204f?w=6550&h=4367&fit=crop",
         "width": "1",
       },
     },
@@ -261,17 +527,17 @@ exports[`patches link to media fields > new > shared slice 1`] = `
 {
   "slices": [
     {
-      "id": "b9dd0f2c3f8",
+      "id": "9b9dd0f2c3f",
       "items": [
         {
           "field": {
             "height": "1",
-            "id": "0eddbd0255b",
+            "id": "c0eddbd0255",
             "kind": "image",
             "link_type": "Media",
             "name": "default.jpg",
             "size": "1",
-            "url": "https://images.unsplash.com/reserve/HgZuGu3gSD6db21T3lxm_San%20Zenone.jpg?w=6373&h=4253&fit=crop",
+            "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
             "width": "1",
           },
         },
@@ -279,33 +545,33 @@ exports[`patches link to media fields > new > shared slice 1`] = `
       "primary": {
         "field": {
           "height": "1",
-          "id": "0eddbd0255b",
+          "id": "c0eddbd0255",
           "kind": "image",
           "link_type": "Media",
           "name": "default.jpg",
           "size": "1",
-          "url": "https://images.unsplash.com/reserve/HgZuGu3gSD6db21T3lxm_San%20Zenone.jpg?w=6373&h=4253&fit=crop",
+          "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
           "width": "1",
         },
         "group": [
           {
             "field": {
               "height": "1",
-              "id": "0eddbd0255b",
+              "id": "c0eddbd0255",
               "kind": "image",
               "link_type": "Media",
               "name": "default.jpg",
               "size": "1",
-              "url": "https://images.unsplash.com/reserve/HgZuGu3gSD6db21T3lxm_San%20Zenone.jpg?w=6373&h=4253&fit=crop",
+              "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
               "width": "1",
             },
           },
         ],
       },
       "slice_label": null,
-      "slice_type": "dignissim",
-      "variation": "vitae",
-      "version": "bfc9053",
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
     },
   ],
 }
@@ -315,17 +581,17 @@ exports[`patches link to media fields > new > slice 1`] = `
 {
   "slices": [
     {
-      "id": "306297c5eda",
+      "id": "5306297c5ed",
       "items": [
         {
           "field": {
             "height": "1",
-            "id": "2beb55ec2f4",
+            "id": "82beb55ec2f",
             "kind": "image",
             "link_type": "Media",
             "name": "default.jpg",
             "size": "1",
-            "url": "https://images.unsplash.com/photo-1444464666168-49d633b86797?w=4844&h=3234&fit=crop",
+            "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
             "width": "1",
           },
         },
@@ -333,17 +599,17 @@ exports[`patches link to media fields > new > slice 1`] = `
       "primary": {
         "field": {
           "height": "1",
-          "id": "2beb55ec2f4",
+          "id": "82beb55ec2f",
           "kind": "image",
           "link_type": "Media",
           "name": "default.jpg",
           "size": "1",
-          "url": "https://images.unsplash.com/photo-1444464666168-49d633b86797?w=4844&h=3234&fit=crop",
+          "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
           "width": "1",
         },
       },
-      "slice_label": "Aliquet",
-      "slice_type": "vel",
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
     },
   ],
 }
@@ -353,29 +619,142 @@ exports[`patches link to media fields > new > static zone 1`] = `
 {
   "field": {
     "height": "1",
-    "id": "bbad670dad7",
+    "id": "bad670dad77",
     "kind": "image",
     "link_type": "Media",
     "name": "default.jpg",
     "size": "1",
-    "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
+    "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
     "width": "1",
   },
 }
 `;
 
-exports[`patches link to media fields > otherRepository > group 1`] = `
+exports[`patches link to media fields > newNonImage > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "id": "fdd322ca9d5",
+        "kind": "document",
+        "link_type": "Media",
+        "name": "default.jpg",
+        "size": "1",
+        "url": "https://images.unsplash.com/photo-1587502537745-84b86da1204f?w=6550&h=4367&fit=crop",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > newNonImage > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": {
+            "id": "c0eddbd0255",
+            "kind": "document",
+            "link_type": "Media",
+            "name": "default.jpg",
+            "size": "1",
+            "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "c0eddbd0255",
+          "kind": "document",
+          "link_type": "Media",
+          "name": "default.jpg",
+          "size": "1",
+          "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
+        },
+        "group": [
+          {
+            "field": {
+              "id": "c0eddbd0255",
+              "kind": "document",
+              "link_type": "Media",
+              "name": "default.jpg",
+              "size": "1",
+              "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > newNonImage > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": {
+            "id": "82beb55ec2f",
+            "kind": "document",
+            "link_type": "Media",
+            "name": "default.jpg",
+            "size": "1",
+            "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "82beb55ec2f",
+          "kind": "document",
+          "link_type": "Media",
+          "name": "default.jpg",
+          "size": "1",
+          "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
+        },
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > newNonImage > static zone 1`] = `
+{
+  "field": {
+    "id": "bad670dad77",
+    "kind": "document",
+    "link_type": "Media",
+    "name": "default.jpg",
+    "size": "1",
+    "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+  },
+}
+`;
+
+exports[`patches link to media fields > newWithText > group 1`] = `
 {
   "group": [
     {
       "field": {
         "height": "1",
-        "id": "cfc26fe8d09",
+        "id": "fdd322ca9d5",
         "kind": "image",
         "link_type": "Media",
         "name": "default.jpg",
         "size": "1",
-        "url": "https://images.unsplash.com/photo-1446329813274-7c9036bd9a1f?w=6000&h=4000&fit=crop",
+        "text": "foo",
+        "url": "https://images.unsplash.com/photo-1587502537745-84b86da1204f?w=6550&h=4367&fit=crop",
         "width": "1",
       },
     },
@@ -383,21 +762,22 @@ exports[`patches link to media fields > otherRepository > group 1`] = `
 }
 `;
 
-exports[`patches link to media fields > otherRepository > shared slice 1`] = `
+exports[`patches link to media fields > newWithText > shared slice 1`] = `
 {
   "slices": [
     {
-      "id": "b9dd0f2c3f8",
+      "id": "9b9dd0f2c3f",
       "items": [
         {
           "field": {
             "height": "1",
-            "id": "61adcf1f5db",
+            "id": "c0eddbd0255",
             "kind": "image",
             "link_type": "Media",
             "name": "default.jpg",
             "size": "1",
-            "url": "https://images.unsplash.com/photo-1553531384-397c80973a0b?w=4335&h=6502&fit=crop",
+            "text": "foo",
+            "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
             "width": "1",
           },
         },
@@ -405,53 +785,56 @@ exports[`patches link to media fields > otherRepository > shared slice 1`] = `
       "primary": {
         "field": {
           "height": "1",
-          "id": "61adcf1f5db",
+          "id": "c0eddbd0255",
           "kind": "image",
           "link_type": "Media",
           "name": "default.jpg",
           "size": "1",
-          "url": "https://images.unsplash.com/photo-1553531384-397c80973a0b?w=4335&h=6502&fit=crop",
+          "text": "foo",
+          "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
           "width": "1",
         },
         "group": [
           {
             "field": {
               "height": "1",
-              "id": "61adcf1f5db",
+              "id": "c0eddbd0255",
               "kind": "image",
               "link_type": "Media",
               "name": "default.jpg",
               "size": "1",
-              "url": "https://images.unsplash.com/photo-1553531384-397c80973a0b?w=4335&h=6502&fit=crop",
+              "text": "foo",
+              "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
               "width": "1",
             },
           },
         ],
       },
       "slice_label": null,
-      "slice_type": "dignissim",
-      "variation": "vitae",
-      "version": "bfc9053",
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
     },
   ],
 }
 `;
 
-exports[`patches link to media fields > otherRepository > slice 1`] = `
+exports[`patches link to media fields > newWithText > slice 1`] = `
 {
   "slices": [
     {
-      "id": "306297c5eda",
+      "id": "5306297c5ed",
       "items": [
         {
           "field": {
             "height": "1",
-            "id": "4f4a69ff72d",
+            "id": "82beb55ec2f",
             "kind": "image",
             "link_type": "Media",
             "name": "default.jpg",
             "size": "1",
-            "url": "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=4554&h=3036&fit=crop",
+            "text": "foo",
+            "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
             "width": "1",
           },
         },
@@ -459,32 +842,34 @@ exports[`patches link to media fields > otherRepository > slice 1`] = `
       "primary": {
         "field": {
           "height": "1",
-          "id": "4f4a69ff72d",
+          "id": "82beb55ec2f",
           "kind": "image",
           "link_type": "Media",
           "name": "default.jpg",
           "size": "1",
-          "url": "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=4554&h=3036&fit=crop",
+          "text": "foo",
+          "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
           "width": "1",
         },
       },
-      "slice_label": "Aliquet",
-      "slice_type": "vel",
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
     },
   ],
 }
 `;
 
-exports[`patches link to media fields > otherRepository > static zone 1`] = `
+exports[`patches link to media fields > newWithText > static zone 1`] = `
 {
   "field": {
     "height": "1",
-    "id": "b1d17b04a95",
+    "id": "bad670dad77",
     "kind": "image",
     "link_type": "Media",
     "name": "default.jpg",
     "size": "1",
-    "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
+    "text": "foo",
+    "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
     "width": "1",
   },
 }
@@ -505,12 +890,12 @@ exports[`patches link to media fields > richTextExisting > group 1`] = `
             {
               "data": {
                 "height": "1",
-                "id": "id-existing",
+                "id": "asset.id-existing",
                 "kind": "image",
                 "link_type": "Media",
                 "name": "default.jpg",
                 "size": "1",
-                "url": "https://images.unsplash.com/reserve/HgZuGu3gSD6db21T3lxm_San%20Zenone.jpg?w=6373&h=4253&fit=crop",
+                "url": "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=4554&h=3036&fit=crop",
                 "width": "1",
               },
               "end": 5,
@@ -531,7 +916,7 @@ exports[`patches link to media fields > richTextExisting > shared slice 1`] = `
 {
   "slices": [
     {
-      "id": "b9dd0f2c3f8",
+      "id": "9b9dd0f2c3f",
       "items": [
         {
           "field": [
@@ -545,7 +930,259 @@ exports[`patches link to media fields > richTextExisting > shared slice 1`] = `
                 {
                   "data": {
                     "height": "1",
-                    "id": "id-existing",
+                    "id": "asset.id-existing",
+                    "kind": "image",
+                    "link_type": "Media",
+                    "name": "default.jpg",
+                    "size": "1",
+                    "url": "https://images.unsplash.com/photo-1504567961542-e24d9439a724?w=4608&h=3456&fit=crop",
+                    "width": "1",
+                  },
+                  "end": 5,
+                  "start": 0,
+                  "type": "hyperlink",
+                },
+              ],
+              "text": "lorem",
+              "type": "paragraph",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [
+              {
+                "end": 5,
+                "start": 0,
+                "type": "strong",
+              },
+              {
+                "data": {
+                  "height": "1",
+                  "id": "asset.id-existing",
+                  "kind": "image",
+                  "link_type": "Media",
+                  "name": "default.jpg",
+                  "size": "1",
+                  "url": "https://images.unsplash.com/photo-1504567961542-e24d9439a724?w=4608&h=3456&fit=crop",
+                  "width": "1",
+                },
+                "end": 5,
+                "start": 0,
+                "type": "hyperlink",
+              },
+            ],
+            "text": "lorem",
+            "type": "paragraph",
+          },
+        ],
+        "group": [
+          {
+            "field": [
+              {
+                "spans": [
+                  {
+                    "end": 5,
+                    "start": 0,
+                    "type": "strong",
+                  },
+                  {
+                    "data": {
+                      "height": "1",
+                      "id": "asset.id-existing",
+                      "kind": "image",
+                      "link_type": "Media",
+                      "name": "default.jpg",
+                      "size": "1",
+                      "url": "https://images.unsplash.com/photo-1504567961542-e24d9439a724?w=4608&h=3456&fit=crop",
+                      "width": "1",
+                    },
+                    "end": 5,
+                    "start": 0,
+                    "type": "hyperlink",
+                  },
+                ],
+                "text": "lorem",
+                "type": "paragraph",
+              },
+            ],
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > richTextExisting > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [
+                {
+                  "end": 5,
+                  "start": 0,
+                  "type": "strong",
+                },
+                {
+                  "data": {
+                    "height": "1",
+                    "id": "asset.id-existing",
+                    "kind": "image",
+                    "link_type": "Media",
+                    "name": "default.jpg",
+                    "size": "1",
+                    "url": "https://images.unsplash.com/photo-1587502537745-84b86da1204f?w=6550&h=4367&fit=crop",
+                    "width": "1",
+                  },
+                  "end": 5,
+                  "start": 0,
+                  "type": "hyperlink",
+                },
+              ],
+              "text": "lorem",
+              "type": "paragraph",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [
+              {
+                "end": 5,
+                "start": 0,
+                "type": "strong",
+              },
+              {
+                "data": {
+                  "height": "1",
+                  "id": "asset.id-existing",
+                  "kind": "image",
+                  "link_type": "Media",
+                  "name": "default.jpg",
+                  "size": "1",
+                  "url": "https://images.unsplash.com/photo-1587502537745-84b86da1204f?w=6550&h=4367&fit=crop",
+                  "width": "1",
+                },
+                "end": 5,
+                "start": 0,
+                "type": "hyperlink",
+              },
+            ],
+            "text": "lorem",
+            "type": "paragraph",
+          },
+        ],
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > richTextExisting > static zone 1`] = `
+{
+  "field": [
+    {
+      "spans": [
+        {
+          "end": 5,
+          "start": 0,
+          "type": "strong",
+        },
+        {
+          "data": {
+            "height": "1",
+            "id": "asset.id-existing",
+            "kind": "image",
+            "link_type": "Media",
+            "name": "default.jpg",
+            "size": "1",
+            "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
+            "width": "1",
+          },
+          "end": 5,
+          "start": 0,
+          "type": "hyperlink",
+        },
+      ],
+      "text": "lorem",
+      "type": "paragraph",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > richTextNew > group 1`] = `
+{
+  "group": [
+    {
+      "field": [
+        {
+          "spans": [
+            {
+              "end": 5,
+              "start": 0,
+              "type": "strong",
+            },
+            {
+              "data": {
+                "height": "1",
+                "id": "fdd322ca9d5",
+                "kind": "image",
+                "link_type": "Media",
+                "name": "default.jpg",
+                "size": "1",
+                "url": "https://images.unsplash.com/photo-1587502537745-84b86da1204f?w=6550&h=4367&fit=crop",
+                "width": "1",
+              },
+              "end": 5,
+              "start": 0,
+              "type": "hyperlink",
+            },
+          ],
+          "text": "lorem",
+          "type": "paragraph",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > richTextNew > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [
+                {
+                  "end": 5,
+                  "start": 0,
+                  "type": "strong",
+                },
+                {
+                  "data": {
+                    "height": "1",
+                    "id": "c0eddbd0255",
                     "kind": "image",
                     "link_type": "Media",
                     "name": "default.jpg",
@@ -576,7 +1213,7 @@ exports[`patches link to media fields > richTextExisting > shared slice 1`] = `
               {
                 "data": {
                   "height": "1",
-                  "id": "id-existing",
+                  "id": "c0eddbd0255",
                   "kind": "image",
                   "link_type": "Media",
                   "name": "default.jpg",
@@ -606,7 +1243,7 @@ exports[`patches link to media fields > richTextExisting > shared slice 1`] = `
                   {
                     "data": {
                       "height": "1",
-                      "id": "id-existing",
+                      "id": "c0eddbd0255",
                       "kind": "image",
                       "link_type": "Media",
                       "name": "default.jpg",
@@ -627,261 +1264,9 @@ exports[`patches link to media fields > richTextExisting > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "dignissim",
-      "variation": "vitae",
-      "version": "bfc9053",
-    },
-  ],
-}
-`;
-
-exports[`patches link to media fields > richTextExisting > slice 1`] = `
-{
-  "slices": [
-    {
-      "id": "306297c5eda",
-      "items": [
-        {
-          "field": [
-            {
-              "spans": [
-                {
-                  "end": 5,
-                  "start": 0,
-                  "type": "strong",
-                },
-                {
-                  "data": {
-                    "height": "1",
-                    "id": "id-existing",
-                    "kind": "image",
-                    "link_type": "Media",
-                    "name": "default.jpg",
-                    "size": "1",
-                    "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
-                    "width": "1",
-                  },
-                  "end": 5,
-                  "start": 0,
-                  "type": "hyperlink",
-                },
-              ],
-              "text": "lorem",
-              "type": "paragraph",
-            },
-          ],
-        },
-      ],
-      "primary": {
-        "field": [
-          {
-            "spans": [
-              {
-                "end": 5,
-                "start": 0,
-                "type": "strong",
-              },
-              {
-                "data": {
-                  "height": "1",
-                  "id": "id-existing",
-                  "kind": "image",
-                  "link_type": "Media",
-                  "name": "default.jpg",
-                  "size": "1",
-                  "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
-                  "width": "1",
-                },
-                "end": 5,
-                "start": 0,
-                "type": "hyperlink",
-              },
-            ],
-            "text": "lorem",
-            "type": "paragraph",
-          },
-        ],
-      },
-      "slice_label": "Aliquet",
-      "slice_type": "vel",
-    },
-  ],
-}
-`;
-
-exports[`patches link to media fields > richTextExisting > static zone 1`] = `
-{
-  "field": [
-    {
-      "spans": [
-        {
-          "end": 5,
-          "start": 0,
-          "type": "strong",
-        },
-        {
-          "data": {
-            "height": "1",
-            "id": "id-existing",
-            "kind": "image",
-            "link_type": "Media",
-            "name": "default.jpg",
-            "size": "1",
-            "url": "https://images.unsplash.com/photo-1587502537745-84b86da1204f?w=6550&h=4367&fit=crop",
-            "width": "1",
-          },
-          "end": 5,
-          "start": 0,
-          "type": "hyperlink",
-        },
-      ],
-      "text": "lorem",
-      "type": "paragraph",
-    },
-  ],
-}
-`;
-
-exports[`patches link to media fields > richTextNew > group 1`] = `
-{
-  "group": [
-    {
-      "field": [
-        {
-          "spans": [
-            {
-              "end": 5,
-              "start": 0,
-              "type": "strong",
-            },
-            {
-              "data": {
-                "height": "1",
-                "id": "dfdd322ca9d",
-                "kind": "image",
-                "link_type": "Media",
-                "name": "default.jpg",
-                "size": "1",
-                "url": "https://images.unsplash.com/reserve/HgZuGu3gSD6db21T3lxm_San%20Zenone.jpg?w=6373&h=4253&fit=crop",
-                "width": "1",
-              },
-              "end": 5,
-              "start": 0,
-              "type": "hyperlink",
-            },
-          ],
-          "text": "lorem",
-          "type": "paragraph",
-        },
-      ],
-    },
-  ],
-}
-`;
-
-exports[`patches link to media fields > richTextNew > shared slice 1`] = `
-{
-  "slices": [
-    {
-      "id": "b9dd0f2c3f8",
-      "items": [
-        {
-          "field": [
-            {
-              "spans": [
-                {
-                  "end": 5,
-                  "start": 0,
-                  "type": "strong",
-                },
-                {
-                  "data": {
-                    "height": "1",
-                    "id": "0eddbd0255b",
-                    "kind": "image",
-                    "link_type": "Media",
-                    "name": "default.jpg",
-                    "size": "1",
-                    "url": "https://images.unsplash.com/reserve/HgZuGu3gSD6db21T3lxm_San%20Zenone.jpg?w=6373&h=4253&fit=crop",
-                    "width": "1",
-                  },
-                  "end": 5,
-                  "start": 0,
-                  "type": "hyperlink",
-                },
-              ],
-              "text": "lorem",
-              "type": "paragraph",
-            },
-          ],
-        },
-      ],
-      "primary": {
-        "field": [
-          {
-            "spans": [
-              {
-                "end": 5,
-                "start": 0,
-                "type": "strong",
-              },
-              {
-                "data": {
-                  "height": "1",
-                  "id": "0eddbd0255b",
-                  "kind": "image",
-                  "link_type": "Media",
-                  "name": "default.jpg",
-                  "size": "1",
-                  "url": "https://images.unsplash.com/reserve/HgZuGu3gSD6db21T3lxm_San%20Zenone.jpg?w=6373&h=4253&fit=crop",
-                  "width": "1",
-                },
-                "end": 5,
-                "start": 0,
-                "type": "hyperlink",
-              },
-            ],
-            "text": "lorem",
-            "type": "paragraph",
-          },
-        ],
-        "group": [
-          {
-            "field": [
-              {
-                "spans": [
-                  {
-                    "end": 5,
-                    "start": 0,
-                    "type": "strong",
-                  },
-                  {
-                    "data": {
-                      "height": "1",
-                      "id": "0eddbd0255b",
-                      "kind": "image",
-                      "link_type": "Media",
-                      "name": "default.jpg",
-                      "size": "1",
-                      "url": "https://images.unsplash.com/reserve/HgZuGu3gSD6db21T3lxm_San%20Zenone.jpg?w=6373&h=4253&fit=crop",
-                      "width": "1",
-                    },
-                    "end": 5,
-                    "start": 0,
-                    "type": "hyperlink",
-                  },
-                ],
-                "text": "lorem",
-                "type": "paragraph",
-              },
-            ],
-          },
-        ],
-      },
-      "slice_label": null,
-      "slice_type": "dignissim",
-      "variation": "vitae",
-      "version": "bfc9053",
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
     },
   ],
 }
@@ -891,7 +1276,7 @@ exports[`patches link to media fields > richTextNew > slice 1`] = `
 {
   "slices": [
     {
-      "id": "306297c5eda",
+      "id": "5306297c5ed",
       "items": [
         {
           "field": [
@@ -905,12 +1290,12 @@ exports[`patches link to media fields > richTextNew > slice 1`] = `
                 {
                   "data": {
                     "height": "1",
-                    "id": "2beb55ec2f4",
+                    "id": "82beb55ec2f",
                     "kind": "image",
                     "link_type": "Media",
                     "name": "default.jpg",
                     "size": "1",
-                    "url": "https://images.unsplash.com/photo-1444464666168-49d633b86797?w=4844&h=3234&fit=crop",
+                    "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
                     "width": "1",
                   },
                   "end": 5,
@@ -936,12 +1321,12 @@ exports[`patches link to media fields > richTextNew > slice 1`] = `
               {
                 "data": {
                   "height": "1",
-                  "id": "2beb55ec2f4",
+                  "id": "82beb55ec2f",
                   "kind": "image",
                   "link_type": "Media",
                   "name": "default.jpg",
                   "size": "1",
-                  "url": "https://images.unsplash.com/photo-1444464666168-49d633b86797?w=4844&h=3234&fit=crop",
+                  "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
                   "width": "1",
                 },
                 "end": 5,
@@ -954,8 +1339,8 @@ exports[`patches link to media fields > richTextNew > slice 1`] = `
           },
         ],
       },
-      "slice_label": "Aliquet",
-      "slice_type": "vel",
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
     },
   ],
 }
@@ -974,264 +1359,12 @@ exports[`patches link to media fields > richTextNew > static zone 1`] = `
         {
           "data": {
             "height": "1",
-            "id": "bbad670dad7",
+            "id": "bad670dad77",
             "kind": "image",
             "link_type": "Media",
             "name": "default.jpg",
             "size": "1",
-            "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
-            "width": "1",
-          },
-          "end": 5,
-          "start": 0,
-          "type": "hyperlink",
-        },
-      ],
-      "text": "lorem",
-      "type": "paragraph",
-    },
-  ],
-}
-`;
-
-exports[`patches link to media fields > richTextOtherRepository > group 1`] = `
-{
-  "group": [
-    {
-      "field": [
-        {
-          "spans": [
-            {
-              "end": 5,
-              "start": 0,
-              "type": "strong",
-            },
-            {
-              "data": {
-                "height": "1",
-                "id": "cfc26fe8d09",
-                "kind": "image",
-                "link_type": "Media",
-                "name": "default.jpg",
-                "size": "1",
-                "url": "https://images.unsplash.com/photo-1446329813274-7c9036bd9a1f?w=6000&h=4000&fit=crop",
-                "width": "1",
-              },
-              "end": 5,
-              "start": 0,
-              "type": "hyperlink",
-            },
-          ],
-          "text": "lorem",
-          "type": "paragraph",
-        },
-      ],
-    },
-  ],
-}
-`;
-
-exports[`patches link to media fields > richTextOtherRepository > shared slice 1`] = `
-{
-  "slices": [
-    {
-      "id": "b9dd0f2c3f8",
-      "items": [
-        {
-          "field": [
-            {
-              "spans": [
-                {
-                  "end": 5,
-                  "start": 0,
-                  "type": "strong",
-                },
-                {
-                  "data": {
-                    "height": "1",
-                    "id": "61adcf1f5db",
-                    "kind": "image",
-                    "link_type": "Media",
-                    "name": "default.jpg",
-                    "size": "1",
-                    "url": "https://images.unsplash.com/photo-1553531384-397c80973a0b?w=4335&h=6502&fit=crop",
-                    "width": "1",
-                  },
-                  "end": 5,
-                  "start": 0,
-                  "type": "hyperlink",
-                },
-              ],
-              "text": "lorem",
-              "type": "paragraph",
-            },
-          ],
-        },
-      ],
-      "primary": {
-        "field": [
-          {
-            "spans": [
-              {
-                "end": 5,
-                "start": 0,
-                "type": "strong",
-              },
-              {
-                "data": {
-                  "height": "1",
-                  "id": "61adcf1f5db",
-                  "kind": "image",
-                  "link_type": "Media",
-                  "name": "default.jpg",
-                  "size": "1",
-                  "url": "https://images.unsplash.com/photo-1553531384-397c80973a0b?w=4335&h=6502&fit=crop",
-                  "width": "1",
-                },
-                "end": 5,
-                "start": 0,
-                "type": "hyperlink",
-              },
-            ],
-            "text": "lorem",
-            "type": "paragraph",
-          },
-        ],
-        "group": [
-          {
-            "field": [
-              {
-                "spans": [
-                  {
-                    "end": 5,
-                    "start": 0,
-                    "type": "strong",
-                  },
-                  {
-                    "data": {
-                      "height": "1",
-                      "id": "61adcf1f5db",
-                      "kind": "image",
-                      "link_type": "Media",
-                      "name": "default.jpg",
-                      "size": "1",
-                      "url": "https://images.unsplash.com/photo-1553531384-397c80973a0b?w=4335&h=6502&fit=crop",
-                      "width": "1",
-                    },
-                    "end": 5,
-                    "start": 0,
-                    "type": "hyperlink",
-                  },
-                ],
-                "text": "lorem",
-                "type": "paragraph",
-              },
-            ],
-          },
-        ],
-      },
-      "slice_label": null,
-      "slice_type": "dignissim",
-      "variation": "vitae",
-      "version": "bfc9053",
-    },
-  ],
-}
-`;
-
-exports[`patches link to media fields > richTextOtherRepository > slice 1`] = `
-{
-  "slices": [
-    {
-      "id": "306297c5eda",
-      "items": [
-        {
-          "field": [
-            {
-              "spans": [
-                {
-                  "end": 5,
-                  "start": 0,
-                  "type": "strong",
-                },
-                {
-                  "data": {
-                    "height": "1",
-                    "id": "4f4a69ff72d",
-                    "kind": "image",
-                    "link_type": "Media",
-                    "name": "default.jpg",
-                    "size": "1",
-                    "url": "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=4554&h=3036&fit=crop",
-                    "width": "1",
-                  },
-                  "end": 5,
-                  "start": 0,
-                  "type": "hyperlink",
-                },
-              ],
-              "text": "lorem",
-              "type": "paragraph",
-            },
-          ],
-        },
-      ],
-      "primary": {
-        "field": [
-          {
-            "spans": [
-              {
-                "end": 5,
-                "start": 0,
-                "type": "strong",
-              },
-              {
-                "data": {
-                  "height": "1",
-                  "id": "4f4a69ff72d",
-                  "kind": "image",
-                  "link_type": "Media",
-                  "name": "default.jpg",
-                  "size": "1",
-                  "url": "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=4554&h=3036&fit=crop",
-                  "width": "1",
-                },
-                "end": 5,
-                "start": 0,
-                "type": "hyperlink",
-              },
-            ],
-            "text": "lorem",
-            "type": "paragraph",
-          },
-        ],
-      },
-      "slice_label": "Aliquet",
-      "slice_type": "vel",
-    },
-  ],
-}
-`;
-
-exports[`patches link to media fields > richTextOtherRepository > static zone 1`] = `
-{
-  "field": [
-    {
-      "spans": [
-        {
-          "end": 5,
-          "start": 0,
-          "type": "strong",
-        },
-        {
-          "data": {
-            "height": "1",
-            "id": "b1d17b04a95",
-            "kind": "image",
-            "link_type": "Media",
-            "name": "default.jpg",
-            "size": "1",
-            "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
+            "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
             "width": "1",
           },
           "end": 5,

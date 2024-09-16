@@ -22,10 +22,8 @@ type GetDataArgs = {
 	migration: prismic.Migration
 	existingAssets: Asset[]
 	existingDocuments: prismic.PrismicDocument[]
-	migrationDocuments: {
-		other: prismic.PrismicMigrationDocument
-		otherRepository: prismic.PrismicMigrationDocument
-	}
+	otherCreateDocument: prismic.PrismicMigrationDocument
+	otherFromPrismicDocument: prismic.PrismicMigrationDocument
 	mockedDomain: string
 }
 
@@ -44,43 +42,23 @@ const internalTestMigrationFieldPatching = (
 
 		const client = createTestWriteClient({ ctx })
 
+		// Mock Document API
 		const repository = ctx.mock.api.repository()
 		repository.languages[0].id = "en-us"
 		repository.languages[0].is_master = true
-
 		const queryResponse = createPagedQueryResponses({
 			ctx,
 			pages: 1,
 			pageSize: 1,
 		})
-		queryResponse[0].results[0].id = "id-existing"
-
-		const { id: _id, ...otherDocument } = {
-			...ctx.mock.value.document(),
-			uid: ctx.mock.value.keyText(),
-		}
-		const otherRepositoryDocument = {
-			...ctx.mock.value.document(),
-			uid: ctx.mock.value.keyText(),
-		}
-		const { id: originalID, ...newDocument } = ctx.mock.value.document()
-
-		const newID = "id-new"
-
+		queryResponse[0].results[0].id = "other.id-existing"
 		mockPrismicRestAPIV2({ ctx, repositoryResponse: repository, queryResponse })
+
+		// Mock Asset API
 		const { assetsDatabase } = mockPrismicAssetAPI({
 			ctx,
 			client,
-			existingAssets: [[mockAsset(ctx, { id: "id-existing" })]],
-		})
-		const { documentsDatabase } = mockPrismicMigrationAPI({
-			ctx,
-			client,
-			newDocuments: [
-				{ id: "id-other" },
-				{ id: "id-other-repository" },
-				{ id: newID },
-			],
+			existingAssets: [[mockAsset(ctx, { id: "asset.id-existing" })]],
 		})
 
 		const mockedDomain = `https://${client.repositoryName}.example.com`
@@ -90,28 +68,56 @@ const internalTestMigrationFieldPatching = (
 			),
 		)
 
+		// Setup migration
 		const migration = prismic.createMigration()
 
+		// Create document
+		const { id: _createOriginalID, ...createDocument } = {
+			...ctx.mock.value.document(),
+			uid: ctx.mock.value.keyText(),
+		}
+
 		const migrationOtherDocument = migration.createDocument(
-			otherDocument,
-			"other",
+			createDocument,
+			"other.create",
 		)
+
+		// Create document from Prismic
+		const fromPrismicDocument = {
+			...ctx.mock.value.document(),
+			uid: ctx.mock.value.keyText(),
+		}
 
 		const migrationOtherRepositoryDocument =
 			migration.createDocumentFromPrismic(
-				otherRepositoryDocument,
-				"other-repository",
+				fromPrismicDocument,
+				"other.fromPrismic",
 			)
 
+		// Create new document
+		const { id: originalID, ...newDocument } = ctx.mock.value.document()
+		const newID =
+			!args.mode || args.mode === "new" ? "id-new" : "id-fromPrismic"
+
+		// Mock Migration API
+		const { documentsDatabase } = mockPrismicMigrationAPI({
+			ctx,
+			client,
+			newDocuments: [
+				{ id: "other.id-create" },
+				{ id: "other.id-fromPrismic" },
+				{ id: newID },
+			],
+		})
+
+		// Get new document data
 		newDocument.data = args.getData({
 			ctx,
 			migration,
 			existingAssets: assetsDatabase.flat(),
 			existingDocuments: queryResponse[0].results,
-			migrationDocuments: {
-				other: migrationOtherDocument,
-				otherRepository: migrationOtherRepositoryDocument,
-			},
+			otherCreateDocument: migrationOtherDocument,
+			otherFromPrismicDocument: migrationOtherRepositoryDocument,
 			mockedDomain,
 		})
 

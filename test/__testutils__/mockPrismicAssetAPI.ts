@@ -180,6 +180,14 @@ export const mockPrismicAssetAPI = (
 						: asset.tags,
 				}
 
+				// __pdf__ is used as a magic word to transform created assets into
+				// documents since we can't read FormData when creating assets...
+				if (response.tags?.some((tag) => tag.name === "__pdf__")) {
+					response.kind = "document"
+					response.width = undefined
+					response.height = undefined
+				}
+
 				// Update asset in DB
 				for (const cursor in assetsDatabase) {
 					for (const asset in assetsDatabase[cursor]) {

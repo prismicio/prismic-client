@@ -29,6 +29,12 @@ testMigrationFieldPatching<AnyRegularField | GroupField>(
 		linkToWeb: ({ ctx }) =>
 			ctx.mock.value.link({ type: "Web", withTargetBlank: true }),
 		richTextMisleadingGroup: () => [{ type: "paragraph" }],
+		documentMisleadingObject: () => {
+			return {
+				id: "foo",
+				href: "bar",
+			}
+		},
 	},
 	{ expectStrictEqual: true },
 )

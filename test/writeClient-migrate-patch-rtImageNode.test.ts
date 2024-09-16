@@ -40,9 +40,9 @@ testMigrationFieldPatching<InjectMigrationSpecificTypes<RichTextField>>(
 )
 
 testMigrationFieldPatching<InjectMigrationSpecificTypes<RichTextField>>(
-	"patches rich text image nodes",
+	"patches rich text image nodes (from Prismic)",
 	{
-		otherRepository: ({ ctx, mockedDomain }) => [
+		simple: ({ ctx, mockedDomain }) => [
 			...ctx.mock.value.richText({ pattern: "short", state: "filled" }),
 			{
 				type: RichTextNodeType.image,
@@ -51,7 +51,7 @@ testMigrationFieldPatching<InjectMigrationSpecificTypes<RichTextField>>(
 				url: `${mockedDomain}/foo.png`,
 			},
 		],
-		otherRepositoryLinkTo: ({ ctx, mockedDomain, existingDocuments }) => [
+		withLinkTo: ({ ctx, mockedDomain, existingDocuments }) => [
 			...ctx.mock.value.richText({ pattern: "short", state: "filled" }),
 			{
 				type: RichTextNodeType.image,

@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`patches link fields > brokenLink > group 1`] = `
+exports[`patches content relationship fields (from Prismic) > broken > group 1`] = `
 {
   "group": [
     {
@@ -14,11 +14,11 @@ exports[`patches link fields > brokenLink > group 1`] = `
 }
 `;
 
-exports[`patches link fields > brokenLink > shared slice 1`] = `
+exports[`patches content relationship fields (from Prismic) > broken > shared slice 1`] = `
 {
   "slices": [
     {
-      "id": "b9dd0f2c3f8",
+      "id": "9b9dd0f2c3f",
       "items": [
         {
           "field": {
@@ -45,19 +45,19 @@ exports[`patches link fields > brokenLink > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "dignissim",
-      "variation": "vitae",
-      "version": "bfc9053",
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
     },
   ],
 }
 `;
 
-exports[`patches link fields > brokenLink > slice 1`] = `
+exports[`patches content relationship fields (from Prismic) > broken > slice 1`] = `
 {
   "slices": [
     {
-      "id": "306297c5eda",
+      "id": "5306297c5ed",
       "items": [
         {
           "field": {
@@ -74,14 +74,14 @@ exports[`patches link fields > brokenLink > slice 1`] = `
           "link_type": "Document",
         },
       },
-      "slice_label": "Aliquet",
-      "slice_type": "vel",
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
     },
   ],
 }
 `;
 
-exports[`patches link fields > brokenLink > static zone 1`] = `
+exports[`patches content relationship fields (from Prismic) > broken > static zone 1`] = `
 {
   "field": {
     "id": "__broken__",
@@ -91,12 +91,12 @@ exports[`patches link fields > brokenLink > static zone 1`] = `
 }
 `;
 
-exports[`patches link fields > existing > group 1`] = `
+exports[`patches content relationship fields (from Prismic) > simple > group 1`] = `
 {
   "group": [
     {
       "field": {
-        "id": "id-existing",
+        "id": "other.id-fromPrismic",
         "link_type": "Document",
       },
     },
@@ -104,83 +104,174 @@ exports[`patches link fields > existing > group 1`] = `
 }
 `;
 
-exports[`patches link fields > existing > shared slice 1`] = `
+exports[`patches content relationship fields (from Prismic) > simple > shared slice 1`] = `
 {
   "slices": [
     {
-      "id": "b9dd0f2c3f8",
+      "id": "9b9dd0f2c3f",
       "items": [
         {
           "field": {
-            "id": "id-existing",
+            "id": "other.id-fromPrismic",
             "link_type": "Document",
           },
         },
       ],
       "primary": {
         "field": {
-          "id": "id-existing",
+          "id": "other.id-fromPrismic",
           "link_type": "Document",
         },
         "group": [
           {
             "field": {
-              "id": "id-existing",
+              "id": "other.id-fromPrismic",
               "link_type": "Document",
             },
           },
         ],
       },
       "slice_label": null,
-      "slice_type": "dignissim",
-      "variation": "vitae",
-      "version": "bfc9053",
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
     },
   ],
 }
 `;
 
-exports[`patches link fields > existing > slice 1`] = `
+exports[`patches content relationship fields (from Prismic) > simple > slice 1`] = `
 {
   "slices": [
     {
-      "id": "306297c5eda",
+      "id": "5306297c5ed",
       "items": [
         {
           "field": {
-            "id": "id-existing",
+            "id": "other.id-fromPrismic",
             "link_type": "Document",
           },
         },
       ],
       "primary": {
         "field": {
-          "id": "id-existing",
+          "id": "other.id-fromPrismic",
           "link_type": "Document",
         },
       },
-      "slice_label": "Aliquet",
-      "slice_type": "vel",
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
     },
   ],
 }
 `;
 
-exports[`patches link fields > existing > static zone 1`] = `
+exports[`patches content relationship fields (from Prismic) > simple > static zone 1`] = `
 {
   "field": {
-    "id": "id-existing",
+    "id": "other.id-fromPrismic",
     "link_type": "Document",
   },
 }
 `;
 
-exports[`patches link fields > lazyExisting > group 1`] = `
+exports[`patches content relationship fields (from Prismic) > withText > group 1`] = `
 {
   "group": [
     {
       "field": {
-        "id": "id-existing",
+        "id": "other.id-fromPrismic",
+        "link_type": "Document",
+        "text": "foo",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields (from Prismic) > withText > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-fromPrismic",
+            "link_type": "Document",
+            "text": "foo",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-fromPrismic",
+          "link_type": "Document",
+          "text": "foo",
+        },
+        "group": [
+          {
+            "field": {
+              "id": "other.id-fromPrismic",
+              "link_type": "Document",
+              "text": "foo",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields (from Prismic) > withText > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-fromPrismic",
+            "link_type": "Document",
+            "text": "foo",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-fromPrismic",
+          "link_type": "Document",
+          "text": "foo",
+        },
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields (from Prismic) > withText > static zone 1`] = `
+{
+  "field": {
+    "id": "other.id-fromPrismic",
+    "link_type": "Document",
+    "text": "foo",
+  },
+}
+`;
+
+exports[`patches content relationship fields > existing > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "id": "other.id-existing",
         "link_type": "Document",
       },
     },
@@ -188,83 +279,83 @@ exports[`patches link fields > lazyExisting > group 1`] = `
 }
 `;
 
-exports[`patches link fields > lazyExisting > shared slice 1`] = `
+exports[`patches content relationship fields > existing > shared slice 1`] = `
 {
   "slices": [
     {
-      "id": "b9dd0f2c3f8",
+      "id": "9b9dd0f2c3f",
       "items": [
         {
           "field": {
-            "id": "id-existing",
+            "id": "other.id-existing",
             "link_type": "Document",
           },
         },
       ],
       "primary": {
         "field": {
-          "id": "id-existing",
+          "id": "other.id-existing",
           "link_type": "Document",
         },
         "group": [
           {
             "field": {
-              "id": "id-existing",
+              "id": "other.id-existing",
               "link_type": "Document",
             },
           },
         ],
       },
       "slice_label": null,
-      "slice_type": "dignissim",
-      "variation": "vitae",
-      "version": "bfc9053",
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
     },
   ],
 }
 `;
 
-exports[`patches link fields > lazyExisting > slice 1`] = `
+exports[`patches content relationship fields > existing > slice 1`] = `
 {
   "slices": [
     {
-      "id": "306297c5eda",
+      "id": "5306297c5ed",
       "items": [
         {
           "field": {
-            "id": "id-existing",
+            "id": "other.id-existing",
             "link_type": "Document",
           },
         },
       ],
       "primary": {
         "field": {
-          "id": "id-existing",
+          "id": "other.id-existing",
           "link_type": "Document",
         },
       },
-      "slice_label": "Aliquet",
-      "slice_type": "vel",
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
     },
   ],
 }
 `;
 
-exports[`patches link fields > lazyExisting > static zone 1`] = `
+exports[`patches content relationship fields > existing > static zone 1`] = `
 {
   "field": {
-    "id": "id-existing",
+    "id": "other.id-existing",
     "link_type": "Document",
   },
 }
 `;
 
-exports[`patches link fields > lazyMigration > group 1`] = `
+exports[`patches content relationship fields > existingLongForm > group 1`] = `
 {
   "group": [
     {
       "field": {
-        "id": "id-other",
+        "id": "other.id-existing",
         "link_type": "Document",
       },
     },
@@ -272,83 +363,174 @@ exports[`patches link fields > lazyMigration > group 1`] = `
 }
 `;
 
-exports[`patches link fields > lazyMigration > shared slice 1`] = `
+exports[`patches content relationship fields > existingLongForm > shared slice 1`] = `
 {
   "slices": [
     {
-      "id": "b9dd0f2c3f8",
+      "id": "9b9dd0f2c3f",
       "items": [
         {
           "field": {
-            "id": "id-other",
+            "id": "other.id-existing",
             "link_type": "Document",
           },
         },
       ],
       "primary": {
         "field": {
-          "id": "id-other",
+          "id": "other.id-existing",
           "link_type": "Document",
         },
         "group": [
           {
             "field": {
-              "id": "id-other",
+              "id": "other.id-existing",
               "link_type": "Document",
             },
           },
         ],
       },
       "slice_label": null,
-      "slice_type": "dignissim",
-      "variation": "vitae",
-      "version": "bfc9053",
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
     },
   ],
 }
 `;
 
-exports[`patches link fields > lazyMigration > slice 1`] = `
+exports[`patches content relationship fields > existingLongForm > slice 1`] = `
 {
   "slices": [
     {
-      "id": "306297c5eda",
+      "id": "5306297c5ed",
       "items": [
         {
           "field": {
-            "id": "id-other",
+            "id": "other.id-existing",
             "link_type": "Document",
           },
         },
       ],
       "primary": {
         "field": {
-          "id": "id-other",
+          "id": "other.id-existing",
           "link_type": "Document",
         },
       },
-      "slice_label": "Aliquet",
-      "slice_type": "vel",
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
     },
   ],
 }
 `;
 
-exports[`patches link fields > lazyMigration > static zone 1`] = `
+exports[`patches content relationship fields > existingLongForm > static zone 1`] = `
 {
   "field": {
-    "id": "id-other",
+    "id": "other.id-existing",
     "link_type": "Document",
   },
 }
 `;
 
-exports[`patches link fields > migration > group 1`] = `
+exports[`patches content relationship fields > existingLongFormWithText > group 1`] = `
 {
   "group": [
     {
       "field": {
-        "id": "id-other",
+        "id": "other.id-existing",
+        "link_type": "Document",
+        "text": "foo",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > existingLongFormWithText > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-existing",
+            "link_type": "Document",
+            "text": "foo",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-existing",
+          "link_type": "Document",
+          "text": "foo",
+        },
+        "group": [
+          {
+            "field": {
+              "id": "other.id-existing",
+              "link_type": "Document",
+              "text": "foo",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > existingLongFormWithText > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-existing",
+            "link_type": "Document",
+            "text": "foo",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-existing",
+          "link_type": "Document",
+          "text": "foo",
+        },
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > existingLongFormWithText > static zone 1`] = `
+{
+  "field": {
+    "id": "other.id-existing",
+    "link_type": "Document",
+    "text": "foo",
+  },
+}
+`;
+
+exports[`patches content relationship fields > lazyExisting > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "id": "other.id-existing",
         "link_type": "Document",
       },
     },
@@ -356,83 +538,83 @@ exports[`patches link fields > migration > group 1`] = `
 }
 `;
 
-exports[`patches link fields > migration > shared slice 1`] = `
+exports[`patches content relationship fields > lazyExisting > shared slice 1`] = `
 {
   "slices": [
     {
-      "id": "b9dd0f2c3f8",
+      "id": "9b9dd0f2c3f",
       "items": [
         {
           "field": {
-            "id": "id-other",
+            "id": "other.id-existing",
             "link_type": "Document",
           },
         },
       ],
       "primary": {
         "field": {
-          "id": "id-other",
+          "id": "other.id-existing",
           "link_type": "Document",
         },
         "group": [
           {
             "field": {
-              "id": "id-other",
+              "id": "other.id-existing",
               "link_type": "Document",
             },
           },
         ],
       },
       "slice_label": null,
-      "slice_type": "dignissim",
-      "variation": "vitae",
-      "version": "bfc9053",
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
     },
   ],
 }
 `;
 
-exports[`patches link fields > migration > slice 1`] = `
+exports[`patches content relationship fields > lazyExisting > slice 1`] = `
 {
   "slices": [
     {
-      "id": "306297c5eda",
+      "id": "5306297c5ed",
       "items": [
         {
           "field": {
-            "id": "id-other",
+            "id": "other.id-existing",
             "link_type": "Document",
           },
         },
       ],
       "primary": {
         "field": {
-          "id": "id-other",
+          "id": "other.id-existing",
           "link_type": "Document",
         },
       },
-      "slice_label": "Aliquet",
-      "slice_type": "vel",
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
     },
   ],
 }
 `;
 
-exports[`patches link fields > migration > static zone 1`] = `
+exports[`patches content relationship fields > lazyExisting > static zone 1`] = `
 {
   "field": {
-    "id": "id-other",
+    "id": "other.id-existing",
     "link_type": "Document",
   },
 }
 `;
 
-exports[`patches link fields > migrationNoTags > group 1`] = `
+exports[`patches content relationship fields > lazyOtherCreate > group 1`] = `
 {
   "group": [
     {
       "field": {
-        "id": "id-other",
+        "id": "other.id-create",
         "link_type": "Document",
       },
     },
@@ -440,83 +622,82 @@ exports[`patches link fields > migrationNoTags > group 1`] = `
 }
 `;
 
-exports[`patches link fields > migrationNoTags > shared slice 1`] = `
+exports[`patches content relationship fields > lazyOtherCreate > shared slice 1`] = `
 {
   "slices": [
     {
-      "id": "b9dd0f2c3f8",
+      "id": "9b9dd0f2c3f",
       "items": [
         {
           "field": {
-            "id": "id-other",
+            "id": "other.id-create",
             "link_type": "Document",
           },
         },
       ],
       "primary": {
         "field": {
-          "id": "id-other",
+          "id": "other.id-create",
           "link_type": "Document",
         },
         "group": [
           {
             "field": {
-              "id": "id-other",
+              "id": "other.id-create",
               "link_type": "Document",
             },
           },
         ],
       },
       "slice_label": null,
-      "slice_type": "dignissim",
-      "variation": "vitae",
-      "version": "bfc9053",
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
     },
   ],
 }
 `;
 
-exports[`patches link fields > migrationNoTags > slice 1`] = `
+exports[`patches content relationship fields > lazyOtherCreate > slice 1`] = `
 {
   "slices": [
     {
-      "id": "306297c5eda",
+      "id": "5306297c5ed",
       "items": [
         {
           "field": {
-            "id": "id-other",
+            "id": "other.id-create",
             "link_type": "Document",
           },
         },
       ],
       "primary": {
         "field": {
-          "id": "id-other",
+          "id": "other.id-create",
           "link_type": "Document",
         },
       },
-      "slice_label": "Aliquet",
-      "slice_type": "vel",
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
     },
   ],
 }
 `;
 
-exports[`patches link fields > migrationNoTags > static zone 1`] = `
+exports[`patches content relationship fields > lazyOtherCreate > static zone 1`] = `
 {
   "field": {
-    "id": "id-other",
+    "id": "other.id-create",
     "link_type": "Document",
   },
 }
 `;
 
-exports[`patches link fields > otherRepositoryContentRelationship > group 1`] = `
+exports[`patches content relationship fields > lazyOtherCreateMissingID > group 1`] = `
 {
   "group": [
     {
       "field": {
-        "id": "id-other-repository",
         "link_type": "Document",
       },
     },
@@ -524,78 +705,156 @@ exports[`patches link fields > otherRepositoryContentRelationship > group 1`] = 
 }
 `;
 
-exports[`patches link fields > otherRepositoryContentRelationship > shared slice 1`] = `
+exports[`patches content relationship fields > lazyOtherCreateMissingID > shared slice 1`] = `
 {
   "slices": [
     {
-      "id": "b9dd0f2c3f8",
+      "id": "9b9dd0f2c3f",
       "items": [
         {
           "field": {
-            "id": "id-other-repository",
             "link_type": "Document",
           },
         },
       ],
       "primary": {
         "field": {
-          "id": "id-other-repository",
           "link_type": "Document",
         },
         "group": [
           {
             "field": {
-              "id": "id-other-repository",
               "link_type": "Document",
             },
           },
         ],
       },
       "slice_label": null,
-      "slice_type": "dignissim",
-      "variation": "vitae",
-      "version": "bfc9053",
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
     },
   ],
 }
 `;
 
-exports[`patches link fields > otherRepositoryContentRelationship > slice 1`] = `
+exports[`patches content relationship fields > lazyOtherCreateMissingID > slice 1`] = `
 {
   "slices": [
     {
-      "id": "306297c5eda",
+      "id": "5306297c5ed",
       "items": [
         {
           "field": {
-            "id": "id-other-repository",
             "link_type": "Document",
           },
         },
       ],
       "primary": {
         "field": {
-          "id": "id-other-repository",
           "link_type": "Document",
         },
       },
-      "slice_label": "Aliquet",
-      "slice_type": "vel",
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
     },
   ],
 }
 `;
 
-exports[`patches link fields > otherRepositoryContentRelationship > static zone 1`] = `
+exports[`patches content relationship fields > lazyOtherCreateMissingID > static zone 1`] = `
 {
   "field": {
-    "id": "id-other-repository",
     "link_type": "Document",
   },
 }
 `;
 
-exports[`patches link fields > richTextLinkNode > group 1`] = `
+exports[`patches content relationship fields > otherCreate > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "id": "other.id-create",
+        "link_type": "Document",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > otherCreate > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-create",
+            "link_type": "Document",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-create",
+          "link_type": "Document",
+        },
+        "group": [
+          {
+            "field": {
+              "id": "other.id-create",
+              "link_type": "Document",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > otherCreate > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-create",
+            "link_type": "Document",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-create",
+          "link_type": "Document",
+        },
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > otherCreate > static zone 1`] = `
+{
+  "field": {
+    "id": "other.id-create",
+    "link_type": "Document",
+  },
+}
+`;
+
+exports[`patches content relationship fields > richTextLinkNode > group 1`] = `
 {
   "group": [
     {
@@ -609,7 +868,7 @@ exports[`patches link fields > richTextLinkNode > group 1`] = `
             },
             {
               "data": {
-                "id": "id-existing",
+                "id": "other.id-existing",
                 "link_type": "Document",
               },
               "end": 5,
@@ -626,11 +885,11 @@ exports[`patches link fields > richTextLinkNode > group 1`] = `
 }
 `;
 
-exports[`patches link fields > richTextLinkNode > shared slice 1`] = `
+exports[`patches content relationship fields > richTextLinkNode > shared slice 1`] = `
 {
   "slices": [
     {
-      "id": "b9dd0f2c3f8",
+      "id": "9b9dd0f2c3f",
       "items": [
         {
           "field": [
@@ -643,7 +902,7 @@ exports[`patches link fields > richTextLinkNode > shared slice 1`] = `
                 },
                 {
                   "data": {
-                    "id": "id-existing",
+                    "id": "other.id-existing",
                     "link_type": "Document",
                   },
                   "end": 5,
@@ -668,7 +927,7 @@ exports[`patches link fields > richTextLinkNode > shared slice 1`] = `
               },
               {
                 "data": {
-                  "id": "id-existing",
+                  "id": "other.id-existing",
                   "link_type": "Document",
                 },
                 "end": 5,
@@ -692,7 +951,7 @@ exports[`patches link fields > richTextLinkNode > shared slice 1`] = `
                   },
                   {
                     "data": {
-                      "id": "id-existing",
+                      "id": "other.id-existing",
                       "link_type": "Document",
                     },
                     "end": 5,
@@ -708,19 +967,19 @@ exports[`patches link fields > richTextLinkNode > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "dignissim",
-      "variation": "vitae",
-      "version": "bfc9053",
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
     },
   ],
 }
 `;
 
-exports[`patches link fields > richTextLinkNode > slice 1`] = `
+exports[`patches content relationship fields > richTextLinkNode > slice 1`] = `
 {
   "slices": [
     {
-      "id": "306297c5eda",
+      "id": "5306297c5ed",
       "items": [
         {
           "field": [
@@ -733,7 +992,7 @@ exports[`patches link fields > richTextLinkNode > slice 1`] = `
                 },
                 {
                   "data": {
-                    "id": "id-existing",
+                    "id": "other.id-existing",
                     "link_type": "Document",
                   },
                   "end": 5,
@@ -758,7 +1017,7 @@ exports[`patches link fields > richTextLinkNode > slice 1`] = `
               },
               {
                 "data": {
-                  "id": "id-existing",
+                  "id": "other.id-existing",
                   "link_type": "Document",
                 },
                 "end": 5,
@@ -771,14 +1030,14 @@ exports[`patches link fields > richTextLinkNode > slice 1`] = `
           },
         ],
       },
-      "slice_label": "Aliquet",
-      "slice_type": "vel",
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
     },
   ],
 }
 `;
 
-exports[`patches link fields > richTextLinkNode > static zone 1`] = `
+exports[`patches content relationship fields > richTextLinkNode > static zone 1`] = `
 {
   "field": [
     {
@@ -790,7 +1049,7 @@ exports[`patches link fields > richTextLinkNode > static zone 1`] = `
         },
         {
           "data": {
-            "id": "id-existing",
+            "id": "other.id-existing",
             "link_type": "Document",
           },
           "end": 5,

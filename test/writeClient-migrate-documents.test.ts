@@ -294,6 +294,38 @@ it.concurrent(
 )
 
 it.concurrent(
+	"creates new non-master locale document with lazy reference (empty)",
+	async (ctx) => {
+		const client = createTestWriteClient({ ctx })
+
+		const { id: documentID, ...document } = ctx.mock.value.document()
+		const newDocuments = [
+			{
+				id: documentID,
+				masterLanguageDocumentID: undefined,
+			},
+		]
+
+		mockPrismicRestAPIV2({ ctx })
+		mockPrismicAssetAPI({ ctx, client })
+		mockPrismicMigrationAPI({ ctx, client, newDocuments: [...newDocuments] })
+
+		const migration = prismic.createMigration()
+
+		const doc = migration.createDocument(document, "bar", {
+			masterLanguageDocument: () => undefined,
+		})
+
+		const reporter = vi.fn()
+
+		await client.migrate(migration, { reporter })
+
+		ctx.expect(doc.document.id).toBe(newDocuments[0].id)
+		ctx.expect.assertions(1)
+	},
+)
+
+it.concurrent(
 	"creates new non-master locale document with alternate language",
 	async (ctx) => {
 		const client = createTestWriteClient({ ctx })
