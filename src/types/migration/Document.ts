@@ -1,5 +1,3 @@
-import type { Migration } from "../../Migration"
-
 import type { FilledContentRelationshipField } from "../value/contentRelationship"
 import type { PrismicDocument, PrismicDocumentWithUID } from "../value/document"
 import type { FilledImageFieldImage } from "../value/image"
@@ -12,7 +10,6 @@ import type {
 	MigrationRTImageNode,
 } from "./Asset"
 import type { MigrationContentRelationship } from "./ContentRelationship"
-import type { MigrationField } from "./Field"
 
 /**
  * A utility type that extends any fields in a record with their migration
@@ -121,49 +118,26 @@ export class PrismicMigrationDocument<
 	originalPrismicDocument?: ExistingPrismicDocument<PrismicDocument>
 
 	/**
-	 * Asset and content relationship fields that this document depends on.
-	 */
-	#dependencies: MigrationField[]
-
-	/**
 	 * Creates a Prismic migration document instance.
 	 *
 	 * @param document - The document to be sent to the Migration API.
 	 * @param title - The name of the document displayed in the editor.
 	 * @param options - Parameters to create/update the document with on the
 	 *   Migration API.
-	 * @param dependencies - Asset and content relationship fields that this
-	 *   document depends on.
 	 *
 	 * @returns A Prismic migration document instance.
 	 */
 	constructor(
 		document: MigrationDocument<TDocument>,
 		title: string,
-		options: {
+		options?: {
 			masterLanguageDocument?: MigrationContentRelationship
 			originalPrismicDocument?: ExistingPrismicDocument<PrismicDocument>
-			dependencies: MigrationField[]
 		},
 	) {
 		this.document = document
 		this.title = title
-		this.masterLanguageDocument = options.masterLanguageDocument
-		this.originalPrismicDocument = options.originalPrismicDocument
-		this.#dependencies = options.dependencies
-	}
-
-	/**
-	 * Resolves each dependencies of the document with the provided maps.
-	 *
-	 * @param migration - A migration instance with documents and assets to use
-	 *   for resolving the field's value
-	 *
-	 * @internal
-	 */
-	async _resolve(migration: Migration): Promise<void> {
-		for (const dependency of this.#dependencies) {
-			await dependency._resolve(migration)
-		}
+		this.masterLanguageDocument = options?.masterLanguageDocument
+		this.originalPrismicDocument = options?.originalPrismicDocument
 	}
 }

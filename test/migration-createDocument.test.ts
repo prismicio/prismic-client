@@ -17,6 +17,6 @@ it("creates a document", () => {
 	migration.createDocument(document, documentTitle)
 
 	expect(migration._documents[0]).toStrictEqual(
-		new PrismicMigrationDocument(document, documentTitle, { dependencies: [] }),
+		new PrismicMigrationDocument(document, documentTitle),
 	)
 })

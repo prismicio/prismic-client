@@ -1,5 +1,6 @@
 import { devMsg } from "./lib/devMsg"
 import { pLimit } from "./lib/pLimit"
+import { resolveMigrationDocumentData } from "./lib/resolveMigrationDocumentData"
 
 import type {
 	Asset,
@@ -432,8 +433,7 @@ export class WriteClient<
 			if (doc.masterLanguageDocument) {
 				const link = doc.masterLanguageDocument
 
-				await link._resolve(migration)
-				masterLanguageDocumentID = link._field?.id
+				masterLanguageDocumentID = (await link._resolve(migration))?.id
 			} else if (doc.originalPrismicDocument) {
 				masterLanguageDocumentID =
 					doc.originalPrismicDocument.alternate_languages.find(
@@ -488,13 +488,17 @@ export class WriteClient<
 				},
 			})
 
-			await doc._resolve(migration)
-
 			await this.updateDocument(
 				doc.document.id!,
 				// We need to forward again document name and tags to update them
 				// in case the document already existed during the previous step.
-				doc.document,
+				{
+					...doc.document,
+					data: await resolveMigrationDocumentData(
+						doc.document.data,
+						migration,
+					),
+				},
 				fetchParams,
 			)
 		}

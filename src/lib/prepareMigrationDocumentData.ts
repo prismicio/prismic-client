@@ -11,8 +11,7 @@ import type { FilledLinkToMediaField } from "../types/value/linkToMedia"
 import * as is from "./isValue"
 
 /**
- * Replaces existings assets and links in a record of Prismic fields and get all
- * dependencies to them.
+ * Replaces existings assets and links in a record of Prismic fields.
  *
  * @typeParam TRecord - Record of values to work with.
  *
@@ -21,8 +20,7 @@ import * as is from "./isValue"
  * @param fromPrismic - Whether the record is from another Prismic repository or
  *   not.
  *
- * @returns An object containing the record with replaced assets and links and a
- *   list of dependencies found and/or created.
+ * @returns An object containing the record with replaced assets and links.
  */
 export const prepareMigrationDocumentData = <
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -33,16 +31,14 @@ export const prepareMigrationDocumentData = <
 		asset: FilledImageFieldImage | FilledLinkToMediaField,
 	) => MigrationImage,
 	fromPrismic?: boolean,
-): { record: TRecord; dependencies: MigrationField[] } => {
+): TRecord => {
 	const result = {} as Record<string, unknown>
-	const dependencies: MigrationField[] = []
 
 	for (const key in record) {
 		const field: unknown = record[key]
 
 		if (field instanceof MigrationField) {
 			// Existing migration fields
-			dependencies.push(field)
 			result[key] = field
 		} else if (fromPrismic && is.linkToMedia(field)) {
 			// Link to media
@@ -50,7 +46,6 @@ export const prepareMigrationDocumentData = <
 			// @ts-expect-error - Future-proofing for link text
 			const linkToMedia = onAsset(field).asLinkToMedia(field.text)
 
-			dependencies.push(linkToMedia)
 			result[key] = linkToMedia
 		} else if (fromPrismic && is.rtImageNode(field)) {
 			// Rich text image nodes
@@ -62,13 +57,12 @@ export const prepareMigrationDocumentData = <
 					{ linkTo: field.linkTo },
 					onAsset,
 					fromPrismic,
-				).record.linkTo as
+				).linkTo as
 					| MigrationContentRelationship
 					| MigrationLinkToMedia
 					| FilledLinkToWebField
 			}
 
-			dependencies.push(rtImageNode)
 			result[key] = rtImageNode
 		} else if (fromPrismic && is.image(field)) {
 			// Image fields
@@ -91,7 +85,6 @@ export const prepareMigrationDocumentData = <
 				}
 			}
 
-			dependencies.push(image)
 			result[key] = image
 		} else if (fromPrismic && is.contentRelationship(field)) {
 			// Content relationships
@@ -102,27 +95,30 @@ export const prepareMigrationDocumentData = <
 				field.text,
 			)
 
-			dependencies.push(contentRelationship)
 			result[key] = contentRelationship
 		} else if (Array.isArray(field)) {
 			// Traverse arrays
 			const array = []
 
 			for (const item of field) {
-				const { record, dependencies: itemDependencies } =
-					prepareMigrationDocumentData({ item }, onAsset, fromPrismic)
+				const record = prepareMigrationDocumentData(
+					{ item },
+					onAsset,
+					fromPrismic,
+				)
 
 				array.push(record.item)
-				dependencies.push(...itemDependencies)
 			}
 
 			result[key] = array
 		} else if (field && typeof field === "object") {
 			// Traverse objects
-			const { record, dependencies: fieldDependencies } =
-				prepareMigrationDocumentData({ ...field }, onAsset, fromPrismic)
+			const record = prepareMigrationDocumentData(
+				{ ...field },
+				onAsset,
+				fromPrismic,
+			)
 
-			dependencies.push(...fieldDependencies)
 			result[key] = record
 		} else {
 			// Primitives
@@ -130,5 +126,5 @@ export const prepareMigrationDocumentData = <
 		}
 	}
 
-	return { record: result as TRecord, dependencies }
+	return result as TRecord
 }

@@ -7,7 +7,12 @@ import type { RTBlockNode, RTInlineNode } from "../value/richText"
 /**
  * Interface for migration fields that can be resolved.
  */
-interface Resolvable {
+interface Resolvable<
+	TField extends AnyRegularField | RTBlockNode | RTInlineNode =
+		| AnyRegularField
+		| RTBlockNode
+		| RTInlineNode,
+> {
 	/**
 	 * Resolves the field's value with the provided maps.
 	 *
@@ -16,7 +21,9 @@ interface Resolvable {
 	 *
 	 * @internal
 	 */
-	_resolve(migration: Migration): Promise<void> | void
+	_resolve(
+		migration: Migration,
+	): Promise<TField | undefined> | TField | undefined
 }
 
 /**
@@ -33,13 +40,6 @@ export abstract class MigrationField<
 	TInitialField = TField,
 > implements Resolvable
 {
-	/**
-	 * The resolved field value.
-	 *
-	 * @internal
-	 */
-	_field?: TField
-
 	/**
 	 * The initial field value this migration field was created with.
 	 *
@@ -58,16 +58,7 @@ export abstract class MigrationField<
 		this._initialField = initialField
 	}
 
-	/**
-	 * Prepares the field to be stringified with {@link JSON.stringify}
-	 *
-	 * @returns The value of the field to be stringified.
-	 *
-	 * @internal
-	 */
-	toJSON(): TField | undefined {
-		return this._field
-	}
-
-	abstract _resolve(migration: Migration): Promise<void> | void
+	abstract _resolve(
+		migration: Migration,
+	): Promise<TField | undefined> | TField | undefined
 }

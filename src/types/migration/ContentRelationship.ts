@@ -68,7 +68,9 @@ export class MigrationContentRelationship extends MigrationField<FilledContentRe
 		this.text = text
 	}
 
-	async _resolve(migration: Migration): Promise<void> {
+	async _resolve(
+		migration: Migration,
+	): Promise<FilledContentRelationshipField | undefined> {
 		const config =
 			typeof this.#unresolvedConfig === "function"
 				? await this.#unresolvedConfig()
@@ -82,7 +84,7 @@ export class MigrationContentRelationship extends MigrationField<FilledContentRe
 						migration.getByOriginalID(config.id)?.document || config
 
 			if (document?.id) {
-				this._field = {
+				return {
 					link_type: LinkType.Document,
 					id: document.id,
 					uid: document.uid || undefined,

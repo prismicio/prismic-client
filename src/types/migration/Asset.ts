@@ -225,20 +225,22 @@ export class MigrationImage extends MigrationAsset<FilledImageFieldImage> {
 		return this
 	}
 
-	async _resolve(migration: Migration): Promise<void> {
+	async _resolve(
+		migration: Migration,
+	): Promise<FilledImageFieldImage | undefined> {
 		const asset = migration._assets.get(this.config.id)?.asset
 
 		if (asset) {
-			this._field = assetToImage(asset, this._initialField)
+			const field = assetToImage(asset, this._initialField)
 
 			for (const name in this.#thumbnails) {
-				await this.#thumbnails[name]._resolve(migration)
-
-				const thumbnail = this.#thumbnails[name]._field
+				const thumbnail = await this.#thumbnails[name]._resolve(migration)
 				if (thumbnail) {
-					;(this._field as ImageField<string>)[name] = thumbnail
+					;(field as ImageField<string>)[name] = thumbnail
 				}
 			}
+
+			return field
 		}
 	}
 }
@@ -274,11 +276,11 @@ export class MigrationLinkToMedia extends MigrationAsset<
 		this.text = text
 	}
 
-	_resolve(migration: Migration): void {
+	_resolve(migration: Migration): LinkToMediaField<"filled"> | undefined {
 		const asset = migration._assets.get(this.config.id)?.asset
 
 		if (asset) {
-			this._field = assetToLinkToMedia(asset, this.text)
+			return assetToLinkToMedia(asset, this.text)
 		}
 	}
 }
@@ -318,20 +320,16 @@ export class MigrationRTImageNode extends MigrationAsset<RTImageNode> {
 		this.linkTo = linkTo
 	}
 
-	async _resolve(migration: Migration): Promise<void> {
+	async _resolve(migration: Migration): Promise<RTImageNode | undefined> {
 		const asset = migration._assets.get(this.config.id)?.asset
 
-		if (this.linkTo instanceof MigrationField) {
-			await this.linkTo._resolve(migration)
-		}
-
 		if (asset) {
-			this._field = {
+			return {
 				...assetToImage(asset, this._initialField),
 				type: RichTextNodeType.image,
 				linkTo:
 					this.linkTo instanceof MigrationField
-						? this.linkTo._field
+						? await this.linkTo._resolve(migration)
 						: this.linkTo,
 			}
 		}

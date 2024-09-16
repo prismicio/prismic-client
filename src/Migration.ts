@@ -245,14 +245,14 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 			masterLanguageDocument?: MigrationContentRelationship
 		},
 	): PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>> {
-		const { record: data, dependencies } = prepareMigrationDocumentData(
+		const data = prepareMigrationDocumentData(
 			document.data!,
 			this.createAsset.bind(this),
 		)
 
 		const doc = new PrismicMigrationDocument<
 			ExtractDocumentType<TDocuments, TType>
-		>({ ...document, data }, title, { ...options, dependencies })
+		>({ ...document, data }, title, options)
 
 		this._documents.push(doc)
 
@@ -279,14 +279,14 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 		document: ExtractDocumentType<ExistingPrismicDocument<TDocuments>, TType>,
 		title: string,
 	): PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>> {
-		const { record: data, dependencies } = prepareMigrationDocumentData(
+		const data = prepareMigrationDocumentData(
 			document.data,
 			this.createAsset.bind(this),
 		)
 
 		const doc = new PrismicMigrationDocument<
 			ExtractDocumentType<TDocuments, TType>
-		>({ ...document, data }, title, { dependencies })
+		>({ ...document, data }, title)
 
 		this._documents.push(doc)
 
@@ -312,7 +312,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 		document: ExtractDocumentType<ExistingPrismicDocument<TDocuments>, TType>,
 		title: string,
 	): PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>> {
-		const { record: data, dependencies } = prepareMigrationDocumentData(
+		const data = prepareMigrationDocumentData(
 			document.data,
 			this.createAsset.bind(this),
 			true,
@@ -324,12 +324,12 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 				lang: document.lang,
 				uid: document.uid,
 				tags: document.tags,
-				data: data,
+				data,
 			} as unknown as PendingPrismicDocument<
 				ExtractDocumentType<TDocuments, TType>
 			>,
 			title,
-			{ originalPrismicDocument: document, dependencies },
+			{ originalPrismicDocument: document },
 		)
 
 		this._documents.push(doc)

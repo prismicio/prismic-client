@@ -21,7 +21,6 @@ it("creates a document from an existing Prismic document", (ctx) => {
 			{ type, uid, lang, tags, data },
 			documentTitle,
 			{
-				dependencies: [],
 				originalPrismicDocument: document,
 			},
 		),
