@@ -2,7 +2,6 @@ import { testMigrationFieldPatching } from "./__testutils__/testMigrationFieldPa
 
 import { RichTextNodeType } from "../src"
 import { assetToImage } from "../src/types/migration/Asset"
-import { MigrationContentRelationship } from "../src/types/migration/ContentRelationship"
 
 testMigrationFieldPatching("patches rich text image nodes", {
 	new: ({ ctx, migration }) => [
@@ -18,9 +17,7 @@ testMigrationFieldPatching("patches rich text image nodes", {
 	],
 	newLinkTo: ({ ctx, migration, existingDocuments }) => [
 		...ctx.mock.value.richText({ pattern: "short", state: "filled" }),
-		migration
-			.createAsset("foo", "foo.png")
-			.asRTImageNode(new MigrationContentRelationship(existingDocuments[0])),
+		migration.createAsset("foo", "foo.png").asRTImageNode(existingDocuments[0]),
 	],
 })
 
@@ -36,19 +33,14 @@ testMigrationFieldPatching(
 				url: `${mockedDomain}/foo.png`,
 			},
 		],
-		otherRepositoryLinkTo: ({
-			ctx,
-			migration,
-			mockedDomain,
-			existingDocuments,
-		}) => [
+		otherRepositoryLinkTo: ({ ctx, mockedDomain, existingDocuments }) => [
 			...ctx.mock.value.richText({ pattern: "short", state: "filled" }),
 			{
 				type: RichTextNodeType.image,
 				...ctx.mock.value.image({ state: "filled" }),
 				id: "foo-id",
 				url: `${mockedDomain}/foo.png`,
-				linkTo: migration.createContentRelationship(existingDocuments[0]),
+				linkTo: existingDocuments[0],
 			},
 		],
 	},

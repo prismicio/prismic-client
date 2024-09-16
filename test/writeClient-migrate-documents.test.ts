@@ -138,9 +138,7 @@ it.concurrent(
 		const migration = prismic.createMigration()
 
 		const doc = migration.createDocument(document, "foo", {
-			masterLanguageDocument: migration.createContentRelationship(
-				masterLanguageDocument,
-			),
+			masterLanguageDocument,
 		})
 
 		const reporter = vi.fn()
@@ -190,9 +188,7 @@ it.concurrent(
 			"foo",
 		)
 		const doc = migration.createDocument(document, "bar", {
-			masterLanguageDocument: migration.createContentRelationship(
-				masterLanguageMigrationDocument,
-			),
+			masterLanguageDocument: masterLanguageMigrationDocument,
 		})
 
 		const reporter = vi.fn()
@@ -232,9 +228,7 @@ it.concurrent(
 		const migration = prismic.createMigration()
 
 		const doc = migration.createDocument(document, "foo", {
-			masterLanguageDocument: migration.createContentRelationship(
-				() => masterLanguageDocument,
-			),
+			masterLanguageDocument: () => masterLanguageDocument,
 		})
 
 		const reporter = vi.fn()
@@ -284,9 +278,7 @@ it.concurrent(
 			"foo",
 		)
 		const doc = migration.createDocument(document, "bar", {
-			masterLanguageDocument: migration.createContentRelationship(
-				() => masterLanguageMigrationDocument,
-			),
+			masterLanguageDocument: () => masterLanguageMigrationDocument,
 		})
 
 		const reporter = vi.fn()

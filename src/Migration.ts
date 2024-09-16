@@ -1,12 +1,14 @@
-import { prepareMigrationDocumentData } from "./lib/prepareMigrationDocumentData"
+import * as is from "./lib/isValue"
 import { validateAssetMetadata } from "./lib/validateAssetMetadata"
 
 import type { Asset } from "./types/api/asset/asset"
-import type { MigrationAssetConfig } from "./types/migration/Asset"
+import type {
+	MigrationAssetConfig,
+	MigrationLinkToMedia,
+} from "./types/migration/Asset"
 import type { MigrationAsset } from "./types/migration/Asset"
 import { MigrationImage } from "./types/migration/Asset"
-import type { UnresolvedMigrationContentRelationshipConfig } from "./types/migration/ContentRelationship"
-import { MigrationContentRelationship } from "./types/migration/ContentRelationship"
+import type { MigrationContentRelationship } from "./types/migration/ContentRelationship"
 import { PrismicMigrationDocument } from "./types/migration/Document"
 import type {
 	ExistingPrismicDocument,
@@ -14,6 +16,7 @@ import type {
 } from "./types/migration/Document"
 import type { PrismicDocument } from "./types/value/document"
 import type { FilledImageFieldImage } from "./types/value/image"
+import type { FilledLinkToWebField } from "./types/value/link"
 import type { FilledLinkToMediaField } from "./types/value/linkToMedia"
 
 /**
@@ -245,14 +248,9 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 			masterLanguageDocument?: MigrationContentRelationship
 		},
 	): PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>> {
-		const data = prepareMigrationDocumentData(
-			document.data!,
-			this.createAsset.bind(this),
-		)
-
 		const doc = new PrismicMigrationDocument<
 			ExtractDocumentType<TDocuments, TType>
-		>({ ...document, data }, title, options)
+		>(document, title, options)
 
 		this._documents.push(doc)
 
@@ -279,14 +277,9 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 		document: ExtractDocumentType<ExistingPrismicDocument<TDocuments>, TType>,
 		title: string,
 	): PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>> {
-		const data = prepareMigrationDocumentData(
-			document.data,
-			this.createAsset.bind(this),
-		)
-
 		const doc = new PrismicMigrationDocument<
 			ExtractDocumentType<TDocuments, TType>
-		>({ ...document, data }, title)
+		>(document, title)
 
 		this._documents.push(doc)
 
@@ -312,22 +305,14 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 		document: ExtractDocumentType<ExistingPrismicDocument<TDocuments>, TType>,
 		title: string,
 	): PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>> {
-		const data = prepareMigrationDocumentData(
-			document.data,
-			this.createAsset.bind(this),
-			true,
-		)
-
 		const doc = new PrismicMigrationDocument(
-			{
+			this.#migratePrismicDocumentData({
 				type: document.type,
 				lang: document.lang,
 				uid: document.uid,
 				tags: document.tags,
-				data,
-			} as unknown as PendingPrismicDocument<
-				ExtractDocumentType<TDocuments, TType>
-			>,
+				data: document.data,
+			}) as PendingPrismicDocument<ExtractDocumentType<TDocuments, TType>>,
 			title,
 			{ originalPrismicDocument: document },
 		)
@@ -335,24 +320,6 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 		this._documents.push(doc)
 
 		return doc
-	}
-
-	/**
-	 * Creates a content relationship fields that can be used in documents to link
-	 * to other documents.
-	 *
-	 * @param config - A Prismic document, a migration document instance, an
-	 *   existing content relationship field's content, or a function that returns
-	 *   one of the previous.
-	 * @param text - Link text associated with the content relationship field.
-	 *
-	 * @returns A migration content relationship field instance.
-	 */
-	createContentRelationship(
-		config: UnresolvedMigrationContentRelationshipConfig,
-		text?: string,
-	): MigrationContentRelationship {
-		return new MigrationContentRelationship(config, text, undefined)
 	}
 
 	/**
@@ -423,6 +390,77 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 		)
 	}
 
+	#migratePrismicDocumentData(input: unknown): unknown {
+		if (is.filledContentRelationship(input)) {
+			if (input.isBroken) {
+				return { link_type: "Document", id: "__broken__", isBroken: true }
+			}
+
+			return () => this.#getByOriginalID(input.id)
+		}
+
+		if (is.filledLinkToMedia(input)) {
+			// TODO: Remove when link text PR is merged
+			// @ts-expect-error - Future-proofing for link text
+			return this.createAsset(input).asLinkToMedia(input.text)
+		}
+
+		if (is.rtImageNode(input)) {
+			// Rich text image nodes
+			const rtImageNode = this.createAsset(input).asRTImageNode()
+
+			if (input.linkTo) {
+				// Node `linkTo` dependency is tracked internally
+				rtImageNode.linkTo = this.#migratePrismicDocumentData(input.linkTo) as
+					| MigrationContentRelationship
+					| MigrationLinkToMedia
+					| FilledLinkToWebField
+			}
+
+			return rtImageNode
+		}
+
+		if (is.filledImage(input)) {
+			const image = this.createAsset(input)
+
+			const {
+				id: _id,
+				url: _url,
+				dimensions: _dimensions,
+				edit: _edit,
+				alt: _alt,
+				copyright: _copyright,
+				...thumbnails
+			} = input
+
+			for (const name in thumbnails) {
+				if (is.filledImage(thumbnails[name])) {
+					image.addThumbnail(name, this.createAsset(thumbnails[name]))
+				}
+			}
+
+			return image
+		}
+
+		if (Array.isArray(input)) {
+			return input.map((element) => this.#migratePrismicDocumentData(element))
+		}
+
+		if (input && typeof input === "object") {
+			const res: Record<PropertyKey, unknown> = {}
+
+			for (const key in input) {
+				res[key] = this.#migratePrismicDocumentData(
+					input[key as keyof typeof input],
+				)
+			}
+
+			return res
+		}
+
+		return input
+	}
+
 	/**
 	 * Queries a document from the migration instance for a specific original ID.
 	 *
@@ -441,7 +479,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * @returns The migration document instance for the original ID, if a matching
 	 *   document is found.
 	 */
-	getByOriginalID<TType extends TDocuments["type"]>(
+	#getByOriginalID<TType extends TDocuments["type"]>(
 		id: string,
 	):
 		| PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>>

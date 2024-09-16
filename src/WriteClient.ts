@@ -1,6 +1,9 @@
 import { devMsg } from "./lib/devMsg"
 import { pLimit } from "./lib/pLimit"
-import { resolveMigrationDocumentData } from "./lib/resolveMigrationDocumentData"
+import {
+	resolveMigrationContentRelationship,
+	resolveMigrationDocumentData,
+} from "./lib/resolveMigrationDocumentData"
 
 import type {
 	Asset,
@@ -431,9 +434,10 @@ export class WriteClient<
 			// Resolve master language document ID for non-master locale documents
 			let masterLanguageDocumentID: string | undefined
 			if (doc.masterLanguageDocument) {
-				const link = doc.masterLanguageDocument
+				const masterLanguageDocument =
+					await resolveMigrationContentRelationship(doc.masterLanguageDocument)
 
-				masterLanguageDocumentID = (await link._resolve(migration))?.id
+				masterLanguageDocumentID = masterLanguageDocument?.id
 			} else if (doc.originalPrismicDocument) {
 				masterLanguageDocumentID =
 					doc.originalPrismicDocument.alternate_languages.find(

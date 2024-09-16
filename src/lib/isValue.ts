@@ -30,7 +30,7 @@ type UnknownValue =
  * @internal
  * This is not an official helper function and it's only designed to work with internal processes.
  */
-export const linkToMedia = (
+export const filledLinkToMedia = (
 	value: UnknownValue,
 ): value is FilledLinkToMediaField => {
 	if (value && typeof value === "object" && !("version" in value)) {
@@ -96,7 +96,7 @@ const imageLike = (
  * @internal
  * This is not an official helper function and it's only designed to work with internal processes.
  */
-export const image = (
+export const filledImage = (
 	value: UnknownValue,
 ): value is ImageField<string, "filled"> => {
 	if (
@@ -145,7 +145,7 @@ export const rtImageNode = (value: UnknownValue): value is RTImageNode => {
  * @internal
  * This is not an official helper function and it's only designed to work with internal processes.
  */
-export const contentRelationship = (
+export const filledContentRelationship = (
 	value: UnknownValue,
 ): value is FilledContentRelationshipField => {
 	if (value && typeof value === "object" && !("version" in value)) {
@@ -162,4 +162,35 @@ export const contentRelationship = (
 	}
 
 	return false
+}
+
+/**
+ * Checks if a value is a Prismic document.
+ *
+ * @param value - Value to check.
+ *
+ * @returns `true` if `value` is a Prismic document, `false` otherwise.
+ *
+ * @internal
+ * This is not an official helper function and it's only designed to work with internal processes.
+ */
+export const prismicDocument = (
+	value: UnknownValue,
+): value is PrismicDocument => {
+	try {
+		return (
+			typeof value === "object" &&
+			value !== null &&
+			"id" in value &&
+			"href" in value &&
+			typeof value.href === "string" &&
+			new URL(value.href) &&
+			"type" in value &&
+			"lang" in value &&
+			"tags" in value &&
+			Array.isArray(value.tags)
+		)
+	} catch {
+		return false
+	}
 }

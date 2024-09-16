@@ -1,9 +1,15 @@
+import { resolveMigrationDocumentData } from "../../lib/resolveMigrationDocumentData"
+
 import type { Migration } from "../../Migration"
 
 import type { Asset } from "../api/asset/asset"
+import type { FilledContentRelationshipField } from "../value/contentRelationship"
 import type { FilledImageFieldImage, ImageField } from "../value/image"
 import { type FilledLinkToWebField, LinkType } from "../value/link"
-import type { LinkToMediaField } from "../value/linkToMedia"
+import type {
+	FilledLinkToMediaField,
+	LinkToMediaField,
+} from "../value/linkToMedia"
 import { type RTImageNode, RichTextNodeType } from "../value/richText"
 
 import type { MigrationContentRelationship } from "./ContentRelationship"
@@ -327,10 +333,11 @@ export class MigrationRTImageNode extends MigrationAsset<RTImageNode> {
 			return {
 				...assetToImage(asset, this._initialField),
 				type: RichTextNodeType.image,
-				linkTo:
-					this.linkTo instanceof MigrationField
-						? await this.linkTo._resolve(migration)
-						: this.linkTo,
+				linkTo: (await resolveMigrationDocumentData(this.linkTo, migration)) as
+					| FilledLinkToWebField
+					| FilledLinkToMediaField
+					| FilledContentRelationshipField
+					| undefined,
 			}
 		}
 	}

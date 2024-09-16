@@ -5,8 +5,9 @@ exports[`patches link fields > brokenLink > group 1`] = `
   "group": [
     {
       "field": {
+        "id": "__broken__",
         "isBroken": true,
-        "type": "Document",
+        "link_type": "Document",
       },
     },
   ],
@@ -21,21 +22,24 @@ exports[`patches link fields > brokenLink > shared slice 1`] = `
       "items": [
         {
           "field": {
+            "id": "__broken__",
             "isBroken": true,
-            "type": "Document",
+            "link_type": "Document",
           },
         },
       ],
       "primary": {
         "field": {
+          "id": "__broken__",
           "isBroken": true,
-          "type": "Document",
+          "link_type": "Document",
         },
         "group": [
           {
             "field": {
+              "id": "__broken__",
               "isBroken": true,
-              "type": "Document",
+              "link_type": "Document",
             },
           },
         ],
@@ -57,15 +61,17 @@ exports[`patches link fields > brokenLink > slice 1`] = `
       "items": [
         {
           "field": {
+            "id": "__broken__",
             "isBroken": true,
-            "type": "Document",
+            "link_type": "Document",
           },
         },
       ],
       "primary": {
         "field": {
+          "id": "__broken__",
           "isBroken": true,
-          "type": "Document",
+          "link_type": "Document",
         },
       },
       "slice_label": "Aliquet",
@@ -78,8 +84,9 @@ exports[`patches link fields > brokenLink > slice 1`] = `
 exports[`patches link fields > brokenLink > static zone 1`] = `
 {
   "field": {
+    "id": "__broken__",
     "isBroken": true,
-    "type": "Document",
+    "link_type": "Document",
   },
 }
 `;
@@ -90,11 +97,7 @@ exports[`patches link fields > existing > group 1`] = `
     {
       "field": {
         "id": "id-existing",
-        "isBroken": false,
-        "lang": "laoreet",
         "link_type": "Document",
-        "tags": [],
-        "type": "orci",
       },
     },
   ],
@@ -110,38 +113,20 @@ exports[`patches link fields > existing > shared slice 1`] = `
         {
           "field": {
             "id": "id-existing",
-            "isBroken": false,
-            "lang": "tortor,",
             "link_type": "Document",
-            "tags": [
-              "Risus In",
-            ],
-            "type": "dui",
           },
         },
       ],
       "primary": {
         "field": {
           "id": "id-existing",
-          "isBroken": false,
-          "lang": "tortor,",
           "link_type": "Document",
-          "tags": [
-            "Risus In",
-          ],
-          "type": "dui",
         },
         "group": [
           {
             "field": {
               "id": "id-existing",
-              "isBroken": false,
-              "lang": "tortor,",
               "link_type": "Document",
-              "tags": [
-                "Risus In",
-              ],
-              "type": "dui",
             },
           },
         ],
@@ -164,26 +149,14 @@ exports[`patches link fields > existing > slice 1`] = `
         {
           "field": {
             "id": "id-existing",
-            "isBroken": false,
-            "lang": "sapien",
             "link_type": "Document",
-            "tags": [
-              "Aenean",
-            ],
-            "type": "amet",
           },
         },
       ],
       "primary": {
         "field": {
           "id": "id-existing",
-          "isBroken": false,
-          "lang": "sapien",
           "link_type": "Document",
-          "tags": [
-            "Aenean",
-          ],
-          "type": "amet",
         },
       },
       "slice_label": "Aliquet",
@@ -197,11 +170,7 @@ exports[`patches link fields > existing > static zone 1`] = `
 {
   "field": {
     "id": "id-existing",
-    "isBroken": false,
-    "lang": "eget",
     "link_type": "Document",
-    "tags": [],
-    "type": "phasellus",
   },
 }
 `;
@@ -212,11 +181,7 @@ exports[`patches link fields > lazyExisting > group 1`] = `
     {
       "field": {
         "id": "id-existing",
-        "isBroken": false,
-        "lang": "laoreet",
         "link_type": "Document",
-        "tags": [],
-        "type": "orci",
       },
     },
   ],
@@ -232,38 +197,20 @@ exports[`patches link fields > lazyExisting > shared slice 1`] = `
         {
           "field": {
             "id": "id-existing",
-            "isBroken": false,
-            "lang": "tortor,",
             "link_type": "Document",
-            "tags": [
-              "Risus In",
-            ],
-            "type": "dui",
           },
         },
       ],
       "primary": {
         "field": {
           "id": "id-existing",
-          "isBroken": false,
-          "lang": "tortor,",
           "link_type": "Document",
-          "tags": [
-            "Risus In",
-          ],
-          "type": "dui",
         },
         "group": [
           {
             "field": {
               "id": "id-existing",
-              "isBroken": false,
-              "lang": "tortor,",
               "link_type": "Document",
-              "tags": [
-                "Risus In",
-              ],
-              "type": "dui",
             },
           },
         ],
@@ -286,26 +233,14 @@ exports[`patches link fields > lazyExisting > slice 1`] = `
         {
           "field": {
             "id": "id-existing",
-            "isBroken": false,
-            "lang": "sapien",
             "link_type": "Document",
-            "tags": [
-              "Aenean",
-            ],
-            "type": "amet",
           },
         },
       ],
       "primary": {
         "field": {
           "id": "id-existing",
-          "isBroken": false,
-          "lang": "sapien",
           "link_type": "Document",
-          "tags": [
-            "Aenean",
-          ],
-          "type": "amet",
         },
       },
       "slice_label": "Aliquet",
@@ -319,11 +254,7 @@ exports[`patches link fields > lazyExisting > static zone 1`] = `
 {
   "field": {
     "id": "id-existing",
-    "isBroken": false,
-    "lang": "eget",
     "link_type": "Document",
-    "tags": [],
-    "type": "phasellus",
   },
 }
 `;
@@ -334,14 +265,7 @@ exports[`patches link fields > lazyMigration > group 1`] = `
     {
       "field": {
         "id": "id-other",
-        "isBroken": false,
-        "lang": "a",
         "link_type": "Document",
-        "tags": [
-          "Odio Eu",
-        ],
-        "type": "amet",
-        "uid": "Non sodales neque",
       },
     },
   ],
@@ -357,35 +281,20 @@ exports[`patches link fields > lazyMigration > shared slice 1`] = `
         {
           "field": {
             "id": "id-other",
-            "isBroken": false,
-            "lang": "gravida",
             "link_type": "Document",
-            "tags": [],
-            "type": "leo",
-            "uid": "Blandit volutpat maecenas",
           },
         },
       ],
       "primary": {
         "field": {
           "id": "id-other",
-          "isBroken": false,
-          "lang": "gravida",
           "link_type": "Document",
-          "tags": [],
-          "type": "leo",
-          "uid": "Blandit volutpat maecenas",
         },
         "group": [
           {
             "field": {
               "id": "id-other",
-              "isBroken": false,
-              "lang": "gravida",
               "link_type": "Document",
-              "tags": [],
-              "type": "leo",
-              "uid": "Blandit volutpat maecenas",
             },
           },
         ],
@@ -408,28 +317,14 @@ exports[`patches link fields > lazyMigration > slice 1`] = `
         {
           "field": {
             "id": "id-other",
-            "isBroken": false,
-            "lang": "ultrices",
             "link_type": "Document",
-            "tags": [
-              "Ipsum Consequat",
-            ],
-            "type": "eget",
-            "uid": "Amet dictum sit",
           },
         },
       ],
       "primary": {
         "field": {
           "id": "id-other",
-          "isBroken": false,
-          "lang": "ultrices",
           "link_type": "Document",
-          "tags": [
-            "Ipsum Consequat",
-          ],
-          "type": "eget",
-          "uid": "Amet dictum sit",
         },
       },
       "slice_label": "Aliquet",
@@ -443,12 +338,7 @@ exports[`patches link fields > lazyMigration > static zone 1`] = `
 {
   "field": {
     "id": "id-other",
-    "isBroken": false,
-    "lang": "nisi,",
     "link_type": "Document",
-    "tags": [],
-    "type": "eros",
-    "uid": "Scelerisque mauris pellentesque",
   },
 }
 `;
@@ -459,14 +349,7 @@ exports[`patches link fields > migration > group 1`] = `
     {
       "field": {
         "id": "id-other",
-        "isBroken": false,
-        "lang": "a",
         "link_type": "Document",
-        "tags": [
-          "Odio Eu",
-        ],
-        "type": "amet",
-        "uid": "Non sodales neque",
       },
     },
   ],
@@ -482,35 +365,20 @@ exports[`patches link fields > migration > shared slice 1`] = `
         {
           "field": {
             "id": "id-other",
-            "isBroken": false,
-            "lang": "gravida",
             "link_type": "Document",
-            "tags": [],
-            "type": "leo",
-            "uid": "Blandit volutpat maecenas",
           },
         },
       ],
       "primary": {
         "field": {
           "id": "id-other",
-          "isBroken": false,
-          "lang": "gravida",
           "link_type": "Document",
-          "tags": [],
-          "type": "leo",
-          "uid": "Blandit volutpat maecenas",
         },
         "group": [
           {
             "field": {
               "id": "id-other",
-              "isBroken": false,
-              "lang": "gravida",
               "link_type": "Document",
-              "tags": [],
-              "type": "leo",
-              "uid": "Blandit volutpat maecenas",
             },
           },
         ],
@@ -533,28 +401,14 @@ exports[`patches link fields > migration > slice 1`] = `
         {
           "field": {
             "id": "id-other",
-            "isBroken": false,
-            "lang": "ultrices",
             "link_type": "Document",
-            "tags": [
-              "Ipsum Consequat",
-            ],
-            "type": "eget",
-            "uid": "Amet dictum sit",
           },
         },
       ],
       "primary": {
         "field": {
           "id": "id-other",
-          "isBroken": false,
-          "lang": "ultrices",
           "link_type": "Document",
-          "tags": [
-            "Ipsum Consequat",
-          ],
-          "type": "eget",
-          "uid": "Amet dictum sit",
         },
       },
       "slice_label": "Aliquet",
@@ -568,12 +422,7 @@ exports[`patches link fields > migration > static zone 1`] = `
 {
   "field": {
     "id": "id-other",
-    "isBroken": false,
-    "lang": "nisi,",
     "link_type": "Document",
-    "tags": [],
-    "type": "eros",
-    "uid": "Scelerisque mauris pellentesque",
   },
 }
 `;
@@ -584,12 +433,7 @@ exports[`patches link fields > migrationNoTags > group 1`] = `
     {
       "field": {
         "id": "id-other",
-        "isBroken": false,
-        "lang": "a",
         "link_type": "Document",
-        "tags": [],
-        "type": "amet",
-        "uid": "Non sodales neque",
       },
     },
   ],
@@ -605,35 +449,20 @@ exports[`patches link fields > migrationNoTags > shared slice 1`] = `
         {
           "field": {
             "id": "id-other",
-            "isBroken": false,
-            "lang": "gravida",
             "link_type": "Document",
-            "tags": [],
-            "type": "leo",
-            "uid": "Blandit volutpat maecenas",
           },
         },
       ],
       "primary": {
         "field": {
           "id": "id-other",
-          "isBroken": false,
-          "lang": "gravida",
           "link_type": "Document",
-          "tags": [],
-          "type": "leo",
-          "uid": "Blandit volutpat maecenas",
         },
         "group": [
           {
             "field": {
               "id": "id-other",
-              "isBroken": false,
-              "lang": "gravida",
               "link_type": "Document",
-              "tags": [],
-              "type": "leo",
-              "uid": "Blandit volutpat maecenas",
             },
           },
         ],
@@ -656,24 +485,14 @@ exports[`patches link fields > migrationNoTags > slice 1`] = `
         {
           "field": {
             "id": "id-other",
-            "isBroken": false,
-            "lang": "ultrices",
             "link_type": "Document",
-            "tags": [],
-            "type": "eget",
-            "uid": "Amet dictum sit",
           },
         },
       ],
       "primary": {
         "field": {
           "id": "id-other",
-          "isBroken": false,
-          "lang": "ultrices",
           "link_type": "Document",
-          "tags": [],
-          "type": "eget",
-          "uid": "Amet dictum sit",
         },
       },
       "slice_label": "Aliquet",
@@ -687,12 +506,7 @@ exports[`patches link fields > migrationNoTags > static zone 1`] = `
 {
   "field": {
     "id": "id-other",
-    "isBroken": false,
-    "lang": "nisi,",
     "link_type": "Document",
-    "tags": [],
-    "type": "eros",
-    "uid": "Scelerisque mauris pellentesque",
   },
 }
 `;
@@ -703,12 +517,7 @@ exports[`patches link fields > otherRepositoryContentRelationship > group 1`] = 
     {
       "field": {
         "id": "id-other-repository",
-        "isBroken": false,
-        "lang": "faucibus",
         "link_type": "Document",
-        "tags": [],
-        "type": "lorem",
-        "uid": "Pharetra et ultrices",
       },
     },
   ],
@@ -724,41 +533,20 @@ exports[`patches link fields > otherRepositoryContentRelationship > shared slice
         {
           "field": {
             "id": "id-other-repository",
-            "isBroken": false,
-            "lang": "eu",
             "link_type": "Document",
-            "tags": [
-              "Pharetra",
-            ],
-            "type": "pellentesque",
-            "uid": "Volutpat ac tincidunt",
           },
         },
       ],
       "primary": {
         "field": {
           "id": "id-other-repository",
-          "isBroken": false,
-          "lang": "eu",
           "link_type": "Document",
-          "tags": [
-            "Pharetra",
-          ],
-          "type": "pellentesque",
-          "uid": "Volutpat ac tincidunt",
         },
         "group": [
           {
             "field": {
               "id": "id-other-repository",
-              "isBroken": false,
-              "lang": "eu",
               "link_type": "Document",
-              "tags": [
-                "Pharetra",
-              ],
-              "type": "pellentesque",
-              "uid": "Volutpat ac tincidunt",
             },
           },
         ],
@@ -781,28 +569,14 @@ exports[`patches link fields > otherRepositoryContentRelationship > slice 1`] = 
         {
           "field": {
             "id": "id-other-repository",
-            "isBroken": false,
-            "lang": "dignissim",
             "link_type": "Document",
-            "tags": [
-              "Arcu Vitae",
-            ],
-            "type": "a",
-            "uid": "Tristique senectus et",
           },
         },
       ],
       "primary": {
         "field": {
           "id": "id-other-repository",
-          "isBroken": false,
-          "lang": "dignissim",
           "link_type": "Document",
-          "tags": [
-            "Arcu Vitae",
-          ],
-          "type": "a",
-          "uid": "Tristique senectus et",
         },
       },
       "slice_label": "Aliquet",
@@ -816,12 +590,7 @@ exports[`patches link fields > otherRepositoryContentRelationship > static zone 
 {
   "field": {
     "id": "id-other-repository",
-    "isBroken": false,
-    "lang": "quam",
     "link_type": "Document",
-    "tags": [],
-    "type": "semper",
-    "uid": "Sed viverra ipsum",
   },
 }
 `;
@@ -841,11 +610,7 @@ exports[`patches link fields > richTextLinkNode > group 1`] = `
             {
               "data": {
                 "id": "id-existing",
-                "isBroken": false,
-                "lang": "laoreet",
                 "link_type": "Document",
-                "tags": [],
-                "type": "orci",
               },
               "end": 5,
               "start": 0,
@@ -879,13 +644,7 @@ exports[`patches link fields > richTextLinkNode > shared slice 1`] = `
                 {
                   "data": {
                     "id": "id-existing",
-                    "isBroken": false,
-                    "lang": "tortor,",
                     "link_type": "Document",
-                    "tags": [
-                      "Risus In",
-                    ],
-                    "type": "dui",
                   },
                   "end": 5,
                   "start": 0,
@@ -910,13 +669,7 @@ exports[`patches link fields > richTextLinkNode > shared slice 1`] = `
               {
                 "data": {
                   "id": "id-existing",
-                  "isBroken": false,
-                  "lang": "tortor,",
                   "link_type": "Document",
-                  "tags": [
-                    "Risus In",
-                  ],
-                  "type": "dui",
                 },
                 "end": 5,
                 "start": 0,
@@ -940,13 +693,7 @@ exports[`patches link fields > richTextLinkNode > shared slice 1`] = `
                   {
                     "data": {
                       "id": "id-existing",
-                      "isBroken": false,
-                      "lang": "tortor,",
                       "link_type": "Document",
-                      "tags": [
-                        "Risus In",
-                      ],
-                      "type": "dui",
                     },
                     "end": 5,
                     "start": 0,
@@ -987,13 +734,7 @@ exports[`patches link fields > richTextLinkNode > slice 1`] = `
                 {
                   "data": {
                     "id": "id-existing",
-                    "isBroken": false,
-                    "lang": "sapien",
                     "link_type": "Document",
-                    "tags": [
-                      "Aenean",
-                    ],
-                    "type": "amet",
                   },
                   "end": 5,
                   "start": 0,
@@ -1018,13 +759,7 @@ exports[`patches link fields > richTextLinkNode > slice 1`] = `
               {
                 "data": {
                   "id": "id-existing",
-                  "isBroken": false,
-                  "lang": "sapien",
                   "link_type": "Document",
-                  "tags": [
-                    "Aenean",
-                  ],
-                  "type": "amet",
                 },
                 "end": 5,
                 "start": 0,
@@ -1056,11 +791,7 @@ exports[`patches link fields > richTextLinkNode > static zone 1`] = `
         {
           "data": {
             "id": "id-existing",
-            "isBroken": false,
-            "lang": "eget",
             "link_type": "Document",
-            "tags": [],
-            "type": "phasellus",
           },
           "end": 5,
           "start": 0,

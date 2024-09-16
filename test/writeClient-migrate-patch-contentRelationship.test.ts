@@ -3,40 +3,34 @@ import { testMigrationFieldPatching } from "./__testutils__/testMigrationFieldPa
 import { RichTextNodeType } from "../src"
 
 testMigrationFieldPatching("patches link fields", {
-	existing: ({ migration, existingDocuments }) =>
-		migration.createContentRelationship(existingDocuments[0]),
-	migration: ({ migration, migrationDocuments }) => {
+	existing: ({ existingDocuments }) => existingDocuments[0],
+	migration: ({ migrationDocuments }) => {
 		delete migrationDocuments.other.document.id
 
-		return migration.createContentRelationship(migrationDocuments.other)
+		return migrationDocuments.other
 	},
-	lazyExisting: ({ migration, existingDocuments }) => {
-		return migration.createContentRelationship(() => existingDocuments[0])
+	lazyExisting: ({ existingDocuments }) => {
+		return () => existingDocuments[0]
 	},
 	lazyMigration: ({ migration, migrationDocuments }) => {
 		delete migrationDocuments.other.document.id
 
-		return migration.createContentRelationship(() =>
+		return () =>
 			migration.getByUID(
 				migrationDocuments.other.document.type,
 				migrationDocuments.other.document.uid!,
-			),
-		)
+			)
 	},
 	migrationNoTags: ({ migration, migrationDocuments }) => {
 		migrationDocuments.other.document.tags = undefined
 
-		return migration.createContentRelationship(() =>
+		return () =>
 			migration.getByUID(
 				migrationDocuments.other.document.type,
 				migrationDocuments.other.document.uid!,
-			),
-		)
+			)
 	},
-	brokenLink: () => {
-		return { type: "Document", isBroken: true }
-	},
-	richTextLinkNode: ({ migration, existingDocuments }) => [
+	richTextLinkNode: ({ existingDocuments }) => [
 		{
 			type: RichTextNodeType.paragraph,
 			text: "lorem",
@@ -46,7 +40,7 @@ testMigrationFieldPatching("patches link fields", {
 					type: RichTextNodeType.hyperlink,
 					start: 0,
 					end: 5,
-					data: migration.createContentRelationship(existingDocuments[0]),
+					data: existingDocuments[0],
 				},
 			],
 		},
@@ -56,6 +50,16 @@ testMigrationFieldPatching("patches link fields", {
 testMigrationFieldPatching(
 	"patches link fields",
 	{
+		brokenLink: () => {
+			return {
+				link_type: "Document",
+				id: "id",
+				type: "type",
+				tags: [],
+				lang: "lang",
+				isBroken: true,
+			}
+		},
 		otherRepositoryContentRelationship: ({ ctx, migrationDocuments }) => {
 			const contentRelationship = ctx.mock.value.link({ type: "Document" })
 			// `migrationDocuments` contains documents from "another repository"

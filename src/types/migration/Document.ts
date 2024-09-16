@@ -24,7 +24,7 @@ export type InjectMigrationSpecificTypes<T> = T extends RTImageNode
 		: T extends FilledLinkToMediaField
 			? T | MigrationLinkToMedia | undefined
 			: T extends FilledContentRelationshipField
-				? T | MigrationContentRelationship | undefined
+				? T | MigrationContentRelationship
 				: // eslint-disable-next-line @typescript-eslint/no-explicit-any
 					T extends Record<any, any>
 					? { [P in keyof T]: InjectMigrationSpecificTypes<T[P]> }
