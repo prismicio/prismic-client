@@ -12,9 +12,9 @@ it("returns a document of a given singleton type", () => {
 	}
 	const documentName = "documentName"
 
-	migration.createDocument(document, documentName)
+	const doc = migration.createDocument(document, documentName)
 
-	expect(migration.getSingle(document.type)).toStrictEqual(document)
+	expect(migration.getSingle(document.type)).toStrictEqual(doc)
 })
 
 it("returns `undefined` if a document is not found", () => {

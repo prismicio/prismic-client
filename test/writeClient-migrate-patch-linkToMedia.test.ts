@@ -1,34 +1,62 @@
 import { testMigrationFieldPatching } from "./__testutils__/testMigrationFieldPatching"
 
-import { RichTextNodeType } from "../src"
-import { AssetType } from "../src/types/api/asset/asset"
+import type {
+	InjectMigrationSpecificTypes,
+	LinkToMediaField,
+	RichTextField,
+} from "../src"
+import { LinkType, RichTextNodeType } from "../src"
+import type { Asset } from "../src/types/api/asset/asset"
+import type { MigrationLinkToMedia } from "../src/types/migration/Asset"
 
-testMigrationFieldPatching("patches link to media fields", {
-	new: ({ migration }) => migration.createAsset("foo", "foo.png").linkToMedia,
-	existing: ({ migration, existingAssets }) =>
-		migration.createAsset(existingAssets[0]).linkToMedia,
-	existingNonImage: ({ migration, existingAssets }) => {
-		existingAssets[0].filename = "foo.pdf"
-		existingAssets[0].extension = "pdf"
-		existingAssets[0].kind = AssetType.Document
-		existingAssets[0].width = undefined
-		existingAssets[0].height = undefined
+const assetToLinkToMedia = (
+	asset: Asset,
+	text?: string,
+): LinkToMediaField<"filled"> => {
+	return {
+		id: asset.id,
+		link_type: LinkType.Media,
+		name: asset.filename,
+		kind: asset.kind,
+		url: asset.url,
+		size: `${asset.size}`,
+		height: typeof asset.height === "number" ? `${asset.height}` : undefined,
+		width: typeof asset.width === "number" ? `${asset.width}` : undefined,
+		// TODO: Remove when link text PR is merged
+		// @ts-expect-error - Future-proofing for link text
+		text,
+	}
+}
 
-		return migration.createAsset(existingAssets[0]).linkToMedia
-	},
-	otherRepository: ({ ctx, mockedDomain }) => {
+testMigrationFieldPatching<
+	| MigrationLinkToMedia
+	| LinkToMediaField
+	| InjectMigrationSpecificTypes<RichTextField>
+>("patches link to media fields", {
+	new: ({ migration }) => {
 		return {
-			...ctx.mock.value.linkToMedia({ state: "filled" }),
-			id: "foo-id",
-			url: `${mockedDomain}/foo.png`,
+			link_type: LinkType.Media,
+			id: migration.createAsset("foo", "foo.png"),
 		}
 	},
-	otherRepositoryNotFoundID: ({ ctx }) => {
+	newWithText: ({ migration }) => {
 		return {
-			...ctx.mock.value.linkToMedia({ state: "empty" }),
-			id: null,
+			link_type: LinkType.Media,
+			id: migration.createAsset("foo", "foo.png"),
+			text: "foo",
 		}
 	},
+	newNonImage: ({ migration }) => {
+		const migrationAsset = migration.createAsset("foo", "foo.pdf", {
+			tags: ["__pdf__"],
+		})
+
+		return {
+			link_type: LinkType.Media,
+			id: migrationAsset,
+		}
+	},
+	existing: ({ existingAssets }) => assetToLinkToMedia(existingAssets[0]),
 	richTextNew: ({ migration }) => [
 		{
 			type: RichTextNodeType.paragraph,
@@ -39,43 +67,60 @@ testMigrationFieldPatching("patches link to media fields", {
 					type: RichTextNodeType.hyperlink,
 					start: 0,
 					end: 5,
-					data: migration.createAsset("foo", "foo.png").linkToMedia,
-				},
-			],
-		},
-	],
-	richTextExisting: ({ migration, existingAssets }) => [
-		{
-			type: RichTextNodeType.paragraph,
-			text: "lorem",
-			spans: [
-				{ type: RichTextNodeType.strong, start: 0, end: 5 },
-				{
-					type: RichTextNodeType.hyperlink,
-					start: 0,
-					end: 5,
-					data: migration.createAsset(existingAssets[0]).linkToMedia,
-				},
-			],
-		},
-	],
-	richTextOtherRepository: ({ ctx, mockedDomain }) => [
-		{
-			type: RichTextNodeType.paragraph,
-			text: "lorem",
-			spans: [
-				{ type: RichTextNodeType.strong, start: 0, end: 5 },
-				{
-					type: RichTextNodeType.hyperlink,
-					start: 0,
-					end: 5,
 					data: {
-						...ctx.mock.value.linkToMedia({ state: "filled" }),
-						id: "foo-id",
-						url: `${mockedDomain}/foo.png`,
+						link_type: LinkType.Media,
+						id: migration.createAsset("foo", "foo.png"),
 					},
 				},
 			],
 		},
 	],
+	richTextExisting: ({ existingAssets }) => [
+		{
+			type: RichTextNodeType.paragraph,
+			text: "lorem",
+			spans: [
+				{ type: RichTextNodeType.strong, start: 0, end: 5 },
+				{
+					type: RichTextNodeType.hyperlink,
+					start: 0,
+					end: 5,
+					data: assetToLinkToMedia(existingAssets[0]),
+				},
+			],
+		},
+	],
 })
+
+testMigrationFieldPatching<LinkToMediaField | RichTextField>(
+	"patches link to media fields (from Prismic)",
+	{
+		simple: ({ ctx, mockedDomain }) => {
+			return {
+				...ctx.mock.value.linkToMedia({ state: "filled" }),
+				id: "foo-id",
+				url: `${mockedDomain}/foo.png`,
+			}
+		},
+		inRichText: ({ ctx, mockedDomain }) => [
+			{
+				type: RichTextNodeType.paragraph,
+				text: "lorem",
+				spans: [
+					{ type: RichTextNodeType.strong, start: 0, end: 5 },
+					{
+						type: RichTextNodeType.hyperlink,
+						start: 0,
+						end: 5,
+						data: {
+							...ctx.mock.value.linkToMedia({ state: "filled" }),
+							id: "foo-id",
+							url: `${mockedDomain}/foo.png`,
+						},
+					},
+				],
+			},
+		],
+	},
+	{ mode: "fromPrismic" },
+)

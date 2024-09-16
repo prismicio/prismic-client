@@ -17,83 +17,6 @@ const isNode16 = process.version.startsWith("v16")
 const isNode18 = process.version.startsWith("v18")
 const it = _it.skipIf(isNode16 || isNode18)
 
-it.concurrent("discovers existing assets", async (ctx) => {
-	const client = createTestWriteClient({ ctx })
-
-	mockPrismicRestAPIV2({ ctx })
-	mockPrismicAssetAPI({ ctx, client, existingAssets: [2] })
-	mockPrismicMigrationAPI({ ctx, client })
-
-	const migration = prismic.createMigration()
-
-	const reporter = vi.fn()
-
-	await client.migrate(migration, { reporter })
-
-	expect(reporter).toHaveBeenCalledWith({
-		type: "assets:existing",
-		data: {
-			existing: 2,
-		},
-	})
-})
-
-it.concurrent(
-	"discovers existing assets and crawl pages if any",
-	async (ctx) => {
-		const client = createTestWriteClient({ ctx })
-
-		mockPrismicRestAPIV2({ ctx })
-		mockPrismicAssetAPI({ ctx, client, existingAssets: [2, 3] })
-		mockPrismicMigrationAPI({ ctx, client })
-
-		const migration = prismic.createMigration()
-
-		const reporter = vi.fn()
-
-		await client.migrate(migration, { reporter })
-
-		expect(reporter).toHaveBeenCalledWith({
-			type: "assets:existing",
-			data: {
-				existing: 5,
-			},
-		})
-	},
-)
-
-it.concurrent("skips creating existing assets", async (ctx) => {
-	const client = createTestWriteClient({ ctx })
-
-	mockPrismicRestAPIV2({ ctx })
-	const { assetsDatabase } = mockPrismicAssetAPI({
-		ctx,
-		client,
-		existingAssets: [1],
-	})
-	mockPrismicMigrationAPI({ ctx, client })
-
-	const migration = prismic.createMigration()
-
-	const asset = assetsDatabase[0][0]
-	migration.createAsset(asset)
-
-	const reporter = vi.fn()
-
-	await client.migrate(migration, { reporter })
-
-	expect(reporter).toHaveBeenCalledWith({
-		type: "assets:skipping",
-		data: {
-			reason: "already exists",
-			current: 1,
-			remaining: 0,
-			total: 1,
-			asset: expect.objectContaining({ id: asset.id, file: asset.url }),
-		},
-	})
-})
-
 it.concurrent("creates new asset from string file data", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
@@ -109,7 +32,7 @@ it.concurrent("creates new asset from string file data", async (ctx) => {
 	mockPrismicMigrationAPI({ ctx, client })
 
 	const migration = prismic.createMigration()
-	migration.createAsset(dummyFileData, asset.filename)
+	const migrationAsset = migration.createAsset(dummyFileData, asset.filename)
 
 	const reporter = vi.fn()
 
@@ -123,10 +46,7 @@ it.concurrent("creates new asset from string file data", async (ctx) => {
 			current: 1,
 			remaining: 0,
 			total: 1,
-			asset: expect.objectContaining({
-				file: dummyFileData,
-				filename: asset.filename,
-			}),
+			asset: migrationAsset,
 		},
 	})
 	expect(assetsDatabase.flat()).toHaveLength(1)
@@ -147,7 +67,7 @@ it.concurrent("creates new asset from a File instance", async (ctx) => {
 	mockPrismicMigrationAPI({ ctx, client })
 
 	const migration = prismic.createMigration()
-	migration.createAsset(dummyFile, asset.filename)
+	const migrationAsset = migration.createAsset(dummyFile, asset.filename)
 
 	const reporter = vi.fn()
 
@@ -161,10 +81,7 @@ it.concurrent("creates new asset from a File instance", async (ctx) => {
 			current: 1,
 			remaining: 0,
 			total: 1,
-			asset: expect.objectContaining({
-				file: dummyFile,
-				filename: asset.filename,
-			}),
+			asset: migrationAsset,
 		},
 	})
 	expect(assetsDatabase.flat()).toHaveLength(1)
@@ -192,7 +109,10 @@ it.concurrent(
 		)
 
 		const migration = prismic.createMigration()
-		migration.createAsset(new URL(asset.url), asset.filename)
+		const migrationAsset = migration.createAsset(
+			new URL(asset.url),
+			asset.filename,
+		)
 
 		const reporter = vi.fn()
 
@@ -206,10 +126,7 @@ it.concurrent(
 				current: 1,
 				remaining: 0,
 				total: 1,
-				asset: expect.objectContaining({
-					file: new URL(asset.url),
-					filename: asset.filename,
-				}),
+				asset: migrationAsset,
 			},
 		})
 		expect(assetsDatabase.flat()).toHaveLength(1)
@@ -238,7 +155,7 @@ it.concurrent(
 		)
 
 		const migration = prismic.createMigration()
-		migration.createAsset(asset.url, asset.filename)
+		const migrationAsset = migration.createAsset(asset.url, asset.filename)
 
 		const reporter = vi.fn()
 
@@ -252,10 +169,7 @@ it.concurrent(
 				current: 1,
 				remaining: 0,
 				total: 1,
-				asset: expect.objectContaining({
-					file: asset.url,
-					filename: asset.filename,
-				}),
+				asset: migrationAsset,
 			},
 		})
 		expect(assetsDatabase.flat()).toHaveLength(1)
@@ -284,7 +198,10 @@ it.concurrent(
 		)
 
 		const migration = prismic.createMigration()
-		migration.createAsset(new URL(asset.url), asset.filename)
+		const migrationAsset = migration.createAsset(
+			new URL(asset.url),
+			asset.filename,
+		)
 
 		const reporter = vi.fn()
 
@@ -298,10 +215,7 @@ it.concurrent(
 				current: 1,
 				remaining: 0,
 				total: 1,
-				asset: expect.objectContaining({
-					file: new URL(asset.url),
-					filename: asset.filename,
-				}),
+				asset: migrationAsset,
 			},
 		})
 		expect(assetsDatabase.flat()).toHaveLength(1)
@@ -330,7 +244,7 @@ it.concurrent(
 		)
 
 		const migration = prismic.createMigration()
-		migration.createAsset(asset.url, asset.filename)
+		const migrationAsset = migration.createAsset(asset.url, asset.filename)
 
 		const reporter = vi.fn()
 
@@ -344,10 +258,7 @@ it.concurrent(
 				current: 1,
 				remaining: 0,
 				total: 1,
-				asset: expect.objectContaining({
-					file: asset.url,
-					filename: asset.filename,
-				}),
+				asset: migrationAsset,
 			},
 		})
 		expect(assetsDatabase.flat()).toHaveLength(1)
@@ -418,7 +329,7 @@ it.concurrent(
 		)
 
 		const migration = prismic.createMigration()
-		migration.createAsset(asset.url, asset.filename)
+		const migrationAsset = migration.createAsset(asset.url, asset.filename)
 
 		const reporter = vi.fn()
 
@@ -432,10 +343,7 @@ it.concurrent(
 				current: 1,
 				remaining: 0,
 				total: 1,
-				asset: expect.objectContaining({
-					file: asset.url,
-					filename: asset.filename,
-				}),
+				asset: migrationAsset,
 			},
 		})
 	},

@@ -37,18 +37,18 @@ export const pLimit = ({
 	interval,
 }: { interval?: number } = {}): LimitFunction => {
 	const queue: AnyFunction[] = []
-	let activeCount = 0
+	let busy = false
 	let lastCompletion = 0
 
 	const resumeNext = () => {
-		if (activeCount === 0 && queue.length > 0) {
+		if (!busy && queue.length > 0) {
 			queue.shift()?.()
-			activeCount++
+			busy = true
 		}
 	}
 
 	const next = () => {
-		activeCount--
+		busy = false
 
 		resumeNext()
 	}
@@ -93,7 +93,7 @@ export const pLimit = ({
 			// needs to happen asynchronously as well to get an up-to-date value for `activeCount`.
 			await Promise.resolve()
 
-			if (activeCount === 0) {
+			if (!busy) {
 				resumeNext()
 			}
 		})()

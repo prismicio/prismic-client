@@ -1738,7 +1738,7 @@ export class Client<
 					throw new RepositoryNotFoundError(
 						`Prismic repository not found. Check that "${this.documentAPIEndpoint}" is pointing to the correct repository.`,
 						url,
-						undefined,
+						url.startsWith(this.documentAPIEndpoint) ? undefined : res.text,
 					)
 				}
 

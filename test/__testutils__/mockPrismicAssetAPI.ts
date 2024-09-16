@@ -108,7 +108,7 @@ export const mockPrismicAssetAPI = (
 
 				validateHeaders(req)
 
-				const index = Number.parseInt(req.url.searchParams.get("cursor") ?? "0")
+				const index = Number.parseInt(req.url.searchParams.get("cursor") || "0")
 				const items: Asset[] = assetsDatabase[index] || []
 
 				let missing_ids: string[] | undefined
@@ -143,7 +143,7 @@ export const mockPrismicAssetAPI = (
 				validateHeaders(req)
 
 				const response: PostAssetResult =
-					args.newAssets?.shift() ?? mockAsset(args.ctx)
+					args.newAssets?.shift() || mockAsset(args.ctx)
 
 				// Save the asset in DB
 				assetsDatabase.push([response])
@@ -178,6 +178,14 @@ export const mockPrismicAssetAPI = (
 					tags: tags?.length
 						? tagsDatabase.filter((tag) => tags.includes(tag.id))
 						: asset.tags,
+				}
+
+				// __pdf__ is used as a magic word to transform created assets into
+				// documents since we can't read FormData when creating assets...
+				if (response.tags?.some((tag) => tag.name === "__pdf__")) {
+					response.kind = "document"
+					response.width = undefined
+					response.height = undefined
 				}
 
 				// Update asset in DB

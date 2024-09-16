@@ -1,124 +1,41 @@
-import * as is from "./lib/isMigrationField"
+import * as is from "./lib/isValue"
 import { validateAssetMetadata } from "./lib/validateAssetMetadata"
 
 import type { Asset } from "./types/api/asset/asset"
-import type { MigrationAsset } from "./types/migration/asset"
 import type {
-	FieldsToMigrationFields,
-	PrismicMigrationDocument,
-	PrismicMigrationDocumentParams,
-} from "./types/migration/document"
-import {
-	type ImageMigrationField,
-	type LinkToMediaMigrationField,
-	MigrationFieldType,
-} from "./types/migration/fields"
+	MigrationAssetConfig,
+	MigrationImage,
+	MigrationLinkToMedia,
+	MigrationRTImageNode,
+} from "./types/migration/Asset"
+import { PrismicMigrationAsset } from "./types/migration/Asset"
+import type { MigrationContentRelationship } from "./types/migration/ContentRelationship"
+import { PrismicMigrationDocument } from "./types/migration/Document"
+import type {
+	ExistingPrismicDocument,
+	PendingPrismicDocument,
+} from "./types/migration/Document"
 import type { PrismicDocument } from "./types/value/document"
-import type { GroupField } from "./types/value/group"
 import type { FilledImageFieldImage } from "./types/value/image"
-import { LinkType } from "./types/value/link"
+import { type FilledLinkToWebField, LinkType } from "./types/value/link"
 import type { FilledLinkToMediaField } from "./types/value/linkToMedia"
 import { RichTextNodeType } from "./types/value/richText"
-import type { SliceZone } from "./types/value/sliceZone"
-import type { AnyRegularField } from "./types/value/types"
-
-import * as isFilled from "./helpers/isFilled"
-
-/**
- * Discovers assets in a record of Prismic fields.
- *
- * @param record - Record of Prismic fields to loook for assets in.
- * @param onAsset - Callback that is called for each asset found.
- */
-const discoverAssets = (
-	record: FieldsToMigrationFields<
-		Record<string, AnyRegularField | GroupField | SliceZone>
-	>,
-	onAsset: (asset: FilledImageFieldImage | FilledLinkToMediaField) => void,
-) => {
-	for (const field of Object.values(record)) {
-		if (is.sliceZone(field)) {
-			for (const slice of field) {
-				discoverAssets(slice.primary, onAsset)
-				for (const item of slice.items) {
-					discoverAssets(item, onAsset)
-				}
-			}
-		} else if (is.richText(field)) {
-			for (const node of field) {
-				if ("type" in node) {
-					if (node.type === RichTextNodeType.image) {
-						onAsset(node)
-						if (
-							node.linkTo &&
-							"link_type" in node.linkTo &&
-							node.linkTo.link_type === LinkType.Media
-						) {
-							onAsset(node.linkTo)
-						}
-					} else if (node.type !== RichTextNodeType.embed) {
-						for (const span of node.spans) {
-							if (
-								span.type === "hyperlink" &&
-								span.data &&
-								"link_type" in span.data &&
-								span.data.link_type === LinkType.Media
-							) {
-								onAsset(span.data)
-							}
-						}
-					}
-				}
-			}
-		} else if (is.group(field)) {
-			for (const item of field) {
-				discoverAssets(item, onAsset)
-			}
-		} else if (
-			is.image(field) &&
-			field &&
-			"dimensions" in field &&
-			isFilled.image(field)
-		) {
-			onAsset(field)
-		} else if (
-			is.link(field) &&
-			field &&
-			"link_type" in field &&
-			field.link_type === LinkType.Media &&
-			isFilled.linkToMedia(field)
-		) {
-			onAsset(field)
-		}
-	}
-}
 
 /**
  * Extracts one or more Prismic document types that match a given Prismic
  * document type. If no matches are found, no extraction is performed and the
  * union of all provided Prismic document types are returned.
  *
- * @typeParam TMigrationDocuments - Prismic migration document types from which
- *   to extract.
- * @typeParam TType - Type(s) to match `TMigrationDocuments` against.
+ * @typeParam TDocuments - Prismic document types from which to extract.
+ * @typeParam TDocumentType - Type(s) to match `TDocuments` against.
  */
-type ExtractMigrationDocumentType<
-	TMigrationDocuments extends PrismicMigrationDocument,
-	TType extends TMigrationDocuments["type"],
+type ExtractDocumentType<
+	TDocuments extends { type: string },
+	TDocumentType extends TDocuments["type"],
 > =
-	Extract<TMigrationDocuments, { type: TType }> extends never
-		? TMigrationDocuments
-		: Extract<TMigrationDocuments, { type: TType }>
-
-type CreateAssetReturnType = ImageMigrationField & {
-	image: ImageMigrationField
-	linkToMedia: LinkToMediaMigrationField
-}
-
-/**
- * The symbol used to index documents that are singletons.
- */
-const SINGLE_INDEX = "__SINGLE__"
+	Extract<TDocuments, { type: TDocumentType }> extends never
+		? TDocuments
+		: Extract<TDocuments, { type: TDocumentType }>
 
 /**
  * A helper that allows preparing your migration to Prismic.
@@ -126,45 +43,96 @@ const SINGLE_INDEX = "__SINGLE__"
  * @typeParam TDocuments - Document types that are registered for the Prismic
  *   repository. Query methods will automatically be typed based on this type.
  */
-export class Migration<
-	TDocuments extends PrismicDocument = PrismicDocument,
-	TMigrationDocuments extends
-		PrismicMigrationDocument<TDocuments> = PrismicMigrationDocument<TDocuments>,
-> {
+export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	/**
+	 * Assets registered in the migration.
+	 *
 	 * @internal
 	 */
-	_documents: {
-		document: TMigrationDocuments
-		params: PrismicMigrationDocumentParams
-	}[] = []
-	#indexedDocuments: Record<string, Record<string, TMigrationDocuments>> = {}
+	_assets: Map<MigrationAssetConfig["file"], PrismicMigrationAsset> = new Map()
 
 	/**
+	 * Documents registered in the migration.
+	 *
 	 * @internal
 	 */
-	_assets: Map<MigrationAsset["file"], MigrationAsset> = new Map()
+	_documents: PrismicMigrationDocument<TDocuments>[] = []
 
+	/**
+	 * Registers an asset to be created in the migration from an asset object.
+	 *
+	 * @remarks
+	 * This method does not create the asset in Prismic media library right away.
+	 * Instead it registers it in your migration. The asset will be created when
+	 * the migration is executed through the `writeClient.migrate()` method.
+	 *
+	 * @param asset - An asset object from Prismic Asset API.
+	 *
+	 * @returns A migration asset field instance.
+	 */
+	createAsset(asset: Asset): PrismicMigrationAsset
+
+	/**
+	 * Registers an asset to be created in the migration from an image or link to
+	 * media field.
+	 *
+	 * @remarks
+	 * This method does not create the asset in Prismic media library right away.
+	 * Instead it registers it in your migration. The asset will be created when
+	 * the migration is executed through the `writeClient.migrate()` method.
+	 *
+	 * @param imageOrLinkToMediaField - An image or link to media field from
+	 *   Prismic Document API.
+	 *
+	 * @returns A migration asset field instance.
+	 */
 	createAsset(
-		asset: Asset | FilledImageFieldImage | FilledLinkToMediaField,
-	): CreateAssetReturnType
+		imageOrLinkToMediaField: FilledImageFieldImage | FilledLinkToMediaField,
+	): PrismicMigrationAsset
+
+	/**
+	 * Registers an asset to be created in the migration from a file.
+	 *
+	 * @remarks
+	 * This method does not create the asset in Prismic media library right away.
+	 * Instead it registers it in your migration. The asset will be created when
+	 * the migration is executed through the `writeClient.migrate()` method.
+	 *
+	 * @param file - The URL or content of the file to be created.
+	 * @param filename - The filename of the asset.
+	 * @param params - Additional asset data.
+	 *
+	 * @returns A migration asset field instance.
+	 */
 	createAsset(
-		file: MigrationAsset["file"],
-		filename: MigrationAsset["filename"],
+		file: MigrationAssetConfig["file"],
+		filename: MigrationAssetConfig["filename"],
 		params?: {
 			notes?: string
 			credits?: string
 			alt?: string
 			tags?: string[]
 		},
-	): CreateAssetReturnType
+	): PrismicMigrationAsset
+
+	/**
+	 * Registers an asset to be created in the migration from a file, an asset
+	 * object, or an image or link to media field.
+	 *
+	 * @remarks
+	 * This method does not create the asset in Prismic media library right away.
+	 * Instead it registers it in your migration. The asset will be created when
+	 * the migration is executed through the `writeClient.migrate()` method.
+	 *
+	 * @returns A migration asset field instance.
+	 */
 	createAsset(
-		fileOrAsset:
-			| MigrationAsset["file"]
+		fileOrAssetOrField:
+			| MigrationAssetConfig["file"]
 			| Asset
 			| FilledImageFieldImage
 			| FilledLinkToMediaField,
-		filename?: MigrationAsset["filename"],
+		filename?: MigrationAssetConfig["filename"],
 		{
 			notes,
 			credits,
@@ -176,24 +144,34 @@ export class Migration<
 			alt?: string
 			tags?: string[]
 		} = {},
-	): CreateAssetReturnType {
-		let asset: MigrationAsset
-		if (typeof fileOrAsset === "object" && "url" in fileOrAsset) {
-			if ("dimensions" in fileOrAsset || "link_type" in fileOrAsset) {
-				const url = fileOrAsset.url.split("?")[0]
+	): PrismicMigrationAsset {
+		let config: MigrationAssetConfig
+		let maybeInitialField: FilledImageFieldImage | undefined
+		if (typeof fileOrAssetOrField === "object" && "url" in fileOrAssetOrField) {
+			if (
+				"dimensions" in fileOrAssetOrField ||
+				"link_type" in fileOrAssetOrField
+			) {
+				const url = fileOrAssetOrField.url.split("?")[0]
 				const filename =
-					"name" in fileOrAsset
-						? fileOrAsset.name
+					"name" in fileOrAssetOrField
+						? fileOrAssetOrField.name
 						: url.split("/").pop()!.split("_").pop()!
 				const credits =
-					"copyright" in fileOrAsset && fileOrAsset.copyright
-						? fileOrAsset.copyright
+					"copyright" in fileOrAssetOrField && fileOrAssetOrField.copyright
+						? fileOrAssetOrField.copyright
 						: undefined
 				const alt =
-					"alt" in fileOrAsset && fileOrAsset.alt ? fileOrAsset.alt : undefined
+					"alt" in fileOrAssetOrField && fileOrAssetOrField.alt
+						? fileOrAssetOrField.alt
+						: undefined
 
-				asset = {
-					id: fileOrAsset.id,
+				if ("dimensions" in fileOrAssetOrField) {
+					maybeInitialField = fileOrAssetOrField
+				}
+
+				config = {
+					id: fileOrAssetOrField.id,
 					file: url,
 					filename,
 					notes: undefined,
@@ -202,20 +180,20 @@ export class Migration<
 					tags: undefined,
 				}
 			} else {
-				asset = {
-					id: fileOrAsset.id,
-					file: fileOrAsset.url,
-					filename: fileOrAsset.filename,
-					notes: fileOrAsset.notes,
-					credits: fileOrAsset.credits,
-					alt: fileOrAsset.alt,
-					tags: fileOrAsset.tags?.map(({ name }) => name),
+				config = {
+					id: fileOrAssetOrField.id,
+					file: fileOrAssetOrField.url,
+					filename: fileOrAssetOrField.filename,
+					notes: fileOrAssetOrField.notes,
+					credits: fileOrAssetOrField.credits,
+					alt: fileOrAssetOrField.alt,
+					tags: fileOrAssetOrField.tags?.map(({ name }) => name),
 				}
 			}
 		} else {
-			asset = {
-				id: fileOrAsset,
-				file: fileOrAsset,
+			config = {
+				id: fileOrAssetOrField,
+				file: fileOrAssetOrField,
 				filename: filename!,
 				notes,
 				credits,
@@ -224,83 +202,322 @@ export class Migration<
 			}
 		}
 
-		validateAssetMetadata(asset)
+		validateAssetMetadata(config)
 
-		const maybeAsset = this._assets.get(asset.id)
+		// We create a detached instance of the asset each time to serialize it properly
+		const migrationAsset = new PrismicMigrationAsset(config, maybeInitialField)
 
+		const maybeAsset = this._assets.get(config.id)
 		if (maybeAsset) {
 			// Consolidate existing asset with new asset value if possible
-			this._assets.set(asset.id, {
-				...maybeAsset,
-				notes: asset.notes || maybeAsset.notes,
-				credits: asset.credits || maybeAsset.credits,
-				alt: asset.alt || maybeAsset.alt,
-				tags: Array.from(
-					new Set([...(maybeAsset.tags || []), ...(asset.tags || [])]),
-				),
-			})
+			maybeAsset.config.notes = maybeAsset.config.notes || config.notes
+			maybeAsset.config.credits = maybeAsset.config.credits || config.credits
+			maybeAsset.config.alt = maybeAsset.config.alt || config.alt
+			maybeAsset.config.tags = Array.from(
+				new Set([...(maybeAsset.config.tags || []), ...(config.tags || [])]),
+			)
 		} else {
-			this._assets.set(asset.id, asset)
+			this._assets.set(config.id, migrationAsset)
 		}
 
-		return {
-			migrationType: MigrationFieldType.Image,
-			...asset,
-			image: {
-				migrationType: MigrationFieldType.Image,
-				...asset,
-			},
-			linkToMedia: {
-				migrationType: MigrationFieldType.LinkToMedia,
-				...asset,
-			},
+		return migrationAsset
+	}
+
+	/**
+	 * Registers a document to be created in the migration.
+	 *
+	 * @remarks
+	 * This method does not create the document in Prismic right away. Instead it
+	 * registers it in your migration. The document will be created when the
+	 * migration is executed through the `writeClient.migrate()` method.
+	 *
+	 * @typeParam TType - Type of the Prismic document to create.
+	 *
+	 * @param document - The document to create.
+	 * @param title - The title of the document to create which will be displayed
+	 *   in the editor.
+	 * @param options - Document master language document ID.
+	 *
+	 * @returns A migration document instance.
+	 */
+	createDocument<TType extends TDocuments["type"]>(
+		document: ExtractDocumentType<PendingPrismicDocument<TDocuments>, TType>,
+		title: string,
+		options?: {
+			masterLanguageDocument?: MigrationContentRelationship
+		},
+	): PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>> {
+		const doc = new PrismicMigrationDocument<
+			ExtractDocumentType<TDocuments, TType>
+		>(document, title, options)
+
+		this._documents.push(doc)
+
+		return doc
+	}
+
+	/**
+	 * Registers an existing document to be updated in the migration.
+	 *
+	 * @remarks
+	 * This method does not update the document in Prismic right away. Instead it
+	 * registers it in your migration. The document will be updated when the
+	 * migration is executed through the `writeClient.migrate()` method.
+	 *
+	 * @typeParam TType - Type of Prismic documents to update.
+	 *
+	 * @param document - The document to update.
+	 * @param documentTitle - The title of the document to update which will be
+	 *   displayed in the editor.
+	 *
+	 * @returns A migration document instance.
+	 */
+	updateDocument<TType extends TDocuments["type"]>(
+		document: ExtractDocumentType<ExistingPrismicDocument<TDocuments>, TType>,
+		title: string,
+	): PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>> {
+		const doc = new PrismicMigrationDocument<
+			ExtractDocumentType<TDocuments, TType>
+		>(document, title)
+
+		this._documents.push(doc)
+
+		return doc
+	}
+
+	/**
+	 * Registers a document to be created in the migration.
+	 *
+	 * @remarks
+	 * This method does not create the document in Prismic right away. Instead it
+	 * registers it in your migration. The document will be created when the
+	 * migration is executed through the `writeClient.migrate()` method.
+	 *
+	 * @param document - The document to create.
+	 * @param title - The title of the document to create which will be displayed
+	 *   in the editor.
+	 * @param options - Document master language document ID.
+	 *
+	 * @returns A migration document instance.
+	 */
+	createDocumentFromPrismic<TType extends TDocuments["type"]>(
+		document: ExtractDocumentType<ExistingPrismicDocument<TDocuments>, TType>,
+		title: string,
+	): PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>> {
+		const doc = new PrismicMigrationDocument(
+			this.#migratePrismicDocumentData({
+				type: document.type,
+				lang: document.lang,
+				uid: document.uid,
+				tags: document.tags,
+				data: document.data,
+			}) as PendingPrismicDocument<ExtractDocumentType<TDocuments, TType>>,
+			title,
+			{ originalPrismicDocument: document },
+		)
+
+		this._documents.push(doc)
+
+		return doc
+	}
+
+	/**
+	 * Queries a document from the migration instance with a specific UID and
+	 * custom type.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * const contentRelationship = migration.createContentRelationship(() =>
+	 * 	migration.getByUID("blog_post", "my-first-post"),
+	 * )
+	 * ```
+	 *
+	 * @typeParam TType - Type of the Prismic document returned.
+	 *
+	 * @param type - The API ID of the document's custom type.
+	 * @param uid - The UID of the document.
+	 *
+	 * @returns The migration document instance with a UID matching the `uid`
+	 *   parameter, if a matching document is found.
+	 */
+	getByUID<TType extends TDocuments["type"]>(
+		type: TType,
+		uid: string,
+	):
+		| PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>>
+		| undefined {
+		return this._documents.find(
+			(
+				doc,
+			): doc is PrismicMigrationDocument<
+				ExtractDocumentType<TDocuments, TType>
+			> => doc.document.type === type && doc.document.uid === uid,
+		)
+	}
+
+	/**
+	 * Queries a singleton document from the migration instance for a specific
+	 * custom type.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * const contentRelationship = migration.createContentRelationship(() =>
+	 * 	migration.getSingle("settings"),
+	 * )
+	 * ```
+	 *
+	 * @typeParam TType - Type of the Prismic document returned.
+	 *
+	 * @param type - The API ID of the singleton custom type.
+	 *
+	 * @returns The migration document instance for the custom type, if a matching
+	 *   document is found.
+	 */
+	getSingle<TType extends TDocuments["type"]>(
+		type: TType,
+	):
+		| PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>>
+		| undefined {
+		return this._documents.find(
+			(
+				doc,
+			): doc is PrismicMigrationDocument<
+				ExtractDocumentType<TDocuments, TType>
+			> => doc.document.type === type,
+		)
+	}
+
+	/**
+	 * Migrates a Prismic document data from another repository so that it can be
+	 * created through the current repository's Migration API.
+	 *
+	 * @param input - The Prismic document data to migrate.
+	 *
+	 * @returns The migrated Prismic document data.
+	 */
+	#migratePrismicDocumentData(input: unknown): unknown {
+		if (is.filledContentRelationship(input)) {
+			if (input.isBroken) {
+				return {
+					link_type: LinkType.Document,
+					id: "__broken__",
+					isBroken: true,
+					// TODO: Remove when link text PR is merged
+					// @ts-expect-error - Future-proofing for link text
+					text: input.text,
+				}
+			}
+
+			return {
+				link_type: LinkType.Document,
+				id: () => this.#getByOriginalID(input.id),
+				// TODO: Remove when link text PR is merged
+				// @ts-expect-error - Future-proofing for link text
+				text: input.text,
+			}
 		}
-	}
 
-	createDocument<TType extends TMigrationDocuments["type"]>(
-		document: ExtractMigrationDocumentType<TMigrationDocuments, TType>,
-		documentTitle: PrismicMigrationDocumentParams["documentTitle"],
-		params: Omit<PrismicMigrationDocumentParams, "documentTitle"> = {},
-	): ExtractMigrationDocumentType<TMigrationDocuments, TType> {
-		this._documents.push({
-			document,
-			params: { documentTitle, ...params },
-		})
-
-		// Index document
-		if (!(document.type in this.#indexedDocuments)) {
-			this.#indexedDocuments[document.type] = {}
+		if (is.filledLinkToMedia(input)) {
+			return {
+				link_type: LinkType.Media,
+				id: this.createAsset(input),
+				// TODO: Remove when link text PR is merged
+				// @ts-expect-error - Future-proofing for link text
+				text: input.text,
+			}
 		}
-		this.#indexedDocuments[document.type][document.uid || SINGLE_INDEX] =
-			document
 
-		// Find other assets in document
-		discoverAssets(document.data, this.createAsset.bind(this))
+		if (is.rtImageNode(input)) {
+			// Rich text image nodes
+			const rtImageNode: MigrationRTImageNode = {
+				type: RichTextNodeType.image,
+				id: this.createAsset(input),
+			}
 
-		return document
+			if (input.linkTo) {
+				rtImageNode.linkTo = this.#migratePrismicDocumentData(input.linkTo) as
+					| MigrationContentRelationship
+					| MigrationLinkToMedia
+					| FilledLinkToWebField
+			}
+
+			return rtImageNode
+		}
+
+		if (is.filledImage(input)) {
+			const image: MigrationImage = {
+				id: this.createAsset(input),
+			}
+
+			const {
+				id: _id,
+				url: _url,
+				dimensions: _dimensions,
+				edit: _edit,
+				alt: _alt,
+				copyright: _copyright,
+				...thumbnails
+			} = input
+
+			for (const name in thumbnails) {
+				if (is.filledImage(thumbnails[name])) {
+					image[name] = this.createAsset(thumbnails[name])
+				}
+			}
+
+			return image
+		}
+
+		if (Array.isArray(input)) {
+			return input.map((element) => this.#migratePrismicDocumentData(element))
+		}
+
+		if (input && typeof input === "object") {
+			const res: Record<PropertyKey, unknown> = {}
+
+			for (const key in input) {
+				res[key] = this.#migratePrismicDocumentData(
+					input[key as keyof typeof input],
+				)
+			}
+
+			return res
+		}
+
+		return input
 	}
 
-	getByUID<
-		TType extends TMigrationDocuments["type"],
-		TMigrationDocument extends Extract<
-			TMigrationDocuments,
-			{ type: TType }
-		> = Extract<TMigrationDocuments, { type: TType }>,
-	>(documentType: TType, uid: string): TMigrationDocument | undefined {
-		return this.#indexedDocuments[documentType]?.[uid] as
-			| TMigrationDocument
-			| undefined
-	}
-
-	getSingle<
-		TType extends TMigrationDocuments["type"],
-		TMigrationDocument extends Extract<
-			TMigrationDocuments,
-			{ type: TType }
-		> = Extract<TMigrationDocuments, { type: TType }>,
-	>(documentType: TType): TMigrationDocument | undefined | undefined {
-		return this.#indexedDocuments[documentType]?.[SINGLE_INDEX] as
-			| TMigrationDocument
-			| undefined
+	/**
+	 * Queries a document from the migration instance for a specific original ID.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * const contentRelationship = migration.createContentRelationship(() =>
+	 * 	migration.getByOriginalID("YhdrDxIAACgAcp_b"),
+	 * )
+	 * ```
+	 *
+	 * @typeParam TType - Type of the Prismic document returned.
+	 *
+	 * @param id - The original ID of the Prismic document.
+	 *
+	 * @returns The migration document instance for the original ID, if a matching
+	 *   document is found.
+	 */
+	#getByOriginalID<TType extends TDocuments["type"]>(
+		id: string,
+	):
+		| PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>>
+		| undefined {
+		return this._documents.find(
+			(
+				doc,
+			): doc is PrismicMigrationDocument<
+				ExtractDocumentType<TDocuments, TType>
+			> => doc.originalPrismicDocument?.id === id,
+		)
 	}
 }

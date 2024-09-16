@@ -107,6 +107,7 @@ it.skip("is abortable with an AbortController", async (ctx) => {
 		client.updateDocument(
 			document.id,
 			{
+				...document,
 				uid: "uid",
 				data: {},
 			},
@@ -135,6 +136,7 @@ it.concurrent("supports custom headers", async (ctx) => {
 			client.updateDocument(
 				document.id,
 				{
+					...document,
 					uid: "uid",
 					data: {},
 				},

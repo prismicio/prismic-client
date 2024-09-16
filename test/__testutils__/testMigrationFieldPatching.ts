@@ -22,15 +22,15 @@ type GetDataArgs = {
 	migration: prismic.Migration
 	existingAssets: Asset[]
 	existingDocuments: prismic.PrismicDocument[]
-	migrationDocuments: (Omit<prismic.PrismicMigrationDocument, "uid"> & {
-		uid: string
-	})[]
+	otherCreateDocument: prismic.PrismicMigrationDocument
+	otherFromPrismicDocument: prismic.PrismicMigrationDocument
 	mockedDomain: string
 }
 
 type InternalTestMigrationFieldPatchingArgs = {
-	getData: (args: GetDataArgs) => prismic.PrismicMigrationDocument["data"]
+	getData: (args: GetDataArgs) => prismic.ExistingPrismicDocument["data"]
 	expectStrictEqual?: boolean
+	mode?: "new" | "fromPrismic"
 }
 
 const internalTestMigrationFieldPatching = (
@@ -42,35 +42,23 @@ const internalTestMigrationFieldPatching = (
 
 		const client = createTestWriteClient({ ctx })
 
+		// Mock Document API
 		const repository = ctx.mock.api.repository()
 		repository.languages[0].id = "en-us"
 		repository.languages[0].is_master = true
-
 		const queryResponse = createPagedQueryResponses({
 			ctx,
 			pages: 1,
 			pageSize: 1,
 		})
-		queryResponse[0].results[0].id = "id-existing"
-
-		const otherDocument = {
-			...ctx.mock.value.document(),
-			uid: ctx.mock.value.keyText(),
-		}
-		const newDocument = ctx.mock.value.document()
-
-		const newID = "id-new"
-
+		queryResponse[0].results[0].id = "other.id-existing"
 		mockPrismicRestAPIV2({ ctx, repositoryResponse: repository, queryResponse })
+
+		// Mock Asset API
 		const { assetsDatabase } = mockPrismicAssetAPI({
 			ctx,
 			client,
-			existingAssets: [[mockAsset(ctx, { id: "id-existing" })]],
-		})
-		const { documentsDatabase } = mockPrismicMigrationAPI({
-			ctx,
-			client,
-			newDocuments: [{ id: "id-migration" }, { id: newID }],
+			existingAssets: [[mockAsset(ctx, { id: "asset.id-existing" })]],
 		})
 
 		const mockedDomain = `https://${client.repositoryName}.example.com`
@@ -80,19 +68,67 @@ const internalTestMigrationFieldPatching = (
 			),
 		)
 
+		// Setup migration
 		const migration = prismic.createMigration()
 
+		// Create document
+		const { id: _createOriginalID, ...createDocument } = {
+			...ctx.mock.value.document(),
+			uid: ctx.mock.value.keyText(),
+		}
+
+		const migrationOtherDocument = migration.createDocument(
+			createDocument,
+			"other.create",
+		)
+
+		// Create document from Prismic
+		const fromPrismicDocument = {
+			...ctx.mock.value.document(),
+			uid: ctx.mock.value.keyText(),
+		}
+
+		const migrationOtherRepositoryDocument =
+			migration.createDocumentFromPrismic(
+				fromPrismicDocument,
+				"other.fromPrismic",
+			)
+
+		// Create new document
+		const { id: originalID, ...newDocument } = ctx.mock.value.document()
+		const newID =
+			!args.mode || args.mode === "new" ? "id-new" : "id-fromPrismic"
+
+		// Mock Migration API
+		const { documentsDatabase } = mockPrismicMigrationAPI({
+			ctx,
+			client,
+			newDocuments: [
+				{ id: "other.id-create" },
+				{ id: "other.id-fromPrismic" },
+				{ id: newID },
+			],
+		})
+
+		// Get new document data
 		newDocument.data = args.getData({
 			ctx,
 			migration,
 			existingAssets: assetsDatabase.flat(),
 			existingDocuments: queryResponse[0].results,
-			migrationDocuments: [otherDocument],
+			otherCreateDocument: migrationOtherDocument,
+			otherFromPrismicDocument: migrationOtherRepositoryDocument,
 			mockedDomain,
 		})
 
-		migration.createDocument(otherDocument, "other")
-		migration.createDocument(newDocument, "new")
+		if (!args.mode || args.mode === "new") {
+			migration.createDocument(newDocument, "new")
+		} else {
+			migration.createDocumentFromPrismic(
+				{ ...newDocument, id: originalID },
+				args.mode,
+			)
+		}
 
 		// We speed up the internal rate limiter to make these tests run faster (from 4500ms to nearly instant)
 		const migrationProcess = client.migrate(migration)
@@ -111,14 +147,15 @@ const internalTestMigrationFieldPatching = (
 	})
 }
 
-type TestMigrationFieldPatchingFactoryCases = Record<
-	string,
-	(args: GetDataArgs) => prismic.PrismicMigrationDocument["data"][string]
->
+type TestMigrationFieldPatchingFactoryCases<
+	TField extends prismic.ExistingPrismicDocument["data"][string],
+> = Record<string, (args: GetDataArgs) => TField>
 
-export const testMigrationFieldPatching = (
+export const testMigrationFieldPatching = <
+	TField extends prismic.ExistingPrismicDocument["data"][string],
+>(
 	description: string,
-	cases: TestMigrationFieldPatchingFactoryCases,
+	cases: TestMigrationFieldPatchingFactoryCases<TField>,
 	args: Omit<InternalTestMigrationFieldPatchingArgs, "getData"> = {},
 ): void => {
 	describe(description, () => {

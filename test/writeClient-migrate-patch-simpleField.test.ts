@@ -1,6 +1,9 @@
 import { testMigrationFieldPatching } from "./__testutils__/testMigrationFieldPatching"
 
-testMigrationFieldPatching(
+import type { AnyRegularField, GroupField, RichTextField } from "../src"
+import { RichTextNodeType } from "../src"
+
+testMigrationFieldPatching<AnyRegularField | GroupField>(
 	"does not patch simple fields",
 	{
 		embed: ({ ctx }) => ctx.mock.value.embed({ state: "filled" }),
@@ -10,7 +13,11 @@ testMigrationFieldPatching(
 		number: ({ ctx }) => ctx.mock.value.number({ state: "filled" }),
 		keyText: ({ ctx }) => ctx.mock.value.keyText({ state: "filled" }),
 		richTextSimple: ({ ctx }) =>
-			ctx.mock.value.richText({ state: "filled", pattern: "long" }),
+			ctx.mock.value
+				.richText({ state: "filled", pattern: "long" })
+				.filter(
+					(node) => node.type !== RichTextNodeType.image,
+				) as RichTextField,
 		select: ({ ctx }) =>
 			ctx.mock.value.select({
 				model: ctx.mock.model.select({ options: ["foo", "bar"] }),
@@ -22,6 +29,12 @@ testMigrationFieldPatching(
 		linkToWeb: ({ ctx }) =>
 			ctx.mock.value.link({ type: "Web", withTargetBlank: true }),
 		richTextMisleadingGroup: () => [{ type: "paragraph" }],
+		documentMisleadingObject: () => {
+			return {
+				id: "foo",
+				href: "bar",
+			}
+		},
 	},
 	{ expectStrictEqual: true },
 )
