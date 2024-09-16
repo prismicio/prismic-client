@@ -5,9 +5,10 @@ import type { Asset } from "./types/api/asset/asset"
 import type {
 	MigrationAssetConfig,
 	MigrationLinkToMedia,
+	MigrationRTImageNode,
 } from "./types/migration/Asset"
-import type { MigrationAsset } from "./types/migration/Asset"
-import { MigrationImage } from "./types/migration/Asset"
+import { PrismicMigrationAsset } from "./types/migration/Asset"
+import type { MigrationImage } from "./types/migration/Asset"
 import type { MigrationContentRelationship } from "./types/migration/ContentRelationship"
 import { PrismicMigrationDocument } from "./types/migration/Document"
 import type {
@@ -16,8 +17,9 @@ import type {
 } from "./types/migration/Document"
 import type { PrismicDocument } from "./types/value/document"
 import type { FilledImageFieldImage } from "./types/value/image"
-import type { FilledLinkToWebField } from "./types/value/link"
+import { type FilledLinkToWebField, LinkType } from "./types/value/link"
 import type { FilledLinkToMediaField } from "./types/value/linkToMedia"
+import { RichTextNodeType } from "./types/value/richText"
 
 /**
  * Extracts one or more Prismic document types that match a given Prismic
@@ -47,7 +49,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *
 	 * @internal
 	 */
-	_assets: Map<MigrationAssetConfig["file"], MigrationAsset> = new Map()
+	_assets: Map<MigrationAssetConfig["file"], PrismicMigrationAsset> = new Map()
 
 	/**
 	 * Documents registered in the migration.
@@ -205,22 +207,23 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 		}
 
 		validateAssetMetadata(config)
-		const migrationAsset = new MigrationImage(config, maybeInitialField)
+
+		// We create a detached instance of the asset each time to serialize it properly
+		const migrationAsset = new PrismicMigrationAsset(config, maybeInitialField)
 
 		const maybeAsset = this._assets.get(config.id)
 		if (maybeAsset) {
 			// Consolidate existing asset with new asset value if possible
-			maybeAsset.config.notes = config.notes || maybeAsset.config.notes
-			maybeAsset.config.credits = config.credits || maybeAsset.config.credits
-			maybeAsset.config.alt = config.alt || maybeAsset.config.alt
-			maybeAsset.config.tags = Array.from(
-				new Set([...(config.tags || []), ...(maybeAsset.config.tags || [])]),
+			maybeAsset._config.notes = config.notes || maybeAsset._config.notes
+			maybeAsset._config.credits = config.credits || maybeAsset._config.credits
+			maybeAsset._config.alt = config.alt || maybeAsset._config.alt
+			maybeAsset._config.tags = Array.from(
+				new Set([...(config.tags || []), ...(maybeAsset._config.tags || [])]),
 			)
 		} else {
 			this._assets.set(config.id, migrationAsset)
 		}
 
-		// We returned a detached instance of the asset to serialize it properly
 		return migrationAsset
 	}
 
@@ -393,24 +396,43 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	#migratePrismicDocumentData(input: unknown): unknown {
 		if (is.filledContentRelationship(input)) {
 			if (input.isBroken) {
-				return { link_type: "Document", id: "__broken__", isBroken: true }
+				return {
+					link_type: LinkType.Document,
+					id: "__broken__",
+					isBroken: true,
+					// TODO: Remove when link text PR is merged
+					// @ts-expect-error - Future-proofing for link text
+					text: input.text,
+				}
 			}
 
-			return () => this.#getByOriginalID(input.id)
+			return {
+				link_type: LinkType.Document,
+				id: () => this.#getByOriginalID(input.id),
+				// TODO: Remove when link text PR is merged
+				// @ts-expect-error - Future-proofing for link text
+				text: input.text,
+			}
 		}
 
 		if (is.filledLinkToMedia(input)) {
-			// TODO: Remove when link text PR is merged
-			// @ts-expect-error - Future-proofing for link text
-			return this.createAsset(input).asLinkToMedia(input.text)
+			return {
+				link_type: LinkType.Media,
+				id: this.createAsset(input),
+				// TODO: Remove when link text PR is merged
+				// @ts-expect-error - Future-proofing for link text
+				text: input.text,
+			}
 		}
 
 		if (is.rtImageNode(input)) {
 			// Rich text image nodes
-			const rtImageNode = this.createAsset(input).asRTImageNode()
+			const rtImageNode: MigrationRTImageNode = {
+				type: RichTextNodeType.image,
+				id: this.createAsset(input),
+			}
 
 			if (input.linkTo) {
-				// Node `linkTo` dependency is tracked internally
 				rtImageNode.linkTo = this.#migratePrismicDocumentData(input.linkTo) as
 					| MigrationContentRelationship
 					| MigrationLinkToMedia

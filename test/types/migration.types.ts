@@ -52,84 +52,23 @@ expectType<TypeEqual<FooDocument[], prismic.PrismicDocument[]>>(false)
 const defaultCreateAsset = defaultMigration.createAsset("url", "name")
 expectType<TypeOf<prismic.MigrationImage, typeof defaultCreateAsset>>(true)
 
-expectType<
-	TypeEqual<
-		ReturnType<typeof defaultCreateAsset.asImage>,
-		prismic.MigrationImage
-	>
->(true)
-expectType<
-	TypeOf<prismic.MigrationImage, ReturnType<typeof defaultCreateAsset.asImage>>
->(true)
-
-expectType<
-	TypeEqual<
-		ReturnType<typeof defaultCreateAsset.asLinkToMedia>,
-		prismic.MigrationLinkToMedia
-	>
->(true)
-expectType<
-	TypeOf<
-		prismic.MigrationLinkToMedia,
-		ReturnType<typeof defaultCreateAsset.asLinkToMedia>
-	>
->(true)
-
-expectType<
-	TypeEqual<
-		ReturnType<typeof defaultCreateAsset.asRTImageNode>,
-		prismic.MigrationRTImageNode
-	>
->(true)
-expectType<
-	TypeOf<
-		prismic.MigrationRTImageNode,
-		ReturnType<typeof defaultCreateAsset.asRTImageNode>
-	>
->(true)
+expectType<TypeEqual<typeof defaultCreateAsset, prismic.PrismicMigrationAsset>>(
+	true,
+)
+expectType<TypeOf<prismic.PrismicMigrationAsset, typeof defaultCreateAsset>>(
+	true,
+)
 
 // Documents
 const documentsCreateAsset = defaultMigration.createAsset("url", "name")
 expectType<TypeOf<prismic.MigrationImage, typeof documentsCreateAsset>>(true)
 
 expectType<
-	TypeEqual<
-		ReturnType<typeof documentsCreateAsset.asImage>,
-		prismic.MigrationImage
-	>
+	TypeEqual<typeof documentsCreateAsset, prismic.PrismicMigrationAsset>
 >(true)
-expectType<
-	TypeOf<
-		prismic.MigrationImage,
-		ReturnType<typeof documentsCreateAsset.asImage>
-	>
->(true)
-
-expectType<
-	TypeEqual<
-		ReturnType<typeof documentsCreateAsset.asLinkToMedia>,
-		prismic.MigrationLinkToMedia
-	>
->(true)
-expectType<
-	TypeOf<
-		prismic.MigrationLinkToMedia,
-		ReturnType<typeof documentsCreateAsset.asLinkToMedia>
-	>
->(true)
-
-expectType<
-	TypeEqual<
-		ReturnType<typeof documentsCreateAsset.asRTImageNode>,
-		prismic.MigrationRTImageNode
-	>
->(true)
-expectType<
-	TypeOf<
-		prismic.MigrationRTImageNode,
-		ReturnType<typeof documentsCreateAsset.asRTImageNode>
-	>
->(true)
+expectType<TypeOf<prismic.PrismicMigrationAsset, typeof documentsCreateAsset>>(
+	true,
+)
 
 /**
  * createDocument

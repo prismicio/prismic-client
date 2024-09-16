@@ -326,13 +326,14 @@ export type {
 } from "./types/model/types"
 
 // Migrations - Types representing Prismic Migration API content values.
+export { PrismicMigrationDocument } from "./types/migration/Document"
 export type {
-	PrismicMigrationDocument,
 	PendingPrismicDocument,
 	ExistingPrismicDocument,
 	InjectMigrationSpecificTypes,
 } from "./types/migration/Document"
 
+export { PrismicMigrationAsset } from "./types/migration/Asset"
 export type {
 	MigrationImage,
 	MigrationLinkToMedia,

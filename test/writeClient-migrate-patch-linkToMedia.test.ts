@@ -1,12 +1,45 @@
 import { testMigrationFieldPatching } from "./__testutils__/testMigrationFieldPatching"
 
-import { RichTextNodeType } from "../src"
+import type {
+	InjectMigrationSpecificTypes,
+	LinkToMediaField,
+	RichTextField,
+} from "../src"
+import { LinkType, RichTextNodeType } from "../src"
+import type { Asset } from "../src/types/api/asset/asset"
 import { AssetType } from "../src/types/api/asset/asset"
-import { assetToLinkToMedia } from "../src/types/migration/Asset"
+import type { MigrationLinkToMedia } from "../src/types/migration/Asset"
 
-testMigrationFieldPatching("patches link to media fields", {
-	new: ({ migration }) =>
-		migration.createAsset("foo", "foo.png").asLinkToMedia(),
+const assetToLinkToMedia = (
+	asset: Asset,
+	text?: string,
+): LinkToMediaField<"filled"> => {
+	return {
+		id: asset.id,
+		link_type: LinkType.Media,
+		name: asset.filename,
+		kind: asset.kind,
+		url: asset.url,
+		size: `${asset.size}`,
+		height: typeof asset.height === "number" ? `${asset.height}` : undefined,
+		width: typeof asset.width === "number" ? `${asset.width}` : undefined,
+		// TODO: Remove when link text PR is merged
+		// @ts-expect-error - Future-proofing for link text
+		text,
+	}
+}
+
+testMigrationFieldPatching<
+	| MigrationLinkToMedia
+	| LinkToMediaField
+	| InjectMigrationSpecificTypes<RichTextField>
+>("patches link to media fields", {
+	new: ({ migration }) => {
+		return {
+			link_type: LinkType.Media,
+			id: migration.createAsset("foo", "foo.png"),
+		}
+	},
 	existing: ({ existingAssets }) => assetToLinkToMedia(existingAssets[0]),
 	existingNonImage: ({ existingAssets }) => {
 		existingAssets[0].filename = "foo.pdf"
@@ -27,7 +60,10 @@ testMigrationFieldPatching("patches link to media fields", {
 					type: RichTextNodeType.hyperlink,
 					start: 0,
 					end: 5,
-					data: migration.createAsset("foo", "foo.png").asLinkToMedia(),
+					data: {
+						link_type: LinkType.Media,
+						id: migration.createAsset("foo", "foo.png"),
+					},
 				},
 			],
 		},
@@ -49,7 +85,7 @@ testMigrationFieldPatching("patches link to media fields", {
 	],
 })
 
-testMigrationFieldPatching(
+testMigrationFieldPatching<LinkToMediaField | RichTextField>(
 	"patches link to media fields",
 	{
 		otherRepository: ({ ctx, mockedDomain }) => {

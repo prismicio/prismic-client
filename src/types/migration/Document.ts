@@ -18,7 +18,11 @@ import type { MigrationContentRelationship } from "./ContentRelationship"
  * @typeParam T - Type of the record to extend.
  */
 export type InjectMigrationSpecificTypes<T> = T extends RTImageNode
-	? T | MigrationRTImageNode | undefined
+	?
+			| T
+			| (Omit<T, "linkTo"> & InjectMigrationSpecificTypes<Pick<T, "linkTo">>)
+			| MigrationRTImageNode
+			| undefined
 	: T extends FilledImageFieldImage
 		? T | MigrationImage | undefined
 		: T extends FilledLinkToMediaField

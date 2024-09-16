@@ -1,13 +1,27 @@
 import { testMigrationFieldPatching } from "./__testutils__/testMigrationFieldPatching"
 
-import { assetToImage } from "../src/types/migration/Asset"
+import type { ImageField, MigrationImage } from "../src"
 
-testMigrationFieldPatching("patches image fields", {
-	new: ({ migration }) => migration.createAsset("foo", "foo.png"),
-	existing: ({ existingAssets }) => assetToImage(existingAssets[0]),
-})
+testMigrationFieldPatching<MigrationImage | ImageField>(
+	"patches image fields",
+	{
+		new: ({ migration }) => migration.createAsset("foo", "foo.png"),
+		existing: ({ existingAssets }) => {
+			const asset = existingAssets[0]
 
-testMigrationFieldPatching(
+			return {
+				id: asset.id,
+				url: asset.url,
+				dimensions: { width: asset.width!, height: asset.height! },
+				edit: { x: 0, y: 0, zoom: 1, background: "transparent" },
+				alt: asset.alt || null,
+				copyright: asset.credits || null,
+			}
+		},
+	},
+)
+
+testMigrationFieldPatching<ImageField>(
 	"patches image fields",
 	{
 		otherRepository: ({ ctx, mockedDomain }) => {

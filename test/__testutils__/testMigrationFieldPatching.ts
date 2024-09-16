@@ -141,14 +141,15 @@ const internalTestMigrationFieldPatching = (
 	})
 }
 
-type TestMigrationFieldPatchingFactoryCases = Record<
-	string,
-	(args: GetDataArgs) => prismic.ExistingPrismicDocument["data"][string]
->
+type TestMigrationFieldPatchingFactoryCases<
+	TField extends prismic.ExistingPrismicDocument["data"][string],
+> = Record<string, (args: GetDataArgs) => TField>
 
-export const testMigrationFieldPatching = (
+export const testMigrationFieldPatching = <
+	TField extends prismic.ExistingPrismicDocument["data"][string],
+>(
 	description: string,
-	cases: TestMigrationFieldPatchingFactoryCases,
+	cases: TestMigrationFieldPatchingFactoryCases<TField>,
 	args: Omit<InternalTestMigrationFieldPatchingArgs, "getData"> = {},
 ): void => {
 	describe(description, () => {

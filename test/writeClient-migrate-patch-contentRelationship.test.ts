@@ -1,8 +1,16 @@
 import { testMigrationFieldPatching } from "./__testutils__/testMigrationFieldPatching"
 
-import { RichTextNodeType } from "../src"
+import type {
+	ContentRelationshipField,
+	InjectMigrationSpecificTypes,
+	MigrationContentRelationship,
+	RichTextField,
+} from "../src"
+import { LinkType, RichTextNodeType } from "../src"
 
-testMigrationFieldPatching("patches link fields", {
+testMigrationFieldPatching<
+	MigrationContentRelationship | InjectMigrationSpecificTypes<RichTextField>
+>("patches link fields", {
 	existing: ({ existingDocuments }) => existingDocuments[0],
 	migration: ({ migrationDocuments }) => {
 		delete migrationDocuments.other.document.id
@@ -47,12 +55,12 @@ testMigrationFieldPatching("patches link fields", {
 	],
 })
 
-testMigrationFieldPatching(
+testMigrationFieldPatching<ContentRelationshipField>(
 	"patches link fields",
 	{
 		brokenLink: () => {
 			return {
-				link_type: "Document",
+				link_type: LinkType.Document,
 				id: "id",
 				type: "type",
 				tags: [],
@@ -61,7 +69,9 @@ testMigrationFieldPatching(
 			}
 		},
 		otherRepositoryContentRelationship: ({ ctx, migrationDocuments }) => {
-			const contentRelationship = ctx.mock.value.link({ type: "Document" })
+			const contentRelationship = ctx.mock.value.link({
+				type: LinkType.Document,
+			})
 			// `migrationDocuments` contains documents from "another repository"
 			contentRelationship.id =
 				migrationDocuments.otherRepository.originalPrismicDocument!.id

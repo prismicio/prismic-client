@@ -24,7 +24,7 @@ import {
 	type PostDocumentResult,
 	type PutDocumentParams,
 } from "./types/api/migration/document"
-import type { MigrationAsset } from "./types/migration/Asset"
+import type { PrismicMigrationAsset } from "./types/migration/Asset"
 import type {
 	MigrationDocument,
 	PendingPrismicDocument,
@@ -90,7 +90,7 @@ type MigrateReporterEventMap = {
 		current: number
 		remaining: number
 		total: number
-		asset: MigrationAsset
+		asset: PrismicMigrationAsset
 	}
 	"assets:created": {
 		created: number
@@ -334,7 +334,7 @@ export class WriteClient<
 			})
 
 			const { file, filename, notes, credits, alt, tags } =
-				migrationAsset.config
+				migrationAsset._config
 
 			let resolvedFile: PostAssetParams["file"] | File
 			if (typeof file === "string") {
@@ -370,7 +370,7 @@ export class WriteClient<
 				...fetchParams,
 			})
 
-			migrationAsset.asset = asset
+			migrationAsset._asset = asset
 		}
 
 		reporter?.({
@@ -437,7 +437,8 @@ export class WriteClient<
 				const masterLanguageDocument =
 					await resolveMigrationContentRelationship(doc.masterLanguageDocument)
 
-				masterLanguageDocumentID = masterLanguageDocument?.id
+				masterLanguageDocumentID =
+					"id" in masterLanguageDocument ? masterLanguageDocument.id : undefined
 			} else if (doc.originalPrismicDocument) {
 				masterLanguageDocumentID =
 					doc.originalPrismicDocument.alternate_languages.find(

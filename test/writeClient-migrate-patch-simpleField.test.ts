@@ -1,8 +1,9 @@
 import { testMigrationFieldPatching } from "./__testutils__/testMigrationFieldPatching"
 
+import type { AnyRegularField, GroupField, RichTextField } from "../src"
 import { RichTextNodeType } from "../src"
 
-testMigrationFieldPatching(
+testMigrationFieldPatching<AnyRegularField | GroupField>(
 	"does not patch simple fields",
 	{
 		embed: ({ ctx }) => ctx.mock.value.embed({ state: "filled" }),
@@ -14,7 +15,9 @@ testMigrationFieldPatching(
 		richTextSimple: ({ ctx }) =>
 			ctx.mock.value
 				.richText({ state: "filled", pattern: "long" })
-				.filter((node) => node.type !== RichTextNodeType.image),
+				.filter(
+					(node) => node.type !== RichTextNodeType.image,
+				) as RichTextField,
 		select: ({ ctx }) =>
 			ctx.mock.value.select({
 				model: ctx.mock.model.select({ options: ["foo", "bar"] }),
