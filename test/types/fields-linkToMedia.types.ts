@@ -71,3 +71,22 @@ expectType<prismic.LinkToMediaField<"filled">>(
 		link_type: prismic.LinkType.Media,
 	},
 )
+
+/**
+ * Empty state with text.
+ */
+expectType<prismic.LinkToMediaField>({
+	link_type: prismic.LinkType.Media,
+	text: "string",
+})
+expectType<prismic.LinkToMediaField<"empty">>({
+	link_type: prismic.LinkType.Media,
+	text: "string",
+})
+expectType<prismic.LinkToMediaField<"filled">>(
+	// @ts-expect-error - Filled fields cannot contain an empty value.
+	{
+		link_type: prismic.LinkType.Media,
+		text: "string",
+	},
+)

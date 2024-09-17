@@ -104,9 +104,6 @@ expectType<prismic.CustomTypeModelContentRelationshipField>({
 	config: {
 		label: "string",
 		select: prismic.CustomTypeModelLinkSelectType.Document,
-		text: {
-			type: prismic.CustomTypeModelFieldType.Text,
-		},
 	},
 })
 

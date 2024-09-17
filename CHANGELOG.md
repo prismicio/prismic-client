@@ -2,6 +2,48 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.9.0-alpha.3](https://github.com/prismicio/prismic-client/compare/v7.8.1...v7.9.0-alpha.3) (2024-09-10)
+
+
+### Chore
+
+* **deps:** maintain lock file ([601edd5](https://github.com/prismicio/prismic-client/commit/601edd55ed2594010da740f3f40250a7f517cf5c))
+
+## [7.9.0-alpha.2](https://github.com/prismicio/prismic-client/compare/v7.9.0-alpha.1...v7.9.0-alpha.2) (2024-08-27)
+
+
+### Chore
+
+* **release:** 7.9.0-alpha.2 ([000f146](https://github.com/prismicio/prismic-client/commit/000f146d25b84b2937c3accaffa54ab936a78de8))
+* revert previous changes ([c53de86](https://github.com/prismicio/prismic-client/commit/c53de86a7ed749f0f9d8999b9e58564d9a8efe35))
+
+## [7.9.0-alpha.1](https://github.com/prismicio/prismic-client/compare/v7.9.0-alpha.0...v7.9.0-alpha.1) (2024-08-27)
+
+
+### Features
+
+* use KeyTextField for link text value definition ([1a4c51a](https://github.com/prismicio/prismic-client/commit/1a4c51a389ed4d06cf69c3edcb215559ba91fe99))
+
+
+### Chore
+
+* **release:** 7.9.0-alpha.1 ([d940fcd](https://github.com/prismicio/prismic-client/commit/d940fcdb023de34765006607f7f34481de00a6ef))
+* remove changelog for alpha ([50fc797](https://github.com/prismicio/prismic-client/commit/50fc797372726c0abc575b9f1b0a56d5db939bb1))
+
+## [7.9.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.8.0...v7.9.0-alpha.0) (2024-08-14)
+
+
+### Features
+
+* add text property to link models ([40d0e0b](https://github.com/prismicio/prismic-client/commit/40d0e0be3ce8038cd36e8cdf3350ffa9893ada98))
+* add text to link value models ([8459d75](https://github.com/prismicio/prismic-client/commit/8459d75608c1af8319adafd2b3bf73555569a434))
+
+
+### Chore
+
+* **release:** 7.9.0-alpha.0 ([f2021c0](https://github.com/prismicio/prismic-client/commit/f2021c053b9aac1c17b7bbd1845c91eab7b0d176))
+* update package version ([c06b383](https://github.com/prismicio/prismic-client/commit/c06b383ff41f01e253641c7852a4e9701725bdba))
+
 ## [7.9.0-alpha.1](https://github.com/prismicio/prismic-client/compare/v7.9.0-alpha.0...v7.9.0-alpha.1) (2024-08-27)
 
 
