@@ -36,35 +36,17 @@ it("builds a query URL using the master ref", async (ctx) => {
 	expect(url.searchParams.toString()).toBe(expectedSearchParams.toString())
 })
 
-it("builds a query URL using the master ref in development mode", async (ctx) => {
+it("includes the `x-d` param in development", async (ctx) => {
 	const originalEnv = { ...process.env }
-
 	process.env.NODE_ENV = "development"
 
-	const repositoryResponse = ctx.mock.api.repository()
-	const ref = getMasterRef(repositoryResponse)
-
-	mockPrismicRestAPIV2({
-		repositoryResponse,
-		ctx,
-	})
+	mockPrismicRestAPIV2({ ctx })
 
 	const client = createTestClient()
 	const res = await client.buildQueryURL()
 	const url = new URL(res)
 
-	const expectedSearchParams = new URLSearchParams({
-		ref,
-		"x-c": xClientVersion,
-		"x-d": "1",
-	})
-	url.searchParams.delete("integrationFieldsRef")
-	url.searchParams.sort()
-	expectedSearchParams.sort()
-
-	expect(url.host).toBe(new URL(client.endpoint).host)
-	expect(url.pathname).toBe("/api/v2/documents/search")
-	expect(url.searchParams.toString()).toBe(expectedSearchParams.toString())
+	expect(url.searchParams.get("x-d")).toBe("1")
 
 	process.env = originalEnv
 })
