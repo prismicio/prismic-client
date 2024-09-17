@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.9.0](https://github.com/prismicio/prismic-client/compare/v7.8.1...v7.9.0) (2024-09-17)
+
+
+### Features
+
+* add client internal query params ([#349](https://github.com/prismicio/prismic-client/issues/349)) ([938d711](https://github.com/prismicio/prismic-client/commit/938d711845e4a51088a8f0e6374d27459f469315))
+
+
+### Chore
+
+* **deps:** maintain lock file ([601edd5](https://github.com/prismicio/prismic-client/commit/601edd55ed2594010da740f3f40250a7f517cf5c))
+
 ### [7.8.1](https://github.com/prismicio/prismic-client/compare/v7.8.0...v7.8.1) (2024-08-27)
 
 
