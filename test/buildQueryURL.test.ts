@@ -256,13 +256,13 @@ it("supports array routes param", () => {
 	)
 })
 
-it("forwards `x-c` header in production", () => {
+it("forwards `x-c` param in production", () => {
 	expect(prismic.buildQueryURL(endpoint, { ref: "ref" })).toBe(
 		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref${xClientVersionParam}`,
 	)
 })
 
-it("forwards `x-c` and `x-d` headers in development", () => {
+it("forwards `x-c` and `x-d` param in development", () => {
 	const originalEnv = { ...process.env }
 
 	process.env.NODE_ENV = "development"
