@@ -63,12 +63,14 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *
 	 * @remarks
 	 * This method does not create the asset in Prismic media library right away.
-	 * Instead it registers it in your migration. The asset will be created when
+	 * Instead, it registers it in your migration. The asset will be created when
 	 * the migration is executed through the `writeClient.migrate()` method.
 	 *
 	 * @param asset - An asset object from Prismic Asset API.
 	 *
 	 * @returns A migration asset field instance.
+	 *
+	 * @internal
 	 */
 	createAsset(asset: Asset): PrismicMigrationAsset
 
@@ -78,13 +80,15 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *
 	 * @remarks
 	 * This method does not create the asset in Prismic media library right away.
-	 * Instead it registers it in your migration. The asset will be created when
+	 * Instead, it registers it in your migration. The asset will be created when
 	 * the migration is executed through the `writeClient.migrate()` method.
 	 *
 	 * @param imageOrLinkToMediaField - An image or link to media field from
 	 *   Prismic Document API.
 	 *
 	 * @returns A migration asset field instance.
+	 *
+	 * @internal
 	 */
 	createAsset(
 		imageOrLinkToMediaField: FilledImageFieldImage | FilledLinkToMediaField,
@@ -95,7 +99,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *
 	 * @remarks
 	 * This method does not create the asset in Prismic media library right away.
-	 * Instead it registers it in your migration. The asset will be created when
+	 * Instead, it registers it in your migration. The asset will be created when
 	 * the migration is executed through the `writeClient.migrate()` method.
 	 *
 	 * @param file - The URL or content of the file to be created.
@@ -121,7 +125,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *
 	 * @remarks
 	 * This method does not create the asset in Prismic media library right away.
-	 * Instead it registers it in your migration. The asset will be created when
+	 * Instead, it registers it in your migration. The asset will be created when
 	 * the migration is executed through the `writeClient.migrate()` method.
 	 *
 	 * @returns A migration asset field instance.
@@ -227,7 +231,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Registers a document to be created in the migration.
 	 *
 	 * @remarks
-	 * This method does not create the document in Prismic right away. Instead it
+	 * This method does not create the document in Prismic right away. Instead, it
 	 * registers it in your migration. The document will be created when the
 	 * migration is executed through the `writeClient.migrate()` method.
 	 *
@@ -236,20 +240,20 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * @param document - The document to create.
 	 * @param title - The title of the document to create which will be displayed
 	 *   in the editor.
-	 * @param options - Document master language document ID.
+	 * @param params - Document master language document ID.
 	 *
 	 * @returns A migration document instance.
 	 */
 	createDocument<TType extends TDocuments["type"]>(
 		document: ExtractDocumentType<PendingPrismicDocument<TDocuments>, TType>,
 		title: string,
-		options?: {
+		params?: {
 			masterLanguageDocument?: MigrationContentRelationship
 		},
 	): PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>> {
 		const doc = new PrismicMigrationDocument<
 			ExtractDocumentType<TDocuments, TType>
-		>(document, title, options)
+		>(document, title, params)
 
 		this._documents.push(doc)
 
@@ -260,21 +264,22 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Registers an existing document to be updated in the migration.
 	 *
 	 * @remarks
-	 * This method does not update the document in Prismic right away. Instead it
+	 * This method does not update the document in Prismic right away. Instead, it
 	 * registers it in your migration. The document will be updated when the
 	 * migration is executed through the `writeClient.migrate()` method.
 	 *
 	 * @typeParam TType - Type of Prismic documents to update.
 	 *
 	 * @param document - The document to update.
-	 * @param documentTitle - The title of the document to update which will be
-	 *   displayed in the editor.
+	 * @param title - The title of the document to update which will be displayed
+	 *   in the editor.
 	 *
 	 * @returns A migration document instance.
 	 */
 	updateDocument<TType extends TDocuments["type"]>(
 		document: ExtractDocumentType<ExistingPrismicDocument<TDocuments>, TType>,
-		title: string,
+		// Title is optional for existing documents as we might not want to update it.
+		title?: string,
 	): PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>> {
 		const doc = new PrismicMigrationDocument<
 			ExtractDocumentType<TDocuments, TType>
@@ -286,17 +291,17 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Registers a document to be created in the migration.
+	 * Registers a document from another Prismic repository to be created in the
+	 * migration.
 	 *
 	 * @remarks
-	 * This method does not create the document in Prismic right away. Instead it
+	 * This method does not create the document in Prismic right away. Instead, it
 	 * registers it in your migration. The document will be created when the
 	 * migration is executed through the `writeClient.migrate()` method.
 	 *
-	 * @param document - The document to create.
+	 * @param document - The document from Prismic to create.
 	 * @param title - The title of the document to create which will be displayed
 	 *   in the editor.
-	 * @param options - Document master language document ID.
 	 *
 	 * @returns A migration document instance.
 	 */
@@ -413,7 +418,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 
 			return {
 				link_type: LinkType.Document,
-				id: () => this.getByOriginalID(input.id),
+				id: () => this._getByOriginalID(input.id),
 				// TODO: Remove when link text PR is merged
 				// @ts-expect-error - Future-proofing for link text
 				text: input.text,
@@ -497,7 +502,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *
 	 * ```ts
 	 * const contentRelationship = migration.createContentRelationship(() =>
-	 * 	migration.getByOriginalID("YhdrDxIAACgAcp_b"),
+	 * 	migration._getByOriginalID("YhdrDxIAACgAcp_b"),
 	 * )
 	 * ```
 	 *
@@ -507,8 +512,10 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *
 	 * @returns The migration document instance for the original ID, if a matching
 	 *   document is found.
+	 *
+	 * @internal
 	 */
-	getByOriginalID<TType extends TDocuments["type"]>(
+	_getByOriginalID<TType extends TDocuments["type"]>(
 		id: string,
 	):
 		| PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>>

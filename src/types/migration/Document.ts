@@ -103,7 +103,7 @@ export class PrismicMigrationDocument<
 	/**
 	 * The name of the document displayed in the editor.
 	 */
-	title: string
+	title?: string
 
 	/**
 	 * The link to the master language document to relate the document to if any.
@@ -126,22 +126,22 @@ export class PrismicMigrationDocument<
 	 *
 	 * @param document - The document to be sent to the Migration API.
 	 * @param title - The name of the document displayed in the editor.
-	 * @param options - Parameters to create/update the document with on the
+	 * @param params - Parameters to create/update the document with on the
 	 *   Migration API.
 	 *
 	 * @returns A Prismic migration document instance.
 	 */
 	constructor(
 		document: MigrationDocument<TDocument>,
-		title: string,
-		options?: {
+		title?: string,
+		params?: {
 			masterLanguageDocument?: MigrationContentRelationship
 			originalPrismicDocument?: ExistingPrismicDocument<PrismicDocument>
 		},
 	) {
 		this.document = document
 		this.title = title
-		this.masterLanguageDocument = options?.masterLanguageDocument
-		this.originalPrismicDocument = options?.originalPrismicDocument
+		this.masterLanguageDocument = params?.masterLanguageDocument
+		this.originalPrismicDocument = params?.originalPrismicDocument
 	}
 }

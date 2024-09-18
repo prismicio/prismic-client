@@ -447,14 +447,14 @@ export class WriteClient<
 
 				if (maybeOriginalID) {
 					masterLanguageDocumentID =
-						migration.getByOriginalID(maybeOriginalID)?.document.id
+						migration._getByOriginalID(maybeOriginalID)?.document.id
 				}
 			}
 
 			const { id } = await this.createDocument(
 				// We'll upload docuements data later on.
 				{ ...doc.document, data: {} },
-				doc.title,
+				doc.title!,
 				{
 					masterLanguageDocumentID,
 					...fetchParams,
