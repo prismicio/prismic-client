@@ -402,7 +402,8 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 			if (input.isBroken) {
 				return {
 					link_type: LinkType.Document,
-					id: "__broken__",
+					// ID needs to be 16 characters long to be considered valid by the API
+					id: "_____broken_____",
 					isBroken: true,
 					// TODO: Remove when link text PR is merged
 					// @ts-expect-error - Future-proofing for link text
@@ -412,7 +413,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 
 			return {
 				link_type: LinkType.Document,
-				id: () => this.#getByOriginalID(input.id),
+				id: () => this.getByOriginalID(input.id),
 				// TODO: Remove when link text PR is merged
 				// @ts-expect-error - Future-proofing for link text
 				text: input.text,
@@ -507,7 +508,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * @returns The migration document instance for the original ID, if a matching
 	 *   document is found.
 	 */
-	#getByOriginalID<TType extends TDocuments["type"]>(
+	getByOriginalID<TType extends TDocuments["type"]>(
 		id: string,
 	):
 		| PrismicMigrationDocument<ExtractDocumentType<TDocuments, TType>>

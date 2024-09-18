@@ -57,6 +57,15 @@ testMigrationFieldPatching<
 		}
 	},
 	existing: ({ existingAssets }) => assetToLinkToMedia(existingAssets[0]),
+	empty: ({ migration }) => {
+		const asset = migration.createAsset("foo", "foo.png")
+		asset.config.id = "empty"
+
+		return {
+			link_type: LinkType.Media,
+			id: asset,
+		}
+	},
 	richTextNew: ({ migration }) => [
 		{
 			type: RichTextNodeType.paragraph,

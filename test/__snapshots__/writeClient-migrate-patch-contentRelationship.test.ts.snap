@@ -5,7 +5,7 @@ exports[`patches content relationship fields (from Prismic) > broken > group 1`]
   "group": [
     {
       "field": {
-        "id": "__broken__",
+        "id": "_____broken_____",
         "isBroken": true,
         "link_type": "Document",
       },
@@ -22,7 +22,7 @@ exports[`patches content relationship fields (from Prismic) > broken > shared sl
       "items": [
         {
           "field": {
-            "id": "__broken__",
+            "id": "_____broken_____",
             "isBroken": true,
             "link_type": "Document",
           },
@@ -30,14 +30,14 @@ exports[`patches content relationship fields (from Prismic) > broken > shared sl
       ],
       "primary": {
         "field": {
-          "id": "__broken__",
+          "id": "_____broken_____",
           "isBroken": true,
           "link_type": "Document",
         },
         "group": [
           {
             "field": {
-              "id": "__broken__",
+              "id": "_____broken_____",
               "isBroken": true,
               "link_type": "Document",
             },
@@ -61,7 +61,7 @@ exports[`patches content relationship fields (from Prismic) > broken > slice 1`]
       "items": [
         {
           "field": {
-            "id": "__broken__",
+            "id": "_____broken_____",
             "isBroken": true,
             "link_type": "Document",
           },
@@ -69,7 +69,7 @@ exports[`patches content relationship fields (from Prismic) > broken > slice 1`]
       ],
       "primary": {
         "field": {
-          "id": "__broken__",
+          "id": "_____broken_____",
           "isBroken": true,
           "link_type": "Document",
         },
@@ -84,7 +84,7 @@ exports[`patches content relationship fields (from Prismic) > broken > slice 1`]
 exports[`patches content relationship fields (from Prismic) > broken > static zone 1`] = `
 {
   "field": {
-    "id": "__broken__",
+    "id": "_____broken_____",
     "isBroken": true,
     "link_type": "Document",
   },

@@ -440,10 +440,15 @@ export class WriteClient<
 				masterLanguageDocumentID =
 					"id" in masterLanguageDocument ? masterLanguageDocument.id : undefined
 			} else if (doc.originalPrismicDocument) {
-				masterLanguageDocumentID =
+				const maybeOriginalID =
 					doc.originalPrismicDocument.alternate_languages.find(
 						({ lang }) => lang === masterLocale,
 					)?.id
+
+				if (maybeOriginalID) {
+					masterLanguageDocumentID =
+						migration.getByOriginalID(maybeOriginalID)?.document.id
+				}
 			}
 
 			const { id } = await this.createDocument(

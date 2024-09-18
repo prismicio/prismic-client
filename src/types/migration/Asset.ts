@@ -1,5 +1,6 @@
 import type { Asset } from "../api/asset/asset"
 import type { FilledImageFieldImage } from "../value/image"
+import type { EmptyLinkField } from "../value/link"
 import type { LinkToMediaField } from "../value/linkToMedia"
 import { type RTImageNode } from "../value/richText"
 
@@ -11,6 +12,11 @@ import type { InjectMigrationSpecificTypes } from "./Document"
 export type MigrationAssetConfig = {
 	/**
 	 * ID the assets is indexed with on the migration instance.
+	 *
+	 * @remarks
+	 * This property's value is not necessarily the same as the as the one in the
+	 * `file` property. It is mainly used for deduplication within a `Migration`
+	 * instance.
 	 */
 	id: string | URL | File | NonNullable<ConstructorParameters<File>[0]>[0]
 
@@ -83,6 +89,16 @@ export type MigrationLinkToMedia = Pick<
 		 */
 		id: PrismicMigrationAsset
 	}
+
+/**
+ * The minimum amount of information needed to represent a link to media field
+ * with the migration API.
+ */
+export type MigrationLinkToMediaField =
+	// TODO: Remove when link text PR is merged
+	// @ts-expect-error - Future-proofing for link text
+	| Pick<LinkToMediaField<"filled">, "link_type" | "id" | "text">
+	| EmptyLinkField<"Media">
 
 /**
  * A rich text image node in a migration.

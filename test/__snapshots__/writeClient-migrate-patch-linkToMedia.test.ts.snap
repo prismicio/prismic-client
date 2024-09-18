@@ -14,14 +14,8 @@ exports[`patches link to media fields (from Prismic) > inRichText > group 1`] = 
             },
             {
               "data": {
-                "height": "1",
                 "id": "fc26fe8d098",
-                "kind": "image",
                 "link_type": "Media",
-                "name": "default.jpg",
-                "size": "1",
-                "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
-                "width": "1",
               },
               "end": 5,
               "start": 0,
@@ -54,14 +48,8 @@ exports[`patches link to media fields (from Prismic) > inRichText > shared slice
                 },
                 {
                   "data": {
-                    "height": "1",
                     "id": "961adcf1f5d",
-                    "kind": "image",
                     "link_type": "Media",
-                    "name": "default.jpg",
-                    "size": "1",
-                    "url": "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=2200&h=1467&fit=crop",
-                    "width": "1",
                   },
                   "end": 5,
                   "start": 0,
@@ -85,14 +73,8 @@ exports[`patches link to media fields (from Prismic) > inRichText > shared slice
               },
               {
                 "data": {
-                  "height": "1",
                   "id": "961adcf1f5d",
-                  "kind": "image",
                   "link_type": "Media",
-                  "name": "default.jpg",
-                  "size": "1",
-                  "url": "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=2200&h=1467&fit=crop",
-                  "width": "1",
                 },
                 "end": 5,
                 "start": 0,
@@ -115,14 +97,8 @@ exports[`patches link to media fields (from Prismic) > inRichText > shared slice
                   },
                   {
                     "data": {
-                      "height": "1",
                       "id": "961adcf1f5d",
-                      "kind": "image",
                       "link_type": "Media",
-                      "name": "default.jpg",
-                      "size": "1",
-                      "url": "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=2200&h=1467&fit=crop",
-                      "width": "1",
                     },
                     "end": 5,
                     "start": 0,
@@ -162,14 +138,8 @@ exports[`patches link to media fields (from Prismic) > inRichText > slice 1`] = 
                 },
                 {
                   "data": {
-                    "height": "1",
                     "id": "54f4a69ff72",
-                    "kind": "image",
                     "link_type": "Media",
-                    "name": "default.jpg",
-                    "size": "1",
-                    "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=2560&h=1440&fit=crop",
-                    "width": "1",
                   },
                   "end": 5,
                   "start": 0,
@@ -193,14 +163,8 @@ exports[`patches link to media fields (from Prismic) > inRichText > slice 1`] = 
               },
               {
                 "data": {
-                  "height": "1",
                   "id": "54f4a69ff72",
-                  "kind": "image",
                   "link_type": "Media",
-                  "name": "default.jpg",
-                  "size": "1",
-                  "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=2560&h=1440&fit=crop",
-                  "width": "1",
                 },
                 "end": 5,
                 "start": 0,
@@ -231,14 +195,8 @@ exports[`patches link to media fields (from Prismic) > inRichText > static zone 
         },
         {
           "data": {
-            "height": "1",
             "id": "1d17b04a95c",
-            "kind": "image",
             "link_type": "Media",
-            "name": "default.jpg",
-            "size": "1",
-            "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
-            "width": "1",
           },
           "end": 5,
           "start": 0,
@@ -257,14 +215,8 @@ exports[`patches link to media fields (from Prismic) > simple > group 1`] = `
   "group": [
     {
       "field": {
-        "height": "1",
         "id": "fc26fe8d098",
-        "kind": "image",
         "link_type": "Media",
-        "name": "default.jpg",
-        "size": "1",
-        "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
-        "width": "1",
       },
     },
   ],
@@ -279,39 +231,21 @@ exports[`patches link to media fields (from Prismic) > simple > shared slice 1`]
       "items": [
         {
           "field": {
-            "height": "1",
             "id": "961adcf1f5d",
-            "kind": "image",
             "link_type": "Media",
-            "name": "default.jpg",
-            "size": "1",
-            "url": "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=2200&h=1467&fit=crop",
-            "width": "1",
           },
         },
       ],
       "primary": {
         "field": {
-          "height": "1",
           "id": "961adcf1f5d",
-          "kind": "image",
           "link_type": "Media",
-          "name": "default.jpg",
-          "size": "1",
-          "url": "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=2200&h=1467&fit=crop",
-          "width": "1",
         },
         "group": [
           {
             "field": {
-              "height": "1",
               "id": "961adcf1f5d",
-              "kind": "image",
               "link_type": "Media",
-              "name": "default.jpg",
-              "size": "1",
-              "url": "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=2200&h=1467&fit=crop",
-              "width": "1",
             },
           },
         ],
@@ -333,27 +267,15 @@ exports[`patches link to media fields (from Prismic) > simple > slice 1`] = `
       "items": [
         {
           "field": {
-            "height": "1",
             "id": "54f4a69ff72",
-            "kind": "image",
             "link_type": "Media",
-            "name": "default.jpg",
-            "size": "1",
-            "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=2560&h=1440&fit=crop",
-            "width": "1",
           },
         },
       ],
       "primary": {
         "field": {
-          "height": "1",
           "id": "54f4a69ff72",
-          "kind": "image",
           "link_type": "Media",
-          "name": "default.jpg",
-          "size": "1",
-          "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=2560&h=1440&fit=crop",
-          "width": "1",
         },
       },
       "slice_label": "Vel",
@@ -366,14 +288,85 @@ exports[`patches link to media fields (from Prismic) > simple > slice 1`] = `
 exports[`patches link to media fields (from Prismic) > simple > static zone 1`] = `
 {
   "field": {
-    "height": "1",
     "id": "1d17b04a95c",
-    "kind": "image",
     "link_type": "Media",
-    "name": "default.jpg",
-    "size": "1",
-    "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
-    "width": "1",
+  },
+}
+`;
+
+exports[`patches link to media fields > empty > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "link_type": "Media",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > empty > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": {
+            "link_type": "Media",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "link_type": "Media",
+        },
+        "group": [
+          {
+            "field": {
+              "link_type": "Media",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > empty > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": {
+            "link_type": "Media",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "link_type": "Media",
+        },
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches link to media fields > empty > static zone 1`] = `
+{
+  "field": {
+    "link_type": "Media",
   },
 }
 `;
@@ -509,14 +502,8 @@ exports[`patches link to media fields > new > group 1`] = `
   "group": [
     {
       "field": {
-        "height": "1",
         "id": "fdd322ca9d5",
-        "kind": "image",
         "link_type": "Media",
-        "name": "default.jpg",
-        "size": "1",
-        "url": "https://images.unsplash.com/photo-1587502537745-84b86da1204f?w=6550&h=4367&fit=crop",
-        "width": "1",
       },
     },
   ],
@@ -531,39 +518,21 @@ exports[`patches link to media fields > new > shared slice 1`] = `
       "items": [
         {
           "field": {
-            "height": "1",
             "id": "c0eddbd0255",
-            "kind": "image",
             "link_type": "Media",
-            "name": "default.jpg",
-            "size": "1",
-            "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
-            "width": "1",
           },
         },
       ],
       "primary": {
         "field": {
-          "height": "1",
           "id": "c0eddbd0255",
-          "kind": "image",
           "link_type": "Media",
-          "name": "default.jpg",
-          "size": "1",
-          "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
-          "width": "1",
         },
         "group": [
           {
             "field": {
-              "height": "1",
               "id": "c0eddbd0255",
-              "kind": "image",
               "link_type": "Media",
-              "name": "default.jpg",
-              "size": "1",
-              "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
-              "width": "1",
             },
           },
         ],
@@ -585,27 +554,15 @@ exports[`patches link to media fields > new > slice 1`] = `
       "items": [
         {
           "field": {
-            "height": "1",
             "id": "82beb55ec2f",
-            "kind": "image",
             "link_type": "Media",
-            "name": "default.jpg",
-            "size": "1",
-            "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
-            "width": "1",
           },
         },
       ],
       "primary": {
         "field": {
-          "height": "1",
           "id": "82beb55ec2f",
-          "kind": "image",
           "link_type": "Media",
-          "name": "default.jpg",
-          "size": "1",
-          "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
-          "width": "1",
         },
       },
       "slice_label": "Vel",
@@ -618,14 +575,8 @@ exports[`patches link to media fields > new > slice 1`] = `
 exports[`patches link to media fields > new > static zone 1`] = `
 {
   "field": {
-    "height": "1",
     "id": "bad670dad77",
-    "kind": "image",
     "link_type": "Media",
-    "name": "default.jpg",
-    "size": "1",
-    "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
-    "width": "1",
   },
 }
 `;
@@ -636,11 +587,7 @@ exports[`patches link to media fields > newNonImage > group 1`] = `
     {
       "field": {
         "id": "fdd322ca9d5",
-        "kind": "document",
         "link_type": "Media",
-        "name": "default.jpg",
-        "size": "1",
-        "url": "https://images.unsplash.com/photo-1587502537745-84b86da1204f?w=6550&h=4367&fit=crop",
       },
     },
   ],
@@ -656,32 +603,20 @@ exports[`patches link to media fields > newNonImage > shared slice 1`] = `
         {
           "field": {
             "id": "c0eddbd0255",
-            "kind": "document",
             "link_type": "Media",
-            "name": "default.jpg",
-            "size": "1",
-            "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
           },
         },
       ],
       "primary": {
         "field": {
           "id": "c0eddbd0255",
-          "kind": "document",
           "link_type": "Media",
-          "name": "default.jpg",
-          "size": "1",
-          "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
         },
         "group": [
           {
             "field": {
               "id": "c0eddbd0255",
-              "kind": "document",
               "link_type": "Media",
-              "name": "default.jpg",
-              "size": "1",
-              "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
             },
           },
         ],
@@ -704,22 +639,14 @@ exports[`patches link to media fields > newNonImage > slice 1`] = `
         {
           "field": {
             "id": "82beb55ec2f",
-            "kind": "document",
             "link_type": "Media",
-            "name": "default.jpg",
-            "size": "1",
-            "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
           },
         },
       ],
       "primary": {
         "field": {
           "id": "82beb55ec2f",
-          "kind": "document",
           "link_type": "Media",
-          "name": "default.jpg",
-          "size": "1",
-          "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
         },
       },
       "slice_label": "Vel",
@@ -733,11 +660,7 @@ exports[`patches link to media fields > newNonImage > static zone 1`] = `
 {
   "field": {
     "id": "bad670dad77",
-    "kind": "document",
     "link_type": "Media",
-    "name": "default.jpg",
-    "size": "1",
-    "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
   },
 }
 `;
@@ -747,15 +670,9 @@ exports[`patches link to media fields > newWithText > group 1`] = `
   "group": [
     {
       "field": {
-        "height": "1",
         "id": "fdd322ca9d5",
-        "kind": "image",
         "link_type": "Media",
-        "name": "default.jpg",
-        "size": "1",
         "text": "foo",
-        "url": "https://images.unsplash.com/photo-1587502537745-84b86da1204f?w=6550&h=4367&fit=crop",
-        "width": "1",
       },
     },
   ],
@@ -770,42 +687,24 @@ exports[`patches link to media fields > newWithText > shared slice 1`] = `
       "items": [
         {
           "field": {
-            "height": "1",
             "id": "c0eddbd0255",
-            "kind": "image",
             "link_type": "Media",
-            "name": "default.jpg",
-            "size": "1",
             "text": "foo",
-            "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
-            "width": "1",
           },
         },
       ],
       "primary": {
         "field": {
-          "height": "1",
           "id": "c0eddbd0255",
-          "kind": "image",
           "link_type": "Media",
-          "name": "default.jpg",
-          "size": "1",
           "text": "foo",
-          "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
-          "width": "1",
         },
         "group": [
           {
             "field": {
-              "height": "1",
               "id": "c0eddbd0255",
-              "kind": "image",
               "link_type": "Media",
-              "name": "default.jpg",
-              "size": "1",
               "text": "foo",
-              "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
-              "width": "1",
             },
           },
         ],
@@ -827,29 +726,17 @@ exports[`patches link to media fields > newWithText > slice 1`] = `
       "items": [
         {
           "field": {
-            "height": "1",
             "id": "82beb55ec2f",
-            "kind": "image",
             "link_type": "Media",
-            "name": "default.jpg",
-            "size": "1",
             "text": "foo",
-            "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
-            "width": "1",
           },
         },
       ],
       "primary": {
         "field": {
-          "height": "1",
           "id": "82beb55ec2f",
-          "kind": "image",
           "link_type": "Media",
-          "name": "default.jpg",
-          "size": "1",
           "text": "foo",
-          "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
-          "width": "1",
         },
       },
       "slice_label": "Vel",
@@ -862,15 +749,9 @@ exports[`patches link to media fields > newWithText > slice 1`] = `
 exports[`patches link to media fields > newWithText > static zone 1`] = `
 {
   "field": {
-    "height": "1",
     "id": "bad670dad77",
-    "kind": "image",
     "link_type": "Media",
-    "name": "default.jpg",
-    "size": "1",
     "text": "foo",
-    "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
-    "width": "1",
   },
 }
 `;
@@ -1141,14 +1022,8 @@ exports[`patches link to media fields > richTextNew > group 1`] = `
             },
             {
               "data": {
-                "height": "1",
                 "id": "fdd322ca9d5",
-                "kind": "image",
                 "link_type": "Media",
-                "name": "default.jpg",
-                "size": "1",
-                "url": "https://images.unsplash.com/photo-1587502537745-84b86da1204f?w=6550&h=4367&fit=crop",
-                "width": "1",
               },
               "end": 5,
               "start": 0,
@@ -1181,14 +1056,8 @@ exports[`patches link to media fields > richTextNew > shared slice 1`] = `
                 },
                 {
                   "data": {
-                    "height": "1",
                     "id": "c0eddbd0255",
-                    "kind": "image",
                     "link_type": "Media",
-                    "name": "default.jpg",
-                    "size": "1",
-                    "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
-                    "width": "1",
                   },
                   "end": 5,
                   "start": 0,
@@ -1212,14 +1081,8 @@ exports[`patches link to media fields > richTextNew > shared slice 1`] = `
               },
               {
                 "data": {
-                  "height": "1",
                   "id": "c0eddbd0255",
-                  "kind": "image",
                   "link_type": "Media",
-                  "name": "default.jpg",
-                  "size": "1",
-                  "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
-                  "width": "1",
                 },
                 "end": 5,
                 "start": 0,
@@ -1242,14 +1105,8 @@ exports[`patches link to media fields > richTextNew > shared slice 1`] = `
                   },
                   {
                     "data": {
-                      "height": "1",
                       "id": "c0eddbd0255",
-                      "kind": "image",
                       "link_type": "Media",
-                      "name": "default.jpg",
-                      "size": "1",
-                      "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=5616&h=3744&fit=crop",
-                      "width": "1",
                     },
                     "end": 5,
                     "start": 0,
@@ -1289,14 +1146,8 @@ exports[`patches link to media fields > richTextNew > slice 1`] = `
                 },
                 {
                   "data": {
-                    "height": "1",
                     "id": "82beb55ec2f",
-                    "kind": "image",
                     "link_type": "Media",
-                    "name": "default.jpg",
-                    "size": "1",
-                    "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
-                    "width": "1",
                   },
                   "end": 5,
                   "start": 0,
@@ -1320,14 +1171,8 @@ exports[`patches link to media fields > richTextNew > slice 1`] = `
               },
               {
                 "data": {
-                  "height": "1",
                   "id": "82beb55ec2f",
-                  "kind": "image",
                   "link_type": "Media",
-                  "name": "default.jpg",
-                  "size": "1",
-                  "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
-                  "width": "1",
                 },
                 "end": 5,
                 "start": 0,
@@ -1358,14 +1203,8 @@ exports[`patches link to media fields > richTextNew > static zone 1`] = `
         },
         {
           "data": {
-            "height": "1",
             "id": "bad670dad77",
-            "kind": "image",
             "link_type": "Media",
-            "name": "default.jpg",
-            "size": "1",
-            "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
-            "width": "1",
           },
           "end": 5,
           "start": 0,

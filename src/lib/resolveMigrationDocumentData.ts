@@ -1,3 +1,4 @@
+import type { MigrationLinkToMediaField } from "../types/migration/Asset"
 import {
 	type MigrationImage,
 	type MigrationLinkToMedia,
@@ -12,7 +13,6 @@ import { PrismicMigrationDocument } from "../types/migration/Document"
 import type { FilledImageFieldImage } from "../types/value/image"
 import type { LinkField } from "../types/value/link"
 import { LinkType } from "../types/value/link"
-import type { LinkToMediaField } from "../types/value/linkToMedia"
 import type { RTImageNode } from "../types/value/richText"
 import { RichTextNodeType } from "../types/value/richText"
 
@@ -156,24 +156,18 @@ export const resolveMigrationRTImageNode = async (
 export const resolveMigrationLinkToMedia = (
 	linkToMedia: MigrationLinkToMedia,
 	migration: Migration,
-): LinkToMediaField<"filled"> | undefined => {
+): MigrationLinkToMediaField => {
 	const asset = migration._assets.get(linkToMedia.id.config.id)?.asset
 
 	if (asset) {
 		return {
 			id: asset.id,
 			link_type: LinkType.Media,
-			name: asset.filename,
-			kind: asset.kind,
-			url: asset.url,
-			size: `${asset.size}`,
-			height: typeof asset.height === "number" ? `${asset.height}` : undefined,
-			width: typeof asset.width === "number" ? `${asset.width}` : undefined,
-			// TODO: Remove when link text PR is merged
-			// @ts-expect-error - Future-proofing for link text
 			text: linkToMedia.text,
 		}
 	}
+
+	return { link_type: LinkType.Media }
 }
 
 /**

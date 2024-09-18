@@ -331,29 +331,30 @@ it.concurrent(
 		const client = createTestWriteClient({ ctx })
 
 		const { repository, masterLocale } = createRepository(ctx)
-		const queryResponse = createPagedQueryResponses({
-			ctx,
-			pages: 1,
-			pageSize: 1,
-		})
 
-		const masterLanguageDocument = queryResponse[0].results[0]
+		const masterLanguageDocument = ctx.mock.value.document()
 		masterLanguageDocument.lang = masterLocale
 		const document = ctx.mock.value.document({
 			alternateLanguages: [masterLanguageDocument],
 		})
-		const newDocument = {
-			id: "foo",
-			masterLanguageDocumentID: masterLanguageDocument.id,
-		}
+		const newDocuments = [
+			{
+				id: "foo",
+			},
+			{
+				id: "bar",
+				masterLanguageDocumentID: "foo",
+			},
+		]
 
-		mockPrismicRestAPIV2({ ctx, repositoryResponse: repository, queryResponse })
+		mockPrismicRestAPIV2({ ctx, repositoryResponse: repository })
 		mockPrismicAssetAPI({ ctx, client })
-		mockPrismicMigrationAPI({ ctx, client, newDocuments: [newDocument] })
+		mockPrismicMigrationAPI({ ctx, client, newDocuments })
 
 		const migration = prismic.createMigration()
 
-		const doc = migration.createDocumentFromPrismic(document, "foo")
+		migration.createDocumentFromPrismic(masterLanguageDocument, "foo")
+		const doc = migration.createDocumentFromPrismic(document, "bar")
 
 		const reporter = vi.fn()
 
@@ -362,13 +363,13 @@ it.concurrent(
 		ctx.expect(reporter).toHaveBeenCalledWith({
 			type: "documents:creating",
 			data: {
-				current: 1,
+				current: 2,
 				remaining: 0,
-				total: 1,
+				total: 2,
 				document: doc,
 			},
 		})
-		ctx.expect(doc.document.id).toBe(newDocument.id)
+		ctx.expect(doc.document.id).toBe("bar")
 		ctx.expect.assertions(3)
 	},
 )
