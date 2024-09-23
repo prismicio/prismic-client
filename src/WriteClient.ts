@@ -452,7 +452,7 @@ export class WriteClient<
 			}
 
 			const { id } = await this.createDocument(
-				// We'll upload docuements data later on.
+				// We'll upload documents data later on.
 				{ ...doc.document, data: {} },
 				doc.title!,
 				{

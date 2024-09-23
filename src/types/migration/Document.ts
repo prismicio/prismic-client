@@ -1,8 +1,10 @@
 import type { FilledContentRelationshipField } from "../value/contentRelationship"
 import type { PrismicDocument, PrismicDocumentWithUID } from "../value/document"
+import type { AnyOEmbed, EmbedField, OEmbedExtra } from "../value/embed"
 import type { FilledImageFieldImage } from "../value/image"
 import type { FilledLinkToMediaField } from "../value/linkToMedia"
 import type { RTImageNode } from "../value/richText"
+import type { SharedSlice } from "../value/sharedSlice"
 
 import type {
 	MigrationImage,
@@ -29,12 +31,20 @@ export type InjectMigrationSpecificTypes<T> = T extends RTImageNode
 			? T | MigrationLinkToMedia | undefined
 			: T extends FilledContentRelationshipField
 				? T | MigrationContentRelationship
-				: // eslint-disable-next-line @typescript-eslint/no-explicit-any
-					T extends Record<any, any>
-					? { [P in keyof T]: InjectMigrationSpecificTypes<T[P]> }
-					: T extends Array<infer U>
-						? Array<InjectMigrationSpecificTypes<U>>
-						: T
+				: T extends EmbedField<AnyOEmbed & OEmbedExtra, "filled">
+					? T | Pick<T, "embed_url">
+					: T extends SharedSlice
+						?
+								| T
+								| InjectMigrationSpecificTypes<
+										Omit<T, "id" | "slice_label" | "version">
+								  >
+						: // eslint-disable-next-line @typescript-eslint/no-explicit-any
+							T extends Record<any, any>
+							? { [P in keyof T]: InjectMigrationSpecificTypes<T[P]> }
+							: T extends Array<infer U>
+								? Array<InjectMigrationSpecificTypes<U>>
+								: T
 
 /**
  * A utility type that ties the type and data of a Prismic document, creating a

@@ -104,6 +104,8 @@ type Fields = {
 	migrationLinkToMedia: prismic.LinkToMediaField
 	contentRelationship: prismic.ContentRelationshipField
 	migrationContentRelationship: prismic.ContentRelationshipField
+	embedField: prismic.EmbedField
+	migrationEmbedField: prismic.EmbedField
 }
 
 type StaticDocument = prismic.PrismicDocument<Fields, "static">
@@ -142,6 +144,8 @@ expectType<MigrationAdvancedDocuments>({
 		migrationLinkToMedia: {} as prismic.MigrationLinkToMedia,
 		contentRelationship: {} as prismic.ContentRelationshipField,
 		migrationContentRelationship: {} as prismic.MigrationContentRelationship,
+		embedField: {} as prismic.EmbedField,
+		migrationEmbedField: { embed_url: "https://example.com" },
 	},
 })
 
@@ -160,6 +164,8 @@ expectType<MigrationAdvancedDocuments>({
 				contentRelationship: {} as prismic.ContentRelationshipField,
 				migrationContentRelationship:
 					{} as prismic.MigrationContentRelationship,
+				embedField: {} as prismic.EmbedField,
+				migrationEmbedField: { embed_url: "https://example.com" },
 			},
 		],
 	},
@@ -174,10 +180,7 @@ expectType<MigrationAdvancedDocuments>({
 		slices: [
 			{
 				slice_type: "default",
-				slice_label: null,
-				id: "",
 				variation: "default",
-				version: "",
 				primary: {
 					image: {} as prismic.ImageField,
 					migrationImage: {} as prismic.MigrationImage,
@@ -186,6 +189,8 @@ expectType<MigrationAdvancedDocuments>({
 					contentRelationship: {} as prismic.ContentRelationshipField,
 					migrationContentRelationship:
 						{} as prismic.MigrationContentRelationship,
+					embedField: {} as prismic.EmbedField,
+					migrationEmbedField: { embed_url: "https://example.com" },
 					group: [
 						{
 							image: {} as prismic.ImageField,
@@ -195,6 +200,8 @@ expectType<MigrationAdvancedDocuments>({
 							contentRelationship: {} as prismic.ContentRelationshipField,
 							migrationContentRelationship:
 								{} as prismic.MigrationContentRelationship,
+							embedField: {} as prismic.EmbedField,
+							migrationEmbedField: { embed_url: "https://example.com" },
 						},
 					],
 				},
@@ -207,6 +214,8 @@ expectType<MigrationAdvancedDocuments>({
 						contentRelationship: {} as prismic.ContentRelationshipField,
 						migrationContentRelationship:
 							{} as prismic.MigrationContentRelationship,
+						embedField: {} as prismic.EmbedField,
+						migrationEmbedField: { embed_url: "https://example.com" },
 					},
 				],
 			},
