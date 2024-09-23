@@ -655,7 +655,12 @@ export class WriteClient<
 			throw new PrismicError("Could not fetch foreign asset", url, undefined)
 		}
 
-		return res.blob()
+		const blob = await res.blob()
+
+		// Ensure a correct content type is attached to the blob.
+		return new File([blob], "", {
+			type: res.headers.get("content-type") || undefined,
+		})
 	}
 
 	/**
