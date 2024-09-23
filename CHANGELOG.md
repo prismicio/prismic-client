@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.10.1](https://github.com/prismicio/prismic-client/compare/v7.10.0...v7.10.1) (2024-09-23)
+
+
+### Bug Fixes
+
+* ensure correct content type is attached to asset's blob ([80fe887](https://github.com/prismicio/prismic-client/commit/80fe887235e2eda594876f08db54cdb544e20b9f))
+
 ## [7.10.0](https://github.com/prismicio/prismic-client/compare/v7.9.0...v7.10.0) (2024-09-23)
 
 
