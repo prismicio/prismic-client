@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.10.0](https://github.com/prismicio/prismic-client/compare/v7.9.0...v7.10.0) (2024-09-23)
+
+
+### Features
+
+* add `createMigration` and `createWriteClient` ([#350](https://github.com/prismicio/prismic-client/issues/350)) ([7dc2950](https://github.com/prismicio/prismic-client/commit/7dc2950e25e7f8db706522175974b8aee36d170e))
+
 ## [7.9.0](https://github.com/prismicio/prismic-client/compare/v7.8.1...v7.9.0) (2024-09-17)
 
 
