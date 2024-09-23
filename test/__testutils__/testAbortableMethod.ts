@@ -22,7 +22,7 @@ export const testAbortableMethod = (
 
 		mockPrismicRestAPIV2({ ctx })
 
-		const client = createTestClient()
+		const client = createTestClient({ ctx })
 
 		await expect(async () => {
 			await args.run(client, {
@@ -43,7 +43,7 @@ export const testAbortableMethod = (
 
 			mockPrismicRestAPIV2({ ctx })
 
-			const client = createTestClient()
+			const client = createTestClient({ ctx })
 
 			await expect(async () => {
 				await args.run(client, {

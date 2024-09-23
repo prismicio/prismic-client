@@ -18,7 +18,7 @@ it("returns a ref by ID", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.getRefByID(ref2.id)
 
 	expect(res).toStrictEqual(ref2)
@@ -29,7 +29,7 @@ it("throws if ref could not be found", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	await expect(() => client.getRefByID("non-existant")).rejects.toThrowError(
 		/could not be found/i,

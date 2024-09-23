@@ -42,7 +42,7 @@ it("uses master ref if manual thunk ref returns non-string value", async (ctx) =
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	client.queryContentFromRef(async () => undefined)
 

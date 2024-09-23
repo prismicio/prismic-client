@@ -84,7 +84,7 @@ it("throws if no documents were returned", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	await expect(() => client.getFirst()).rejects.toThrowError(
 		/no documents were returned/i,

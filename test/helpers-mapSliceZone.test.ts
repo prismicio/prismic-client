@@ -42,8 +42,18 @@ it("maps a Slice Zone", async (ctx) => {
 	})
 
 	expect(actual).toStrictEqual([
-		{ __mapped: true, id: undefined, slice_type: model1.id, foo: "bar" },
-		{ __mapped: true, id: undefined, slice_type: model2.id, baz: "qux" },
+		{
+			__mapped: true,
+			id: expect.any(String),
+			slice_type: model1.id,
+			foo: "bar",
+		},
+		{
+			__mapped: true,
+			id: expect.any(String),
+			slice_type: model2.id,
+			baz: "qux",
+		},
 	])
 })
 
@@ -56,8 +66,8 @@ it("supports mapping functions that return undefined", async (ctx) => {
 	})
 
 	expect(actual).toStrictEqual([
-		{ __mapped: true, id: undefined, slice_type: model1.id },
-		{ __mapped: true, id: undefined, slice_type: model2.id },
+		{ __mapped: true, id: expect.any(String), slice_type: model1.id },
+		{ __mapped: true, id: expect.any(String), slice_type: model2.id },
 	])
 })
 
@@ -70,8 +80,18 @@ it("supports async mapping functions", async (ctx) => {
 	})
 
 	expect(actual).toStrictEqual([
-		{ __mapped: true, id: undefined, slice_type: model1.id, foo: "bar" },
-		{ __mapped: true, id: undefined, slice_type: model2.id, baz: "qux" },
+		{
+			__mapped: true,
+			id: expect.any(String),
+			slice_type: model1.id,
+			foo: "bar",
+		},
+		{
+			__mapped: true,
+			id: expect.any(String),
+			slice_type: model2.id,
+			baz: "qux",
+		},
 	])
 })
 
@@ -156,8 +176,18 @@ it("supports lazy-loaded mapping functions", async (ctx) => {
 	})
 
 	expect(actual).toStrictEqual([
-		{ __mapped: true, id: undefined, slice_type: model1.id, foo: "bar" },
-		{ __mapped: true, id: undefined, slice_type: model2.id, baz: "qux" },
+		{
+			__mapped: true,
+			id: expect.any(String),
+			slice_type: model1.id,
+			foo: "bar",
+		},
+		{
+			__mapped: true,
+			id: expect.any(String),
+			slice_type: model2.id,
+			baz: "qux",
+		},
 	])
 })
 
@@ -169,7 +199,7 @@ it("skips Slices without a mapping function", async (ctx) => {
 	})
 
 	expect(actual).toStrictEqual([
-		{ __mapped: true, id: undefined, slice_type: model1.id },
+		{ __mapped: true, id: expect.any(String), slice_type: model1.id },
 		sliceZone[1],
 	])
 })

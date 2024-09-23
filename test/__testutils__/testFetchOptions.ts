@@ -50,6 +50,7 @@ export const testFetchOptions = (
 				fetch: fetchSpy,
 				fetchOptions,
 			},
+			ctx,
 		})
 
 		await args.run(client)
@@ -90,6 +91,7 @@ export const testFetchOptions = (
 			clientConfig: {
 				fetch: fetchSpy,
 			},
+			ctx,
 		})
 
 		await args.run(client, { fetchOptions })

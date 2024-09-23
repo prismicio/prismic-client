@@ -15,7 +15,7 @@ it("returns all tags", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.getTags()
 
 	expect(res).toStrictEqual(repositoryResponse.tags)
@@ -44,7 +44,7 @@ it("uses form endpoint if available", async (ctx) => {
 		}),
 	)
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.getTags()
 
 	expect(res).toStrictEqual(tagsResponse)
@@ -76,7 +76,7 @@ it("sends access token if form endpoint is used", async (ctx) => {
 		}),
 	)
 
-	const client = createTestClient({ clientConfig: { accessToken } })
+	const client = createTestClient({ clientConfig: { accessToken }, ctx })
 	const res = await client.getTags()
 
 	expect(res).toStrictEqual(tagsResponse)

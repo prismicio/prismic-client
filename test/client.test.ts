@@ -10,7 +10,7 @@ import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
 
 import * as prismic from "../src"
 
-it("createClient creates a Client", () => {
+it("creates a Client with `createClient`", () => {
 	const client = prismic.createClient("qwerty", {
 		fetch: vi.fn(),
 	})
@@ -36,7 +36,7 @@ it("creates a client with a Rest API V2 endpoint", () => {
 	expect(client.endpoint).toBe(endpoint)
 })
 
-it("client has correct default state", () => {
+it("has correct default state", () => {
 	const endpoint = prismic.getRepositoryEndpoint("qwerty")
 	const options: prismic.ClientConfig = {
 		accessToken: "accessToken",
@@ -54,7 +54,7 @@ it("client has correct default state", () => {
 	expect(client.defaultParams).toBe(options.defaultParams)
 })
 
-it("constructor throws if an invalid repository name is provided", () => {
+it("throws in constructor if an invalid repository name is provided", () => {
 	expect(() => {
 		prismic.createClient("invalid repository name", {
 			fetch: vi.fn(),
@@ -67,7 +67,7 @@ it("constructor throws if an invalid repository name is provided", () => {
 	}).toThrowError(prismic.PrismicError)
 })
 
-it("constructor throws if an invalid repository endpoint is provided", () => {
+it("throws in constructor if an invalid repository endpoint is provided", () => {
 	expect(() => {
 		prismic.createClient("https://invalid url.cdn.prismic.io/api/v2", {
 			fetch: vi.fn(),
@@ -80,7 +80,7 @@ it("constructor throws if an invalid repository endpoint is provided", () => {
 	}).toThrowError(prismic.PrismicError)
 })
 
-it("constructor throws if a prismic.io endpoint is given that is not for Rest API V2", () => {
+it("throws in constructor if a prismic.io endpoint is given that is not for Rest API V2", () => {
 	const fetch = vi.fn()
 
 	const originalNodeEnv = process.env.NODE_ENV
@@ -92,6 +92,10 @@ it("constructor throws if a prismic.io endpoint is given that is not for Rest AP
 	expect(() => {
 		prismic.createClient("https://qwerty.cdn.prismic.io/api/v1", { fetch })
 	}).toThrowError(prismic.PrismicError)
+
+	const consoleWarnSpy = vi
+		.spyOn(console, "warn")
+		.mockImplementation(() => void 0)
 
 	expect(() => {
 		prismic.createClient("https://example.com/custom/endpoint", { fetch })
@@ -105,10 +109,12 @@ it("constructor throws if a prismic.io endpoint is given that is not for Rest AP
 		prismic.createClient(prismic.getRepositoryEndpoint("qwerty"), { fetch })
 	}, "An endpoint created with getRepositoryEndpoint does not throw").not.toThrow()
 
+	consoleWarnSpy.mockRestore()
+
 	process.env.NODE_ENV = originalNodeEnv
 })
 
-it("constructor warns if a non-.cdn prismic.io endpoint is given", () => {
+it("warns in constructor if a non-.cdn prismic.io endpoint is given", () => {
 	const fetch = vi.fn()
 
 	const originalNodeEnv = process.env.NODE_ENV
@@ -149,7 +155,83 @@ it("constructor warns if a non-.cdn prismic.io endpoint is given", () => {
 	process.env.NODE_ENV = originalNodeEnv
 })
 
-it("constructor throws if fetch is unavailable", () => {
+it("warns in constructor if an endpoint is given along the `documentAPIEndpoint` option and they do not match", () => {
+	const fetch = vi.fn()
+
+	const originalNodeEnv = process.env.NODE_ENV
+	process.env.NODE_ENV = "development"
+
+	const consoleWarnSpy = vi
+		.spyOn(console, "warn")
+		.mockImplementation(() => void 0)
+
+	prismic.createClient("https://example.com/my-repo-name", {
+		documentAPIEndpoint: "https://example.com/my-repo-name/prismic",
+		fetch,
+	})
+	expect(consoleWarnSpy).toHaveBeenNthCalledWith(
+		2,
+		expect.stringMatching(/prefer-repository-name/i),
+	)
+	consoleWarnSpy.mockClear()
+
+	prismic.createClient("https://example-prismic-repo.cdn.prismic.io/api/v2", {
+		documentAPIEndpoint: "https://example.com/my-repo-name/prismic",
+		fetch,
+	})
+	expect(consoleWarnSpy).toHaveBeenNthCalledWith(
+		1,
+		expect.stringMatching(/prefer-repository-name/i),
+	)
+	consoleWarnSpy.mockClear()
+
+	prismic.createClient("https://example.com/my-repo-name/prismic", {
+		documentAPIEndpoint: "https://example.com/my-repo-name/prismic",
+		fetch,
+	})
+	expect(consoleWarnSpy).toHaveBeenNthCalledWith(
+		1,
+		expect.stringMatching(/prefer-repository-name/i),
+	)
+	consoleWarnSpy.mockClear()
+
+	prismic.createClient("my-repo-name", {
+		documentAPIEndpoint: "https://example.com/my-repo-name/prismic",
+		fetch,
+	})
+	expect(consoleWarnSpy).not.toHaveBeenCalledWith(
+		expect.stringMatching(/prefer-repository-name/i),
+	)
+
+	consoleWarnSpy.mockRestore()
+
+	process.env.NODE_ENV = originalNodeEnv
+})
+
+it("warns in constructor if an endpoint is given and the repository name could not be inferred", () => {
+	const fetch = vi.fn()
+
+	const consoleWarnSpy = vi
+		.spyOn(console, "warn")
+		.mockImplementation(() => void 0)
+
+	prismic.createClient("https://example.com/my-repo-name/prismic", { fetch })
+	expect(consoleWarnSpy).toHaveBeenCalledWith(
+		expect.stringMatching(/prefer-repository-name/i),
+	)
+	consoleWarnSpy.mockClear()
+
+	prismic.createClient("https://example-prismic-repo.cdn.prismic.io/api/v2", {
+		fetch,
+	})
+	expect(consoleWarnSpy).not.toHaveBeenCalledWith(
+		expect.stringMatching(/prefer-repository-name/i),
+	)
+
+	consoleWarnSpy.mockRestore()
+})
+
+it("throws in constructor if fetch is unavailable", () => {
 	const endpoint = prismic.getRepositoryEndpoint("qwerty")
 
 	const originalFetch = globalThis.fetch
@@ -166,7 +248,7 @@ it("constructor throws if fetch is unavailable", () => {
 	globalThis.fetch = originalFetch
 })
 
-it("constructor throws if provided fetch is not a function", () => {
+it("throws in constructor if provided fetch is not a function", () => {
 	const endpoint = prismic.getRepositoryEndpoint("qwerty")
 	const fetch = "not a function"
 
@@ -197,6 +279,51 @@ it("constructor throws if provided fetch is not a function", () => {
 	globalThis.fetch = originalFetch
 })
 
+it("throws if `repositoryName` is not available but accessed", () => {
+	const fetch = vi.fn()
+
+	const consoleWarnSpy = vi
+		.spyOn(console, "warn")
+		.mockImplementation(() => void 0)
+
+	const client = prismic.createClient(
+		"https://example.com/my-repo-name/prismic",
+		{ fetch },
+	)
+
+	expect(() => {
+		client.repositoryName
+	}).toThrowError(/prefer-repository-name/i)
+
+	const client2 = prismic.createClient("my-repo-name", {
+		fetch,
+		documentAPIEndpoint: "https://example.com/my-repo-name/prismic",
+	})
+
+	expect(() => {
+		client2.repositoryName
+	}).not.toThrowError()
+
+	consoleWarnSpy.mockRestore()
+})
+
+// TODO: Remove when alias gets removed
+it("aliases `endpoint` (deprecated) to `documentAPIEndpoint`", () => {
+	const fetch = vi.fn()
+
+	const client = prismic.createClient(
+		"https://example-prismic-repo.cdn.prismic.io/api/v2",
+		{ fetch },
+	)
+
+	expect(client.documentAPIEndpoint).toBe(client.endpoint)
+
+	const otherEndpoint = "https://other-prismic-repo.cdn.prismic.io/api/v2"
+	client.endpoint = otherEndpoint
+
+	expect(client.documentAPIEndpoint).toBe(otherEndpoint)
+})
+
 it("uses globalThis.fetch if available", async () => {
 	const endpoint = prismic.getRepositoryEndpoint("qwerty")
 	const responseBody = { foo: "bar" }
@@ -224,7 +351,7 @@ it("uses the master ref by default", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.get()
 
 	expect(res).toStrictEqual(queryResponse)
@@ -240,7 +367,7 @@ it("supports manual string ref", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient({ clientConfig: { ref } })
+	const client = createTestClient({ clientConfig: { ref }, ctx })
 	const res = await client.get()
 
 	expect(res).toStrictEqual(queryResponse)
@@ -256,7 +383,7 @@ it("supports manual thunk ref", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient({ clientConfig: { ref: () => ref } })
+	const client = createTestClient({ clientConfig: { ref: () => ref }, ctx })
 	const res = await client.get()
 
 	expect(res).toStrictEqual(queryResponse)
@@ -273,7 +400,10 @@ it("uses master ref if ref thunk param returns non-string value", async (ctx) =>
 		ctx,
 	})
 
-	const client = createTestClient({ clientConfig: { ref: () => undefined } })
+	const client = createTestClient({
+		clientConfig: { ref: () => undefined },
+		ctx,
+	})
 	const res = await client.get()
 
 	expect(res).toStrictEqual(queryResponse)
@@ -294,7 +424,7 @@ it("uses browser preview ref if available", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.get()
 
 	expect(res).toStrictEqual(queryResponse)
@@ -318,7 +448,7 @@ it("uses req preview ref if available", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	client.enableAutoPreviewsFromReq(req)
 	const res = await client.get()
 
@@ -342,7 +472,7 @@ it("supports req with Web APIs", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	client.enableAutoPreviewsFromReq(req)
 	const res = await client.get()
 
@@ -364,7 +494,7 @@ it("ignores req without cookies", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	client.enableAutoPreviewsFromReq(req)
 	const res = await client.get()
 
@@ -381,7 +511,7 @@ it("does not use preview ref if auto previews are disabled", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository()
 	const queryResponse = prismicM.api.query({ seed: ctx.task.name })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	// Disable auto previews and ensure the default ref is being used. Note that
 	// the global cookie has already been set by this point, which should be
@@ -430,7 +560,7 @@ it("uses the integration fields ref if the repository provides it", async (ctx) 
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.get()
 
 	expect(res).toStrictEqual(queryResponse)
@@ -450,7 +580,7 @@ it("ignores the integration fields ref if the repository provides a null value",
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.get()
 
 	expect(res).toStrictEqual(queryResponse)
@@ -485,7 +615,7 @@ it("uses client-provided routes in queries", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient({ clientConfig: { routes } })
+	const client = createTestClient({ clientConfig: { routes }, ctx })
 	const res = await client.get()
 
 	expect(res).toStrictEqual(queryResponse)
@@ -504,7 +634,7 @@ it("uses client-provided brokenRoute in queries", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient({ clientConfig: { brokenRoute } })
+	const client = createTestClient({ clientConfig: { brokenRoute }, ctx })
 	const res = await client.get()
 
 	expect(res).toStrictEqual(queryResponse)
@@ -516,7 +646,7 @@ it("throws ForbiddenError if access token is invalid for repository metadata", a
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	await expect(() => client.getRepository()).rejects.toThrowError(
 		/invalid access token/i,
@@ -532,7 +662,7 @@ it("throws ForbiddenError if access token is invalid for query", async (ctx) => 
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	await expect(() => client.get()).rejects.toThrowError(/invalid access token/i)
 	await expect(() => client.get()).rejects.toThrowError(prismic.ForbiddenError)
@@ -545,7 +675,7 @@ it("throws ForbiddenError if response code is 403", async (ctx) => {
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"documents/search",
@@ -583,7 +713,7 @@ it("throws ParsingError if response code is 400 with parsing-error type", async 
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"documents/search",
@@ -605,7 +735,7 @@ it("throws PrismicError if response code is 400 but is not a parsing error", asy
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"documents/search",
@@ -626,7 +756,7 @@ it("throws PrismicError if response is not 200, 400, 401, 403, or 404", async (c
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"./documents/search",
@@ -646,7 +776,7 @@ it("throws PrismicError if response is not 200, 400, 401, 403, or 404", async (c
 it("throws PrismicError if response is not JSON", async (ctx) => {
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"documents/search",
@@ -664,7 +794,7 @@ it("throws PrismicError if response is not JSON", async (ctx) => {
 })
 
 it("throws RepositoryNotFoundError if repository does not exist", async (ctx) => {
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	ctx.server.use(
 		msw.rest.get(client.endpoint, (_req, res, ctx) => {
@@ -686,7 +816,7 @@ it("throws RefNotFoundError if ref does not exist", async (ctx) => {
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"./documents/search",
@@ -713,7 +843,7 @@ it("throws RefExpiredError if ref is expired", async (ctx) => {
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"./documents/search",
@@ -740,7 +870,7 @@ it("throws PreviewTokenExpiredError if preview token is expired", async (ctx) =>
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"./documents/search",
@@ -767,7 +897,7 @@ it("throws NotFoundError if the 404 error is unknown", async (ctx) => {
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"./documents/search",
@@ -802,7 +932,7 @@ it("retries after `retry-after` milliseconds if response code is 429", async (ct
 		queryResponse,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"documents/search",
@@ -865,7 +995,7 @@ it("retries after 1000 milliseconds if response code is 429 and an invalid `retr
 		queryResponse,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"documents/search",
@@ -912,7 +1042,7 @@ it("throws if a non-2xx response is returned even after retrying", async (ctx) =
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const queryEndpoint = new URL(
 		"documents/search",

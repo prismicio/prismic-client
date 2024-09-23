@@ -28,7 +28,7 @@ it("uses a releases ref by ID", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	client.queryContentFromReleaseByID(ref1.id)
 

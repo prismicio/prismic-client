@@ -52,7 +52,7 @@ export const testGetWithinTTL = (
 			ctx,
 		})
 
-		const client = createTestClient()
+		const client = createTestClient({ ctx })
 
 		if (args.beforeFirstGet) {
 			args.beforeFirstGet({ client })
@@ -112,7 +112,7 @@ export const testGetOutsideTTL = (
 				ctx,
 			})
 
-			const client = createTestClient()
+			const client = createTestClient({ ctx })
 
 			if (args.beforeFirstGet) {
 				args.beforeFirstGet({ client })
