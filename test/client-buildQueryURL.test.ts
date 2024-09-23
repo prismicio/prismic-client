@@ -42,7 +42,7 @@ it("includes the `x-d` param in development", async (ctx) => {
 
 	mockPrismicRestAPIV2({ ctx })
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.buildQueryURL()
 	const url = new URL(res)
 
