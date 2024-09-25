@@ -14,14 +14,7 @@ export type MigrationContentRelationship<
 > =
 	| ValueOrThunk<TDocuments | PrismicMigrationDocument<TDocuments> | undefined>
 	| (Pick<FilledContentRelationshipField, "link_type"> &
-			Partial<
-				Pick<
-					FilledContentRelationshipField,
-					// TODO: Remove when link text PR is merged
-					// @ts-expect-error - Future-proofing for link text
-					"text"
-				>
-			> & {
+			Partial<Pick<FilledContentRelationshipField, "text">> & {
 				id: ValueOrThunk<
 					TDocuments | PrismicMigrationDocument<TDocuments> | undefined
 				>
