@@ -24,6 +24,7 @@ export type EmptyLinkField<
 	Type extends (typeof LinkType)[keyof typeof LinkType] = typeof LinkType.Any,
 > = {
 	link_type: Type | string
+	text?: string
 }
 
 /**
@@ -33,6 +34,7 @@ export interface FilledLinkToWebField {
 	link_type: typeof LinkType.Web
 	url: string
 	target?: string
+	text?: string
 }
 
 /**

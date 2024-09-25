@@ -75,14 +75,7 @@ export type MigrationLinkToMedia = Pick<
 	LinkToMediaField<"filled">,
 	"link_type"
 > &
-	Partial<
-		Pick<
-			LinkToMediaField<"filled">,
-			// TODO: Remove when link text PR is merged
-			// @ts-expect-error - Future-proofing for link text
-			"text"
-		>
-	> & {
+	Partial<Pick<LinkToMediaField<"filled">, "text">> & {
 		/**
 		 * A reference to the migration asset used to resolve the link to media
 		 * field's value.
@@ -95,8 +88,6 @@ export type MigrationLinkToMedia = Pick<
  * with the migration API.
  */
 export type MigrationLinkToMediaField =
-	// TODO: Remove when link text PR is merged
-	// @ts-expect-error - Future-proofing for link text
 	| Pick<LinkToMediaField<"filled">, "link_type" | "id" | "text">
 	| EmptyLinkField<"Media">
 

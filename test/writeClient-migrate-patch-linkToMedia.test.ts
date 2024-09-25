@@ -22,8 +22,6 @@ const assetToLinkToMedia = (
 		size: `${asset.size}`,
 		height: typeof asset.height === "number" ? `${asset.height}` : undefined,
 		width: typeof asset.width === "number" ? `${asset.width}` : undefined,
-		// TODO: Remove when link text PR is merged
-		// @ts-expect-error - Future-proofing for link text
 		text,
 	}
 }

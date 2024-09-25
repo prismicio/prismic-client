@@ -410,8 +410,6 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 					// ID needs to be 16 characters long to be considered valid by the API
 					id: "_____broken_____",
 					isBroken: true,
-					// TODO: Remove when link text PR is merged
-					// @ts-expect-error - Future-proofing for link text
 					text: input.text,
 				}
 			}
@@ -419,8 +417,6 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 			return {
 				link_type: LinkType.Document,
 				id: () => this._getByOriginalID(input.id),
-				// TODO: Remove when link text PR is merged
-				// @ts-expect-error - Future-proofing for link text
 				text: input.text,
 			}
 		}
@@ -429,8 +425,6 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 			return {
 				link_type: LinkType.Media,
 				id: this.createAsset(input),
-				// TODO: Remove when link text PR is merged
-				// @ts-expect-error - Future-proofing for link text
 				text: input.text,
 			}
 		}
