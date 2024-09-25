@@ -14,7 +14,7 @@ it("returns repository metadata", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.getRepository()
 
 	expect(res).toStrictEqual(repositoryResponse)
@@ -33,7 +33,7 @@ it("includes access token if configured", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient({ clientConfig })
+	const client = createTestClient({ clientConfig, ctx })
 	const res = await client.getRepository()
 
 	expect(res).toStrictEqual(repositoryResponse)

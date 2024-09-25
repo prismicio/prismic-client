@@ -43,6 +43,7 @@ export const testAnyGetMethodFactory = (
 
 		const client = createTestClient({
 			clientConfig: args.clientConfig,
+			ctx,
 		})
 
 		const res = await args.run(client)

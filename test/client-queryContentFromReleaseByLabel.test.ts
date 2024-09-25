@@ -28,7 +28,7 @@ it("uses a releases ref by label", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	client.queryContentFromReleaseByLabel(ref1.label)
 

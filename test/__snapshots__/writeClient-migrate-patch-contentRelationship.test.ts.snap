@@ -1,0 +1,1065 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`patches content relationship fields (from Prismic) > broken > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "id": "_____broken_____",
+        "isBroken": true,
+        "link_type": "Document",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields (from Prismic) > broken > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": {
+            "id": "_____broken_____",
+            "isBroken": true,
+            "link_type": "Document",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "_____broken_____",
+          "isBroken": true,
+          "link_type": "Document",
+        },
+        "group": [
+          {
+            "field": {
+              "id": "_____broken_____",
+              "isBroken": true,
+              "link_type": "Document",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields (from Prismic) > broken > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": {
+            "id": "_____broken_____",
+            "isBroken": true,
+            "link_type": "Document",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "_____broken_____",
+          "isBroken": true,
+          "link_type": "Document",
+        },
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields (from Prismic) > broken > static zone 1`] = `
+{
+  "field": {
+    "id": "_____broken_____",
+    "isBroken": true,
+    "link_type": "Document",
+  },
+}
+`;
+
+exports[`patches content relationship fields (from Prismic) > simple > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "id": "other.id-fromPrismic",
+        "link_type": "Document",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields (from Prismic) > simple > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-fromPrismic",
+            "link_type": "Document",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-fromPrismic",
+          "link_type": "Document",
+        },
+        "group": [
+          {
+            "field": {
+              "id": "other.id-fromPrismic",
+              "link_type": "Document",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields (from Prismic) > simple > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-fromPrismic",
+            "link_type": "Document",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-fromPrismic",
+          "link_type": "Document",
+        },
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields (from Prismic) > simple > static zone 1`] = `
+{
+  "field": {
+    "id": "other.id-fromPrismic",
+    "link_type": "Document",
+  },
+}
+`;
+
+exports[`patches content relationship fields (from Prismic) > withText > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "id": "other.id-fromPrismic",
+        "link_type": "Document",
+        "text": "foo",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields (from Prismic) > withText > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-fromPrismic",
+            "link_type": "Document",
+            "text": "foo",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-fromPrismic",
+          "link_type": "Document",
+          "text": "foo",
+        },
+        "group": [
+          {
+            "field": {
+              "id": "other.id-fromPrismic",
+              "link_type": "Document",
+              "text": "foo",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields (from Prismic) > withText > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-fromPrismic",
+            "link_type": "Document",
+            "text": "foo",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-fromPrismic",
+          "link_type": "Document",
+          "text": "foo",
+        },
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields (from Prismic) > withText > static zone 1`] = `
+{
+  "field": {
+    "id": "other.id-fromPrismic",
+    "link_type": "Document",
+    "text": "foo",
+  },
+}
+`;
+
+exports[`patches content relationship fields > existing > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "id": "other.id-existing",
+        "link_type": "Document",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > existing > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-existing",
+            "link_type": "Document",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-existing",
+          "link_type": "Document",
+        },
+        "group": [
+          {
+            "field": {
+              "id": "other.id-existing",
+              "link_type": "Document",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > existing > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-existing",
+            "link_type": "Document",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-existing",
+          "link_type": "Document",
+        },
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > existing > static zone 1`] = `
+{
+  "field": {
+    "id": "other.id-existing",
+    "link_type": "Document",
+  },
+}
+`;
+
+exports[`patches content relationship fields > existingLongForm > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "id": "other.id-existing",
+        "link_type": "Document",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > existingLongForm > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-existing",
+            "link_type": "Document",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-existing",
+          "link_type": "Document",
+        },
+        "group": [
+          {
+            "field": {
+              "id": "other.id-existing",
+              "link_type": "Document",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > existingLongForm > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-existing",
+            "link_type": "Document",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-existing",
+          "link_type": "Document",
+        },
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > existingLongForm > static zone 1`] = `
+{
+  "field": {
+    "id": "other.id-existing",
+    "link_type": "Document",
+  },
+}
+`;
+
+exports[`patches content relationship fields > existingLongFormWithText > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "id": "other.id-existing",
+        "link_type": "Document",
+        "text": "foo",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > existingLongFormWithText > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-existing",
+            "link_type": "Document",
+            "text": "foo",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-existing",
+          "link_type": "Document",
+          "text": "foo",
+        },
+        "group": [
+          {
+            "field": {
+              "id": "other.id-existing",
+              "link_type": "Document",
+              "text": "foo",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > existingLongFormWithText > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-existing",
+            "link_type": "Document",
+            "text": "foo",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-existing",
+          "link_type": "Document",
+          "text": "foo",
+        },
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > existingLongFormWithText > static zone 1`] = `
+{
+  "field": {
+    "id": "other.id-existing",
+    "link_type": "Document",
+    "text": "foo",
+  },
+}
+`;
+
+exports[`patches content relationship fields > lazyExisting > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "id": "other.id-existing",
+        "link_type": "Document",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > lazyExisting > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-existing",
+            "link_type": "Document",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-existing",
+          "link_type": "Document",
+        },
+        "group": [
+          {
+            "field": {
+              "id": "other.id-existing",
+              "link_type": "Document",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > lazyExisting > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-existing",
+            "link_type": "Document",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-existing",
+          "link_type": "Document",
+        },
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > lazyExisting > static zone 1`] = `
+{
+  "field": {
+    "id": "other.id-existing",
+    "link_type": "Document",
+  },
+}
+`;
+
+exports[`patches content relationship fields > lazyOtherCreate > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "id": "other.id-create",
+        "link_type": "Document",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > lazyOtherCreate > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-create",
+            "link_type": "Document",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-create",
+          "link_type": "Document",
+        },
+        "group": [
+          {
+            "field": {
+              "id": "other.id-create",
+              "link_type": "Document",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > lazyOtherCreate > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-create",
+            "link_type": "Document",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-create",
+          "link_type": "Document",
+        },
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > lazyOtherCreate > static zone 1`] = `
+{
+  "field": {
+    "id": "other.id-create",
+    "link_type": "Document",
+  },
+}
+`;
+
+exports[`patches content relationship fields > lazyOtherCreateMissingID > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "link_type": "Document",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > lazyOtherCreateMissingID > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": {
+            "link_type": "Document",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "link_type": "Document",
+        },
+        "group": [
+          {
+            "field": {
+              "link_type": "Document",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > lazyOtherCreateMissingID > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": {
+            "link_type": "Document",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "link_type": "Document",
+        },
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > lazyOtherCreateMissingID > static zone 1`] = `
+{
+  "field": {
+    "link_type": "Document",
+  },
+}
+`;
+
+exports[`patches content relationship fields > otherCreate > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "id": "other.id-create",
+        "link_type": "Document",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > otherCreate > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-create",
+            "link_type": "Document",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-create",
+          "link_type": "Document",
+        },
+        "group": [
+          {
+            "field": {
+              "id": "other.id-create",
+              "link_type": "Document",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > otherCreate > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-create",
+            "link_type": "Document",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-create",
+          "link_type": "Document",
+        },
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > otherCreate > static zone 1`] = `
+{
+  "field": {
+    "id": "other.id-create",
+    "link_type": "Document",
+  },
+}
+`;
+
+exports[`patches content relationship fields > richTextLinkNode > group 1`] = `
+{
+  "group": [
+    {
+      "field": [
+        {
+          "spans": [
+            {
+              "end": 5,
+              "start": 0,
+              "type": "strong",
+            },
+            {
+              "data": {
+                "id": "other.id-existing",
+                "link_type": "Document",
+              },
+              "end": 5,
+              "start": 0,
+              "type": "hyperlink",
+            },
+          ],
+          "text": "lorem",
+          "type": "paragraph",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > richTextLinkNode > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [
+                {
+                  "end": 5,
+                  "start": 0,
+                  "type": "strong",
+                },
+                {
+                  "data": {
+                    "id": "other.id-existing",
+                    "link_type": "Document",
+                  },
+                  "end": 5,
+                  "start": 0,
+                  "type": "hyperlink",
+                },
+              ],
+              "text": "lorem",
+              "type": "paragraph",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [
+              {
+                "end": 5,
+                "start": 0,
+                "type": "strong",
+              },
+              {
+                "data": {
+                  "id": "other.id-existing",
+                  "link_type": "Document",
+                },
+                "end": 5,
+                "start": 0,
+                "type": "hyperlink",
+              },
+            ],
+            "text": "lorem",
+            "type": "paragraph",
+          },
+        ],
+        "group": [
+          {
+            "field": [
+              {
+                "spans": [
+                  {
+                    "end": 5,
+                    "start": 0,
+                    "type": "strong",
+                  },
+                  {
+                    "data": {
+                      "id": "other.id-existing",
+                      "link_type": "Document",
+                    },
+                    "end": 5,
+                    "start": 0,
+                    "type": "hyperlink",
+                  },
+                ],
+                "text": "lorem",
+                "type": "paragraph",
+              },
+            ],
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > richTextLinkNode > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [
+                {
+                  "end": 5,
+                  "start": 0,
+                  "type": "strong",
+                },
+                {
+                  "data": {
+                    "id": "other.id-existing",
+                    "link_type": "Document",
+                  },
+                  "end": 5,
+                  "start": 0,
+                  "type": "hyperlink",
+                },
+              ],
+              "text": "lorem",
+              "type": "paragraph",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [
+              {
+                "end": 5,
+                "start": 0,
+                "type": "strong",
+              },
+              {
+                "data": {
+                  "id": "other.id-existing",
+                  "link_type": "Document",
+                },
+                "end": 5,
+                "start": 0,
+                "type": "hyperlink",
+              },
+            ],
+            "text": "lorem",
+            "type": "paragraph",
+          },
+        ],
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > richTextLinkNode > static zone 1`] = `
+{
+  "field": [
+    {
+      "spans": [
+        {
+          "end": 5,
+          "start": 0,
+          "type": "strong",
+        },
+        {
+          "data": {
+            "id": "other.id-existing",
+            "link_type": "Document",
+          },
+          "end": 5,
+          "start": 0,
+          "type": "hyperlink",
+        },
+      ],
+      "text": "lorem",
+      "type": "paragraph",
+    },
+  ],
+}
+`;

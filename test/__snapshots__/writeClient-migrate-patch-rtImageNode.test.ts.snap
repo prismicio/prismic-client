@@ -1,0 +1,1177 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`patches rich text image nodes (from Prismic) > simple > group 1`] = `
+{
+  "group": [
+    {
+      "field": [
+        {
+          "spans": [],
+          "text": "Pulvinar elementum integer enim neque volutpat ac tincidunt vitae semper quis. Gravida hendrerit lectus a molestie lorem ipsum dolor sit amet. Mauris sit amet massa vitae tortor condimentum lacinia. Blandit volutpat maecenas volutpat blandit aliquam. Massa eget egestas purus viverra accumsan in nisl nisi scelerisque. Imperdiet dui accumsan sit amet nulla facilisi morbi tempus iaculis.",
+          "type": "paragraph",
+        },
+        {
+          "alt": "Phasellus faucibus scelerisque eleifend donec pretium vulputate",
+          "copyright": null,
+          "dimensions": {
+            "height": 1,
+            "width": 1,
+          },
+          "edit": {
+            "background": "#14a045",
+            "x": -1057,
+            "y": 1363,
+            "zoom": 1.3020761265191427,
+          },
+          "id": "097ac4a7efe",
+          "type": "image",
+          "url": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes (from Prismic) > simple > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [],
+              "text": "Ultrices In Iaculis Nunc Sed Augue Lacus Viverra Vitae Congue Eu",
+              "type": "heading4",
+            },
+            {
+              "alt": "Dolor morbi non arcu risus quis varius quam quisque id diam vel",
+              "copyright": null,
+              "dimensions": {
+                "height": 1,
+                "width": 1,
+              },
+              "edit": {
+                "background": "#073a8e",
+                "x": -531,
+                "y": 1549,
+                "zoom": 1.1496011393958705,
+              },
+              "id": "9378bc2e4da",
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [],
+            "text": "Eget magna fermentum iaculis eu non diam phasellus vestibulum lorem. Egestas maecenas pharetra convallis posuere morbi leo urna molestie at. Cras fermentum odio eu feugiat pretium. Neque aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet nulla malesuada. Fermentum posuere urna nec tincidunt praesent semper feugiat nibh. Eleifend donec pretium vulputate sapien.",
+            "type": "paragraph",
+          },
+          {
+            "alt": "A scelerisque purus semper eget duis at tellus at urna condimentum mattis",
+            "copyright": null,
+            "dimensions": {
+              "height": 1,
+              "width": 1,
+            },
+            "edit": {
+              "background": "#53af6d",
+              "x": 1608,
+              "y": -790,
+              "zoom": 1.8290852631509968,
+            },
+            "id": "9378bc2e4da",
+            "type": "image",
+            "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1",
+          },
+        ],
+        "group": [
+          {
+            "field": [
+              {
+                "spans": [],
+                "text": "Consectetur adipiscing elit duis tristique sollicitudin nibh sit amet commodo",
+                "type": "o-list-item",
+              },
+              {
+                "alt": "Lorem mollis aliquam ut porttitor leo a",
+                "copyright": null,
+                "dimensions": {
+                  "height": 1,
+                  "width": 1,
+                },
+                "edit": {
+                  "background": "#35eaa8",
+                  "x": -757,
+                  "y": -123,
+                  "zoom": 1.2194779259663722,
+                },
+                "id": "9378bc2e4da",
+                "type": "image",
+                "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1",
+              },
+            ],
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes (from Prismic) > simple > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [],
+              "text": "Auctor neque vitae tempus quam. At ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget gravida cum.",
+              "type": "paragraph",
+            },
+            {
+              "alt": "Sed id semper risus in hendrerit gravida rutrum",
+              "copyright": null,
+              "dimensions": {
+                "height": 1,
+                "width": 1,
+              },
+              "edit": {
+                "background": "#104dde",
+                "x": -1621,
+                "y": -870,
+                "zoom": 1.7278759511485409,
+              },
+              "id": "2003a644c30",
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [],
+            "text": "Pharetra et ultrices neque ornare aenean euismod. Mauris sit amet massa vitae tortor condimentum lacinia quis vel eros donec ac.",
+            "type": "preformatted",
+          },
+          {
+            "alt": "Vitae et leo duis ut diam quam nulla porttitor",
+            "copyright": null,
+            "dimensions": {
+              "height": 1,
+              "width": 1,
+            },
+            "edit": {
+              "background": "#cc54f4",
+              "x": 637,
+              "y": -1697,
+              "zoom": 1.1481742186351154,
+            },
+            "id": "2003a644c30",
+            "type": "image",
+            "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff",
+          },
+        ],
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes (from Prismic) > simple > static zone 1`] = `
+{
+  "field": [
+    {
+      "spans": [],
+      "text": "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis. Tincidunt praesent semper feugiat nibh sed pulvinar proin gravida hendrerit lectus a.",
+      "type": "paragraph",
+    },
+    {
+      "alt": "Adipiscing bibendum est ultricies integer quis auctor elit",
+      "copyright": null,
+      "dimensions": {
+        "height": 1,
+        "width": 1,
+      },
+      "edit": {
+        "background": "#b943c8",
+        "x": 592,
+        "y": 260,
+        "zoom": 1.3971999251277185,
+      },
+      "id": "b5df4522c1a",
+      "type": "image",
+      "url": "https://images.unsplash.com/photo-1504198266287-1659872e6590",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes (from Prismic) > withLinkTo > group 1`] = `
+{
+  "group": [
+    {
+      "field": [
+        {
+          "spans": [],
+          "text": "Pulvinar elementum integer enim neque volutpat ac tincidunt vitae semper quis. Gravida hendrerit lectus a molestie lorem ipsum dolor sit amet. Mauris sit amet massa vitae tortor condimentum lacinia. Blandit volutpat maecenas volutpat blandit aliquam. Massa eget egestas purus viverra accumsan in nisl nisi scelerisque. Imperdiet dui accumsan sit amet nulla facilisi morbi tempus iaculis.",
+          "type": "paragraph",
+        },
+        {
+          "alt": "Phasellus faucibus scelerisque eleifend donec pretium vulputate",
+          "copyright": null,
+          "dimensions": {
+            "height": 1,
+            "width": 1,
+          },
+          "edit": {
+            "background": "#14a045",
+            "x": -1057,
+            "y": 1363,
+            "zoom": 1.3020761265191427,
+          },
+          "id": "097ac4a7efe",
+          "linkTo": {
+            "id": "other.id-existing",
+            "link_type": "Document",
+          },
+          "type": "image",
+          "url": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes (from Prismic) > withLinkTo > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [],
+              "text": "Ultrices In Iaculis Nunc Sed Augue Lacus Viverra Vitae Congue Eu",
+              "type": "heading4",
+            },
+            {
+              "alt": "Dolor morbi non arcu risus quis varius quam quisque id diam vel",
+              "copyright": null,
+              "dimensions": {
+                "height": 1,
+                "width": 1,
+              },
+              "edit": {
+                "background": "#073a8e",
+                "x": -531,
+                "y": 1549,
+                "zoom": 1.1496011393958705,
+              },
+              "id": "9378bc2e4da",
+              "linkTo": {
+                "id": "other.id-existing",
+                "link_type": "Document",
+              },
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [],
+            "text": "Eget magna fermentum iaculis eu non diam phasellus vestibulum lorem. Egestas maecenas pharetra convallis posuere morbi leo urna molestie at. Cras fermentum odio eu feugiat pretium. Neque aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet nulla malesuada. Fermentum posuere urna nec tincidunt praesent semper feugiat nibh. Eleifend donec pretium vulputate sapien.",
+            "type": "paragraph",
+          },
+          {
+            "alt": "A scelerisque purus semper eget duis at tellus at urna condimentum mattis",
+            "copyright": null,
+            "dimensions": {
+              "height": 1,
+              "width": 1,
+            },
+            "edit": {
+              "background": "#53af6d",
+              "x": 1608,
+              "y": -790,
+              "zoom": 1.8290852631509968,
+            },
+            "id": "9378bc2e4da",
+            "linkTo": {
+              "id": "other.id-existing",
+              "link_type": "Document",
+            },
+            "type": "image",
+            "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1",
+          },
+        ],
+        "group": [
+          {
+            "field": [
+              {
+                "spans": [],
+                "text": "Consectetur adipiscing elit duis tristique sollicitudin nibh sit amet commodo",
+                "type": "o-list-item",
+              },
+              {
+                "alt": "Lorem mollis aliquam ut porttitor leo a",
+                "copyright": null,
+                "dimensions": {
+                  "height": 1,
+                  "width": 1,
+                },
+                "edit": {
+                  "background": "#35eaa8",
+                  "x": -757,
+                  "y": -123,
+                  "zoom": 1.2194779259663722,
+                },
+                "id": "9378bc2e4da",
+                "linkTo": {
+                  "id": "other.id-existing",
+                  "link_type": "Document",
+                },
+                "type": "image",
+                "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1",
+              },
+            ],
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes (from Prismic) > withLinkTo > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [],
+              "text": "Auctor neque vitae tempus quam. At ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget gravida cum.",
+              "type": "paragraph",
+            },
+            {
+              "alt": "Sed id semper risus in hendrerit gravida rutrum",
+              "copyright": null,
+              "dimensions": {
+                "height": 1,
+                "width": 1,
+              },
+              "edit": {
+                "background": "#104dde",
+                "x": -1621,
+                "y": -870,
+                "zoom": 1.7278759511485409,
+              },
+              "id": "2003a644c30",
+              "linkTo": {
+                "id": "other.id-existing",
+                "link_type": "Document",
+              },
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [],
+            "text": "Pharetra et ultrices neque ornare aenean euismod. Mauris sit amet massa vitae tortor condimentum lacinia quis vel eros donec ac.",
+            "type": "preformatted",
+          },
+          {
+            "alt": "Vitae et leo duis ut diam quam nulla porttitor",
+            "copyright": null,
+            "dimensions": {
+              "height": 1,
+              "width": 1,
+            },
+            "edit": {
+              "background": "#cc54f4",
+              "x": 637,
+              "y": -1697,
+              "zoom": 1.1481742186351154,
+            },
+            "id": "2003a644c30",
+            "linkTo": {
+              "id": "other.id-existing",
+              "link_type": "Document",
+            },
+            "type": "image",
+            "url": "https://images.unsplash.com/photo-1426604966848-d7adac402bff",
+          },
+        ],
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes (from Prismic) > withLinkTo > static zone 1`] = `
+{
+  "field": [
+    {
+      "spans": [],
+      "text": "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis. Tincidunt praesent semper feugiat nibh sed pulvinar proin gravida hendrerit lectus a.",
+      "type": "paragraph",
+    },
+    {
+      "alt": "Adipiscing bibendum est ultricies integer quis auctor elit",
+      "copyright": null,
+      "dimensions": {
+        "height": 1,
+        "width": 1,
+      },
+      "edit": {
+        "background": "#b943c8",
+        "x": 592,
+        "y": 260,
+        "zoom": 1.3971999251277185,
+      },
+      "id": "b5df4522c1a",
+      "linkTo": {
+        "id": "other.id-existing",
+        "link_type": "Document",
+      },
+      "type": "image",
+      "url": "https://images.unsplash.com/photo-1504198266287-1659872e6590",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > existing > group 1`] = `
+{
+  "group": [
+    {
+      "field": [
+        {
+          "spans": [],
+          "text": "Pulvinar elementum integer enim neque volutpat ac tincidunt vitae semper quis. Gravida hendrerit lectus a molestie lorem ipsum dolor sit amet. Mauris sit amet massa vitae tortor condimentum lacinia. Blandit volutpat maecenas volutpat blandit aliquam. Massa eget egestas purus viverra accumsan in nisl nisi scelerisque. Imperdiet dui accumsan sit amet nulla facilisi morbi tempus iaculis.",
+          "type": "paragraph",
+        },
+        {
+          "alt": null,
+          "copyright": null,
+          "dimensions": {
+            "height": 1,
+            "width": 1,
+          },
+          "edit": {
+            "background": "transparent",
+            "x": 0,
+            "y": 0,
+            "zoom": 1,
+          },
+          "id": "asset.id-existing",
+          "type": "image",
+          "url": "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=4554&h=3036&fit=crop",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > existing > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [],
+              "text": "Diam",
+              "type": "heading4",
+            },
+            {
+              "alt": null,
+              "copyright": null,
+              "dimensions": {
+                "height": 1,
+                "width": 1,
+              },
+              "edit": {
+                "background": "transparent",
+                "x": 0,
+                "y": 0,
+                "zoom": 1,
+              },
+              "id": "asset.id-existing",
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1504567961542-e24d9439a724?w=4608&h=3456&fit=crop",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [],
+            "text": "Eget magna fermentum iaculis eu non diam phasellus vestibulum lorem. Egestas maecenas pharetra convallis posuere morbi leo urna molestie at. Cras fermentum odio eu feugiat pretium. Neque aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet nulla malesuada. Fermentum posuere urna nec tincidunt praesent semper feugiat nibh. Eleifend donec pretium vulputate sapien.",
+            "type": "paragraph",
+          },
+          {
+            "alt": null,
+            "copyright": null,
+            "dimensions": {
+              "height": 1,
+              "width": 1,
+            },
+            "edit": {
+              "background": "transparent",
+              "x": 0,
+              "y": 0,
+              "zoom": 1,
+            },
+            "id": "asset.id-existing",
+            "type": "image",
+            "url": "https://images.unsplash.com/photo-1504567961542-e24d9439a724?w=4608&h=3456&fit=crop",
+          },
+        ],
+        "group": [
+          {
+            "field": [
+              {
+                "spans": [],
+                "text": "Quis Enim Lobortis",
+                "type": "heading2",
+              },
+              {
+                "alt": null,
+                "copyright": null,
+                "dimensions": {
+                  "height": 1,
+                  "width": 1,
+                },
+                "edit": {
+                  "background": "transparent",
+                  "x": 0,
+                  "y": 0,
+                  "zoom": 1,
+                },
+                "id": "asset.id-existing",
+                "type": "image",
+                "url": "https://images.unsplash.com/photo-1504567961542-e24d9439a724?w=4608&h=3456&fit=crop",
+              },
+            ],
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > existing > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [],
+              "text": "Ultrices dui sapien eget mi proin sed libero enim sed. Diam ut venenatis tellus in metus vulputate eu scelerisque felis imperdiet. Sed nisi lacus sed viverra tellus in hac habitasse. Eget mi proin sed libero enim sed faucibus turpis. Pellentesque id nibh tortor id aliquet. Aliquam sem et tortor consequat id porta nibh venenatis cras sed felis.",
+              "type": "paragraph",
+            },
+            {
+              "alt": null,
+              "copyright": null,
+              "dimensions": {
+                "height": 1,
+                "width": 1,
+              },
+              "edit": {
+                "background": "transparent",
+                "x": 0,
+                "y": 0,
+                "zoom": 1,
+              },
+              "id": "asset.id-existing",
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1587502537745-84b86da1204f?w=6550&h=4367&fit=crop",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [],
+            "text": "Pharetra et ultrices neque ornare aenean euismod. Mauris sit amet massa vitae tortor condimentum lacinia quis vel eros donec ac.",
+            "type": "preformatted",
+          },
+          {
+            "alt": null,
+            "copyright": null,
+            "dimensions": {
+              "height": 1,
+              "width": 1,
+            },
+            "edit": {
+              "background": "transparent",
+              "x": 0,
+              "y": 0,
+              "zoom": 1,
+            },
+            "id": "asset.id-existing",
+            "type": "image",
+            "url": "https://images.unsplash.com/photo-1587502537745-84b86da1204f?w=6550&h=4367&fit=crop",
+          },
+        ],
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > existing > static zone 1`] = `
+{
+  "field": [
+    {
+      "spans": [],
+      "text": "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis. Tincidunt praesent semper feugiat nibh sed pulvinar proin gravida hendrerit lectus a.",
+      "type": "paragraph",
+    },
+    {
+      "alt": null,
+      "copyright": null,
+      "dimensions": {
+        "height": 1,
+        "width": 1,
+      },
+      "edit": {
+        "background": "transparent",
+        "x": 0,
+        "y": 0,
+        "zoom": 1,
+      },
+      "id": "asset.id-existing",
+      "type": "image",
+      "url": "https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?w=4240&h=2832&fit=crop",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > new > group 1`] = `
+{
+  "group": [
+    {
+      "field": [
+        {
+          "spans": [],
+          "text": "Pulvinar elementum integer enim neque volutpat ac tincidunt vitae semper quis. Gravida hendrerit lectus a molestie lorem ipsum dolor sit amet. Mauris sit amet massa vitae tortor condimentum lacinia. Blandit volutpat maecenas volutpat blandit aliquam. Massa eget egestas purus viverra accumsan in nisl nisi scelerisque. Imperdiet dui accumsan sit amet nulla facilisi morbi tempus iaculis.",
+          "type": "paragraph",
+        },
+        {
+          "alt": null,
+          "copyright": null,
+          "dimensions": {
+            "height": 1,
+            "width": 1,
+          },
+          "edit": {
+            "background": "transparent",
+            "x": 0,
+            "y": 0,
+            "zoom": 1,
+          },
+          "id": "26fe8d0985c",
+          "type": "image",
+          "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > new > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [],
+              "text": "Diam",
+              "type": "heading4",
+            },
+            {
+              "alt": null,
+              "copyright": null,
+              "dimensions": {
+                "height": 1,
+                "width": 1,
+              },
+              "edit": {
+                "background": "transparent",
+                "x": 0,
+                "y": 0,
+                "zoom": 1,
+              },
+              "id": "f7b961adcf1",
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [],
+            "text": "Eget magna fermentum iaculis eu non diam phasellus vestibulum lorem. Egestas maecenas pharetra convallis posuere morbi leo urna molestie at. Cras fermentum odio eu feugiat pretium. Neque aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet nulla malesuada. Fermentum posuere urna nec tincidunt praesent semper feugiat nibh. Eleifend donec pretium vulputate sapien.",
+            "type": "paragraph",
+          },
+          {
+            "alt": null,
+            "copyright": null,
+            "dimensions": {
+              "height": 1,
+              "width": 1,
+            },
+            "edit": {
+              "background": "transparent",
+              "x": 0,
+              "y": 0,
+              "zoom": 1,
+            },
+            "id": "f7b961adcf1",
+            "type": "image",
+            "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+          },
+        ],
+        "group": [
+          {
+            "field": [
+              {
+                "spans": [],
+                "text": "Quis Enim Lobortis",
+                "type": "heading2",
+              },
+              {
+                "alt": null,
+                "copyright": null,
+                "dimensions": {
+                  "height": 1,
+                  "width": 1,
+                },
+                "edit": {
+                  "background": "transparent",
+                  "x": 0,
+                  "y": 0,
+                  "zoom": 1,
+                },
+                "id": "f7b961adcf1",
+                "type": "image",
+                "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+              },
+            ],
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > new > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [],
+              "text": "Ultrices dui sapien eget mi proin sed libero enim sed. Diam ut venenatis tellus in metus vulputate eu scelerisque felis imperdiet. Sed nisi lacus sed viverra tellus in hac habitasse. Eget mi proin sed libero enim sed faucibus turpis. Pellentesque id nibh tortor id aliquet. Aliquam sem et tortor consequat id porta nibh venenatis cras sed felis.",
+              "type": "paragraph",
+            },
+            {
+              "alt": null,
+              "copyright": null,
+              "dimensions": {
+                "height": 1,
+                "width": 1,
+              },
+              "edit": {
+                "background": "transparent",
+                "x": 0,
+                "y": 0,
+                "zoom": 1,
+              },
+              "id": "54f4a69ff72",
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=2560&h=1440&fit=crop",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [],
+            "text": "Pharetra et ultrices neque ornare aenean euismod. Mauris sit amet massa vitae tortor condimentum lacinia quis vel eros donec ac.",
+            "type": "preformatted",
+          },
+          {
+            "alt": null,
+            "copyright": null,
+            "dimensions": {
+              "height": 1,
+              "width": 1,
+            },
+            "edit": {
+              "background": "transparent",
+              "x": 0,
+              "y": 0,
+              "zoom": 1,
+            },
+            "id": "54f4a69ff72",
+            "type": "image",
+            "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=2560&h=1440&fit=crop",
+          },
+        ],
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > new > static zone 1`] = `
+{
+  "field": [
+    {
+      "spans": [],
+      "text": "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis. Tincidunt praesent semper feugiat nibh sed pulvinar proin gravida hendrerit lectus a.",
+      "type": "paragraph",
+    },
+    {
+      "alt": null,
+      "copyright": null,
+      "dimensions": {
+        "height": 1,
+        "width": 1,
+      },
+      "edit": {
+        "background": "transparent",
+        "x": 0,
+        "y": 0,
+        "zoom": 1,
+      },
+      "id": "ab1d17b04a9",
+      "type": "image",
+      "url": "https://images.unsplash.com/photo-1553531384-397c80973a0b?w=4335&h=6502&fit=crop",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > newLinkTo > group 1`] = `
+{
+  "group": [
+    {
+      "field": [
+        {
+          "spans": [],
+          "text": "Pulvinar elementum integer enim neque volutpat ac tincidunt vitae semper quis. Gravida hendrerit lectus a molestie lorem ipsum dolor sit amet. Mauris sit amet massa vitae tortor condimentum lacinia. Blandit volutpat maecenas volutpat blandit aliquam. Massa eget egestas purus viverra accumsan in nisl nisi scelerisque. Imperdiet dui accumsan sit amet nulla facilisi morbi tempus iaculis.",
+          "type": "paragraph",
+        },
+        {
+          "alt": null,
+          "copyright": null,
+          "dimensions": {
+            "height": 1,
+            "width": 1,
+          },
+          "edit": {
+            "background": "transparent",
+            "x": 0,
+            "y": 0,
+            "zoom": 1,
+          },
+          "id": "26fe8d0985c",
+          "linkTo": {
+            "id": "other.id-existing",
+            "link_type": "Document",
+          },
+          "type": "image",
+          "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > newLinkTo > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [],
+              "text": "Diam",
+              "type": "heading4",
+            },
+            {
+              "alt": null,
+              "copyright": null,
+              "dimensions": {
+                "height": 1,
+                "width": 1,
+              },
+              "edit": {
+                "background": "transparent",
+                "x": 0,
+                "y": 0,
+                "zoom": 1,
+              },
+              "id": "f7b961adcf1",
+              "linkTo": {
+                "id": "other.id-existing",
+                "link_type": "Document",
+              },
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [],
+            "text": "Eget magna fermentum iaculis eu non diam phasellus vestibulum lorem. Egestas maecenas pharetra convallis posuere morbi leo urna molestie at. Cras fermentum odio eu feugiat pretium. Neque aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet nulla malesuada. Fermentum posuere urna nec tincidunt praesent semper feugiat nibh. Eleifend donec pretium vulputate sapien.",
+            "type": "paragraph",
+          },
+          {
+            "alt": null,
+            "copyright": null,
+            "dimensions": {
+              "height": 1,
+              "width": 1,
+            },
+            "edit": {
+              "background": "transparent",
+              "x": 0,
+              "y": 0,
+              "zoom": 1,
+            },
+            "id": "f7b961adcf1",
+            "linkTo": {
+              "id": "other.id-existing",
+              "link_type": "Document",
+            },
+            "type": "image",
+            "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+          },
+        ],
+        "group": [
+          {
+            "field": [
+              {
+                "spans": [],
+                "text": "Quis Enim Lobortis",
+                "type": "heading2",
+              },
+              {
+                "alt": null,
+                "copyright": null,
+                "dimensions": {
+                  "height": 1,
+                  "width": 1,
+                },
+                "edit": {
+                  "background": "transparent",
+                  "x": 0,
+                  "y": 0,
+                  "zoom": 1,
+                },
+                "id": "f7b961adcf1",
+                "linkTo": {
+                  "id": "other.id-existing",
+                  "link_type": "Document",
+                },
+                "type": "image",
+                "url": "https://images.unsplash.com/photo-1604537466608-109fa2f16c3b?w=4240&h=2832&fit=crop",
+              },
+            ],
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > newLinkTo > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": [
+            {
+              "spans": [],
+              "text": "Ultrices dui sapien eget mi proin sed libero enim sed. Diam ut venenatis tellus in metus vulputate eu scelerisque felis imperdiet. Sed nisi lacus sed viverra tellus in hac habitasse. Eget mi proin sed libero enim sed faucibus turpis. Pellentesque id nibh tortor id aliquet. Aliquam sem et tortor consequat id porta nibh venenatis cras sed felis.",
+              "type": "paragraph",
+            },
+            {
+              "alt": null,
+              "copyright": null,
+              "dimensions": {
+                "height": 1,
+                "width": 1,
+              },
+              "edit": {
+                "background": "transparent",
+                "x": 0,
+                "y": 0,
+                "zoom": 1,
+              },
+              "id": "54f4a69ff72",
+              "linkTo": {
+                "id": "other.id-existing",
+                "link_type": "Document",
+              },
+              "type": "image",
+              "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=2560&h=1440&fit=crop",
+            },
+          ],
+        },
+      ],
+      "primary": {
+        "field": [
+          {
+            "spans": [],
+            "text": "Pharetra et ultrices neque ornare aenean euismod. Mauris sit amet massa vitae tortor condimentum lacinia quis vel eros donec ac.",
+            "type": "preformatted",
+          },
+          {
+            "alt": null,
+            "copyright": null,
+            "dimensions": {
+              "height": 1,
+              "width": 1,
+            },
+            "edit": {
+              "background": "transparent",
+              "x": 0,
+              "y": 0,
+              "zoom": 1,
+            },
+            "id": "54f4a69ff72",
+            "linkTo": {
+              "id": "other.id-existing",
+              "link_type": "Document",
+            },
+            "type": "image",
+            "url": "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?w=2560&h=1440&fit=crop",
+          },
+        ],
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches rich text image nodes > newLinkTo > static zone 1`] = `
+{
+  "field": [
+    {
+      "spans": [],
+      "text": "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis. Tincidunt praesent semper feugiat nibh sed pulvinar proin gravida hendrerit lectus a.",
+      "type": "paragraph",
+    },
+    {
+      "alt": null,
+      "copyright": null,
+      "dimensions": {
+        "height": 1,
+        "width": 1,
+      },
+      "edit": {
+        "background": "transparent",
+        "x": 0,
+        "y": 0,
+        "zoom": 1,
+      },
+      "id": "ab1d17b04a9",
+      "linkTo": {
+        "id": "other.id-existing",
+        "link_type": "Document",
+      },
+      "type": "image",
+      "url": "https://images.unsplash.com/photo-1553531384-397c80973a0b?w=4335&h=6502&fit=crop",
+    },
+  ],
+}
+`;

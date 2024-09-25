@@ -13,7 +13,7 @@ it("returns all Releases", async (ctx) => {
 		ctx,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 	const res = await client.getReleases()
 
 	expect(res).toStrictEqual(

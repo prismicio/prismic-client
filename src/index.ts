@@ -16,7 +16,16 @@ import { filter } from "./filter"
 //=============================================================================
 
 // Primary Client API.
-export { createClient, Client } from "./createClient"
+export { createClient } from "./createClient"
+export { Client } from "./Client"
+
+// Write Client API.
+export { createWriteClient } from "./createWriteClient"
+export { WriteClient } from "./WriteClient"
+
+// Migration helper.
+export { createMigration } from "./createMigration"
+export { Migration } from "./Migration"
 
 // API endpoint helpers.
 export { getRepositoryEndpoint } from "./getRepositoryEndpoint"
@@ -41,21 +50,24 @@ export { filter, predicate }
 export * as cookie from "./cookie"
 
 // General types used to query content from Prismic. These are made public to allow users to better type their projects.
+export type { CreateClient } from "./createClient"
+export type { ClientConfig } from "./Client"
+export type { CreateWriteClient } from "./createWriteClient"
+export type { WriteClientConfig, MigrateReporterEvents } from "./WriteClient"
 export type {
 	AbortSignalLike,
-	ClientConfig,
-	CreateClient,
 	FetchLike,
 	HttpRequestLike,
 	RequestInitLike,
 	ResponseLike,
-} from "./createClient"
+} from "./BaseClient"
 export type {
 	BuildQueryURLArgs,
 	Ordering,
 	QueryParams,
 	Route,
 } from "./buildQueryURL"
+export type { CreateMigration } from "./createMigration"
 
 //=============================================================================
 // Helpers - Manipulate content from Prismic.
@@ -312,6 +324,22 @@ export type {
 	CustomTypeModelFieldForNestedGroup,
 	CustomTypeModelFieldForSlicePrimary,
 } from "./types/model/types"
+
+// Migrations - Types representing Prismic Migration API content values.
+export { PrismicMigrationDocument } from "./types/migration/Document"
+export type {
+	PendingPrismicDocument,
+	ExistingPrismicDocument,
+	InjectMigrationSpecificTypes,
+} from "./types/migration/Document"
+
+export { PrismicMigrationAsset } from "./types/migration/Asset"
+export type {
+	MigrationImage,
+	MigrationLinkToMedia,
+	MigrationRTImageNode,
+} from "./types/migration/Asset"
+export type { MigrationContentRelationship } from "./types/migration/ContentRelationship"
 
 // API - Types representing Prismic Rest API V2 responses.
 export type { Query } from "./types/api/query"

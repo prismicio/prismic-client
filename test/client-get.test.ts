@@ -62,7 +62,7 @@ testGetMethod("merges params and default params if provided", {
 it("uses cached repository metadata within the client's repository cache TTL", async (ctx) => {
 	const fetchSpy = vi.fn(fetch)
 
-	const client = createTestClient({ clientConfig: { fetch: fetchSpy } })
+	const client = createTestClient({ clientConfig: { fetch: fetchSpy }, ctx })
 
 	const repositoryResponse1 = ctx.mock.api.repository()
 	repositoryResponse1.refs = [ctx.mock.api.ref({ isMasterRef: true })]

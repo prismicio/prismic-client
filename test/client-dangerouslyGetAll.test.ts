@@ -138,7 +138,7 @@ it("throttles requests past first page", async (ctx) => {
 		queryDelay,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const startTime = Date.now()
 	await client.dangerouslyGetAll()
@@ -173,7 +173,7 @@ it("does not throttle single page queries", async (ctx) => {
 		queryDelay,
 	})
 
-	const client = createTestClient()
+	const client = createTestClient({ ctx })
 
 	const startTime = Date.now()
 	await client.dangerouslyGetAll()

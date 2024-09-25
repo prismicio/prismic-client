@@ -52,9 +52,9 @@ export const testConcurrentMethod = (
 			queryDelay: 10,
 		})
 
-		const client = createTestClient({ clientConfig: { fetch: fetchSpy } })
+		const client = createTestClient({ clientConfig: { fetch: fetchSpy }, ctx })
 
-		const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`
+		const graphqlURL = `https://${createRepositoryName(ctx)}.cdn.prismic.io/graphql`
 		const graphqlResponse = { foo: "bar" }
 		ctx.server.use(
 			rest.get(graphqlURL, (req, res, ctx) => {
