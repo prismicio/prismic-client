@@ -19,5 +19,6 @@ export interface CustomTypeModelContentRelationshipField<
 		customtypes?: readonly CustomTypeIDs[]
 		tags?: readonly Tags[]
 		allowText?: boolean
+		repeat?: boolean
 	}
 }
