@@ -262,6 +262,12 @@ export class Client<
 	#repositoryName: string | undefined
 
 	/**
+	 * Keep a list of all refs we retried so we know which refs not to retry
+	 * again. We should only retry once per ref.
+	 */
+	#retriedRefs = new Set<string>()
+
+	/**
 	 * The Prismic repository's name.
 	 */
 	set repositoryName(value: string) {
@@ -531,7 +537,36 @@ export class Client<
 	): Promise<Query<TDocument>> {
 		const url = await this.buildQueryURL(params)
 
-		return await this.fetch<Query<TDocument>>(url, params)
+		try {
+			return await this.fetch<Query<TDocument>>(url, params)
+		} catch (error) {
+			if (!(error instanceof RefNotFoundError)) {
+				throw error
+			}
+
+			const latestRef = error.message.match(/Master ref is: (?<ref>.*)$/)
+				?.groups?.ref
+			if (!latestRef) {
+				throw error
+			}
+
+			if (this.#retriedRefs.has(latestRef)) {
+				// We only allow retrying a ref once. We'll
+				// likely get the same response on future
+				// retries and don't want to get stuck in a
+				// loop.
+				throw error
+			}
+
+			this.#retriedRefs.add(latestRef)
+
+			const invalidRef = new URL(url).searchParams.get("ref")
+			console.warn(
+				`The ref (${invalidRef}) was invalid or expired. Now retrying with the latest master ref (${latestRef}). If you were previewing content, the response will not include draft content.`,
+			)
+
+			return await this.get({ ...params, ref: latestRef })
+		}
 	}
 
 	/**
