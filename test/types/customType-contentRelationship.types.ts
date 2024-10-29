@@ -97,6 +97,30 @@ expectType<prismic.CustomTypeModelContentRelationshipField<string, "foo">>({
 })
 
 /**
+ * Supports optional `allowText` property.
+ */
+expectType<prismic.CustomTypeModelContentRelationshipField<string, "foo">>({
+	type: prismic.CustomTypeModelFieldType.Link,
+	config: {
+		label: "string",
+		select: prismic.CustomTypeModelLinkSelectType.Document,
+		allowText: true,
+	},
+})
+
+/**
+ * Supports optional `repeat` value.
+ */
+expectType<prismic.CustomTypeModelContentRelationshipField<string, "foo">>({
+	type: prismic.CustomTypeModelFieldType.Link,
+	config: {
+		label: "string",
+		select: prismic.CustomTypeModelLinkSelectType.Document,
+		repeat: false,
+	},
+})
+
+/**
  * `@prismicio/types` extends `@prismicio/types-internal`
  */
 expectType<prismic.CustomTypeModelContentRelationshipField>(

@@ -41,7 +41,7 @@ expectType<prismic.CustomTypeModelLinkToMediaField>({
 })
 
 /**
- * Supports optional `text` property.
+ * Supports optional `allowText` property.
  */
 expectType<prismic.CustomTypeModelLinkToMediaField>({
 	type: prismic.CustomTypeModelFieldType.Link,
@@ -49,6 +49,18 @@ expectType<prismic.CustomTypeModelLinkToMediaField>({
 		label: "string",
 		select: prismic.CustomTypeModelLinkSelectType.Media,
 		allowText: true,
+	},
+})
+
+/**
+ * Supports optional `repeat` property.
+ */
+expectType<prismic.CustomTypeModelLinkToMediaField>({
+	type: prismic.CustomTypeModelFieldType.Link,
+	config: {
+		label: "string",
+		select: prismic.CustomTypeModelLinkSelectType.Media,
+		repeat: true,
 	},
 })
 

@@ -61,13 +61,24 @@ expectType<prismic.CustomTypeModelLinkField>({
 })
 
 /**
- * Supports optional `text` property.
+ * Supports optional `allowText` property.
  */
 expectType<prismic.CustomTypeModelLinkField>({
 	type: prismic.CustomTypeModelFieldType.Link,
 	config: {
 		label: "string",
 		allowText: true,
+	},
+})
+
+/**
+ * Supports optional `repeat` property.
+ */
+expectType<prismic.CustomTypeModelLinkField>({
+	type: prismic.CustomTypeModelFieldType.Link,
+	config: {
+		label: "string",
+		repeat: true,
 	},
 })
 
