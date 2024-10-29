@@ -140,17 +140,20 @@ export const asLink: {
 		return null as AsLinkReturnType<LinkResolverFunctionReturnType, Field>
 	}
 
-	// Converts document to link field if needed
-	const linkField =
-		// prettier-ignore
-		(
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore - Bug in TypeScript 4.9: https://github.com/microsoft/TypeScript/issues/51501
-			// TODO: Remove the `prettier-ignore` comment when this bug is fixed.
+	// If the link field is repeatable, then it returns the first link in
+	// the array. If not, then it converts document to link field if needed
+	let linkField: LinkField
+	if (Array.isArray(linkFieldOrDocument)) {
+		if (!linkFieldOrDocument[0]) {
+			return null as AsLinkReturnType<LinkResolverFunctionReturnType, Field>
+		}
+		linkField = linkFieldOrDocument[0]
+	} else {
+		linkField =
 			"link_type" in linkFieldOrDocument
 				? linkFieldOrDocument
 				: documentToLinkField(linkFieldOrDocument)
-		) as LinkField
+	}
 
 	// TODO: Remove when we remove support for deprecated tuple-style configuration.
 	const [configObjectOrLinkResolver] = configObjectOrTuple
