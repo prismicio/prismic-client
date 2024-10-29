@@ -1,8 +1,8 @@
 import type { AnyRegularField, FieldState } from "./types"
 
-import type { ContentRelationshipField } from "./contentRelationship"
+import type { SingleContentRelationshipField } from "./contentRelationship"
 import type { GroupField } from "./group"
-import type { LinkToMediaField } from "./linkToMedia"
+import type { SingleLinkToMediaField } from "./linkToMedia"
 import type { SliceZone } from "./sliceZone"
 
 /**
@@ -38,6 +38,52 @@ export interface FilledLinkToWebField {
 }
 
 /**
+ * A single link field value.
+ *
+ * @typeParam TypeEnum - Type API ID of the document.
+ * @typeParam LangEnum - Language API ID of the document.
+ * @typeParam DataInterface - Data fields for the document (filled in via
+ *   GraphQuery of `fetchLinks`).
+ * @typeParam State - State of the field which determines its shape.
+ */
+export type SingleLinkField<
+	TypeEnum = string,
+	LangEnum = string,
+	DataInterface extends
+		| Record<string, AnyRegularField | GroupField | SliceZone>
+		| unknown = unknown,
+	State extends FieldState = FieldState,
+> = State extends "empty"
+	? EmptyLinkField<typeof LinkType.Any>
+	:
+			| SingleContentRelationshipField<TypeEnum, LangEnum, DataInterface, State>
+			| FilledLinkToWebField
+			| SingleLinkToMediaField<State>
+
+/**
+ * A repeatable link field value.
+ *
+ * @typeParam TypeEnum - Type API ID of the document.
+ * @typeParam LangEnum - Language API ID of the document.
+ * @typeParam DataInterface - Data fields for the document (filled in via
+ *   GraphQuery of `fetchLinks`).
+ * @typeParam State - State of the field which determines its shape.
+ */
+export type RepeatableLinkFieldValue<
+	TypeEnum = string,
+	LangEnum = string,
+	DataInterface extends
+		| Record<string, AnyRegularField | GroupField | SliceZone>
+		| unknown = unknown,
+	State extends FieldState = FieldState,
+> = State extends "empty"
+	? []
+	: [
+			SingleLinkField<TypeEnum, LangEnum, DataInterface>,
+			...SingleLinkField<TypeEnum, LangEnum, DataInterface>[],
+		]
+
+/**
  * A link field.
  *
  * @typeParam TypeEnum - Type API ID of the document.
@@ -53,9 +99,6 @@ export type LinkField<
 		| Record<string, AnyRegularField | GroupField | SliceZone>
 		| unknown = unknown,
 	State extends FieldState = FieldState,
-> = State extends "empty"
-	? EmptyLinkField<typeof LinkType.Any>
-	:
-			| ContentRelationshipField<TypeEnum, LangEnum, DataInterface, State>
-			| FilledLinkToWebField
-			| LinkToMediaField<State>
+> =
+	| SingleLinkField<TypeEnum, LangEnum, DataInterface, State>
+	| RepeatableLinkFieldValue<TypeEnum, LangEnum, DataInterface, State>

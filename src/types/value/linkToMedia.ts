@@ -3,14 +3,33 @@ import type { FieldState } from "./types"
 import type { EmptyLinkField, LinkType } from "./link"
 
 /**
+ * A single link field value that points to media.
+ *
+ * @typeParam State - State of the field which determines its shape.
+ */
+export type SingleLinkToMediaField<State extends FieldState = FieldState> =
+	State extends "empty"
+		? EmptyLinkField<typeof LinkType.Media>
+		: FilledLinkToMediaField
+
+/**
+ * Repeatable link field values that point to media.
+ *
+ * @typeParam State - State of the field which determines its shape.
+ */
+export type RepeatableLinkToMediaField<State extends FieldState = FieldState> =
+	State extends "empty"
+		? []
+		: [SingleLinkToMediaField, ...SingleLinkToMediaField[]]
+
+/**
  * A link field that points to media.
  *
  * @typeParam State - State of the field which determines its shape.
  */
 export type LinkToMediaField<State extends FieldState = FieldState> =
-	State extends "empty"
-		? EmptyLinkField<typeof LinkType.Media>
-		: FilledLinkToMediaField
+	| SingleLinkToMediaField<State>
+	| RepeatableLinkToMediaField<State>
 
 /**
  * A link that points to media.
