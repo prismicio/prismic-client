@@ -15,6 +15,11 @@ type Attributes = Record<string, string | boolean | null | undefined>
 const formatAttributes = (node: RTAnyNode, attributes: Attributes): string => {
 	const _attributes = { ...attributes }
 
+	// Respect `ltr` and `rtl` direction
+	if ("direction" in node && node.direction === "rtl") {
+		_attributes.dir = node.direction
+	}
+
 	// Add label to attributes
 	if ("data" in node && "label" in node.data && node.data.label) {
 		_attributes.class = _attributes.class

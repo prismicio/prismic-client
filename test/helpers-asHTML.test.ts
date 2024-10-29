@@ -138,6 +138,17 @@ it("includes target attribute on links with a target value", () => {
 	)
 })
 
+it("includes `dir` attribute on `ltr` languages", () => {
+	const richTextFixtures = createRichTextFixtures()
+
+	expect(asHTML(richTextFixtures.ar, { linkResolver })).toMatchSnapshot()
+
+	// TODO: Remove when we remove support for deprecated tuple-style configuration.
+	expect(asHTML(richTextFixtures.ar, linkResolver)).toBe(
+		asHTML(richTextFixtures.ar, { linkResolver }),
+	)
+})
+
 it("returns null for nullish inputs", () => {
 	expect(asHTML(null)).toBeNull()
 	expect(asHTML(undefined)).toBeNull()
