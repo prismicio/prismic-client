@@ -36,14 +36,26 @@ expectType<typeof prismic.LinkType.Document>(
 /**
  * Filled state.
  */
-// Web link
+
+// Web link (non-repeatable)
 expectType<prismic.LinkField>({
 	link_type: prismic.LinkType.Web,
 	url: "string",
 	target: "string",
 	text: "string",
 })
-// Content relationship link
+
+// Web link (repeatable)
+expectType<prismic.LinkField>([
+	{
+		link_type: prismic.LinkType.Web,
+		url: "string",
+		target: "string",
+		text: "string",
+	},
+])
+
+// Content relationship link (non-repeatable)
 expectType<prismic.LinkField>({
 	link_type: prismic.LinkType.Document,
 	id: "string",
@@ -57,7 +69,25 @@ expectType<prismic.LinkField>({
 	data: undefined,
 	text: "string",
 })
-// Media link
+
+// Content relationship link (repeatable)
+expectType<prismic.LinkField>([
+	{
+		link_type: prismic.LinkType.Document,
+		id: "string",
+		uid: "string",
+		type: "string",
+		tags: ["string"],
+		lang: "string",
+		url: "string",
+		slug: "string",
+		isBroken: true,
+		data: undefined,
+		text: "string",
+	},
+])
+
+// Media link (non-repeatable)
 expectType<prismic.LinkField>({
 	link_type: prismic.LinkType.Media,
 	name: "string",
@@ -82,8 +112,31 @@ expectType<prismic.LinkField<string, string, never, "empty">>({
 	text: "string",
 })
 
+// Media link (repeatable)
+expectType<prismic.LinkField>([
+	{
+		link_type: prismic.LinkType.Media,
+		name: "string",
+		kind: "string",
+		url: "string",
+		size: "string",
+		height: "string",
+		width: "string",
+		text: "string",
+	},
+])
+expectType<prismic.LinkField<string, string, never, "filled">>([
+	{
+		link_type: prismic.LinkType.Web,
+		url: "string",
+		target: "string",
+		text: "string",
+	},
+])
+expectType<prismic.LinkField<string, string, never, "empty">>([])
+
 /**
- * Empty state.
+ * Empty state (non-repeatable).
  */
 expectType<prismic.LinkField>({
 	link_type: prismic.LinkType.Any,
@@ -121,7 +174,23 @@ expectType<prismic.LinkField<string, string, never, "filled">>(
 )
 
 /**
- * Empty state with text.
+ * Empty state (repeatable).
+ */
+expectType<prismic.LinkField>([
+	{
+		link_type: prismic.LinkType.Any,
+	},
+])
+expectType<prismic.LinkField<string, string, never, "empty">>([])
+expectType<prismic.LinkField<string, string, never, "empty">>([
+	// @ts-expect-error - Empty fields cannot contain a value.
+	{
+		link_type: prismic.LinkType.Web,
+	},
+])
+
+/**
+ * Empty state with text (non-repeatable).
  */
 expectType<prismic.LinkField<string, string, never, "empty">>({
 	link_type: prismic.LinkType.Web,
@@ -167,7 +236,36 @@ expectType<prismic.LinkField<string, string, never, "filled">>({
 })
 
 /**
- * Supports custom document type for document links.
+ * Empty state with text (repeatable).
+ */
+expectType<prismic.LinkField<string, string, never, "filled">>([
+	{
+		link_type: prismic.LinkType.Web,
+		text: "string",
+	},
+	{
+		link_type: prismic.LinkType.Document,
+		text: "string",
+	},
+	{
+		link_type: prismic.LinkType.Media,
+		text: "string",
+	},
+	{
+		link_type: prismic.LinkType.Any,
+		text: "string",
+	},
+])
+expectType<prismic.LinkField<string, string, never, "empty">>([
+	// @ts-expect-error - Empty fields cannot contain a value.
+	{
+		link_type: prismic.LinkType.Web,
+		text: "string",
+	},
+])
+
+/**
+ * Supports custom document type for document links (non-repeatable).
  */
 expectType<prismic.LinkField<"foo">>({
 	link_type: prismic.LinkType.Document,
@@ -186,7 +284,30 @@ expectType<prismic.LinkField<"foo">>({
 })
 
 /**
- * Supports custom document language for document links.
+ * Supports custom document type for document links (repeatable).
+ */
+expectType<prismic.LinkField<"foo">>([
+	{
+		link_type: prismic.LinkType.Document,
+		id: "string",
+		type: "foo",
+		tags: [],
+		lang: "string",
+	},
+])
+expectType<prismic.LinkField<"foo">>([
+	// @ts-expect-error - Document type must match the given type.
+	{
+		link_type: prismic.LinkType.Document,
+		id: "string",
+		type: "string",
+		tags: [],
+		lang: "string",
+	},
+])
+
+/**
+ * Supports custom document language for document links (non-repeatable).
  */
 expectType<prismic.LinkField<string, "fr-fr">>({
 	link_type: prismic.LinkType.Document,
@@ -205,7 +326,30 @@ expectType<prismic.LinkField<string, "fr-fr">>({
 })
 
 /**
- * Supports custom document data for document links.
+ * Supports custom document language for document links (repeatable).
+ */
+expectType<prismic.LinkField<string, "fr-fr">>([
+	{
+		link_type: prismic.LinkType.Document,
+		id: "string",
+		type: "string",
+		tags: [],
+		lang: "fr-fr",
+	},
+])
+expectType<prismic.LinkField<string, "fr-fr">>([
+	// @ts-expect-error - Document language must match the given type.
+	{
+		link_type: prismic.LinkType.Document,
+		id: "string",
+		type: "string",
+		tags: [],
+		lang: "string",
+	},
+])
+
+/**
+ * Supports custom document data for document links (non-repeatable).
  */
 expectType<prismic.LinkField<string, string, { foo: prismic.BooleanField }>>({
 	link_type: prismic.LinkType.Document,
@@ -219,3 +363,60 @@ expectType<prismic.LinkField<string, string, { foo: prismic.BooleanField }>>({
 		bar: false,
 	},
 })
+
+/**
+ * Supports custom document data for document links (repeatable).
+ */
+expectType<prismic.LinkField<string, string, { foo: prismic.BooleanField }>>([
+	{
+		link_type: prismic.LinkType.Document,
+		id: "string",
+		type: "string",
+		tags: [],
+		lang: "fr-fr",
+		data: {
+			foo: true,
+			// @ts-expect-error - Only given fields are valid.
+			bar: false,
+		},
+	},
+])
+
+/**
+ * Supports multiple link types (repeatable).
+ */
+expectType<prismic.LinkField>([
+	{
+		link_type: prismic.LinkType.Web,
+		url: "string",
+		target: "string",
+		text: "string",
+	},
+	{
+		link_type: prismic.LinkType.Document,
+		id: "string",
+		uid: "string",
+		type: "string",
+		tags: ["string"],
+		lang: "string",
+		url: "string",
+		slug: "string",
+		isBroken: true,
+		data: undefined,
+		text: "string",
+	},
+	{
+		link_type: prismic.LinkType.Media,
+		name: "string",
+		kind: "string",
+		url: "string",
+		size: "string",
+		height: "string",
+		width: "string",
+		text: "string",
+	},
+	{
+		link_type: prismic.LinkType.Web,
+		text: "string",
+	},
+])
