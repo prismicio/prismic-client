@@ -3,10 +3,9 @@ import { expect, it, vi } from "vitest"
 import { rest } from "msw"
 
 import { createTestClient } from "./createClient"
-import { getMasterRef } from "./getMasterRef"
 import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2"
 
-import * as prismic from "../../src"
+import type * as prismic from "../../src"
 
 type TestInvalidRefRetryArgs = {
 	run: (
@@ -15,74 +14,85 @@ type TestInvalidRefRetryArgs = {
 	) => Promise<unknown>
 }
 
-export const testInvalidRefRetry = (
-	description: string,
-	args: TestInvalidRefRetryArgs,
-): void => {
-	it.concurrent(description, async (ctx) => {
-		const client = createTestClient({ ctx })
+export const testInvalidRefRetry = (args: TestInvalidRefRetryArgs): void => {
+	it.concurrent(
+		"retries with the master ref when an invalid ref is used",
+		async (ctx) => {
+			const client = createTestClient({ ctx })
+			const badRef = ctx.mock.api.ref().ref
+			const masterRef = ctx.mock.api.ref().ref
+			const queryResponse = ctx.mock.api.query({
+				documents: [ctx.mock.value.document()],
+			})
 
-		const triedRefs: string[] = []
+			const triedRefs: (string | null)[] = []
 
-		const repositoryResponse = ctx.mock.api.repository()
-		repositoryResponse.refs = [ctx.mock.api.ref({ isMasterRef: true })]
-
-		const latestRef = ctx.mock.api.ref().ref
-
-		mockPrismicRestAPIV2({ ctx, repositoryResponse })
-
-		const queryEndpoint = new URL(
-			"documents/search",
-			`${client.documentAPIEndpoint}/`,
-		).toString()
-
-		ctx.server.use(
-			rest.get(queryEndpoint, (req, res, ctx) => {
-				const ref = req.url.searchParams.get("ref")
-				if (ref) {
-					triedRefs.push(ref)
-				}
-
-				if (triedRefs.length <= 1) {
-					return res(
-						ctx.status(404),
+			mockPrismicRestAPIV2({ ctx, queryResponse })
+			const endpoint = new URL(
+				"documents/search",
+				`${client.documentAPIEndpoint}/`,
+			).toString()
+			ctx.server.use(
+				rest.get(endpoint, (req) => {
+					triedRefs.push(req.url.searchParams.get("ref"))
+				}),
+				rest.get(endpoint, (_req, res, ctx) =>
+					res.once(
 						ctx.json({
 							type: "api_notfound_error",
-							message: `Ref not found. Ensure you have the correct ref and try again. Master ref is: ${latestRef}`,
+							message: `Master ref is: ${masterRef}`,
 						}),
-					)
-				}
-			}),
-		)
+						ctx.status(404),
+					),
+				),
+			)
 
-		const consoleWarnSpy = vi
-			.spyOn(console, "warn")
-			.mockImplementation(() => void 0)
+			const consoleWarnSpy = vi
+				.spyOn(console, "warn")
+				.mockImplementation(() => void 0)
+			await args.run(client, { ref: badRef })
+			consoleWarnSpy.mockRestore()
 
-		await args.run(client)
+			expect(triedRefs).toStrictEqual([badRef, masterRef])
+		},
+	)
 
-		expect(triedRefs).toStrictEqual([
-			getMasterRef(repositoryResponse),
-			latestRef,
-		])
+	it.concurrent(
+		"retries with the master ref when an expired ref is used",
+		async (ctx) => {
+			const client = createTestClient({ ctx })
+			const badRef = ctx.mock.api.ref().ref
+			const masterRef = ctx.mock.api.ref().ref
+			const queryResponse = ctx.mock.api.query({
+				documents: [ctx.mock.value.document()],
+			})
 
-		// Check that refs are not retried more than once.
-		ctx.server.use(
-			rest.get(queryEndpoint, (_req, res, ctx) => {
-				return res(
-					ctx.status(404),
-					ctx.json({
-						type: "api_notfound_error",
-						message: `Ref not found. Ensure you have the correct ref and try again. Master ref is: ${triedRefs[0]}`,
-					}),
-				)
-			}),
-		)
+			const triedRefs: (string | null)[] = []
 
-		await expect(async () => {
-			await args.run(client)
-		}).rejects.toThrow(prismic.RefNotFoundError)
+			mockPrismicRestAPIV2({ ctx, queryResponse })
+			const endpoint = new URL(
+				"documents/search",
+				`${client.documentAPIEndpoint}/`,
+			).toString()
+			ctx.server.use(
+				rest.get(endpoint, (req) => {
+					triedRefs.push(req.url.searchParams.get("ref"))
+				}),
+				rest.get(endpoint, (_req, res, ctx) =>
+					res.once(
+						ctx.json({ message: `Master ref is: ${masterRef}` }),
+						ctx.status(410),
+					),
+				),
+			)
 
-		consoleWarnSpy.mockRestore()
-	})
+			const consoleWarnSpy = vi
+				.spyOn(console, "warn")
+				.mockImplementation(() => void 0)
+			await args.run(client, { ref: badRef })
+			consoleWarnSpy.mockRestore()
+
+			expect(triedRefs).toStrictEqual([badRef, masterRef])
+		},
+	)
 }

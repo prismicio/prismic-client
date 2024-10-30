@@ -93,7 +93,7 @@ it("uses cached repository metadata within the client's repository cache TTL", a
 	)
 })
 
-testInvalidRefRetry("retries on expired refs", {
+testInvalidRefRetry({
 	run: (client, params) => client.get(params),
 })
 
