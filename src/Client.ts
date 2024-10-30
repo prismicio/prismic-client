@@ -74,9 +74,9 @@ export const GET_ALL_QUERY_DELAY = 500
 const DEFUALT_RETRY_AFTER_MS = 1000
 
 /**
- * The maximum number of attemps to retry a query with an invalid ref before
- * halting. We allow multiple attemps as each attemp may return a different ref.
- * Capping the number of attemps prevents infinite loops.
+ * The maximum number of attemps to retry a query with an invalid ref. We allow
+ * multiple attempts since each attempt may use a different (and possibly
+ * invalid) ref. Capping the number of attemps prevents infinite loops.
  */
 const MAX_INVALID_REF_RETRY_ATTEMPS = 3
 
