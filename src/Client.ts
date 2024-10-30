@@ -74,6 +74,13 @@ export const GET_ALL_QUERY_DELAY = 500
 const DEFUALT_RETRY_AFTER_MS = 1000
 
 /**
+ * The maximum number of attemps to retry a query with an invalid ref. We allow
+ * multiple attempts since each attempt may use a different (and possibly
+ * invalid) ref. Capping the number of attemps prevents infinite loops.
+ */
+const MAX_INVALID_REF_RETRY_ATTEMPS = 3
+
+/**
  * Extracts one or more Prismic document types that match a given Prismic
  * document type. If no matches are found, no extraction is performed and the
  * union of all provided Prismic document types are returned.
@@ -529,9 +536,9 @@ export class Client<
 	async get<TDocument extends TDocuments>(
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<Query<TDocument>> {
-		const url = await this.buildQueryURL(params)
+		const { data } = await this._get<TDocument>(params)
 
-		return await this.fetch<Query<TDocument>>(url, params)
+		return data
 	}
 
 	/**
@@ -546,8 +553,9 @@ export class Client<
 	 *
 	 * @typeParam TDocument - Type of the Prismic document returned.
 	 *
-	 * @param params - Parameters to filter, sort, and paginate results. @returns
-	 *   The first result of the query, if any.
+	 * @param params - Parameters to filter, sort, and paginate results.
+	 *
+	 * @returns The first result of the query, if any.
 	 */
 	async getFirst<TDocument extends TDocuments>(
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
@@ -556,10 +564,9 @@ export class Client<
 		if (!(params && params.page) && !params?.pageSize) {
 			actualParams.pageSize = this.defaultParams?.pageSize ?? 1
 		}
-		const url = await this.buildQueryURL(actualParams)
-		const result = await this.fetch<Query<TDocument>>(url, params)
+		const { data, url } = await this._get<TDocument>(actualParams)
 
-		const firstResult = result.results[0]
+		const firstResult = data.results[0]
 
 		if (firstResult) {
 			return firstResult
@@ -1676,6 +1683,66 @@ export class Client<
 		}
 
 		return findMasterRef(cachedRepository.refs).ref
+	}
+
+	/**
+	 * The private implementation of `this.get`. It returns the API response and
+	 * the URL used to make the request. The URL is sometimes used in the public
+	 * method to include in thrown errors.
+	 *
+	 * This method retries requests that throw `RefNotFoundError` or
+	 * `RefExpiredError`. It contains special logic to retry with the latest
+	 * master ref, provided in the API's error message.
+	 *
+	 * @typeParam TDocument - Type of Prismic documents returned.
+	 *
+	 * @param params - Parameters to filter, sort, and paginate results.
+	 *
+	 * @returns An object containing the paginated response containing the result
+	 *   of the query and the URL used to make the API request.
+	 */
+	private async _get<TDocument extends TDocuments>(
+		params?: Partial<BuildQueryURLArgs> & FetchParams,
+		attemptCount = 0,
+	): Promise<{ data: Query<TDocument>; url: string }> {
+		const url = await this.buildQueryURL(params)
+
+		try {
+			const data = await this.fetch<Query<TDocument>>(url, params)
+
+			return { data, url }
+		} catch (error) {
+			if (
+				!(
+					error instanceof RefNotFoundError || error instanceof RefExpiredError
+				) ||
+				attemptCount >= MAX_INVALID_REF_RETRY_ATTEMPS - 1
+			) {
+				throw error
+			}
+
+			// If no explicit ref is given (i.e. the master ref from
+			// /api/v2 is used), clear the cached repository value.
+			// Clearing the cached value prevents other methods from
+			// using a known-stale ref.
+			if (!params?.ref) {
+				this.cachedRepository = undefined
+			}
+
+			const masterRef = error.message.match(/Master ref is: (?<ref>.*)$/)
+				?.groups?.ref
+			if (!masterRef) {
+				throw error
+			}
+
+			const badRef = new URL(url).searchParams.get("ref")
+			const issue = error instanceof RefNotFoundError ? "invalid" : "expired"
+			console.warn(
+				`The ref (${badRef}) was ${issue}. Now retrying with the latest master ref (${masterRef}). If you were previewing content, the response will not include draft content.`,
+			)
+
+			return await this._get({ ...params, ref: masterRef }, attemptCount + 1)
+		}
 	}
 
 	/**

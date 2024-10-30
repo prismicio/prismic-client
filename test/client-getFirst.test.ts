@@ -8,6 +8,7 @@ import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
 import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod"
 import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
 import { testFetchOptions } from "./__testutils__/testFetchOptions"
+import { testInvalidRefRetry } from "./__testutils__/testInvalidRefRetry"
 
 import * as prismic from "../src"
 
@@ -95,6 +96,10 @@ it("throws if no documents were returned", async (ctx) => {
 })
 
 testFetchOptions("supports fetch options", {
+	run: (client, params) => client.getFirst(params),
+})
+
+testInvalidRefRetry({
 	run: (client, params) => client.getFirst(params),
 })
 

@@ -2,6 +2,7 @@ import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
 import { testGetAllMethod } from "./__testutils__/testAnyGetMethod"
 import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
 import { testFetchOptions } from "./__testutils__/testFetchOptions"
+import { testInvalidRefRetry } from "./__testutils__/testInvalidRefRetry"
 
 testGetAllMethod("returns all documents by UIDs from paginated response", {
 	run: (client) => client.getAllByUIDs("type", ["uid1", "uid2"]),
@@ -32,6 +33,11 @@ testGetAllMethod("includes params if provided", {
 })
 
 testFetchOptions("supports fetch options", {
+	run: (client, params) =>
+		client.getAllByUIDs("type", ["uid1", "uid2"], params),
+})
+
+testInvalidRefRetry({
 	run: (client, params) =>
 		client.getAllByUIDs("type", ["uid1", "uid2"], params),
 })
