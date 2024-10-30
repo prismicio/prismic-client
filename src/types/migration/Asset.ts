@@ -1,7 +1,10 @@
 import type { Asset } from "../api/asset/asset"
 import type { FilledImageFieldImage } from "../value/image"
 import type { EmptyLinkField } from "../value/link"
-import type { LinkToMediaField } from "../value/linkToMedia"
+import type {
+	LinkToMediaField,
+	SingleLinkToMediaField,
+} from "../value/linkToMedia"
 import { type RTImageNode } from "../value/richText"
 
 import type { InjectMigrationSpecificTypes } from "./Document"
@@ -72,10 +75,10 @@ export type MigrationImage =
  * A link to media field in a migration.
  */
 export type MigrationLinkToMedia = Pick<
-	LinkToMediaField<"filled">,
+	SingleLinkToMediaField<"filled">,
 	"link_type"
 > &
-	Partial<Pick<LinkToMediaField<"filled">, "text">> & {
+	Partial<Pick<SingleLinkToMediaField<"filled">, "text">> & {
 		/**
 		 * A reference to the migration asset used to resolve the link to media
 		 * field's value.
@@ -88,7 +91,7 @@ export type MigrationLinkToMedia = Pick<
  * with the migration API.
  */
 export type MigrationLinkToMediaField =
-	| Pick<LinkToMediaField<"filled">, "link_type" | "id" | "text">
+	| Pick<SingleLinkToMediaField<"filled">, "link_type" | "id" | "text">
 	| EmptyLinkField<"Media">
 
 /**

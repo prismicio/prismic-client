@@ -11,7 +11,7 @@ import type {
 } from "../types/migration/ContentRelationship"
 import { PrismicMigrationDocument } from "../types/migration/Document"
 import type { FilledImageFieldImage } from "../types/value/image"
-import type { LinkField } from "../types/value/link"
+import type { SingleLinkField } from "../types/value/link"
 import { LinkType } from "../types/value/link"
 import type { RTImageNode } from "../types/value/richText"
 import { RichTextNodeType } from "../types/value/richText"
@@ -78,7 +78,14 @@ export const resolveMigrationImage = (
 		image instanceof PrismicMigrationAsset ? { id: image } : image
 
 	const asset = migration._assets.get(master.config.id)?.asset
-	const maybeInitialField = master.originalField
+	let maybeInitialField
+	if (Array.isArray(master.originalField)) {
+		maybeInitialField = isFilled.link(master.originalField[0])
+			? master.originalField[0]
+			: undefined
+	} else {
+		maybeInitialField = master.originalField
+	}
 
 	if (asset) {
 		const parameters = (maybeInitialField?.url || asset.url).split("?")[1]
@@ -135,7 +142,7 @@ export const resolveMigrationRTImageNode = async (
 		const linkTo = (await resolveMigrationDocumentData(
 			rtImageNode.linkTo,
 			migration,
-		)) as LinkField
+		)) as SingleLinkField
 
 		return {
 			...image,
