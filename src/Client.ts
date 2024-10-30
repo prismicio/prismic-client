@@ -1721,6 +1721,14 @@ export class Client<
 				throw error
 			}
 
+			// If no explicit ref is given (i.e. the master ref from
+			// /api/v2 is used), clear the cached repository value.
+			// Clearing the cached value prevents other methods from
+			// using a known-stale ref.
+			if (!params?.ref) {
+				this.cachedRepository = undefined
+			}
+
 			const masterRef = error.message.match(/Master ref is: (?<ref>.*)$/)
 				?.groups?.ref
 			if (!masterRef) {
