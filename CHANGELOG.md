@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.11.1](https://github.com/prismicio/prismic-client/compare/v7.11.0...v7.11.1) (2024-10-30)
+
+
+### Bug Fixes
+
+* **helpers:** add missing `dir` attribute for right-to-left languages ([#357](https://github.com/prismicio/prismic-client/issues/357)) ([b607685](https://github.com/prismicio/prismic-client/commit/b607685f433e351ab93c52a1bf60ab0ca9099759))
+
+
+### Chore
+
+* **deps:** maintain dependencies ([9eb295e](https://github.com/prismicio/prismic-client/commit/9eb295e447f336635ab1810a9229639202c2f9f6))
+
 ## [7.11.0](https://github.com/prismicio/prismic-client/compare/v7.10.1...v7.11.0) (2024-09-25)
 
 ## [7.10.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.9.0...v7.10.0-alpha.0) (2024-09-20)
