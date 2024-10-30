@@ -262,12 +262,6 @@ export class Client<
 	#repositoryName: string | undefined
 
 	/**
-	 * Keep a list of all refs we retried so we know which refs not to retry
-	 * again. We should only retry once per ref.
-	 */
-	#retriedRefs = new Set<string>()
-
-	/**
 	 * The Prismic repository's name.
 	 */
 	set repositoryName(value: string) {
@@ -535,38 +529,9 @@ export class Client<
 	async get<TDocument extends TDocuments>(
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<Query<TDocument>> {
-		const url = await this.buildQueryURL(params)
+		const { data } = await this._get<TDocument>(params)
 
-		try {
-			return await this.fetch<Query<TDocument>>(url, params)
-		} catch (error) {
-			if (!(error instanceof RefNotFoundError)) {
-				throw error
-			}
-
-			const latestRef = error.message.match(/Master ref is: (?<ref>.*)$/)
-				?.groups?.ref
-			if (!latestRef) {
-				throw error
-			}
-
-			if (this.#retriedRefs.has(latestRef)) {
-				// We only allow retrying a ref once. We'll
-				// likely get the same response on future
-				// retries and don't want to get stuck in a
-				// loop.
-				throw error
-			}
-
-			this.#retriedRefs.add(latestRef)
-
-			const invalidRef = new URL(url).searchParams.get("ref")
-			console.warn(
-				`The ref (${invalidRef}) was invalid or expired. Now retrying with the latest master ref (${latestRef}). If you were previewing content, the response will not include draft content.`,
-			)
-
-			return await this.get({ ...params, ref: latestRef })
-		}
+		return data
 	}
 
 	/**
@@ -581,8 +546,9 @@ export class Client<
 	 *
 	 * @typeParam TDocument - Type of the Prismic document returned.
 	 *
-	 * @param params - Parameters to filter, sort, and paginate results. @returns
-	 *   The first result of the query, if any.
+	 * @param params - Parameters to filter, sort, and paginate results.
+	 *
+	 * @returns The first result of the query, if any.
 	 */
 	async getFirst<TDocument extends TDocuments>(
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
@@ -591,10 +557,9 @@ export class Client<
 		if (!(params && params.page) && !params?.pageSize) {
 			actualParams.pageSize = this.defaultParams?.pageSize ?? 1
 		}
-		const url = await this.buildQueryURL(actualParams)
-		const result = await this.fetch<Query<TDocument>>(url, params)
+		const { data, url } = await this._get<TDocument>(actualParams)
 
-		const firstResult = result.results[0]
+		const firstResult = data.results[0]
 
 		if (firstResult) {
 			return firstResult
@@ -1711,6 +1676,54 @@ export class Client<
 		}
 
 		return findMasterRef(cachedRepository.refs).ref
+	}
+
+	/**
+	 * The private implementation of `this.get`. It returns the API response and
+	 * the URL used to make the request. The URL is sometimes used in the public
+	 * method to include in thrown errors.
+	 *
+	 * This method retries requests that throw `RefNotFoundError` or
+	 * `RefExpiredError`. It contains special logic to retry with the latest
+	 * master ref, provided in the API's error message.
+	 *
+	 * @typeParam TDocument - Type of Prismic documents returned.
+	 *
+	 * @param params - Parameters to filter, sort, and paginate results.
+	 *
+	 * @returns An object containing the paginated response containing the result
+	 *   of the query and the URL used to make the API request.
+	 */
+	private async _get<TDocument extends TDocuments>(
+		params?: Partial<BuildQueryURLArgs> & FetchParams,
+	): Promise<{ data: Query<TDocument>; url: string }> {
+		const url = await this.buildQueryURL(params)
+
+		try {
+			const data = await this.fetch<Query<TDocument>>(url, params)
+
+			return { data, url }
+		} catch (error) {
+			if (
+				!(error instanceof RefNotFoundError || error instanceof RefExpiredError)
+			) {
+				throw error
+			}
+
+			const masterRef = error.message.match(/Master ref is: (?<ref>.*)$/)
+				?.groups?.ref
+			if (!masterRef) {
+				throw error
+			}
+
+			const badRef = new URL(url).searchParams.get("ref")
+			const issue = error instanceof RefNotFoundError ? "invalid" : "expired"
+			console.warn(
+				`The ref (${badRef}) was ${issue}. Now retrying with the latest master ref (${masterRef}). If you were previewing content, the response will not include draft content.`,
+			)
+
+			return await this._get({ ...params, ref: masterRef })
+		}
 	}
 
 	/**
