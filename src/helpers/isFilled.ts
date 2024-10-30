@@ -100,7 +100,8 @@ export const image = imageThumbnail as <
 ) => field is ImageField<ThumbnailNames, "filled">
 
 /**
- * Determines if a link field is filled.
+ * Determines if a link field is filled. If the field is repeatable, it checks
+ * if the link array contains at least one item
  *
  * @param field - Link field to check.
  *
@@ -115,6 +116,10 @@ export const link = <
 >(
 	field: LinkField<TypeEnum, LangEnum, DataInterface> | null | undefined,
 ): field is LinkField<TypeEnum, LangEnum, DataInterface, "filled"> => {
+	if (Array.isArray(field)) {
+		return isNonNullish(field) && isNonEmptyArray(field)
+	}
+
 	return isNonNullish(field) && ("id" in field || "url" in field)
 }
 

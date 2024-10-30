@@ -207,6 +207,7 @@ export type {
 export type {
 	LinkToMediaField,
 	FilledLinkToMediaField,
+	SingleLinkToMediaField,
 } from "./types/value/linkToMedia"
 
 export type {

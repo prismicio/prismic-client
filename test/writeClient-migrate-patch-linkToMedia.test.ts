@@ -4,6 +4,7 @@ import type {
 	InjectMigrationSpecificTypes,
 	LinkToMediaField,
 	RichTextField,
+	SingleLinkToMediaField,
 } from "../src"
 import { LinkType, RichTextNodeType } from "../src"
 import type { Asset } from "../src/types/api/asset/asset"
@@ -12,7 +13,7 @@ import type { MigrationLinkToMedia } from "../src/types/migration/Asset"
 const assetToLinkToMedia = (
 	asset: Asset,
 	text?: string,
-): LinkToMediaField<"filled"> => {
+): SingleLinkToMediaField<"filled"> => {
 	return {
 		id: asset.id,
 		link_type: LinkType.Media,
