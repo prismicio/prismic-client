@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: [16, 18, 20, 22]
+        node: [18, 20, 22]
 
     steps:
       - name: Set up Node
@@ -39,7 +39,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        node: [16, 18, 20, 22]
+        node: [18, 20, 22]
 
     steps:
       - name: Set up Node
@@ -80,7 +80,7 @@ jobs:
         node: [22]
         # Top 5 from https://majors.nullvoxpopuli.com/q?minors=on&packages=typescript
         # We cannot test 4.9 because it's error throwing is slightly different from v5.
-        typescript: ["5.2", "5.3", "5.4", "5.5"]
+        typescript: ["5.2", "5.3", "5.4", "5.5", "5.6"]
 
     steps:
       - name: Set up Node
