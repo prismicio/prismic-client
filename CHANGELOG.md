@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.12.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.9.0-alpha.2...v7.12.0-alpha.0) (2024-10-30)
+
+
+### Features
+
+* add `createMigration` and `createWriteClient` ([#350](https://github.com/prismicio/prismic-client/issues/350)) ([7dc2950](https://github.com/prismicio/prismic-client/commit/7dc2950e25e7f8db706522175974b8aee36d170e))
+* add client internal query params ([#349](https://github.com/prismicio/prismic-client/issues/349)) ([938d711](https://github.com/prismicio/prismic-client/commit/938d711845e4a51088a8f0e6374d27459f469315))
+* support repeatable link values ([f0f46c8](https://github.com/prismicio/prismic-client/commit/f0f46c8734ff18ad37d123b65d573c5dc35d60ee))
+* support repeatable links in helpers ([a683942](https://github.com/prismicio/prismic-client/commit/a683942963a66f4dfcf4a0ba3e94b34f05062a04))
+* support repeatable links in migration ([f6fcf11](https://github.com/prismicio/prismic-client/commit/f6fcf1192b54ba619cbecf5aecb1d13925a79751))
+* support repeatable links in models ([00f8524](https://github.com/prismicio/prismic-client/commit/00f8524d3df5034e263f74c884a9d78627a37dce))
+
+
+### Bug Fixes
+
+* add missing `is_master` property on repository type ([0289698](https://github.com/prismicio/prismic-client/commit/0289698cc9ca7ed5b264f71f2a9f8d39e3710058))
+* ensure correct content type is attached to asset's blob ([80fe887](https://github.com/prismicio/prismic-client/commit/80fe887235e2eda594876f08db54cdb544e20b9f))
+
+
+### Chore
+
+* add type tests ([c1e25ec](https://github.com/prismicio/prismic-client/commit/c1e25ec394887e54d25c959e9561e9aa80c30f44))
+* bump types-internal dep ([6a5eb26](https://github.com/prismicio/prismic-client/commit/6a5eb26b1bd3cb26eb68150ce43c081630bcfbfd))
+* **deps:** maintain lock file ([601edd5](https://github.com/prismicio/prismic-client/commit/601edd55ed2594010da740f3f40250a7f517cf5c))
+* **release:** 7.10.0 ([f1e356b](https://github.com/prismicio/prismic-client/commit/f1e356bc2239654ea05f75fc7710d34ddf7f0633))
+* **release:** 7.10.0-alpha.0 ([c801c12](https://github.com/prismicio/prismic-client/commit/c801c12b3f2a1175530a17a0c45d414ef3412797))
+* **release:** 7.10.1 ([56bf0ba](https://github.com/prismicio/prismic-client/commit/56bf0ba4f140da52b893200611c8b4c8a4423a51))
+* **release:** 7.11.0 ([8739e02](https://github.com/prismicio/prismic-client/commit/8739e029731c0dd54b0973e05821f62b2fbc6a6b))
+* **release:** 7.8.1 ([57fd302](https://github.com/prismicio/prismic-client/commit/57fd3025e46ad0a7911396396cde04a9e5c6a00b))
+* **release:** 7.9.0 ([088f9c5](https://github.com/prismicio/prismic-client/commit/088f9c54f66b248d231d4823b806ef67db65239f))
+* **release:** 7.9.0-alpha.3 ([0d3fb98](https://github.com/prismicio/prismic-client/commit/0d3fb98743b79d3fc2a41dcb2fc6edfc67857478))
+
 ## [7.11.0](https://github.com/prismicio/prismic-client/compare/v7.10.1...v7.11.0) (2024-09-25)
 
 ## [7.10.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.9.0...v7.10.0-alpha.0) (2024-09-20)
