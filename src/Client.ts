@@ -74,6 +74,13 @@ export const GET_ALL_QUERY_DELAY = 500
 const DEFUALT_RETRY_AFTER_MS = 1000
 
 /**
+ * The maximum number of attemps to retry a query with an invalid ref before
+ * halting. We allow multiple attemps as each attemp may return a different ref.
+ * Capping the number of attemps prevents infinite loops.
+ */
+const MAX_INVALID_REF_RETRY_ATTEMPS = 3
+
+/**
  * Extracts one or more Prismic document types that match a given Prismic
  * document type. If no matches are found, no extraction is performed and the
  * union of all provided Prismic document types are returned.
@@ -1696,6 +1703,7 @@ export class Client<
 	 */
 	private async _get<TDocument extends TDocuments>(
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
+		attemptCount = 0,
 	): Promise<{ data: Query<TDocument>; url: string }> {
 		const url = await this.buildQueryURL(params)
 
@@ -1705,7 +1713,10 @@ export class Client<
 			return { data, url }
 		} catch (error) {
 			if (
-				!(error instanceof RefNotFoundError || error instanceof RefExpiredError)
+				!(
+					error instanceof RefNotFoundError || error instanceof RefExpiredError
+				) ||
+				attemptCount >= MAX_INVALID_REF_RETRY_ATTEMPS - 1
 			) {
 				throw error
 			}
@@ -1722,7 +1733,7 @@ export class Client<
 				`The ref (${badRef}) was ${issue}. Now retrying with the latest master ref (${masterRef}). If you were previewing content, the response will not include draft content.`,
 			)
 
-			return await this._get({ ...params, ref: masterRef })
+			return await this._get({ ...params, ref: masterRef }, attemptCount + 1)
 		}
 	}
 

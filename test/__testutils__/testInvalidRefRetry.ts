@@ -5,7 +5,7 @@ import { rest } from "msw"
 import { createTestClient } from "./createClient"
 import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2"
 
-import type * as prismic from "../../src"
+import * as prismic from "../../src"
 
 type TestInvalidRefRetryArgs = {
 	run: (
@@ -93,6 +93,48 @@ export const testInvalidRefRetry = (args: TestInvalidRefRetryArgs): void => {
 			consoleWarnSpy.mockRestore()
 
 			expect(triedRefs).toStrictEqual([badRef, masterRef])
+		},
+	)
+
+	it.concurrent(
+		"throws if the maximum number of retries when an invalid ref is used is reached",
+		async (ctx) => {
+			const client = createTestClient({ ctx })
+			const queryResponse = ctx.mock.api.query({
+				documents: [ctx.mock.value.document()],
+			})
+
+			const triedRefs: (string | null)[] = []
+
+			mockPrismicRestAPIV2({ ctx, queryResponse })
+			const endpoint = new URL(
+				"documents/search",
+				`${client.documentAPIEndpoint}/`,
+			).toString()
+			ctx.server.use(
+				rest.get(endpoint, (req) => {
+					triedRefs.push(req.url.searchParams.get("ref"))
+				}),
+				rest.get(endpoint, (_req, res, requestCtx) =>
+					res(
+						requestCtx.json({
+							type: "api_notfound_error",
+							message: `Master ref is: ${ctx.mock.api.ref().ref}`,
+						}),
+						requestCtx.status(404),
+					),
+				),
+			)
+
+			const consoleWarnSpy = vi
+				.spyOn(console, "warn")
+				.mockImplementation(() => void 0)
+			await expect(async () => {
+				await args.run(client)
+			}).rejects.toThrow(prismic.RefNotFoundError)
+			consoleWarnSpy.mockRestore()
+
+			expect(triedRefs.length).toBe(3)
 		},
 	)
 }
