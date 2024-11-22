@@ -2,6 +2,7 @@ import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
 import { testGetMethod } from "./__testutils__/testAnyGetMethod"
 import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
 import { testFetchOptions } from "./__testutils__/testFetchOptions"
+import { testInvalidRefRetry } from "./__testutils__/testInvalidRefRetry"
 
 testGetMethod("queries for documents by some tags", {
 	run: (client) => client.getBySomeTags(["foo", "bar"]),
@@ -26,6 +27,10 @@ testGetMethod("includes params if provided", {
 })
 
 testFetchOptions("supports fetch options", {
+	run: (client, params) => client.getBySomeTags(["foo", "bar"], params),
+})
+
+testInvalidRefRetry({
 	run: (client, params) => client.getBySomeTags(["foo", "bar"], params),
 })
 

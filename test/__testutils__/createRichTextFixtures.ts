@@ -1,3 +1,4 @@
+import arRichTextJSON from "../__fixtures__/arRichText.json"
 import cnRichTextJSON from "../__fixtures__/cnRichText.json"
 import emojiRichTextJSON from "../__fixtures__/emojiRichText.json"
 import enRichTextJSON from "../__fixtures__/enRichText.json"
@@ -12,11 +13,12 @@ const deepCloneJSON = <T>(json: T): T => {
 }
 
 export const createRichTextFixtures = (): Record<
-	"en" | "cn" | "ko" | "emoji" | "overlapped" | "xss",
+	"en" | "ar" | "cn" | "ko" | "emoji" | "overlapped" | "xss",
 	RichTextField
 > => {
 	return {
 		en: deepCloneJSON(enRichTextJSON) as RichTextField,
+		ar: deepCloneJSON(arRichTextJSON) as RichTextField,
 		cn: deepCloneJSON(cnRichTextJSON) as RichTextField,
 		ko: deepCloneJSON(koRichTextJSON) as RichTextField,
 		emoji: deepCloneJSON(emojiRichTextJSON) as RichTextField,

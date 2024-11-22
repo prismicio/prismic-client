@@ -138,6 +138,12 @@ it("includes target attribute on links with a target value", () => {
 	)
 })
 
+it("includes `dir` attribute on right-to-left languages", () => {
+	const richTextFixtures = createRichTextFixtures()
+
+	expect(asHTML(richTextFixtures.ar, { linkResolver })).toMatchSnapshot()
+})
+
 it("returns null for nullish inputs", () => {
 	expect(asHTML(null)).toBeNull()
 	expect(asHTML(undefined)).toBeNull()

@@ -7,6 +7,7 @@ import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
 import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
 import { testGetMethod } from "./__testutils__/testAnyGetMethod"
 import { testFetchOptions } from "./__testutils__/testFetchOptions"
+import { testInvalidRefRetry } from "./__testutils__/testInvalidRefRetry"
 
 testGetMethod("resolves a query", {
 	run: (client) => client.get(),
@@ -90,6 +91,10 @@ it("uses cached repository metadata within the client's repository cache TTL", a
 	expect(new URL(getRequests[1]).searchParams.get("ref")).toBe(
 		repositoryResponse1.refs[0].ref,
 	)
+})
+
+testInvalidRefRetry({
+	run: (client, params) => client.get(params),
 })
 
 testFetchOptions("supports fetch options", {
