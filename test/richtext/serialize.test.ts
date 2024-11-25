@@ -31,6 +31,8 @@ it(
 	serializeMacro("en"),
 )
 
+it("handles Arabic characters correctly", serializeMacro("ar"))
+
 it("handles Chinese characters correctly", serializeMacro("cn"))
 
 it("handles Korean characters correctly", serializeMacro("ko"))

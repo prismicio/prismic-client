@@ -2,6 +2,7 @@ import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
 import { testGetAllMethod } from "./__testutils__/testAnyGetMethod"
 import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
 import { testFetchOptions } from "./__testutils__/testFetchOptions"
+import { testInvalidRefRetry } from "./__testutils__/testInvalidRefRetry"
 
 testGetAllMethod("returns all documents by tag from paginated response", {
 	run: (client) => client.getAllByTag("tag"),
@@ -26,6 +27,10 @@ testGetAllMethod("includes params if provided", {
 })
 
 testFetchOptions("supports fetch options", {
+	run: (client, params) => client.getAllByTag("tag", params),
+})
+
+testInvalidRefRetry({
 	run: (client, params) => client.getAllByTag("tag", params),
 })
 

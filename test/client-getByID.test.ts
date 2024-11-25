@@ -2,6 +2,7 @@ import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
 import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod"
 import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
 import { testFetchOptions } from "./__testutils__/testFetchOptions"
+import { testInvalidRefRetry } from "./__testutils__/testInvalidRefRetry"
 
 testGetFirstMethod("queries for document by ID", {
 	run: (client) => client.getByID("id"),
@@ -26,6 +27,10 @@ testGetFirstMethod("includes params if provided", {
 })
 
 testFetchOptions("supports fetch options", {
+	run: (client, params) => client.getByID("id", params),
+})
+
+testInvalidRefRetry({
 	run: (client, params) => client.getByID("id", params),
 })
 
