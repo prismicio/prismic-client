@@ -11,6 +11,7 @@ import type { KeyTextField } from "./keyText"
 import type { LinkField } from "./link"
 import type { LinkToMediaField } from "./linkToMedia"
 import type { NumberField } from "./number"
+import { Repeatable } from "./repeatable"
 import type { RichTextField } from "./richText"
 import type { SelectField } from "./select"
 import type { TimestampField } from "./timestamp"
@@ -25,6 +26,11 @@ export type EmptyObjectField = Record<string, never>
  * Valid states for fields. Not all fields use this type (e.g. BooleanField).
  */
 export type FieldState = "empty" | "filled"
+
+/**
+ * Any field that can be repeated.
+ */
+export type AnyRepeatableField = LinkField
 
 /**
  * Any regular field that can be nested in a group-like field.
@@ -46,6 +52,7 @@ export type AnyRegularField =
 	| BooleanField
 	| GeoPointField
 	| IntegrationField
+	| Repeatable
 
 /**
  * Any field that can be used in a slice's primary section.
