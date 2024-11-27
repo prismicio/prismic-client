@@ -27,6 +27,11 @@ export type EmptyObjectField = Record<string, never>
 export type FieldState = "empty" | "filled"
 
 /**
+ * Repeatable fields.
+ */
+export type RepeatableFields = LinkField[]
+
+/**
  * Any regular field that can be nested in a group-like field.
  */
 export type AnyRegularField =
@@ -46,6 +51,7 @@ export type AnyRegularField =
 	| BooleanField
 	| GeoPointField
 	| IntegrationField
+	| RepeatableFields
 
 /**
  * Any field that can be used in a slice's primary section.
