@@ -17,7 +17,7 @@ import type { Slice } from "../types/value/slice"
 import type { SliceZone } from "../types/value/sliceZone"
 import type { TimestampField } from "../types/value/timestamp"
 import type { TitleField } from "../types/value/title"
-import type { AnyRegularField } from "../types/value/types"
+import type { AnyRegularField, Repeatable } from "../types/value/types"
 
 /**
  * Determines if a value is not nullish (i.e. not `null` or `undefined`). This
@@ -265,6 +265,20 @@ export const integrationField = isNonNullish as <
  */
 // TODO: Remove when we remove support for deprecated `integrationFields` export.
 export const integrationFields = integrationField
+
+/**
+ * Determines if a repeatable field has at least one item.
+ *
+ * @param repeatable - Repeatable to check.
+ *
+ * @returns `true` if `repeatable` contains at least one item, `false`
+ *   otherwise.
+ */
+export const repeatable = <T extends LinkField>(
+	repeatable: Repeatable<T> | null | undefined,
+): repeatable is Repeatable<T, "filled"> => {
+	return isNonNullish(repeatable) && isNonEmptyArray(repeatable)
+}
 
 /**
  * Determines if a Group has at least one item.
