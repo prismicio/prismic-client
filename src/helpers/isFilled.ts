@@ -274,7 +274,6 @@ export const integrationFields = integrationField
  * @returns `true` if `repeatable` contains at least one item, `false`
  *   otherwise.
  */
-
 export const repeatable = <T extends LinkField>(
 	repeatable: Repeatable<T> | null | undefined,
 ): repeatable is Repeatable<T, "filled"> => {
