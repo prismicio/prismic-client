@@ -14,6 +14,5 @@ export interface CustomTypeModelLinkToMediaField {
 		placeholder?: string
 		select: typeof CustomTypeModelLinkSelectType.Media
 		allowText?: boolean
-		repeat?: boolean
 	}
 }
