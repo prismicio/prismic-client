@@ -8,7 +8,7 @@ import type { GroupField } from "./group"
 import type { ImageField } from "./image"
 import type { IntegrationField } from "./integration"
 import type { KeyTextField } from "./keyText"
-import type { LinkField, RepeatableLinkField } from "./link"
+import type { LinkField } from "./link"
 import type { LinkToMediaField } from "./linkToMedia"
 import type { NumberField } from "./number"
 import type { RichTextField } from "./richText"
@@ -35,7 +35,7 @@ export type AnyRegularField =
 	| ImageField
 	| ContentRelationshipField
 	| LinkField
-	| RepeatableLinkField
+	| Repeatable<LinkField>
 	| LinkToMediaField
 	| EmbedField
 	| DateField
