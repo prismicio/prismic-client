@@ -267,7 +267,7 @@ export const integrationField = isNonNullish as <
 export const integrationFields = integrationField
 
 /**
- * Determines if a Repeatable has at least one item.
+ * Determines if a repeatable field has at least one item.
  *
  * @param repeatable - Repeatable to check.
  *
