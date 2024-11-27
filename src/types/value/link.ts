@@ -1,4 +1,4 @@
-import type { AnyRegularField, FieldState } from "./types"
+import type { AnyRegularField, FieldState, Repeatable } from "./types"
 
 import type { ContentRelationshipField } from "./contentRelationship"
 import type { GroupField } from "./group"
@@ -59,3 +59,9 @@ export type LinkField<
 			| ContentRelationshipField<TypeEnum, LangEnum, DataInterface, State>
 			| FilledLinkToWebField
 			| LinkToMediaField<State>
+
+/**
+ * A repeatable link field.
+ */
+
+export type RepeatableLinkField = Repeatable<LinkField>

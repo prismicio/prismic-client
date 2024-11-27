@@ -8,7 +8,7 @@ import type { GroupField } from "./group"
 import type { ImageField } from "./image"
 import type { IntegrationField } from "./integration"
 import type { KeyTextField } from "./keyText"
-import type { LinkField } from "./link"
+import type { LinkField, RepeatableLinkField } from "./link"
 import type { LinkToMediaField } from "./linkToMedia"
 import type { NumberField } from "./number"
 import type { Repeatable } from "./repeatable"
@@ -28,11 +28,6 @@ export type EmptyObjectField = Record<string, never>
 export type FieldState = "empty" | "filled"
 
 /**
- * Any field that can be repeated.
- */
-export type AnyRepeatableField = LinkField
-
-/**
  * Any regular field that can be nested in a group-like field.
  */
 export type AnyRegularField =
@@ -41,6 +36,7 @@ export type AnyRegularField =
 	| ImageField
 	| ContentRelationshipField
 	| LinkField
+	| RepeatableLinkField
 	| LinkToMediaField
 	| EmbedField
 	| DateField
@@ -52,12 +48,19 @@ export type AnyRegularField =
 	| BooleanField
 	| GeoPointField
 	| IntegrationField
-	| Repeatable
 
 /**
  * Any field that can be used in a slice's primary section.
  */
 export type AnySlicePrimaryField = GroupField | AnyRegularField
+
+/**
+ * A list of repeatable fields.
+ */
+export type Repeatable<
+	Field extends LinkField,
+	State extends FieldState = FieldState,
+> = State extends "empty" ? [] : [Field, ...Field[]]
 
 /**
  * Useful to flatten the type output to improve type hints shown in editors. And

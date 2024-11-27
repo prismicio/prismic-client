@@ -10,7 +10,6 @@ import type { KeyTextField } from "../types/value/keyText"
 import type { LinkField } from "../types/value/link"
 import type { LinkToMediaField } from "../types/value/linkToMedia"
 import type { NumberField } from "../types/value/number"
-import type { Repeatable } from "../types/value/repeatable"
 import type { RichTextField } from "../types/value/richText"
 import type { SelectField } from "../types/value/select"
 import type { SharedSlice } from "../types/value/sharedSlice"
@@ -18,7 +17,7 @@ import type { Slice } from "../types/value/slice"
 import type { SliceZone } from "../types/value/sliceZone"
 import type { TimestampField } from "../types/value/timestamp"
 import type { TitleField } from "../types/value/title"
-import type { AnyRegularField, AnyRepeatableField } from "../types/value/types"
+import type { AnyRegularField, Repeatable } from "../types/value/types"
 
 /**
  * Determines if a value is not nullish (i.e. not `null` or `undefined`). This
@@ -276,9 +275,9 @@ export const integrationFields = integrationField
  *   otherwise.
  */
 
-export const repeatable = (
-	repeatable: Repeatable | null | undefined,
-): repeatable is Repeatable<Array<AnyRepeatableField>, "filled"> => {
+export const repeatable = <T extends LinkField>(
+	repeatable: Repeatable<T> | null | undefined,
+): repeatable is Repeatable<T, "filled"> => {
 	return isNonNullish(repeatable) && isNonEmptyArray(repeatable)
 }
 
