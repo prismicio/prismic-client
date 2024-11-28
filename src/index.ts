@@ -246,6 +246,7 @@ export type {
 	FieldState,
 	AnyRegularField,
 	AnySlicePrimaryField,
+	Repeatable,
 } from "./types/value/types"
 
 // Models - Types representing Prismic content models.
