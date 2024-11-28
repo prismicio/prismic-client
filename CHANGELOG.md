@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.13.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.12.0...v7.13.0-alpha.0) (2024-11-28)
+
+
+### Features
+
+* support repeatable links in models ([00f8524](https://github.com/prismicio/prismic-client/commit/00f8524d3df5034e263f74c884a9d78627a37dce))
+
+
+### Chore
+
+* bump types-internal dep ([6a5eb26](https://github.com/prismicio/prismic-client/commit/6a5eb26b1bd3cb26eb68150ce43c081630bcfbfd))
+
 ## [7.12.0](https://github.com/prismicio/prismic-client/compare/v7.11.1...v7.12.0) (2024-10-30)
 
 
