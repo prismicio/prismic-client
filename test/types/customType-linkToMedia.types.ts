@@ -41,7 +41,7 @@ expectType<prismic.CustomTypeModelLinkToMediaField>({
 })
 
 /**
- * Supports optional `text` property.
+ * Supports optional `allowText` property.
  */
 expectType<prismic.CustomTypeModelLinkToMediaField>({
 	type: prismic.CustomTypeModelFieldType.Link,

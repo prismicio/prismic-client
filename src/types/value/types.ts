@@ -35,6 +35,7 @@ export type AnyRegularField =
 	| ImageField
 	| ContentRelationshipField
 	| LinkField
+	| Repeatable<LinkField>
 	| LinkToMediaField
 	| EmbedField
 	| DateField
@@ -51,6 +52,14 @@ export type AnyRegularField =
  * Any field that can be used in a slice's primary section.
  */
 export type AnySlicePrimaryField = GroupField | AnyRegularField
+
+/**
+ * A list of repeatable fields.
+ */
+export type Repeatable<
+	Field extends LinkField,
+	State extends FieldState = FieldState,
+> = State extends "empty" ? [] : [Field, ...Field[]]
 
 /**
  * Useful to flatten the type output to improve type hints shown in editors. And

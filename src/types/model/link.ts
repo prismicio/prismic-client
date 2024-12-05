@@ -15,6 +15,7 @@ export interface CustomTypeModelLinkField {
 			| (typeof CustomTypeModelLinkSelectType)[keyof typeof CustomTypeModelLinkSelectType]
 		allowText?: boolean
 		allowTargetBlank?: boolean
+		repeat?: boolean
 	}
 }
 
