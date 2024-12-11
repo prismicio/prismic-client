@@ -107,6 +107,7 @@ it("creates an asset from a link to media field", () => {
 	const migration = prismic.createMigration()
 
 	const link: prismic.FilledLinkToMediaField = {
+		key: "d2aeab81-27a6-4623-be8d-5a23149da921",
 		id: "foo",
 		url: "https://example.com/foo.jpg",
 		link_type: prismic.LinkType.Media,

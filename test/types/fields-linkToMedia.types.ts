@@ -33,6 +33,7 @@ expectType<prismic.LinkToMediaField>({
 	text: "string",
 })
 expectType<prismic.LinkToMediaField<"filled">>({
+	key: "string",
 	id: "string",
 	link_type: prismic.LinkType.Media,
 	name: "string",

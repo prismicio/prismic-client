@@ -61,7 +61,11 @@ describe.each<{
 	{
 		fieldType: "link to media",
 		getField: (mock) => {
-			const linkToMedia = mock.value.linkToMedia({ state: "filled" })
+			const linkToMedia = {
+				// TODO: Add mock support for link key.
+				...mock.value.linkToMedia({ state: "filled" }),
+				key: crypto.randomUUID(),
+			}
 
 			return {
 				id: linkToMedia.id,
@@ -144,7 +148,11 @@ describe.each<{
 		fieldType: "rich text (image's link to media)",
 		getField: (mock) => {
 			const image = mock.value.image({ state: "filled" })
-			const linkToMedia = mock.value.linkToMedia({ state: "filled" })
+			const linkToMedia = {
+				// TODO: Add mock support for link key.
+				...mock.value.linkToMedia({ state: "filled" }),
+				key: crypto.randomUUID(),
+			}
 			const richText: prismic.RichTextField<"filled"> = [
 				{
 					type: prismic.RichTextNodeType.image,

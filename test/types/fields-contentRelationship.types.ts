@@ -35,6 +35,7 @@ expectType<prismic.ContentRelationshipField>({
 	text: "string",
 })
 expectType<prismic.ContentRelationshipField<string, string, never, "filled">>({
+	key: "string",
 	link_type: prismic.LinkType.Document,
 	id: "string",
 	uid: "string",

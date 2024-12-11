@@ -14,6 +14,7 @@ const assetToLinkToMedia = (
 	text?: string,
 ): LinkToMediaField<"filled"> => {
 	return {
+		key: crypto.randomUUID(),
 		id: asset.id,
 		link_type: LinkType.Media,
 		name: asset.filename,

@@ -35,29 +35,35 @@ export async function resolveMigrationContentRelationship(
 		return resolveMigrationContentRelationship(await relation())
 	}
 
+	const field = {
+		key: crypto.randomUUID(),
+		link_type: LinkType.Document,
+	}
+
 	if (relation instanceof PrismicMigrationDocument) {
-		return relation.document.id
-			? { link_type: LinkType.Document, id: relation.document.id }
-			: { link_type: LinkType.Document }
+		const id = relation.document.id
+
+		return {
+			...field,
+			...(id && { id }),
+		}
 	}
 
 	if (relation) {
-		if (
-			isMigration.contentRelationship(relation.id) ||
-			typeof relation.id === "function"
-		) {
+		const id = relation.id
+		if (isMigration.contentRelationship(id) || typeof id === "function") {
 			return {
-				...(await resolveMigrationContentRelationship(relation.id)),
+				...(await resolveMigrationContentRelationship(id)),
 				// TODO: Remove when link text PR is merged
 				// @ts-expect-error - Future-proofing for link text
 				text: relation.text,
 			}
 		}
 
-		return { link_type: LinkType.Document, id: relation.id }
+		return { ...field, id }
 	}
 
-	return { link_type: LinkType.Document }
+	return field
 }
 
 /**
@@ -159,15 +165,13 @@ export const resolveMigrationLinkToMedia = (
 ): MigrationLinkToMediaField => {
 	const asset = migration._assets.get(linkToMedia.id.config.id)?.asset
 
-	if (asset) {
-		return {
-			id: asset.id,
-			link_type: LinkType.Media,
-			text: linkToMedia.text,
-		}
-	}
+	return {
+		key: crypto.randomUUID(),
+		link_type: LinkType.Media,
+		text: linkToMedia.text,
 
-	return { link_type: LinkType.Media }
+		...(asset && { id: asset.id }),
+	}
 }
 
 /**

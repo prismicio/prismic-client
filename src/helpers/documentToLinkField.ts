@@ -27,6 +27,7 @@ export const documentToLinkField = <
 	TDocument["data"]
 > => {
 	return {
+		key: crypto.randomUUID(),
 		link_type: LinkType.Document,
 		id: prismicDocument.id,
 		uid: prismicDocument.uid || undefined,

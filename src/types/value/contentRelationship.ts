@@ -34,6 +34,7 @@ export interface FilledContentRelationshipField<
 		| Record<string, AnyRegularField | GroupField | SliceZone>
 		| unknown = unknown,
 > {
+	key: string
 	link_type: typeof LinkType.Document
 	id: string
 	uid?: string

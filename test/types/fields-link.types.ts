@@ -69,6 +69,7 @@ expectType<prismic.LinkField>({
 	text: "string",
 })
 expectType<prismic.LinkField<string, string, never, "filled">>({
+	key: "string",
 	link_type: prismic.LinkType.Web,
 	url: "string",
 	target: "string",
