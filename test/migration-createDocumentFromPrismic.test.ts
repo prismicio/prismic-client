@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 
 import type { MockFactory } from "@prismicio/mock"
+import { v4 } from "uuid"
 
 import * as prismic from "../src"
 import type { MigrationAssetConfig } from "../src/types/migration/Asset"
@@ -64,7 +65,7 @@ describe.each<{
 			const linkToMedia = {
 				// TODO: Add mock support for link key.
 				...mock.value.linkToMedia({ state: "filled" }),
-				key: crypto.randomUUID(),
+				key: v4(),
 			}
 
 			return {
@@ -151,7 +152,7 @@ describe.each<{
 			const linkToMedia = {
 				// TODO: Add mock support for link key.
 				...mock.value.linkToMedia({ state: "filled" }),
-				key: crypto.randomUUID(),
+				key: v4(),
 			}
 			const richText: prismic.RichTextField<"filled"> = [
 				{

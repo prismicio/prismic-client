@@ -1,3 +1,5 @@
+import { v4 } from "uuid"
+
 import { testMigrationFieldPatching } from "./__testutils__/testMigrationFieldPatching"
 
 import type {
@@ -14,7 +16,7 @@ const assetToLinkToMedia = (
 	text?: string,
 ): LinkToMediaField<"filled"> => {
 	return {
-		key: crypto.randomUUID(),
+		key: v4(),
 		id: asset.id,
 		link_type: LinkType.Media,
 		name: asset.filename,

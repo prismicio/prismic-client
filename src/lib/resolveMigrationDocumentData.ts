@@ -1,3 +1,5 @@
+import { v4 } from "uuid"
+
 import type { MigrationLinkToMediaField } from "../types/migration/Asset"
 import {
 	type MigrationImage,
@@ -36,7 +38,7 @@ export async function resolveMigrationContentRelationship(
 	}
 
 	const field = {
-		key: crypto.randomUUID(),
+		key: v4(),
 		link_type: LinkType.Document,
 	}
 
@@ -166,7 +168,7 @@ export const resolveMigrationLinkToMedia = (
 	const asset = migration._assets.get(linkToMedia.id.config.id)?.asset
 
 	return {
-		key: crypto.randomUUID(),
+		key: v4(),
 		link_type: LinkType.Media,
 		text: linkToMedia.text,
 

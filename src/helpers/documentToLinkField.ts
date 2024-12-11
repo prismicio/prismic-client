@@ -1,3 +1,5 @@
+import { v4 } from "uuid"
+
 import type { FilledContentRelationshipField } from "../types/value/contentRelationship"
 import type { PrismicDocument } from "../types/value/document"
 import { LinkType } from "../types/value/link"
@@ -27,7 +29,7 @@ export const documentToLinkField = <
 	TDocument["data"]
 > => {
 	return {
-		key: crypto.randomUUID(),
+		key: v4(),
 		link_type: LinkType.Document,
 		id: prismicDocument.id,
 		uid: prismicDocument.uid || undefined,

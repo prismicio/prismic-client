@@ -79,7 +79,8 @@
 		"test": "npm run lint && npm run types && npm run unit && npm run build && npm run size"
 	},
 	"dependencies": {
-		"imgix-url-builder": "^0.0.5"
+		"imgix-url-builder": "^0.0.5",
+		"uuid": "^11.0.3"
 	},
 	"devDependencies": {
 		"@prismicio/mock": "^0.3.9",
