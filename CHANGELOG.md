@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.14.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.13.1...v7.14.0-alpha.0) (2024-12-11)
+
 ### [7.13.1](https://github.com/prismicio/prismic-client/compare/v7.12.0...v7.13.1) (2024-12-11)
 
 
