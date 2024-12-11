@@ -59,7 +59,12 @@ export type AnySlicePrimaryField = GroupField | AnyRegularField
 export type Repeatable<
 	Field extends LinkField,
 	State extends FieldState = FieldState,
-> = State extends "empty" ? [] : [Field, ...Field[]]
+> = State extends "empty" ? [] : [WithKey<Field>, ...WithKey<Field>[]]
+
+/**
+ * Wrapper to add a key to a field when inside a repeatable.
+ */
+type WithKey<Field extends LinkField> = Field & { key: string }
 
 /**
  * Useful to flatten the type output to improve type hints shown in editors. And
