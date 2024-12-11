@@ -31,6 +31,7 @@ expectType<prismic.LinkToMediaField>({
 	height: "string",
 	width: "string",
 	text: "string",
+	variant: "string",
 })
 expectType<prismic.LinkToMediaField<"filled">>({
 	id: "string",
@@ -42,6 +43,7 @@ expectType<prismic.LinkToMediaField<"filled">>({
 	height: "string",
 	width: "string",
 	text: "string",
+	variant: "string",
 })
 expectType<prismic.LinkToMediaField<"empty">>({
 	link_type: prismic.LinkType.Media,
@@ -54,6 +56,7 @@ expectType<prismic.LinkToMediaField<"empty">>({
 	height: "string",
 	width: "string",
 	text: "string",
+	variant: "string",
 })
 
 /**
@@ -73,20 +76,23 @@ expectType<prismic.LinkToMediaField<"filled">>(
 )
 
 /**
- * Empty state with text.
+ * Empty state with text and variant.
  */
 expectType<prismic.LinkToMediaField>({
 	link_type: prismic.LinkType.Media,
 	text: "string",
+	variant: "string",
 })
 expectType<prismic.LinkToMediaField<"empty">>({
 	link_type: prismic.LinkType.Media,
 	text: "string",
+	variant: "string",
 })
 expectType<prismic.LinkToMediaField<"filled">>(
 	// @ts-expect-error - Filled fields cannot contain an empty value.
 	{
 		link_type: prismic.LinkType.Media,
 		text: "string",
+		variant: "string",
 	},
 )
