@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.13.1](https://github.com/prismicio/prismic-client/compare/v7.12.0...v7.13.1) (2024-12-11)
+
+
+### Features
+
+* add support for repeatable links in models  ([#355](https://github.com/prismicio/prismic-client/issues/355)) ([ed120a8](https://github.com/prismicio/prismic-client/commit/ed120a8606b8de0e6c651dc859e350a732d76768)), closes [#360](https://github.com/prismicio/prismic-client/issues/360)
+
+
+### Bug Fixes
+
+* link inside a repeatable contain a key ([#363](https://github.com/prismicio/prismic-client/issues/363)) ([eb32f54](https://github.com/prismicio/prismic-client/commit/eb32f5465afa24c6794f1dd47923af6e44c1f7e3))
+
+
+### Chore
+
+* **release:** 7.13.0 ([a001f06](https://github.com/prismicio/prismic-client/commit/a001f06778c934fdceaf31c460664a14957315a2))
+
 ### [7.13.1-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.12.0...v7.13.1-alpha.0) (2024-12-11)
 
 
