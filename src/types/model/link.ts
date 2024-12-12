@@ -16,7 +16,7 @@ export interface CustomTypeModelLinkField {
 		allowText?: boolean
 		allowTargetBlank?: boolean
 		repeat?: boolean
-		variant?: string[]
+		variants?: string[]
 	}
 }
 
