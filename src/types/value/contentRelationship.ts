@@ -45,4 +45,5 @@ export interface FilledContentRelationshipField<
 	isBroken?: boolean
 	data?: DataInterface
 	text?: string
+	variant?: string
 }

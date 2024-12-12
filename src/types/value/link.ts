@@ -25,6 +25,7 @@ export type EmptyLinkField<
 > = {
 	link_type: Type | string
 	text?: string
+	variant?: string
 }
 
 /**
@@ -35,6 +36,7 @@ export interface FilledLinkToWebField {
 	url: string
 	target?: string
 	text?: string
+	variant?: string
 }
 
 /**
