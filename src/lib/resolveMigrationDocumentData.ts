@@ -48,9 +48,9 @@ export async function resolveMigrationContentRelationship(
 		) {
 			return {
 				...(await resolveMigrationContentRelationship(relation.id)),
-				// TODO: Remove when link text PR is merged
-				// @ts-expect-error - Future-proofing for link text
-				text: relation.text,
+				...("text" in relation && relation.text && { text: relation.text }),
+				...("variant" in relation &&
+					relation.variant && { variant: relation.variant }),
 			}
 		}
 
@@ -164,6 +164,7 @@ export const resolveMigrationLinkToMedia = (
 			id: asset.id,
 			link_type: LinkType.Media,
 			text: linkToMedia.text,
+			variant: linkToMedia.variant,
 		}
 	}
 

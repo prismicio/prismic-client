@@ -86,11 +86,10 @@ testMigrationFieldPatching<ContentRelationshipField>(
 			contentRelationship.id =
 				otherFromPrismicDocument.originalPrismicDocument!.id
 
-			// TODO: Remove when link text PR is merged
-			// @ts-expect-error - Future-proofing for link text
-			contentRelationship.text = "foo"
-
-			return contentRelationship
+			return {
+				...contentRelationship,
+				text: "foo",
+			}
 		},
 		broken: () => {
 			return {

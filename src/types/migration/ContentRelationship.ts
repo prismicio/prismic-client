@@ -14,7 +14,7 @@ export type MigrationContentRelationship<
 > =
 	| ValueOrThunk<TDocuments | PrismicMigrationDocument<TDocuments> | undefined>
 	| (Pick<FilledContentRelationshipField, "link_type"> &
-			Partial<Pick<FilledContentRelationshipField, "text">> & {
+			Partial<Pick<FilledContentRelationshipField, "text" | "variant">> & {
 				id: ValueOrThunk<
 					TDocuments | PrismicMigrationDocument<TDocuments> | undefined
 				>

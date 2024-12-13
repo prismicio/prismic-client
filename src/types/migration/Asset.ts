@@ -75,7 +75,7 @@ export type MigrationLinkToMedia = Pick<
 	LinkToMediaField<"filled">,
 	"link_type"
 > &
-	Partial<Pick<LinkToMediaField<"filled">, "text">> & {
+	Partial<Pick<LinkToMediaField<"filled">, "text" | "variant">> & {
 		/**
 		 * A reference to the migration asset used to resolve the link to media
 		 * field's value.
@@ -88,7 +88,7 @@ export type MigrationLinkToMedia = Pick<
  * with the migration API.
  */
 export type MigrationLinkToMediaField =
-	| Pick<LinkToMediaField<"filled">, "link_type" | "id" | "text">
+	| Pick<LinkToMediaField<"filled">, "link_type" | "id" | "text" | "variant">
 	| EmptyLinkField<"Media">
 
 /**
