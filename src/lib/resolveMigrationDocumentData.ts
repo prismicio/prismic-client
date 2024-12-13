@@ -48,13 +48,19 @@ export async function resolveMigrationContentRelationship(
 		) {
 			return {
 				...(await resolveMigrationContentRelationship(relation.id)),
-				// TODO: Remove when link text PR is merged
-				// @ts-expect-error - Future-proofing for link text
-				text: relation.text,
+				...("text" in relation && relation.text && { text: relation.text }),
+				...("variant" in relation &&
+					relation.variant && { variant: relation.variant }),
 			}
 		}
 
-		return { link_type: LinkType.Document, id: relation.id }
+		// This is only called when resolveMigrationContentRelationship recursively
+		// calls itself from the statement above and the resolved content relation
+		// is a Prismic document value.
+		return {
+			link_type: LinkType.Document,
+			id: relation.id,
+		}
 	}
 
 	return { link_type: LinkType.Document }
@@ -164,6 +170,7 @@ export const resolveMigrationLinkToMedia = (
 			id: asset.id,
 			link_type: LinkType.Media,
 			text: linkToMedia.text,
+			variant: linkToMedia.variant,
 		}
 	}
 

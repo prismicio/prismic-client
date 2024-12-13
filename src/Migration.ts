@@ -411,6 +411,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 					id: "_____broken_____",
 					isBroken: true,
 					text: input.text,
+					variant: input.variant,
 				}
 			}
 
@@ -418,6 +419,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 				link_type: LinkType.Document,
 				id: () => this._getByOriginalID(input.id),
 				text: input.text,
+				variant: input.variant,
 			}
 		}
 
@@ -426,6 +428,7 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 				link_type: LinkType.Media,
 				id: this.createAsset(input),
 				text: input.text,
+				variant: input.variant,
 			}
 		}
 
