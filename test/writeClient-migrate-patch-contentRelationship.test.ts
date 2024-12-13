@@ -25,6 +25,13 @@ testMigrationFieldPatching<
 			text: "foo",
 		}
 	},
+	existingLongFormWithVariant: ({ existingDocuments }) => {
+		return {
+			link_type: LinkType.Document,
+			id: existingDocuments[0],
+			variant: "Secondary",
+		}
+	},
 	otherCreate: ({ otherCreateDocument }) => otherCreateDocument,
 	lazyExisting: ({ existingDocuments }) => {
 		return () => existingDocuments[0]
@@ -89,6 +96,19 @@ testMigrationFieldPatching<ContentRelationshipField>(
 			return {
 				...contentRelationship,
 				text: "foo",
+			}
+		},
+		withVariant: ({ ctx, otherFromPrismicDocument }) => {
+			const contentRelationship = ctx.mock.value.link({
+				type: LinkType.Document,
+			})
+			// `migrationDocuments` contains documents from "another repository"
+			contentRelationship.id =
+				otherFromPrismicDocument.originalPrismicDocument!.id
+
+			return {
+				...contentRelationship,
+				variant: "Secondary",
 			}
 		},
 		broken: () => {

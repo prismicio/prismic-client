@@ -54,7 +54,13 @@ export async function resolveMigrationContentRelationship(
 			}
 		}
 
-		return { link_type: LinkType.Document, id: relation.id }
+		// This is only called when resolveMigrationContentRelationship recursively
+		// calls itself from the statement above and the resolved content relation
+		// is a Prismic document value.
+		return {
+			link_type: LinkType.Document,
+			id: relation.id,
+		}
 	}
 
 	return { link_type: LinkType.Document }
