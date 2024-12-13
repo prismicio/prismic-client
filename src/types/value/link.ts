@@ -16,6 +16,16 @@ export const LinkType = {
 } as const
 
 /**
+ * Additional optional data for a link field.
+ *
+ * @typeParam Link - Link field.
+ */
+export type WithLinkAdditionalData<Link> = Link & {
+	text?: string
+	variant?: string
+}
+
+/**
  * For link fields that haven't been filled
  *
  * @typeParam Type - The type of link.
@@ -24,20 +34,16 @@ export type EmptyLinkField<
 	Type extends (typeof LinkType)[keyof typeof LinkType] = typeof LinkType.Any,
 > = {
 	link_type: Type | string
-	text?: string
-	variant?: string
 }
 
 /**
  * Link that points to external website
  */
-export interface FilledLinkToWebField {
+export type FilledLinkToWebField = WithLinkAdditionalData<{
 	link_type: typeof LinkType.Web
 	url: string
 	target?: string
-	text?: string
-	variant?: string
-}
+}>
 
 /**
  * A link field.
@@ -56,8 +62,10 @@ export type LinkField<
 		| unknown = unknown,
 	State extends FieldState = FieldState,
 > = State extends "empty"
-	? EmptyLinkField<typeof LinkType.Any>
+	? WithLinkAdditionalData<EmptyLinkField<typeof LinkType.Any>>
 	:
-			| ContentRelationshipField<TypeEnum, LangEnum, DataInterface, State>
+			| WithLinkAdditionalData<
+					ContentRelationshipField<TypeEnum, LangEnum, DataInterface, State>
+			  >
 			| FilledLinkToWebField
 			| LinkToMediaField<State>

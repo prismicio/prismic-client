@@ -18,6 +18,5 @@ export interface CustomTypeModelContentRelationshipField<
 		select: typeof CustomTypeModelLinkSelectType.Document
 		customtypes?: readonly CustomTypeIDs[]
 		tags?: readonly Tags[]
-		allowText?: boolean
 	}
 }

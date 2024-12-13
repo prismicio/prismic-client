@@ -177,9 +177,9 @@ export type RTImageNode = {
 		background: string
 	}
 	linkTo?:
-		| FilledContentRelationshipField
-		| FilledLinkToWebField
-		| FilledLinkToMediaField
+		| Omit<FilledContentRelationshipField, "text" | "variant">
+		| Omit<FilledLinkToWebField, "text" | "variant">
+		| Omit<FilledLinkToMediaField, "text" | "variant">
 }
 
 /**
@@ -200,9 +200,9 @@ export type RTEmbedNode = {
 export interface RTLinkNode extends RTSpanNodeBase {
 	type: typeof RichTextNodeType.hyperlink
 	data:
-		| FilledContentRelationshipField
-		| FilledLinkToWebField
-		| FilledLinkToMediaField
+		| Omit<FilledContentRelationshipField, "text" | "variant">
+		| Omit<FilledLinkToWebField, "text" | "variant">
+		| Omit<FilledLinkToMediaField, "text" | "variant">
 }
 
 // Serialization related nodes

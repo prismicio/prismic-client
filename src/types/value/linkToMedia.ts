@@ -1,6 +1,6 @@
 import type { FieldState } from "./types"
 
-import type { EmptyLinkField, LinkType } from "./link"
+import type { EmptyLinkField, LinkType, WithLinkAdditionalData } from "./link"
 
 /**
  * A link field that points to media.
@@ -9,13 +9,13 @@ import type { EmptyLinkField, LinkType } from "./link"
  */
 export type LinkToMediaField<State extends FieldState = FieldState> =
 	State extends "empty"
-		? EmptyLinkField<typeof LinkType.Media>
+		? WithLinkAdditionalData<EmptyLinkField<typeof LinkType.Media>>
 		: FilledLinkToMediaField
 
 /**
  * A link that points to media.
  */
-export interface FilledLinkToMediaField {
+export type FilledLinkToMediaField = WithLinkAdditionalData<{
 	id: string
 	link_type: typeof LinkType.Media
 	name: string
@@ -24,6 +24,4 @@ export interface FilledLinkToMediaField {
 	size: string
 	height?: string | null
 	width?: string | null
-	text?: string
-	variant?: string
-}
+}>
