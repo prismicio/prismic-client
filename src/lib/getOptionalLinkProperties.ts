@@ -1,6 +1,4 @@
-import type { FilledContentRelationshipField } from "../types/value/contentRelationship"
 import type { OptionalLinkProperties } from "../types/value/link"
-import type { FilledLinkToMediaField } from "../types/value/linkToMedia"
 
 /**
  * Returns optional properties only available to link fields. Link fields can
@@ -8,12 +6,12 @@ import type { FilledLinkToMediaField } from "../types/value/linkToMedia"
  * requiring special treatment to extract link-specific properties.
  *
  * @param input - The content relationship or link to media field from which the
- *   link properties are extracted.
+ *   link properties will be extracted.
  *
  * @returns Optional link properties that `input` might have.
  */
 export const getOptionalLinkProperties = (
-	input: FilledContentRelationshipField | FilledLinkToMediaField,
+	input: OptionalLinkProperties,
 ): OptionalLinkProperties => {
 	const res: OptionalLinkProperties = {}
 

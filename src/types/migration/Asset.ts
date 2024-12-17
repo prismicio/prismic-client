@@ -73,14 +73,13 @@ export type MigrationImage =
 export type MigrationLinkToMedia = Pick<
 	LinkToMediaField<"filled">,
 	"link_type"
-> &
-	Partial<Pick<LinkToMediaField<"filled">, "text">> & {
-		/**
-		 * A reference to the migration asset used to resolve the link to media
-		 * field's value.
-		 */
-		id: PrismicMigrationAsset
-	}
+> & {
+	/**
+	 * A reference to the migration asset used to resolve the link to media
+	 * field's value.
+	 */
+	id: PrismicMigrationAsset
+}
 
 /**
  * The minimum amount of information needed to represent a link to media field

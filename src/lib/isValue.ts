@@ -4,6 +4,7 @@ import type { PrismicDocument } from "../types/value/document"
 import type { GroupField } from "../types/value/group"
 import type { ImageField } from "../types/value/image"
 import { LinkType } from "../types/value/link"
+import type { OptionalLinkProperties } from "../types/value/link"
 import type { FilledLinkToMediaField } from "../types/value/linkToMedia"
 import { type RTImageNode, RichTextNodeType } from "../types/value/richText"
 import type { SliceZone } from "../types/value/sliceZone"
@@ -23,6 +24,11 @@ type UnknownValue =
 /**
  * Checks if a value is a link to media field.
  *
+ * @remarks
+ * The return value includes `OptionalLinkProperties` because
+ * `FilledLinkToMediaField` may be a link field, not strictly a content
+ * relationship field.
+ *
  * @param value - Value to check.
  *
  * @returns `true` if `value` is a link to media field, `false` otherwise.
@@ -32,7 +38,7 @@ type UnknownValue =
  */
 export const filledLinkToMedia = (
 	value: UnknownValue,
-): value is FilledLinkToMediaField => {
+): value is FilledLinkToMediaField & OptionalLinkProperties => {
 	if (value && typeof value === "object" && !("version" in value)) {
 		if (
 			"link_type" in value &&
@@ -138,6 +144,11 @@ export const rtImageNode = (value: UnknownValue): value is RTImageNode => {
 /**
  * Checks if a value is a content relationship field.
  *
+ * @remarks
+ * The return value includes `OptionalLinkProperties` because
+ * `FilledContentRelationshipField` may be a link field, not strictly a content
+ * relationship field.
+ *
  * @param value - Value to check.
  *
  * @returns `true` if `value` is a content relationship, `false` otherwise.
@@ -147,7 +158,7 @@ export const rtImageNode = (value: UnknownValue): value is RTImageNode => {
  */
 export const filledContentRelationship = (
 	value: UnknownValue,
-): value is FilledContentRelationshipField => {
+): value is FilledContentRelationshipField & OptionalLinkProperties => {
 	if (value && typeof value === "object" && !("version" in value)) {
 		if (
 			"link_type" in value &&
