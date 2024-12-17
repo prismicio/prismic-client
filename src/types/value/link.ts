@@ -42,15 +42,15 @@ export type LinkField<
 /**
  * A link field that is not filled.
  *
- * @typeParam Type - Unused. An empty link field will always have a `link_type`
- *   of "Any".
+ * @typeParam _Unused - THIS PARAMETER IS NOT USED. If you are passing a type,
+ *   **please remove it**.
  */
 // This type needs `OptionalLinkProperties` because this type may be used on its own.
 export type EmptyLinkField<
 	_Unused extends
 		(typeof LinkType)[keyof typeof LinkType] = typeof LinkType.Any,
 > = {
-	link_type: typeof LinkType.Any
+	link_type: "Any"
 } & OptionalLinkProperties
 
 /**
@@ -58,7 +58,7 @@ export type EmptyLinkField<
  */
 // This type needs `OptionalLinkProperties` because this type may be used on its own.
 export type FilledLinkToWebField = {
-	link_type: typeof LinkType.Web
+	link_type: "Web"
 	url: string
 	target?: string
 } & OptionalLinkProperties

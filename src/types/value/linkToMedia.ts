@@ -1,7 +1,5 @@
 import type { FieldState } from "./types"
 
-import type { LinkType } from "./link"
-
 /**
  * A link field that points to media.
  *
@@ -11,7 +9,7 @@ export type LinkToMediaField<State extends FieldState = FieldState> =
 	State extends "empty" ? EmptyLinkToMediaField : FilledLinkToMediaField
 
 type EmptyLinkToMediaField = {
-	link_type: typeof LinkType.Any
+	link_type: "Any"
 	text?: string
 }
 

@@ -1,7 +1,6 @@
 import type { AnyRegularField, FieldState } from "./types"
 
 import type { GroupField } from "./group"
-import type { LinkType } from "./link"
 import type { SliceZone } from "./sliceZone"
 
 /**
@@ -25,7 +24,7 @@ export type ContentRelationshipField<
 	: FilledContentRelationshipField<TypeEnum, LangEnum, DataInterface>
 
 type EmptyContentRelationshipField = {
-	link_type: typeof LinkType.Any
+	link_type: "Any"
 }
 
 /**
