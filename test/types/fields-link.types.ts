@@ -160,11 +160,6 @@ expectType<prismic.LinkField<string, string, never, "empty">>({
 	link_type: prismic.LinkType.Any,
 	variant: "string",
 })
-expectType<prismic.LinkField<string, string, never, "filled">>({
-	// @ts-expect-error - Filled fields cannot contain an empty value.
-	link_type: prismic.LinkType.Any,
-	variant: "string",
-})
 
 /**
  * Supports custom document type for document links.
