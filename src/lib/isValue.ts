@@ -3,6 +3,7 @@ import type { FilledContentRelationshipField } from "../types/value/contentRelat
 import type { PrismicDocument } from "../types/value/document"
 import type { GroupField } from "../types/value/group"
 import type { ImageField } from "../types/value/image"
+import type { LinkField } from "../types/value/link"
 import { LinkType } from "../types/value/link"
 import type { FilledLinkToMediaField } from "../types/value/linkToMedia"
 import { type RTImageNode, RichTextNodeType } from "../types/value/richText"
@@ -33,23 +34,7 @@ type UnknownValue =
 export const filledLinkToMedia = (
 	value: UnknownValue,
 ): value is FilledLinkToMediaField => {
-	if (value && typeof value === "object" && !("version" in value)) {
-		if (
-			"link_type" in value &&
-			value.link_type === LinkType.Media &&
-			"id" in value &&
-			"name" in value &&
-			"kind" in value &&
-			"url" in value &&
-			"size" in value
-		) {
-			value
-
-			return true
-		}
-	}
-
-	return false
+	return filledLink(value) && value.link_type === LinkType.Media
 }
 
 /**
@@ -135,6 +120,18 @@ export const rtImageNode = (value: UnknownValue): value is RTImageNode => {
 	return false
 }
 
+export const filledLink = (
+	value: UnknownValue,
+): value is LinkField<string, string, unknown, "filled"> => {
+	return (
+		typeof value === "object" &&
+		value !== null &&
+		"link_type" in value &&
+		typeof value.link_type === "string" &&
+		value.link_type !== LinkType.Any
+	)
+}
+
 /**
  * Checks if a value is a content relationship field.
  *
@@ -148,20 +145,7 @@ export const rtImageNode = (value: UnknownValue): value is RTImageNode => {
 export const filledContentRelationship = (
 	value: UnknownValue,
 ): value is FilledContentRelationshipField => {
-	if (value && typeof value === "object" && !("version" in value)) {
-		if (
-			"link_type" in value &&
-			value.link_type === LinkType.Document &&
-			"id" in value &&
-			"type" in value &&
-			"tags" in value &&
-			"lang" in value
-		) {
-			return true
-		}
-	}
-
-	return false
+	return filledLink(value) && value.link_type === LinkType.Document
 }
 
 /**

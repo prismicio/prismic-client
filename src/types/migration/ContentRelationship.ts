@@ -1,6 +1,8 @@
-import type { FilledContentRelationshipField } from "../value/contentRelationship"
+import type {
+	ContentRelationshipField,
+	FilledContentRelationshipField,
+} from "../value/contentRelationship"
 import type { PrismicDocument } from "../value/document"
-import type { EmptyLinkField } from "../value/link"
 
 import type { PrismicMigrationDocument } from "./Document"
 
@@ -13,12 +15,11 @@ export type MigrationContentRelationship<
 	TDocuments extends PrismicDocument = PrismicDocument,
 > =
 	| ValueOrThunk<TDocuments | PrismicMigrationDocument<TDocuments> | undefined>
-	| (Pick<FilledContentRelationshipField, "link_type"> &
-			Partial<Pick<FilledContentRelationshipField, "text">> & {
-				id: ValueOrThunk<
-					TDocuments | PrismicMigrationDocument<TDocuments> | undefined
-				>
-			})
+	| (Pick<ContentRelationshipField, "link_type"> & {
+			id: ValueOrThunk<
+				TDocuments | PrismicMigrationDocument<TDocuments> | undefined
+			>
+	  })
 
 /**
  * The minimum amount of information needed to represent a content relationship
@@ -26,4 +27,4 @@ export type MigrationContentRelationship<
  */
 export type MigrationContentRelationshipField =
 	| Pick<FilledContentRelationshipField, "link_type" | "id">
-	| EmptyLinkField<"Document">
+	| ContentRelationshipField<string, string, unknown, "empty">

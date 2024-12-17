@@ -1,6 +1,5 @@
 import type { Asset } from "../api/asset/asset"
 import type { FilledImageFieldImage } from "../value/image"
-import type { EmptyLinkField } from "../value/link"
 import type { LinkToMediaField } from "../value/linkToMedia"
 import { type RTImageNode } from "../value/richText"
 
@@ -89,7 +88,7 @@ export type MigrationLinkToMedia = Pick<
  */
 export type MigrationLinkToMediaField =
 	| Pick<LinkToMediaField<"filled">, "link_type" | "id" | "text">
-	| EmptyLinkField<"Media">
+	| LinkToMediaField<"empty">
 
 /**
  * A rich text image node in a migration.

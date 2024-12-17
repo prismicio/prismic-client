@@ -3,7 +3,9 @@ import { expect, it } from "vitest"
 import { documentFixture } from "./__fixtures__/document"
 
 import type { GroupField, SliceZone } from "../src"
-import { isFilled } from "../src"
+import { LinkType, isFilled } from "../src"
+
+const emptyLink = { link_type: LinkType.Any }
 
 it("color", (ctx) => {
 	expect(isFilled.color(null)).toBe(false)
@@ -14,13 +16,7 @@ it("color", (ctx) => {
 it("content relationship", (ctx) => {
 	expect(isFilled.contentRelationship(null)).toBe(false)
 	expect(isFilled.contentRelationship(undefined)).toBe(false)
-	expect(
-		isFilled.contentRelationship(
-			ctx.mock.value.contentRelationship({
-				state: "empty",
-			}),
-		),
-	).toBe(false)
+	expect(isFilled.contentRelationship(emptyLink)).toBe(false)
 	expect(
 		isFilled.contentRelationship(
 			ctx.mock.value.contentRelationship({
@@ -104,16 +100,14 @@ it("key text", (ctx) => {
 it("link", (ctx) => {
 	expect(isFilled.link(null)).toBe(false)
 	expect(isFilled.link(undefined)).toBe(false)
-	expect(isFilled.link(ctx.mock.value.link({ state: "empty" }))).toBe(false)
+	expect(isFilled.link(emptyLink)).toBe(false)
 	expect(isFilled.link(ctx.mock.value.link({ state: "filled" }))).toBe(true)
 })
 
 it("link to media", (ctx) => {
 	expect(isFilled.linkToMedia(null)).toBe(false)
 	expect(isFilled.linkToMedia(undefined)).toBe(false)
-	expect(
-		isFilled.linkToMedia(ctx.mock.value.linkToMedia({ state: "empty" })),
-	).toBe(false)
+	expect(isFilled.linkToMedia(emptyLink)).toBe(false)
 	expect(
 		isFilled.linkToMedia(ctx.mock.value.linkToMedia({ state: "filled" })),
 	).toBe(true)
