@@ -1,5 +1,6 @@
 import type {
 	ContentRelationshipField,
+	EmptyContentRelationshipField,
 	FilledContentRelationshipField,
 } from "../value/contentRelationship"
 import type { PrismicDocument } from "../value/document"
@@ -27,4 +28,4 @@ export type MigrationContentRelationship<
  */
 export type MigrationContentRelationshipField =
 	| Pick<FilledContentRelationshipField, "link_type" | "id">
-	| ContentRelationshipField<string, string, unknown, "empty">
+	| EmptyContentRelationshipField

@@ -23,7 +23,7 @@ export type ContentRelationshipField<
 	? EmptyContentRelationshipField
 	: FilledContentRelationshipField<TypeEnum, LangEnum, DataInterface>
 
-type EmptyContentRelationshipField = {
+export type EmptyContentRelationshipField = {
 	link_type: "Any"
 }
 

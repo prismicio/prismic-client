@@ -31,12 +31,29 @@ export type LinkField<
 		| Record<string, AnyRegularField | GroupField | SliceZone>
 		| unknown = unknown,
 	State extends FieldState = FieldState,
-> = (State extends "empty"
+> = State extends "empty"
 	? EmptyLinkField
-	:
-			| FilledContentRelationshipField<TypeEnum, LangEnum, DataInterface>
-			| FilledLinkToMediaField
-			| FilledLinkToWebField) &
+	: FilledLinkField<TypeEnum, LangEnum, DataInterface>
+
+/**
+ * A link field that is filled.
+ *
+ * @typeParam TypeEnum - Type API ID of the document.
+ * @typeParam LangEnum - Language API ID of the document.
+ * @typeParam DataInterface - Data fields for the document (filled via the
+ *   `fetchLinks` or `graphQuery` query parameter).
+ */
+export type FilledLinkField<
+	TypeEnum = string,
+	LangEnum = string,
+	DataInterface extends
+		| Record<string, AnyRegularField | GroupField | SliceZone>
+		| unknown = unknown,
+> = (
+	| FilledContentRelationshipField<TypeEnum, LangEnum, DataInterface>
+	| FilledLinkToMediaField
+	| FilledLinkToWebField
+) &
 	OptionalLinkProperties
 
 /**
@@ -45,7 +62,6 @@ export type LinkField<
  * @typeParam _Unused - THIS PARAMETER IS NOT USED. If you are passing a type,
  *   **please remove it**.
  */
-// This type needs `OptionalLinkProperties` because this type may be used on its own.
 export type EmptyLinkField<
 	_Unused extends
 		(typeof LinkType)[keyof typeof LinkType] = typeof LinkType.Any,
@@ -56,7 +72,6 @@ export type EmptyLinkField<
 /**
  * A link field pointing to a relative or absolute URL.
  */
-// This type needs `OptionalLinkProperties` because this type may be used on its own.
 export type FilledLinkToWebField = {
 	link_type: "Web"
 	url: string
@@ -70,6 +85,8 @@ export type FilledLinkToWebField = {
  *
  * @internal
  */
+// Remember to update the `getOptionalLinkProperties()` function when updating
+// this type. The function should check for every property.
 export type OptionalLinkProperties = {
 	variant?: string
 	text?: string
