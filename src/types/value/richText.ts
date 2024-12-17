@@ -1,9 +1,7 @@
 import type { FieldState } from "./types"
 
-import type { FilledContentRelationshipField } from "./contentRelationship"
 import type { EmbedField } from "./embed"
-import type { FilledLinkToWebField } from "./link"
-import type { FilledLinkToMediaField } from "./linkToMedia"
+import type { FilledLinkField } from "./link"
 
 /**
  * Types enum for RichTextNodes
@@ -176,10 +174,7 @@ export type RTImageNode = {
 		zoom: number
 		background: string
 	}
-	linkTo?:
-		| FilledContentRelationshipField
-		| FilledLinkToWebField
-		| FilledLinkToMediaField
+	linkTo?: FilledLinkField
 }
 
 /**
@@ -199,10 +194,7 @@ export type RTEmbedNode = {
  */
 export interface RTLinkNode extends RTSpanNodeBase {
 	type: typeof RichTextNodeType.hyperlink
-	data:
-		| FilledContentRelationshipField
-		| FilledLinkToWebField
-		| FilledLinkToMediaField
+	data: FilledLinkField
 }
 
 // Serialization related nodes

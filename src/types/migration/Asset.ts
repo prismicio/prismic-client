@@ -1,6 +1,5 @@
 import type { Asset } from "../api/asset/asset"
 import type { FilledImageFieldImage } from "../value/image"
-import type { EmptyLinkField } from "../value/link"
 import type { LinkToMediaField } from "../value/linkToMedia"
 import { type RTImageNode } from "../value/richText"
 
@@ -73,15 +72,14 @@ export type MigrationImage =
  */
 export type MigrationLinkToMedia = Pick<
 	LinkToMediaField<"filled">,
-	"link_type"
-> &
-	Partial<Pick<LinkToMediaField<"filled">, "text">> & {
-		/**
-		 * A reference to the migration asset used to resolve the link to media
-		 * field's value.
-		 */
-		id: PrismicMigrationAsset
-	}
+	"link_type" | "text"
+> & {
+	/**
+	 * A reference to the migration asset used to resolve the link to media
+	 * field's value.
+	 */
+	id: PrismicMigrationAsset
+}
 
 /**
  * The minimum amount of information needed to represent a link to media field
@@ -89,7 +87,7 @@ export type MigrationLinkToMedia = Pick<
  */
 export type MigrationLinkToMediaField =
 	| Pick<LinkToMediaField<"filled">, "link_type" | "id" | "text">
-	| EmptyLinkField<"Media">
+	| LinkToMediaField<"empty">
 
 /**
  * A rich text image node in a migration.

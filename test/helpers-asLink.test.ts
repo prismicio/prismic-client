@@ -10,22 +10,6 @@ it("returns null for nullish inputs", () => {
 	expect(asLink(undefined, linkResolver)).toBeNull()
 })
 
-it("returns null when link to document field is empty", () => {
-	const field = {
-		link_type: LinkType.Document,
-	}
-
-	expect(asLink(field, linkResolver)).toBeNull()
-})
-
-it("returns null when link to media field is empty", () => {
-	const field = {
-		link_type: LinkType.Media,
-	}
-
-	expect(asLink(field, linkResolver)).toBeNull()
-})
-
 it("returns null when link field is empty", () => {
 	const field = {
 		link_type: LinkType.Any,
@@ -102,8 +86,11 @@ it("resolves a link to document field with route resolver", () => {
 
 it("returns null when given a document field and linkResolver is not provided ", () => {
 	const field = {
-		id: "XvoFFREAAM0WGBng",
 		link_type: LinkType.Document,
+		id: "XvoFFREAAM0WGBng",
+		lang: "fr-fr",
+		tags: [],
+		type: "foo",
 	}
 
 	expect(asLink(field)).toBeNull()
@@ -121,6 +108,7 @@ it("resolves a link to web field", () => {
 it("resolves a link to media field", () => {
 	const field = {
 		link_type: LinkType.Media,
+		id: "foo",
 		name: "test.jpg",
 		kind: "image",
 		url: "https://prismic.io",

@@ -1,4 +1,5 @@
 import * as is from "./lib/isValue"
+import { getOptionalLinkProperties } from "./lib/getOptionalLinkProperties"
 import { validateAssetMetadata } from "./lib/validateAssetMetadata"
 
 import type { Asset } from "./types/api/asset/asset"
@@ -404,28 +405,32 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 */
 	#migratePrismicDocumentData(input: unknown): unknown {
 		if (is.filledContentRelationship(input)) {
+			const optionalLinkProperties = getOptionalLinkProperties(input)
+
 			if (input.isBroken) {
 				return {
+					...optionalLinkProperties,
 					link_type: LinkType.Document,
 					// ID needs to be 16 characters long to be considered valid by the API
 					id: "_____broken_____",
 					isBroken: true,
-					text: input.text,
 				}
 			}
 
 			return {
+				...optionalLinkProperties,
 				link_type: LinkType.Document,
 				id: () => this._getByOriginalID(input.id),
-				text: input.text,
 			}
 		}
 
 		if (is.filledLinkToMedia(input)) {
+			const optionalLinkProperties = getOptionalLinkProperties(input)
+
 			return {
+				...optionalLinkProperties,
 				link_type: LinkType.Media,
 				id: this.createAsset(input),
-				text: input.text,
 			}
 		}
 

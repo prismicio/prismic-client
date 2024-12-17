@@ -698,7 +698,7 @@ exports[`patches content relationship fields > lazyOtherCreateMissingID > group 
   "group": [
     {
       "field": {
-        "link_type": "Document",
+        "link_type": "Any",
       },
     },
   ],
@@ -713,18 +713,18 @@ exports[`patches content relationship fields > lazyOtherCreateMissingID > shared
       "items": [
         {
           "field": {
-            "link_type": "Document",
+            "link_type": "Any",
           },
         },
       ],
       "primary": {
         "field": {
-          "link_type": "Document",
+          "link_type": "Any",
         },
         "group": [
           {
             "field": {
-              "link_type": "Document",
+              "link_type": "Any",
             },
           },
         ],
@@ -746,13 +746,13 @@ exports[`patches content relationship fields > lazyOtherCreateMissingID > slice 
       "items": [
         {
           "field": {
-            "link_type": "Document",
+            "link_type": "Any",
           },
         },
       ],
       "primary": {
         "field": {
-          "link_type": "Document",
+          "link_type": "Any",
         },
       },
       "slice_label": "Vel",
@@ -765,7 +765,7 @@ exports[`patches content relationship fields > lazyOtherCreateMissingID > slice 
 exports[`patches content relationship fields > lazyOtherCreateMissingID > static zone 1`] = `
 {
   "field": {
-    "link_type": "Document",
+    "link_type": "Any",
   },
 }
 `;

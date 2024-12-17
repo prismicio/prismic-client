@@ -299,7 +299,7 @@ exports[`patches link to media fields > empty > group 1`] = `
   "group": [
     {
       "field": {
-        "link_type": "Media",
+        "link_type": "Any",
       },
     },
   ],
@@ -314,18 +314,18 @@ exports[`patches link to media fields > empty > shared slice 1`] = `
       "items": [
         {
           "field": {
-            "link_type": "Media",
+            "link_type": "Any",
           },
         },
       ],
       "primary": {
         "field": {
-          "link_type": "Media",
+          "link_type": "Any",
         },
         "group": [
           {
             "field": {
-              "link_type": "Media",
+              "link_type": "Any",
             },
           },
         ],
@@ -347,13 +347,13 @@ exports[`patches link to media fields > empty > slice 1`] = `
       "items": [
         {
           "field": {
-            "link_type": "Media",
+            "link_type": "Any",
           },
         },
       ],
       "primary": {
         "field": {
-          "link_type": "Media",
+          "link_type": "Any",
         },
       },
       "slice_label": "Vel",
@@ -366,7 +366,7 @@ exports[`patches link to media fields > empty > slice 1`] = `
 exports[`patches link to media fields > empty > static zone 1`] = `
 {
   "field": {
-    "link_type": "Media",
+    "link_type": "Any",
   },
 }
 `;

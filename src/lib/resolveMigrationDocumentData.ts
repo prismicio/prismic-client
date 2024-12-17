@@ -10,8 +10,9 @@ import type {
 	MigrationContentRelationshipField,
 } from "../types/migration/ContentRelationship"
 import { PrismicMigrationDocument } from "../types/migration/Document"
+import type { MaybeLink } from "../types/migration/Link"
 import type { FilledImageFieldImage } from "../types/value/image"
-import type { LinkField } from "../types/value/link"
+import type { LinkField, OptionalLinkProperties } from "../types/value/link"
 import { LinkType } from "../types/value/link"
 import type { RTImageNode } from "../types/value/richText"
 import { RichTextNodeType } from "../types/value/richText"
@@ -20,6 +21,7 @@ import * as isFilled from "../helpers/isFilled"
 import type { Migration } from "../Migration"
 
 import * as isMigration from "./isMigrationValue"
+import { getOptionalLinkProperties } from "./getOptionalLinkProperties"
 
 /**
  * Resolves a migration content relationship to a content relationship field.
@@ -29,8 +31,8 @@ import * as isMigration from "./isMigrationValue"
  * @returns Resolved content relationship field.
  */
 export async function resolveMigrationContentRelationship(
-	relation: MigrationContentRelationship,
-): Promise<MigrationContentRelationshipField> {
+	relation: MaybeLink<MigrationContentRelationship>,
+): Promise<MigrationContentRelationshipField & OptionalLinkProperties> {
 	if (typeof relation === "function") {
 		return resolveMigrationContentRelationship(await relation())
 	}
@@ -38,26 +40,39 @@ export async function resolveMigrationContentRelationship(
 	if (relation instanceof PrismicMigrationDocument) {
 		return relation.document.id
 			? { link_type: LinkType.Document, id: relation.document.id }
-			: { link_type: LinkType.Document }
+			: { link_type: LinkType.Any }
 	}
+
+	const optionalLinkProperties =
+		relation && "link_type" in relation
+			? getOptionalLinkProperties(relation)
+			: undefined
 
 	if (relation) {
 		if (
 			isMigration.contentRelationship(relation.id) ||
-			typeof relation.id === "function"
+			typeof relation.id !== "string"
 		) {
 			return {
+				...optionalLinkProperties,
 				...(await resolveMigrationContentRelationship(relation.id)),
-				// TODO: Remove when link text PR is merged
-				// @ts-expect-error - Future-proofing for link text
-				text: relation.text,
 			}
 		}
 
-		return { link_type: LinkType.Document, id: relation.id }
+		// This is only called when resolveMigrationContentRelationship recursively
+		// calls itself from the statement above and the resolved content relation
+		// is a Prismic document value.
+		return {
+			...optionalLinkProperties,
+			link_type: LinkType.Document,
+			id: relation.id,
+		}
 	}
 
-	return { link_type: LinkType.Document }
+	return {
+		...optionalLinkProperties,
+		link_type: LinkType.Any,
+	}
 }
 
 /**
@@ -154,20 +169,24 @@ export const resolveMigrationRTImageNode = async (
  * @returns Resolved link to media field.
  */
 export const resolveMigrationLinkToMedia = (
-	linkToMedia: MigrationLinkToMedia,
+	linkToMedia: MaybeLink<MigrationLinkToMedia>,
 	migration: Migration,
 ): MigrationLinkToMediaField => {
 	const asset = migration._assets.get(linkToMedia.id.config.id)?.asset
+	const optionalLinkProperties = getOptionalLinkProperties(linkToMedia)
 
 	if (asset) {
 		return {
+			...optionalLinkProperties,
 			id: asset.id,
 			link_type: LinkType.Media,
-			text: linkToMedia.text,
 		}
 	}
 
-	return { link_type: LinkType.Media }
+	return {
+		...optionalLinkProperties,
+		link_type: LinkType.Any,
+	}
 }
 
 /**

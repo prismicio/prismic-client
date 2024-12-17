@@ -32,7 +32,6 @@ expectType<prismic.ContentRelationshipField>({
 	slug: "string",
 	isBroken: true,
 	data: undefined,
-	text: "string",
 })
 expectType<prismic.ContentRelationshipField<string, string, never, "filled">>({
 	link_type: prismic.LinkType.Document,
@@ -45,10 +44,9 @@ expectType<prismic.ContentRelationshipField<string, string, never, "filled">>({
 	slug: "string",
 	isBroken: true,
 	data: undefined,
-	text: "string",
 })
 expectType<prismic.ContentRelationshipField<string, string, never, "empty">>({
-	link_type: prismic.LinkType.Document,
+	link_type: prismic.LinkType.Any,
 	// @ts-expect-error - Empty fields cannot contain a filled value.
 	id: "string",
 	uid: "string",
@@ -59,43 +57,21 @@ expectType<prismic.ContentRelationshipField<string, string, never, "empty">>({
 	slug: "string",
 	isBroken: true,
 	data: undefined,
-	text: "string",
 })
 
 /**
  * Empty state.
  */
 expectType<prismic.ContentRelationshipField>({
-	link_type: prismic.LinkType.Document,
+	link_type: prismic.LinkType.Any,
 })
 expectType<prismic.ContentRelationshipField<string, string, never, "empty">>({
-	link_type: prismic.LinkType.Document,
+	link_type: prismic.LinkType.Any,
 })
-expectType<prismic.ContentRelationshipField<string, string, never, "filled">>(
+expectType<prismic.ContentRelationshipField<string, string, never, "filled">>({
 	// @ts-expect-error - Filled fields cannot contain an empty value.
-	{
-		link_type: prismic.LinkType.Document,
-	},
-)
-
-/**
- * Empty state with text.
- */
-expectType<prismic.ContentRelationshipField>({
-	link_type: prismic.LinkType.Document,
-	text: "string",
+	link_type: prismic.LinkType.Any,
 })
-expectType<prismic.ContentRelationshipField<string, string, never, "empty">>({
-	link_type: prismic.LinkType.Document,
-	text: "string",
-})
-expectType<prismic.ContentRelationshipField<string, string, never, "filled">>(
-	// @ts-expect-error - Filled fields cannot contain an empty value.
-	{
-		link_type: prismic.LinkType.Document,
-		text: "string",
-	},
-)
 
 /**
  * Supports custom document type.
