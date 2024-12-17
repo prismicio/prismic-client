@@ -1,5 +1,5 @@
 import * as is from "./lib/isValue"
-import { getOptionalLinkProperties } from "./lib/getLinkProperties"
+import { getOptionalLinkProperties } from "./lib/getOptionalLinkProperties"
 import { validateAssetMetadata } from "./lib/validateAssetMetadata"
 
 import type { Asset } from "./types/api/asset/asset"
