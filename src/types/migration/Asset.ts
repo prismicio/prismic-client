@@ -72,7 +72,7 @@ export type MigrationImage =
  */
 export type MigrationLinkToMedia = Pick<
 	LinkToMediaField<"filled">,
-	"link_type" | "text"
+	"link_type"
 > & {
 	/**
 	 * A reference to the migration asset used to resolve the link to media
