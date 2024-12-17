@@ -85,10 +85,6 @@ export const image = (value: UnknownValue): value is MigrationImage => {
 /**
  * Checks if a value is a migration link to media field.
  *
- * @remarks
- * `OptionalLinkProperties` is included because `MigrationContentRelationship`
- * may be a link field, not strictly a content relationship field.
- *
  * @param value - Value to check.
  *
  * @returns `true` if `value` is a migration link to media field, `false`
@@ -99,7 +95,7 @@ export const image = (value: UnknownValue): value is MigrationImage => {
  */
 export const linkToMedia = (
 	value: UnknownValue,
-): value is MigrationLinkToMedia & OptionalLinkProperties => {
+): value is MigrationLinkToMedia => {
 	return (
 		typeof value === "object" &&
 		value !== null &&
