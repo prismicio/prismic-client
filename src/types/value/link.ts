@@ -71,5 +71,6 @@ export type FilledLinkToWebField = {
  * @internal
  */
 export type OptionalLinkProperties = {
+	variant?: string
 	text?: string
 }
