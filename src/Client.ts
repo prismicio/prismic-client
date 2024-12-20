@@ -605,6 +605,7 @@ export class Client<
 	): Promise<TDocument[]> {
 		const { limit = Infinity, ...actualParams } = params
 		const resolvedParams = {
+			page: undefined,
 			...actualParams,
 			pageSize: Math.min(
 				limit,
@@ -619,7 +620,7 @@ export class Client<
 			(!latestResult || latestResult.next_page) &&
 			documents.length < limit
 		) {
-			const page = latestResult ? latestResult.page + 1 : undefined
+			const page = latestResult ? latestResult.page + 1 : resolvedParams.page
 
 			latestResult = await this.get<TDocument>({ ...resolvedParams, page })
 			documents.push(...latestResult.results)
