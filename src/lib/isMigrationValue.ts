@@ -12,6 +12,7 @@ import {
 import type { PrismicDocument } from "../types/value/document"
 import type { GroupField } from "../types/value/group"
 import { LinkType } from "../types/value/link"
+import type { OptionalLinkProperties } from "../types/value/link"
 import { RichTextNodeType } from "../types/value/richText"
 import type { SliceZone } from "../types/value/sliceZone"
 import type { AnyRegularField } from "../types/value/types"
@@ -32,6 +33,10 @@ type UnknownValue =
 /**
  * Checks if a value is a migration content relationship field.
  *
+ * @remarks
+ * `OptionalLinkProperties` is included because `MigrationContentRelationship`
+ * may be a link field, not strictly a content relationship field.
+ *
  * @param value - Value to check.
  *
  * @returns `true` if `value` is a migration content relationship field, `false`
@@ -42,7 +47,7 @@ type UnknownValue =
  */
 export const contentRelationship = (
 	value: UnknownValue,
-): value is MigrationContentRelationship => {
+): value is MigrationContentRelationship & OptionalLinkProperties => {
 	return (
 		value instanceof PrismicMigrationDocument ||
 		is.prismicDocument(value) ||
@@ -80,6 +85,10 @@ export const image = (value: UnknownValue): value is MigrationImage => {
 /**
  * Checks if a value is a migration link to media field.
  *
+ * - @remarks `OptionalLinkProperties` is included because
+ *   `MigrationContentRelationship` may be a link field, not strictly a content
+ *   relationship field.
+ *
  * @param value - Value to check.
  *
  * @returns `true` if `value` is a migration link to media field, `false`
@@ -90,7 +99,7 @@ export const image = (value: UnknownValue): value is MigrationImage => {
  */
 export const linkToMedia = (
 	value: UnknownValue,
-): value is MigrationLinkToMedia => {
+): value is MigrationLinkToMedia & OptionalLinkProperties => {
 	return (
 		typeof value === "object" &&
 		value !== null &&

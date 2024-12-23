@@ -1,32 +1,14 @@
 import { expect, it, vi } from "vitest"
 
-import { asLinkAttrs } from "../src"
+import { LinkType, asLinkAttrs } from "../src"
 
 it("returns empty object for nullish inputs", () => {
 	expect(asLinkAttrs(null)).toEqual({})
 	expect(asLinkAttrs(undefined)).toEqual({})
 })
 
-it("returns empty object when link field is empty", (ctx) => {
-	const field = ctx.mock.value.link({ type: "Any", state: "empty" })
-
-	expect(asLinkAttrs(field)).toEqual({})
-})
-
-it("returns empty object when link to document field is empty", (ctx) => {
-	const field = ctx.mock.value.link({ type: "Document", state: "empty" })
-
-	expect(asLinkAttrs(field)).toEqual({})
-})
-
-it("returns empty object when link to media field is empty", (ctx) => {
-	const field = ctx.mock.value.link({ type: "Media", state: "empty" })
-
-	expect(asLinkAttrs(field)).toEqual({})
-})
-
-it("returns empty object when link to web field is empty", (ctx) => {
-	const field = ctx.mock.value.link({ type: "Web", state: "empty" })
+it("returns empty object when link field is empty", () => {
+	const field = { link_type: LinkType.Any }
 
 	expect(asLinkAttrs(field)).toEqual({})
 })
