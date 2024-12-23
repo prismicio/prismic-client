@@ -15,12 +15,12 @@ export const getOptionalLinkProperties = (
 ): OptionalLinkProperties => {
 	const res: OptionalLinkProperties = {}
 
-	if ("variant" in input) {
-		res.variant = input.variant
-	}
-
 	if ("text" in input) {
 		res.text = input.text
+	}
+
+	if ("variant" in input) {
+		res.variant = input.variant
 	}
 
 	return res

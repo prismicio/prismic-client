@@ -88,6 +88,6 @@ export type FilledLinkToWebField = {
 // Remember to update the `getOptionalLinkProperties()` function when updating
 // this type. The function should check for every property.
 export type OptionalLinkProperties = {
-	variant?: string
 	text?: string
+	variant?: string
 }
