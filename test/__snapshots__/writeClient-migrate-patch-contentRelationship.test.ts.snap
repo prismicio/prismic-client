@@ -266,6 +266,97 @@ exports[`patches content relationship fields (from Prismic) > withText > static 
 }
 `;
 
+exports[`patches content relationship fields (from Prismic) > withVariant > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "id": "other.id-fromPrismic",
+        "link_type": "Document",
+        "variant": "Secondary",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields (from Prismic) > withVariant > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-fromPrismic",
+            "link_type": "Document",
+            "variant": "Secondary",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-fromPrismic",
+          "link_type": "Document",
+          "variant": "Secondary",
+        },
+        "group": [
+          {
+            "field": {
+              "id": "other.id-fromPrismic",
+              "link_type": "Document",
+              "variant": "Secondary",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields (from Prismic) > withVariant > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-fromPrismic",
+            "link_type": "Document",
+            "variant": "Secondary",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-fromPrismic",
+          "link_type": "Document",
+          "variant": "Secondary",
+        },
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields (from Prismic) > withVariant > static zone 1`] = `
+{
+  "field": {
+    "id": "other.id-fromPrismic",
+    "link_type": "Document",
+    "variant": "Secondary",
+  },
+}
+`;
+
 exports[`patches content relationship fields > existing > group 1`] = `
 {
   "group": [
@@ -521,6 +612,97 @@ exports[`patches content relationship fields > existingLongFormWithText > static
     "id": "other.id-existing",
     "link_type": "Document",
     "text": "foo",
+  },
+}
+`;
+
+exports[`patches content relationship fields > existingLongFormWithVariant > group 1`] = `
+{
+  "group": [
+    {
+      "field": {
+        "id": "other.id-existing",
+        "link_type": "Document",
+        "variant": "Secondary",
+      },
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > existingLongFormWithVariant > shared slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "9b9dd0f2c3f",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-existing",
+            "link_type": "Document",
+            "variant": "Secondary",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-existing",
+          "link_type": "Document",
+          "variant": "Secondary",
+        },
+        "group": [
+          {
+            "field": {
+              "id": "other.id-existing",
+              "link_type": "Document",
+              "variant": "Secondary",
+            },
+          },
+        ],
+      },
+      "slice_label": null,
+      "slice_type": "nunc",
+      "variation": "ullamcorper",
+      "version": "8bfc905",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > existingLongFormWithVariant > slice 1`] = `
+{
+  "slices": [
+    {
+      "id": "5306297c5ed",
+      "items": [
+        {
+          "field": {
+            "id": "other.id-existing",
+            "link_type": "Document",
+            "variant": "Secondary",
+          },
+        },
+      ],
+      "primary": {
+        "field": {
+          "id": "other.id-existing",
+          "link_type": "Document",
+          "variant": "Secondary",
+        },
+      },
+      "slice_label": "Vel",
+      "slice_type": "hac_habitasse",
+    },
+  ],
+}
+`;
+
+exports[`patches content relationship fields > existingLongFormWithVariant > static zone 1`] = `
+{
+  "field": {
+    "id": "other.id-existing",
+    "link_type": "Document",
+    "variant": "Secondary",
   },
 }
 `;

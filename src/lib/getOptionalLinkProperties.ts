@@ -19,5 +19,9 @@ export const getOptionalLinkProperties = (
 		res.text = input.text
 	}
 
+	if ("variant" in input) {
+		res.variant = input.variant
+	}
+
 	return res
 }
