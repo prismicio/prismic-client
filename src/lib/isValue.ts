@@ -24,11 +24,6 @@ type UnknownValue =
 /**
  * Checks if a value is a link to media field.
  *
- * @remarks
- * The return value includes `OptionalLinkProperties` because
- * `FilledLinkToMediaField` may be a link field, not strictly a content
- * relationship field.
- *
  * @param value - Value to check.
  *
  * @returns `true` if `value` is a link to media field, `false` otherwise.
@@ -38,7 +33,7 @@ type UnknownValue =
  */
 export const filledLinkToMedia = (
 	value: UnknownValue,
-): value is FilledLinkToMediaField & OptionalLinkProperties => {
+): value is FilledLinkToMediaField => {
 	if (value && typeof value === "object" && !("version" in value)) {
 		if (
 			"link_type" in value &&

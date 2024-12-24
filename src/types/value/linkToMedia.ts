@@ -1,5 +1,7 @@
 import type { FieldState } from "./types"
 
+import type { OptionalLinkProperties } from "./link"
+
 /**
  * A link field that points to media.
  *
@@ -10,13 +12,12 @@ export type LinkToMediaField<State extends FieldState = FieldState> =
 
 type EmptyLinkToMediaField = {
 	link_type: "Any"
-	text?: string
-}
+} & OptionalLinkProperties
 
 /**
  * A link that points to media.
  */
-export interface FilledLinkToMediaField {
+export type FilledLinkToMediaField = {
 	id: string
 	link_type: "Media"
 	name: string
@@ -25,5 +26,4 @@ export interface FilledLinkToMediaField {
 	size: string
 	height?: string | null
 	width?: string | null
-	text?: string
-}
+} & OptionalLinkProperties
