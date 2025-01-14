@@ -504,6 +504,7 @@ export class WriteClient<
 				// in case the document already existed during the previous step.
 				{
 					...doc.document,
+					documentTitle: doc.title,
 					data: await resolveMigrationDocumentData(
 						doc.document.data,
 						migration,
