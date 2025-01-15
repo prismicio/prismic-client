@@ -160,6 +160,88 @@ expectType<prismic.LinkField<string, string, never, "empty">>({
 	link_type: prismic.LinkType.Any,
 	variant: "string",
 })
+expectType<prismic.LinkField<string, string, never, "empty", "foo" | "bar">>({
+	link_type: prismic.LinkType.Any,
+	variant: "foo",
+})
+expectType<prismic.LinkField<string, string, never, "empty", "foo" | "bar">>({
+	link_type: prismic.LinkType.Any,
+	// @ts-expect-error - Variant must match the given enum.
+	variant: "string",
+})
+
+/**
+ * Filled state with explicit variant.
+ */
+expectType<prismic.LinkField<string, string, never, "filled", "foo" | "bar">>({
+	link_type: prismic.LinkType.Web,
+	url: "string",
+	target: "string",
+	text: "string",
+	variant: "foo",
+})
+expectType<prismic.LinkField<string, string, never, "filled", "foo" | "bar">>({
+	link_type: prismic.LinkType.Document,
+	id: "string",
+	uid: "string",
+	type: "string",
+	tags: ["string"],
+	lang: "string",
+	url: "string",
+	slug: "string",
+	isBroken: true,
+	data: undefined,
+	text: "string",
+	variant: "foo",
+})
+expectType<prismic.LinkField<string, string, never, "filled", "foo" | "bar">>({
+	link_type: prismic.LinkType.Media,
+	id: "string",
+	name: "string",
+	kind: "string",
+	url: "string",
+	size: "string",
+	height: "string",
+	width: "string",
+	text: "string",
+	variant: "foo",
+})
+expectType<prismic.LinkField<string, string, never, "filled", "foo" | "bar">>({
+	link_type: prismic.LinkType.Web,
+	url: "string",
+	target: "string",
+	text: "string",
+	// @ts-expect-error - Variant must match the given enum.
+	variant: "string",
+})
+expectType<prismic.LinkField<string, string, never, "filled", "foo" | "bar">>({
+	link_type: prismic.LinkType.Document,
+	id: "string",
+	uid: "string",
+	type: "string",
+	tags: ["string"],
+	lang: "string",
+	url: "string",
+	slug: "string",
+	isBroken: true,
+	data: undefined,
+	text: "string",
+	// @ts-expect-error - Variant must match the given enum.
+	variant: "string",
+})
+expectType<prismic.LinkField<string, string, never, "filled", "foo" | "bar">>({
+	link_type: prismic.LinkType.Media,
+	id: "string",
+	name: "string",
+	kind: "string",
+	url: "string",
+	size: "string",
+	height: "string",
+	width: "string",
+	text: "string",
+	// @ts-expect-error - Variant must match the given enum.
+	variant: "string",
+})
 
 /**
  * Supports custom document type for document links.
