@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.15.0](https://github.com/prismicio/prismic-client/compare/v7.14.0...v7.15.0) (2025-01-15)
+
+
+### Bug Fixes
+
+* properly update document's title with `updateDocument` ([#373](https://github.com/prismicio/prismic-client/issues/373)) ([fa9ca0d](https://github.com/prismicio/prismic-client/commit/fa9ca0dfd762cc2cdab9c86b1f0edd51a71c5ef9))
+
 ## [7.15.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.14.0...v7.15.0-alpha.0) (2025-01-14)
 
 ## [7.14.0](https://github.com/prismicio/prismic-client/compare/v7.13.1...v7.14.0) (2025-01-09)
