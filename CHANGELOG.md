@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.15.1](https://github.com/prismicio/prismic-client/compare/v7.15.0...v7.15.1) (2025-01-16)
+
+
+### Bug Fixes
+
+* allow generics with link variant ([#374](https://github.com/prismicio/prismic-client/issues/374)) ([7cff55e](https://github.com/prismicio/prismic-client/commit/7cff55e582458964353ac650346cbb0471a500ba))
+
 ## [7.15.0](https://github.com/prismicio/prismic-client/compare/v7.14.0...v7.15.0) (2025-01-15)
 
 
