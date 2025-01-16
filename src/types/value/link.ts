@@ -23,7 +23,7 @@ export const LinkType = {
  * @typeParam DataInterface - Data fields for the document (filled via the
  *   `fetchLinks` or `graphQuery` query parameter).
  * @typeParam State - State of the field which determines its shape.
- * @typeParam VariantEnum - Variants of the link.
+ * @typeParam Variant - Variants of the link.
  */
 export type LinkField<
 	TypeEnum = string,
@@ -32,10 +32,10 @@ export type LinkField<
 		| Record<string, AnyRegularField | GroupField | SliceZone>
 		| unknown = unknown,
 	State extends FieldState = FieldState,
-	VariantEnum = string,
+	Variant = string,
 > = State extends "empty"
-	? EmptyLinkField<typeof LinkType.Any, VariantEnum>
-	: FilledLinkField<TypeEnum, LangEnum, DataInterface, VariantEnum>
+	? EmptyLinkField<typeof LinkType.Any, Variant>
+	: FilledLinkField<TypeEnum, LangEnum, DataInterface, Variant>
 
 /**
  * A link field that is filled.
@@ -44,7 +44,7 @@ export type LinkField<
  * @typeParam LangEnum - Language API ID of the document.
  * @typeParam DataInterface - Data fields for the document (filled via the
  *   `fetchLinks` or `graphQuery` query parameter).
- * @typeParam VariantEnum - Variants of the link.
+ * @typeParam Variant - Variants of the link.
  */
 export type FilledLinkField<
 	TypeEnum = string,
@@ -52,51 +52,51 @@ export type FilledLinkField<
 	DataInterface extends
 		| Record<string, AnyRegularField | GroupField | SliceZone>
 		| unknown = unknown,
-	VariantEnum = string,
+	Variant = string,
 > =
 	| (FilledContentRelationshipField<TypeEnum, LangEnum, DataInterface> &
-			OptionalLinkProperties<VariantEnum>)
-	| FilledLinkToMediaField<VariantEnum>
-	| FilledLinkToWebField<VariantEnum>
+			OptionalLinkProperties<Variant>)
+	| FilledLinkToMediaField<Variant>
+	| FilledLinkToWebField<Variant>
 
 /**
  * A link field that is not filled.
  *
  * @typeParam _Unused - THIS PARAMETER IS NOT USED. If you are passing a type,
  *   **please remove it**.
- * @typeParam VariantEnum - Variants of the link.
+ * @typeParam Variant - Variants of the link.
  */
 export type EmptyLinkField<
 	_Unused extends
 		(typeof LinkType)[keyof typeof LinkType] = typeof LinkType.Any,
-	VariantEnum = string,
+	Variant = string,
 > = {
 	link_type: "Any"
-} & OptionalLinkProperties<VariantEnum>
+} & OptionalLinkProperties<Variant>
 
 /**
  * A link field pointing to a relative or absolute URL.
  *
- * @typeParam VariantEnum - Variants of the link.
+ * @typeParam Variant - Variants of the link.
  */
-export type FilledLinkToWebField<VariantEnum = string> = {
+export type FilledLinkToWebField<Variant = string> = {
 	link_type: "Web"
 	url: string
 	target?: string
-} & OptionalLinkProperties<VariantEnum>
+} & OptionalLinkProperties<Variant>
 
 /**
  * Optional properties available to link fields. It is used to augment existing
  * link-like fields (like content relationship fields) with field-specific
  * properties.
  *
- * @typeParam VariantEnum - Variants of the link.
+ * @typeParam Variant - Variants of the link.
  *
  * @internal
  */
 // Remember to update the `getOptionalLinkProperties()` function when updating
 // this type. The function should check for every property.
-export type OptionalLinkProperties<VariantEnum = string> = {
+export type OptionalLinkProperties<Variant = string> = {
 	text?: string
-	variant?: VariantEnum
+	variant?: Variant
 }

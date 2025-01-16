@@ -6,25 +6,25 @@ import type { OptionalLinkProperties } from "./link"
  * A link field that points to media.
  *
  * @typeParam State - State of the field which determines its shape.
- * @typeParam VariantEnum - Variants of the link.
+ * @typeParam Variant - Variants of the link.
  */
 export type LinkToMediaField<
 	State extends FieldState = FieldState,
-	VariantEnum = string,
+	Variant = string,
 > = State extends "empty"
-	? EmptyLinkToMediaField<VariantEnum>
-	: FilledLinkToMediaField<VariantEnum>
+	? EmptyLinkToMediaField<Variant>
+	: FilledLinkToMediaField<Variant>
 
-type EmptyLinkToMediaField<VariantEnum = string> = {
+type EmptyLinkToMediaField<Variant = string> = {
 	link_type: "Any"
-} & OptionalLinkProperties<VariantEnum>
+} & OptionalLinkProperties<Variant>
 
 /**
  * A link that points to media.
  *
- * @typeParam VariantEnum - Variants of the link.
+ * @typeParam Variant - Variants of the link.
  */
-export type FilledLinkToMediaField<VariantEnum = string> = {
+export type FilledLinkToMediaField<Variant = string> = {
 	id: string
 	link_type: "Media"
 	name: string
@@ -33,4 +33,4 @@ export type FilledLinkToMediaField<VariantEnum = string> = {
 	size: string
 	height?: string | null
 	width?: string | null
-} & OptionalLinkProperties<VariantEnum>
+} & OptionalLinkProperties<Variant>
