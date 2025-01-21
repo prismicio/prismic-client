@@ -19,6 +19,7 @@ import type { CustomTypeModelRichTextField } from "./richText"
 import type { CustomTypeModelSelectField } from "./select"
 import type { CustomTypeModelSeparatorField } from "./separator"
 import type { CustomTypeModelSliceZoneField } from "./sliceZone"
+import type { CustomTypeModelTableField } from "./table"
 import type { CustomTypeModelTimestampField } from "./timestamp"
 import type { CustomTypeModelTitleField } from "./title"
 import type { CustomTypeModelUIDField } from "./uid"
@@ -40,6 +41,7 @@ export const CustomTypeModelFieldType = {
 	Select: "Select",
 	Slices: "Slices",
 	StructuredText: "StructuredText",
+	Table: "Table",
 	Text: "Text",
 	Timestamp: "Timestamp",
 	UID: "UID",
@@ -102,6 +104,7 @@ export type CustomTypeModelFieldForNestedGroup =
 	| CustomTypeModelRangeField
 	| CustomTypeModelSelectField
 	| CustomTypeModelRichTextField
+	| CustomTypeModelTableField
 	| CustomTypeModelTitleField
 	| CustomTypeModelKeyTextField
 	| CustomTypeModelTimestampField
