@@ -288,6 +288,7 @@ export type { CustomTypeModelNumberField } from "./types/model/number"
 export type { CustomTypeModelSelectField } from "./types/model/select"
 export type { CustomTypeModelTimestampField } from "./types/model/timestamp"
 export type { CustomTypeModelGeoPointField } from "./types/model/geoPoint"
+export type { CustomTypeModelTableField } from "./types/model/table"
 
 /**
  * @deprecated Renamed to `CustomTypeModelIntegrationField`.
