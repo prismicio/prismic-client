@@ -227,6 +227,7 @@ export type { NumberField } from "./types/value/number"
 export type { SelectField } from "./types/value/select"
 export type { TimestampField } from "./types/value/timestamp"
 export type { GeoPointField } from "./types/value/geoPoint"
+export type { TableField } from "./types/value/table"
 
 /**
  * @deprecated Renamed to `IntegrationField`

@@ -15,6 +15,7 @@ import type { SelectField } from "../types/value/select"
 import type { SharedSlice } from "../types/value/sharedSlice"
 import type { Slice } from "../types/value/slice"
 import type { SliceZone } from "../types/value/sliceZone"
+import type { TableField } from "../types/value/table"
 import type { TimestampField } from "../types/value/timestamp"
 import type { TitleField } from "../types/value/title"
 import type { AnyRegularField, Repeatable } from "../types/value/types"
@@ -247,6 +248,17 @@ export const geoPoint = (
 ): field is GeoPointField<"filled"> => {
 	return isNonNullish(field) && "longitude" in field
 }
+
+/**
+ * Determines if a table field is filled.
+ *
+ * @param field - Table field to check.
+ *
+ * @returns `true` if `field` is filled, `false` otherwise.
+ */
+export const table = isNonNullish as (
+	field: TableField | null | undefined,
+) => field is TableField<"filled">
 
 /**
  * Determines if an integration field is filled.
