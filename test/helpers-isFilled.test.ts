@@ -46,6 +46,12 @@ it("geopoint", (ctx) => {
 	expect(isFilled.geoPoint(ctx.mock.value.geoPoint())).toBe(true)
 })
 
+it("table", (/*ctx*/) => {
+	expect(isFilled.table(null)).toBe(false)
+	expect(isFilled.table(undefined)).toBe(false)
+	// expect(isFilled.table(ctx.mock.value.table())).toBe(true)
+})
+
 it("group", (ctx) => {
 	expect(isFilled.group(null)).toBe(false)
 	expect(isFilled.group(undefined)).toBe(false)
