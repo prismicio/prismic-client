@@ -49,7 +49,10 @@ export type TableHeaderCell = {
  * Represents a row in a table body.
  */
 export type TableDataRow = {
-	cells: (TableDataCell | TableHeaderCell)[]
+	/**
+	 * Cells in the row.
+	 */
+	cells: (TableHeaderCell | TableDataCell)[]
 }
 
 /**
