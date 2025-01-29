@@ -14,7 +14,7 @@ exports[`patches link to media fields (from Prismic) > inRichText > group 1`] = 
             },
             {
               "data": {
-                "id": "fc26fe8d098",
+                "id": "6fe8d0985c0",
                 "link_type": "Media",
               },
               "end": 5,
@@ -48,8 +48,9 @@ exports[`patches link to media fields (from Prismic) > inRichText > shared slice
                 },
                 {
                   "data": {
-                    "id": "961adcf1f5d",
+                    "id": "bdd8a5cdeb2",
                     "link_type": "Media",
+                    "text": "Mi in",
                   },
                   "end": 5,
                   "start": 0,
@@ -73,7 +74,7 @@ exports[`patches link to media fields (from Prismic) > inRichText > shared slice
               },
               {
                 "data": {
-                  "id": "961adcf1f5d",
+                  "id": "bdd8a5cdeb2",
                   "link_type": "Media",
                 },
                 "end": 5,
@@ -97,7 +98,7 @@ exports[`patches link to media fields (from Prismic) > inRichText > shared slice
                   },
                   {
                     "data": {
-                      "id": "961adcf1f5d",
+                      "id": "bdd8a5cdeb2",
                       "link_type": "Media",
                     },
                     "end": 5,
@@ -138,7 +139,7 @@ exports[`patches link to media fields (from Prismic) > inRichText > slice 1`] = 
                 },
                 {
                   "data": {
-                    "id": "54f4a69ff72",
+                    "id": "dfac8dd04d4",
                     "link_type": "Media",
                   },
                   "end": 5,
@@ -163,8 +164,9 @@ exports[`patches link to media fields (from Prismic) > inRichText > slice 1`] = 
               },
               {
                 "data": {
-                  "id": "54f4a69ff72",
+                  "id": "dfac8dd04d4",
                   "link_type": "Media",
+                  "text": "Felis donec",
                 },
                 "end": 5,
                 "start": 0,
@@ -195,7 +197,7 @@ exports[`patches link to media fields (from Prismic) > inRichText > static zone 
         },
         {
           "data": {
-            "id": "1d17b04a95c",
+            "id": "1e2254cd63b",
             "link_type": "Media",
           },
           "end": 5,
@@ -215,7 +217,7 @@ exports[`patches link to media fields (from Prismic) > simple > group 1`] = `
   "group": [
     {
       "field": {
-        "id": "fc26fe8d098",
+        "id": "6fe8d0985c0",
         "link_type": "Media",
       },
     },
@@ -231,20 +233,21 @@ exports[`patches link to media fields (from Prismic) > simple > shared slice 1`]
       "items": [
         {
           "field": {
-            "id": "961adcf1f5d",
+            "id": "bdd8a5cdeb2",
             "link_type": "Media",
+            "text": "Mi in",
           },
         },
       ],
       "primary": {
         "field": {
-          "id": "961adcf1f5d",
+          "id": "bdd8a5cdeb2",
           "link_type": "Media",
         },
         "group": [
           {
             "field": {
-              "id": "961adcf1f5d",
+              "id": "bdd8a5cdeb2",
               "link_type": "Media",
             },
           },
@@ -267,15 +270,16 @@ exports[`patches link to media fields (from Prismic) > simple > slice 1`] = `
       "items": [
         {
           "field": {
-            "id": "54f4a69ff72",
+            "id": "dfac8dd04d4",
             "link_type": "Media",
           },
         },
       ],
       "primary": {
         "field": {
-          "id": "54f4a69ff72",
+          "id": "dfac8dd04d4",
           "link_type": "Media",
+          "text": "Felis donec",
         },
       },
       "slice_label": "Vel",
@@ -288,7 +292,7 @@ exports[`patches link to media fields (from Prismic) > simple > slice 1`] = `
 exports[`patches link to media fields (from Prismic) > simple > static zone 1`] = `
 {
   "field": {
-    "id": "1d17b04a95c",
+    "id": "1e2254cd63b",
     "link_type": "Media",
   },
 }
