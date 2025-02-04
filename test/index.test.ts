@@ -59,6 +59,7 @@ it("custom type field type mapping", () => {
 		Select: "Select",
 		Slices: "Slices",
 		StructuredText: "StructuredText",
+		Table: "Table",
 		Text: "Text",
 		Timestamp: "Timestamp",
 		UID: "UID",

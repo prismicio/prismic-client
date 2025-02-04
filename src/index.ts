@@ -227,6 +227,7 @@ export type { NumberField } from "./types/value/number"
 export type { SelectField } from "./types/value/select"
 export type { TimestampField } from "./types/value/timestamp"
 export type { GeoPointField } from "./types/value/geoPoint"
+export type { TableField } from "./types/value/table"
 
 /**
  * @deprecated Renamed to `IntegrationField`
@@ -288,6 +289,7 @@ export type { CustomTypeModelNumberField } from "./types/model/number"
 export type { CustomTypeModelSelectField } from "./types/model/select"
 export type { CustomTypeModelTimestampField } from "./types/model/timestamp"
 export type { CustomTypeModelGeoPointField } from "./types/model/geoPoint"
+export type { CustomTypeModelTableField } from "./types/model/table"
 
 /**
  * @deprecated Renamed to `CustomTypeModelIntegrationField`.

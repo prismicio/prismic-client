@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.16.0-alpha.1](https://github.com/prismicio/prismic-client/compare/v7.16.0-alpha.0...v7.16.0-alpha.1) (2025-01-24)
+
+## [7.16.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.15.1...v7.16.0-alpha.0) (2025-01-21)
+
+
+### Features
+
+* add table field model ([d656a82](https://github.com/prismicio/prismic-client/commit/d656a82145e4786294b804da9d722d6dd49067f9))
+
+
+### Chore
+
+* update types-internal dep ([3e20131](https://github.com/prismicio/prismic-client/commit/3e20131ce4859e36569d3ea7e0536ee68a5bb003))
+
 ### [7.15.1](https://github.com/prismicio/prismic-client/compare/v7.15.0...v7.15.1) (2025-01-16)
 
 

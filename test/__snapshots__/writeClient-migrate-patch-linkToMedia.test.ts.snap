@@ -14,7 +14,7 @@ exports[`patches link to media fields (from Prismic) > inRichText > group 1`] = 
             },
             {
               "data": {
-                "id": "fc26fe8d098",
+                "id": "6fe8d0985c0",
                 "link_type": "Media",
               },
               "end": 5,
@@ -48,8 +48,9 @@ exports[`patches link to media fields (from Prismic) > inRichText > shared slice
                 },
                 {
                   "data": {
-                    "id": "961adcf1f5d",
+                    "id": "bdd8a5cdeb2",
                     "link_type": "Media",
+                    "text": "Eleifend mi",
                   },
                   "end": 5,
                   "start": 0,
@@ -73,7 +74,7 @@ exports[`patches link to media fields (from Prismic) > inRichText > shared slice
               },
               {
                 "data": {
-                  "id": "961adcf1f5d",
+                  "id": "bdd8a5cdeb2",
                   "link_type": "Media",
                 },
                 "end": 5,
@@ -97,7 +98,7 @@ exports[`patches link to media fields (from Prismic) > inRichText > shared slice
                   },
                   {
                     "data": {
-                      "id": "961adcf1f5d",
+                      "id": "bdd8a5cdeb2",
                       "link_type": "Media",
                     },
                     "end": 5,
@@ -113,8 +114,8 @@ exports[`patches link to media fields (from Prismic) > inRichText > shared slice
         ],
       },
       "slice_label": null,
-      "slice_type": "nunc",
-      "variation": "ullamcorper",
+      "slice_type": "purus",
+      "variation": "pulvinar",
       "version": "8bfc905",
     },
   ],
@@ -138,7 +139,7 @@ exports[`patches link to media fields (from Prismic) > inRichText > slice 1`] = 
                 },
                 {
                   "data": {
-                    "id": "54f4a69ff72",
+                    "id": "dfac8dd04d4",
                     "link_type": "Media",
                   },
                   "end": 5,
@@ -163,8 +164,9 @@ exports[`patches link to media fields (from Prismic) > inRichText > slice 1`] = 
               },
               {
                 "data": {
-                  "id": "54f4a69ff72",
+                  "id": "dfac8dd04d4",
                   "link_type": "Media",
+                  "text": "Donec et",
                 },
                 "end": 5,
                 "start": 0,
@@ -176,7 +178,7 @@ exports[`patches link to media fields (from Prismic) > inRichText > slice 1`] = 
           },
         ],
       },
-      "slice_label": "Vel",
+      "slice_label": "Leo",
       "slice_type": "hac_habitasse",
     },
   ],
@@ -195,7 +197,7 @@ exports[`patches link to media fields (from Prismic) > inRichText > static zone 
         },
         {
           "data": {
-            "id": "1d17b04a95c",
+            "id": "1e2254cd63b",
             "link_type": "Media",
           },
           "end": 5,
@@ -215,7 +217,7 @@ exports[`patches link to media fields (from Prismic) > simple > group 1`] = `
   "group": [
     {
       "field": {
-        "id": "fc26fe8d098",
+        "id": "6fe8d0985c0",
         "link_type": "Media",
       },
     },
@@ -231,28 +233,29 @@ exports[`patches link to media fields (from Prismic) > simple > shared slice 1`]
       "items": [
         {
           "field": {
-            "id": "961adcf1f5d",
+            "id": "bdd8a5cdeb2",
             "link_type": "Media",
+            "text": "Eleifend mi",
           },
         },
       ],
       "primary": {
         "field": {
-          "id": "961adcf1f5d",
+          "id": "bdd8a5cdeb2",
           "link_type": "Media",
         },
         "group": [
           {
             "field": {
-              "id": "961adcf1f5d",
+              "id": "bdd8a5cdeb2",
               "link_type": "Media",
             },
           },
         ],
       },
       "slice_label": null,
-      "slice_type": "nunc",
-      "variation": "ullamcorper",
+      "slice_type": "purus",
+      "variation": "pulvinar",
       "version": "8bfc905",
     },
   ],
@@ -267,18 +270,19 @@ exports[`patches link to media fields (from Prismic) > simple > slice 1`] = `
       "items": [
         {
           "field": {
-            "id": "54f4a69ff72",
+            "id": "dfac8dd04d4",
             "link_type": "Media",
           },
         },
       ],
       "primary": {
         "field": {
-          "id": "54f4a69ff72",
+          "id": "dfac8dd04d4",
           "link_type": "Media",
+          "text": "Donec et",
         },
       },
-      "slice_label": "Vel",
+      "slice_label": "Leo",
       "slice_type": "hac_habitasse",
     },
   ],
@@ -288,7 +292,7 @@ exports[`patches link to media fields (from Prismic) > simple > slice 1`] = `
 exports[`patches link to media fields (from Prismic) > simple > static zone 1`] = `
 {
   "field": {
-    "id": "1d17b04a95c",
+    "id": "1e2254cd63b",
     "link_type": "Media",
   },
 }
@@ -331,8 +335,8 @@ exports[`patches link to media fields > empty > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "nunc",
-      "variation": "ullamcorper",
+      "slice_type": "purus",
+      "variation": "pulvinar",
       "version": "8bfc905",
     },
   ],
@@ -356,7 +360,7 @@ exports[`patches link to media fields > empty > slice 1`] = `
           "link_type": "Any",
         },
       },
-      "slice_label": "Vel",
+      "slice_label": "Leo",
       "slice_type": "hac_habitasse",
     },
   ],
@@ -436,8 +440,8 @@ exports[`patches link to media fields > existing > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "nunc",
-      "variation": "ullamcorper",
+      "slice_type": "purus",
+      "variation": "pulvinar",
       "version": "8bfc905",
     },
   ],
@@ -475,7 +479,7 @@ exports[`patches link to media fields > existing > slice 1`] = `
           "width": "1",
         },
       },
-      "slice_label": "Vel",
+      "slice_label": "Leo",
       "slice_type": "hac_habitasse",
     },
   ],
@@ -538,8 +542,8 @@ exports[`patches link to media fields > new > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "nunc",
-      "variation": "ullamcorper",
+      "slice_type": "purus",
+      "variation": "pulvinar",
       "version": "8bfc905",
     },
   ],
@@ -565,7 +569,7 @@ exports[`patches link to media fields > new > slice 1`] = `
           "link_type": "Media",
         },
       },
-      "slice_label": "Vel",
+      "slice_label": "Leo",
       "slice_type": "hac_habitasse",
     },
   ],
@@ -622,8 +626,8 @@ exports[`patches link to media fields > newNonImage > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "nunc",
-      "variation": "ullamcorper",
+      "slice_type": "purus",
+      "variation": "pulvinar",
       "version": "8bfc905",
     },
   ],
@@ -649,7 +653,7 @@ exports[`patches link to media fields > newNonImage > slice 1`] = `
           "link_type": "Media",
         },
       },
-      "slice_label": "Vel",
+      "slice_label": "Leo",
       "slice_type": "hac_habitasse",
     },
   ],
@@ -710,8 +714,8 @@ exports[`patches link to media fields > newWithText > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "nunc",
-      "variation": "ullamcorper",
+      "slice_type": "purus",
+      "variation": "pulvinar",
       "version": "8bfc905",
     },
   ],
@@ -739,7 +743,7 @@ exports[`patches link to media fields > newWithText > slice 1`] = `
           "text": "foo",
         },
       },
-      "slice_label": "Vel",
+      "slice_label": "Leo",
       "slice_type": "hac_habitasse",
     },
   ],
@@ -893,8 +897,8 @@ exports[`patches link to media fields > richTextExisting > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "nunc",
-      "variation": "ullamcorper",
+      "slice_type": "purus",
+      "variation": "pulvinar",
       "version": "8bfc905",
     },
   ],
@@ -968,7 +972,7 @@ exports[`patches link to media fields > richTextExisting > slice 1`] = `
           },
         ],
       },
-      "slice_label": "Vel",
+      "slice_label": "Leo",
       "slice_type": "hac_habitasse",
     },
   ],
@@ -1121,8 +1125,8 @@ exports[`patches link to media fields > richTextNew > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "nunc",
-      "variation": "ullamcorper",
+      "slice_type": "purus",
+      "variation": "pulvinar",
       "version": "8bfc905",
     },
   ],
@@ -1184,7 +1188,7 @@ exports[`patches link to media fields > richTextNew > slice 1`] = `
           },
         ],
       },
-      "slice_label": "Vel",
+      "slice_label": "Leo",
       "slice_type": "hac_habitasse",
     },
   ],

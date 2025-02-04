@@ -437,6 +437,19 @@ type EmbedData = prismic.VideoOEmbed & { foo: string }
 }
 
 /**
+ * Table
+ */
+;(value: prismic.TableField) => {
+	if (prismic.isFilled.table(value)) {
+		expectType<TypeEqual<prismic.TableField<"filled">, typeof value>>(true)
+		expectType<TypeEqual<prismic.TableField<"empty">, typeof value>>(false)
+	} else {
+		expectType<TypeEqual<prismic.TableField<"filled">, typeof value>>(false)
+		expectType<TypeEqual<prismic.TableField<"empty">, typeof value>>(true)
+	}
+}
+
+/**
  * Integration fields
  */
 
