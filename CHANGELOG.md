@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.16.0](https://github.com/prismicio/prismic-client/compare/v7.15.1...v7.16.0) (2025-02-04)
+
+
+### Features
+
+* support table field ([#375](https://github.com/prismicio/prismic-client/issues/375)) ([39c66f0](https://github.com/prismicio/prismic-client/commit/39c66f09d9f6d7f84ca0b628a7cb0376372ca999))
+
 ## [7.16.0-alpha.1](https://github.com/prismicio/prismic-client/compare/v7.16.0-alpha.0...v7.16.0-alpha.1) (2025-01-24)
 
 ## [7.16.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.15.1...v7.16.0-alpha.0) (2025-01-21)
