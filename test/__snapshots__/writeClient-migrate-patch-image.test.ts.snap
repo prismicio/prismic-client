@@ -53,8 +53,8 @@ exports[`patches image fields (from Prismic) > empty > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "nunc",
-      "variation": "ullamcorper",
+      "slice_type": "purus",
+      "variation": "pulvinar",
       "version": "8bfc905",
     },
   ],
@@ -86,7 +86,7 @@ exports[`patches image fields (from Prismic) > empty > slice 1`] = `
           "url": null,
         },
       },
-      "slice_label": "Vel",
+      "slice_label": "Leo",
       "slice_type": "hac_habitasse",
     },
   ],
@@ -110,7 +110,7 @@ exports[`patches image fields (from Prismic) > simple > group 1`] = `
   "group": [
     {
       "field": {
-        "alt": "Morbi tincidunt ornare massa eget egestas purus viverra accumsan in nisl nisi scelerisque eu",
+        "alt": "Morbi tincidunt ornare massa eget egestas purus viverra accumsan nisl nisi scelerisque eu ultrices",
         "copyright": null,
         "dimensions": {
           "height": 1,
@@ -138,7 +138,7 @@ exports[`patches image fields (from Prismic) > simple > shared slice 1`] = `
       "items": [
         {
           "field": {
-            "alt": "Nam libero justo laoreet sit amet cursus sit amet dictum sit",
+            "alt": "Ut consequat semper viverra nam libero justo laoreet sit amet cursus",
             "copyright": null,
             "dimensions": {
               "height": 1,
@@ -157,7 +157,7 @@ exports[`patches image fields (from Prismic) > simple > shared slice 1`] = `
       ],
       "primary": {
         "field": {
-          "alt": "Massa massa ultricies mi quis hendrerit dolor magna eget est lorem ipsum dolor sit",
+          "alt": "Pharetra pharetra massa massa ultricies mi quis hendrerit dolor magna eget est lorem ipsum",
           "copyright": null,
           "dimensions": {
             "height": 1,
@@ -194,8 +194,8 @@ exports[`patches image fields (from Prismic) > simple > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "nunc",
-      "variation": "ullamcorper",
+      "slice_type": "purus",
+      "variation": "pulvinar",
       "version": "8bfc905",
     },
   ],
@@ -229,7 +229,7 @@ exports[`patches image fields (from Prismic) > simple > slice 1`] = `
       ],
       "primary": {
         "field": {
-          "alt": "Tincidunt vitae semper quis lectus",
+          "alt": "Ac tincidunt vitae semper quis",
           "copyright": null,
           "dimensions": {
             "height": 1,
@@ -245,7 +245,7 @@ exports[`patches image fields (from Prismic) > simple > slice 1`] = `
           "url": "https://images.unsplash.com/reserve/HgZuGu3gSD6db21T3lxm_San%20Zenone.jpg",
         },
       },
-      "slice_label": "Vel",
+      "slice_label": "Leo",
       "slice_type": "hac_habitasse",
     },
   ],
@@ -255,7 +255,7 @@ exports[`patches image fields (from Prismic) > simple > slice 1`] = `
 exports[`patches image fields (from Prismic) > simple > static zone 1`] = `
 {
   "field": {
-    "alt": "Velit laoreet id donec ultrices tincidunt arcu non sodales neque sodales ut etiam sit",
+    "alt": "Id interdum velit laoreet id donec ultrices tincidunt arcu non sodales neque sodales ut",
     "copyright": null,
     "dimensions": {
       "height": 1,
@@ -278,7 +278,7 @@ exports[`patches image fields (from Prismic) > withSpecialTypeThumbnail > group 
   "group": [
     {
       "field": {
-        "alt": "Morbi tincidunt ornare massa eget egestas purus viverra accumsan in nisl nisi scelerisque eu",
+        "alt": "Morbi tincidunt ornare massa eget egestas purus viverra accumsan nisl nisi scelerisque eu ultrices",
         "copyright": null,
         "dimensions": {
           "height": 1,
@@ -292,7 +292,7 @@ exports[`patches image fields (from Prismic) > withSpecialTypeThumbnail > group 
         },
         "id": "d0985c09900",
         "type": {
-          "alt": "Morbi tincidunt ornare massa eget egestas purus viverra accumsan in nisl nisi scelerisque eu",
+          "alt": "Morbi tincidunt ornare massa eget egestas purus viverra accumsan nisl nisi scelerisque eu ultrices",
           "copyright": null,
           "dimensions": {
             "height": 1,
@@ -322,7 +322,7 @@ exports[`patches image fields (from Prismic) > withSpecialTypeThumbnail > shared
       "items": [
         {
           "field": {
-            "alt": "Nam libero justo laoreet sit amet cursus sit amet dictum sit",
+            "alt": "Ut consequat semper viverra nam libero justo laoreet sit amet cursus",
             "copyright": null,
             "dimensions": {
               "height": 1,
@@ -336,7 +336,7 @@ exports[`patches image fields (from Prismic) > withSpecialTypeThumbnail > shared
             },
             "id": "b35eaa8ebee",
             "type": {
-              "alt": "Nam libero justo laoreet sit amet cursus sit amet dictum sit",
+              "alt": "Ut consequat semper viverra nam libero justo laoreet sit amet cursus",
               "copyright": null,
               "dimensions": {
                 "height": 1,
@@ -357,7 +357,7 @@ exports[`patches image fields (from Prismic) > withSpecialTypeThumbnail > shared
       ],
       "primary": {
         "field": {
-          "alt": "Massa massa ultricies mi quis hendrerit dolor magna eget est lorem ipsum dolor sit",
+          "alt": "Pharetra pharetra massa massa ultricies mi quis hendrerit dolor magna eget est lorem ipsum",
           "copyright": null,
           "dimensions": {
             "height": 1,
@@ -371,7 +371,7 @@ exports[`patches image fields (from Prismic) > withSpecialTypeThumbnail > shared
           },
           "id": "b35eaa8ebee",
           "type": {
-            "alt": "Massa massa ultricies mi quis hendrerit dolor magna eget est lorem ipsum dolor sit",
+            "alt": "Pharetra pharetra massa massa ultricies mi quis hendrerit dolor magna eget est lorem ipsum",
             "copyright": null,
             "dimensions": {
               "height": 1,
@@ -426,8 +426,8 @@ exports[`patches image fields (from Prismic) > withSpecialTypeThumbnail > shared
         ],
       },
       "slice_label": null,
-      "slice_type": "nunc",
-      "variation": "ullamcorper",
+      "slice_type": "purus",
+      "variation": "pulvinar",
       "version": "8bfc905",
     },
   ],
@@ -477,7 +477,7 @@ exports[`patches image fields (from Prismic) > withSpecialTypeThumbnail > slice 
       ],
       "primary": {
         "field": {
-          "alt": "Tincidunt vitae semper quis lectus",
+          "alt": "Ac tincidunt vitae semper quis",
           "copyright": null,
           "dimensions": {
             "height": 1,
@@ -491,7 +491,7 @@ exports[`patches image fields (from Prismic) > withSpecialTypeThumbnail > slice 
           },
           "id": "07a35bc5aa2",
           "type": {
-            "alt": "Tincidunt vitae semper quis lectus",
+            "alt": "Ac tincidunt vitae semper quis",
             "copyright": null,
             "dimensions": {
               "height": 1,
@@ -509,7 +509,7 @@ exports[`patches image fields (from Prismic) > withSpecialTypeThumbnail > slice 
           "url": "https://images.unsplash.com/reserve/HgZuGu3gSD6db21T3lxm_San%20Zenone.jpg?some=query",
         },
       },
-      "slice_label": "Vel",
+      "slice_label": "Leo",
       "slice_type": "hac_habitasse",
     },
   ],
@@ -519,7 +519,7 @@ exports[`patches image fields (from Prismic) > withSpecialTypeThumbnail > slice 
 exports[`patches image fields (from Prismic) > withSpecialTypeThumbnail > static zone 1`] = `
 {
   "field": {
-    "alt": "Velit laoreet id donec ultrices tincidunt arcu non sodales neque sodales ut etiam sit",
+    "alt": "Id interdum velit laoreet id donec ultrices tincidunt arcu non sodales neque sodales ut",
     "copyright": null,
     "dimensions": {
       "height": 1,
@@ -533,7 +533,7 @@ exports[`patches image fields (from Prismic) > withSpecialTypeThumbnail > static
     },
     "id": "a95cc61c373",
     "type": {
-      "alt": "Velit laoreet id donec ultrices tincidunt arcu non sodales neque sodales ut etiam sit",
+      "alt": "Id interdum velit laoreet id donec ultrices tincidunt arcu non sodales neque sodales ut",
       "copyright": null,
       "dimensions": {
         "height": 1,
@@ -558,7 +558,7 @@ exports[`patches image fields (from Prismic) > withThumbnails > group 1`] = `
   "group": [
     {
       "field": {
-        "alt": "Morbi tincidunt ornare massa eget egestas purus viverra accumsan in nisl nisi scelerisque eu",
+        "alt": "Morbi tincidunt ornare massa eget egestas purus viverra accumsan nisl nisi scelerisque eu ultrices",
         "copyright": null,
         "dimensions": {
           "height": 1,
@@ -572,7 +572,7 @@ exports[`patches image fields (from Prismic) > withThumbnails > group 1`] = `
         },
         "id": "d0985c09900",
         "square": {
-          "alt": "Morbi tincidunt ornare massa eget egestas purus viverra accumsan in nisl nisi scelerisque eu",
+          "alt": "Morbi tincidunt ornare massa eget egestas purus viverra accumsan nisl nisi scelerisque eu ultrices",
           "copyright": null,
           "dimensions": {
             "height": 1,
@@ -602,7 +602,7 @@ exports[`patches image fields (from Prismic) > withThumbnails > shared slice 1`]
       "items": [
         {
           "field": {
-            "alt": "Nam libero justo laoreet sit amet cursus sit amet dictum sit",
+            "alt": "Ut consequat semper viverra nam libero justo laoreet sit amet cursus",
             "copyright": null,
             "dimensions": {
               "height": 1,
@@ -616,7 +616,7 @@ exports[`patches image fields (from Prismic) > withThumbnails > shared slice 1`]
             },
             "id": "b35eaa8ebee",
             "square": {
-              "alt": "Nam libero justo laoreet sit amet cursus sit amet dictum sit",
+              "alt": "Ut consequat semper viverra nam libero justo laoreet sit amet cursus",
               "copyright": null,
               "dimensions": {
                 "height": 1,
@@ -637,7 +637,7 @@ exports[`patches image fields (from Prismic) > withThumbnails > shared slice 1`]
       ],
       "primary": {
         "field": {
-          "alt": "Massa massa ultricies mi quis hendrerit dolor magna eget est lorem ipsum dolor sit",
+          "alt": "Pharetra pharetra massa massa ultricies mi quis hendrerit dolor magna eget est lorem ipsum",
           "copyright": null,
           "dimensions": {
             "height": 1,
@@ -651,7 +651,7 @@ exports[`patches image fields (from Prismic) > withThumbnails > shared slice 1`]
           },
           "id": "b35eaa8ebee",
           "square": {
-            "alt": "Massa massa ultricies mi quis hendrerit dolor magna eget est lorem ipsum dolor sit",
+            "alt": "Pharetra pharetra massa massa ultricies mi quis hendrerit dolor magna eget est lorem ipsum",
             "copyright": null,
             "dimensions": {
               "height": 1,
@@ -706,8 +706,8 @@ exports[`patches image fields (from Prismic) > withThumbnails > shared slice 1`]
         ],
       },
       "slice_label": null,
-      "slice_type": "nunc",
-      "variation": "ullamcorper",
+      "slice_type": "purus",
+      "variation": "pulvinar",
       "version": "8bfc905",
     },
   ],
@@ -757,7 +757,7 @@ exports[`patches image fields (from Prismic) > withThumbnails > slice 1`] = `
       ],
       "primary": {
         "field": {
-          "alt": "Tincidunt vitae semper quis lectus",
+          "alt": "Ac tincidunt vitae semper quis",
           "copyright": null,
           "dimensions": {
             "height": 1,
@@ -771,7 +771,7 @@ exports[`patches image fields (from Prismic) > withThumbnails > slice 1`] = `
           },
           "id": "07a35bc5aa2",
           "square": {
-            "alt": "Tincidunt vitae semper quis lectus",
+            "alt": "Ac tincidunt vitae semper quis",
             "copyright": null,
             "dimensions": {
               "height": 1,
@@ -789,7 +789,7 @@ exports[`patches image fields (from Prismic) > withThumbnails > slice 1`] = `
           "url": "https://images.unsplash.com/reserve/HgZuGu3gSD6db21T3lxm_San%20Zenone.jpg?some=query",
         },
       },
-      "slice_label": "Vel",
+      "slice_label": "Leo",
       "slice_type": "hac_habitasse",
     },
   ],
@@ -799,7 +799,7 @@ exports[`patches image fields (from Prismic) > withThumbnails > slice 1`] = `
 exports[`patches image fields (from Prismic) > withThumbnails > static zone 1`] = `
 {
   "field": {
-    "alt": "Velit laoreet id donec ultrices tincidunt arcu non sodales neque sodales ut etiam sit",
+    "alt": "Id interdum velit laoreet id donec ultrices tincidunt arcu non sodales neque sodales ut",
     "copyright": null,
     "dimensions": {
       "height": 1,
@@ -813,7 +813,7 @@ exports[`patches image fields (from Prismic) > withThumbnails > static zone 1`] 
     },
     "id": "a95cc61c373",
     "square": {
-      "alt": "Velit laoreet id donec ultrices tincidunt arcu non sodales neque sodales ut etiam sit",
+      "alt": "Id interdum velit laoreet id donec ultrices tincidunt arcu non sodales neque sodales ut",
       "copyright": null,
       "dimensions": {
         "height": 1,
@@ -986,8 +986,8 @@ exports[`patches image fields (from Prismic) > withThumbnailsNoAlt > shared slic
         ],
       },
       "slice_label": null,
-      "slice_type": "nunc",
-      "variation": "ullamcorper",
+      "slice_type": "purus",
+      "variation": "pulvinar",
       "version": "8bfc905",
     },
   ],
@@ -1069,7 +1069,7 @@ exports[`patches image fields (from Prismic) > withThumbnailsNoAlt > slice 1`] =
           "url": "https://images.unsplash.com/reserve/HgZuGu3gSD6db21T3lxm_San%20Zenone.jpg?some=query",
         },
       },
-      "slice_label": "Vel",
+      "slice_label": "Leo",
       "slice_type": "hac_habitasse",
     },
   ],
@@ -1202,8 +1202,8 @@ exports[`patches image fields > existing > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "nunc",
-      "variation": "ullamcorper",
+      "slice_type": "purus",
+      "variation": "pulvinar",
       "version": "8bfc905",
     },
   ],
@@ -1253,7 +1253,7 @@ exports[`patches image fields > existing > slice 1`] = `
           "url": "https://images.unsplash.com/photo-1587502537745-84b86da1204f?w=6550&h=4367&fit=crop",
         },
       },
-      "slice_label": "Vel",
+      "slice_label": "Leo",
       "slice_type": "hac_habitasse",
     },
   ],
@@ -1370,8 +1370,8 @@ exports[`patches image fields > new > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "nunc",
-      "variation": "ullamcorper",
+      "slice_type": "purus",
+      "variation": "pulvinar",
       "version": "8bfc905",
     },
   ],
@@ -1421,7 +1421,7 @@ exports[`patches image fields > new > slice 1`] = `
           "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
         },
       },
-      "slice_label": "Vel",
+      "slice_label": "Leo",
       "slice_type": "hac_habitasse",
     },
   ],
@@ -1538,8 +1538,8 @@ exports[`patches image fields > newLongForm > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "nunc",
-      "variation": "ullamcorper",
+      "slice_type": "purus",
+      "variation": "pulvinar",
       "version": "8bfc905",
     },
   ],
@@ -1589,7 +1589,7 @@ exports[`patches image fields > newLongForm > slice 1`] = `
           "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
         },
       },
-      "slice_label": "Vel",
+      "slice_label": "Leo",
       "slice_type": "hac_habitasse",
     },
   ],
@@ -1770,8 +1770,8 @@ exports[`patches image fields > newThumbnails > shared slice 1`] = `
         ],
       },
       "slice_label": null,
-      "slice_type": "nunc",
-      "variation": "ullamcorper",
+      "slice_type": "purus",
+      "variation": "pulvinar",
       "version": "8bfc905",
     },
   ],
@@ -1853,7 +1853,7 @@ exports[`patches image fields > newThumbnails > slice 1`] = `
           "url": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=7372&h=4392&fit=crop",
         },
       },
-      "slice_label": "Vel",
+      "slice_label": "Leo",
       "slice_type": "hac_habitasse",
     },
   ],
