@@ -599,12 +599,11 @@ export class Client<
 	 * @returns A list of documents matching the query.
 	 */
 	async dangerouslyGetAll<TDocument extends TDocuments>(
-		params: Partial<Omit<BuildQueryURLArgs, "page">> &
-			GetAllParams &
-			FetchParams = {},
+		params: Partial<BuildQueryURLArgs> & GetAllParams & FetchParams = {},
 	): Promise<TDocument[]> {
 		const { limit = Infinity, ...actualParams } = params
 		const resolvedParams = {
+			page: undefined,
 			...actualParams,
 			pageSize: Math.min(
 				limit,
@@ -619,7 +618,7 @@ export class Client<
 			(!latestResult || latestResult.next_page) &&
 			documents.length < limit
 		) {
-			const page = latestResult ? latestResult.page + 1 : undefined
+			const page = latestResult ? latestResult.page + 1 : resolvedParams.page
 
 			latestResult = await this.get<TDocument>({ ...resolvedParams, page })
 			documents.push(...latestResult.results)
