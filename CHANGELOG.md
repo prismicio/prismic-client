@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.16.1](https://github.com/prismicio/prismic-client/compare/v7.16.0...v7.16.1) (2025-02-20)
+
+
+### Features
+
+* add TableField to AnyRegularField ([6f249d0](https://github.com/prismicio/prismic-client/commit/6f249d06c572f2ef09a2e253743e1045ebc2e8dc))
+
+
+### Bug Fixes
+
+* export table field types ([a0f3e44](https://github.com/prismicio/prismic-client/commit/a0f3e44d514808f9f0ffc2acc9a1adc29323eea7))
+* export table field types ([2862321](https://github.com/prismicio/prismic-client/commit/2862321a186a3f4f617c018977e83dd001666267))
+
+
+### Chore
+
+* update prismic-mock dep ([361b882](https://github.com/prismicio/prismic-client/commit/361b882c0f74627bd845d9146d4fb6aa0b65b49d))
+
 ## [7.16.0](https://github.com/prismicio/prismic-client/compare/v7.15.1...v7.16.0) (2025-02-04)
 
 
