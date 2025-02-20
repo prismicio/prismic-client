@@ -13,6 +13,7 @@ import type { LinkToMediaField } from "./linkToMedia"
 import type { NumberField } from "./number"
 import type { RichTextField } from "./richText"
 import type { SelectField } from "./select"
+import type { TableField } from "./table"
 import type { TimestampField } from "./timestamp"
 import type { TitleField } from "./title"
 
@@ -47,6 +48,7 @@ export type AnyRegularField =
 	| BooleanField
 	| GeoPointField
 	| IntegrationField
+	| TableField
 
 /**
  * Any field that can be used in a slice's primary section.
