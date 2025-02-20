@@ -14,33 +14,44 @@ export type TableField<State extends FieldState = FieldState> =
 		? null
 		: {
 				/**
-				 * The header of the table.
+				 * The head of the table.
 				 */
-				head?: {
-					rows: TableHeaderRow[]
-				}
+				head?: TableFieldHead
+
 				/**
 				 * The body of the table.
 				 */
-				body: {
-					rows: TableDataRow[]
-				}
+				body: TableFieldBody
 			}
 
 /**
- * Represents a row in a table header.
+ * Represents a table head.
  */
-export type TableHeaderRow = {
-	/**
-	 * Cells in the row.
-	 */
-	cells: TableHeaderCell[]
+export type TableFieldHead = {
+	rows: TableFieldHeadRow[]
 }
 
 /**
- * Represents a cell in a table header.
+ * Represents a table body.
  */
-export type TableHeaderCell = {
+export type TableFieldBody = {
+	rows: TableFieldBodyRow[]
+}
+
+/**
+ * Represents a row in a table head.
+ */
+export type TableFieldHeadRow = {
+	/**
+	 * Cells in the row.
+	 */
+	cells: TableFieldHeaderCell[]
+}
+
+/**
+ * Represents a table header cell.
+ */
+export type TableFieldHeaderCell = {
 	type: "header"
 	content: RichTextField
 }
@@ -48,17 +59,17 @@ export type TableHeaderCell = {
 /**
  * Represents a row in a table body.
  */
-export type TableDataRow = {
+export type TableFieldBodyRow = {
 	/**
 	 * Cells in the row.
 	 */
-	cells: (TableHeaderCell | TableDataCell)[]
+	cells: (TableFieldHeaderCell | TableFieldDataCell)[]
 }
 
 /**
- * Represents a cell in a table body.
+ * Represents a table data cell.
  */
-export type TableDataCell = {
+export type TableFieldDataCell = {
 	type: "data"
 	content: RichTextField
 }
