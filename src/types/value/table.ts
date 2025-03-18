@@ -43,6 +43,11 @@ export type TableFieldBody = {
  */
 export type TableFieldHeadRow = {
 	/**
+	 * Unique key of the row (UUID v4 format).
+	 */
+	key: string
+
+	/**
 	 * Cells in the row.
 	 */
 	cells: TableFieldHeaderCell[]
@@ -52,7 +57,19 @@ export type TableFieldHeadRow = {
  * Represents a table header cell.
  */
 export type TableFieldHeaderCell = {
+	/**
+	 * Unique key of the cell (UUID v4 format).
+	 */
+	key: string
+
+	/**
+	 * The type of the cell.
+	 */
 	type: "header"
+
+	/**
+	 * The content of the cell.
+	 */
 	content: RichTextField
 }
 
@@ -60,6 +77,11 @@ export type TableFieldHeaderCell = {
  * Represents a row in a table body.
  */
 export type TableFieldBodyRow = {
+	/**
+	 * Unique key of the row (UUID v4 format).
+	 */
+	key: string
+
 	/**
 	 * Cells in the row.
 	 */
@@ -70,6 +92,18 @@ export type TableFieldBodyRow = {
  * Represents a table data cell.
  */
 export type TableFieldDataCell = {
+	/**
+	 * Unique key of the cell (UUID v4 format).
+	 */
+	key: string
+
+	/**
+	 * The type of the cell.
+	 */
 	type: "data"
+
+	/**
+	 * The content of the cell.
+	 */
 	content: RichTextField
 }
