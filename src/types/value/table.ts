@@ -43,7 +43,7 @@ export type TableFieldBody = {
  */
 export type TableFieldHeadRow = {
 	/**
-	 * Unique key of the row (UUID v4 format).
+	 * Unique key of the row.
 	 */
 	key: string
 
@@ -58,7 +58,7 @@ export type TableFieldHeadRow = {
  */
 export type TableFieldHeaderCell = {
 	/**
-	 * Unique key of the cell (UUID v4 format).
+	 * Unique key of the cell.
 	 */
 	key: string
 
@@ -78,7 +78,7 @@ export type TableFieldHeaderCell = {
  */
 export type TableFieldBodyRow = {
 	/**
-	 * Unique key of the row (UUID v4 format).
+	 * Unique key of the row.
 	 */
 	key: string
 
@@ -93,7 +93,7 @@ export type TableFieldBodyRow = {
  */
 export type TableFieldDataCell = {
 	/**
-	 * Unique key of the cell (UUID v4 format).
+	 * Unique key of the cell.
 	 */
 	key: string
 
