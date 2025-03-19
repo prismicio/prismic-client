@@ -25,8 +25,10 @@ expectType<prismic.TableField>({
 	head: {
 		rows: [
 			{
+				key: "string",
 				cells: [
 					{
+						key: "string",
 						type: "header",
 						content: [
 							{
@@ -49,8 +51,10 @@ expectType<prismic.TableField>({
 	body: {
 		rows: [
 			{
+				key: "string",
 				cells: [
 					{
+						key: "string",
 						type: "data",
 						content: [
 							{

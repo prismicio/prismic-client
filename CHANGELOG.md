@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.17.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.15.0...v7.17.0-alpha.0) (2025-03-18)
+
+
+### Features
+
+* add TableField to AnyRegularField ([6f249d0](https://github.com/prismicio/prismic-client/commit/6f249d06c572f2ef09a2e253743e1045ebc2e8dc))
+* support key for table field content ([165abef](https://github.com/prismicio/prismic-client/commit/165abef574729c77a63cbd3929cac08ae630e82b))
+* support table field ([#375](https://github.com/prismicio/prismic-client/issues/375)) ([39c66f0](https://github.com/prismicio/prismic-client/commit/39c66f09d9f6d7f84ca0b628a7cb0376372ca999))
+
+
+### Bug Fixes
+
+* allow generics with link variant ([#374](https://github.com/prismicio/prismic-client/issues/374)) ([7cff55e](https://github.com/prismicio/prismic-client/commit/7cff55e582458964353ac650346cbb0471a500ba))
+* export table field types ([a0f3e44](https://github.com/prismicio/prismic-client/commit/a0f3e44d514808f9f0ffc2acc9a1adc29323eea7))
+* export table field types ([2862321](https://github.com/prismicio/prismic-client/commit/2862321a186a3f4f617c018977e83dd001666267))
+
+
+### Chore
+
+* **release:** 7.15.1 ([c54c749](https://github.com/prismicio/prismic-client/commit/c54c7495dd748239e0ee615723ec9456204ea07a))
+* **release:** 7.16.0 ([821b360](https://github.com/prismicio/prismic-client/commit/821b3606c7a736971d219a33dbfa9032aa2cd7bf))
+* **release:** 7.16.1 ([16d066f](https://github.com/prismicio/prismic-client/commit/16d066fab315896b099929c1305e46d8bff93565))
+* update prismic-mock dep ([d5d7edb](https://github.com/prismicio/prismic-client/commit/d5d7edb23a491823766036d582969cdb4faeeba8))
+* update prismic-mock dep ([dbf56e6](https://github.com/prismicio/prismic-client/commit/dbf56e603ecb3507a30f4948c1454b142e3104d3))
+* update prismic-mock dep ([361b882](https://github.com/prismicio/prismic-client/commit/361b882c0f74627bd845d9146d4fb6aa0b65b49d))
+
 ### [7.16.1](https://github.com/prismicio/prismic-client/compare/v7.16.0...v7.16.1) (2025-02-20)
 
 
