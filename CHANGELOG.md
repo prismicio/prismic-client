@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.17.1](https://github.com/prismicio/prismic-client/compare/v7.17.0...v7.17.1) (2025-03-31)
+
+
+### Chore
+
+* **deps:** bump `imgix-url-builder` ([e68e43e](https://github.com/prismicio/prismic-client/commit/e68e43e5b97503ca51ae9990bc100eaea7974f76))
+* **deps:** maintain dependencies ([f921d26](https://github.com/prismicio/prismic-client/commit/f921d266b00d56baa0671d56f86af818c0bc6b07))
+
 ## [7.17.0](https://github.com/prismicio/prismic-client/compare/v7.15.0...v7.17.0) (2025-03-19)
 
 
