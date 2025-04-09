@@ -171,8 +171,11 @@ export const testInvalidRefRetry = (args: TestInvalidRefRetryArgs): void => {
 	it("throttles log", async (ctx) => {
 		const client = createTestClient({ ctx })
 		const badRef = ctx.mock.api.ref().ref
+		const queryResponse = ctx.mock.api.query({
+			documents: [ctx.mock.value.document()],
+		})
 
-		mockPrismicRestAPIV2({ ctx })
+		mockPrismicRestAPIV2({ ctx, queryResponse })
 
 		const endpoint = new URL(
 			"documents/search",
