@@ -167,4 +167,45 @@ export const testInvalidRefRetry = (args: TestInvalidRefRetryArgs): void => {
 
 		expect(triedRefs.size).toBe(3)
 	})
+
+	it("throttles log", async (ctx) => {
+		const client = createTestClient({ ctx })
+		const badRef = ctx.mock.api.ref().ref
+
+		mockPrismicRestAPIV2({ ctx })
+
+		const endpoint = new URL(
+			"documents/search",
+			`${client.documentAPIEndpoint}/`,
+		).toString()
+		let attempts = 0
+		ctx.server.use(
+			rest.get(endpoint, (_req, res, ctx) => {
+				if (attempts < 2) {
+					attempts++
+
+					// We purposely return the bad ref again
+					// to force a loop.
+					return res(
+						ctx.json({
+							type: "api_notfound_error",
+							message: `Master ref is: ${badRef}`,
+						}),
+						ctx.status(404),
+					)
+				}
+			}),
+		)
+
+		const consoleWarnSpy = vi
+			.spyOn(console, "warn")
+			.mockImplementation(() => void 0)
+		await args.run(client, { ref: badRef })
+
+		// The client should make two attemps but only log once.
+		expect(attempts).toBe(2)
+		expect(consoleWarnSpy).toHaveBeenCalledTimes(1)
+
+		consoleWarnSpy.mockRestore()
+	})
 }

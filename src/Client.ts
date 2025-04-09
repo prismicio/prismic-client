@@ -8,6 +8,7 @@ import { findRefByLabel } from "./lib/findRefByLabel"
 import { getPreviewCookie } from "./lib/getPreviewCookie"
 import { minifyGraphQLQuery } from "./lib/minifyGraphQLQuery"
 import { someTagsFilter } from "./lib/someTagsFilter"
+import { throttledLog } from "./lib/throttledLog"
 import { typeFilter } from "./lib/typeFilter"
 
 import type { Query } from "./types/api/query"
@@ -1737,8 +1738,9 @@ export class Client<
 
 			const badRef = new URL(url).searchParams.get("ref")
 			const issue = error instanceof RefNotFoundError ? "invalid" : "expired"
-			console.warn(
-				`The ref (${badRef}) was ${issue}. Now retrying with the latest master ref (${masterRef}). If you were previewing content, the response will not include draft content.`,
+			throttledLog(
+				`[@prismicio/client] The ref (${badRef}) was ${issue}. Now retrying with the latest master ref (${masterRef}). If you were previewing content, the response will not include draft content.`,
+				{ level: "warn" },
 			)
 
 			return await this._get({ ...params, ref: masterRef }, attemptCount + 1)
