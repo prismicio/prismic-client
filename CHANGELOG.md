@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.17.2](https://github.com/prismicio/prismic-client/compare/v7.17.1...v7.17.2) (2025-04-10)
+
+
+### Bug Fixes
+
+* omit `page` from all `getAll*` method params ([#383](https://github.com/prismicio/prismic-client/issues/383)) ([5009087](https://github.com/prismicio/prismic-client/commit/5009087c3a3307040882faf4d130b7beeddf3ca7))
+* prevent logging the retry message many times ([#382](https://github.com/prismicio/prismic-client/issues/382)) ([c2bcf4b](https://github.com/prismicio/prismic-client/commit/c2bcf4b88cfba512fa23666ca5c7cd9ec38aa0a5))
+
+
+### Documentation
+
+* update contributing guide ([#381](https://github.com/prismicio/prismic-client/issues/381)) ([5966b61](https://github.com/prismicio/prismic-client/commit/5966b61b41609352c78d9d2ac1e1158ca492a261))
+
 ### [7.17.1](https://github.com/prismicio/prismic-client/compare/v7.17.0...v7.17.1) (2025-03-31)
 
 
