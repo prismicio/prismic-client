@@ -7,7 +7,7 @@ let lastCalledAt = 0
  * Logs a message. If the message is identical the immediate previous logged
  * message and that message was logged within 5 seconds of the current call, the
  * log is ignored. This throttle behavior prevents identical messages from
- * flodding the console.
+ * flooding the console.
  *
  * @param message - A message to log.
  * @param config - Configuration for the log.
