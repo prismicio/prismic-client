@@ -23,15 +23,16 @@ export const throttledLog = (
 ): void => {
 	const { level = "log" } = config
 
-	lastCalledAt = Date.now()
-
 	if (
 		message === lastMessage &&
 		Date.now() - lastCalledAt < THROTTLE_THRESHOLD_MS
 	) {
+		lastCalledAt = Date.now()
+
 		return
 	}
 
+	lastCalledAt = Date.now()
 	lastMessage = message
 
 	// eslint-disable-next-line no-console
