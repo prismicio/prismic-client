@@ -730,7 +730,9 @@ export class Client<
 	 */
 	async getAllByIDs<TDocument extends TDocuments>(
 		ids: string[],
-		params?: Partial<BuildQueryURLArgs> & GetAllParams & FetchParams,
+		params?: Partial<Omit<BuildQueryURLArgs, "page">> &
+			GetAllParams &
+			FetchParams,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
 			appendFilters(params, filter.in("document.id", ids)),
@@ -858,7 +860,9 @@ export class Client<
 	>(
 		documentType: TDocumentType,
 		uids: string[],
-		params?: Partial<BuildQueryURLArgs> & GetAllParams & FetchParams,
+		params?: Partial<Omit<BuildQueryURLArgs, "page">> &
+			GetAllParams &
+			FetchParams,
 	): Promise<ExtractDocumentType<TDocument, TDocumentType>[]> {
 		return await this.dangerouslyGetAll<
 			ExtractDocumentType<TDocument, TDocumentType>
