@@ -137,8 +137,6 @@ After publishing a new release, publish the tags as releases. This will show the
 2. Open the options for the tag you just published to NPM and select "Create release."
 3. Ensure that the "Set as the latest release" box is checked, then publish the release.
 
----
-
 [^1]: This package is maintained by the DevX team. Prismic employees can ask for help or a review in the [#team-devx](https://prismic-team.slack.com/archives/C014VAACCQL) Slack channel.
 
 [^2]: Prismic employees are highly encouraged to discuss changes with the DevX team in the [#team-devx](https://prismic-team.slack.com/archives/C014VAACCQL) Slack channel before starting.
