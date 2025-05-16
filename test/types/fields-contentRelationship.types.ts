@@ -33,19 +33,21 @@ expectType<prismic.ContentRelationshipField>({
 	isBroken: true,
 	data: undefined,
 })
-expectType<prismic.ContentRelationshipField<string, string, never, "filled">>({
-	link_type: prismic.LinkType.Document,
-	id: "string",
-	uid: "string",
-	type: "string",
-	tags: ["string"],
-	lang: "string",
-	url: "string",
-	slug: "string",
-	isBroken: true,
-	data: undefined,
-})
-expectType<prismic.ContentRelationshipField<string, string, never, "empty">>({
+expectType<prismic.ContentRelationshipField<string, string, unknown, "filled">>(
+	{
+		link_type: prismic.LinkType.Document,
+		id: "string",
+		uid: "string",
+		type: "string",
+		tags: ["string"],
+		lang: "string",
+		url: "string",
+		slug: "string",
+		isBroken: true,
+		data: undefined,
+	},
+)
+expectType<prismic.ContentRelationshipField<string, string, unknown, "empty">>({
 	link_type: prismic.LinkType.Any,
 	// @ts-expect-error - Empty fields cannot contain a filled value.
 	id: "string",
@@ -65,13 +67,15 @@ expectType<prismic.ContentRelationshipField<string, string, never, "empty">>({
 expectType<prismic.ContentRelationshipField>({
 	link_type: prismic.LinkType.Any,
 })
-expectType<prismic.ContentRelationshipField<string, string, never, "empty">>({
+expectType<prismic.ContentRelationshipField<string, string, unknown, "empty">>({
 	link_type: prismic.LinkType.Any,
 })
-expectType<prismic.ContentRelationshipField<string, string, never, "filled">>({
-	// @ts-expect-error - Filled fields cannot contain an empty value.
-	link_type: prismic.LinkType.Any,
-})
+expectType<prismic.ContentRelationshipField<string, string, unknown, "filled">>(
+	{
+		// @ts-expect-error - Filled fields cannot contain an empty value.
+		link_type: prismic.LinkType.Any,
+	},
+)
 
 /**
  * Supports custom document type.

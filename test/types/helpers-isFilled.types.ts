@@ -265,6 +265,121 @@ type ContentRelationshipData = { baz: prismic.RichTextField }
 			>
 		>(true)
 	}
+
+	prismic.isFilled.contentRelationship<typeof value>(value)
+	prismic.isFilled.contentRelationship<prismic.ContentRelationshipField>(value)
+	prismic.isFilled.contentRelationship<
+		prismic.ContentRelationshipField<"baz", "bazz", ContentRelationshipData>
+		// @ts-expect-error - Testing mismatch
+	>(value)
+}
+
+type ContentRelationshipDataQux = { qux: prismic.RichTextField }
+
+// With strict union
+;(
+	value:
+		| prismic.ContentRelationshipField<"foo", "bar", ContentRelationshipData>
+		| prismic.ContentRelationshipField<
+				"baz",
+				"bazz",
+				ContentRelationshipDataQux
+		  >,
+) => {
+	if (prismic.isFilled.contentRelationship(value)) {
+		if (value.type === "foo") {
+			expectType<
+				TypeEqual<
+					prismic.ContentRelationshipField<
+						"foo",
+						"bar",
+						ContentRelationshipData,
+						"filled"
+					>,
+					typeof value
+				>
+			>(true)
+			expectType<
+				TypeEqual<
+					prismic.ContentRelationshipField<
+						"baz",
+						"bazz",
+						ContentRelationshipDataQux,
+						"filled"
+					>,
+					typeof value
+				>
+			>(false)
+		} else {
+			expectType<
+				TypeEqual<
+					prismic.ContentRelationshipField<
+						"foo",
+						"bar",
+						ContentRelationshipData,
+						"filled"
+					>,
+					typeof value
+				>
+			>(false)
+			expectType<
+				TypeEqual<
+					prismic.ContentRelationshipField<
+						"baz",
+						"bazz",
+						ContentRelationshipDataQux,
+						"filled"
+					>,
+					typeof value
+				>
+			>(true)
+		}
+	} else {
+		expectType<
+			TypeEqual<
+				prismic.ContentRelationshipField<
+					"foo",
+					"bar",
+					ContentRelationshipData,
+					"filled"
+				>,
+				typeof value
+			>
+		>(false)
+		expectType<
+			TypeEqual<
+				prismic.ContentRelationshipField<
+					"baz",
+					"bazz",
+					ContentRelationshipDataQux,
+					"filled"
+				>,
+				typeof value
+			>
+		>(false)
+		expectType<
+			TypeEqual<
+				prismic.ContentRelationshipField<
+					"foo",
+					"bar",
+					ContentRelationshipData,
+					"empty"
+				>,
+				typeof value
+			>
+		>(true)
+		expectType<
+			TypeEqual<
+				prismic.ContentRelationshipField<
+					"baz",
+					"bazz",
+					ContentRelationshipDataQux,
+					"empty"
+				>,
+				typeof value
+			>
+		>(true)
+	}
 }
 
 /**
