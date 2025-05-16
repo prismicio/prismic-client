@@ -266,16 +266,6 @@ type ContentRelationshipData = { baz: prismic.RichTextField }
 		>(true)
 	}
 
-	// Legacy explicit generic signature
-	prismic.isFilled.contentRelationship<"foo", "bar", ContentRelationshipData>(
-		value,
-	)
-	prismic.isFilled.contentRelationship<"baz", "bazz", ContentRelationshipData>(
-		// @ts-expect-error - Testing mismatch
-		value,
-	)
-
-	// Modern explicit generic signature
 	prismic.isFilled.contentRelationship<typeof value>(value)
 	prismic.isFilled.contentRelationship<prismic.ContentRelationshipField>(value)
 	prismic.isFilled.contentRelationship<

@@ -69,14 +69,14 @@ expectType<prismic.LinkField>({
 	text: "string",
 	variant: "string",
 })
-expectType<prismic.LinkField<string, string, never, "filled">>({
+expectType<prismic.LinkField<string, string, unknown, "filled">>({
 	link_type: prismic.LinkType.Web,
 	url: "string",
 	target: "string",
 	text: "string",
 	variant: "string",
 })
-expectType<prismic.LinkField<string, string, never, "empty">>({
+expectType<prismic.LinkField<string, string, unknown, "empty">>({
 	// @ts-expect-error - Empty fields cannot contain a filled link type.
 	link_type: prismic.LinkType.Web,
 	url: "string",
@@ -91,7 +91,7 @@ expectType<prismic.LinkField<string, string, never, "empty">>({
 expectType<prismic.LinkField>({
 	link_type: prismic.LinkType.Any,
 })
-expectType<prismic.LinkField<string, string, never, "filled">>({
+expectType<prismic.LinkField<string, string, unknown, "filled">>({
 	// @ts-expect-error - Filled fields cannot contain an empty value.
 	link_type: prismic.LinkType.Any,
 })
@@ -101,7 +101,7 @@ expectType<prismic.LinkField>(
 		link_type: prismic.LinkType.Web,
 	},
 )
-expectType<prismic.LinkField<string, string, never, "filled">>(
+expectType<prismic.LinkField<string, string, unknown, "filled">>(
 	// @ts-expect-error - Filled fields must contain properties.
 	{
 		link_type: prismic.LinkType.Web,
@@ -113,7 +113,7 @@ expectType<prismic.LinkField>(
 		link_type: prismic.LinkType.Document,
 	},
 )
-expectType<prismic.LinkField<string, string, never, "filled">>(
+expectType<prismic.LinkField<string, string, unknown, "filled">>(
 	// @ts-expect-error - Filled fields must contain properties.
 	{
 		link_type: prismic.LinkType.Document,
@@ -125,7 +125,7 @@ expectType<prismic.LinkField>(
 		link_type: prismic.LinkType.Media,
 	},
 )
-expectType<prismic.LinkField<string, string, never, "filled">>(
+expectType<prismic.LinkField<string, string, unknown, "filled">>(
 	// @ts-expect-error - Filled fields must contain properties.
 	{
 		link_type: prismic.LinkType.Media,
@@ -139,11 +139,11 @@ expectType<prismic.LinkField>({
 	link_type: prismic.LinkType.Any,
 	text: "string",
 })
-expectType<prismic.LinkField<string, string, never, "empty">>({
+expectType<prismic.LinkField<string, string, unknown, "empty">>({
 	link_type: prismic.LinkType.Any,
 	text: "string",
 })
-expectType<prismic.LinkField<string, string, never, "filled">>({
+expectType<prismic.LinkField<string, string, unknown, "filled">>({
 	// @ts-expect-error - Filled fields cannot contain an empty value.
 	link_type: prismic.LinkType.Any,
 	text: "string",
@@ -156,15 +156,15 @@ expectType<prismic.LinkField>({
 	link_type: prismic.LinkType.Any,
 	variant: "string",
 })
-expectType<prismic.LinkField<string, string, never, "empty">>({
+expectType<prismic.LinkField<string, string, unknown, "empty">>({
 	link_type: prismic.LinkType.Any,
 	variant: "string",
 })
-expectType<prismic.LinkField<string, string, never, "empty", "foo" | "bar">>({
+expectType<prismic.LinkField<string, string, unknown, "empty", "foo" | "bar">>({
 	link_type: prismic.LinkType.Any,
 	variant: "foo",
 })
-expectType<prismic.LinkField<string, string, never, "empty", "foo" | "bar">>({
+expectType<prismic.LinkField<string, string, unknown, "empty", "foo" | "bar">>({
 	link_type: prismic.LinkType.Any,
 	// @ts-expect-error - Variant must match the given enum.
 	variant: "string",
@@ -173,75 +173,87 @@ expectType<prismic.LinkField<string, string, never, "empty", "foo" | "bar">>({
 /**
  * Filled state with explicit variant.
  */
-expectType<prismic.LinkField<string, string, never, "filled", "foo" | "bar">>({
-	link_type: prismic.LinkType.Web,
-	url: "string",
-	target: "string",
-	text: "string",
-	variant: "foo",
-})
-expectType<prismic.LinkField<string, string, never, "filled", "foo" | "bar">>({
-	link_type: prismic.LinkType.Document,
-	id: "string",
-	uid: "string",
-	type: "string",
-	tags: ["string"],
-	lang: "string",
-	url: "string",
-	slug: "string",
-	isBroken: true,
-	data: undefined,
-	text: "string",
-	variant: "foo",
-})
-expectType<prismic.LinkField<string, string, never, "filled", "foo" | "bar">>({
-	link_type: prismic.LinkType.Media,
-	id: "string",
-	name: "string",
-	kind: "string",
-	url: "string",
-	size: "string",
-	height: "string",
-	width: "string",
-	text: "string",
-	variant: "foo",
-})
-expectType<prismic.LinkField<string, string, never, "filled", "foo" | "bar">>({
-	link_type: prismic.LinkType.Web,
-	url: "string",
-	target: "string",
-	text: "string",
-	// @ts-expect-error - Variant must match the given enum.
-	variant: "string",
-})
-expectType<prismic.LinkField<string, string, never, "filled", "foo" | "bar">>({
-	link_type: prismic.LinkType.Document,
-	id: "string",
-	uid: "string",
-	type: "string",
-	tags: ["string"],
-	lang: "string",
-	url: "string",
-	slug: "string",
-	isBroken: true,
-	data: undefined,
-	text: "string",
-	// @ts-expect-error - Variant must match the given enum.
-	variant: "string",
-})
-expectType<prismic.LinkField<string, string, never, "filled", "foo" | "bar">>({
-	link_type: prismic.LinkType.Media,
-	id: "string",
-	name: "string",
-	kind: "string",
-	url: "string",
-	size: "string",
-	height: "string",
-	width: "string",
-	text: "string",
-	// @ts-expect-error - Variant must match the given enum.
-	variant: "string",
-})
+expectType<prismic.LinkField<string, string, unknown, "filled", "foo" | "bar">>(
+	{
+		link_type: prismic.LinkType.Web,
+		url: "string",
+		target: "string",
+		text: "string",
+		variant: "foo",
+	},
+)
+expectType<prismic.LinkField<string, string, unknown, "filled", "foo" | "bar">>(
+	{
+		link_type: prismic.LinkType.Document,
+		id: "string",
+		uid: "string",
+		type: "string",
+		tags: ["string"],
+		lang: "string",
+		url: "string",
+		slug: "string",
+		isBroken: true,
+		data: undefined,
+		text: "string",
+		variant: "foo",
+	},
+)
+expectType<prismic.LinkField<string, string, unknown, "filled", "foo" | "bar">>(
+	{
+		link_type: prismic.LinkType.Media,
+		id: "string",
+		name: "string",
+		kind: "string",
+		url: "string",
+		size: "string",
+		height: "string",
+		width: "string",
+		text: "string",
+		variant: "foo",
+	},
+)
+expectType<prismic.LinkField<string, string, unknown, "filled", "foo" | "bar">>(
+	{
+		link_type: prismic.LinkType.Web,
+		url: "string",
+		target: "string",
+		text: "string",
+		// @ts-expect-error - Variant must match the given enum.
+		variant: "string",
+	},
+)
+expectType<prismic.LinkField<string, string, unknown, "filled", "foo" | "bar">>(
+	{
+		link_type: prismic.LinkType.Document,
+		id: "string",
+		uid: "string",
+		type: "string",
+		tags: ["string"],
+		lang: "string",
+		url: "string",
+		slug: "string",
+		isBroken: true,
+		data: undefined,
+		text: "string",
+		// @ts-expect-error - Variant must match the given enum.
+		variant: "string",
+	},
+)
+expectType<prismic.LinkField<string, string, unknown, "filled", "foo" | "bar">>(
+	{
+		link_type: prismic.LinkType.Media,
+		id: "string",
+		name: "string",
+		kind: "string",
+		url: "string",
+		size: "string",
+		height: "string",
+		width: "string",
+		text: "string",
+		// @ts-expect-error - Variant must match the given enum.
+		variant: "string",
+	},
+)
 
 /**
  * Supports custom document type for document links.

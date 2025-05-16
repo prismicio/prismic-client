@@ -140,31 +140,11 @@ export const linkToMedia = link as (
  *
  * @returns `true` if `field` is filled, `false` otherwise.
  */
-export function contentRelationship<Field extends ContentRelationshipField>(
-	field: Field | null | undefined,
-): field is Exclude<Field, EmptyContentRelationshipField>
-export function contentRelationship<
-	TypeEnum extends string,
-	LangEnum extends string = string,
-	DataInterface extends
-		| Record<string, AnyRegularField | GroupField | SliceZone>
-		| unknown = unknown,
+export const contentRelationship = link as <
+	Field extends ContentRelationshipField,
 >(
-	field:
-		| ContentRelationshipField<TypeEnum, LangEnum, DataInterface>
-		| null
-		| undefined,
-): field is ContentRelationshipField<
-	TypeEnum,
-	LangEnum,
-	DataInterface,
-	"filled"
->
-export function contentRelationship(
-	field: ContentRelationshipField | null | undefined,
-): field is ContentRelationshipField<string, string, unknown, "filled"> {
-	return link(field)
-}
+	field: Field | null | undefined,
+) => field is Exclude<Field, EmptyContentRelationshipField>
 
 /**
  * Determines if a date field is filled.
