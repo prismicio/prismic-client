@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.17.3](https://github.com/prismicio/prismic-client/compare/v7.17.2...v7.17.3) (2025-05-28)
+
+
+### Documentation
+
+* CONTRIBUTING.md ([5b0cd60](https://github.com/prismicio/prismic-client/commit/5b0cd60f6ec833ca0905847b4304a2266bf97f7b))
+
+
+### Refactor
+
+* `isFilled.contentRelationship` function overloads to support strict unions ([#384](https://github.com/prismicio/prismic-client/issues/384)) ([cdb4e06](https://github.com/prismicio/prismic-client/commit/cdb4e067f8f7ef0ebfd43d4eeac82e2c2e9362ad))
+
 ### [7.17.2](https://github.com/prismicio/prismic-client/compare/v7.17.1...v7.17.2) (2025-04-10)
 
 
