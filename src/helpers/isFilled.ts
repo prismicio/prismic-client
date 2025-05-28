@@ -1,5 +1,8 @@
 import type { ColorField } from "../types/value/color"
-import type { ContentRelationshipField } from "../types/value/contentRelationship"
+import type {
+	ContentRelationshipField,
+	EmptyContentRelationshipField,
+} from "../types/value/contentRelationship"
 import type { DateField } from "../types/value/date"
 import type { AnyOEmbed, EmbedField } from "../types/value/embed"
 import type { GeoPointField } from "../types/value/geoPoint"
@@ -138,22 +141,10 @@ export const linkToMedia = link as (
  * @returns `true` if `field` is filled, `false` otherwise.
  */
 export const contentRelationship = link as <
-	TypeEnum = string,
-	LangEnum = string,
-	DataInterface extends
-		| Record<string, AnyRegularField | GroupField | SliceZone>
-		| unknown = unknown,
+	Field extends ContentRelationshipField,
 >(
-	field:
-		| ContentRelationshipField<TypeEnum, LangEnum, DataInterface>
-		| null
-		| undefined,
-) => field is ContentRelationshipField<
-	TypeEnum,
-	LangEnum,
-	DataInterface,
-	"filled"
->
+	field: Field | null | undefined,
+) => field is Exclude<Field, EmptyContentRelationshipField>
 
 /**
  * Determines if a date field is filled.
