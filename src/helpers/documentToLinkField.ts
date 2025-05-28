@@ -45,9 +45,5 @@ export const documentToLinkField = <
 		...(prismicDocument.data && Object.keys(prismicDocument.data).length > 0
 			? { data: prismicDocument.data }
 			: {}),
-	} as FilledContentRelationshipField<
-		TDocument["type"],
-		TDocument["lang"],
-		TDocument["data"]
-	>
+	}
 }

@@ -30,13 +30,13 @@ export type EmptyContentRelationshipField = {
 /**
  * Links that refer to documents
  */
-export type FilledContentRelationshipField<
+export interface FilledContentRelationshipField<
 	TypeEnum = string,
 	LangEnum = string,
 	DataInterface extends
 		| Record<string, AnyRegularField | GroupField | SliceZone>
 		| unknown = unknown,
-> = {
+> {
 	link_type: "Document"
 	id: string
 	uid?: string
@@ -46,7 +46,5 @@ export type FilledContentRelationshipField<
 	url?: string
 	slug?: string
 	isBroken?: boolean
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-} & (DataInterface extends Record<string, any>
-	? { data: DataInterface }
-	: { data?: unknown })
+	data?: DataInterface
+}
