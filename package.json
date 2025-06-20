@@ -83,7 +83,7 @@
 	},
 	"devDependencies": {
 		"@prismicio/mock": "0.7.1",
-		"@prismicio/types-internal": "^3.8.0",
+		"@prismicio/types-internal": "^3.11.2",
 		"@size-limit/preset-small-lib": "^11.2.0",
 		"@trivago/prettier-plugin-sort-imports": "^4.3.0",
 		"@typescript-eslint/eslint-plugin": "^6.21.0",
