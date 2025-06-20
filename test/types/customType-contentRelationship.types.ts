@@ -53,6 +53,67 @@ expectType<prismic.CustomTypeModelContentRelationshipField>({
 })
 
 /**
+ * Supports simple data linking in optional `customtypes` property.
+ */
+expectType<prismic.CustomTypeModelContentRelationshipField>({
+	type: prismic.CustomTypeModelFieldType.Link,
+	config: {
+		label: "CR-1",
+		select: prismic.CustomTypeModelLinkSelectType.Document,
+		customtypes: [{ id: "custom-type", fields: ["field-1", "field-2"] }],
+	},
+})
+
+/**
+ * Supports complex data linking in optional `customtypes` property.
+ */
+expectType<prismic.CustomTypeModelContentRelationshipField>({
+	type: prismic.CustomTypeModelFieldType.Link,
+	config: {
+		label: "CR-1",
+		select: prismic.CustomTypeModelLinkSelectType.Document,
+		customtypes: [
+			{
+				id: "custom-type-1",
+				fields: [
+					"field-1",
+					{
+						id: "group-1",
+						fields: [
+							"field-1",
+							{
+								id: "CR-2",
+								customtypes: [
+									{
+										id: "custom-type-2",
+										fields: [
+											"field-1",
+											{ id: "group-2", fields: ["field-1", "field-2"] },
+										],
+									},
+								],
+							},
+						],
+					},
+					{
+						id: "CR-2",
+						customtypes: [
+							{
+								id: "custom-type-2",
+								fields: [
+									"field-1",
+									{ id: "group-2", fields: ["field-1", "field-2"] },
+								],
+							},
+						],
+					},
+				],
+			},
+		],
+	},
+})
+
+/**
  * Supports custom `customtypes` values.
  */
 expectType<prismic.CustomTypeModelContentRelationshipField<"foo">>({
