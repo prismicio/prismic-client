@@ -33,7 +33,7 @@ type CustomTypeLevel1 = {
  * More details: {@link https://prismic.io/docs/content-relationship}
  */
 export interface CustomTypeModelContentRelationshipField<
-	CustomTypeIDs extends string | CustomTypeLevel1 = string | CustomTypeLevel1,
+	CustomTypes extends string | CustomTypeLevel1 = string | CustomTypeLevel1,
 	Tags extends string = string,
 > {
 	type: typeof CustomTypeModelFieldType.Link
@@ -41,7 +41,7 @@ export interface CustomTypeModelContentRelationshipField<
 		label?: string | null
 		placeholder?: string
 		select: typeof CustomTypeModelLinkSelectType.Document
-		customtypes?: readonly CustomTypeIDs[]
+		customtypes?: readonly CustomTypes[]
 		tags?: readonly Tags[]
 	}
 }
