@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.18.0](https://github.com/prismicio/prismic-client/compare/v7.18.0-alpha.0...v7.18.0) (2025-06-24)
+
+
+### Chore
+
+* update type names ([7ecf76a](https://github.com/prismicio/prismic-client/commit/7ecf76aa930571a508c210a5de838e6a4eb0a956))
+
 ## [7.18.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.17.3...v7.18.0-alpha.0) (2025-06-23)
 
 
