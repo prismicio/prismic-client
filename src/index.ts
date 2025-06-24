@@ -285,11 +285,11 @@ export type {
 } from "./types/model/image"
 
 export type {
-	CustomTypeLevel1,
-	ContentRelationshipLevel1,
-	GroupLevel1,
-	CustomTypeLevel2,
-	GroupLevel2,
+	CustomTypeModelFetchCustomTypeLevel1,
+	CustomTypeModelFetchContentRelationshipLevel1,
+	CustomTypeModelFetchGroupLevel1,
+	CustomTypeModelFetchCustomTypeLevel2,
+	CustomTypeModelFetchGroupLevel2,
 	CustomTypeModelContentRelationshipField,
 } from "./types/model/contentRelationship"
 export type { CustomTypeModelLinkField } from "./types/model/link"

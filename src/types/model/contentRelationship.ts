@@ -5,7 +5,7 @@ import type { CustomTypeModelLinkSelectType } from "./link"
 /**
  * @internal
  */
-export type GroupLevel2 = {
+export type CustomTypeModelFetchGroupLevel2 = {
 	id: string
 	fields: ReadonlyArray<string>
 }
@@ -13,33 +13,37 @@ export type GroupLevel2 = {
 /**
  * @internal
  */
-export type CustomTypeLevel2 = {
+export type CustomTypeModelFetchCustomTypeLevel2 = {
 	id: string
-	fields: ReadonlyArray<string | GroupLevel2>
+	fields: ReadonlyArray<string | CustomTypeModelFetchGroupLevel2>
 }
 
 /**
  * @internal
  */
-export type GroupLevel1 = {
+export type CustomTypeModelFetchGroupLevel1 = {
 	id: string
-	fields: ReadonlyArray<string | ContentRelationshipLevel1>
+	fields: ReadonlyArray<string | CustomTypeModelFetchContentRelationshipLevel1>
 }
 
 /**
  * @internal
  */
-export type ContentRelationshipLevel1 = {
+export type CustomTypeModelFetchContentRelationshipLevel1 = {
 	id: string
-	customtypes: ReadonlyArray<string | CustomTypeLevel2>
+	customtypes: ReadonlyArray<string | CustomTypeModelFetchCustomTypeLevel2>
 }
 
 /**
  * @internal
  */
-export type CustomTypeLevel1 = {
+export type CustomTypeModelFetchCustomTypeLevel1 = {
 	id: string
-	fields: ReadonlyArray<string | GroupLevel1 | ContentRelationshipLevel1>
+	fields: ReadonlyArray<
+		| string
+		| CustomTypeModelFetchGroupLevel1
+		| CustomTypeModelFetchContentRelationshipLevel1
+	>
 }
 
 /**
@@ -48,7 +52,9 @@ export type CustomTypeLevel1 = {
  * More details: {@link https://prismic.io/docs/content-relationship}
  */
 export interface CustomTypeModelContentRelationshipField<
-	CustomTypes extends string | CustomTypeLevel1 = string | CustomTypeLevel1,
+	CustomTypes extends string | CustomTypeModelFetchCustomTypeLevel1 =
+		| string
+		| CustomTypeModelFetchCustomTypeLevel1,
 	Tags extends string = string,
 > {
 	type: typeof CustomTypeModelFieldType.Link
