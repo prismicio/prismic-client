@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.18.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.17.3...v7.18.0-alpha.0) (2025-06-23)
+
+
+### Features
+
+* export customtypes models ([6342133](https://github.com/prismicio/prismic-client/commit/63421334af9ba7b17ea6b3310a2a86350b14425e))
+* support content relationship v2 ([8a26cef](https://github.com/prismicio/prismic-client/commit/8a26cef3dc94884f9ea066eb738fed3c702d12a0))
+
+
+### Chore
+
+* rename CustomTypeIDs to CustomTypes ([918b298](https://github.com/prismicio/prismic-client/commit/918b2988bce8eb2bd04c57b8d2b81f11e1b71215))
+
 ### [7.17.3](https://github.com/prismicio/prismic-client/compare/v7.17.2...v7.17.3) (2025-05-28)
 
 

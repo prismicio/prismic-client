@@ -284,7 +284,14 @@ export type {
 	CustomTypeModelImageThumbnail,
 } from "./types/model/image"
 
-export type { CustomTypeModelContentRelationshipField } from "./types/model/contentRelationship"
+export type {
+	CustomTypeModelFetchCustomTypeLevel1,
+	CustomTypeModelFetchContentRelationshipLevel1,
+	CustomTypeModelFetchGroupLevel1,
+	CustomTypeModelFetchCustomTypeLevel2,
+	CustomTypeModelFetchGroupLevel2,
+	CustomTypeModelContentRelationshipField,
+} from "./types/model/contentRelationship"
 export type { CustomTypeModelLinkField } from "./types/model/link"
 export type { CustomTypeModelLinkToMediaField } from "./types/model/linkToMedia"
 
