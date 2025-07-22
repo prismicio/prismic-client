@@ -160,18 +160,6 @@ export type CreateAssetParams = {
 }
 
 /**
- * Prismic Migration API demo keys.
- */
-const MIGRATION_API_DEMO_KEYS = [
-	"cSaZlfkQlF9C6CEAM2Del6MNX9WonlV86HPbeEJL",
-	"pZCexCajUQ4jriYwIGSxA1drZrFxDyFf1S0D1K0P",
-	"Yc0mfrkGDw8gaaGKTrzwC3QUZDajv6k73DA99vWN",
-	"ySzSEbVMAb5S1oSCQfbVG4mbh9Cb8wlF7BCvKI0L",
-	"g2DA3EKWvx8uxVYcNFrmT5nJpon1Vi9V4XcOibJD",
-	"CCNIlI0Vz41J66oFwsHUXaZa6NYFIY6z7aDF62Bc",
-]
-
-/**
  * Configuration for clients that determine how content is queried.
  */
 export type WriteClientConfig = {
@@ -179,15 +167,6 @@ export type WriteClientConfig = {
 	 * A Prismic write token that allows writing content to the repository.
 	 */
 	writeToken: string
-
-	/**
-	 * A Prismic Migration API key that allows working with the Migration API.
-	 *
-	 * @remarks
-	 * If no key is provided, the client will use one of the demo key available
-	 * which has stricter rate limiting rules enforced.
-	 */
-	migrationAPIKey?: string
 
 	/**
 	 * The Prismic Asset API endpoint.
@@ -222,7 +201,6 @@ export class WriteClient<
 	TDocuments extends PrismicDocument = PrismicDocument,
 > extends Client<TDocuments> {
 	writeToken: string
-	migrationAPIKey: string
 
 	assetAPIEndpoint = "https://asset-api.prismic.io/"
 	migrationAPIEndpoint = "https://migration.prismic.io/"
@@ -246,16 +224,11 @@ export class WriteClient<
 
 		if (typeof globalThis.window !== "undefined") {
 			console.warn(
-				`[@prismicio/client] Prismic write client appears to be running in a browser environment. This is not recommended as it exposes your write token and Migration API key. Consider using Prismic write client in a server environment only, preferring the regular client for browser environement. For more details, see ${devMsg("avoid-write-client-in-browser")}`,
+				`[@prismicio/client] Prismic write client appears to be running in a browser environment. This is not recommended as it exposes your write token. Consider using Prismic write client in a server environment only, preferring the regular client for browser environment. For more details, see ${devMsg("avoid-write-client-in-browser")}`,
 			)
 		}
 
 		this.writeToken = options.writeToken
-		this.migrationAPIKey =
-			options.migrationAPIKey ||
-			MIGRATION_API_DEMO_KEYS[
-				Math.floor(Math.random() * MIGRATION_API_DEMO_KEYS.length)
-			]
 
 		if (options.assetAPIEndpoint) {
 			this.assetAPIEndpoint = `${options.assetAPIEndpoint}/`
@@ -909,7 +882,6 @@ export class WriteClient<
 					"content-type": "application/json",
 					repository: this.repositoryName,
 					authorization: `Bearer ${this.writeToken}`,
-					"x-api-key": this.migrationAPIKey,
 				},
 			},
 		}
