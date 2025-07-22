@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.18.1](https://github.com/prismicio/prismic-client/compare/v7.18.0...v7.18.1) (2025-07-22)
+
 ## [7.18.0](https://github.com/prismicio/prismic-client/compare/v7.18.0-alpha.0...v7.18.0) (2025-06-24)
 
 
