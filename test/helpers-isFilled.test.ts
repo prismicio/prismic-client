@@ -87,13 +87,16 @@ it("image thumbnail", () => {
 	).toBe(true)
 })
 
-it("integration fields", (ctx) => {
-	expect(isFilled.integrationField(null)).toBe(false)
-	expect(isFilled.integrationField(undefined)).toBe(false)
-	expect(isFilled.integrationField(ctx.mock.value.integration())).toBe(true)
+it("integration", (ctx) => {
+	expect(isFilled.integration(null)).toBe(false)
+	expect(isFilled.integration(undefined)).toBe(false)
+	expect(isFilled.integration(ctx.mock.value.integration())).toBe(true)
 })
-it("aliases integrationFields to integrationField", () => {
-	expect(isFilled.integrationField).toBe(isFilled.integrationField)
+it("aliases integrationField to integration", () => {
+	expect(isFilled.integrationField).toBe(isFilled.integration)
+})
+it("aliases integrationFields to integration", () => {
+	expect(isFilled.integrationFields).toBe(isFilled.integration)
 })
 
 it("key text", (ctx) => {
