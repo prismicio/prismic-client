@@ -258,16 +258,21 @@ export const table = isNonNullish as (
  *
  * @returns `true` if `field` is filled, `false` otherwise.
  */
-export const integrationField = isNonNullish as <
+export const integration = isNonNullish as <
 	Data extends Record<string, unknown>,
 >(
 	field: IntegrationField<Data> | null | undefined,
 ) => field is IntegrationField<Data, "filled">
 /**
+ * @deprecated Renamed to `integration`.
+ */
+// TODO: Remove when we remove support for deprecated `integrationField` export.
+export const integrationField = integration
+/**
  * @deprecated Renamed to `integrationField`.
  */
 // TODO: Remove when we remove support for deprecated `integrationFields` export.
-export const integrationFields = integrationField
+export const integrationFields = integration
 
 /**
  * Determines if a repeatable field has at least one item.
