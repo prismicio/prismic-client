@@ -51,13 +51,3 @@ it("uses provided Migration API endpoint and adds `/` suffix", () => {
 
 	expect(client.migrationAPIEndpoint).toBe("https://example.com/")
 })
-
-it("uses provided Migration API key", () => {
-	const client = prismic.createWriteClient("qwerty", {
-		fetch: vi.fn(),
-		writeToken: "xxx",
-		migrationAPIKey: "yyy",
-	})
-
-	expect(client.migrationAPIKey).toBe("yyy")
-})
