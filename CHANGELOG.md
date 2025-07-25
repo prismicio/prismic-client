@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.19.0](https://github.com/prismicio/prismic-client/compare/v7.18.3...v7.19.0) (2025-07-25)
+
+
+### Bug Fixes
+
+* rename `isFilled.integrationField` to `isFilled.integration` ([#390](https://github.com/prismicio/prismic-client/issues/390)) ([0cc7b25](https://github.com/prismicio/prismic-client/commit/0cc7b25349e7a827ddf3a3e5b3eb2f83713774dd))
+
+
+### Chore
+
+* remove hard-coded `--release-as patch` ([2ce1008](https://github.com/prismicio/prismic-client/commit/2ce1008bf5813d446233707a3df1c24bb5eeffad))
+
 ### [7.18.3](https://github.com/prismicio/prismic-client/compare/v7.18.2...v7.18.3) (2025-07-25)
 
 ### [7.18.2](https://github.com/prismicio/prismic-client/compare/v7.18.1...v7.18.2) (2025-07-24)
