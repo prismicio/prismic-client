@@ -15,7 +15,6 @@ type MockPrismicMigrationAPIArgs = {
 	ctx: TestContext
 	client: WriteClient
 	writeToken?: string
-	migrationAPIKey?: string
 	requiredHeaders?: Record<string, string>
 	existingDocuments?: (PostDocumentResult | PrismicDocument)[] | number
 	newDocuments?: { id: string; masterLanguageDocumentID?: string }[]
@@ -34,7 +33,6 @@ export const mockPrismicMigrationAPI = (
 	const repositoryName = args.client.repositoryName
 	const migrationAPIEndpoint = args.client.migrationAPIEndpoint
 	const writeToken = args.writeToken || args.client.writeToken
-	const migrationAPIKey = args.migrationAPIKey || args.client.migrationAPIKey
 
 	const documentsDatabase: Record<
 		string,
@@ -88,7 +86,6 @@ export const mockPrismicMigrationAPI = (
 			async (req, res, ctx) => {
 				if (
 					req.headers.get("authorization") !== `Bearer ${writeToken}` ||
-					req.headers.get("x-api-key") !== migrationAPIKey ||
 					req.headers.get("repository") !== repositoryName
 				) {
 					return res(ctx.status(403), ctx.json({ Message: "forbidden" }))
@@ -129,7 +126,6 @@ export const mockPrismicMigrationAPI = (
 			async (req, res, ctx) => {
 				if (
 					req.headers.get("authorization") !== `Bearer ${writeToken}` ||
-					req.headers.get("x-api-key") !== migrationAPIKey ||
 					req.headers.get("repository") !== repositoryName
 				) {
 					return res(ctx.status(403), ctx.json({ Message: "forbidden" }))
