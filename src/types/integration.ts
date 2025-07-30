@@ -1,4 +1,4 @@
-import type { IntegrationFieldData } from "../value/integration"
+import type { IntegrationFieldData } from "./value/integration"
 
 /**
  * A catalog item from an integration field.
@@ -7,7 +7,9 @@ import type { IntegrationFieldData } from "../value/integration"
  *
  * @see {@link https://prismic.io/docs/fields/integration#create-an-integration-catalog}
  */
-export type IntegrationAPIItem<TData extends IntegrationFieldData> = {
+export type IntegrationAPIItem<
+	TData extends IntegrationFieldData = IntegrationFieldData,
+> = {
 	id: string
 	title: string
 	description: string
@@ -24,7 +26,14 @@ export type IntegrationAPIItem<TData extends IntegrationFieldData> = {
  *
  * @see {@link https://prismic.io/docs/fields/integration#create-an-integration-catalog}
  */
-export type IntegrationAPIResults<TData extends IntegrationFieldData> = {
+export type IntegrationAPIResults<
+	TData extends IntegrationFieldData = IntegrationFieldData,
+> = {
 	results_size: number
 	results: IntegrationAPIItem<TData>[]
+	/**
+	 * An optional cursor used for pagination. It will be passed as a `cursor` URL
+	 * parameter to the next page.
+	 */
+	cursor?: string
 }

@@ -385,3 +385,6 @@ export type { WebhookBody } from "./types/webhook/types"
 export type { WebhookBodyAPIUpdate } from "./types/webhook/apiUpdate"
 
 export type { WebhookBodyTestTrigger } from "./types/webhook/testTrigger"
+
+// Integration - Types representing integration catalogs.
+export { IntegrationAPIItem, IntegrationAPIResults } from "./types/integration"
