@@ -243,7 +243,8 @@ export type { GeoPointField } from "./types/value/geoPoint"
  */
 // TODO: Remove when we remove support for deprecated `IntegrationFields` export.
 type IntegrationFields = IntegrationField
-export { IntegrationField, IntegrationFields }
+export type { IntegrationField, IntegrationFields }
+export type { IntegrationFieldData } from "./types/value/integration"
 
 export type { GroupField, NestedGroupField } from "./types/value/group"
 
