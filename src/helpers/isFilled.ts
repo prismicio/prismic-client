@@ -8,7 +8,10 @@ import type { AnyOEmbed, EmbedField } from "../types/value/embed"
 import type { GeoPointField } from "../types/value/geoPoint"
 import type { GroupField, NestedGroupField } from "../types/value/group"
 import type { ImageField, ImageFieldImage } from "../types/value/image"
-import type { IntegrationField } from "../types/value/integration"
+import type {
+	IntegrationField,
+	IntegrationFieldData,
+} from "../types/value/integration"
 import type { KeyTextField } from "../types/value/keyText"
 import type { LinkField } from "../types/value/link"
 import type { LinkToMediaField } from "../types/value/linkToMedia"
@@ -258,9 +261,7 @@ export const table = isNonNullish as (
  *
  * @returns `true` if `field` is filled, `false` otherwise.
  */
-export const integration = isNonNullish as <
-	Data extends Record<string, unknown>,
->(
+export const integration = isNonNullish as <Data extends IntegrationFieldData>(
 	field: IntegrationField<Data> | null | undefined,
 ) => field is IntegrationField<Data, "filled">
 /**

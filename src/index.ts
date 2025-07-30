@@ -243,7 +243,8 @@ export type { GeoPointField } from "./types/value/geoPoint"
  */
 // TODO: Remove when we remove support for deprecated `IntegrationFields` export.
 type IntegrationFields = IntegrationField
-export { IntegrationField, IntegrationFields }
+export type { IntegrationField, IntegrationFields }
+export type { IntegrationFieldData } from "./types/value/integration"
 
 export type { GroupField, NestedGroupField } from "./types/value/group"
 
@@ -384,3 +385,6 @@ export type { WebhookBody } from "./types/webhook/types"
 export type { WebhookBodyAPIUpdate } from "./types/webhook/apiUpdate"
 
 export type { WebhookBodyTestTrigger } from "./types/webhook/testTrigger"
+
+// Integration - Types representing integration catalogs.
+export { IntegrationAPIItem, IntegrationAPIResults } from "./types/integration"

@@ -17,6 +17,21 @@ import type * as prismic from "../../src"
 		}
 	}
 }
+;(value: prismic.IntegrationFieldData): true => {
+	switch (typeof value) {
+		case "object": {
+			if (value === null) {
+				expectNever(value)
+			}
+
+			return true
+		}
+
+		default: {
+			return expectNever(value)
+		}
+	}
+}
 
 /**
  * Filled state.
