@@ -568,33 +568,31 @@ type EmbedData = prismic.VideoOEmbed & { foo: string }
  * Integration
  */
 
-type IntegrationFieldDefault = Record<string, unknown>
-
 // Default
 ;(value: prismic.IntegrationField) => {
 	if (prismic.isFilled.integration(value)) {
 		expectType<
 			TypeEqual<
-				prismic.IntegrationField<IntegrationFieldDefault, "filled">,
+				prismic.IntegrationField<prismic.IntegrationFieldData, "filled">,
 				typeof value
 			>
 		>(true)
 		expectType<
 			TypeEqual<
-				prismic.IntegrationField<IntegrationFieldDefault, "empty">,
+				prismic.IntegrationField<prismic.IntegrationFieldData, "empty">,
 				typeof value
 			>
 		>(false)
 	} else {
 		expectType<
 			TypeEqual<
-				prismic.IntegrationField<IntegrationFieldDefault, "filled">,
+				prismic.IntegrationField<prismic.IntegrationFieldData, "filled">,
 				typeof value
 			>
 		>(false)
 		expectType<
 			TypeEqual<
-				prismic.IntegrationField<IntegrationFieldDefault, "empty">,
+				prismic.IntegrationField<prismic.IntegrationFieldData, "empty">,
 				typeof value
 			>
 		>(true)
