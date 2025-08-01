@@ -72,14 +72,14 @@ export const GET_ALL_QUERY_DELAY = 500
  *
  * The API allows up to 200 requests per second.
  */
-const DEFUALT_RETRY_AFTER_MS = 1000
+const DEFAULT_RETRY_AFTER_MS = 1000
 
 /**
- * The maximum number of attemps to retry a query with an invalid ref. We allow
+ * The maximum number of attempts to retry a query with an invalid ref. We allow
  * multiple attempts since each attempt may use a different (and possibly
- * invalid) ref. Capping the number of attemps prevents infinite loops.
+ * invalid) ref. Capping the number of attempts prevents infinite loops.
  */
-const MAX_INVALID_REF_RETRY_ATTEMPS = 3
+const MAX_INVALID_REF_RETRY_ATTEMPTS = 3
 
 /**
  * Extracts one or more Prismic document types that match a given Prismic
@@ -1721,7 +1721,7 @@ export class Client<
 				!(
 					error instanceof RefNotFoundError || error instanceof RefExpiredError
 				) ||
-				attemptCount >= MAX_INVALID_REF_RETRY_ATTEMPS - 1
+				attemptCount >= MAX_INVALID_REF_RETRY_ATTEMPTS - 1
 			) {
 				throw error
 			}
@@ -1840,8 +1840,8 @@ export class Client<
 			case 429: {
 				const parsedRetryAfter = Number(res.headers.get("retry-after"))
 				const delay = Number.isNaN(parsedRetryAfter)
-					? DEFUALT_RETRY_AFTER_MS
-					: parsedRetryAfter
+					? DEFAULT_RETRY_AFTER_MS
+					: parsedRetryAfter * 1000
 
 				return await new Promise((resolve, reject) => {
 					setTimeout(async () => {

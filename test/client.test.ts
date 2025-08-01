@@ -914,7 +914,7 @@ it("throws NotFoundError if the 404 error is unknown", async (ctx) => {
 	await expect(() => client.get()).rejects.toThrowError(prismic.NotFoundError)
 })
 
-it("retries after `retry-after` milliseconds if response code is 429", async (ctx) => {
+it("retries after `retry-after` if response code is 429", async (ctx) => {
 	const retryAfter = 200 // ms
 	/**
 	 * The number of milliseconds that time-measuring tests can vary.
@@ -936,7 +936,7 @@ it("retries after `retry-after` milliseconds if response code is 429", async (ct
 
 	const queryEndpoint = new URL(
 		"documents/search",
-		`${client.endpoint}/`,
+		`${client.documentAPIEndpoint}/`,
 	).toString()
 
 	let responseTries = 0
@@ -955,7 +955,8 @@ it("retries after `retry-after` milliseconds if response code is 429", async (ct
 						status_message:
 							"Your request count (11) is over the allowed limit of 10.",
 					}),
-					ctx.set("retry-after", retryAfter.toString()),
+					// "retry-after" is specified in seconds
+					ctx.set("retry-after", (retryAfter / 1000).toString()),
 				)
 			}
 		}),
