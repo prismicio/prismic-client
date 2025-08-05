@@ -1,5 +1,5 @@
 import { devMsg } from "./lib/devMsg"
-import type { RequestInitLike } from "./lib/efficientFetch"
+import { type RequestInitLike, efficientFetch } from "./lib/efficientFetch"
 import { pLimit } from "./lib/pLimit"
 import {
 	resolveMigrationContentRelationship,
@@ -9,22 +9,15 @@ import {
 import type {
 	Asset,
 	PatchAssetParams,
-	PatchAssetResult,
 	PostAssetParams,
 	PostAssetResult,
 } from "./types/api/asset/asset"
 import type {
 	AssetTag,
 	GetAssetTagsResult,
-	PostAssetTagParams,
 	PostAssetTagResult,
 } from "./types/api/asset/tag"
-import type { PutDocumentResult } from "./types/api/migration/document"
-import {
-	type PostDocumentParams,
-	type PostDocumentResult,
-	type PutDocumentParams,
-} from "./types/api/migration/document"
+import { type PostDocumentResult } from "./types/api/migration/document"
 import type { PrismicMigrationAsset } from "./types/migration/Asset"
 import type {
 	MigrationDocument,
@@ -33,10 +26,9 @@ import type {
 } from "./types/migration/Document"
 import type { PrismicDocument } from "./types/value/document"
 
+import { ForbiddenError } from "./errors/ForbiddenError"
+import { NotFoundError } from "./errors/NotFoundError"
 import { PrismicError } from "./errors/PrismicError"
-
-import { assetAPIFetch } from "./clients/asset"
-import { migrationAPIFetch } from "./clients/migration"
 
 import { Client } from "./Client"
 import type { ClientConfig, FetchParams } from "./Client"
@@ -540,20 +532,46 @@ export class WriteClient<
 			formData.append("alt", alt)
 		}
 
-		const asset = await this.#assetAPIFetch<PostAssetResult>(
+		const response = await efficientFetch(
 			url.toString(),
-			this.buildAssetAPIQueryParams({
+			{
 				method: "POST",
 				body: formData,
-				params,
-			}),
+				headers: {
+					...this.fetchOptions?.headers,
+					...params.fetchOptions?.headers,
+					authorization: `Bearer ${this.writeToken}`,
+					repository: this.repositoryName,
+				},
+				signal:
+					params?.fetchOptions?.signal ||
+					params?.signal ||
+					this.fetchOptions?.signal,
+			},
+			this.fetchFn,
 		)
+		switch (response.status) {
+			case 200: {
+				const asset = (await response.json()) as PostAssetResult
 
-		if (tags && tags.length) {
-			return this.updateAsset(asset.id, { tags })
+				if (tags && tags.length) {
+					return this.updateAsset(asset.id, { tags })
+				}
+
+				return asset
+			}
+			case 400: {
+				const json = await response.json()
+				throw new PrismicError(json.error, url.toString(), json)
+			}
+			case 401: {
+				const json = await response.json()
+				throw new ForbiddenError(json.error, url.toString(), json)
+			}
+			default: {
+				throw new PrismicError(undefined, url.toString(), await response.text())
+			}
 		}
-
-		return asset
 	}
 
 	/**
@@ -585,20 +603,47 @@ export class WriteClient<
 			})
 		}
 
-		return this.#assetAPIFetch<PatchAssetResult>(
+		const response = await efficientFetch(
 			url.toString(),
-			this.buildAssetAPIQueryParams<PatchAssetParams>({
+			{
 				method: "PATCH",
-				body: {
+				body: JSON.stringify({
 					notes,
 					credits,
 					alt,
 					filename,
 					tags,
+				}),
+				headers: {
+					...this.fetchOptions?.headers,
+					...params.fetchOptions?.headers,
+					"content-type": "application/json",
+					authorization: `Bearer ${this.writeToken}`,
+					repository: this.repositoryName,
 				},
-				params,
-			}),
+				signal:
+					params?.fetchOptions?.signal ||
+					params?.signal ||
+					this.fetchOptions?.signal,
+			},
+			this.fetchFn,
 		)
+		switch (response.status) {
+			case 200: {
+				return (await response.json()) as Asset
+			}
+			case 401: {
+				const json = await response.json()
+				throw new ForbiddenError(json.error, url.toString(), json)
+			}
+			case 404: {
+				const json = await response.json()
+				throw new NotFoundError(json.error, url.toString(), json)
+			}
+			default: {
+				throw new PrismicError(undefined, url.toString(), await response.text())
+			}
+		}
 	}
 
 	/**
@@ -699,14 +744,37 @@ export class WriteClient<
 	): Promise<AssetTag> {
 		const url = new URL("tags", this.assetAPIEndpoint)
 
-		return this.#assetAPIFetch<PostAssetTagResult>(
+		const response = await efficientFetch(
 			url.toString(),
-			this.buildAssetAPIQueryParams<PostAssetTagParams>({
+			{
 				method: "POST",
-				body: { name },
-				params,
-			}),
+				body: JSON.stringify({ name }),
+				headers: {
+					...this.fetchOptions?.headers,
+					...params?.fetchOptions?.headers,
+					"content-type": "application/json",
+					authorization: `Bearer ${this.writeToken}`,
+					repository: this.repositoryName,
+				},
+				signal:
+					params?.fetchOptions?.signal ||
+					params?.signal ||
+					this.fetchOptions?.signal,
+			},
+			this.fetchFn,
 		)
+		switch (response.status) {
+			case 201: {
+				return (await response.json()) as PostAssetTagResult
+			}
+			case 401: {
+				const json = await response.json()
+				throw new ForbiddenError(json.error, url.toString(), json)
+			}
+			default: {
+				throw new PrismicError(undefined, url.toString(), await response.text())
+			}
+		}
 	}
 
 	/**
@@ -719,12 +787,36 @@ export class WriteClient<
 	private async getAssetTags(params?: FetchParams): Promise<AssetTag[]> {
 		const url = new URL("tags", this.assetAPIEndpoint)
 
-		const { items } = await this.#assetAPIFetch<GetAssetTagsResult>(
+		const response = await efficientFetch(
 			url.toString(),
-			this.buildAssetAPIQueryParams({ params }),
+			{
+				headers: {
+					...this.fetchOptions?.headers,
+					...params?.fetchOptions?.headers,
+					authorization: `Bearer ${this.writeToken}`,
+					repository: this.repositoryName,
+				},
+				signal:
+					params?.fetchOptions?.signal ||
+					params?.signal ||
+					this.fetchOptions?.signal,
+			},
+			this.fetchFn,
 		)
+		switch (response.status) {
+			case 200: {
+				const json = (await response.json()) as GetAssetTagsResult
 
-		return items
+				return json.items
+			}
+			case 401: {
+				const json = await response.json()
+				throw new ForbiddenError(json.error, url.toString(), json)
+			}
+			default: {
+				throw new PrismicError(undefined, url.toString(), await response.text())
+			}
+		}
 	}
 
 	/**
@@ -752,11 +844,11 @@ export class WriteClient<
 	): Promise<{ id: string }> {
 		const url = new URL("documents", this.migrationAPIEndpoint)
 
-		const result = await this.#migrationAPIFetch<PostDocumentResult>(
+		const response = await efficientFetch(
 			url.toString(),
-			this.buildMigrationAPIQueryParams<PostDocumentParams>({
+			{
 				method: "POST",
-				body: {
+				body: JSON.stringify({
 					title: documentTitle,
 					type: document.type,
 					uid: document.uid || undefined,
@@ -764,12 +856,35 @@ export class WriteClient<
 					alternate_language_id: masterLanguageDocumentID,
 					tags: document.tags,
 					data: document.data,
+				}),
+				headers: {
+					...this.fetchOptions?.headers,
+					...params?.fetchOptions?.headers,
+					"content-type": "application/json",
+					repository: this.repositoryName,
+					authorization: `Bearer ${this.writeToken}`,
 				},
-				params,
-			}),
+				signal:
+					params?.fetchOptions?.signal ||
+					params?.signal ||
+					this.fetchOptions?.signal,
+			},
+			this.fetchFn,
 		)
+		switch (response.status) {
+			case 201: {
+				const json = (await response.json()) as PostDocumentResult
 
-		return { id: result.id }
+				return { id: json.id }
+			}
+			case 403: {
+				const json = await response.json()
+				throw new ForbiddenError(json.Message, url.toString(), json)
+			}
+			default: {
+				throw new PrismicError(undefined, url.toString(), await response.text())
+			}
+		}
 	}
 
 	/**
@@ -792,135 +907,45 @@ export class WriteClient<
 	): Promise<void> {
 		const url = new URL(`documents/${id}`, this.migrationAPIEndpoint)
 
-		await this.#migrationAPIFetch<PutDocumentResult>(
+		const response = await efficientFetch(
 			url.toString(),
-			this.buildMigrationAPIQueryParams({
+			{
 				method: "PUT",
-				body: {
+				body: JSON.stringify({
 					title: document.documentTitle,
 					uid: document.uid || undefined,
 					tags: document.tags,
 					data: document.data,
-				},
-				params,
-			}),
-		)
-	}
-
-	/**
-	 * Builds fetch parameters for the Asset API.
-	 *
-	 * @typeParam TBody - Type of the body to send in the fetch request.
-	 *
-	 * @param params - Method, body, and additional fetch parameters.
-	 *
-	 * @returns An object that can be fetched to interact with the Asset API.
-	 *
-	 * @see Prismic Asset API technical reference: {@link https://prismic.io/docs/asset-api-technical-reference}
-	 */
-	private buildAssetAPIQueryParams<TBody = FormData | Record<string, unknown>>({
-		method,
-		body,
-		params,
-	}: {
-		method?: string
-		body?: TBody
-		params?: FetchParams
-	}): FetchParams {
-		const headers: Record<string, string> = {
-			...params?.fetchOptions?.headers,
-			authorization: `Bearer ${this.writeToken}`,
-			repository: this.repositoryName,
-		}
-
-		let _body: FormData | string | undefined
-		if (body instanceof FormData) {
-			_body = body
-		} else if (body) {
-			_body = JSON.stringify(body)
-			headers["content-type"] = "application/json"
-		}
-
-		return {
-			...params,
-			fetchOptions: {
-				...params?.fetchOptions,
-				method,
-				body: _body,
-				headers,
-			},
-		}
-	}
-
-	/**
-	 * Builds fetch parameters for the Migration API.
-	 *
-	 * @typeParam TBody - Type of the body to send in the fetch request.
-	 *
-	 * @param params - Method, body, and additional fetch options.
-	 *
-	 * @returns An object that can be fetched to interact with the Migration API.
-	 *
-	 * @see Prismic Migration API technical reference: {@link https://prismic.io/docs/migration-api-technical-reference}
-	 */
-	private buildMigrationAPIQueryParams<
-		TBody extends PostDocumentParams | PutDocumentParams,
-	>({
-		method,
-		body,
-		params,
-	}: {
-		method?: string
-		body: TBody
-		params?: FetchParams
-	}): FetchParams {
-		return {
-			...params,
-			fetchOptions: {
-				...params?.fetchOptions,
-				method,
-				body: JSON.stringify(body),
+				}),
 				headers: {
+					...this.fetchOptions?.headers,
 					...params?.fetchOptions?.headers,
 					"content-type": "application/json",
 					repository: this.repositoryName,
 					authorization: `Bearer ${this.writeToken}`,
 				},
+				signal:
+					params?.fetchOptions?.signal ||
+					params?.signal ||
+					this.fetchOptions?.signal,
 			},
-		}
-	}
-
-	async #assetAPIFetch<T>(url: string, params: FetchParams = {}): Promise<T> {
-		return await assetAPIFetch<T>(
-			url,
-			this.#buildRequestInit(params),
 			this.fetchFn,
 		)
-	}
-
-	async #migrationAPIFetch<T>(
-		url: string,
-		params: FetchParams = {},
-	): Promise<T> {
-		return await migrationAPIFetch<T>(
-			url,
-			this.#buildRequestInit(params),
-			this.fetchFn,
-		)
-	}
-
-	#buildRequestInit(params: FetchParams = {}): RequestInitLike {
-		return {
-			...this.fetchOptions,
-			...params.fetchOptions,
-			headers: {
-				...this.fetchOptions?.headers,
-				...params.fetchOptions?.headers,
-			},
-			signal:
-				params.fetchOptions?.signal ||
-				params.signal ||
-				this.fetchOptions?.signal,
+		switch (response.status) {
+			case 200: {
+				return
+			}
+			case 403: {
+				const json = await response.json()
+				throw new ForbiddenError(json.Message, url.toString(), json)
+			}
+			case 404: {
+				const text = await response.text()
+				throw new NotFoundError(text, url.toString(), text)
+			}
+			default: {
+				throw new PrismicError(undefined, url.toString(), await response.text())
+			}
 		}
 	}
 }

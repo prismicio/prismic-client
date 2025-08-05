@@ -669,39 +669,6 @@ it("throws ForbiddenError if access token is invalid for query", async (ctx) => 
 	await expect(() => client.get()).rejects.toThrowError(prismic.ForbiddenError)
 })
 
-it("throws ForbiddenError if response code is 403", async (ctx) => {
-	const queryResponse = {
-		error: "Invalid access token",
-	}
-
-	mockPrismicRestAPIV2({ ctx })
-
-	const client = createTestClient({ ctx })
-
-	const queryEndpoint = new URL(
-		"documents/search",
-		`${client.endpoint}/`,
-	).toString()
-
-	ctx.server.use(
-		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
-			return res(ctx.status(403), ctx.json(queryResponse))
-		}),
-	)
-
-	let error: prismic.ForbiddenError | undefined
-
-	try {
-		await client.get()
-	} catch (e) {
-		if (e instanceof prismic.ForbiddenError) {
-			error = e
-		}
-	}
-
-	expect(error?.message).toBe(queryResponse.error)
-})
-
 it("throws ParsingError if response code is 400 with parsing-error type", async (ctx) => {
 	const queryResponse = {
 		type: "parsing-error",

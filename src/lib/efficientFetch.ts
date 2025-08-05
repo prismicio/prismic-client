@@ -7,7 +7,15 @@ import { type LimitFunction, pLimit } from "./pLimit"
  */
 export const DEFAULT_RETRY_AFTER = 1500 // ms
 
+/**
+ * A record of URLs mapped to throttled task runners.
+ */
 const THROTTLED_RUNNERS: Partial<Record<string, LimitFunction>> = {}
+
+/**
+ * A record of URLs mapped to active deduplicated jobs. Jobs are keyed by their
+ * optional signal.
+ */
 const DEDUPLICATED_JOBS: Partial<
 	Record<string, Map<AbortSignalLike | undefined, Promise<ResponseLike>>>
 > = {}
@@ -96,7 +104,7 @@ export interface HeadersLike {
 }
 
 export async function efficientFetch(
-	input: string,
+	url: string,
 	init: RequestInitLike | undefined,
 	fetchFn: FetchLike,
 ): Promise<ResponseLike> {
@@ -105,27 +113,27 @@ export async function efficientFetch(
 	// Throttle requests with a body.
 	if (init?.body) {
 		// Rate limiting is done per hostname.
-		const hostname = new URL(input).hostname
+		const hostname = new URL(url).hostname
 		THROTTLED_RUNNERS[hostname] ||= pLimit({
 			interval: DEFAULT_RETRY_AFTER,
 		})
 
-		job = THROTTLED_RUNNERS[hostname](() => fetchFn(input, init))
+		job = THROTTLED_RUNNERS[hostname](() => fetchFn(url, init))
 	} else {
 		// Deduplicate all other requests.
-		const existingJob = DEDUPLICATED_JOBS[input]?.get(init?.signal)
+		const existingJob = DEDUPLICATED_JOBS[url]?.get(init?.signal)
 		if (existingJob) {
 			return existingJob
 		}
 
-		job = fetchFn(input, init).finally(() => {
-			DEDUPLICATED_JOBS[input]?.delete(init?.signal)
-			if (DEDUPLICATED_JOBS[input]?.size === 0) {
-				delete DEDUPLICATED_JOBS[input]
+		job = fetchFn(url, init).finally(() => {
+			DEDUPLICATED_JOBS[url]?.delete(init?.signal)
+			if (DEDUPLICATED_JOBS[url]?.size === 0) {
+				delete DEDUPLICATED_JOBS[url]
 			}
 		})
-		DEDUPLICATED_JOBS[input] ||= new Map()
-		DEDUPLICATED_JOBS[input].set(init?.signal, job)
+		DEDUPLICATED_JOBS[url] ||= new Map()
+		DEDUPLICATED_JOBS[url].set(init?.signal, job)
 	}
 
 	const response = await job
@@ -137,12 +145,9 @@ export async function efficientFetch(
 			? DEFAULT_RETRY_AFTER
 			: retryAfter * 1000
 
-		return await new Promise((resolve) => {
-			setTimeout(
-				() => resolve(efficientFetch(input, init, fetchFn)),
-				resolvedRetryAfter,
-			)
-		})
+		await new Promise((resolve) => setTimeout(resolve, resolvedRetryAfter))
+
+		return efficientFetch(url, init, fetchFn)
 	}
 
 	return response.clone()
