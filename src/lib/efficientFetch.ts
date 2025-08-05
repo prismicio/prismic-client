@@ -131,8 +131,8 @@ export async function efficientFetch(
 					delete DEDUPLICATED_JOBS[url]
 				}
 			})
-			DEDUPLICATED_JOBS[url] ||= new Map()
-			DEDUPLICATED_JOBS[url].set(init?.signal, job)
+			const map = (DEDUPLICATED_JOBS[url] ||= new Map())
+			map.set(init?.signal, job)
 		}
 	}
 
