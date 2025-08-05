@@ -4,7 +4,7 @@ import { createTestWriteClient } from "./__testutils__/createWriteClient"
 import { mockPrismicAssetAPI } from "./__testutils__/mockPrismicAssetAPI"
 
 import { ForbiddenError } from "../src"
-import { UNKNOWN_RATE_LIMIT_DELAY } from "../src/BaseClient"
+import { DEFAULT_RETRY_AFTER } from "../src/lib/efficientFetch"
 import type { AssetTag } from "../src/types/api/asset/tag"
 
 // Skip test on Node 16 (FormData support)
@@ -98,12 +98,12 @@ it.concurrent("respects unknown rate limit", async (ctx) => {
 	// @ts-expect-error - testing purposes
 	await client.createAssetTag(...args)
 
-	expect(Date.now() - start).toBeLessThan(UNKNOWN_RATE_LIMIT_DELAY)
+	expect(Date.now() - start).toBeLessThan(DEFAULT_RETRY_AFTER)
 
 	// @ts-expect-error - testing purposes
 	await client.createAssetTag(...args)
 
-	expect(Date.now() - start).toBeGreaterThanOrEqual(UNKNOWN_RATE_LIMIT_DELAY)
+	expect(Date.now() - start).toBeGreaterThanOrEqual(DEFAULT_RETRY_AFTER)
 })
 
 it("throws fetch errors as-is", async (ctx) => {

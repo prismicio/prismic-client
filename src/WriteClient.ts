@@ -1,4 +1,5 @@
 import { devMsg } from "./lib/devMsg"
+import type { RequestInitLike } from "./lib/efficientFetch"
 import { pLimit } from "./lib/pLimit"
 import {
 	resolveMigrationContentRelationship,
@@ -34,9 +35,11 @@ import type { PrismicDocument } from "./types/value/document"
 
 import { PrismicError } from "./errors/PrismicError"
 
-import type { FetchParams, RequestInitLike } from "./BaseClient"
+import { assetAPIFetch } from "./clients/asset"
+import { migrationAPIFetch } from "./clients/migration"
+
 import { Client } from "./Client"
-import type { ClientConfig } from "./Client"
+import type { ClientConfig, FetchParams } from "./Client"
 import type { Migration } from "./Migration"
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { createMigration } from "./createMigration"
@@ -537,7 +540,7 @@ export class WriteClient<
 			formData.append("alt", alt)
 		}
 
-		const asset = await this.fetch<PostAssetResult>(
+		const asset = await this.#assetAPIFetch<PostAssetResult>(
 			url.toString(),
 			this.buildAssetAPIQueryParams({
 				method: "POST",
@@ -582,7 +585,7 @@ export class WriteClient<
 			})
 		}
 
-		return this.fetch<PatchAssetResult>(
+		return this.#assetAPIFetch<PatchAssetResult>(
 			url.toString(),
 			this.buildAssetAPIQueryParams<PatchAssetParams>({
 				method: "PATCH",
@@ -696,7 +699,7 @@ export class WriteClient<
 	): Promise<AssetTag> {
 		const url = new URL("tags", this.assetAPIEndpoint)
 
-		return this.fetch<PostAssetTagResult>(
+		return this.#assetAPIFetch<PostAssetTagResult>(
 			url.toString(),
 			this.buildAssetAPIQueryParams<PostAssetTagParams>({
 				method: "POST",
@@ -716,7 +719,7 @@ export class WriteClient<
 	private async getAssetTags(params?: FetchParams): Promise<AssetTag[]> {
 		const url = new URL("tags", this.assetAPIEndpoint)
 
-		const { items } = await this.fetch<GetAssetTagsResult>(
+		const { items } = await this.#assetAPIFetch<GetAssetTagsResult>(
 			url.toString(),
 			this.buildAssetAPIQueryParams({ params }),
 		)
@@ -749,7 +752,7 @@ export class WriteClient<
 	): Promise<{ id: string }> {
 		const url = new URL("documents", this.migrationAPIEndpoint)
 
-		const result = await this.fetch<PostDocumentResult>(
+		const result = await this.#migrationAPIFetch<PostDocumentResult>(
 			url.toString(),
 			this.buildMigrationAPIQueryParams<PostDocumentParams>({
 				method: "POST",
@@ -789,7 +792,7 @@ export class WriteClient<
 	): Promise<void> {
 		const url = new URL(`documents/${id}`, this.migrationAPIEndpoint)
 
-		await this.fetch<PutDocumentResult>(
+		await this.#migrationAPIFetch<PutDocumentResult>(
 			url.toString(),
 			this.buildMigrationAPIQueryParams({
 				method: "PUT",
@@ -884,6 +887,40 @@ export class WriteClient<
 					authorization: `Bearer ${this.writeToken}`,
 				},
 			},
+		}
+	}
+
+	async #assetAPIFetch<T>(url: string, params: FetchParams = {}): Promise<T> {
+		return await assetAPIFetch<T>(
+			url,
+			this.#buildRequestInit(params),
+			this.fetchFn,
+		)
+	}
+
+	async #migrationAPIFetch<T>(
+		url: string,
+		params: FetchParams = {},
+	): Promise<T> {
+		return await migrationAPIFetch<T>(
+			url,
+			this.#buildRequestInit(params),
+			this.fetchFn,
+		)
+	}
+
+	#buildRequestInit(params: FetchParams = {}): RequestInitLike {
+		return {
+			...this.fetchOptions,
+			...params.fetchOptions,
+			headers: {
+				...this.fetchOptions?.headers,
+				...params.fetchOptions?.headers,
+			},
+			signal:
+				params.fetchOptions?.signal ||
+				params.signal ||
+				this.fetchOptions?.signal,
 		}
 	}
 }

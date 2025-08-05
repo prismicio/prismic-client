@@ -51,16 +51,9 @@ export * as cookie from "./cookie"
 
 // General types used to query content from Prismic. These are made public to allow users to better type their projects.
 export type { CreateClient } from "./createClient"
-export type { ClientConfig } from "./Client"
+export type { ClientConfig, HttpRequestLike } from "./Client"
 export type { CreateWriteClient } from "./createWriteClient"
 export type { WriteClientConfig, MigrateReporterEvents } from "./WriteClient"
-export type {
-	AbortSignalLike,
-	FetchLike,
-	HttpRequestLike,
-	RequestInitLike,
-	ResponseLike,
-} from "./BaseClient"
 export type {
 	BuildQueryURLArgs,
 	Ordering,
@@ -68,6 +61,12 @@ export type {
 	Route,
 } from "./buildQueryURL"
 export type { CreateMigration } from "./createMigration"
+export type {
+	AbortSignalLike,
+	FetchLike,
+	RequestInitLike,
+	ResponseLike,
+} from "./lib/efficientFetch"
 
 //=============================================================================
 // Helpers - Manipulate content from Prismic.
