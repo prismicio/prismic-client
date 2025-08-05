@@ -15,7 +15,7 @@ export async function migrationAPIFetch<T>(
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	let json: any
 	try {
-		json = await response.clone().json()
+		json = await response.json()
 	} catch {
 		// noop
 	}
@@ -23,8 +23,6 @@ export async function migrationAPIFetch<T>(
 	if (response.ok) {
 		return json as T
 	}
-
-	const text = await response.text()
 
 	switch (response.status) {
 		case 401:
