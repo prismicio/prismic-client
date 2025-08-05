@@ -534,20 +534,10 @@ export class WriteClient<
 
 		const response = await efficientFetch(
 			url.toString(),
-			{
+			this._buildRequestInit(params, {
 				method: "POST",
 				body: formData,
-				headers: {
-					...this.fetchOptions?.headers,
-					...params.fetchOptions?.headers,
-					authorization: `Bearer ${this.writeToken}`,
-					repository: this.repositoryName,
-				},
-				signal:
-					params?.fetchOptions?.signal ||
-					params?.signal ||
-					this.fetchOptions?.signal,
-			},
+			}),
 			this.fetchFn,
 		)
 		switch (response.status) {
@@ -605,7 +595,7 @@ export class WriteClient<
 
 		const response = await efficientFetch(
 			url.toString(),
-			{
+			this._buildRequestInit(params, {
 				method: "PATCH",
 				body: JSON.stringify({
 					notes,
@@ -615,17 +605,9 @@ export class WriteClient<
 					tags,
 				}),
 				headers: {
-					...this.fetchOptions?.headers,
-					...params.fetchOptions?.headers,
 					"content-type": "application/json",
-					authorization: `Bearer ${this.writeToken}`,
-					repository: this.repositoryName,
 				},
-				signal:
-					params?.fetchOptions?.signal ||
-					params?.signal ||
-					this.fetchOptions?.signal,
-			},
+			}),
 			this.fetchFn,
 		)
 		switch (response.status) {
@@ -658,20 +640,7 @@ export class WriteClient<
 		url: string,
 		params: FetchParams = {},
 	): Promise<Blob> {
-		const requestInit: RequestInitLike = {
-			...this.fetchOptions,
-			...params.fetchOptions,
-			headers: {
-				...this.fetchOptions?.headers,
-				...params.fetchOptions?.headers,
-			},
-			signal:
-				params.fetchOptions?.signal ||
-				params.signal ||
-				this.fetchOptions?.signal,
-		}
-
-		const res = await this.fetchFn(url, requestInit)
+		const res = await this.fetchFn(url, this._buildRequestInit(params))
 
 		if (!res.ok) {
 			throw new PrismicError("Could not fetch foreign asset", url, undefined)
@@ -746,21 +715,13 @@ export class WriteClient<
 
 		const response = await efficientFetch(
 			url.toString(),
-			{
+			this._buildRequestInit(params, {
 				method: "POST",
 				body: JSON.stringify({ name }),
 				headers: {
-					...this.fetchOptions?.headers,
-					...params?.fetchOptions?.headers,
 					"content-type": "application/json",
-					authorization: `Bearer ${this.writeToken}`,
-					repository: this.repositoryName,
 				},
-				signal:
-					params?.fetchOptions?.signal ||
-					params?.signal ||
-					this.fetchOptions?.signal,
-			},
+			}),
 			this.fetchFn,
 		)
 		switch (response.status) {
@@ -789,18 +750,7 @@ export class WriteClient<
 
 		const response = await efficientFetch(
 			url.toString(),
-			{
-				headers: {
-					...this.fetchOptions?.headers,
-					...params?.fetchOptions?.headers,
-					authorization: `Bearer ${this.writeToken}`,
-					repository: this.repositoryName,
-				},
-				signal:
-					params?.fetchOptions?.signal ||
-					params?.signal ||
-					this.fetchOptions?.signal,
-			},
+			this._buildRequestInit(params),
 			this.fetchFn,
 		)
 		switch (response.status) {
@@ -846,7 +796,7 @@ export class WriteClient<
 
 		const response = await efficientFetch(
 			url.toString(),
-			{
+			this._buildRequestInit(params, {
 				method: "POST",
 				body: JSON.stringify({
 					title: documentTitle,
@@ -858,17 +808,9 @@ export class WriteClient<
 					data: document.data,
 				}),
 				headers: {
-					...this.fetchOptions?.headers,
-					...params?.fetchOptions?.headers,
 					"content-type": "application/json",
-					repository: this.repositoryName,
-					authorization: `Bearer ${this.writeToken}`,
 				},
-				signal:
-					params?.fetchOptions?.signal ||
-					params?.signal ||
-					this.fetchOptions?.signal,
-			},
+			}),
 			this.fetchFn,
 		)
 		switch (response.status) {
@@ -909,7 +851,7 @@ export class WriteClient<
 
 		const response = await efficientFetch(
 			url.toString(),
-			{
+			this._buildRequestInit(params, {
 				method: "PUT",
 				body: JSON.stringify({
 					title: document.documentTitle,
@@ -918,17 +860,9 @@ export class WriteClient<
 					data: document.data,
 				}),
 				headers: {
-					...this.fetchOptions?.headers,
-					...params?.fetchOptions?.headers,
 					"content-type": "application/json",
-					repository: this.repositoryName,
-					authorization: `Bearer ${this.writeToken}`,
 				},
-				signal:
-					params?.fetchOptions?.signal ||
-					params?.signal ||
-					this.fetchOptions?.signal,
-			},
+			}),
 			this.fetchFn,
 		)
 		switch (response.status) {
@@ -946,6 +880,24 @@ export class WriteClient<
 			default: {
 				throw new PrismicError(undefined, url.toString(), await response.text())
 			}
+		}
+	}
+
+	protected _buildRequestInit(
+		params?: FetchParams,
+		init?: RequestInitLike,
+	): RequestInitLike {
+		const base = super._buildRequestInit(params)
+
+		return {
+			...base,
+			...init,
+			headers: {
+				...base.headers,
+				...init?.headers,
+				repository: this.repositoryName,
+				authorization: `Bearer ${this.writeToken}`,
+			},
 		}
 	}
 }
