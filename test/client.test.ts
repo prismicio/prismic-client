@@ -9,6 +9,7 @@ import { getMasterRef } from "./__testutils__/getMasterRef"
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
 
 import * as prismic from "../src"
+import { DEFAULT_RETRY_AFTER } from "../src/lib/efficientFetch"
 
 it("creates a Client with `createClient`", () => {
 	const client = prismic.createClient("qwerty", {
@@ -1031,8 +1032,8 @@ it("retries after 1000 milliseconds if response code is 429 and an invalid `retr
 	const t1 = performance.now()
 
 	expect(res).toStrictEqual(queryResponse)
-	expect(t1 - t0).toBeGreaterThanOrEqual(1000)
-	expect(t1 - t0).toBeLessThanOrEqual(1000 + testTolerance)
+	expect(t1 - t0).toBeGreaterThanOrEqual(DEFAULT_RETRY_AFTER)
+	expect(t1 - t0).toBeLessThanOrEqual(DEFAULT_RETRY_AFTER + testTolerance)
 })
 
 it("throws if a non-2xx response is returned even after retrying", async (ctx) => {
@@ -1079,6 +1080,6 @@ it("throws if a non-2xx response is returned even after retrying", async (ctx) =
 	await expect(() => client.get()).rejects.toThrowError(/invalid api response/i)
 	const t1 = performance.now()
 
-	expect(t1 - t0).toBeGreaterThanOrEqual(1000)
-	expect(t1 - t0).toBeLessThanOrEqual(1000 + testTolerance)
+	expect(t1 - t0).toBeGreaterThanOrEqual(DEFAULT_RETRY_AFTER)
+	expect(t1 - t0).toBeLessThanOrEqual(DEFAULT_RETRY_AFTER + testTolerance)
 })

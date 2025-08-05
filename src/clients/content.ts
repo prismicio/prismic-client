@@ -17,20 +17,21 @@ export async function contentAPIFetch<T>(
 	documentAPIEndpoint: string,
 ): Promise<T> {
 	const response = await efficientFetch(input, init, fetchFn)
+	const text = await response.clone().text()
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	let json: any
 	try {
-		json = await response.clone().json()
-	} catch {
-		// noop
+		json = JSON.parse(text)
+	} catch (e) {
+		if (response.status !== 404) {
+			throw new PrismicError(undefined, input, text)
+		}
 	}
 
 	if (response.ok) {
 		return json as T
 	}
-
-	const text = await response.text()
 
 	switch (response.status) {
 		// - Invalid filter syntax
