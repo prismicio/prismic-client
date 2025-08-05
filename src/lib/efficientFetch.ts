@@ -114,11 +114,11 @@ export async function efficientFetch(
 	if (init?.body) {
 		// Rate limiting is done per hostname.
 		const hostname = new URL(url).hostname
-		THROTTLED_RUNNERS[hostname] ||= pLimit({
+		const runner = (THROTTLED_RUNNERS[hostname] ||= pLimit({
 			interval: DEFAULT_RETRY_AFTER,
-		})
+		}))
 
-		job = THROTTLED_RUNNERS[hostname](() => fetchFn(url, init))
+		job = runner(() => fetchFn(url, init))
 	} else {
 		// Deduplicate all other requests.
 		const existingJob = DEDUPLICATED_JOBS[url]?.get(init?.signal)
