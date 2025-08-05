@@ -90,7 +90,7 @@ export const testInvalidRefRetry = (args: TestInvalidRefRetryArgs): void => {
 		expect([...triedRefs]).toStrictEqual([badRef, masterRef])
 	})
 
-	it.only("throws if the maximum number of retries with invalid refs is reached", async (ctx) => {
+	it("throws if the maximum number of retries with invalid refs is reached", async (ctx) => {
 		const client = createTestClient({ ctx })
 		const queryResponse = ctx.mock.api.query({
 			documents: [ctx.mock.value.document()],

@@ -123,17 +123,17 @@ export async function efficientFetch(
 		// Deduplicate all other requests.
 		const existingJob = DEDUPLICATED_JOBS[url]?.get(init?.signal)
 		if (existingJob) {
-			return existingJob
+			job = existingJob
+		} else {
+			job = fetchFn(url, init).finally(() => {
+				DEDUPLICATED_JOBS[url]?.delete(init?.signal)
+				if (DEDUPLICATED_JOBS[url]?.size === 0) {
+					delete DEDUPLICATED_JOBS[url]
+				}
+			})
+			DEDUPLICATED_JOBS[url] ||= new Map()
+			DEDUPLICATED_JOBS[url].set(init?.signal, job)
 		}
-
-		job = fetchFn(url, init).finally(() => {
-			DEDUPLICATED_JOBS[url]?.delete(init?.signal)
-			if (DEDUPLICATED_JOBS[url]?.size === 0) {
-				delete DEDUPLICATED_JOBS[url]
-			}
-		})
-		DEDUPLICATED_JOBS[url] ||= new Map()
-		DEDUPLICATED_JOBS[url].set(init?.signal, job)
 	}
 
 	const response = await job

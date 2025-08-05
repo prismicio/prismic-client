@@ -1232,9 +1232,6 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * @returns Repository metadata.
 	 */
 	async getRepository(params?: FetchParams): Promise<Repository> {
-		// TODO: Restore when Authorization header support works in browsers with CORS.
-		// return await this.#contentAPIFetch<Repository>(this.documentAPIEndpoint, params);
-
 		const url = new URL(this.documentAPIEndpoint)
 
 		if (this.accessToken) {
@@ -1248,7 +1245,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		)
 		switch (response.status) {
 			case 200: {
-				return (await response.clone().json()) as Repository
+				return (await response.json()) as Repository
 			}
 			case 401: {
 				const json = await response.json()
