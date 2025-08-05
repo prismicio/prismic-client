@@ -1924,17 +1924,17 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		}
 	}
 
-	protected _buildRequestInit(params: FetchParams = {}): RequestInitLike {
+	protected _buildRequestInit(params?: FetchParams): RequestInitLike {
 		return {
 			...this.fetchOptions,
-			...params.fetchOptions,
+			...params?.fetchOptions,
 			headers: {
 				...this.fetchOptions?.headers,
-				...params.fetchOptions?.headers,
+				...params?.fetchOptions?.headers,
 			},
 			signal:
-				params.fetchOptions?.signal ||
-				params.signal ||
+				params?.fetchOptions?.signal ||
+				params?.signal ||
 				this.fetchOptions?.signal,
 		}
 	}

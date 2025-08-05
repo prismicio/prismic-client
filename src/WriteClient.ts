@@ -534,7 +534,7 @@ export class WriteClient<
 
 		const response = await efficientFetch(
 			url.toString(),
-			this._buildRequestInit(params, {
+			this.#buildRequestInit(params, {
 				method: "POST",
 				body: formData,
 			}),
@@ -595,7 +595,7 @@ export class WriteClient<
 
 		const response = await efficientFetch(
 			url.toString(),
-			this._buildRequestInit(params, {
+			this.#buildRequestInit(params, {
 				method: "PATCH",
 				body: JSON.stringify({
 					notes,
@@ -640,7 +640,7 @@ export class WriteClient<
 		url: string,
 		params: FetchParams = {},
 	): Promise<Blob> {
-		const res = await this.fetchFn(url, this._buildRequestInit(params))
+		const res = await this.fetchFn(url, this.#buildRequestInit(params))
 
 		if (!res.ok) {
 			throw new PrismicError("Could not fetch foreign asset", url, undefined)
@@ -715,7 +715,7 @@ export class WriteClient<
 
 		const response = await efficientFetch(
 			url.toString(),
-			this._buildRequestInit(params, {
+			this.#buildRequestInit(params, {
 				method: "POST",
 				body: JSON.stringify({ name }),
 				headers: {
@@ -750,7 +750,7 @@ export class WriteClient<
 
 		const response = await efficientFetch(
 			url.toString(),
-			this._buildRequestInit(params),
+			this.#buildRequestInit(params),
 			this.fetchFn,
 		)
 		switch (response.status) {
@@ -796,7 +796,7 @@ export class WriteClient<
 
 		const response = await efficientFetch(
 			url.toString(),
-			this._buildRequestInit(params, {
+			this.#buildRequestInit(params, {
 				method: "POST",
 				body: JSON.stringify({
 					title: documentTitle,
@@ -851,7 +851,7 @@ export class WriteClient<
 
 		const response = await efficientFetch(
 			url.toString(),
-			this._buildRequestInit(params, {
+			this.#buildRequestInit(params, {
 				method: "PUT",
 				body: JSON.stringify({
 					title: document.documentTitle,
@@ -883,11 +883,11 @@ export class WriteClient<
 		}
 	}
 
-	protected _buildRequestInit(
+	#buildRequestInit(
 		params?: FetchParams,
 		init?: RequestInitLike,
 	): RequestInitLike {
-		const base = super._buildRequestInit(params)
+		const base = this._buildRequestInit(params)
 
 		return {
 			...base,
