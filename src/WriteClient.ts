@@ -1,6 +1,7 @@
 import { devMsg } from "./lib/devMsg"
-import { type RequestInitLike, efficientFetch } from "./lib/efficientFetch"
 import { pLimit } from "./lib/pLimit"
+import type { ResponseLike } from "./lib/request"
+import { type RequestInitLike, request } from "./lib/request"
 import {
 	resolveMigrationContentRelationship,
 	resolveMigrationDocumentData,
@@ -532,14 +533,10 @@ export class WriteClient<
 			formData.append("alt", alt)
 		}
 
-		const response = await efficientFetch(
-			url.toString(),
-			this.#buildRequestInit(params, {
-				method: "POST",
-				body: formData,
-			}),
-			this.fetchFn,
-		)
+		const response = await this.#request(url, params, {
+			method: "POST",
+			body: formData,
+		})
 		switch (response.status) {
 			case 200: {
 				const asset = (await response.json()) as PostAssetResult
@@ -593,23 +590,19 @@ export class WriteClient<
 			})
 		}
 
-		const response = await efficientFetch(
-			url.toString(),
-			this.#buildRequestInit(params, {
-				method: "PATCH",
-				body: JSON.stringify({
-					notes,
-					credits,
-					alt,
-					filename,
-					tags,
-				}),
-				headers: {
-					"content-type": "application/json",
-				},
+		const response = await this.#request(url, params, {
+			method: "PATCH",
+			body: JSON.stringify({
+				notes,
+				credits,
+				alt,
+				filename,
+				tags,
 			}),
-			this.fetchFn,
-		)
+			headers: {
+				"content-type": "application/json",
+			},
+		})
 		switch (response.status) {
 			case 200: {
 				return (await response.json()) as Asset
@@ -640,7 +633,7 @@ export class WriteClient<
 		url: string,
 		params: FetchParams = {},
 	): Promise<Blob> {
-		const res = await this.fetchFn(url, this.#buildRequestInit(params))
+		const res = await this.fetchFn(url, this._buildRequestInit(params))
 
 		if (!res.ok) {
 			throw new PrismicError("Could not fetch foreign asset", url, undefined)
@@ -713,17 +706,13 @@ export class WriteClient<
 	): Promise<AssetTag> {
 		const url = new URL("tags", this.assetAPIEndpoint)
 
-		const response = await efficientFetch(
-			url.toString(),
-			this.#buildRequestInit(params, {
-				method: "POST",
-				body: JSON.stringify({ name }),
-				headers: {
-					"content-type": "application/json",
-				},
-			}),
-			this.fetchFn,
-		)
+		const response = await this.#request(url, params, {
+			method: "POST",
+			body: JSON.stringify({ name }),
+			headers: {
+				"content-type": "application/json",
+			},
+		})
 		switch (response.status) {
 			case 201: {
 				return (await response.json()) as PostAssetTagResult
@@ -748,11 +737,7 @@ export class WriteClient<
 	private async getAssetTags(params?: FetchParams): Promise<AssetTag[]> {
 		const url = new URL("tags", this.assetAPIEndpoint)
 
-		const response = await efficientFetch(
-			url.toString(),
-			this.#buildRequestInit(params),
-			this.fetchFn,
-		)
+		const response = await this.#request(url, params)
 		switch (response.status) {
 			case 200: {
 				const json = (await response.json()) as GetAssetTagsResult
@@ -794,25 +779,21 @@ export class WriteClient<
 	): Promise<{ id: string }> {
 		const url = new URL("documents", this.migrationAPIEndpoint)
 
-		const response = await efficientFetch(
-			url.toString(),
-			this.#buildRequestInit(params, {
-				method: "POST",
-				body: JSON.stringify({
-					title: documentTitle,
-					type: document.type,
-					uid: document.uid || undefined,
-					lang: document.lang,
-					alternate_language_id: masterLanguageDocumentID,
-					tags: document.tags,
-					data: document.data,
-				}),
-				headers: {
-					"content-type": "application/json",
-				},
+		const response = await this.#request(url, params, {
+			method: "POST",
+			body: JSON.stringify({
+				title: documentTitle,
+				type: document.type,
+				uid: document.uid || undefined,
+				lang: document.lang,
+				alternate_language_id: masterLanguageDocumentID,
+				tags: document.tags,
+				data: document.data,
 			}),
-			this.fetchFn,
-		)
+			headers: {
+				"content-type": "application/json",
+			},
+		})
 		switch (response.status) {
 			case 201: {
 				const json = (await response.json()) as PostDocumentResult
@@ -849,22 +830,18 @@ export class WriteClient<
 	): Promise<void> {
 		const url = new URL(`documents/${id}`, this.migrationAPIEndpoint)
 
-		const response = await efficientFetch(
-			url.toString(),
-			this.#buildRequestInit(params, {
-				method: "PUT",
-				body: JSON.stringify({
-					title: document.documentTitle,
-					uid: document.uid || undefined,
-					tags: document.tags,
-					data: document.data,
-				}),
-				headers: {
-					"content-type": "application/json",
-				},
+		const response = await this.#request(url, params, {
+			method: "PUT",
+			body: JSON.stringify({
+				title: document.documentTitle,
+				uid: document.uid || undefined,
+				tags: document.tags,
+				data: document.data,
 			}),
-			this.fetchFn,
-		)
+			headers: {
+				"content-type": "application/json",
+			},
+		})
 		switch (response.status) {
 			case 200: {
 				return
@@ -883,21 +860,26 @@ export class WriteClient<
 		}
 	}
 
-	#buildRequestInit(
-		params?: FetchParams,
+	async #request(
+		url: URL,
+		params?: RequestInitLike,
 		init?: RequestInitLike,
-	): RequestInitLike {
-		const base = this._buildRequestInit(params)
+	): Promise<ResponseLike> {
+		const baseInit = this._buildRequestInit(params)
 
-		return {
-			...base,
-			...init,
-			headers: {
-				...base.headers,
-				...init?.headers,
-				repository: this.repositoryName,
-				authorization: `Bearer ${this.writeToken}`,
+		return await request(
+			url,
+			{
+				...baseInit,
+				...init,
+				headers: {
+					...baseInit.headers,
+					...init?.headers,
+					repository: this.repositoryName,
+					authorization: `Bearer ${this.writeToken}`,
+				},
 			},
-		}
+			this.fetchFn,
+		)
 	}
 }

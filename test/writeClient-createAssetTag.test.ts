@@ -4,7 +4,7 @@ import { createTestWriteClient } from "./__testutils__/createWriteClient"
 import { mockPrismicAssetAPI } from "./__testutils__/mockPrismicAssetAPI"
 
 import { ForbiddenError } from "../src"
-import { DEFAULT_RETRY_AFTER } from "../src/lib/efficientFetch"
+import { DEFAULT_RETRY_AFTER } from "../src/lib/request"
 import type { AssetTag } from "../src/types/api/asset/tag"
 
 // Skip test on Node 16 (FormData support)

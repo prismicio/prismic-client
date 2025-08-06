@@ -66,7 +66,7 @@ export type {
 	FetchLike,
 	RequestInitLike,
 	ResponseLike,
-} from "./lib/efficientFetch"
+} from "./lib/request"
 
 //=============================================================================
 // Helpers - Manipulate content from Prismic.

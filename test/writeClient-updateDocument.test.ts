@@ -4,7 +4,7 @@ import { createTestWriteClient } from "./__testutils__/createWriteClient"
 import { mockPrismicMigrationAPI } from "./__testutils__/mockPrismicMigrationAPI"
 
 import { ForbiddenError, NotFoundError } from "../src"
-import { DEFAULT_RETRY_AFTER } from "../src/lib/efficientFetch"
+import { DEFAULT_RETRY_AFTER } from "../src/lib/request"
 
 it.concurrent("updates a document", async (ctx) => {
 	const client = createTestWriteClient({ ctx })

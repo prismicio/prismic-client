@@ -1,18 +1,19 @@
 import { appendFilters } from "./lib/appendFilters"
 import { castThunk } from "./lib/castThunk"
 import { devMsg } from "./lib/devMsg"
-import {
-	type AbortSignalLike,
-	type FetchLike,
-	type RequestInitLike,
-	efficientFetch,
-} from "./lib/efficientFetch"
 import { everyTagFilter } from "./lib/everyTagFilter"
 import { findMasterRef } from "./lib/findMasterRef"
 import { findRefByID } from "./lib/findRefByID"
 import { findRefByLabel } from "./lib/findRefByLabel"
 import { getPreviewCookie } from "./lib/getPreviewCookie"
 import { minifyGraphQLQuery } from "./lib/minifyGraphQLQuery"
+import type { ResponseLike } from "./lib/request"
+import {
+	type AbortSignalLike,
+	type FetchLike,
+	type RequestInitLike,
+	request,
+} from "./lib/request"
 import { someTagsFilter } from "./lib/someTagsFilter"
 import { throttledLog } from "./lib/throttledLog"
 import { typeFilter } from "./lib/typeFilter"
@@ -1238,11 +1239,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			url.searchParams.set("access_token", this.accessToken)
 		}
 
-		const response = await efficientFetch(
-			url.toString(),
-			this._buildRequestInit(params),
-			this.fetchFn,
-		)
+		const response = await this.#request(url, params)
 		switch (response.status) {
 			case 200: {
 				return (await response.json()) as Repository
@@ -1370,11 +1367,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 				url.searchParams.set("access_token", this.accessToken)
 			}
 
-			const response = await efficientFetch(
-				url.toString(),
-				this._buildRequestInit(params),
-				this.fetchFn,
-			)
+			const response = await this.#request(url, params)
 			switch (response.status) {
 				case 200: {
 					return (await response.json()) as string[]
@@ -1837,11 +1830,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		const url = await this.buildQueryURL(params)
 
 		try {
-			const response = await efficientFetch(
-				url,
-				this._buildRequestInit(params),
-				this.fetchFn,
-			)
+			const response = await this.#request(new URL(url), params)
 			switch (response.status) {
 				case 200: {
 					try {
@@ -1922,6 +1911,10 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 			return await this._get({ ...params, ref: masterRef }, attemptCount + 1)
 		}
+	}
+
+	async #request(url: URL, params?: RequestInitLike): Promise<ResponseLike> {
+		return await request(url, this._buildRequestInit(params), this.fetchFn)
 	}
 
 	protected _buildRequestInit(params?: FetchParams): RequestInitLike {

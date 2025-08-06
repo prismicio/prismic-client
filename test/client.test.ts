@@ -9,7 +9,7 @@ import { getMasterRef } from "./__testutils__/getMasterRef"
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
 
 import * as prismic from "../src"
-import { DEFAULT_RETRY_AFTER } from "../src/lib/efficientFetch"
+import { DEFAULT_RETRY_AFTER } from "../src/lib/request"
 
 it("creates a Client with `createClient`", () => {
 	const client = prismic.createClient("qwerty", {

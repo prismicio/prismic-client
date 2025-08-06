@@ -103,35 +103,36 @@ export interface HeadersLike {
 	get(name: string): string | null
 }
 
-export async function efficientFetch(
-	url: string,
+export async function request(
+	url: URL,
 	init: RequestInitLike | undefined,
 	fetchFn: FetchLike,
 ): Promise<ResponseLike> {
+	const stringURL = url.toString()
+
 	let job: Promise<ResponseLike>
 
 	// Throttle requests with a body.
 	if (init?.body) {
 		// Rate limiting is done per hostname.
-		const hostname = new URL(url).hostname
-		const runner = (THROTTLED_RUNNERS[hostname] ||= pLimit({
+		const runner = (THROTTLED_RUNNERS[url.hostname] ||= pLimit({
 			interval: DEFAULT_RETRY_AFTER,
 		}))
 
-		job = runner(() => fetchFn(url, init))
+		job = runner(() => fetchFn(stringURL, init))
 	} else {
 		// Deduplicate all other requests.
-		const existingJob = DEDUPLICATED_JOBS[url]?.get(init?.signal)
+		const existingJob = DEDUPLICATED_JOBS[stringURL]?.get(init?.signal)
 		if (existingJob) {
 			job = existingJob
 		} else {
-			job = fetchFn(url, init).finally(() => {
-				DEDUPLICATED_JOBS[url]?.delete(init?.signal)
-				if (DEDUPLICATED_JOBS[url]?.size === 0) {
-					delete DEDUPLICATED_JOBS[url]
+			job = fetchFn(stringURL, init).finally(() => {
+				DEDUPLICATED_JOBS[stringURL]?.delete(init?.signal)
+				if (DEDUPLICATED_JOBS[stringURL]?.size === 0) {
+					delete DEDUPLICATED_JOBS[stringURL]
 				}
 			})
-			const map = (DEDUPLICATED_JOBS[url] ||= new Map())
+			const map = (DEDUPLICATED_JOBS[stringURL] ||= new Map())
 			map.set(init?.signal, job)
 		}
 	}
@@ -147,7 +148,7 @@ export async function efficientFetch(
 
 		await new Promise((resolve) => setTimeout(resolve, resolvedRetryAfter))
 
-		return efficientFetch(url, init, fetchFn)
+		return request(url, init, fetchFn)
 	}
 
 	return response.clone()
