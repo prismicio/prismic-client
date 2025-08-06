@@ -860,6 +860,17 @@ export class WriteClient<
 		}
 	}
 
+	/**
+	 * Makes an authenticated HTTP request for write operations using the client's
+	 * configured fetch function and options.
+	 *
+	 * @param url - The URL to request.
+	 * @param params - Fetch options from the user.
+	 * @param init - Additional fetch options to merge with the user-provided
+	 *   options.
+	 *
+	 * @returns The response from the fetch request.
+	 */
 	async #request(
 		url: URL,
 		params?: RequestInitLike,

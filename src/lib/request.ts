@@ -103,6 +103,16 @@ export interface HeadersLike {
 	get(name: string): string | null
 }
 
+/**
+ * Makes an HTTP request with automatic retry for rate limits and request
+ * deduplication.
+ *
+ * @param url - The URL to request.
+ * @param init - Fetch options.
+ * @param fetchFn - The fetch function to use.
+ *
+ * @returns The response from the fetch request.
+ */
 export async function request(
 	url: URL,
 	init: RequestInitLike | undefined,

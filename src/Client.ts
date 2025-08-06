@@ -1864,6 +1864,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		}
 	}
 
+	/**
+	 * Makes an HTTP request using the client's configured fetch function and
+	 * options.
+	 *
+	 * @param url - The URL to request.
+	 * @param params - Fetch options.
+	 *
+	 * @returns The response from the fetch request.
+	 */
 	async #request(url: URL, params?: RequestInitLike): Promise<ResponseLike> {
 		return await request(url, this._buildRequestInit(params), this.fetchFn)
 	}
