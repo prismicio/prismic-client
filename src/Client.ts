@@ -20,7 +20,7 @@ import { typeFilter } from "./lib/typeFilter"
 
 import type { Query } from "./types/api/query"
 import type { Ref } from "./types/api/ref"
-import type { Form, Repository } from "./types/api/repository"
+import type { Repository } from "./types/api/repository"
 import type { PrismicDocument } from "./types/value/document"
 
 import { ForbiddenError } from "./errors/ForbiddenError"
@@ -1358,44 +1358,23 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * @returns A list of all tags used in the repository.
 	 */
 	async getTags(params?: FetchParams): Promise<string[]> {
-		try {
-			const tagsForm = await this.getCachedRepositoryForm("tags", params)
-
-			const url = new URL(tagsForm.action)
-
+		const cachedRepository = await this.getCachedRepository(params)
+		const form = cachedRepository.forms.tags
+		if (form) {
+			const url = new URL(form.action)
 			if (this.accessToken) {
 				url.searchParams.set("access_token", this.accessToken)
 			}
 
 			const response = await this.#request(url, params)
-			switch (response.status) {
-				case 200: {
-					return (await response.json()) as string[]
-				}
-				case 401: {
-					const json = await response.json()
-					throw new ForbiddenError(json.error, url.toString(), json)
-				}
-				case 404: {
-					throw new RepositoryNotFoundError(
-						`Prismic repository not found. Check that "${this.documentAPIEndpoint}" is pointing to the correct repository.`,
-						url.toString(),
-						undefined,
-					)
-				}
-				default: {
-					throw new PrismicError(
-						undefined,
-						url.toString(),
-						await response.text(),
-					)
-				}
+			if (response.ok) {
+				return (await response.json()) as string[]
 			}
-		} catch {
-			const repository = await this.getRepository(params)
-
-			return repository.tags
 		}
+
+		const repository = await this.getRepository(params)
+
+		return repository.tags
 	}
 
 	/**
@@ -1705,34 +1684,6 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		}
 
 		return this.cachedRepository
-	}
-
-	/**
-	 * Returns a cached Prismic repository form. Forms are used to determine API
-	 * endpoints for types of repository data.
-	 *
-	 * @param name - Name of the form.
-	 *
-	 * @returns The repository form.
-	 *
-	 * @throws If a matching form cannot be found.
-	 */
-	private async getCachedRepositoryForm(
-		name: string,
-		params?: FetchParams,
-	): Promise<Form> {
-		const cachedRepository = await this.getCachedRepository(params)
-		const form = cachedRepository.forms[name]
-
-		if (!form) {
-			throw new PrismicError(
-				`Form with name "${name}" could not be found`,
-				undefined,
-				undefined,
-			)
-		}
-
-		return form
 	}
 
 	/**
