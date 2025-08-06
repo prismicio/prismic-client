@@ -1790,11 +1790,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 							url,
 						}
 					} catch {
-						throw new PrismicError(
-							undefined,
-							url,
-							await response.clone().text(),
-						)
+						throw new PrismicError(undefined, url, await response.text())
 					}
 				}
 				case 400: {
