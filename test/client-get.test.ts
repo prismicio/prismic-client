@@ -61,6 +61,7 @@ testGetMethod("merges params and default params if provided", {
 })
 
 it("uses cached repository metadata within the client's repository cache TTL", async (ctx) => {
+	vi.useFakeTimers()
 	const fetchSpy = vi.fn(fetch)
 
 	const client = createTestClient({ clientConfig: { fetch: fetchSpy }, ctx })
@@ -76,6 +77,7 @@ it("uses cached repository metadata within the client's repository cache TTL", a
 	repositoryResponse2.refs = [ctx.mock.api.ref({ isMasterRef: true })]
 	mockPrismicRestAPIV2({ ctx, repositoryResponse: repositoryResponse2 })
 
+	vi.runAllTimers()
 	await client.get()
 
 	const getRequests = fetchSpy.mock.calls
@@ -91,6 +93,8 @@ it("uses cached repository metadata within the client's repository cache TTL", a
 	expect(new URL(getRequests[1]).searchParams.get("ref")).toBe(
 		repositoryResponse1.refs[0].ref,
 	)
+
+	vi.useRealTimers()
 })
 
 testInvalidRefRetry({

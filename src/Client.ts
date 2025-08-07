@@ -7,13 +7,20 @@ import { findRefByID } from "./lib/findRefByID"
 import { findRefByLabel } from "./lib/findRefByLabel"
 import { getPreviewCookie } from "./lib/getPreviewCookie"
 import { minifyGraphQLQuery } from "./lib/minifyGraphQLQuery"
+import type { ResponseLike } from "./lib/request"
+import {
+	type AbortSignalLike,
+	type FetchLike,
+	type RequestInitLike,
+	request,
+} from "./lib/request"
 import { someTagsFilter } from "./lib/someTagsFilter"
 import { throttledLog } from "./lib/throttledLog"
 import { typeFilter } from "./lib/typeFilter"
 
 import type { Query } from "./types/api/query"
 import type { Ref } from "./types/api/ref"
-import type { Form, Repository } from "./types/api/repository"
+import type { Repository } from "./types/api/repository"
 import type { PrismicDocument } from "./types/value/document"
 
 import { ForbiddenError } from "./errors/ForbiddenError"
@@ -28,13 +35,6 @@ import { RepositoryNotFoundError } from "./errors/RepositoryNotFoundError"
 import type { LinkResolverFunction } from "./helpers/asLink"
 import { asLink } from "./helpers/asLink"
 
-import {
-	type AbortSignalLike,
-	BaseClient,
-	type BaseClientConfig,
-	type FetchParams,
-	type HttpRequestLike,
-} from "./BaseClient"
 import type { BuildQueryURLArgs } from "./buildQueryURL"
 import { buildQueryURL } from "./buildQueryURL"
 import { filter } from "./filter"
@@ -64,15 +64,6 @@ export const REPOSITORY_CACHE_TTL = 5000
  * of a failed API request due to overloading.
  */
 export const GET_ALL_QUERY_DELAY = 500
-
-/**
- * The default number of milliseconds to wait before retrying a rate-limited
- * `fetch()` request (429 response code). The default value is only used if the
- * response does not include a `retry-after` header.
- *
- * The API allows up to 200 requests per second.
- */
-const DEFAULT_RETRY_AFTER_MS = 1000
 
 /**
  * The maximum number of attempts to retry a query with an invalid ref. We allow
@@ -123,6 +114,33 @@ enum RefStateMode {
 }
 
 /**
+ * The minimum required properties to treat as an HTTP Request for automatic
+ * Prismic preview support.
+ */
+export type HttpRequestLike =
+	| /**
+	 * Web API Request
+	 *
+	 * @see http://developer.mozilla.org/en-US/docs/Web/API/Request
+	 */
+	{
+			headers?: {
+				get(name: string): string | null
+			}
+			url?: string
+	  }
+
+	/**
+	 * Express-style Request
+	 */
+	| {
+			headers?: {
+				cookie?: string
+			}
+			query?: Record<string, unknown>
+	  }
+
+/**
  * An object containing stateful information about a client's ref strategy.
  */
 type RefState = {
@@ -162,6 +180,28 @@ type RefState = {
 type RefStringOrThunk =
 	| string
 	| (() => string | undefined | Promise<string | undefined>)
+
+/**
+ * Parameters for any client method that use `fetch()`.
+ */
+export type FetchParams = {
+	/**
+	 * Options provided to the client's `fetch()` on all network requests. These
+	 * options will be merged with internally required options. They can also be
+	 * overriden on a per-query basis using the query's `fetchOptions` parameter.
+	 */
+	fetchOptions?: RequestInitLike
+
+	/**
+	 * An `AbortSignal` provided by an `AbortController`. This allows the network
+	 * request to be cancelled if necessary.
+	 *
+	 * @deprecated Move the `signal` parameter into `fetchOptions.signal`:
+	 *
+	 * @see \<https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal\>
+	 */
+	signal?: AbortSignalLike
+}
 
 /**
  * Configuration for clients that determine how content is queried.
@@ -214,7 +254,21 @@ export type ClientConfig = {
 		BuildQueryURLArgs,
 		"ref" | "integrationFieldsRef" | "accessToken" | "routes" | "brokenRoute"
 	>
-} & BaseClientConfig
+
+	/**
+	 * The function used to make network requests to the Prismic REST API. In
+	 * environments where a global `fetch` function does not exist, such as
+	 * Node.js, this function must be provided.
+	 */
+	fetch?: FetchLike
+
+	/**
+	 * Options provided to the client's `fetch()` on all network requests. These
+	 * options will be merged with internally required options. They can also be
+	 * overriden on a per-query basis using the query's `fetchOptions` parameter.
+	 */
+	fetchOptions?: RequestInitLike
+}
 
 /**
  * Parameters specific to client methods that fetch all documents. These methods
@@ -264,9 +318,16 @@ type ResolvePreviewArgs<LinkResolverReturnType> = {
  * @typeParam TDocuments - Document types that are registered for the Prismic
  *   repository. Query methods will automatically be typed based on this type.
  */
-export class Client<
-	TDocuments extends PrismicDocument = PrismicDocument,
-> extends BaseClient {
+export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
+	/**
+	 * The function used to make network requests to the Prismic REST API. In
+	 * environments where a global `fetch` function does not exist, such as
+	 * Node.js, this function must be provided.
+	 */
+	fetchFn: FetchLike
+
+	fetchOptions?: RequestInitLike
+
 	#repositoryName: string | undefined
 
 	/**
@@ -388,7 +449,24 @@ export class Client<
 	 * @returns A client that can query content from the repository.
 	 */
 	constructor(repositoryNameOrEndpoint: string, options: ClientConfig = {}) {
-		super(options)
+		this.fetchOptions = options.fetchOptions
+
+		if (typeof options.fetch === "function") {
+			this.fetchFn = options.fetch
+		} else if (typeof globalThis.fetch === "function") {
+			this.fetchFn = globalThis.fetch as FetchLike
+		} else {
+			throw new PrismicError(
+				"A valid fetch implementation was not provided. In environments where fetch is not available (including Node.js), a fetch implementation must be provided via a polyfill or the `fetch` option.",
+				undefined,
+				undefined,
+			)
+		}
+
+		// If the global fetch function is used, we must bind it to the global scope.
+		if (this.fetchFn === globalThis.fetch) {
+			this.fetchFn = this.fetchFn.bind(globalThis)
+		}
 
 		if (
 			(options.documentAPIEndpoint ||
@@ -1155,16 +1233,32 @@ export class Client<
 	 * @returns Repository metadata.
 	 */
 	async getRepository(params?: FetchParams): Promise<Repository> {
-		// TODO: Restore when Authorization header support works in browsers with CORS.
-		// return await this.fetch<Repository>(this.endpoint);
-
 		const url = new URL(this.documentAPIEndpoint)
 
 		if (this.accessToken) {
 			url.searchParams.set("access_token", this.accessToken)
 		}
 
-		return await this.fetch<Repository>(url.toString(), params)
+		const response = await this.#request(url, params)
+		switch (response.status) {
+			case 200: {
+				return (await response.json()) as Repository
+			}
+			case 401: {
+				const json = await response.json()
+				throw new ForbiddenError(json.error, url.toString(), json)
+			}
+			case 404: {
+				throw new RepositoryNotFoundError(
+					`Prismic repository not found. Check that "${this.documentAPIEndpoint}" is pointing to the correct repository.`,
+					url.toString(),
+					undefined,
+				)
+			}
+			default: {
+				throw new PrismicError(undefined, url.toString(), await response.text())
+			}
+		}
 	}
 
 	/**
@@ -1264,21 +1358,23 @@ export class Client<
 	 * @returns A list of all tags used in the repository.
 	 */
 	async getTags(params?: FetchParams): Promise<string[]> {
-		try {
-			const tagsForm = await this.getCachedRepositoryForm("tags", params)
-
-			const url = new URL(tagsForm.action)
-
+		const cachedRepository = await this.getCachedRepository(params)
+		const form = cachedRepository.forms.tags
+		if (form) {
+			const url = new URL(form.action)
 			if (this.accessToken) {
 				url.searchParams.set("access_token", this.accessToken)
 			}
 
-			return await this.fetch<string[]>(url.toString(), params)
-		} catch {
-			const repository = await this.getRepository(params)
-
-			return repository.tags
+			const response = await this.#request(url, params)
+			if (response.ok) {
+				return (await response.json()) as string[]
+			}
 		}
+
+		const repository = await this.getRepository(params)
+
+		return repository.tags
 	}
 
 	/**
@@ -1583,39 +1679,11 @@ export class Client<
 			!this.cachedRepository ||
 			Date.now() >= this.cachedRepositoryExpiration
 		) {
-			this.cachedRepositoryExpiration = Date.now() + REPOSITORY_CACHE_TTL
 			this.cachedRepository = await this.getRepository(params)
+			this.cachedRepositoryExpiration = Date.now() + REPOSITORY_CACHE_TTL
 		}
 
 		return this.cachedRepository
-	}
-
-	/**
-	 * Returns a cached Prismic repository form. Forms are used to determine API
-	 * endpoints for types of repository data.
-	 *
-	 * @param name - Name of the form.
-	 *
-	 * @returns The repository form.
-	 *
-	 * @throws If a matching form cannot be found.
-	 */
-	private async getCachedRepositoryForm(
-		name: string,
-		params?: FetchParams,
-	): Promise<Form> {
-		const cachedRepository = await this.getCachedRepository(params)
-		const form = cachedRepository.forms[name]
-
-		if (!form) {
-			throw new PrismicError(
-				`Form with name "${name}" could not be found`,
-				undefined,
-				undefined,
-			)
-		}
-
-		return form
 	}
 
 	/**
@@ -1713,9 +1781,50 @@ export class Client<
 		const url = await this.buildQueryURL(params)
 
 		try {
-			const data = await this.fetch<Query<TDocument>>(url, params)
-
-			return { data, url }
+			const response = await this.#request(new URL(url), params)
+			switch (response.status) {
+				case 200: {
+					try {
+						return {
+							data: (await response.clone().json()) as Query<TDocument>,
+							url,
+						}
+					} catch {
+						throw new PrismicError(undefined, url, await response.text())
+					}
+				}
+				case 400: {
+					const json = await response.json()
+					throw new ParsingError(json.message, url, json)
+				}
+				case 401: {
+					const json = await response.json()
+					throw new ForbiddenError(json.message, url, json)
+				}
+				case 404: {
+					const json = await response.json()
+					switch (json.type) {
+						case "api_notfound_error": {
+							throw new RefNotFoundError(json.message, url, json)
+						}
+						case "api_security_error": {
+							if (/preview token.*expired/i.test(json.message)) {
+								throw new PreviewTokenExpiredError(json.message, url, json)
+							}
+						}
+						default: {
+							throw new NotFoundError(json.message, url, json)
+						}
+					}
+				}
+				case 410: {
+					const json = await response.json()
+					throw new RefExpiredError(json.message, url, json)
+				}
+				default: {
+					throw new PrismicError(undefined, url, await response.text())
+				}
+			}
 		} catch (error) {
 			if (
 				!(
@@ -1752,109 +1861,30 @@ export class Client<
 	}
 
 	/**
-	 * Performs a network request using the configured `fetch` function. It
-	 * assumes all successful responses will have a JSON content type. It also
-	 * normalizes unsuccessful network requests.
+	 * Makes an HTTP request using the client's configured fetch function and
+	 * options.
 	 *
-	 * @typeParam T - The JSON response.
+	 * @param url - The URL to request.
+	 * @param params - Fetch options.
 	 *
-	 * @param url - URL to the resource to fetch.
-	 * @param params - Prismic REST API parameters for the network request.
-	 *
-	 * @returns The JSON response from the network request.
+	 * @returns The response from the fetch request.
 	 */
-	protected async fetch<T = unknown>(
-		url: string,
-		params: FetchParams = {},
-	): Promise<T> {
-		const res = await super.fetch(url, params)
+	async #request(url: URL, params?: RequestInitLike): Promise<ResponseLike> {
+		return await request(url, this._buildRequestInit(params), this.fetchFn)
+	}
 
-		if (res.status !== 404 && res.status !== 429 && res.json == null) {
-			throw new PrismicError(undefined, url, res.json || res.text)
+	protected _buildRequestInit(params?: FetchParams): RequestInitLike {
+		return {
+			...this.fetchOptions,
+			...params?.fetchOptions,
+			headers: {
+				...this.fetchOptions?.headers,
+				...params?.fetchOptions?.headers,
+			},
+			signal:
+				params?.fetchOptions?.signal ||
+				params?.signal ||
+				this.fetchOptions?.signal,
 		}
-
-		switch (res.status) {
-			// Successful
-			case 200:
-			case 201: {
-				return res.json
-			}
-
-			// Bad Request
-			// - Invalid filter syntax
-			// - Ref not provided (ignored)
-			case 400: {
-				throw new ParsingError(res.json.message, url, res.json)
-			}
-
-			// Unauthorized
-			// - Missing access token for repository endpoint
-			// - Incorrect access token for repository endpoint
-			case 401:
-			// Forbidden
-			// - Missing access token for query endpoint
-			// - Incorrect access token for query endpoint
-			case 403: {
-				throw new ForbiddenError(
-					res.json.error || res.json.message,
-					url,
-					res.json,
-				)
-			}
-
-			// Not Found
-			// - Incorrect repository name (this response has an empty body)
-			// - Ref does not exist
-			// - Preview token is expired
-			case 404: {
-				if (res.json === undefined) {
-					throw new RepositoryNotFoundError(
-						`Prismic repository not found. Check that "${this.documentAPIEndpoint}" is pointing to the correct repository.`,
-						url,
-						url.startsWith(this.documentAPIEndpoint) ? undefined : res.text,
-					)
-				}
-
-				if (res.json.type === "api_notfound_error") {
-					throw new RefNotFoundError(res.json.message, url, res.json)
-				}
-
-				if (
-					res.json.type === "api_security_error" &&
-					/preview token.*expired/i.test(res.json.message)
-				) {
-					throw new PreviewTokenExpiredError(res.json.message, url, res.json)
-				}
-
-				throw new NotFoundError(res.json.message, url, res.json)
-			}
-
-			// Gone
-			// - Ref is expired
-			case 410: {
-				throw new RefExpiredError(res.json.message, url, res.json)
-			}
-
-			// Too Many Requests
-			// - Exceeded the maximum number of requests per second
-			case 429: {
-				const parsedRetryAfter = Number(res.headers.get("retry-after"))
-				const delay = Number.isNaN(parsedRetryAfter)
-					? DEFAULT_RETRY_AFTER_MS
-					: parsedRetryAfter * 1000
-
-				return await new Promise((resolve, reject) => {
-					setTimeout(async () => {
-						try {
-							resolve(await this.fetch(url, params))
-						} catch (error) {
-							reject(error)
-						}
-					}, delay)
-				})
-			}
-		}
-
-		throw new PrismicError(undefined, url, res.json)
 	}
 }

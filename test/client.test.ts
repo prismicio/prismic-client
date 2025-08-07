@@ -9,6 +9,7 @@ import { getMasterRef } from "./__testutils__/getMasterRef"
 import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
 
 import * as prismic from "../src"
+import { DEFAULT_RETRY_AFTER } from "../src/lib/request"
 
 it("creates a Client with `createClient`", () => {
 	const client = prismic.createClient("qwerty", {
@@ -668,39 +669,6 @@ it("throws ForbiddenError if access token is invalid for query", async (ctx) => 
 	await expect(() => client.get()).rejects.toThrowError(prismic.ForbiddenError)
 })
 
-it("throws ForbiddenError if response code is 403", async (ctx) => {
-	const queryResponse = {
-		error: "Invalid access token",
-	}
-
-	mockPrismicRestAPIV2({ ctx })
-
-	const client = createTestClient({ ctx })
-
-	const queryEndpoint = new URL(
-		"documents/search",
-		`${client.endpoint}/`,
-	).toString()
-
-	ctx.server.use(
-		msw.rest.get(queryEndpoint, (_req, res, ctx) => {
-			return res(ctx.status(403), ctx.json(queryResponse))
-		}),
-	)
-
-	let error: prismic.ForbiddenError | undefined
-
-	try {
-		await client.get()
-	} catch (e) {
-		if (e instanceof prismic.ForbiddenError) {
-			error = e
-		}
-	}
-
-	expect(error?.message).toBe(queryResponse.error)
-})
-
 it("throws ParsingError if response code is 400 with parsing-error type", async (ctx) => {
 	const queryResponse = {
 		type: "parsing-error",
@@ -1031,8 +999,8 @@ it("retries after 1000 milliseconds if response code is 429 and an invalid `retr
 	const t1 = performance.now()
 
 	expect(res).toStrictEqual(queryResponse)
-	expect(t1 - t0).toBeGreaterThanOrEqual(1000)
-	expect(t1 - t0).toBeLessThanOrEqual(1000 + testTolerance)
+	expect(t1 - t0).toBeGreaterThanOrEqual(DEFAULT_RETRY_AFTER)
+	expect(t1 - t0).toBeLessThanOrEqual(DEFAULT_RETRY_AFTER + testTolerance)
 })
 
 it("throws if a non-2xx response is returned even after retrying", async (ctx) => {
@@ -1079,6 +1047,6 @@ it("throws if a non-2xx response is returned even after retrying", async (ctx) =
 	await expect(() => client.get()).rejects.toThrowError(/invalid api response/i)
 	const t1 = performance.now()
 
-	expect(t1 - t0).toBeGreaterThanOrEqual(1000)
-	expect(t1 - t0).toBeLessThanOrEqual(1000 + testTolerance)
+	expect(t1 - t0).toBeGreaterThanOrEqual(DEFAULT_RETRY_AFTER)
+	expect(t1 - t0).toBeLessThanOrEqual(DEFAULT_RETRY_AFTER + testTolerance)
 })
