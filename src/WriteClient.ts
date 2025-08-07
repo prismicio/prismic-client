@@ -897,9 +897,9 @@ export class WriteClient<
 		response: ResponseLike,
 		url: URL,
 	): Promise<never> {
+		const text = await response.text()
 		switch (response.status) {
 			case 400: {
-				const text = await response.text()
 				try {
 					// Try to parse as JSON validation errors array
 					const json = JSON.parse(text)
@@ -919,11 +919,9 @@ export class WriteClient<
 				}
 			}
 			case 401: {
-				const text = await response.text()
 				throw new ForbiddenError(text, url.toString(), text)
 			}
 			case 403: {
-				const text = await response.text()
 				// Try to parse as JSON
 				try {
 					const json = JSON.parse(text)
@@ -938,15 +936,12 @@ export class WriteClient<
 				}
 			}
 			case 404: {
-				const text = await response.text()
 				throw new NotFoundError(text, url.toString(), text)
 			}
 			case 500: {
-				const text = await response.text()
 				throw new PrismicError(text, url.toString(), text)
 			}
 			default: {
-				const text = await response.text()
 				throw new PrismicError(text, url.toString(), text)
 			}
 		}
