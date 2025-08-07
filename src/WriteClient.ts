@@ -800,12 +800,8 @@ export class WriteClient<
 
 				return { id: json.id }
 			}
-			case 403: {
-				const json = await response.json()
-				throw new ForbiddenError(json.Message, url.toString(), json)
-			}
 			default: {
-				throw new PrismicError(undefined, url.toString(), await response.text())
+				return await this.#handleMigrationAPIError(response, url)
 			}
 		}
 	}
@@ -846,16 +842,8 @@ export class WriteClient<
 			case 200: {
 				return
 			}
-			case 403: {
-				const json = await response.json()
-				throw new ForbiddenError(json.Message, url.toString(), json)
-			}
-			case 404: {
-				const text = await response.text()
-				throw new NotFoundError(text, url.toString(), text)
-			}
 			default: {
-				throw new PrismicError(undefined, url.toString(), await response.text())
+				await this.#handleMigrationAPIError(response, url)
 			}
 		}
 	}
@@ -892,5 +880,75 @@ export class WriteClient<
 			},
 			this.fetchFn,
 		)
+	}
+
+	/**
+	 * Handles error responses from the Migration API with comprehensive error
+	 * parsing.
+	 *
+	 * @param response - The HTTP response from the Migration API.
+	 * @param url - The URL that was requested.
+	 *
+	 * @throws {@link PrismicError} For 400, 500, and other unexpected errors.
+	 * @throws {@link ForbiddenError} For 401 and 403 errors.
+	 * @throws {@link NotFoundError} For 404 errors.
+	 */
+	async #handleMigrationAPIError(
+		response: ResponseLike,
+		url: URL,
+	): Promise<never> {
+		switch (response.status) {
+			case 400: {
+				const text = await response.text()
+				try {
+					// Try to parse as JSON validation errors array
+					const json = JSON.parse(text)
+					// `json` has the shape Array<{ property: string, value: unknown, error: string }>
+					throw new PrismicError(
+						"Validation failed, check the response property of the error for details",
+						url.toString(),
+						json,
+					)
+				} catch (error) {
+					// If it's a PrismicError we just threw, re-throw it
+					if (error instanceof PrismicError) {
+						throw error
+					}
+					// Not valid JSON, use as text
+					throw new PrismicError(text, url.toString(), text)
+				}
+			}
+			case 401: {
+				const text = await response.text()
+				throw new ForbiddenError(text, url.toString(), text)
+			}
+			case 403: {
+				const text = await response.text()
+				// Try to parse as JSON
+				try {
+					const json = JSON.parse(text)
+					throw new ForbiddenError(json.Message, url.toString(), json)
+				} catch (error) {
+					// If it's a ForbiddenError we just threw, re-throw it
+					if (error instanceof ForbiddenError) {
+						throw error
+					}
+					// Not valid JSON, use as text
+					throw new ForbiddenError(text, url.toString(), text)
+				}
+			}
+			case 404: {
+				const text = await response.text()
+				throw new NotFoundError(text, url.toString(), text)
+			}
+			case 500: {
+				const text = await response.text()
+				throw new PrismicError(text, url.toString(), text)
+			}
+			default: {
+				const text = await response.text()
+				throw new PrismicError(text, url.toString(), text)
+			}
+		}
 	}
 }
