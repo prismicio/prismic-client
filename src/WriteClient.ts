@@ -601,7 +601,7 @@ export class WriteClient<
 				return (await response.json()) as Asset
 			}
 			default: {
-				return await this.#handleAssetAPIError(response, url)
+				return await this.#handleAssetAPIError(response)
 			}
 		}
 	}
@@ -703,7 +703,7 @@ export class WriteClient<
 				return (await response.json()) as PostAssetTagResult
 			}
 			default: {
-				return await this.#handleAssetAPIError(response, url)
+				return await this.#handleAssetAPIError(response)
 			}
 		}
 	}
@@ -726,7 +726,7 @@ export class WriteClient<
 				return json.items
 			}
 			default: {
-				return await this.#handleAssetAPIError(response, url)
+				return await this.#handleAssetAPIError(response)
 			}
 		}
 	}
@@ -864,27 +864,29 @@ export class WriteClient<
 	 * parsing.
 	 *
 	 * @param response - The HTTP response from the Asset API.
-	 * @param url - The URL that was requested.
 	 *
-	 * @throws {@link PrismicError} For 400, 500, and other unexpected errors.
+	 * @throws {@link InvalidDataError} For 400 errors.
 	 * @throws {@link ForbiddenError} For 401 and 403 errors.
 	 * @throws {@link NotFoundError} For 404 errors.
+	 * @throws {@link PrismicError} For 500, and other unexpected errors.
 	 */
-	async #handleAssetAPIError(response: ResponseLike, url: URL): Promise<never> {
+	async #handleAssetAPIError(response: ResponseLike): Promise<never> {
 		const json = await response.json()
 		switch (response.status) {
 			case 401:
 			case 403:
-				throw new ForbiddenError(json.error, url.toString(), json)
+				throw new ForbiddenError(json.error, response.url, json)
 
 			case 404:
-				throw new NotFoundError(json.error, url.toString(), json)
+				throw new NotFoundError(json.error, response.url, json)
 
 			case 400:
+				throw new InvalidDataError(json.error, response.url, json)
+
 			case 500:
 			case 503:
 			default:
-				throw new PrismicError(json.error, url.toString(), json)
+				throw new PrismicError(json.error, response.url, json)
 		}
 	}
 
