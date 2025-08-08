@@ -801,7 +801,7 @@ export class WriteClient<
 				return { id: json.id }
 			}
 			default: {
-				return await this.#handleMigrationAPIError(response, url)
+				return await this.#handleMigrationAPIError(response)
 			}
 		}
 	}
@@ -843,7 +843,7 @@ export class WriteClient<
 				return
 			}
 			default: {
-				await this.#handleMigrationAPIError(response, url)
+				await this.#handleMigrationAPIError(response)
 			}
 		}
 	}
@@ -893,10 +893,7 @@ export class WriteClient<
 	 * @throws {@link ForbiddenError} For 401 and 403 errors.
 	 * @throws {@link NotFoundError} For 404 errors.
 	 */
-	async #handleMigrationAPIError(
-		response: ResponseLike,
-		url: URL,
-	): Promise<never> {
+	async #handleMigrationAPIError(response: ResponseLike): Promise<never> {
 		const text = await response.text()
 		switch (response.status) {
 			case 400: {
@@ -906,7 +903,7 @@ export class WriteClient<
 					// `json` has the shape Array<{ property: string, value: unknown, error: string }>
 					throw new PrismicError(
 						"Validation failed, check the response property of the error for details",
-						url.toString(),
+						response.url,
 						json,
 					)
 				} catch (error) {
@@ -915,34 +912,34 @@ export class WriteClient<
 						throw error
 					}
 					// Not valid JSON, use as text
-					throw new PrismicError(text, url.toString(), text)
+					throw new PrismicError(text, response.url, text)
 				}
 			}
 			case 401: {
-				throw new ForbiddenError(text, url.toString(), text)
+				throw new ForbiddenError(text, response.url, text)
 			}
 			case 403: {
 				// Try to parse as JSON
 				try {
 					const json = JSON.parse(text)
-					throw new ForbiddenError(json.Message, url.toString(), json)
+					throw new ForbiddenError(json.Message, response.url, json)
 				} catch (error) {
 					// If it's a ForbiddenError we just threw, re-throw it
 					if (error instanceof ForbiddenError) {
 						throw error
 					}
 					// Not valid JSON, use as text
-					throw new ForbiddenError(text, url.toString(), text)
+					throw new ForbiddenError(text, response.url, text)
 				}
 			}
 			case 404: {
-				throw new NotFoundError(text, url.toString(), text)
+				throw new NotFoundError(text, response.url, text)
 			}
 			case 500: {
-				throw new PrismicError(text, url.toString(), text)
+				throw new PrismicError(text, response.url, text)
 			}
 			default: {
-				throw new PrismicError(text, url.toString(), text)
+				throw new PrismicError(text, response.url, text)
 			}
 		}
 	}
