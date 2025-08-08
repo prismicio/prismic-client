@@ -89,6 +89,7 @@ export interface ResponseLike {
 	ok: boolean
 	status: number
 	headers: HeadersLike
+	url: string
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	json(): Promise<any>
 	text(): Promise<string>
