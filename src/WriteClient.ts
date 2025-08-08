@@ -868,7 +868,7 @@ export class WriteClient<
 	 * @throws {@link InvalidDataError} For 400 errors.
 	 * @throws {@link ForbiddenError} For 401 and 403 errors.
 	 * @throws {@link NotFoundError} For 404 errors.
-	 * @throws {@link PrismicError} For 500, and other unexpected errors.
+	 * @throws {@link PrismicError} For 500, 503, and other unexpected errors.
 	 */
 	async #handleAssetAPIError(response: ResponseLike): Promise<never> {
 		const json = await response.json()
