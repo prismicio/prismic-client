@@ -549,7 +549,7 @@ export class WriteClient<
 				return asset
 			}
 			default: {
-				return await this.#handleAssetAPIError(response, url)
+				return await this.#handleAssetAPIError(response)
 			}
 		}
 	}
