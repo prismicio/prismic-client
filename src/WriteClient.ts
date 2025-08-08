@@ -802,7 +802,7 @@ export class WriteClient<
 				return { id: json.id }
 			}
 			default: {
-				return await this.#handleMigrationAPIError(response)
+				await this.#handleMigrationAPIError(response)
 			}
 		}
 	}
