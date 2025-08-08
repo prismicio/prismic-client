@@ -895,7 +895,6 @@ export class WriteClient<
 	 * parsing.
 	 *
 	 * @param response - The HTTP response from the Migration API.
-	 * @param url - The URL that was requested.
 	 *
 	 * @throws {@link InvalidDataError} For 400 errors.
 	 * @throws {@link ForbiddenError} For 401 and 403 errors.
