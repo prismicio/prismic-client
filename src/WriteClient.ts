@@ -548,16 +548,8 @@ export class WriteClient<
 
 				return asset
 			}
-			case 400: {
-				const json = await response.json()
-				throw new PrismicError(json.error, url.toString(), json)
-			}
-			case 401: {
-				const json = await response.json()
-				throw new ForbiddenError(json.error, url.toString(), json)
-			}
 			default: {
-				throw new PrismicError(undefined, url.toString(), await response.text())
+				return await this.#handleAssetAPIError(response)
 			}
 		}
 	}
@@ -608,16 +600,8 @@ export class WriteClient<
 			case 200: {
 				return (await response.json()) as Asset
 			}
-			case 401: {
-				const json = await response.json()
-				throw new ForbiddenError(json.error, url.toString(), json)
-			}
-			case 404: {
-				const json = await response.json()
-				throw new NotFoundError(json.error, url.toString(), json)
-			}
 			default: {
-				throw new PrismicError(undefined, url.toString(), await response.text())
+				return await this.#handleAssetAPIError(response)
 			}
 		}
 	}
@@ -718,12 +702,8 @@ export class WriteClient<
 			case 201: {
 				return (await response.json()) as PostAssetTagResult
 			}
-			case 401: {
-				const json = await response.json()
-				throw new ForbiddenError(json.error, url.toString(), json)
-			}
 			default: {
-				throw new PrismicError(undefined, url.toString(), await response.text())
+				return await this.#handleAssetAPIError(response)
 			}
 		}
 	}
@@ -745,12 +725,8 @@ export class WriteClient<
 
 				return json.items
 			}
-			case 401: {
-				const json = await response.json()
-				throw new ForbiddenError(json.error, url.toString(), json)
-			}
 			default: {
-				throw new PrismicError(undefined, url.toString(), await response.text())
+				return await this.#handleAssetAPIError(response)
 			}
 		}
 	}
@@ -881,6 +857,37 @@ export class WriteClient<
 			},
 			this.fetchFn,
 		)
+	}
+
+	/**
+	 * Handles error responses from the Asset API with comprehensive error
+	 * parsing.
+	 *
+	 * @param response - The HTTP response from the Asset API.
+	 *
+	 * @throws {@link InvalidDataError} For 400 errors.
+	 * @throws {@link ForbiddenError} For 401 and 403 errors.
+	 * @throws {@link NotFoundError} For 404 errors.
+	 * @throws {@link PrismicError} For 500, 503, and other unexpected errors.
+	 */
+	async #handleAssetAPIError(response: ResponseLike): Promise<never> {
+		const json = await response.json()
+		switch (response.status) {
+			case 401:
+			case 403:
+				throw new ForbiddenError(json.error, response.url, json)
+
+			case 404:
+				throw new NotFoundError(json.error, response.url, json)
+
+			case 400:
+				throw new InvalidDataError(json.error, response.url, json)
+
+			case 500:
+			case 503:
+			default:
+				throw new PrismicError(json.error, response.url, json)
+		}
 	}
 
 	/**
