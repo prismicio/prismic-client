@@ -28,6 +28,7 @@ import type {
 import type { PrismicDocument } from "./types/value/document"
 
 import { ForbiddenError } from "./errors/ForbiddenError"
+import { InvalidDataError } from "./errors/InvalidDataError"
 import { NotFoundError } from "./errors/NotFoundError"
 import { PrismicError } from "./errors/PrismicError"
 
@@ -800,12 +801,8 @@ export class WriteClient<
 
 				return { id: json.id }
 			}
-			case 403: {
-				const json = await response.json()
-				throw new ForbiddenError(json.Message, url.toString(), json)
-			}
 			default: {
-				throw new PrismicError(undefined, url.toString(), await response.text())
+				return await this.#handleMigrationAPIError(response)
 			}
 		}
 	}
@@ -846,16 +843,8 @@ export class WriteClient<
 			case 200: {
 				return
 			}
-			case 403: {
-				const json = await response.json()
-				throw new ForbiddenError(json.Message, url.toString(), json)
-			}
-			case 404: {
-				const text = await response.text()
-				throw new NotFoundError(text, url.toString(), text)
-			}
 			default: {
-				throw new PrismicError(undefined, url.toString(), await response.text())
+				await this.#handleMigrationAPIError(response)
 			}
 		}
 	}
@@ -892,5 +881,59 @@ export class WriteClient<
 			},
 			this.fetchFn,
 		)
+	}
+
+	/**
+	 * Handles error responses from the Migration API with comprehensive error
+	 * parsing.
+	 *
+	 * @param response - The HTTP response from the Migration API.
+	 *
+	 * @throws {@link InvalidDataError} For 400 errors.
+	 * @throws {@link ForbiddenError} For 401 and 403 errors.
+	 * @throws {@link NotFoundError} For 404 errors.
+	 * @throws {@link PrismicError} For 500, and other unexpected errors.
+	 */
+	async #handleMigrationAPIError(response: ResponseLike): Promise<never> {
+		// Some responses come with a JSON body, some with a text body.
+		const text = await response.text()
+		let json: unknown
+		try {
+			json = JSON.parse(text)
+		} catch {
+			// no-op
+		}
+
+		switch (response.status) {
+			case 400:
+				if (json) {
+					throw new InvalidDataError(
+						"Validation failed, check the response property of the error for details",
+						response.url,
+						json, // `json` has the shape Array<{ property: string, value: unknown, error: string }>
+					)
+				}
+				throw new InvalidDataError(text, response.url, text)
+
+			case 401:
+				throw new ForbiddenError(text, response.url, text)
+
+			case 403:
+				if (json) {
+					throw new ForbiddenError(
+						(json as { Message: string }).Message,
+						response.url,
+						json,
+					)
+				}
+				throw new ForbiddenError(text, response.url, text)
+
+			case 404:
+				throw new NotFoundError(text, response.url, text)
+
+			case 500:
+			default:
+				throw new PrismicError(text, response.url, text)
+		}
 	}
 }
