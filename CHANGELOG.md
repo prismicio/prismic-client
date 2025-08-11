@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.19.2](https://github.com/prismicio/prismic-client/compare/v7.19.1...v7.19.2) (2025-08-11)
+
+
+### Refactor
+
+* centralize request handling and improve error management ([#393](https://github.com/prismicio/prismic-client/issues/393)) ([cf4161a](https://github.com/prismicio/prismic-client/commit/cf4161ae5b4b0e05a80d6121174276ffc2baa69b))
+
 ### [7.19.1](https://github.com/prismicio/prismic-client/compare/v7.19.0...v7.19.1) (2025-08-01)
 
 ### [7.19.1-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.19.0...v7.19.1-alpha.0) (2025-08-01)
