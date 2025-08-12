@@ -48,12 +48,3 @@ expectType<prismic.IntegrationAPIResults>({
 	results_size: 1,
 	results: [item, item],
 })
-
-/**
- * Supports an optional cursor.
- */
-expectType<prismic.IntegrationAPIResults>({
-	results_size: 1,
-	results: [item, item],
-	cursor: "string",
-})

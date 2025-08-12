@@ -29,11 +29,6 @@ export type IntegrationAPIItem<
 export type IntegrationAPIResults<
 	TData extends IntegrationFieldData = IntegrationFieldData,
 > = {
-	results_size: number
+		results_size: number
 	results: IntegrationAPIItem<TData>[]
-	/**
-	 * An optional cursor used for pagination. It will be passed as a `cursor` URL
-	 * parameter to the next page.
-	 */
-	cursor?: string
 }
