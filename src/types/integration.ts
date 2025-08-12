@@ -29,6 +29,6 @@ export type IntegrationAPIItem<
 export type IntegrationAPIResults<
 	TData extends IntegrationFieldData = IntegrationFieldData,
 > = {
-		results_size: number
+	results_size: number
 	results: IntegrationAPIItem<TData>[]
 }
