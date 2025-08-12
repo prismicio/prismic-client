@@ -35,9 +35,7 @@ export const mockPrismicRestAPIV2 = (args: MockPrismicRestAPIV2Args): void => {
 				return res(
 					ctx.status(401),
 					ctx.json({
-						message: "invalid access token",
-						oauth_initiate: "oauth_initiate",
-						oauth_token: "oauth_token",
+						error: "Invalid access token",
 					}),
 				)
 			}
@@ -47,6 +45,19 @@ export const mockPrismicRestAPIV2 = (args: MockPrismicRestAPIV2Args): void => {
 			return res(ctx.json(response))
 		}),
 		rest.get(queryEndpoint, (req, res, ctx) => {
+			if (
+				typeof args.accessToken === "string" &&
+				req.url.searchParams.get("access_token") !== args.accessToken
+			) {
+				return res(
+					ctx.status(401),
+					ctx.json({
+						type: "api_security_error",
+						message: "Invalid access token",
+					}),
+				)
+			}
+
 			if (args.queryRequiredParams) {
 				for (const paramKey in args.queryRequiredParams) {
 					const requiredValue = args.queryRequiredParams[paramKey]

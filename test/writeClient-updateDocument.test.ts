@@ -4,7 +4,7 @@ import { createTestWriteClient } from "./__testutils__/createWriteClient"
 import { mockPrismicMigrationAPI } from "./__testutils__/mockPrismicMigrationAPI"
 
 import { ForbiddenError, NotFoundError } from "../src"
-import { UNKNOWN_RATE_LIMIT_DELAY } from "../src/BaseClient"
+import { DEFAULT_RETRY_AFTER } from "../src/lib/request"
 
 it.concurrent("updates a document", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
@@ -64,12 +64,12 @@ it.concurrent("respects unknown rate limit", async (ctx) => {
 	// @ts-expect-error - testing purposes
 	await client.updateDocument(...args)
 
-	expect(Date.now() - start).toBeLessThan(UNKNOWN_RATE_LIMIT_DELAY)
+	expect(Date.now() - start).toBeLessThan(DEFAULT_RETRY_AFTER)
 
 	// @ts-expect-error - testing purposes
 	await client.updateDocument(...args)
 
-	expect(Date.now() - start).toBeGreaterThanOrEqual(UNKNOWN_RATE_LIMIT_DELAY)
+	expect(Date.now() - start).toBeGreaterThanOrEqual(DEFAULT_RETRY_AFTER)
 })
 
 it.concurrent("throws forbidden error on invalid credentials", async (ctx) => {
