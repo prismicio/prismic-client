@@ -242,7 +242,8 @@ export type { GeoPointField } from "./types/value/geoPoint"
  */
 // TODO: Remove when we remove support for deprecated `IntegrationFields` export.
 type IntegrationFields = IntegrationField
-export { IntegrationField, IntegrationFields }
+export type { IntegrationField, IntegrationFields }
+export type { IntegrationFieldData } from "./types/value/integration"
 
 export type { GroupField, NestedGroupField } from "./types/value/group"
 
@@ -374,6 +375,12 @@ export type {
 } from "./types/api/repository"
 
 export type { Tags } from "./types/api/tags"
+
+// Integration - Types representing Prismic's integration API.
+export {
+	IntegrationAPIItem,
+	IntegrationAPIResults,
+} from "./types/api/integration"
 
 // Webhook - Types representing Prismic webhooks.
 export { WebhookType } from "./types/webhook/types"

@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.20.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.19.0...v7.20.0-alpha.0) (2025-08-12)
+
+
+### Features
+
+* add integration catalog API types ([b49ee1b](https://github.com/prismicio/prismic-client/commit/b49ee1b1fda066d29999d47f4e2ca164cc9d9abd))
+
+
+### Bug Fixes
+
+* export types ([a5bef08](https://github.com/prismicio/prismic-client/commit/a5bef08582d694d5f14b4d85d31dc704e0f49233))
+* remove unimplemented `cursor` property ([5e7b53c](https://github.com/prismicio/prismic-client/commit/5e7b53cb1de31379ddb04fa27549baa0b8ffa13d))
+* update `isFilled` for new data type ([56f94ca](https://github.com/prismicio/prismic-client/commit/56f94ca45ca30ff731688c79fce82263c9a511c7))
+
 ### [7.19.2](https://github.com/prismicio/prismic-client/compare/v7.19.1...v7.19.2) (2025-08-11)
 
 
