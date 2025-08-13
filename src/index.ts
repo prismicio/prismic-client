@@ -376,6 +376,12 @@ export type {
 
 export type { Tags } from "./types/api/tags"
 
+// Integration - Types representing Prismic's integration API.
+export {
+	IntegrationAPIItem,
+	IntegrationAPIResults,
+} from "./types/api/integration"
+
 // Webhook - Types representing Prismic webhooks.
 export { WebhookType } from "./types/webhook/types"
 
@@ -384,6 +390,3 @@ export type { WebhookBody } from "./types/webhook/types"
 export type { WebhookBodyAPIUpdate } from "./types/webhook/apiUpdate"
 
 export type { WebhookBodyTestTrigger } from "./types/webhook/testTrigger"
-
-// Integration - Types representing integration catalogs.
-export { IntegrationAPIItem, IntegrationAPIResults } from "./types/integration"
