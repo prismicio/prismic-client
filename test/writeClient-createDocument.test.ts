@@ -103,12 +103,14 @@ it.concurrent("supports custom headers", async (ctx) => {
 it.concurrent("includes client identification headers", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 
-	// Import the version dynamically to avoid hardcoding
-	const { version } = await import("../package.json")
+	// Import the name and version dynamically to avoid hardcoding
+	const { name, version } = await import("../package.json")
+
+	// Format the client identifier the same way as the implementation
+	const clientIdentifier = `${name.replace("@", "").replace("/", "-")}/${version}`
 
 	const requiredHeaders = {
-		"x-client": "@prismicio/client",
-		"x-client-version": version,
+		"x-client": clientIdentifier,
 	}
 	const newDocument = { id: "foo" }
 
@@ -131,7 +133,7 @@ it.concurrent("includes client identification headers", async (ctx) => {
 	)
 
 	ctx.expect(id).toBe(newDocument.id)
-	ctx.expect.assertions(3)
+	ctx.expect.assertions(2)
 })
 
 it.concurrent("respects unknown rate limit", async (ctx) => {
