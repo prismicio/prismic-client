@@ -100,6 +100,40 @@ it.concurrent("supports custom headers", async (ctx) => {
 	ctx.expect.assertions(2)
 })
 
+it.concurrent("includes client identification headers", async (ctx) => {
+	const client = createTestWriteClient({ ctx })
+
+	// Import the version dynamically to avoid hardcoding
+	const { version } = await import("../package.json")
+
+	const requiredHeaders = {
+		"x-client": "@prismicio/client",
+		"x-client-version": version,
+	}
+	const newDocument = { id: "foo" }
+
+	mockPrismicMigrationAPI({
+		ctx,
+		client,
+		requiredHeaders,
+		newDocuments: [newDocument],
+	})
+
+	// @ts-expect-error - testing purposes
+	const { id } = await client.createDocument(
+		{
+			type: "type",
+			uid: "uid",
+			lang: "lang",
+			data: {},
+		},
+		"Foo",
+	)
+
+	ctx.expect(id).toBe(newDocument.id)
+	ctx.expect.assertions(3)
+})
+
 it.concurrent("respects unknown rate limit", async (ctx) => {
 	const client = createTestWriteClient({ ctx })
 

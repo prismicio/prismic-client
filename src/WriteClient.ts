@@ -32,6 +32,8 @@ import { InvalidDataError } from "./errors/InvalidDataError"
 import { NotFoundError } from "./errors/NotFoundError"
 import { PrismicError } from "./errors/PrismicError"
 
+import { version } from "../package.json"
+
 import { Client } from "./Client"
 import type { ClientConfig, FetchParams } from "./Client"
 import type { Migration } from "./Migration"
@@ -769,6 +771,8 @@ export class WriteClient<
 			}),
 			headers: {
 				"content-type": "application/json",
+				"x-client": "@prismicio/client",
+				"x-client-version": version,
 			},
 		})
 		switch (response.status) {
@@ -813,6 +817,8 @@ export class WriteClient<
 			}),
 			headers: {
 				"content-type": "application/json",
+				"x-client": "@prismicio/client",
+				"x-client-version": version,
 			},
 		})
 		switch (response.status) {
