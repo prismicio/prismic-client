@@ -32,11 +32,15 @@ import { InvalidDataError } from "./errors/InvalidDataError"
 import { NotFoundError } from "./errors/NotFoundError"
 import { PrismicError } from "./errors/PrismicError"
 
+import { name, version } from "../package.json"
+
 import { Client } from "./Client"
 import type { ClientConfig, FetchParams } from "./Client"
 import type { Migration } from "./Migration"
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { createMigration } from "./createMigration"
+
+const CLIENT_IDENTIFIER = `${name.replace("@", "").replace("/", "-")}/${version}`
 
 /**
  * Extracts one or more Prismic document types that match a given Prismic
@@ -769,6 +773,7 @@ export class WriteClient<
 			}),
 			headers: {
 				"content-type": "application/json",
+				"x-client": CLIENT_IDENTIFIER,
 			},
 		})
 		switch (response.status) {
@@ -813,6 +818,7 @@ export class WriteClient<
 			}),
 			headers: {
 				"content-type": "application/json",
+				"x-client": CLIENT_IDENTIFIER,
 			},
 		})
 		switch (response.status) {
