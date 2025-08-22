@@ -119,6 +119,7 @@ export type { HTMLRichTextSerializer } from "./helpers/asHTML"
 // Client Errors
 export { PrismicError } from "./errors/PrismicError"
 export { ForbiddenError } from "./errors/ForbiddenError"
+export { InvalidDataError } from "./errors/InvalidDataError"
 export { NotFoundError } from "./errors/NotFoundError"
 export { RefNotFoundError } from "./errors/RefNotFoundError"
 export { RefExpiredError } from "./errors/RefExpiredError"
