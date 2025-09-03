@@ -63,7 +63,7 @@ export const CustomTypeModelFieldType = {
 	LegacySlices: "Choice",
 } as const
 
-export type CustomTypeModelFieldTypeKeys = typeof CustomTypeModelFieldType
+export type CustomTypeModelFieldType = typeof CustomTypeModelFieldType
 
 /**
  * A custom type field.
