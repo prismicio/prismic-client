@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.21.0-alpha.1](https://github.com/prismicio/prismic-client/compare/v7.21.0-alpha.0...v7.21.0-alpha.1) (2025-09-03)
+
+
+### Bug Fixes
+
+* type name ([adc5161](https://github.com/prismicio/prismic-client/commit/adc516123ddb73bec065beb6f6a5120aa9d728df))
+
 ## [7.21.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.20.1...v7.21.0-alpha.0) (2025-09-03)
 
 
