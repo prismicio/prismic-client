@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.19.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.18.0...v7.19.0-alpha.0) (2025-09-03)
+
+
+### Bug Fixes
+
+* add missing type export ([39730b7](https://github.com/prismicio/prismic-client/commit/39730b749c86ed15dcd93005f1f31eb3ce8ad25e))
+
 ## [7.18.0](https://github.com/prismicio/prismic-client/compare/v7.18.0-alpha.0...v7.18.0) (2025-06-24)
 
 
