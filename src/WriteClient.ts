@@ -186,7 +186,24 @@ export type WriteClientConfig = {
 	 * @see Prismic Migration API technical reference: {@link https://prismic.io/docs/migration-api-technical-reference}
 	 */
 	migrationAPIEndpoint?: string
+
+	/**
+	 * The Prismic Locale API endpoint.
+	 *
+	 * @defaultValue `"https://api.internal.prismic.io/locale/"`
+	 */
+	localeAPIEndpoint?: string
 } & ClientConfig
+
+type LocalesResponse = {
+	results: Locale[]
+}
+type Locale = {
+	id: string
+	customName: string | null
+	isMaster: boolean
+	label: string
+}
 
 /**
  * A client that allows querying and writing content to a Prismic repository.
@@ -205,6 +222,7 @@ export class WriteClient<
 
 	assetAPIEndpoint = "https://asset-api.prismic.io/"
 	migrationAPIEndpoint = "https://migration.prismic.io/"
+	localeAPIEndpoint = "https://api.internal.prismic.io/locale/"
 
 	/**
 	 * Creates a Prismic client that can be used to query and write content to a
@@ -237,6 +255,10 @@ export class WriteClient<
 
 		if (options.migrationAPIEndpoint) {
 			this.migrationAPIEndpoint = `${options.migrationAPIEndpoint}/`
+		}
+
+		if (options.localeAPIEndpoint) {
+			this.localeAPIEndpoint = `${options.localeAPIEndpoint}/`
 		}
 	}
 
@@ -355,6 +377,39 @@ export class WriteClient<
 		})
 	}
 
+	private async getMasterLocale(fetchParams: FetchParams): Promise<string> {
+		const getLocalesURL = new URL("repository/locales", this.localeAPIEndpoint)
+		getLocalesURL.searchParams.set("repository", this.repositoryName)
+
+		const localesResponse = await this.#request(getLocalesURL, fetchParams, {
+			headers: {
+				Authorization: `Bearer ${this.writeToken}`,
+			},
+		})
+
+		switch (localesResponse.status) {
+			case 200: {
+				const locales = (await localesResponse.json()) as LocalesResponse
+				const masterLocale = locales.results.find(
+					(locale: Locale) => locale.isMaster,
+				)
+
+				if (!masterLocale) {
+					throw new PrismicError(
+						"Master locale not found",
+						getLocalesURL.toString(),
+						locales,
+					)
+				}
+
+				return masterLocale.id
+			}
+			default: {
+				return await this.#handleMigrationAPIError(localesResponse)
+			}
+		}
+	}
+
 	/**
 	 * Creates documents in the Prismic repository's migration release.
 	 *
@@ -370,14 +425,10 @@ export class WriteClient<
 			...fetchParams
 		}: { reporter?: (event: MigrateReporterEvents) => void } & FetchParams = {},
 	): Promise<void> {
-		// Resolve master locale
-		const repository = await this.getRepository(fetchParams)
-		const masterLocale = repository.languages.find((lang) => lang.is_master)!.id
+		const masterLocale = await this.getMasterLocale(fetchParams)
 		reporter?.({
 			type: "documents:masterLocale",
-			data: {
-				masterLocale,
-			},
+			data: { masterLocale },
 		})
 
 		const documentsToCreate: PrismicMigrationDocument<TDocuments>[] = []
