@@ -43,7 +43,7 @@ export const asText: {
 	 * @returns Plain text equivalent of the rich text field, or `null` if the
 	 *   field is empty.
 	 *
-	 * @see Learn how to display rich text as plain text: {@link https://prismic.io/docs/fields/rich-text}
+	 * @see Learn how to work with rich text fields: {@link https://prismic.io/docs/fields/rich-text}
 	 */
 	<Field extends RichTextField | null | undefined>(
 		richTextField: Field,
@@ -62,7 +62,7 @@ export const asText: {
 	 * @returns Plain text equivalent of the rich text field, or `null` if the
 	 *   field is empty.
 	 *
-	 * @see Learn how to display rich text as plain text: {@link https://prismic.io/docs/fields/rich-text}
+	 * @see Learn how to work with rich text fields: {@link https://prismic.io/docs/fields/rich-text}
 	 */
 	<Field extends RichTextField | null | undefined>(
 		richTextField: Field,
