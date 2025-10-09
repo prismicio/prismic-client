@@ -203,7 +203,7 @@ export const number = isNonNullish as (
 export const keyText = (
 	field: KeyTextField | null | undefined,
 ): field is KeyTextField<"filled"> => {
-	return isNonNullish(keyText) && !!field
+	return isNonNullish(field) && !!field
 }
 
 /**
