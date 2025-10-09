@@ -124,7 +124,8 @@ export interface QueryParams {
 
 	/**
 	 * The `after` parameter can be used along with the orderings option. It will
-	 * remove all the pages except for those after the specified page in the list.
+	 * remove all the pages except for those after the specified page in the
+	 * list.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#after}
 	 */

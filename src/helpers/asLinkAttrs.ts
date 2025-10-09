@@ -67,9 +67,8 @@ type AsLinkAttrsReturnType<
 		}
 
 /**
- * Resolves any type of link field or Prismic page to a set of link
- * attributes. The attributes are designed to be passed to link HTML elements,
- * like `<a>`.
+ * Resolves any type of link field or Prismic page to a set of link attributes.
+ * The attributes are designed to be passed to link HTML elements, like `<a>`.
  *
  * If a resolved URL is external (i.e. starts with a protocol like `https://`),
  * `rel` is returned as `"noreferrer"`.
