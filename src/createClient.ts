@@ -26,7 +26,7 @@ export interface CreateClient {
  * createClient("https://my-repo.cdn.prismic.io/api/v2")
  * ```
  *
- * @typeParam TDocuments - A union of Prismic document types for the repository.
+ * @typeParam TDocuments - A union of Prismic page types for the repository.
  *
  * @param repositoryNameOrEndpoint - The Prismic repository name or full Content
  *   API endpoint for the repository.
