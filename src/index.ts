@@ -360,7 +360,7 @@ export type {
 } from "./types/migration/Asset"
 export type { MigrationContentRelationship } from "./types/migration/ContentRelationship"
 
-// API - Types representing Prismic Rest API V2 responses.
+// API - Types representing Prismic Content API responses.
 export type { Query } from "./types/api/query"
 
 export type { Ref } from "./types/api/ref"

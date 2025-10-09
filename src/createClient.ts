@@ -14,26 +14,28 @@ export interface CreateClient {
 }
 
 /**
- * Creates a Prismic client that can be used to query a repository.
+ * Creates a Prismic client that can be used to query content from a repository.
  *
  * @example
  *
  * ```ts
- * // With a repository name.
- * createClient("qwerty")
+ * // With a repository name
+ * createClient("my-repo");
  *
- * // Or with a full Prismic Rest API V2 endpoint.
- * createClient("https://qwerty.cdn.prismic.io/api/v2")
+ * // With a full Prismic Content API endpoint
+ * createClient("https://my-repo.cdn.prismic.io/api/v2");
  * ```
  *
  * @typeParam TDocuments - A union of Prismic document types for the repository.
  *
- * @param repositoryNameOrEndpoint - The Prismic repository name or full Rest
- *   API V2 endpoint for the repository.
+ * @param repositoryNameOrEndpoint - The Prismic repository name or full Content
+ *   API endpoint for the repository.
  * @param options - Configuration that determines how content will be queried
  *   from the Prismic repository.
  *
  * @returns A client that can query content from the repository.
+ *
+ * @see @prismicio/client technical reference: {@link https://prismic.io/docs/technical-reference/prismicio-client/v7}
  */
 export const createClient: CreateClient = <TDocuments extends PrismicDocument>(
 	repositoryNameOrEndpoint: string,

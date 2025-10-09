@@ -85,8 +85,7 @@ type AsLinkAttrsReturnType<
  * @returns Resolved set of link attributes or, if the provided link field or
  *   document is empty, and empty object
  *
- * @see Prismic link resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
- * @see Prismic API `routes` options documentation: {@link https://prismic.io/docs/route-resolver}
+ * @see Learn about route resolvers and link resolvers: {@link https://prismic.io/docs/routes}
  */
 export const asLinkAttrs = <
 	LinkResolverFunctionReturnType = ReturnType<LinkResolverFunction>,

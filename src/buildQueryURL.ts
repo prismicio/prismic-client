@@ -94,9 +94,9 @@ export interface Route {
 }
 
 /**
- * Parameters for the Prismic REST API V2.
+ * Parameters for the Prismic Content API.
  *
- * {@link https://prismic.io/docs/api}
+ * @see Learn how to fetch content from Prismic: {@link https://prismic.io/docs/fetch-content}
  */
 export interface QueryParams {
 	/**
@@ -296,7 +296,7 @@ const castOrderingToString = (ordering: Ordering | string): string => {
 export type BuildQueryURLArgs = QueryParams & BuildQueryURLParams
 
 /**
- * Build a Prismic REST API V2 URL to request documents from a repository. The
+ * Builds a Prismic Content API URL to request documents from a repository. The
  * paginated response for this URL includes documents matching the parameters.
  *
  * A ref is required to make a request. Request the `endpoint` URL to retrieve a
@@ -304,13 +304,21 @@ export type BuildQueryURLArgs = QueryParams & BuildQueryURLParams
  *
  * Type the JSON response with `Query`.
  *
- * {@link https://prismic.io/docs/api#refs-and-the-entry-api}
- * {@link https://prismic.io/docs/rest-api-technical-reference}
+ * @example
  *
- * @param endpoint - URL to the repository's REST API V2.
+ * ```ts
+ * const url = buildQueryURL("https://my-repo.cdn.prismic.io/api/v2", {
+ *   ref: "my-ref",
+ *   filters: [filter.at("document.type", "blog_post")],
+ * });
+ * ```
+ *
+ * @param endpoint - URL to the repository's Content API.
  * @param args - Arguments to filter and scope the query.
  *
  * @returns URL that can be used to request documents from the repository.
+ *
+ * @see Prismic Content API technical reference: {@link https://prismic.io/docs/content-api}
  */
 export const buildQueryURL = (
 	endpoint: string,

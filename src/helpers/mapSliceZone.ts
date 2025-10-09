@@ -26,10 +26,10 @@ type ExtractSliceType<TSlice extends SliceLike> = TSlice extends SliceLikeRestV2
 		: never
 
 /**
- * The minimum required properties to represent a Prismic Slice from the Prismic
- * Rest API V2 for the `mapSliceZone()` helper.
+ * The minimum required properties to represent a Prismic slice from the Prismic
+ * Content API for the `mapSliceZone()` helper.
  *
- * @typeParam SliceType - Type name of the Slice.
+ * @typeParam SliceType - Type name of the slice.
  */
 type SliceLikeRestV2<TSliceType extends string = string> = Pick<
 	Slice<TSliceType>,
@@ -37,23 +37,23 @@ type SliceLikeRestV2<TSliceType extends string = string> = Pick<
 >
 
 /**
- * The minimum required properties to represent a Prismic Slice from the Prismic
+ * The minimum required properties to represent a Prismic slice from the Prismic
  * GraphQL API for the `mapSliceZone()` helper.
  *
- * @typeParam SliceType - Type name of the Slice.
+ * @typeParam SliceType - Type name of the slice.
  */
 type SliceLikeGraphQL<TSliceType extends string = string> = {
 	type: Slice<TSliceType>["slice_type"]
 }
 
 /**
- * The minimum required properties to represent a Prismic Slice for the
+ * The minimum required properties to represent a Prismic slice for the
  * `mapSliceZone()` helper.
  *
- * If using Prismic's Rest API V2, use the `Slice` export from
+ * If using Prismic's Content API, use the `Slice` export from
  * `@prismicio/client` for a full interface.
  *
- * @typeParam SliceType - Type name of the Slice.
+ * @typeParam SliceType - Type name of the slice.
  */
 type SliceLike<TSliceType extends string = string> =
 	| SliceLikeRestV2<TSliceType>
@@ -63,10 +63,10 @@ type SliceLike<TSliceType extends string = string> =
  * A looser version of the `SliceZone` type from `@prismicio/client` using
  * `SliceLike`.
  *
- * If using Prismic's Rest API V2, use the `SliceZone` export from
+ * If using Prismic's Content API, use the `SliceZone` export from
  * `@prismicio/client` for the full type.
  *
- * @typeParam TSlice - The type(s) of a Slice in the Slice Zone.
+ * @typeParam TSlice - The type(s) of a slice in the slice zone.
  */
 type SliceZoneLike<TSlice extends SliceLike = SliceLike> = readonly TSlice[]
 

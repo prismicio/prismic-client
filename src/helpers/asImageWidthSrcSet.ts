@@ -19,13 +19,13 @@ type AsImageWidthSrcSetReturnType<
 	Field extends ImageFieldImage<"filled">
 		? {
 				/**
-				 * The image field's image URL with Imgix URL parameters (if given).
+				 * The image field's URL with imgix URL parameters (if given).
 				 */
 				src: string
 
 				/**
-				 * A width-based `srcset` attribute value for the image field's image
-				 * with Imgix URL parameters (if given).
+				 * A width-based `srcset` attribute value for the image field
+				 * with imgix URL parameters (if given).
 				 */
 				srcset: string
 			}
@@ -39,10 +39,9 @@ type AsImageWidthSrcSetConfig = Omit<BuildWidthSrcSetParams, "widths"> & {
 }
 
 /**
- * Creates a width-based `srcset` from an image field with optional image
- * transformations (via Imgix URL parameters).
+ * Creates a width-based `srcset` from an image field with optional image transformations via imgix URL parameters.
  *
- * If a `widths` parameter is not given, the following widths will be used by
+ * If a `widths` parameter is not given, the following widths (in pixels) will be used by
  * default: 640, 750, 828, 1080, 1200, 1920, 2048, 3840.
  *
  * If the image field contains responsive views, each responsive view can be
@@ -52,28 +51,28 @@ type AsImageWidthSrcSetConfig = Omit<BuildWidthSrcSetParams, "widths"> & {
  * @example
  *
  * ```ts
- * const srcset = asImageWidthSrcSet(document.data.imageField, {
- * 	widths: [400, 800, 1600],
- * 	sat: -100,
- * })
+ * const srcset = asImageWidthSrcSet(document.data.photo, {
+ *   widths: [400, 800, 1600],
+ *   sat: -100,
+ * });
  * // => {
- * //   src:    'https://images.prismic.io/repo/image.png?sat=-100',
- * //   srcset: 'https://images.prismic.io/repo/image.png?sat=-100&width=400 400w, ' +
- * //           'https://images.prismic.io/repo/image.png?sat=-100&width=800 800w,' +
- * //           'https://images.prismic.io/repo/image.png?sat=-100&width=1600 1600w'
+ * //   src: "https://images.prismic.io/repo/image.png?sat=-100",
+ * //   srcset: "https://images.prismic.io/repo/image.png?sat=-100&width=400 400w, " +
+ * //           "https://images.prismic.io/repo/image.png?sat=-100&width=800 800w, " +
+ * //           "https://images.prismic.io/repo/image.png?sat=-100&width=1600 1600w"
  * // }
  * ```
  *
- * @param field - Image field (or one of its responsive views) from which to get
- *   an image URL.
- * @param config - An object of Imgix URL API parameters. The `widths` parameter
+ * @param field - An image field (or one of its responsive views) from which to get an image URL.
+ * @param config - An object of imgix URL API parameters. The `widths` parameter
  *   defines the resulting `srcset` widths. Pass `"thumbnails"` to automatically
  *   use the field's responsive views.
  *
- * @returns A `srcset` attribute value for the image field with Imgix URL
- *   parameters (if given). If the image field is empty, `null` is returned.
+ * @returns A `srcset` attribute value for the image field with imgix URL
+ *   parameters, or `null` if the field is empty.
  *
- * @see Imgix URL parameters reference: https://docs.imgix.com/apis/rendering
+ * @see Learn how to optimize images with imgix: {@link https://prismic.io/docs/fields/image}
+ * @see imgix URL parameters reference: {@link https://docs.imgix.com/apis/rendering}
  */
 export const asImageWidthSrcSet = <
 	Field extends ImageFieldImage | null | undefined,
