@@ -308,9 +308,9 @@ export type BuildQueryURLArgs = QueryParams & BuildQueryURLParams
  *
  * ```ts
  * const url = buildQueryURL("https://my-repo.cdn.prismic.io/api/v2", {
- *   ref: "my-ref",
- *   filters: [filter.at("document.type", "blog_post")],
- * });
+ * 	ref: "my-ref",
+ * 	filters: [filter.at("document.type", "blog_post")],
+ * })
  * ```
  *
  * @param endpoint - URL to the repository's Content API.

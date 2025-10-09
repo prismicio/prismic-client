@@ -33,14 +33,15 @@ export const asText: {
 	 * @example
 	 *
 	 * ```ts
-	 * const text = asText(document.data.content);
+	 * const text = asText(document.data.content)
 	 * // => "Hello world"
 	 * ```
 	 *
 	 * @param richTextField - A rich text field from Prismic.
 	 * @param config - Configuration that determines the output of `asText()`.
 	 *
-	 * @returns Plain text equivalent of the rich text field, or `null` if the field is empty.
+	 * @returns Plain text equivalent of the rich text field, or `null` if the
+	 *   field is empty.
 	 *
 	 * @see Learn how to display rich text as plain text: {@link https://prismic.io/docs/fields/rich-text}
 	 */
@@ -55,9 +56,11 @@ export const asText: {
 	 * @deprecated Use object-style configuration instead.
 	 *
 	 * @param richTextField - A rich text field from Prismic.
-	 * @param separator - Separator used to join each element. Defaults to a space.
+	 * @param separator - Separator used to join each element. Defaults to a
+	 *   space.
 	 *
-	 * @returns Plain text equivalent of the rich text field, or `null` if the field is empty.
+	 * @returns Plain text equivalent of the rich text field, or `null` if the
+	 *   field is empty.
 	 *
 	 * @see Learn how to display rich text as plain text: {@link https://prismic.io/docs/fields/rich-text}
 	 */

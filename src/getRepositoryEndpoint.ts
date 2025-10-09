@@ -8,7 +8,7 @@ import { isRepositoryName } from "./isRepositoryName"
  * @example
  *
  * ```ts
- * getRepositoryEndpoint("my-repo");
+ * getRepositoryEndpoint("my-repo")
  * // => "https://my-repo.cdn.prismic.io/api/v2"
  * ```
  *

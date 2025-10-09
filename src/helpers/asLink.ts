@@ -68,14 +68,16 @@ export const asLink: {
 	 * @example
 	 *
 	 * ```ts
-	 * const url = asLink(document.data.link);
+	 * const url = asLink(document.data.link)
 	 * // => "/blog/my-post"
 	 * ```
 	 *
-	 * @typeParam LinkResolverFunctionReturnType - Link resolver function return type.
+	 * @typeParam LinkResolverFunctionReturnType - Link resolver function return
+	 *   type.
 	 * @typeParam Field - Link field or Prismic document to resolve to a URL.
 	 *
-	 * @param linkFieldOrDocument - Any kind of link field or a document to resolve.
+	 * @param linkFieldOrDocument - Any kind of link field or a document to
+	 *   resolve.
 	 * @param config - Configuration that determines the output of `asLink()`.
 	 *
 	 * @returns Resolved URL, or `null` if the link field or document is empty.
@@ -99,12 +101,14 @@ export const asLink: {
 	 *
 	 * @deprecated Use object-style configuration instead.
 	 *
-	 * @typeParam LinkResolverFunctionReturnType - Link resolver function return type.
+	 * @typeParam LinkResolverFunctionReturnType - Link resolver function return
+	 *   type.
 	 * @typeParam Field - Link field or Prismic document to resolve to a URL.
 	 *
-	 * @param linkFieldOrDocument - Any kind of link field or a document to resolve.
-	 * @param linkResolver - An optional link resolver function. Without it, you're
-	 *   expected to use the `routes` option from the API.
+	 * @param linkFieldOrDocument - Any kind of link field or a document to
+	 *   resolve.
+	 * @param linkResolver - An optional link resolver function. Without it,
+	 *   you're expected to use the `routes` option from the API.
 	 *
 	 * @returns Resolved URL, or `null` if the link field or document is empty.
 	 *

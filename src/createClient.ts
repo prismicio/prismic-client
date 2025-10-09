@@ -20,10 +20,10 @@ export interface CreateClient {
  *
  * ```ts
  * // With a repository name
- * createClient("my-repo");
+ * createClient("my-repo")
  *
  * // With a full Prismic Content API endpoint
- * createClient("https://my-repo.cdn.prismic.io/api/v2");
+ * createClient("https://my-repo.cdn.prismic.io/api/v2")
  * ```
  *
  * @typeParam TDocuments - A union of Prismic document types for the repository.

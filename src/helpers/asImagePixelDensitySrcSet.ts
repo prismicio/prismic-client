@@ -51,9 +51,9 @@ type AsImagePixelDensitySrcSetReturnType<
  *
  * ```ts
  * const srcset = asImagePixelDensitySrcSet(document.data.photo, {
- *   pixelDensities: [1, 2],
- *   sat: -100,
- * });
+ * 	pixelDensities: [1, 2],
+ * 	sat: -100,
+ * })
  * // => {
  * //   src: "https://images.prismic.io/repo/image.png?sat=-100",
  * //   srcset: "https://images.prismic.io/repo/image.png?sat=-100&dpr=1 1x, " +
@@ -61,7 +61,8 @@ type AsImagePixelDensitySrcSetReturnType<
  * // }
  * ```
  *
- * @param field - An image field (or one of its responsive views) from which to get an image URL.
+ * @param field - An image field (or one of its responsive views) from which to
+ *   get an image URL.
  * @param config - An object of imgix URL API parameters. The `pixelDensities`
  *   parameter defines the resulting `srcset` pixel densities.
  *

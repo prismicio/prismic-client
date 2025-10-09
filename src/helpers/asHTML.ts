@@ -325,14 +325,15 @@ export const asHTML: {
 	 * @example
 	 *
 	 * ```ts
-	 * const html = asHTML(document.data.content);
+	 * const html = asHTML(document.data.content)
 	 * // => "<p>Hello world</p>"
 	 * ```
 	 *
 	 * @param richTextField - A rich text field from Prismic.
 	 * @param config - Configuration that determines the output of `asHTML()`.
 	 *
-	 * @returns HTML equivalent of the rich text field, or `null` if the field is empty.
+	 * @returns HTML equivalent of the rich text field, or `null` if the field is
+	 *   empty.
 	 *
 	 * @see Learn how to style rich text and customize rendering: {@link https://prismic.io/docs/fields/rich-text}
 	 */
@@ -352,7 +353,8 @@ export const asHTML: {
 	 * @param serializer - An optional rich text serializer. Unhandled cases will
 	 *   fall back to the default serializer.
 	 *
-	 * @returns HTML equivalent of the rich text field, or `null` if the field is empty.
+	 * @returns HTML equivalent of the rich text field, or `null` if the field is
+	 *   empty.
 	 *
 	 * @see Learn how to style rich text and customize rendering: {@link https://prismic.io/docs/fields/rich-text}
 	 */

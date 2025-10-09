@@ -5,7 +5,7 @@
 The repository name must be provided when creating a `@prismicio/client` like the following:
 
 ```typescript
-import * as prismic from "@prismicio/client";
+import * as prismic from "@prismicio/client"
 
 const client = prismic.createClient("example-prismic-repo")
 ```

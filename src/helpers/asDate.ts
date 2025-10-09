@@ -14,7 +14,7 @@ type AsDateReturnType<
  * @example
  *
  * ```ts
- * const date = asDate(document.data.release_date);
+ * const date = asDate(document.data.release_date)
  * // => Date object or null
  * ```
  *

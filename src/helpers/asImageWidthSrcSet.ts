@@ -24,8 +24,8 @@ type AsImageWidthSrcSetReturnType<
 				src: string
 
 				/**
-				 * A width-based `srcset` attribute value for the image field
-				 * with imgix URL parameters (if given).
+				 * A width-based `srcset` attribute value for the image field with imgix
+				 * URL parameters (if given).
 				 */
 				srcset: string
 			}
@@ -39,10 +39,11 @@ type AsImageWidthSrcSetConfig = Omit<BuildWidthSrcSetParams, "widths"> & {
 }
 
 /**
- * Creates a width-based `srcset` from an image field with optional image transformations via imgix URL parameters.
+ * Creates a width-based `srcset` from an image field with optional image
+ * transformations via imgix URL parameters.
  *
- * If a `widths` parameter is not given, the following widths (in pixels) will be used by
- * default: 640, 750, 828, 1080, 1200, 1920, 2048, 3840.
+ * If a `widths` parameter is not given, the following widths (in pixels) will
+ * be used by default: 640, 750, 828, 1080, 1200, 1920, 2048, 3840.
  *
  * If the image field contains responsive views, each responsive view can be
  * used as a width in the resulting `srcset` by passing `"thumbnails"` as the
@@ -52,9 +53,9 @@ type AsImageWidthSrcSetConfig = Omit<BuildWidthSrcSetParams, "widths"> & {
  *
  * ```ts
  * const srcset = asImageWidthSrcSet(document.data.photo, {
- *   widths: [400, 800, 1600],
- *   sat: -100,
- * });
+ * 	widths: [400, 800, 1600],
+ * 	sat: -100,
+ * })
  * // => {
  * //   src: "https://images.prismic.io/repo/image.png?sat=-100",
  * //   srcset: "https://images.prismic.io/repo/image.png?sat=-100&width=400 400w, " +
@@ -63,7 +64,8 @@ type AsImageWidthSrcSetConfig = Omit<BuildWidthSrcSetParams, "widths"> & {
  * // }
  * ```
  *
- * @param field - An image field (or one of its responsive views) from which to get an image URL.
+ * @param field - An image field (or one of its responsive views) from which to
+ *   get an image URL.
  * @param config - An object of imgix URL API parameters. The `widths` parameter
  *   defines the resulting `srcset` widths. Pass `"thumbnails"` to automatically
  *   use the field's responsive views.

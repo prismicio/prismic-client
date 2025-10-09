@@ -309,7 +309,8 @@ export const group = <
  *
  * @param slices - Slice zone to check.
  *
- * @returns `true` if the slice zone contains at least one slice, `false` otherwise.
+ * @returns `true` if the slice zone contains at least one slice, `false`
+ *   otherwise.
  */
 export const sliceZone = <Slices extends Slice | SharedSlice>(
 	slices: SliceZone<Slices> | null | undefined,
