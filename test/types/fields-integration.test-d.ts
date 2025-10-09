@@ -3,10 +3,7 @@ import { expectTypeOf, test } from "vitest"
 import type * as prismic from "../../src"
 
 test("IntegrationField type structure", () => {
-	expectTypeOf<prismic.IntegrationField>().toEqualTypeOf<
-		| prismic.IntegrationFieldData
-		| null
-	>()
+	expectTypeOf<prismic.IntegrationField>().toEqualTypeOf<prismic.IntegrationFieldData | null>()
 })
 
 test("IntegrationField filled state", () => {

@@ -23,7 +23,7 @@ test("EmbedField filled state", () => {
 })
 
 test("EmbedField empty state", () => {
-	expectTypeOf<
-		prismic.EmbedField<prismic.AnyOEmbed, "empty">
-	>().toEqualTypeOf<Record<string, never>>()
+	expectTypeOf<prismic.EmbedField<prismic.AnyOEmbed, "empty">>().toEqualTypeOf<
+		Record<string, never>
+	>()
 })

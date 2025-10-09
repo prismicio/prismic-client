@@ -16,5 +16,7 @@ test("GeoPointField filled state", () => {
 })
 
 test("GeoPointField empty state", () => {
-	expectTypeOf<prismic.GeoPointField<"empty">>().toEqualTypeOf<Record<string, never>>()
+	expectTypeOf<prismic.GeoPointField<"empty">>().toEqualTypeOf<
+		Record<string, never>
+	>()
 })

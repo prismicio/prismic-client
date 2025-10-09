@@ -10,9 +10,9 @@ test("TimestampField type structure", () => {
 })
 
 test("TimestampField filled state", () => {
-	expectTypeOf<prismic.TimestampField<"filled">>().toEqualTypeOf<
-		`${prismic.DateField<"filled">}T${number}:${number}:${number}+${number}`
-	>()
+	expectTypeOf<
+		prismic.TimestampField<"filled">
+	>().toEqualTypeOf<`${prismic.DateField<"filled">}T${number}:${number}:${number}+${number}`>()
 })
 
 test("TimestampField empty state", () => {

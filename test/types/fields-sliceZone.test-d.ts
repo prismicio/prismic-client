@@ -6,15 +6,14 @@ type DefaultSlices = prismic.Slice | prismic.SharedSlice
 
 test("SliceZone type structure", () => {
 	expectTypeOf<prismic.SliceZone>().toEqualTypeOf<
-		| []
-		| [DefaultSlices, ...DefaultSlices[]]
+		[] | [DefaultSlices, ...DefaultSlices[]]
 	>()
 })
 
 test("SliceZone filled state", () => {
-	expectTypeOf<
-		prismic.SliceZone<DefaultSlices, "filled">
-	>().toEqualTypeOf<[DefaultSlices, ...DefaultSlices[]]>()
+	expectTypeOf<prismic.SliceZone<DefaultSlices, "filled">>().toEqualTypeOf<
+		[DefaultSlices, ...DefaultSlices[]]
+	>()
 })
 
 test("SliceZone empty state", () => {

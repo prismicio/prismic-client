@@ -4,8 +4,7 @@ import type * as prismic from "../../src"
 
 test("ImageField type structure", () => {
 	expectTypeOf<prismic.ImageField>().toEqualTypeOf<
-		| prismic.ImageFieldImage<"filled">
-		| prismic.ImageFieldImage<"empty">
+		prismic.ImageFieldImage<"filled"> | prismic.ImageFieldImage<"empty">
 	>()
 })
 

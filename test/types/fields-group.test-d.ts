@@ -2,12 +2,14 @@ import { expectTypeOf, test } from "vitest"
 
 import type * as prismic from "../../src"
 
-type DefaultFields = Record<string, prismic.AnyRegularField | prismic.NestedGroupField>
+type DefaultFields = Record<
+	string,
+	prismic.AnyRegularField | prismic.NestedGroupField
+>
 
 test("GroupField type structure", () => {
 	expectTypeOf<prismic.GroupField>().toEqualTypeOf<
-		| []
-		| [DefaultFields, ...DefaultFields[]]
+		[] | [DefaultFields, ...DefaultFields[]]
 	>()
 })
 

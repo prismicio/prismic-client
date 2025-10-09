@@ -4,8 +4,7 @@ import type * as prismic from "../../src"
 
 test("RichTextField type structure", () => {
 	expectTypeOf<prismic.RichTextField>().toEqualTypeOf<
-		| []
-		| [prismic.RTNode, ...prismic.RTNode[]]
+		[] | [prismic.RTNode, ...prismic.RTNode[]]
 	>()
 })
 

@@ -3,13 +3,10 @@ import { expectTypeOf, test } from "vitest"
 import type * as prismic from "../../src"
 
 test("TableField type structure", () => {
-	expectTypeOf<prismic.TableField>().toEqualTypeOf<
-		| null
-		| {
-				head?: prismic.TableFieldHead
-				body: prismic.TableFieldBody
-		  }
-	>()
+	expectTypeOf<prismic.TableField>().toEqualTypeOf<null | {
+		head?: prismic.TableFieldHead
+		body: prismic.TableFieldBody
+	}>()
 })
 
 test("TableField filled state", () => {
