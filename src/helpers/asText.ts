@@ -28,14 +28,22 @@ type AsTextReturnType<Field extends RichTextField | null | undefined> =
 
 export const asText: {
 	/**
-	 * Serializes a rich text or title field to a plain text string.
+	 * Converts a rich text field to a plain text string.
 	 *
-	 * @param richTextField - A rich text or title field from Prismic
-	 * @param config - Configuration that determines the output of `asText()`
+	 * @example
 	 *
-	 * @returns Plain text equivalent of the provided rich text or title field
+	 * ```ts
+	 * const text = asText(document.data.content)
+	 * // => "Hello world"
+	 * ```
 	 *
-	 * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
+	 * @param richTextField - A rich text field from Prismic.
+	 * @param config - Configuration that determines the output of `asText()`.
+	 *
+	 * @returns Plain text equivalent of the rich text field, or `null` if the
+	 *   field is empty.
+	 *
+	 * @see Learn how to work with rich text fields: {@link https://prismic.io/docs/fields/rich-text}
 	 */
 	<Field extends RichTextField | null | undefined>(
 		richTextField: Field,
@@ -43,16 +51,18 @@ export const asText: {
 	): AsTextReturnType<Field>
 
 	/**
-	 * Serializes a rich text or title field to a plain text string.
+	 * Converts a rich text field to a plain text string.
 	 *
 	 * @deprecated Use object-style configuration instead.
 	 *
-	 * @param richTextField - A rich text or title field from Prismic
-	 * @param separator - Separator used to join each element, defaults to a space
+	 * @param richTextField - A rich text field from Prismic.
+	 * @param separator - Separator used to join each element. Defaults to a
+	 *   space.
 	 *
-	 * @returns Plain text equivalent of the provided rich text or title field
+	 * @returns Plain text equivalent of the rich text field, or `null` if the
+	 *   field is empty.
 	 *
-	 * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#rich-text-and-title}
+	 * @see Learn how to work with rich text fields: {@link https://prismic.io/docs/fields/rich-text}
 	 */
 	<Field extends RichTextField | null | undefined>(
 		richTextField: Field,

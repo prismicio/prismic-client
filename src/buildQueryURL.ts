@@ -39,11 +39,11 @@ export interface Ordering {
 }
 
 /**
- * A `routes` parameter that determines how a document's URL field is resolved.
+ * A `routes` parameter that determines how a page's URL field is resolved.
  *
  * {@link https://prismic.io/docs/route-resolver}
  *
- * @example With a document's UID field.
+ * @example With a page's UID field.
  *
  * ```ts
  * {
@@ -66,24 +66,24 @@ export interface Ordering {
  */
 export interface Route {
 	/**
-	 * The custom type of the document.
+	 * The custom type of the page.
 	 */
 	type: string
 
 	/**
 	 * A specific UID to which this route definition is scoped. The route is only
-	 * defined for the document whose UID matches the given UID.
+	 * defined for the page whose UID matches the given UID.
 	 */
 	uid?: string
 
 	/**
 	 * A specific language to which this route definition is scoped. The route is
-	 * only defined for documents whose language matches the given language.
+	 * only defined for pages whose language matches the given language.
 	 */
 	lang?: string
 
 	/**
-	 * The resolved path of the document with optional placeholders.
+	 * The resolved path of the page with optional placeholders.
 	 */
 	path: string
 
@@ -94,9 +94,9 @@ export interface Route {
 }
 
 /**
- * Parameters for the Prismic REST API V2.
+ * Parameters for the Prismic Content API.
  *
- * {@link https://prismic.io/docs/api}
+ * @see Learn how to fetch content from Prismic: {@link https://prismic.io/docs/fetch-content}
  */
 export interface QueryParams {
 	/**
@@ -108,8 +108,8 @@ export interface QueryParams {
 	accessToken?: string
 
 	/**
-	 * The `pageSize` parameter defines the maximum number of documents that the
-	 * API will return for your query.
+	 * The `pageSize` parameter defines the maximum number of pages that the API
+	 * will return for your query.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#pagesize}
 	 */
@@ -124,8 +124,8 @@ export interface QueryParams {
 
 	/**
 	 * The `after` parameter can be used along with the orderings option. It will
-	 * remove all the documents except for those after the specified document in
-	 * the list.
+	 * remove all the pages except for those after the specified page in the
+	 * list.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#after}
 	 */
@@ -141,7 +141,7 @@ export interface QueryParams {
 
 	/**
 	 * The `fetchLinks` parameter allows you to retrieve a specific content field
-	 * from a linked document and add it to the document response object.
+	 * from a linked page and add it to the page response object.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#fetchlinks}
 	 */
@@ -189,7 +189,7 @@ export interface QueryParams {
 	orderings?: string | Ordering | (string | Ordering)[]
 
 	/**
-	 * The `routes` option allows you to define how a document's `url` field is
+	 * The `routes` option allows you to define how a page's `url` field is
 	 * resolved.
 	 *
 	 * {@link https://prismic.io/docs/route-resolver}
@@ -199,7 +199,7 @@ export interface QueryParams {
 	/**
 	 * The `brokenRoute` option allows you to define the route populated in the
 	 * `url` property for broken link or content relationship fields. A broken
-	 * link is a link or content relationship field whose linked document has been
+	 * link is a link or content relationship field whose linked page has been
 	 * unpublished or deleted.
 	 *
 	 * {@link https://prismic.io/docs/route-resolver}
@@ -296,21 +296,29 @@ const castOrderingToString = (ordering: Ordering | string): string => {
 export type BuildQueryURLArgs = QueryParams & BuildQueryURLParams
 
 /**
- * Build a Prismic REST API V2 URL to request documents from a repository. The
- * paginated response for this URL includes documents matching the parameters.
+ * Builds a Prismic Content API URL to request pages from a repository. The
+ * paginated response for this URL includes pages matching the parameters.
  *
  * A ref is required to make a request. Request the `endpoint` URL to retrieve a
  * list of available refs.
  *
  * Type the JSON response with `Query`.
  *
- * {@link https://prismic.io/docs/api#refs-and-the-entry-api}
- * {@link https://prismic.io/docs/rest-api-technical-reference}
+ * @example
  *
- * @param endpoint - URL to the repository's REST API V2.
+ * ```ts
+ * const url = buildQueryURL("https://my-repo.cdn.prismic.io/api/v2", {
+ * 	ref: "my-ref",
+ * 	filters: [filter.at("document.type", "blog_post")],
+ * })
+ * ```
+ *
+ * @param endpoint - URL to the repository's Content API.
  * @param args - Arguments to filter and scope the query.
  *
- * @returns URL that can be used to request documents from the repository.
+ * @returns URL that can be used to request pages from the repository.
+ *
+ * @see Prismic Content API technical reference: {@link https://prismic.io/docs/content-api}
  */
 export const buildQueryURL = (
 	endpoint: string,

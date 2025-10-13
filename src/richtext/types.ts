@@ -28,9 +28,9 @@ import { RichTextNodeType } from "../types/value/richText"
 /**
  * Serializes a node from a rich text or title field with a function
  *
- * @typeParam ReturnType - Return type of the function serializer
+ * @typeParam ReturnType - Return type of the function serializer.
  *
- * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/technologies/templating-rich-text-and-title-fields-javascript}
+ * @see Learn how to work with rich text fields: {@link https://prismic.io/docs/fields/rich-text}
  */
 export type RichTextFunctionSerializer<ReturnType> = (
 	type: RichTextNodeTypes,
@@ -59,15 +59,15 @@ export type RichTextMapSerializerFunction<
 }) => ReturnType | null | undefined
 
 /**
- * Serializes a node from a rich text or title field with a map
+ * Serializes a node from a rich text field with a map.
  *
  * @remarks
  * This type of serializer needs to be processed through
- * {@link wrapMapSerializer} before being used with {@link serialize}
+ * {@link wrapMapSerializer} before being used with {@link serialize}.
  *
- * @typeParam ReturnType - Return type of the map serializer
+ * @typeParam ReturnType - Return type of the map serializer.
  *
- * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/technologies/templating-rich-text-and-title-fields-javascript}
+ * @see Learn how to work with rich text fields: {@link https://prismic.io/docs/fields/rich-text}
  */
 export type RichTextMapSerializer<ReturnType> = {
 	heading1?: RichTextMapSerializerFunction<
