@@ -2,9 +2,9 @@ import { describe, expect, it } from "vitest"
 
 import type { MockFactory } from "@prismicio/mock"
 
-import * as prismic from "../src"
-import type { MigrationAssetConfig } from "../src/types/migration/Asset"
-import { PrismicMigrationDocument } from "../src/types/migration/Document"
+import * as prismic from "../src/index.ts"
+import type { MigrationAssetConfig } from "../src/types/migration/Asset.ts"
+import { PrismicMigrationDocument } from "../src/types/migration/Document.ts"
 
 it("creates a document from an existing Prismic document", (ctx) => {
 	const migration = prismic.createMigration()

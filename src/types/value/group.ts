@@ -1,4 +1,4 @@
-import type { AnyRegularField, FieldState } from "./types"
+import type { AnyRegularField, FieldState } from "./types.ts"
 
 /**
  * A group field.

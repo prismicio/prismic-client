@@ -1,6 +1,6 @@
 import { expectNever, expectType } from "ts-expect"
 
-import * as prismic from "../../src"
+import * as prismic from "../../src/index.ts"
 
 ;(value: prismic.RichTextField): true => {
 	if (!Array.isArray(value)) {

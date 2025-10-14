@@ -1,6 +1,5 @@
-import type { FieldState } from "./types"
-
-import type { DateField } from "./date"
+import type { DateField } from "./date.ts"
+import type { FieldState } from "./types.ts"
 
 /**
  * A timestamp field.

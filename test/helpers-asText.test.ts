@@ -1,9 +1,9 @@
 import { expect, it } from "vitest"
 
-import { createRichTextFixtures } from "./__testutils__/createRichTextFixtures"
+import { createRichTextFixtures } from "./__testutils__/createRichTextFixtures.ts"
 
-import { asText } from "../src"
-import { asText as richTextAsText } from "../src/richtext"
+import { asText } from "../src/index.ts"
+import { asText as richTextAsText } from "../src/richtext.ts"
 
 it("is an alias for @prismicio/client/richtext's `asText` function for non-nullish inputs", () => {
 	const richTextFixtures = createRichTextFixtures()

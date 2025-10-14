@@ -1,26 +1,26 @@
-import * as is from "./lib/isValue"
-import { getOptionalLinkProperties } from "./lib/getOptionalLinkProperties"
-import { validateAssetMetadata } from "./lib/validateAssetMetadata"
+import * as is from "./lib/isValue.ts"
+import { getOptionalLinkProperties } from "./lib/getOptionalLinkProperties.ts"
+import { validateAssetMetadata } from "./lib/validateAssetMetadata.ts"
 
-import type { Asset } from "./types/api/asset/asset"
+import type { Asset } from "./types/api/asset/asset.ts"
 import type {
 	MigrationAssetConfig,
 	MigrationImage,
 	MigrationLinkToMedia,
 	MigrationRTImageNode,
 } from "./types/migration/Asset"
-import { PrismicMigrationAsset } from "./types/migration/Asset"
-import type { MigrationContentRelationship } from "./types/migration/ContentRelationship"
-import { PrismicMigrationDocument } from "./types/migration/Document"
+import { PrismicMigrationAsset } from "./types/migration/Asset.ts"
+import type { MigrationContentRelationship } from "./types/migration/ContentRelationship.ts"
 import type {
 	ExistingPrismicDocument,
 	PendingPrismicDocument,
 } from "./types/migration/Document"
-import type { PrismicDocument } from "./types/value/document"
-import type { FilledImageFieldImage } from "./types/value/image"
-import { type FilledLinkToWebField, LinkType } from "./types/value/link"
-import type { FilledLinkToMediaField } from "./types/value/linkToMedia"
-import { RichTextNodeType } from "./types/value/richText"
+import { PrismicMigrationDocument } from "./types/migration/Document.ts"
+import type { PrismicDocument } from "./types/value/document.ts"
+import type { FilledImageFieldImage } from "./types/value/image.ts"
+import { type FilledLinkToWebField, LinkType } from "./types/value/link.ts"
+import type { FilledLinkToMediaField } from "./types/value/linkToMedia.ts"
+import { RichTextNodeType } from "./types/value/richText.ts"
 
 /**
  * Extracts one or more Prismic document types that match a given Prismic

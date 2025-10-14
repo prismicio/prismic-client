@@ -1,9 +1,9 @@
 import type { ImgixURLParams } from "imgix-url-builder"
 import { buildURL } from "imgix-url-builder"
 
-import type { ImageFieldImage } from "../types/value/image"
+import type { ImageFieldImage } from "../types/value/image.ts"
 
-import { imageThumbnail as isImageThumbnailFilled } from "./isFilled"
+import { imageThumbnail as isImageThumbnailFilled } from "./isFilled.ts"
 
 /**
  * The return type of `asImageSrc()`.

@@ -1,4 +1,4 @@
-import { ForbiddenError } from "./ForbiddenError"
+import { ForbiddenError } from "./ForbiddenError.ts"
 
 type RefNotFoundErrorAPIResponse = {
 	type: "api_notfound_error"

@@ -1,4 +1,4 @@
-import type * as prismic from "../../src"
+import type * as prismic from "../../src/index.ts"
 
 export const partialHTMLRichTextMapSerializer: prismic.HTMLRichTextMapSerializer =
 	{

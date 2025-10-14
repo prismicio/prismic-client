@@ -1,8 +1,8 @@
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
-import { testGetMethod } from "./__testutils__/testAnyGetMethod"
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
-import { testFetchOptions } from "./__testutils__/testFetchOptions"
-import { testInvalidRefRetry } from "./__testutils__/testInvalidRefRetry"
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod.ts"
+import { testGetMethod } from "./__testutils__/testAnyGetMethod.ts"
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod.ts"
+import { testFetchOptions } from "./__testutils__/testFetchOptions.ts"
+import { testInvalidRefRetry } from "./__testutils__/testInvalidRefRetry.ts"
 
 testGetMethod("queries for documents by tag", {
 	run: (client) => client.getByEveryTag(["foo", "bar"]),

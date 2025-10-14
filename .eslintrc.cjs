@@ -13,7 +13,7 @@ module.exports = {
 		"plugin:@typescript-eslint/recommended",
 		"plugin:prettier/recommended",
 	],
-	plugins: ["eslint-plugin-tsdoc"],
+	plugins: ["eslint-plugin-tsdoc", "import"],
 	rules: {
 		"no-console": ["warn", { allow: ["info", "warn", "error"] }],
 		"no-debugger": "warn",
@@ -35,5 +35,18 @@ module.exports = {
 		"@typescript-eslint/explicit-module-boundary-types": "error",
 		"@typescript-eslint/consistent-type-imports": "error",
 		"tsdoc/syntax": "warn",
+		"import/extensions": [
+			"error",
+			"always",
+			{
+				ignorePackages: true,
+				pattern: { ts: "always" },
+			},
+		],
+	},
+	settings: {
+		"import/resolver": {
+			node: true,
+		},
 	},
 }

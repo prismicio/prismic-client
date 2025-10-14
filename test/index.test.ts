@@ -1,6 +1,6 @@
 import { expect, it } from "vitest"
 
-import * as prismic from "../src"
+import * as prismic from "../src/index.ts"
 
 it("rich text node type mapping", () => {
 	expect(prismic.RichTextNodeType).toMatchObject({

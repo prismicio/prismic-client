@@ -1,4 +1,4 @@
-import type { RichTextFunctionSerializer } from "./types"
+import type { RichTextFunctionSerializer } from "./types.ts"
 
 /**
  * Takes an array of serializers and returns a serializer applying provided

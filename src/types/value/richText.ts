@@ -1,7 +1,6 @@
-import type { FieldState } from "./types"
-
-import type { EmbedField } from "./embed"
-import type { FilledLinkField } from "./link"
+import type { EmbedField } from "./embed.ts"
+import type { FilledLinkField } from "./link.ts"
+import type { FieldState } from "./types.ts"
 
 /**
  * Types enum for RichTextNodes

@@ -1,7 +1,6 @@
-import type { AnyRegularField, FieldState } from "./types"
-
-import type { GroupField } from "./group"
-import type { SliceZone } from "./sliceZone"
+import type { GroupField } from "./group.ts"
+import type { SliceZone } from "./sliceZone.ts"
+import type { AnyRegularField, FieldState } from "./types.ts"
 
 /**
  * Field for related documents

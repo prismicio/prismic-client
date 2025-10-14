@@ -1,12 +1,12 @@
 import { expect, it } from "vitest"
 
-import { createTestClient } from "./__testutils__/createClient"
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
-import { testFetchOptions } from "./__testutils__/testFetchOptions"
+import { createTestClient } from "./__testutils__/createClient.ts"
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2.ts"
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod.ts"
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod.ts"
+import { testFetchOptions } from "./__testutils__/testFetchOptions.ts"
 
-import * as prismic from "../src"
+import * as prismic from "../src/index.ts"
 
 it("returns a Release by label", async (ctx) => {
 	const ref1 = ctx.mock.api.ref({ isMasterRef: true })

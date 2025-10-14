@@ -1,4 +1,4 @@
-import type { OptionalLinkProperties } from "../types/value/link"
+import type { OptionalLinkProperties } from "../types/value/link.ts"
 
 /**
  * Returns optional properties only available to link fields. Link fields can

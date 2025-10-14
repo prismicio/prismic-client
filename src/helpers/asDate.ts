@@ -1,5 +1,5 @@
-import type { DateField } from "../types/value/date"
-import type { TimestampField } from "../types/value/timestamp"
+import type { DateField } from "../types/value/date.ts"
+import type { TimestampField } from "../types/value/timestamp.ts"
 
 /**
  * The return type of `asDate()`.

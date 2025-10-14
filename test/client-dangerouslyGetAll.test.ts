@@ -1,12 +1,12 @@
 import { expect, it } from "vitest"
 
-import { createTestClient } from "./__testutils__/createClient"
-import { createPagedQueryResponses } from "./__testutils__/createPagedQueryResponses"
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
-import { testGetAllMethod } from "./__testutils__/testAnyGetMethod"
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
-import { testFetchOptions } from "./__testutils__/testFetchOptions"
+import { createTestClient } from "./__testutils__/createClient.ts"
+import { createPagedQueryResponses } from "./__testutils__/createPagedQueryResponses.ts"
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2.ts"
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod.ts"
+import { testGetAllMethod } from "./__testutils__/testAnyGetMethod.ts"
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod.ts"
+import { testFetchOptions } from "./__testutils__/testFetchOptions.ts"
 
 /**
  * The number of milliseconds in which a multi-page `getAll` (e.g. `getAll`,

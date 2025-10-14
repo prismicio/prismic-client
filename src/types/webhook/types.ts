@@ -1,5 +1,5 @@
-import type { WebhookBodyAPIUpdate } from "./apiUpdate"
-import type { WebhookBodyTestTrigger } from "./testTrigger"
+import type { WebhookBodyAPIUpdate } from "./apiUpdate.ts"
+import type { WebhookBodyTestTrigger } from "./testTrigger.ts"
 
 export type WebhookBody = WebhookBodyAPIUpdate | WebhookBodyTestTrigger
 

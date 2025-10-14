@@ -1,6 +1,5 @@
-import type { FieldState } from "./types"
-
-import type { RichTextField } from "./richText"
+import type { RichTextField } from "./richText.ts"
+import type { FieldState } from "./types.ts"
 
 /**
  * A table field.

@@ -1,12 +1,12 @@
 import { expect, it } from "vitest"
 
-import { createTestClient } from "./__testutils__/createClient"
-import { getMasterRef } from "./__testutils__/getMasterRef"
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
+import { createTestClient } from "./__testutils__/createClient.ts"
+import { getMasterRef } from "./__testutils__/getMasterRef.ts"
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2.ts"
 
-import { version } from "../package.json"
+import { version } from "../package.json.ts"
 
-import type * as prismic from "../src"
+import type * as prismic from "../src/index.ts"
 
 const xClientVersion = `js-${version}`
 

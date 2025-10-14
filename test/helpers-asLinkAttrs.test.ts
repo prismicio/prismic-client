@@ -1,6 +1,6 @@
 import { expect, it, vi } from "vitest"
 
-import { LinkType, asLinkAttrs } from "../src"
+import { LinkType, asLinkAttrs } from "../src/index.ts"
 
 it("returns empty object for nullish inputs", () => {
 	expect(asLinkAttrs(null)).toEqual({})

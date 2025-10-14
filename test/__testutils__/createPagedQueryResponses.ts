@@ -1,6 +1,6 @@
 import type { TestContext } from "vitest"
 
-import type * as prismic from "../../src"
+import type * as prismic from "../../src/index.ts"
 
 type CreatePagedQueryResponsesArgs = {
 	ctx: TestContext

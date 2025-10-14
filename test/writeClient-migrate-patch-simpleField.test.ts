@@ -1,7 +1,11 @@
-import { testMigrationFieldPatching } from "./__testutils__/testMigrationFieldPatching"
+import { testMigrationFieldPatching } from "./__testutils__/testMigrationFieldPatching.ts"
 
-import type { AnyRegularField, GroupField, RichTextField } from "../src"
-import { RichTextNodeType } from "../src"
+import type {
+	AnyRegularField,
+	GroupField,
+	RichTextField,
+} from "../src/index.ts"
+import { RichTextNodeType } from "../src/index.ts"
 
 testMigrationFieldPatching<AnyRegularField | GroupField>(
 	"does not patch simple fields",

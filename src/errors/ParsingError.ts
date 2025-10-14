@@ -1,4 +1,4 @@
-import { PrismicError } from "./PrismicError"
+import { PrismicError } from "./PrismicError.ts"
 
 type ParsingErrorAPIResponse = {
 	type: "parsing-error"

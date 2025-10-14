@@ -1,10 +1,10 @@
-import type { FilledContentRelationshipField } from "../types/value/contentRelationship"
-import type { PrismicDocument } from "../types/value/document"
-import type { FilledLinkToWebField, LinkField } from "../types/value/link"
-import { LinkType } from "../types/value/link"
-import type { FilledLinkToMediaField } from "../types/value/linkToMedia"
+import type { FilledContentRelationshipField } from "../types/value/contentRelationship.ts"
+import type { PrismicDocument } from "../types/value/document.ts"
+import type { FilledLinkToWebField, LinkField } from "../types/value/link.ts"
+import { LinkType } from "../types/value/link.ts"
+import type { FilledLinkToMediaField } from "../types/value/linkToMedia.ts"
 
-import { documentToLinkField } from "./documentToLinkField"
+import { documentToLinkField } from "./documentToLinkField.ts"
 
 /**
  * Resolves a link to a Prismic page to a URL.

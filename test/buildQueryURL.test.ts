@@ -1,8 +1,8 @@
 import { expect, it, vi } from "vitest"
 
-import { version } from "../package.json"
+import { version } from "../package.json.ts"
 
-import * as prismic from "../src"
+import * as prismic from "../src/index.ts"
 
 const endpoint = prismic.getRepositoryEndpoint("qwerty")
 const xClientVersionParam = `&x-c=js-${version}`

@@ -1,4 +1,4 @@
-import type { WebhookBodyBase, WebhookType } from "./types"
+import type { WebhookBodyBase, WebhookType } from "./types.ts"
 
 /**
  * Webhook payload sent when a test webhook action is triggered.

@@ -1,9 +1,9 @@
 import { expect, it } from "vitest"
 
-import { documentFixture } from "./__fixtures__/document"
+import { documentFixture } from "./__fixtures__/document.ts"
 
-import type { GroupField, SliceZone } from "../src"
-import { LinkType, isFilled } from "../src"
+import type { GroupField, SliceZone } from "../src/index.ts"
+import { LinkType, isFilled } from "../src/index.ts"
 
 const emptyLink = { link_type: LinkType.Any }
 

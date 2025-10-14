@@ -1,4 +1,4 @@
-import { type LimitFunction, pLimit } from "./pLimit"
+import { type LimitFunction, pLimit } from "./pLimit.ts"
 
 /**
  * The default number of milliseconds to wait before retrying a rate-limited

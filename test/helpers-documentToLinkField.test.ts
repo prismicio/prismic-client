@@ -1,8 +1,8 @@
 import { expect, it } from "vitest"
 
-import { documentFixture } from "./__fixtures__/document"
+import { documentFixture } from "./__fixtures__/document.ts"
 
-import { LinkType, documentToLinkField } from "../src"
+import { LinkType, documentToLinkField } from "../src/index.ts"
 
 it("returns equivalent link field from given document", () => {
 	const document = { ...documentFixture.empty, url: null }

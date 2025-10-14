@@ -1,4 +1,4 @@
-import type { AnyRegularField } from "./types"
+import type { AnyRegularField } from "./types.ts"
 
 /**
  * A Slice - sections of your webpages.

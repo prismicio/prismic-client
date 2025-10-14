@@ -1,7 +1,10 @@
-import { testMigrationFieldPatching } from "./__testutils__/testMigrationFieldPatching"
+import { testMigrationFieldPatching } from "./__testutils__/testMigrationFieldPatching.ts"
 
-import type { InjectMigrationSpecificTypes, RichTextField } from "../src"
-import { RichTextNodeType } from "../src"
+import type {
+	InjectMigrationSpecificTypes,
+	RichTextField,
+} from "../src/index.ts"
+import { RichTextNodeType } from "../src/index.ts"
 
 testMigrationFieldPatching<InjectMigrationSpecificTypes<RichTextField>>(
 	"patches rich text image nodes",

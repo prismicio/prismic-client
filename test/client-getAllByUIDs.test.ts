@@ -1,8 +1,8 @@
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
-import { testGetAllMethod } from "./__testutils__/testAnyGetMethod"
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
-import { testFetchOptions } from "./__testutils__/testFetchOptions"
-import { testInvalidRefRetry } from "./__testutils__/testInvalidRefRetry"
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod.ts"
+import { testGetAllMethod } from "./__testutils__/testAnyGetMethod.ts"
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod.ts"
+import { testFetchOptions } from "./__testutils__/testFetchOptions.ts"
+import { testInvalidRefRetry } from "./__testutils__/testInvalidRefRetry.ts"
 
 testGetAllMethod("returns all documents by UIDs from paginated response", {
 	run: (client) => client.getAllByUIDs("type", ["uid1", "uid2"]),

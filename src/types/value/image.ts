@@ -1,4 +1,4 @@
-import type { FieldState, Simplify } from "./types"
+import type { FieldState, Simplify } from "./types.ts"
 
 /**
  * An individual image within an image field. The base image and each thumbnail

@@ -1,11 +1,11 @@
-import { devMsg } from "./lib/devMsg"
-import { pLimit } from "./lib/pLimit"
-import type { ResponseLike } from "./lib/request"
-import { type RequestInitLike, request } from "./lib/request"
+import { devMsg } from "./lib/devMsg.ts"
+import { pLimit } from "./lib/pLimit.ts"
+import type { ResponseLike } from "./lib/request.ts"
+import { type RequestInitLike, request } from "./lib/request.ts"
 import {
 	resolveMigrationContentRelationship,
 	resolveMigrationDocumentData,
-} from "./lib/resolveMigrationDocumentData"
+} from "./lib/resolveMigrationDocumentData.ts"
 
 import type {
 	Asset,
@@ -18,27 +18,27 @@ import type {
 	GetAssetTagsResult,
 	PostAssetTagResult,
 } from "./types/api/asset/tag"
-import { type PostDocumentResult } from "./types/api/migration/document"
-import type { PrismicMigrationAsset } from "./types/migration/Asset"
+import { type PostDocumentResult } from "./types/api/migration/document.ts"
+import type { PrismicMigrationAsset } from "./types/migration/Asset.ts"
 import type {
 	MigrationDocument,
 	PendingPrismicDocument,
 	PrismicMigrationDocument,
 } from "./types/migration/Document"
-import type { PrismicDocument } from "./types/value/document"
+import type { PrismicDocument } from "./types/value/document.ts"
 
-import { ForbiddenError } from "./errors/ForbiddenError"
-import { InvalidDataError } from "./errors/InvalidDataError"
-import { NotFoundError } from "./errors/NotFoundError"
-import { PrismicError } from "./errors/PrismicError"
+import { ForbiddenError } from "./errors/ForbiddenError.ts"
+import { InvalidDataError } from "./errors/InvalidDataError.ts"
+import { NotFoundError } from "./errors/NotFoundError.ts"
+import { PrismicError } from "./errors/PrismicError.ts"
 
 import { name, version } from "../package.json"
 
-import { Client } from "./Client"
-import type { ClientConfig, FetchParams } from "./Client"
-import type { Migration } from "./Migration"
+import { Client } from "./Client.ts"
+import type { ClientConfig, FetchParams } from "./Client.ts"
+import type { Migration } from "./Migration.ts"
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { createMigration } from "./createMigration"
+import type { createMigration } from "./createMigration.ts"
 
 const CLIENT_IDENTIFIER = `${name.replace("@", "").replace("/", "-")}/${version}`
 

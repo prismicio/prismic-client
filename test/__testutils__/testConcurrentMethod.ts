@@ -3,12 +3,12 @@ import { expect, it, vi } from "vitest"
 import { rest } from "msw"
 import fetch from "node-fetch"
 
-import { createTestClient } from "./createClient"
-import { createPagedQueryResponses } from "./createPagedQueryResponses"
-import { createRepositoryName } from "./createRepositoryName"
-import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2"
+import { createTestClient } from "./createClient.ts"
+import { createPagedQueryResponses } from "./createPagedQueryResponses.ts"
+import { createRepositoryName } from "./createRepositoryName.ts"
+import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2.ts"
 
-import type * as prismic from "../../src"
+import type * as prismic from "../../src/index.ts"
 
 type TestConcurrentMethodArgs = {
 	run: (

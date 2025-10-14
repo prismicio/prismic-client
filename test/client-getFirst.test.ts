@@ -2,15 +2,15 @@ import { expect, it } from "vitest"
 
 import * as prismicM from "@prismicio/mock"
 
-import { createTestClient } from "./__testutils__/createClient"
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
-import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod"
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
-import { testFetchOptions } from "./__testutils__/testFetchOptions"
-import { testInvalidRefRetry } from "./__testutils__/testInvalidRefRetry"
+import { createTestClient } from "./__testutils__/createClient.ts"
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2.ts"
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod.ts"
+import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod.ts"
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod.ts"
+import { testFetchOptions } from "./__testutils__/testFetchOptions.ts"
+import { testInvalidRefRetry } from "./__testutils__/testInvalidRefRetry.ts"
 
-import * as prismic from "../src"
+import * as prismic from "../src/index.ts"
 
 testGetFirstMethod("returns the first document from a response", {
 	run: (client) => client.getFirst(),

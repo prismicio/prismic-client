@@ -1,6 +1,6 @@
-import { PrismicError } from "./errors/PrismicError"
+import { PrismicError } from "./errors/PrismicError.ts"
 
-import { isRepositoryName } from "./isRepositoryName"
+import { isRepositoryName } from "./isRepositoryName.ts"
 
 /**
  * Get a repository's Prismic Content API endpoint.

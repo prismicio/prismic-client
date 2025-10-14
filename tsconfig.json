@@ -10,6 +10,7 @@
 		"resolveJsonModule": true,
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
+		"rewriteRelativeImportExtensions": true,
 
 		"forceConsistentCasingInFileNames": true,
 		"jsx": "preserve",

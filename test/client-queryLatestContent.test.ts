@@ -1,5 +1,8 @@
-import { getMasterRef } from "./__testutils__/getMasterRef"
-import { testGetOutsideTTL, testGetWithinTTL } from "./__testutils__/testGetTTL"
+import { getMasterRef } from "./__testutils__/getMasterRef.ts"
+import {
+	testGetOutsideTTL,
+	testGetWithinTTL,
+} from "./__testutils__/testGetTTL.ts"
 
 testGetWithinTTL("uses the cached master ref within the ref's TTL", {
 	getContext: {

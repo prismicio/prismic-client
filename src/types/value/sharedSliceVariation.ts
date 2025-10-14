@@ -1,4 +1,4 @@
-import type { AnyRegularField, AnySlicePrimaryField } from "./types"
+import type { AnyRegularField, AnySlicePrimaryField } from "./types.ts"
 
 /**
  * A shared Slice variation.

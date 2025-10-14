@@ -1,10 +1,10 @@
 import { expect, it } from "vitest"
 
-import { createRichTextFixtures } from "../__testutils__/createRichTextFixtures"
+import { createRichTextFixtures } from "../__testutils__/createRichTextFixtures.ts"
 
-import { htmlRichTextMapSerializer } from "../__fixtures__/htmlRichTextMapSerializer"
+import { htmlRichTextMapSerializer } from "../__fixtures__/htmlRichTextMapSerializer.ts"
 
-import { serialize, wrapMapSerializer } from "../../src/richtext"
+import { serialize, wrapMapSerializer } from "../../src/richtext.ts"
 
 it("serializes a rich text field value using a given serializer map", () => {
 	const richTextFixtures = createRichTextFixtures()

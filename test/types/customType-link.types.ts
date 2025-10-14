@@ -2,7 +2,7 @@ import { expectNever, expectType } from "ts-expect"
 
 import type * as prismicTICustomTypes from "@prismicio/types-internal/lib/customtypes"
 
-import * as prismic from "../../src"
+import * as prismic from "../../src/index.ts"
 
 ;(value: prismic.CustomTypeModelLinkField): true => {
 	switch (typeof value) {

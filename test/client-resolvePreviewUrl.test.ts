@@ -3,11 +3,11 @@ import { expect, it } from "vitest"
 import * as prismicM from "@prismicio/mock"
 import { Headers } from "node-fetch"
 
-import { createTestClient } from "./__testutils__/createClient"
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
-import { testFetchOptions } from "./__testutils__/testFetchOptions"
+import { createTestClient } from "./__testutils__/createClient.ts"
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2.ts"
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod.ts"
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod.ts"
+import { testFetchOptions } from "./__testutils__/testFetchOptions.ts"
 
 const previewToken = "previewToken"
 

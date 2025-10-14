@@ -1,12 +1,12 @@
 import { expect, it } from "vitest"
 
-import { createRichTextFixtures } from "../__testutils__/createRichTextFixtures"
+import { createRichTextFixtures } from "../__testutils__/createRichTextFixtures.ts"
 
-import { htmlRichTextFunctionSerializer } from "../__fixtures__/htmlRichTextFunctionSerializer"
-import { htmlRichTextMapSerializer } from "../__fixtures__/htmlRichTextMapSerializer"
+import { htmlRichTextFunctionSerializer } from "../__fixtures__/htmlRichTextFunctionSerializer.ts"
+import { htmlRichTextMapSerializer } from "../__fixtures__/htmlRichTextMapSerializer.ts"
 
-import type { RichTextFunctionSerializer } from "../../src/richtext"
-import { Element, serialize, wrapMapSerializer } from "../../src/richtext"
+import type { RichTextFunctionSerializer } from "../../src/richtext.ts"
+import { Element, serialize, wrapMapSerializer } from "../../src/richtext.ts"
 
 const serializeMacro =
 	(richTextKey: keyof ReturnType<typeof createRichTextFixtures>) => () => {

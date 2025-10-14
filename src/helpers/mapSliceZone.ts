@@ -1,4 +1,4 @@
-import type { Slice } from "../types/value/slice"
+import type { Slice } from "../types/value/slice.ts"
 
 /**
  * Convert a value to a lazyily loaded module. This is useful when using

@@ -1,6 +1,6 @@
-import { PrismicError } from "./errors/PrismicError"
+import { PrismicError } from "./errors/PrismicError.ts"
 
-import { isRepositoryName } from "./isRepositoryName"
+import { isRepositoryName } from "./isRepositoryName.ts"
 
 /**
  * Returns the URL for a Prismic repository's Prismic Toolbar script. Use the

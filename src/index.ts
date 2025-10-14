@@ -1,42 +1,42 @@
 // Imports are used for deprecations.
-import type { CustomTypeModelIntegrationField } from "./types/model/integration"
-import type { IntegrationField } from "./types/value/integration"
-import { RichTextNodeType } from "./types/value/richText"
+import type { CustomTypeModelIntegrationField } from "./types/model/integration.ts"
+import type { IntegrationField } from "./types/value/integration.ts"
+import { RichTextNodeType } from "./types/value/richText.ts"
 
 import type {
 	HTMLRichTextFunctionSerializer,
 	HTMLRichTextMapSerializer,
 } from "./helpers/asHTML"
-import { mapSliceZone } from "./helpers/mapSliceZone"
+import { mapSliceZone } from "./helpers/mapSliceZone.ts"
 
-import { filter } from "./filter"
+import { filter } from "./filter.ts"
 
 //=============================================================================
 // Client - Query content from Prismic.
 //=============================================================================
 
 // Primary Client API.
-export { createClient } from "./createClient"
-export { Client } from "./Client"
+export { createClient } from "./createClient.ts"
+export { Client } from "./Client.ts"
 
 // Write Client API.
-export { createWriteClient } from "./createWriteClient"
-export { WriteClient } from "./WriteClient"
+export { createWriteClient } from "./createWriteClient.ts"
+export { WriteClient } from "./WriteClient.ts"
 
 // Migration helper.
-export { createMigration } from "./createMigration"
-export { Migration } from "./Migration"
+export { createMigration } from "./createMigration.ts"
+export { Migration } from "./Migration.ts"
 
 // API endpoint helpers.
-export { getRepositoryEndpoint } from "./getRepositoryEndpoint"
-export { getRepositoryName } from "./getRepositoryName"
-export { getGraphQLEndpoint } from "./getGraphQLEndpoint"
-export { isRepositoryName } from "./isRepositoryName"
-export { isRepositoryEndpoint } from "./isRepositoryEndpoint"
-export { buildQueryURL } from "./buildQueryURL"
+export { getRepositoryEndpoint } from "./getRepositoryEndpoint.ts"
+export { getRepositoryName } from "./getRepositoryName.ts"
+export { getGraphQLEndpoint } from "./getGraphQLEndpoint.ts"
+export { isRepositoryName } from "./isRepositoryName.ts"
+export { isRepositoryEndpoint } from "./isRepositoryEndpoint.ts"
+export { buildQueryURL } from "./buildQueryURL.ts"
 
 // Toolbar helpers.
-export { getToolbarSrc } from "./getToolbarSrc"
+export { getToolbarSrc } from "./getToolbarSrc.ts"
 
 // Query filters API.
 /**
@@ -47,41 +47,41 @@ const predicate = filter
 export { filter, predicate }
 
 // A collection of well-known cookie names shared between Prismic libraries and systems.
-export * as cookie from "./cookie"
+export * as cookie from "./cookie.ts"
 
 // General types used to query content from Prismic. These are made public to allow users to better type their projects.
-export type { CreateClient } from "./createClient"
-export type { ClientConfig, HttpRequestLike } from "./Client"
-export type { CreateWriteClient } from "./createWriteClient"
-export type { WriteClientConfig, MigrateReporterEvents } from "./WriteClient"
+export type { CreateClient } from "./createClient.ts"
+export type { ClientConfig, HttpRequestLike } from "./Client.ts"
+export type { CreateWriteClient } from "./createWriteClient.ts"
+export type { WriteClientConfig, MigrateReporterEvents } from "./WriteClient.ts"
 export type {
 	BuildQueryURLArgs,
 	Ordering,
 	QueryParams,
 	Route,
-} from "./buildQueryURL"
-export type { CreateMigration } from "./createMigration"
+} from "./buildQueryURL.ts"
+export type { CreateMigration } from "./createMigration.ts"
 export type {
 	AbortSignalLike,
 	FetchLike,
 	RequestInitLike,
 	ResponseLike,
-} from "./lib/request"
+} from "./lib/request.ts"
 
 //=============================================================================
 // Helpers - Manipulate content from Prismic.
 //=============================================================================
 
 // Primary Helpers API.
-export { asDate } from "./helpers/asDate"
-export { asLink } from "./helpers/asLink"
-export { asLinkAttrs } from "./helpers/asLinkAttrs"
-export { asText } from "./helpers/asText"
-export { asHTML } from "./helpers/asHTML"
-export { asImageSrc } from "./helpers/asImageSrc"
-export { asImageWidthSrcSet } from "./helpers/asImageWidthSrcSet"
-export { asImagePixelDensitySrcSet } from "./helpers/asImagePixelDensitySrcSet"
-export * as isFilled from "./helpers/isFilled"
+export { asDate } from "./helpers/asDate.ts"
+export { asLink } from "./helpers/asLink.ts"
+export { asLinkAttrs } from "./helpers/asLinkAttrs.ts"
+export { asText } from "./helpers/asText.ts"
+export { asHTML } from "./helpers/asHTML.ts"
+export { asImageSrc } from "./helpers/asImageSrc.ts"
+export { asImageWidthSrcSet } from "./helpers/asImageWidthSrcSet.ts"
+export { asImagePixelDensitySrcSet } from "./helpers/asImagePixelDensitySrcSet.ts"
+export * as isFilled from "./helpers/isFilled.ts"
 
 /**
  * @deprecated Renamed to `mapSliceZone`
@@ -90,11 +90,11 @@ const unstable_mapSliceZone = mapSliceZone
 export { mapSliceZone, unstable_mapSliceZone }
 
 // Conversion helper.
-export { documentToLinkField } from "./helpers/documentToLinkField"
+export { documentToLinkField } from "./helpers/documentToLinkField.ts"
 
-export type { LinkResolverFunction } from "./helpers/asLink"
-export type { AsLinkAttrsConfig } from "./helpers/asLinkAttrs"
-export type { SliceMapper } from "./helpers/mapSliceZone"
+export type { LinkResolverFunction } from "./helpers/asLink.ts"
+export type { AsLinkAttrsConfig } from "./helpers/asLinkAttrs.ts"
+export type { SliceMapper } from "./helpers/mapSliceZone.ts"
 
 /**
  * @deprecated Renamed to `HTMLRichTextMapSerializer`
@@ -110,21 +110,21 @@ export type {
 	HTMLMapSerializer,
 	HTMLFunctionSerializer,
 }
-export type { HTMLRichTextSerializer } from "./helpers/asHTML"
+export type { HTMLRichTextSerializer } from "./helpers/asHTML.ts"
 
 //=============================================================================
 // Errors - Custom errors for Prismic APIs.
 //=============================================================================
 
 // Client Errors
-export { PrismicError } from "./errors/PrismicError"
-export { ForbiddenError } from "./errors/ForbiddenError"
-export { NotFoundError } from "./errors/NotFoundError"
-export { RefNotFoundError } from "./errors/RefNotFoundError"
-export { RefExpiredError } from "./errors/RefExpiredError"
-export { PreviewTokenExpiredError } from "./errors/PreviewTokenExpired"
-export { ParsingError } from "./errors/ParsingError"
-export { RepositoryNotFoundError } from "./errors/RepositoryNotFoundError"
+export { PrismicError } from "./errors/PrismicError.ts"
+export { ForbiddenError } from "./errors/ForbiddenError.ts"
+export { NotFoundError } from "./errors/NotFoundError.ts"
+export { RefNotFoundError } from "./errors/RefNotFoundError.ts"
+export { RefExpiredError } from "./errors/RefExpiredError.ts"
+export { PreviewTokenExpiredError } from "./errors/PreviewTokenExpired.ts"
+export { ParsingError } from "./errors/ParsingError.ts"
+export { RepositoryNotFoundError } from "./errors/RepositoryNotFoundError.ts"
 
 //=============================================================================
 // Types - Types representing Prismic content, models, and API payloads.
@@ -137,8 +137,8 @@ export { RepositoryNotFoundError } from "./errors/RepositoryNotFoundError"
 // TODO: Remove in v8.
 const Element = RichTextNodeType
 export { RichTextNodeType, Element }
-export { LinkType } from "./types/value/link"
-export { OEmbedType } from "./types/value/embed"
+export { LinkType } from "./types/value/link.ts"
+export { OEmbedType } from "./types/value/embed.ts"
 
 export type {
 	PrismicDocument,
@@ -146,7 +146,7 @@ export type {
 	PrismicDocumentWithoutUID,
 	PrismicDocumentHeader,
 	AlternateLanguage,
-} from "./types/value/document"
+} from "./types/value/document.ts"
 
 export type {
 	// RichText & Title
@@ -184,29 +184,29 @@ export type {
 	RTInlineNode,
 	RTAnyNode,
 	RichTextNodeTypes,
-} from "./types/value/richText"
-export type { TitleField } from "./types/value/title"
+} from "./types/value/richText.ts"
+export type { TitleField } from "./types/value/title.ts"
 
 export type {
 	ImageField,
 	ImageFieldImage,
 	FilledImageFieldImage,
 	EmptyImageFieldImage,
-} from "./types/value/image"
+} from "./types/value/image.ts"
 
 export type {
 	EmptyLinkField,
 	LinkField,
 	FilledLinkToWebField,
-} from "./types/value/link"
+} from "./types/value/link.ts"
 export type {
 	ContentRelationshipField,
 	FilledContentRelationshipField,
-} from "./types/value/contentRelationship"
+} from "./types/value/contentRelationship.ts"
 export type {
 	LinkToMediaField,
 	FilledLinkToMediaField,
-} from "./types/value/linkToMedia"
+} from "./types/value/linkToMedia.ts"
 
 export type {
 	OEmbedExtra,
@@ -216,7 +216,7 @@ export type {
 	RichOEmbed,
 	AnyOEmbed,
 	EmbedField,
-} from "./types/value/embed"
+} from "./types/value/embed.ts"
 
 export type {
 	TableField,
@@ -226,16 +226,16 @@ export type {
 	TableFieldBodyRow,
 	TableFieldHeaderCell,
 	TableFieldDataCell,
-} from "./types/value/table"
+} from "./types/value/table.ts"
 
-export type { BooleanField } from "./types/value/boolean"
-export type { ColorField } from "./types/value/color"
-export type { DateField } from "./types/value/date"
-export type { KeyTextField } from "./types/value/keyText"
-export type { NumberField } from "./types/value/number"
-export type { SelectField } from "./types/value/select"
-export type { TimestampField } from "./types/value/timestamp"
-export type { GeoPointField } from "./types/value/geoPoint"
+export type { BooleanField } from "./types/value/boolean.ts"
+export type { ColorField } from "./types/value/color.ts"
+export type { DateField } from "./types/value/date.ts"
+export type { KeyTextField } from "./types/value/keyText.ts"
+export type { NumberField } from "./types/value/number.ts"
+export type { SelectField } from "./types/value/select.ts"
+export type { TimestampField } from "./types/value/timestamp.ts"
+export type { GeoPointField } from "./types/value/geoPoint.ts"
 
 /**
  * @deprecated Renamed to `IntegrationField`
@@ -243,27 +243,27 @@ export type { GeoPointField } from "./types/value/geoPoint"
 // TODO: Remove when we remove support for deprecated `IntegrationFields` export.
 type IntegrationFields = IntegrationField
 export type { IntegrationField, IntegrationFields }
-export type { IntegrationFieldData } from "./types/value/integration"
+export type { IntegrationFieldData } from "./types/value/integration.ts"
 
-export type { GroupField, NestedGroupField } from "./types/value/group"
+export type { GroupField, NestedGroupField } from "./types/value/group.ts"
 
-export type { SliceZone } from "./types/value/sliceZone"
-export type { Slice } from "./types/value/slice"
-export type { SharedSlice } from "./types/value/sharedSlice"
-export type { SharedSliceVariation } from "./types/value/sharedSliceVariation"
+export type { SliceZone } from "./types/value/sliceZone.ts"
+export type { Slice } from "./types/value/slice.ts"
+export type { SharedSlice } from "./types/value/sharedSlice.ts"
+export type { SharedSliceVariation } from "./types/value/sharedSliceVariation.ts"
 
 export type {
 	FieldState,
 	AnyRegularField,
 	AnySlicePrimaryField,
 	Repeatable,
-} from "./types/value/types"
+} from "./types/value/types.ts"
 
 // Models - Types representing Prismic content models.
-export { CustomTypeModelFieldType } from "./types/model/types"
-export { CustomTypeModelLinkSelectType } from "./types/model/link"
-export { CustomTypeModelSliceType } from "./types/model/sliceZone"
-export { CustomTypeModelSliceDisplay } from "./types/model/slice"
+export { CustomTypeModelFieldType } from "./types/model/types.ts"
+export { CustomTypeModelLinkSelectType } from "./types/model/link.ts"
+export { CustomTypeModelSliceType } from "./types/model/sliceZone.ts"
+export { CustomTypeModelSliceDisplay } from "./types/model/slice.ts"
 
 export type {
 	CustomTypeModel,
@@ -275,14 +275,14 @@ export type {
 	CustomTypeModelRichTextField,
 	CustomTypeModelRichTextMultiField,
 	CustomTypeModelRichTextSingleField,
-} from "./types/model/richText"
-export type { CustomTypeModelTitleField } from "./types/model/title"
+} from "./types/model/richText.ts"
+export type { CustomTypeModelTitleField } from "./types/model/title.ts"
 
 export type {
 	CustomTypeModelImageField,
 	CustomTypeModelImageConstraint,
 	CustomTypeModelImageThumbnail,
-} from "./types/model/image"
+} from "./types/model/image.ts"
 
 export type {
 	CustomTypeModelFetchCustomTypeLevel1,
@@ -291,21 +291,21 @@ export type {
 	CustomTypeModelFetchCustomTypeLevel2,
 	CustomTypeModelFetchGroupLevel2,
 	CustomTypeModelContentRelationshipField,
-} from "./types/model/contentRelationship"
-export type { CustomTypeModelLinkField } from "./types/model/link"
-export type { CustomTypeModelLinkToMediaField } from "./types/model/linkToMedia"
+} from "./types/model/contentRelationship.ts"
+export type { CustomTypeModelLinkField } from "./types/model/link.ts"
+export type { CustomTypeModelLinkToMediaField } from "./types/model/linkToMedia.ts"
 
-export type { CustomTypeModelEmbedField } from "./types/model/embed"
+export type { CustomTypeModelEmbedField } from "./types/model/embed.ts"
 
-export type { CustomTypeModelBooleanField } from "./types/model/boolean"
-export type { CustomTypeModelColorField } from "./types/model/color"
-export type { CustomTypeModelDateField } from "./types/model/date"
-export type { CustomTypeModelKeyTextField } from "./types/model/keyText"
-export type { CustomTypeModelNumberField } from "./types/model/number"
-export type { CustomTypeModelSelectField } from "./types/model/select"
-export type { CustomTypeModelTimestampField } from "./types/model/timestamp"
-export type { CustomTypeModelGeoPointField } from "./types/model/geoPoint"
-export type { CustomTypeModelTableField } from "./types/model/table"
+export type { CustomTypeModelBooleanField } from "./types/model/boolean.ts"
+export type { CustomTypeModelColorField } from "./types/model/color.ts"
+export type { CustomTypeModelDateField } from "./types/model/date.ts"
+export type { CustomTypeModelKeyTextField } from "./types/model/keyText.ts"
+export type { CustomTypeModelNumberField } from "./types/model/number.ts"
+export type { CustomTypeModelSelectField } from "./types/model/select.ts"
+export type { CustomTypeModelTimestampField } from "./types/model/timestamp.ts"
+export type { CustomTypeModelGeoPointField } from "./types/model/geoPoint.ts"
+export type { CustomTypeModelTableField } from "./types/model/table.ts"
 
 /**
  * @deprecated Renamed to `CustomTypeModelIntegrationField`.
@@ -319,74 +319,74 @@ export {
 export type {
 	CustomTypeModelGroupField,
 	CustomTypeModelNestedGroupField,
-} from "./types/model/group"
+} from "./types/model/group.ts"
 export type {
 	CustomTypeModelSliceZoneField,
 	CustomTypeModelSliceLabel,
 	CustomTypeModelSharedSlice,
-} from "./types/model/sliceZone"
+} from "./types/model/sliceZone.ts"
 export type {
 	CustomTypeModelSlice,
 	CustomTypeModelLegacySlice,
-} from "./types/model/slice"
-export type { SharedSliceModel } from "./types/model/sharedSlice"
-export type { SharedSliceModelVariation } from "./types/model/sharedSliceVariation"
+} from "./types/model/slice.ts"
+export type { SharedSliceModel } from "./types/model/sharedSlice.ts"
+export type { SharedSliceModelVariation } from "./types/model/sharedSliceVariation.ts"
 
-export type { CustomTypeModelUIDField } from "./types/model/uid"
+export type { CustomTypeModelUIDField } from "./types/model/uid.ts"
 
-export type { CustomTypeModelRangeField } from "./types/model/range"
-export type { CustomTypeModelSeparatorField } from "./types/model/separator"
+export type { CustomTypeModelRangeField } from "./types/model/range.ts"
+export type { CustomTypeModelSeparatorField } from "./types/model/separator.ts"
 
 export type {
 	CustomTypeModelField,
 	CustomTypeModelFieldForGroup,
 	CustomTypeModelFieldForNestedGroup,
 	CustomTypeModelFieldForSlicePrimary,
-} from "./types/model/types"
+} from "./types/model/types.ts"
 
 // Migrations - Types representing Prismic Migration API content values.
-export { PrismicMigrationDocument } from "./types/migration/Document"
+export { PrismicMigrationDocument } from "./types/migration/Document.ts"
 export type {
 	PendingPrismicDocument,
 	ExistingPrismicDocument,
 	InjectMigrationSpecificTypes,
-} from "./types/migration/Document"
+} from "./types/migration/Document.ts"
 
-export { PrismicMigrationAsset } from "./types/migration/Asset"
+export { PrismicMigrationAsset } from "./types/migration/Asset.ts"
 export type {
 	MigrationImage,
 	MigrationLinkToMedia,
 	MigrationRTImageNode,
-} from "./types/migration/Asset"
-export type { MigrationContentRelationship } from "./types/migration/ContentRelationship"
+} from "./types/migration/Asset.ts"
+export type { MigrationContentRelationship } from "./types/migration/ContentRelationship.ts"
 
 // API - Types representing Prismic Content API responses.
-export type { Query } from "./types/api/query"
+export type { Query } from "./types/api/query.ts"
 
-export type { Ref } from "./types/api/ref"
+export type { Ref } from "./types/api/ref.ts"
 
-export type { Release } from "./types/api/release"
+export type { Release } from "./types/api/release.ts"
 
 export type {
 	Repository,
 	Language,
 	Form,
 	FormField,
-} from "./types/api/repository"
+} from "./types/api/repository.ts"
 
-export type { Tags } from "./types/api/tags"
+export type { Tags } from "./types/api/tags.ts"
 
 // Integration - Types representing Prismic's integration API.
 export {
 	IntegrationAPIItem,
 	IntegrationAPIResults,
-} from "./types/api/integration"
+} from "./types/api/integration.ts"
 
 // Webhook - Types representing Prismic webhooks.
-export { WebhookType } from "./types/webhook/types"
+export { WebhookType } from "./types/webhook/types.ts"
 
-export type { WebhookBody } from "./types/webhook/types"
+export type { WebhookBody } from "./types/webhook/types.ts"
 
-export type { WebhookBodyAPIUpdate } from "./types/webhook/apiUpdate"
+export type { WebhookBodyAPIUpdate } from "./types/webhook/apiUpdate.ts"
 
-export type { WebhookBodyTestTrigger } from "./types/webhook/testTrigger"
+export type { WebhookBodyTestTrigger } from "./types/webhook/testTrigger.ts"

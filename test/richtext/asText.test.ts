@@ -1,8 +1,8 @@
 import { expect, it } from "vitest"
 
-import { createRichTextFixtures } from "../__testutils__/createRichTextFixtures"
+import { createRichTextFixtures } from "../__testutils__/createRichTextFixtures.ts"
 
-import { asText } from "../../src/richtext"
+import { asText } from "../../src/richtext.ts"
 
 it("returns a string representation of a rich text field value", () => {
 	const richTextFixtures = createRichTextFixtures()

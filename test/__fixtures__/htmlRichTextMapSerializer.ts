@@ -1,5 +1,5 @@
-import { LinkType } from "../../src"
-import type { RichTextMapSerializer } from "../../src/richtext"
+import { LinkType } from "../../src/index.ts"
+import type { RichTextMapSerializer } from "../../src/richtext.ts"
 
 export const htmlRichTextMapSerializer: RichTextMapSerializer<string> = {
 	heading1: ({ children }) => `<h1>${children.join("")}</h1>`,

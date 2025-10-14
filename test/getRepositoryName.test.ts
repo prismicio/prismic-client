@@ -1,6 +1,6 @@
 import { expect, it } from "vitest"
 
-import * as prismic from "../src"
+import * as prismic from "../src/index.ts"
 
 it("returns the repository name from a valid Prismic Document API endpoint", () => {
 	const repositoryName = prismic.getRepositoryName(

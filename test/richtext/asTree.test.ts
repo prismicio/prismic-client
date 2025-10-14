@@ -1,8 +1,8 @@
 import { expect, it } from "vitest"
 
-import { createRichTextFixtures } from "../__testutils__/createRichTextFixtures"
+import { createRichTextFixtures } from "../__testutils__/createRichTextFixtures.ts"
 
-import { asTree } from "../../src/richtext"
+import { asTree } from "../../src/richtext.ts"
 
 it("does not mutate the provided rich text field", () => {
 	const richTextFixturesUntouched = createRichTextFixtures()

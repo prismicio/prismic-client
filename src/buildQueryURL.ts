@@ -1,5 +1,5 @@
-import { castArray } from "./lib/castArray"
-import { devMsg } from "./lib/devMsg"
+import { castArray } from "./lib/castArray.ts"
+import { devMsg } from "./lib/devMsg.ts"
 
 import { version } from "../package.json"
 

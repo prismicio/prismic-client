@@ -1,4 +1,4 @@
-import type { FieldState } from "./types"
+import type { FieldState } from "./types.ts"
 
 /**
  * A color field.

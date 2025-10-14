@@ -1,7 +1,7 @@
 import { expect, it } from "vitest"
 
-import type { ImageField } from "../src"
-import { asImagePixelDensitySrcSet } from "../src"
+import type { ImageField } from "../src/index.ts"
+import { asImagePixelDensitySrcSet } from "../src/index.ts"
 
 it("returns null for nullish inputs", () => {
 	expect(asImagePixelDensitySrcSet(null)).toBeNull()

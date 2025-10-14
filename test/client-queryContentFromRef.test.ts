@@ -2,10 +2,10 @@ import { expect, it } from "vitest"
 
 import * as prismicM from "@prismicio/mock"
 
-import { createTestClient } from "./__testutils__/createClient"
-import { getMasterRef } from "./__testutils__/getMasterRef"
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
-import { testGetMethod } from "./__testutils__/testAnyGetMethod"
+import { createTestClient } from "./__testutils__/createClient.ts"
+import { getMasterRef } from "./__testutils__/getMasterRef.ts"
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2.ts"
+import { testGetMethod } from "./__testutils__/testAnyGetMethod.ts"
 
 testGetMethod("supports manual string ref", {
 	run: (client) => {

@@ -5,18 +5,22 @@ import {
 	serializePreFormatted,
 	serializeSpan,
 	serializeStandardTag,
-} from "../lib/serializerHelpers"
+} from "../lib/serializerHelpers.ts"
 
-import type { RichTextField } from "../types/value/richText"
+import type { RichTextField } from "../types/value/richText.ts"
 
 import type {
 	RichTextFunctionSerializer,
 	RichTextMapSerializer,
 	RichTextMapSerializerFunction,
-} from "../richtext"
-import { composeSerializers, serialize, wrapMapSerializer } from "../richtext"
+} from "../richtext/index.ts"
+import {
+	composeSerializers,
+	serialize,
+	wrapMapSerializer,
+} from "../richtext/index.ts"
 
-import type { LinkResolverFunction } from "./asLink"
+import type { LinkResolverFunction } from "./asLink.ts"
 
 /**
  * Serializes a node from a rich text field with a function to HTML.

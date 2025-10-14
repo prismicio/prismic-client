@@ -3,14 +3,14 @@ import { it as _it, describe, vi } from "vitest"
 
 import { rest } from "msw"
 
-import { createPagedQueryResponses } from "./createPagedQueryResponses"
-import { createTestWriteClient } from "./createWriteClient"
-import { mockAsset, mockPrismicAssetAPI } from "./mockPrismicAssetAPI"
-import { mockPrismicMigrationAPI } from "./mockPrismicMigrationAPI"
-import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2"
+import { createPagedQueryResponses } from "./createPagedQueryResponses.ts"
+import { createTestWriteClient } from "./createWriteClient.ts"
+import { mockAsset, mockPrismicAssetAPI } from "./mockPrismicAssetAPI.ts"
+import { mockPrismicMigrationAPI } from "./mockPrismicMigrationAPI.ts"
+import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2.ts"
 
-import * as prismic from "../../src"
-import type { Asset } from "../../src/types/api/asset/asset"
+import * as prismic from "../../src/index.ts"
+import type { Asset } from "../../src/types/api/asset/asset.ts"
 
 // Skip test on Node 16 and 18 (File and FormData support)
 const isNode16 = process.version.startsWith("v16")

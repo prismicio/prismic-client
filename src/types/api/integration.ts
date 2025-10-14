@@ -1,4 +1,4 @@
-import type { IntegrationFieldData } from "../value/integration"
+import type { IntegrationFieldData } from "../value/integration.ts"
 
 /**
  * A catalog item from an integration field.

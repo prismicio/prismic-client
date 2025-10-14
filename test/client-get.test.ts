@@ -2,12 +2,12 @@ import { expect, it, vi } from "vitest"
 
 import fetch from "node-fetch"
 
-import { createTestClient } from "./__testutils__/createClient"
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
-import { testGetMethod } from "./__testutils__/testAnyGetMethod"
-import { testFetchOptions } from "./__testutils__/testFetchOptions"
-import { testInvalidRefRetry } from "./__testutils__/testInvalidRefRetry"
+import { createTestClient } from "./__testutils__/createClient.ts"
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2.ts"
+import { testAbortableMethod } from "./__testutils__/testAbortableMethod.ts"
+import { testGetMethod } from "./__testutils__/testAnyGetMethod.ts"
+import { testFetchOptions } from "./__testutils__/testFetchOptions.ts"
+import { testInvalidRefRetry } from "./__testutils__/testInvalidRefRetry.ts"
 
 testGetMethod("resolves a query", {
 	run: (client) => client.get(),

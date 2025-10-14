@@ -1,7 +1,7 @@
 import { expect, it } from "vitest"
 
-import * as prismic from "../src"
-import { PrismicMigrationDocument } from "../src/types/migration/Document"
+import * as prismic from "../src/index.ts"
+import { PrismicMigrationDocument } from "../src/types/migration/Document.ts"
 
 it("creates a document", () => {
 	const migration = prismic.createMigration()

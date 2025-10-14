@@ -1,9 +1,9 @@
 import type { BuildPixelDensitySrcSetParams } from "imgix-url-builder"
 import { buildPixelDensitySrcSet, buildURL } from "imgix-url-builder"
 
-import type { ImageFieldImage } from "../types/value/image"
+import type { ImageFieldImage } from "../types/value/image.ts"
 
-import { imageThumbnail as isImageThumbnailFilled } from "./isFilled"
+import { imageThumbnail as isImageThumbnailFilled } from "./isFilled.ts"
 
 /**
  * The default pixel densities used to generate a `srcset` value.

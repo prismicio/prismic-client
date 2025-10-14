@@ -1,4 +1,4 @@
-import type { LinkType, OptionalLinkProperties } from "../value/link"
+import type { LinkType, OptionalLinkProperties } from "../value/link.ts"
 
 /**
  * Adds `OptionalLinkProperties` to any type that looks like a link object (one

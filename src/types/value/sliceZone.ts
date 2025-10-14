@@ -1,7 +1,6 @@
-import type { FieldState } from "./types"
-
-import type { SharedSlice } from "./sharedSlice"
-import type { Slice } from "./slice"
+import type { SharedSlice } from "./sharedSlice.ts"
+import type { Slice } from "./slice.ts"
+import type { FieldState } from "./types.ts"
 
 /**
  * Prismic Slices are sections of your website. Prismic documents contain a

@@ -1,6 +1,6 @@
 import { expect, it, vi } from "vitest"
 
-import * as prismic from "../src"
+import * as prismic from "../src/index.ts"
 
 it("creates a write client with `createWriteClient`", () => {
 	const client = prismic.createWriteClient("qwerty", {

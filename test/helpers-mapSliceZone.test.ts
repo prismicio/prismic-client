@@ -1,7 +1,7 @@
 import type { TestContext } from "vitest"
 import { expect, it, vi } from "vitest"
 
-import { mapSliceZone } from "../src"
+import { mapSliceZone } from "../src/index.ts"
 
 const generateTestData = (ctx: TestContext) => {
 	const model1 = ctx.mock.model.sharedSlice({

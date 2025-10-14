@@ -21,7 +21,7 @@ import type {
 	RTStrongNode,
 	RichTextNodeTypes,
 } from "../types/value/richText"
-import { RichTextNodeType } from "../types/value/richText"
+import { RichTextNodeType } from "../types/value/richText.ts"
 
 // Serializers
 

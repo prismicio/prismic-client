@@ -1,4 +1,4 @@
-import type { PrismicDocument } from "../value/document"
+import type { PrismicDocument } from "../value/document.ts"
 
 /**
  * A query response from the Prismic REST API V2. The response contains

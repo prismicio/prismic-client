@@ -1,4 +1,4 @@
-import type { CustomTypeModelFieldType } from "./types"
+import type { CustomTypeModelFieldType } from "./types.ts"
 
 /**
  * A rich text custom type field.

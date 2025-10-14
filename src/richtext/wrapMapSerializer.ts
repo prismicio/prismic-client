@@ -1,5 +1,8 @@
-import type { RichTextFunctionSerializer, RichTextMapSerializer } from "./types"
-import { RichTextReversedNodeType } from "./types"
+import type {
+	RichTextFunctionSerializer,
+	RichTextMapSerializer,
+} from "./types.ts"
+import { RichTextReversedNodeType } from "./types.ts"
 
 /**
  * Wraps a map serializer into a regular function serializer

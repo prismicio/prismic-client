@@ -1,8 +1,8 @@
 import { expect, it } from "vitest"
 
-import { documentFixture } from "./__fixtures__/document"
+import { documentFixture } from "./__fixtures__/document.ts"
 
-import { asDate } from "../src"
+import { asDate } from "../src/index.ts"
 
 it("returns null for nullish inputs", () => {
 	expect(asDate(null)).toBeNull()

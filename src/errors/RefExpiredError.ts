@@ -1,4 +1,4 @@
-import { ForbiddenError } from "./ForbiddenError"
+import { ForbiddenError } from "./ForbiddenError.ts"
 
 type RefExpiredErrorAPIResponse = {
 	type: "api_validation_error"

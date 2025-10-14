@@ -1,13 +1,13 @@
-import { testMigrationFieldPatching } from "./__testutils__/testMigrationFieldPatching"
+import { testMigrationFieldPatching } from "./__testutils__/testMigrationFieldPatching.ts"
 
 import type {
 	InjectMigrationSpecificTypes,
 	LinkToMediaField,
 	RichTextField,
 } from "../src"
-import { LinkType, RichTextNodeType } from "../src"
-import type { Asset } from "../src/types/api/asset/asset"
-import type { MigrationLinkToMedia } from "../src/types/migration/Asset"
+import { LinkType, RichTextNodeType } from "../src/index.ts"
+import type { Asset } from "../src/types/api/asset/asset.ts"
+import type { MigrationLinkToMedia } from "../src/types/migration/Asset.ts"
 
 const assetToLinkToMedia = (
 	asset: Asset,

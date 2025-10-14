@@ -1,5 +1,3 @@
-import type { FieldState } from "./types"
-
 import type {
 	RTHeading1Node,
 	RTHeading2Node,
@@ -8,6 +6,7 @@ import type {
 	RTHeading5Node,
 	RTHeading6Node,
 } from "./richText"
+import type { FieldState } from "./types.ts"
 
 /**
  * A title field.

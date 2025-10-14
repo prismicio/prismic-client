@@ -1,10 +1,10 @@
 import { expect, it } from "vitest"
 
-import { createTestWriteClient } from "./__testutils__/createWriteClient"
-import { mockPrismicMigrationAPI } from "./__testutils__/mockPrismicMigrationAPI"
+import { createTestWriteClient } from "./__testutils__/createWriteClient.ts"
+import { mockPrismicMigrationAPI } from "./__testutils__/mockPrismicMigrationAPI.ts"
 
-import { ForbiddenError, NotFoundError } from "../src"
-import { DEFAULT_RETRY_AFTER } from "../src/lib/request"
+import { ForbiddenError, NotFoundError } from "../src/index.ts"
+import { DEFAULT_RETRY_AFTER } from "../src/lib/request.ts"
 
 it.concurrent("updates a document", async (ctx) => {
 	const client = createTestWriteClient({ ctx })

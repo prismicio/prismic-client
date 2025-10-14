@@ -1,6 +1,5 @@
-import type { CustomTypeModelFieldType } from "./types"
-
-import type { CustomTypeModelLinkSelectType } from "./link"
+import type { CustomTypeModelLinkSelectType } from "./link.ts"
+import type { CustomTypeModelFieldType } from "./types.ts"
 
 /**
  * A link to media custom type field.

@@ -1,10 +1,10 @@
 import { expect, it } from "vitest"
 
-import { createTestClient } from "./createClient"
-import { createPagedQueryResponses } from "./createPagedQueryResponses"
-import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2"
+import { createTestClient } from "./createClient.ts"
+import { createPagedQueryResponses } from "./createPagedQueryResponses.ts"
+import { mockPrismicRestAPIV2 } from "./mockPrismicRestAPIV2.ts"
 
-import type * as prismic from "../../src"
+import type * as prismic from "../../src/index.ts"
 
 type TestGetAllMethodArgs<
 	TResponse extends

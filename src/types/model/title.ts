@@ -1,4 +1,4 @@
-import type { CustomTypeModelRichTextSingleField } from "./richText"
+import type { CustomTypeModelRichTextSingleField } from "./richText.ts"
 
 /**
  * A title custom type field.

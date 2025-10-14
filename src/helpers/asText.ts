@@ -1,6 +1,6 @@
-import type { RichTextField } from "../types/value/richText"
+import type { RichTextField } from "../types/value/richText.ts"
 
-import { asText as baseAsText } from "../richtext/asText"
+import { asText as baseAsText } from "../richtext/asText.ts"
 
 /**
  * Configuration that determines the output of `asText()`.

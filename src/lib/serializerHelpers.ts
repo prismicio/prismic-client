@@ -1,15 +1,15 @@
-import type { RichTextMapSerializer } from "../richtext/types"
-import { LinkType } from "../types/value/link"
-import type { RTAnyNode } from "../types/value/richText"
+import { LinkType } from "../types/value/link.ts"
+import type { RTAnyNode } from "../types/value/richText.ts"
 
 import type {
 	HTMLRichTextMapSerializer,
 	HTMLStrictRichTextMapSerializer,
 } from "../helpers/asHTML"
-import type { LinkResolverFunction } from "../helpers/asLink"
-import { asLink } from "../helpers/asLink"
+import type { LinkResolverFunction } from "../helpers/asLink.ts"
+import { asLink } from "../helpers/asLink.ts"
+import type { RichTextMapSerializer } from "../richtext/types.ts"
 
-import { escapeHTML } from "./escapeHTML"
+import { escapeHTML } from "./escapeHTML.ts"
 
 type Attributes = Record<string, string | boolean | null | undefined>
 const formatAttributes = (node: RTAnyNode, attributes: Attributes): string => {

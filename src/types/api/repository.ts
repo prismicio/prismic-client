@@ -1,4 +1,4 @@
-import type { Ref } from "./ref"
+import type { Ref } from "./ref.ts"
 
 /**
  * Repository metadata returned from the Prismic REST API V2. This data can be

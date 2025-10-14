@@ -3,9 +3,9 @@ import type {
 	EmptyContentRelationshipField,
 	FilledContentRelationshipField,
 } from "../value/contentRelationship"
-import type { PrismicDocument } from "../value/document"
+import type { PrismicDocument } from "../value/document.ts"
 
-import type { PrismicMigrationDocument } from "./Document"
+import type { PrismicMigrationDocument } from "./Document.ts"
 
 type ValueOrThunk<T> = T | (() => Promise<T> | T)
 

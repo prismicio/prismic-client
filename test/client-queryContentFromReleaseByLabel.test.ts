@@ -2,9 +2,12 @@ import { expect, it } from "vitest"
 
 import * as prismicM from "@prismicio/mock"
 
-import { createTestClient } from "./__testutils__/createClient"
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
-import { testGetOutsideTTL, testGetWithinTTL } from "./__testutils__/testGetTTL"
+import { createTestClient } from "./__testutils__/createClient.ts"
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2.ts"
+import {
+	testGetOutsideTTL,
+	testGetWithinTTL,
+} from "./__testutils__/testGetTTL.ts"
 
 // Do not use `_mock` within tests. Use the text-specific `ctx.mock` instead.
 const _mock = prismicM.createMockFactory({

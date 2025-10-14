@@ -1,4 +1,4 @@
-import * as prismic from "../../src"
+import * as prismic from "../../src/index.ts"
 
 export const partialHTMLRichTextFunctionSerializer: prismic.HTMLRichTextFunctionSerializer =
 	(_type, node, _text, children) => {

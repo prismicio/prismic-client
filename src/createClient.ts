@@ -1,7 +1,7 @@
-import type { PrismicDocument } from "./types/value/document"
+import type { PrismicDocument } from "./types/value/document.ts"
 
-import type { ClientConfig } from "./Client"
-import { Client } from "./Client"
+import type { ClientConfig } from "./Client.ts"
+import { Client } from "./Client.ts"
 
 /**
  * Type definitions for the `createClient()` function. May be augmented by

@@ -1,17 +1,20 @@
-import type { FilledContentRelationshipField } from "../value/contentRelationship"
-import type { PrismicDocument, PrismicDocumentWithUID } from "../value/document"
-import type { AnyOEmbed, EmbedField, OEmbedExtra } from "../value/embed"
-import type { FilledImageFieldImage } from "../value/image"
-import type { FilledLinkToMediaField } from "../value/linkToMedia"
-import type { RTImageNode } from "../value/richText"
-import type { SharedSlice } from "../value/sharedSlice"
+import type { FilledContentRelationshipField } from "../value/contentRelationship.ts"
+import type {
+	PrismicDocument,
+	PrismicDocumentWithUID,
+} from "../value/document.ts"
+import type { AnyOEmbed, EmbedField, OEmbedExtra } from "../value/embed.ts"
+import type { FilledImageFieldImage } from "../value/image.ts"
+import type { FilledLinkToMediaField } from "../value/linkToMedia.ts"
+import type { RTImageNode } from "../value/richText.ts"
+import type { SharedSlice } from "../value/sharedSlice.ts"
 
 import type {
 	MigrationImage,
 	MigrationLinkToMedia,
 	MigrationRTImageNode,
 } from "./Asset"
-import type { MigrationContentRelationship } from "./ContentRelationship"
+import type { MigrationContentRelationship } from "./ContentRelationship.ts"
 
 /**
  * A utility type that extends any fields in a record with their migration

@@ -1,13 +1,13 @@
-import { isInternalURL } from "../lib/isInternalURL"
+import { isInternalURL } from "../lib/isInternalURL.ts"
 
-import type { FilledContentRelationshipField } from "../types/value/contentRelationship"
-import type { PrismicDocument } from "../types/value/document"
-import type { FilledLinkToWebField, LinkField } from "../types/value/link"
-import type { FilledLinkToMediaField } from "../types/value/linkToMedia"
+import type { FilledContentRelationshipField } from "../types/value/contentRelationship.ts"
+import type { PrismicDocument } from "../types/value/document.ts"
+import type { FilledLinkToWebField, LinkField } from "../types/value/link.ts"
+import type { FilledLinkToMediaField } from "../types/value/linkToMedia.ts"
 
-import type { AsLinkReturnType, LinkResolverFunction } from "./asLink"
-import { asLink } from "./asLink"
-import { link as isFilledLink } from "./isFilled"
+import type { AsLinkReturnType, LinkResolverFunction } from "./asLink.ts"
+import { asLink } from "./asLink.ts"
+import { link as isFilledLink } from "./isFilled.ts"
 
 type AsLinkAttrsConfigRelArgs<
 	LinkResolverFunctionReturnType = ReturnType<LinkResolverFunction>,

@@ -1,4 +1,4 @@
-import { filter } from "../filter"
+import { filter } from "../filter.ts"
 
 /**
  * Creates a filter to filter content by document type.

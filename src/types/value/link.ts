@@ -1,9 +1,8 @@
-import type { AnyRegularField, FieldState } from "./types"
-
-import type { FilledContentRelationshipField } from "./contentRelationship"
-import type { GroupField } from "./group"
-import type { FilledLinkToMediaField } from "./linkToMedia"
-import type { SliceZone } from "./sliceZone"
+import type { FilledContentRelationshipField } from "./contentRelationship.ts"
+import type { GroupField } from "./group.ts"
+import type { FilledLinkToMediaField } from "./linkToMedia.ts"
+import type { SliceZone } from "./sliceZone.ts"
+import type { AnyRegularField, FieldState } from "./types.ts"
 
 /**
  * Link types

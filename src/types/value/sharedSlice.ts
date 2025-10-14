@@ -1,4 +1,4 @@
-import type { SharedSliceVariation } from "./sharedSliceVariation"
+import type { SharedSliceVariation } from "./sharedSliceVariation.ts"
 
 /**
  * A shared Slice.

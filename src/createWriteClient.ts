@@ -1,7 +1,7 @@
-import type { PrismicDocument } from "./types/value/document"
+import type { PrismicDocument } from "./types/value/document.ts"
 
-import type { WriteClientConfig } from "./WriteClient"
-import { WriteClient } from "./WriteClient"
+import type { WriteClientConfig } from "./WriteClient.ts"
+import { WriteClient } from "./WriteClient.ts"
 
 /**
  * Type definitions for the `createWriteClient()` function. May be augmented by

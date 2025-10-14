@@ -1,4 +1,4 @@
-import { PrismicError } from "./PrismicError"
+import { PrismicError } from "./PrismicError.ts"
 
 type ForbiddenErrorRepositoryAPIResponse = {
 	type: string

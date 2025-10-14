@@ -1,6 +1,6 @@
 import { expect, it } from "vitest"
 
-import * as prismic from "../src"
+import * as prismic from "../src/index.ts"
 
 it("returns default GraphQL API CDN URL", () => {
 	const endpoint = prismic.getGraphQLEndpoint("qwerty")

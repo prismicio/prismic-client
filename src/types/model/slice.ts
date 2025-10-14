@@ -1,7 +1,6 @@
-import type { CustomTypeModelFieldForNestedGroup } from "./types"
-
-import type { CustomTypeModelNestedGroupField } from "./group"
-import type { CustomTypeModelSliceType } from "./sliceZone"
+import type { CustomTypeModelNestedGroupField } from "./group.ts"
+import type { CustomTypeModelSliceType } from "./sliceZone.ts"
+import type { CustomTypeModelFieldForNestedGroup } from "./types.ts"
 
 /**
  * A Slice for a custom type.

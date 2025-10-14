@@ -1,30 +1,30 @@
-import type { ColorField } from "../types/value/color"
+import type { ColorField } from "../types/value/color.ts"
 import type {
 	ContentRelationshipField,
 	EmptyContentRelationshipField,
 } from "../types/value/contentRelationship"
-import type { DateField } from "../types/value/date"
-import type { AnyOEmbed, EmbedField } from "../types/value/embed"
-import type { GeoPointField } from "../types/value/geoPoint"
-import type { GroupField, NestedGroupField } from "../types/value/group"
-import type { ImageField, ImageFieldImage } from "../types/value/image"
+import type { DateField } from "../types/value/date.ts"
+import type { AnyOEmbed, EmbedField } from "../types/value/embed.ts"
+import type { GeoPointField } from "../types/value/geoPoint.ts"
+import type { GroupField, NestedGroupField } from "../types/value/group.ts"
+import type { ImageField, ImageFieldImage } from "../types/value/image.ts"
 import type {
 	IntegrationField,
 	IntegrationFieldData,
 } from "../types/value/integration"
-import type { KeyTextField } from "../types/value/keyText"
-import type { LinkField } from "../types/value/link"
-import type { LinkToMediaField } from "../types/value/linkToMedia"
-import type { NumberField } from "../types/value/number"
-import type { RichTextField } from "../types/value/richText"
-import type { SelectField } from "../types/value/select"
-import type { SharedSlice } from "../types/value/sharedSlice"
-import type { Slice } from "../types/value/slice"
-import type { SliceZone } from "../types/value/sliceZone"
-import type { TableField } from "../types/value/table"
-import type { TimestampField } from "../types/value/timestamp"
-import type { TitleField } from "../types/value/title"
-import type { AnyRegularField, Repeatable } from "../types/value/types"
+import type { KeyTextField } from "../types/value/keyText.ts"
+import type { LinkField } from "../types/value/link.ts"
+import type { LinkToMediaField } from "../types/value/linkToMedia.ts"
+import type { NumberField } from "../types/value/number.ts"
+import type { RichTextField } from "../types/value/richText.ts"
+import type { SelectField } from "../types/value/select.ts"
+import type { SharedSlice } from "../types/value/sharedSlice.ts"
+import type { Slice } from "../types/value/slice.ts"
+import type { SliceZone } from "../types/value/sliceZone.ts"
+import type { TableField } from "../types/value/table.ts"
+import type { TimestampField } from "../types/value/timestamp.ts"
+import type { TitleField } from "../types/value/title.ts"
+import type { AnyRegularField, Repeatable } from "../types/value/types.ts"
 
 /**
  * Determines if a value is not nullish (i.e. not `null` or `undefined`). This

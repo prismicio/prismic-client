@@ -1,13 +1,13 @@
 import type { TestContext } from "vitest"
 import { it as _it, expect, vi } from "vitest"
 
-import { createPagedQueryResponses } from "./__testutils__/createPagedQueryResponses"
-import { createTestWriteClient } from "./__testutils__/createWriteClient"
-import { mockPrismicAssetAPI } from "./__testutils__/mockPrismicAssetAPI"
-import { mockPrismicMigrationAPI } from "./__testutils__/mockPrismicMigrationAPI"
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
+import { createPagedQueryResponses } from "./__testutils__/createPagedQueryResponses.ts"
+import { createTestWriteClient } from "./__testutils__/createWriteClient.ts"
+import { mockPrismicAssetAPI } from "./__testutils__/mockPrismicAssetAPI.ts"
+import { mockPrismicMigrationAPI } from "./__testutils__/mockPrismicMigrationAPI.ts"
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2.ts"
 
-import * as prismic from "../src"
+import * as prismic from "../src/index.ts"
 
 // Skip test on Node 16 and 18 (File and FormData support)
 const isNode16 = process.version.startsWith("v16")

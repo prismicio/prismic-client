@@ -1,4 +1,4 @@
-import type { CustomTypeModelField } from "./types"
+import type { CustomTypeModelField } from "./types.ts"
 
 /**
  * A Prismic custom type model.

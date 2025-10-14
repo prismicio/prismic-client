@@ -1,4 +1,4 @@
-import type { EmptyObjectField, FieldState } from "./types"
+import type { EmptyObjectField, FieldState } from "./types.ts"
 
 /**
  * A geopoint field.

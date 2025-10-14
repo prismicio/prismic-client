@@ -7,8 +7,9 @@ import type {
 	RTOListItemNode,
 	RTTextNode,
 } from "../types/value/richText"
-import { RichTextNodeType } from "../types/value/richText"
-import type { Tree, TreeNode } from "./types"
+import { RichTextNodeType } from "../types/value/richText.ts"
+
+import type { Tree, TreeNode } from "./types.ts"
 
 const uuid = (): string => {
 	return (++uuid.i).toString()

@@ -3,7 +3,7 @@ import type { TestContext } from "vitest"
 import type { RestRequest } from "msw"
 import { rest } from "msw"
 
-import type { PrismicDocument, WriteClient } from "../../src"
+import type { PrismicDocument, WriteClient } from "../../src/index.ts"
 import type {
 	PostDocumentParams,
 	PostDocumentResult,

@@ -3,7 +3,7 @@ import { type TestContext } from "vitest"
 import type { RestRequest } from "msw"
 import { rest } from "msw"
 
-import type { WriteClient } from "../../src"
+import type { WriteClient } from "../../src/index.ts"
 import type {
 	Asset,
 	GetAssetsResult,

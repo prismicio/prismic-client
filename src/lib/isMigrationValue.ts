@@ -3,21 +3,21 @@ import type {
 	MigrationLinkToMedia,
 	MigrationRTImageNode,
 } from "../types/migration/Asset"
-import { PrismicMigrationAsset } from "../types/migration/Asset"
-import type { MigrationContentRelationship } from "../types/migration/ContentRelationship"
+import { PrismicMigrationAsset } from "../types/migration/Asset.ts"
+import type { MigrationContentRelationship } from "../types/migration/ContentRelationship.ts"
 import {
 	type InjectMigrationSpecificTypes,
 	PrismicMigrationDocument,
-} from "../types/migration/Document"
-import type { PrismicDocument } from "../types/value/document"
-import type { GroupField } from "../types/value/group"
-import { LinkType } from "../types/value/link"
-import type { OptionalLinkProperties } from "../types/value/link"
-import { RichTextNodeType } from "../types/value/richText"
-import type { SliceZone } from "../types/value/sliceZone"
-import type { AnyRegularField } from "../types/value/types"
+} from "../types/migration/Document.ts"
+import type { PrismicDocument } from "../types/value/document.ts"
+import type { GroupField } from "../types/value/group.ts"
+import { LinkType } from "../types/value/link.ts"
+import type { OptionalLinkProperties } from "../types/value/link.ts"
+import { RichTextNodeType } from "../types/value/richText.ts"
+import type { SliceZone } from "../types/value/sliceZone.ts"
+import type { AnyRegularField } from "../types/value/types.ts"
 
-import * as is from "./isValue"
+import * as is from "./isValue.ts"
 
 /**
  * Unknown value to check if it's a specific field type.

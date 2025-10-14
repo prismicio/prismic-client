@@ -1,6 +1,6 @@
-import type { Ref } from "../types/api/ref"
+import type { Ref } from "../types/api/ref.ts"
 
-import { findRef } from "./findRef"
+import { findRef } from "./findRef.ts"
 
 /**
  * Returns the master ref from a list of given refs.

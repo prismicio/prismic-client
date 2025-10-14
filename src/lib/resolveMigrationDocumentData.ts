@@ -1,27 +1,27 @@
-import type { MigrationLinkToMediaField } from "../types/migration/Asset"
+import type { MigrationLinkToMediaField } from "../types/migration/Asset.ts"
 import {
 	type MigrationImage,
 	type MigrationLinkToMedia,
 	type MigrationRTImageNode,
 	PrismicMigrationAsset,
-} from "../types/migration/Asset"
+} from "../types/migration/Asset.ts"
 import type {
 	MigrationContentRelationship,
 	MigrationContentRelationshipField,
 } from "../types/migration/ContentRelationship"
-import { PrismicMigrationDocument } from "../types/migration/Document"
-import type { MaybeLink } from "../types/migration/Link"
-import type { FilledImageFieldImage } from "../types/value/image"
-import type { LinkField, OptionalLinkProperties } from "../types/value/link"
-import { LinkType } from "../types/value/link"
-import type { RTImageNode } from "../types/value/richText"
-import { RichTextNodeType } from "../types/value/richText"
+import { PrismicMigrationDocument } from "../types/migration/Document.ts"
+import type { MaybeLink } from "../types/migration/Link.ts"
+import type { FilledImageFieldImage } from "../types/value/image.ts"
+import type { LinkField, OptionalLinkProperties } from "../types/value/link.ts"
+import { LinkType } from "../types/value/link.ts"
+import type { RTImageNode } from "../types/value/richText.ts"
+import { RichTextNodeType } from "../types/value/richText.ts"
 
-import * as isFilled from "../helpers/isFilled"
-import type { Migration } from "../Migration"
+import * as isFilled from "../helpers/isFilled.ts"
+import type { Migration } from "../Migration.ts"
 
-import * as isMigration from "./isMigrationValue"
-import { getOptionalLinkProperties } from "./getOptionalLinkProperties"
+import * as isMigration from "./isMigrationValue.ts"
+import { getOptionalLinkProperties } from "./getOptionalLinkProperties.ts"
 
 /**
  * Resolves a migration content relationship to a content relationship field.

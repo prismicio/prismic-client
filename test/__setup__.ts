@@ -6,7 +6,7 @@ import AbortController from "abort-controller"
 import type { SetupServer } from "msw/node"
 import { setupServer } from "msw/node"
 
-import * as prismic from "../src"
+import * as prismic from "../src/index.ts"
 
 declare module "vitest" {
 	export interface TestContext {

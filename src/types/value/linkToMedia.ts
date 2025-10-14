@@ -1,6 +1,5 @@
-import type { FieldState } from "./types"
-
-import type { OptionalLinkProperties } from "./link"
+import type { OptionalLinkProperties } from "./link.ts"
+import type { FieldState } from "./types.ts"
 
 /**
  * A link field that points to media.

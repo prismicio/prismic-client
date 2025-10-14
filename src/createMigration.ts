@@ -1,6 +1,6 @@
-import type { PrismicDocument } from "./types/value/document"
+import type { PrismicDocument } from "./types/value/document.ts"
 
-import { Migration } from "./Migration"
+import { Migration } from "./Migration.ts"
 
 /**
  * Type definitions for the `createMigration()` function. May be augmented by

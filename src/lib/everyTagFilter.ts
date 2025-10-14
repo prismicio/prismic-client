@@ -1,6 +1,6 @@
-import { filter } from "../filter"
+import { filter } from "../filter.ts"
 
-import { castArray } from "./castArray"
+import { castArray } from "./castArray.ts"
 
 /**
  * Creates a filter to filter content by document tags. All tags are required on

@@ -2,12 +2,12 @@ import { expect, it } from "vitest"
 
 import * as msw from "msw"
 
-import { createAuthorizationHeader } from "./__testutils__/createAuthorizationHeader"
-import { createTestClient } from "./__testutils__/createClient"
-import { createRepositoryName } from "./__testutils__/createRepositoryName"
-import { getMasterRef } from "./__testutils__/getMasterRef"
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
+import { createAuthorizationHeader } from "./__testutils__/createAuthorizationHeader.ts"
+import { createTestClient } from "./__testutils__/createClient.ts"
+import { createRepositoryName } from "./__testutils__/createRepositoryName.ts"
+import { getMasterRef } from "./__testutils__/getMasterRef.ts"
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2.ts"
+import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod.ts"
 
 it("resolves a query", async (ctx) => {
 	const repositoryResponse = ctx.mock.api.repository()

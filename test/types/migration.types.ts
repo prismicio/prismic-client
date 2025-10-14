@@ -1,7 +1,7 @@
 import type { TypeEqual, TypeOf } from "ts-expect"
 import { expectType } from "ts-expect"
 
-import * as prismic from "../../src"
+import * as prismic from "../../src/index.ts"
 
 // Default migration
 const defaultMigration = prismic.createMigration()

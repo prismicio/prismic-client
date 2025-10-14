@@ -1,6 +1,6 @@
-import { testFilter } from "./__testutils__/testFilter"
+import { testFilter } from "./__testutils__/testFilter.ts"
 
-import * as prismic from "../src"
+import * as prismic from "../src/index.ts"
 
 testFilter(
 	'[date.after(document.first_publication_date, "2017-05-18T17:00:00-0500")]',

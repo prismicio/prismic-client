@@ -1,4 +1,4 @@
-import { preview as previewCookieName } from "../cookie"
+import { preview as previewCookieName } from "../cookie.ts"
 
 const readValue = (value: string): string => {
 	return value.replace(/%3B/g, ";")

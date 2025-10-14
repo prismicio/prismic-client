@@ -1,8 +1,8 @@
 import { it as _it, expect } from "vitest"
 
-import * as prismic from "../src"
-import type { Asset } from "../src/types/api/asset/asset"
-import { AssetType } from "../src/types/api/asset/asset"
+import * as prismic from "../src/index.ts"
+import type { Asset } from "../src/types/api/asset/asset.ts"
+import { AssetType } from "../src/types/api/asset/asset.ts"
 
 // Skip test on Node 16 and 18 (File and FormData support)
 const isNode16 = process.version.startsWith("v16")

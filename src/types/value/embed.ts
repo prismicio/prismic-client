@@ -1,4 +1,4 @@
-import type { EmptyObjectField, FieldState } from "./types"
+import type { EmptyObjectField, FieldState } from "./types.ts"
 
 /**
  * oEmbed 1.0 possible types.

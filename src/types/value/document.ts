@@ -1,8 +1,7 @@
-import type { AnyRegularField } from "./types"
-
-import type { GroupField } from "./group"
-import type { SliceZone } from "./sliceZone"
-import type { TimestampField } from "./timestamp"
+import type { GroupField } from "./group.ts"
+import type { SliceZone } from "./sliceZone.ts"
+import type { TimestampField } from "./timestamp.ts"
+import type { AnyRegularField } from "./types.ts"
 
 /**
  * Document metadata for a translation of a Prismic document.

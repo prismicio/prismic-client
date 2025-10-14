@@ -1,6 +1,6 @@
-import { testMigrationFieldPatching } from "./__testutils__/testMigrationFieldPatching"
+import { testMigrationFieldPatching } from "./__testutils__/testMigrationFieldPatching.ts"
 
-import type { ImageField, MigrationImage } from "../src"
+import type { ImageField, MigrationImage } from "../src/index.ts"
 
 testMigrationFieldPatching<MigrationImage | ImageField>(
 	"patches image fields",

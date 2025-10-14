@@ -1,6 +1,6 @@
-import { PrismicError } from "../errors/PrismicError"
+import { PrismicError } from "../errors/PrismicError.ts"
 
-import type { CreateAssetParams } from "../WriteClient"
+import type { CreateAssetParams } from "../WriteClient.ts"
 
 /**
  * Max length for asset notes accepted by the API.

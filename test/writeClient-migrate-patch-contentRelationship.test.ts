@@ -1,4 +1,4 @@
-import { testMigrationFieldPatching } from "./__testutils__/testMigrationFieldPatching"
+import { testMigrationFieldPatching } from "./__testutils__/testMigrationFieldPatching.ts"
 
 import type {
 	ContentRelationshipField,
@@ -6,7 +6,7 @@ import type {
 	MigrationContentRelationship,
 	RichTextField,
 } from "../src"
-import { LinkType, RichTextNodeType } from "../src"
+import { LinkType, RichTextNodeType } from "../src/index.ts"
 
 testMigrationFieldPatching<
 	MigrationContentRelationship | InjectMigrationSpecificTypes<RichTextField>

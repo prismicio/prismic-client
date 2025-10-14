@@ -1,6 +1,8 @@
-import type { CustomTypeModelFieldType } from "./types"
-
-import type { CustomTypeModelLegacySlice, CustomTypeModelSlice } from "./slice"
+import type {
+	CustomTypeModelLegacySlice,
+	CustomTypeModelSlice,
+} from "./slice.ts"
+import type { CustomTypeModelFieldType } from "./types.ts"
 
 /**
  * A Slice Zone custom type field.

@@ -2,9 +2,9 @@ import type { TaskContext } from "vitest"
 
 import fetch from "node-fetch"
 
-import { createRepositoryName } from "./createRepositoryName"
+import { createRepositoryName } from "./createRepositoryName.ts"
 
-import * as prismic from "../../src"
+import * as prismic from "../../src/index.ts"
 
 type CreateTestClientArgs = (
 	| {

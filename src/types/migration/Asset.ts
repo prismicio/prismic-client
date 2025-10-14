@@ -1,9 +1,9 @@
-import type { Asset } from "../api/asset/asset"
-import type { FilledImageFieldImage } from "../value/image"
-import type { LinkToMediaField } from "../value/linkToMedia"
-import { type RTImageNode } from "../value/richText"
+import type { Asset } from "../api/asset/asset.ts"
+import type { FilledImageFieldImage } from "../value/image.ts"
+import type { LinkToMediaField } from "../value/linkToMedia.ts"
+import { type RTImageNode } from "../value/richText.ts"
 
-import type { InjectMigrationSpecificTypes } from "./Document"
+import type { InjectMigrationSpecificTypes } from "./Document.ts"
 
 /**
  * An asset to be uploaded to Prismic media library.

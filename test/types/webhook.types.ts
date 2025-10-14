@@ -1,7 +1,7 @@
 import type { TypeOf } from "ts-expect"
 import { expectType } from "ts-expect"
 
-import type * as prismic from "../../src"
+import type * as prismic from "../../src/index.ts"
 
 /**
  * WebhookBody supports any webhook body.

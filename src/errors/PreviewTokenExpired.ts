@@ -1,4 +1,4 @@
-import { ForbiddenError } from "./ForbiddenError"
+import { ForbiddenError } from "./ForbiddenError.ts"
 
 type PreviewTokenExpiredErrorAPIResponse = {
 	type: "api_security_error"

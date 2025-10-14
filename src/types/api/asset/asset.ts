@@ -1,4 +1,4 @@
-import type { AssetTag } from "./tag"
+import type { AssetTag } from "./tag.ts"
 
 /**
  * Asset types.

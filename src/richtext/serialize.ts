@@ -1,7 +1,7 @@
-import type { RichTextField } from "../types/value/richText"
-import type { RichTextFunctionSerializer, TreeNode } from "./types"
+import type { RichTextField } from "../types/value/richText.ts"
 
-import { asTree } from "./asTree"
+import { asTree } from "./asTree.ts"
+import type { RichTextFunctionSerializer, TreeNode } from "./types.ts"
 
 /**
  * Serializes a rich text field with a given serializer.

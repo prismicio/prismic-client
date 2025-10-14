@@ -2,7 +2,7 @@ import { it as _it, expect } from "vitest"
 
 import { rest } from "msw"
 
-import { createTestWriteClient } from "./__testutils__/createWriteClient"
+import { createTestWriteClient } from "./__testutils__/createWriteClient.ts"
 
 // Skip test on Node 16 and 18 (File and FormData support)
 const isNode16 = process.version.startsWith("v16")

@@ -1,4 +1,4 @@
-import type { RTTextNode, RichTextField } from "../types/value/richText"
+import type { RTTextNode, RichTextField } from "../types/value/richText.ts"
 
 /**
  * Converts a rich text field to a plain text string.

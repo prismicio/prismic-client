@@ -1,4 +1,4 @@
-import { castArray } from "./castArray"
+import { castArray } from "./castArray.ts"
 
 interface WithFilters {
 	filters?: string | string[]

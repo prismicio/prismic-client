@@ -1,6 +1,6 @@
-import { LinkType } from "../../src"
-import type { RichTextFunctionSerializer } from "../../src/richtext"
-import { Element } from "../../src/richtext"
+import { LinkType } from "../../src/index.ts"
+import type { RichTextFunctionSerializer } from "../../src/richtext.ts"
+import { Element } from "../../src/richtext.ts"
 
 export const htmlRichTextFunctionSerializer: RichTextFunctionSerializer<
 	string

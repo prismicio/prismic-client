@@ -1,13 +1,13 @@
 import { expect, it } from "vitest"
 
-import { createRichTextFixtures } from "./__testutils__/createRichTextFixtures"
+import { createRichTextFixtures } from "./__testutils__/createRichTextFixtures.ts"
 
-import { linkResolver } from "./__fixtures__/linkResolver"
-import { partialHTMLRichTextFunctionSerializer } from "./__fixtures__/partialHTMLRichTextFunctionSerializer"
-import { partialHTMLRichTextMapSerializer } from "./__fixtures__/partialHTMLRichTextMapSerializer"
+import { linkResolver } from "./__fixtures__/linkResolver.ts"
+import { partialHTMLRichTextFunctionSerializer } from "./__fixtures__/partialHTMLRichTextFunctionSerializer.ts"
+import { partialHTMLRichTextMapSerializer } from "./__fixtures__/partialHTMLRichTextMapSerializer.ts"
 
-import type { RichTextField } from "../src"
-import { asHTML } from "../src"
+import type { RichTextField } from "../src/index.ts"
+import { asHTML } from "../src/index.ts"
 
 it("serializes with default serializer", () => {
 	const richTextFixtures = createRichTextFixtures()

@@ -1,14 +1,14 @@
 import { expect, it } from "vitest"
 
-import { createRichTextFixtures } from "../__testutils__/createRichTextFixtures"
+import { createRichTextFixtures } from "../__testutils__/createRichTextFixtures.ts"
 
-import { htmlRichTextMapSerializer } from "../__fixtures__/htmlRichTextMapSerializer"
+import { htmlRichTextMapSerializer } from "../__fixtures__/htmlRichTextMapSerializer.ts"
 
 import {
 	composeSerializers,
 	serialize,
 	wrapMapSerializer,
-} from "../../src/richtext"
+} from "../../src/richtext/index.ts"
 
 it("composes multiple serializers", () => {
 	const richTextFixtures = createRichTextFixtures()

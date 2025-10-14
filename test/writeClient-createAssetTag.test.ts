@@ -1,11 +1,11 @@
 import { it as _it, expect } from "vitest"
 
-import { createTestWriteClient } from "./__testutils__/createWriteClient"
-import { mockPrismicAssetAPI } from "./__testutils__/mockPrismicAssetAPI"
+import { createTestWriteClient } from "./__testutils__/createWriteClient.ts"
+import { mockPrismicAssetAPI } from "./__testutils__/mockPrismicAssetAPI.ts"
 
-import { ForbiddenError } from "../src"
-import { DEFAULT_RETRY_AFTER } from "../src/lib/request"
-import type { AssetTag } from "../src/types/api/asset/tag"
+import { ForbiddenError } from "../src/index.ts"
+import { DEFAULT_RETRY_AFTER } from "../src/lib/request.ts"
+import type { AssetTag } from "../src/types/api/asset/tag.ts"
 
 // Skip test on Node 16 (FormData support)
 const isNode16 = process.version.startsWith("v16")

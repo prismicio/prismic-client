@@ -3,9 +3,9 @@ import { expect } from "vitest"
 
 import { rest } from "msw"
 
-import { createRepositoryName } from "./createRepositoryName"
+import { createRepositoryName } from "./createRepositoryName.ts"
 
-import type * as prismic from "../../src"
+import type * as prismic from "../../src/index.ts"
 
 const DEFAULT_DELAY = 0
 

@@ -1,4 +1,4 @@
-import type { CustomTypeModelFieldType } from "./types"
+import type { CustomTypeModelFieldType } from "./types.ts"
 
 /**
  * A geopoint custom type field.

@@ -1,9 +1,9 @@
 import type { BuildWidthSrcSetParams } from "imgix-url-builder"
 import { buildURL, buildWidthSrcSet } from "imgix-url-builder"
 
-import type { ImageFieldImage } from "../types/value/image"
+import type { ImageFieldImage } from "../types/value/image.ts"
 
-import * as isFilled from "./isFilled"
+import * as isFilled from "./isFilled.ts"
 
 /**
  * The default widths used to generate a `srcset` value.

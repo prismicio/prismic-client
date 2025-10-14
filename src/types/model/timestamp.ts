@@ -1,4 +1,4 @@
-import type { CustomTypeModelFieldType } from "./types"
+import type { CustomTypeModelFieldType } from "./types.ts"
 
 /**
  * A timestamp custom type field.

@@ -4,12 +4,12 @@ import * as prismicM from "@prismicio/mock"
 import * as msw from "msw"
 import { Headers, Response } from "node-fetch"
 
-import { createTestClient } from "./__testutils__/createClient"
-import { getMasterRef } from "./__testutils__/getMasterRef"
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
+import { createTestClient } from "./__testutils__/createClient.ts"
+import { getMasterRef } from "./__testutils__/getMasterRef.ts"
+import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2.ts"
 
-import * as prismic from "../src"
-import { DEFAULT_RETRY_AFTER } from "../src/lib/request"
+import * as prismic from "../src/index.ts"
+import { DEFAULT_RETRY_AFTER } from "../src/lib/request.ts"
 
 it("creates a Client with `createClient`", () => {
 	const client = prismic.createClient("qwerty", {
