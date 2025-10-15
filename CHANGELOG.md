@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.21.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.20.2...v7.21.0-alpha.0) (2025-10-15)
+
+
+### Chore
+
+* **deps:** maintain lock file ([38e3aa0](https://github.com/prismicio/prismic-client/commit/38e3aa0def632bf7bc32b23edefd2765d8c0cfe0))
+
 ### [7.20.2](https://github.com/prismicio/prismic-client/compare/v7.20.1...v7.20.2) (2025-10-14)
 
 
