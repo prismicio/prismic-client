@@ -23,48 +23,26 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"require": {
-				"types": "./dist/index.d.ts",
-				"default": "./dist/index.cjs"
-			},
-			"import": {
-				"types": "./dist/index.d.ts",
-				"default": "./dist/index.js"
-			}
+			"require": "./dist/index.cjs",
+			"import": "./dist/index.mjs"
 		},
 		"./richtext": {
-			"require": {
-				"types": "./dist/richtext/index.d.ts",
-				"default": "./dist/richtext.cjs"
-			},
-			"import": {
-				"types": "./dist/richtext/index.d.ts",
-				"default": "./dist/richtext.js"
-			}
+			"require": "./dist/richtext/index.cjs",
+			"import": "./dist/richtext/index.mjs"
 		},
 		"./package.json": "./package.json"
 	},
 	"main": "./dist/index.cjs",
-	"module": "./dist/index.js",
-	"react-native": "./dist/index.js",
+	"module": "./dist/index.mjs",
+	"react-native": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",
-	"typesVersions": {
-		"*": {
-			"*": [
-				"dist/index.d.ts"
-			],
-			"richtext": [
-				"dist/richtext/index.d.ts"
-			]
-		}
-	},
 	"files": [
 		"dist",
 		"src"
 	],
 	"scripts": {
-		"build": "vite build",
-		"dev": "vite build --watch",
+		"build": "unbuild",
+		"dev": "unbuild watch",
 		"format": "prettier --write .",
 		"prepare": "npm run build",
 		"release": "npm run test && standard-version && git push --follow-tags && npm run build && npm publish",
@@ -83,28 +61,27 @@
 	},
 	"devDependencies": {
 		"@prismicio/mock": "0.7.1",
-		"@prismicio/types-internal": "^3.11.2",
+		"@prismicio/types-internal": "^3.16.1",
 		"@size-limit/preset-small-lib": "^11.2.0",
-		"@trivago/prettier-plugin-sort-imports": "^4.3.0",
+		"@trivago/prettier-plugin-sort-imports": "^5.2.2",
 		"@typescript-eslint/eslint-plugin": "^6.21.0",
 		"@typescript-eslint/parser": "^6.21.0",
-		"@vitest/coverage-v8": "^2.1.9",
+		"@vitest/coverage-v8": "^3.2.4",
 		"abort-controller": "^3.0.0",
 		"eslint": "^8.57.1",
-		"eslint-config-prettier": "^9.1.0",
-		"eslint-plugin-prettier": "^5.2.5",
+		"eslint-config-prettier": "^9.1.2",
+		"eslint-plugin-prettier": "^5.5.4",
 		"eslint-plugin-tsdoc": "^0.3.0",
 		"msw": "^1.3.5",
 		"node-fetch": "^3.3.2",
-		"prettier": "^3.5.3",
-		"prettier-plugin-jsdoc": "1.3.2",
+		"prettier": "^3.6.2",
+		"prettier-plugin-jsdoc": "1.3.3",
 		"size-limit": "^11.2.0",
 		"standard-version": "^9.5.0",
 		"ts-expect": "^1.3.0",
-		"typescript": "^5.8.2",
-		"vite": "^5.4.15",
-		"vite-plugin-sdk": "^0.1.3",
-		"vitest": "^2.1.9"
+		"typescript": "^5.9.3",
+		"unbuild": "^3.6.1",
+		"vitest": "^3.2.4"
 	},
 	"engines": {
 		"node": ">=14.15.0"

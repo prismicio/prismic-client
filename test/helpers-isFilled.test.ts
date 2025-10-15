@@ -2,7 +2,7 @@ import { expect, it } from "vitest"
 
 import { documentFixture } from "./__fixtures__/document"
 
-import type { GroupField, SliceZone } from "../src"
+import type { ContentRelationshipField, GroupField, SliceZone } from "../src"
 import { LinkType, isFilled } from "../src"
 
 const emptyLink = { link_type: LinkType.Any }
@@ -21,7 +21,7 @@ it("content relationship", (ctx) => {
 		isFilled.contentRelationship(
 			ctx.mock.value.contentRelationship({
 				state: "filled",
-			}),
+			}) as ContentRelationshipField,
 		),
 	).toBe(true)
 })

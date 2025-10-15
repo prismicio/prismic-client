@@ -17,12 +17,20 @@ export type MigrationAssetConfig = {
 	 * `file` property. It is mainly used for deduplication within a `Migration`
 	 * instance.
 	 */
-	id: string | URL | File | NonNullable<ConstructorParameters<File>[0]>[0]
+	id:
+		| string
+		| URL
+		| File
+		| NonNullable<ConstructorParameters<typeof File>[0]>[0]
 
 	/**
 	 * File to be uploaded as an asset.
 	 */
-	file: string | URL | File | NonNullable<ConstructorParameters<File>[0]>[0]
+	file:
+		| string
+		| URL
+		| File
+		| NonNullable<ConstructorParameters<typeof File>[0]>[0]
 
 	/**
 	 * Filename of the asset.
