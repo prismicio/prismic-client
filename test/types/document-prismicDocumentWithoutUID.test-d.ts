@@ -152,39 +152,39 @@ it("supports custom type", () => {
 })
 
 it("supports custom language", () => {
-	assertType<
-		PrismicDocumentWithoutUID<Record<string, never>, string, "fr-fr">
-	>({
-		id: "string",
-		uid: null,
-		url: "string",
-		type: "foo",
-		href: "string",
-		tags: [],
-		first_publication_date: "2020-06-29T15:13:27+0000",
-		last_publication_date: "2021-05-18T15:44:01+0000",
-		slugs: [],
-		linked_documents: [],
-		lang: "fr-fr",
-		alternate_languages: [],
-		data: {},
-	})
-	assertType<
-		PrismicDocumentWithoutUID<Record<string, never>, string, "fr-fr">
-	>({
-		id: "string",
-		uid: null,
-		url: "string",
-		type: "string",
-		href: "string",
-		tags: [],
-		first_publication_date: "2020-06-29T15:13:27+0000",
-		last_publication_date: "2021-05-18T15:44:01+0000",
-		slugs: [],
-		linked_documents: [],
-		// @ts-expect-error - Document lang must match the given language.
-		lang: "string",
-		alternate_languages: [],
-		data: {},
-	})
+	assertType<PrismicDocumentWithoutUID<Record<string, never>, string, "fr-fr">>(
+		{
+			id: "string",
+			uid: null,
+			url: "string",
+			type: "foo",
+			href: "string",
+			tags: [],
+			first_publication_date: "2020-06-29T15:13:27+0000",
+			last_publication_date: "2021-05-18T15:44:01+0000",
+			slugs: [],
+			linked_documents: [],
+			lang: "fr-fr",
+			alternate_languages: [],
+			data: {},
+		},
+	)
+	assertType<PrismicDocumentWithoutUID<Record<string, never>, string, "fr-fr">>(
+		{
+			id: "string",
+			uid: null,
+			url: "string",
+			type: "string",
+			href: "string",
+			tags: [],
+			first_publication_date: "2020-06-29T15:13:27+0000",
+			last_publication_date: "2021-05-18T15:44:01+0000",
+			slugs: [],
+			linked_documents: [],
+			// @ts-expect-error - Document lang must match the given language.
+			lang: "string",
+			alternate_languages: [],
+			data: {},
+		},
+	)
 })
