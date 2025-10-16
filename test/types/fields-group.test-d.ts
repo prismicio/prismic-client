@@ -1,6 +1,11 @@
 import { assertType, it } from "vitest"
 
-import type { BooleanField, GroupField, NestedGroupField } from "../../src"
+import type {
+	BooleanField,
+	GroupField,
+	NestedGroupField,
+	SliceZone,
+} from "../../src"
 
 it("supports filled values", () => {
 	assertType<GroupField>([
@@ -34,11 +39,9 @@ it("supports nested groups", () => {
 
 it("may only contain group-compatible fields", () => {
 	assertType<
-		GroupField<
-			// @ts-expect-error - Slice Zones are invalid within group fields.
-			{
-				sliceZone: any
-			}
-		>
+		GroupField<// @ts-expect-error - Slice Zones are invalid within group fields.
+		{
+			sliceZone: SliceZone
+		}>
 	>([])
 })

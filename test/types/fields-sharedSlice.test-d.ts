@@ -24,10 +24,10 @@ it("supports custom shared slice type API ID", () => {
 		primary: {},
 		items: [],
 	})
-	// @ts-expect-error - No arg
-	assertType<SharedSlice<"foo">>(
+	assertType<SharedSlice<"foo">>({
 		// @ts-expect-error - Slice type must match the given type.
-	)
+		slice_type: "bar",
+	})
 })
 
 it("supports custom variation types", () => {
@@ -40,8 +40,8 @@ it("supports custom variation types", () => {
 		primary: {},
 		items: [],
 	})
-	// @ts-expect-error - No arg
-	assertType<SharedSlice<string, SharedSliceVariation<"foo">>>(
+	assertType<SharedSlice<string, SharedSliceVariation<"foo">>>({
 		// @ts-expect-error - Variation type must match the given type.
-	)
+		variation: "bar",
+	})
 })

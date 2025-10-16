@@ -58,6 +58,7 @@ export interface CustomTypeModelContentRelationshipField<
 	Tags extends string = string,
 > {
 	type: typeof CustomTypeModelFieldType.Link
+	fieldset?: string | null
 	config?: {
 		label?: string | null
 		placeholder?: string
