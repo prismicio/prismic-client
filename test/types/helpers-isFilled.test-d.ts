@@ -203,8 +203,7 @@ it("narrows KeyTextField from generic to filled/empty", () => {
 	if (isFilled.keyText(value)) {
 		assertType<KeyTextField<"filled">>(value)
 	} else {
-		// `""` is of type string and gets TypeScript confused in the narrowing
-		assertType<KeyTextField<"empty"> | "">(value as any)
+		assertType<KeyTextField<"empty">>(value)
 	}
 })
 
