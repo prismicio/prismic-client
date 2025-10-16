@@ -18,11 +18,10 @@ it("supports filled values", () => {
 it("supports empty values", () => {
 	assertType<GeoPointField>({})
 	assertType<GeoPointField<"empty">>({})
-	assertType<GeoPointField<"empty">>(
+	assertType<GeoPointField<"empty">>({
 		// @ts-expect-error - Empty fields cannot contain a filled value.
-		{
-			longitude: 0,
-			latitude: 0,
-		},
-	)
+		longitude: 0,
+		// @ts-expect-error - Empty fields cannot contain a filled value.
+		latitude: 0,
+	})
 })

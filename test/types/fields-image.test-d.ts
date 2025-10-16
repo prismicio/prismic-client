@@ -19,15 +19,10 @@ it("supports filled values", () => {
 		alt: "alt",
 		copyright: "copyright",
 	})
-	assertType<ImageField<never, "filled">>(
+	assertType<ImageField<never, "filled">>({
 		// @ts-expect-error - Filled fields cannot contain an empty value.
-		{
-			url: null,
-			dimensions: null,
-			alt: null,
-			copyright: null,
-		},
-	)
+		url: null,
+	})
 })
 
 it("supports empty values", () => {
