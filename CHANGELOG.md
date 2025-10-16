@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.20.3](https://github.com/prismicio/prismic-client/compare/v7.20.2...v7.20.3) (2025-10-16)
+
+
+### Bug Fixes
+
+* include extensions in `.d.ts` files ([#406](https://github.com/prismicio/prismic-client/issues/406)) ([857b2d4](https://github.com/prismicio/prismic-client/commit/857b2d4096ecac502c1d771bf0ce3be47f546372))
+
 ### [7.20.2](https://github.com/prismicio/prismic-client/compare/v7.20.1...v7.20.2) (2025-10-14)
 
 
