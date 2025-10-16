@@ -12,6 +12,9 @@ export default defineConfig({
 		},
 	},
 	test: {
+		typecheck: {
+			enabled: true,
+		},
 		coverage: {
 			provider: "v8",
 			reporter: ["lcovonly", "text"],
