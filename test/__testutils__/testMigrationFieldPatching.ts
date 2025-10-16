@@ -132,6 +132,8 @@ const internalTestMigrationFieldPatching = (
 
 		// We speed up the internal rate limiter to make these tests run faster (from 4500ms to nearly instant)
 		const migrationProcess = client.migrate(migration)
+		// This double call is needed to work around a bug with fake timers timing out.
+		await vi.runAllTimersAsync()
 		await vi.runAllTimersAsync()
 		await migrationProcess
 
