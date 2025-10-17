@@ -1835,14 +1835,6 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 				throw error
 			}
 
-			// If no explicit ref is given (i.e. the master ref from
-			// /api/v2 is used), clear the cached repository value.
-			// Clearing the cached value prevents other methods from
-			// using a known-stale ref.
-			if (!params?.ref) {
-				this.cachedRepository = undefined
-			}
-
 			const masterRef = error.message.match(/Master ref is: (?<ref>.*)$/)
 				?.groups?.ref
 			if (!masterRef) {
@@ -1856,7 +1848,20 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 				{ level: "warn" },
 			)
 
-			return await this._get({ ...params, ref: masterRef }, attemptCount + 1)
+			const res = await this._get<TDocument>(
+				{ ...params, ref: masterRef },
+				attemptCount + 1,
+			)
+
+			// If no explicit ref is given (i.e. the master ref from
+			// /api/v2 is used), clear the cached repository value.
+			// Clearing the cached value prevents other methods from
+			// using a known-stale ref.
+			if (!params?.ref) {
+				this.cachedRepository = undefined
+			}
+
+			return res
 		}
 	}
 
