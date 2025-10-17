@@ -326,7 +326,10 @@ export const buildQueryURL = (
 ): string => {
 	const { filters, predicates, ...params } = args
 
-	const url = new URL(`documents/search`, `${endpoint}/`)
+	if (!endpoint.endsWith("/")) {
+		endpoint += "/"
+	}
+	const url = new URL(`documents/search`, endpoint)
 
 	if (filters) {
 		// TODO: Remove warning when we remove support for string `filters` values.
