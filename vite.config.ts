@@ -12,14 +12,17 @@ export default defineConfig({
 		},
 	},
 	test: {
+		include: [".\/test2\/*.test.ts"],
+		globalSetup: ["./test2/global.setup.ts"],
+		setupFiles: ["./test2/setup.ts"],
 		typecheck: {
 			enabled: true,
+			include: [".\/test2\/*.test-d.ts"],
 		},
 		coverage: {
 			provider: "v8",
 			reporter: ["lcovonly", "text"],
 			include: ["src"],
 		},
-		setupFiles: ["./test/__setup__"],
 	},
 })
