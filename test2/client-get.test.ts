@@ -126,8 +126,4 @@ it("supports signal", async ({ expect, client }) => {
 	await expect(() =>
 		client.get({ fetchOptions: { signal: controller.signal } }),
 	).rejects.toThrow("aborted")
-	// TODO: Remove when `signal` is removed in favor of `fetchOptions.signal`.
-	await expect(() => client.get({ signal: controller.signal })).rejects.toThrow(
-		"aborted",
-	)
 })
