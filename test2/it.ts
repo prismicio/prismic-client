@@ -1,9 +1,9 @@
-import { test, vi } from "vitest"
-
-import { ok } from "node:assert"
+import { inject, test, vi } from "vitest"
 
 import type {
+	ContentApiDocument,
 	ContentApiRef,
+	ContentApiSearchResponse,
 	RepositoryManager,
 } from "@prismicio/e2e-tests-utils"
 
@@ -22,13 +22,22 @@ type Fixtures = {
 		repo: (masterRef: string) => Response
 		refNotFound: (newRef: string) => Response
 		refExpired: (newRef: string) => Response
+		search: (
+			results: Partial<ContentApiDocument>[],
+			payload?: Partial<Omit<ContentApiSearchResponse, "results">>,
+		) => Response
+	}
+	docs: {
+		basic: ContentApiDocument
+		another: ContentApiDocument
+		french: ContentApiDocument
 	}
 }
 
 export const it = test.extend<Fixtures>({
 	repo: async ({}, use) => {
-		ok(process.env.PRISMIC_REPO_NAME, "Global setup incomplete")
-		const repo = repos.getRepositoryManager(process.env.PRISMIC_REPO_NAME)
+		const name = inject("repo")
+		const repo = repos.getRepositoryManager(name)
 		await use(repo)
 	},
 	client: async ({ repo }, use) => {
@@ -77,6 +86,15 @@ export const it = test.extend<Fixtures>({
 					},
 					{ status: 410 },
 				),
+			search: (results, payload) =>
+				Response.json({
+					results,
+					...payload,
+				}),
 		})
+	},
+	docs: async ({}, use) => {
+		const docs = JSON.parse(inject("docs"))
+		await use(docs)
 	},
 })

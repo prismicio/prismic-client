@@ -4,26 +4,93 @@ import { it } from "./it"
 
 import { RefNotFoundError } from "../src"
 
-it("returns paginated response", async ({ expect, client }) => {
-	const res = await client.get()
-	expect(res).toMatchObject({ results: expect.any(Array) })
+it("returns multiple documents", async ({ expect, client }) => {
+	const res = await client.dangerouslyGetAll()
+	expect(res).toHaveLength(2)
+	expect(res).toContainEqual(
+		expect.objectContaining({ id: expect.any(String) }),
+	)
+})
+
+it("can be limited", async ({ expect, client }) => {
+	const res = await client.dangerouslyGetAll({ limit: 1 })
+	expect(res).toHaveLength(1)
 })
 
 it("does not include filters by default", async ({ expect, client }) => {
-	await client.get()
+	await client.dangerouslyGetAll()
 	const url = vi.mocked(client.fetchFn).mock.lastCall![0]
 	expect(url).not.toHaveSearchParam("q")
 })
 
+it("uses a default page size", async ({ expect, client }) => {
+	await client.dangerouslyGetAll()
+	expect(client).toHaveLastFetchedContentAPI({ pageSize: "100" })
+})
+
+it("throttles requests with multiple pages", async ({
+	expect,
+	client,
+	masterRef,
+	response,
+}) => {
+	vi.mocked(client.fetchFn)
+		.mockResolvedValueOnce(response.repo(masterRef))
+		.mockResolvedValueOnce(response.search([{ id: "1" }], { next_page: "1" }))
+		.mockResolvedValueOnce(response.search([{ id: "1" }]))
+	vi.useFakeTimers()
+	const start = performance.now()
+	const promise = client.dangerouslyGetAll()
+	await vi.runAllTimersAsync()
+	await promise
+	expect(client).toHaveFetchedContentAPITimes(2)
+	expect(performance.now() - start).toBe(500)
+	vi.useRealTimers()
+})
+
+it("does not throttle single page requests", async ({
+	expect,
+	client,
+	masterRef,
+	response,
+}) => {
+	vi.mocked(client.fetchFn)
+		.mockResolvedValueOnce(response.repo(masterRef))
+		.mockResolvedValueOnce(response.search([{ id: "1" }]))
+	vi.useFakeTimers()
+	const start = performance.now()
+	const promise = client.dangerouslyGetAll()
+	await vi.runAllTimersAsync()
+	await promise
+	expect(performance.now() - start).toBe(0)
+	vi.useRealTimers()
+})
+
+it("optimizes page size when the limit is below the page size", async ({
+	expect,
+	client,
+}) => {
+	await client.dangerouslyGetAll({ limit: 2 })
+	expect(client).toHaveLastFetchedContentAPI({ pageSize: "2" })
+})
+
+it("does not optimize page size when the limit is above the page size", async ({
+	expect,
+	client,
+}) => {
+	await client.dangerouslyGetAll({ limit: 150 })
+	expect(client).toHaveLastFetchedContentAPI({ pageSize: "100" })
+})
+
 it("supports params", async ({ expect, client }) => {
-	await client.get({ lang: "fr-fr", page: 2 })
-	expect(client).toHaveLastFetchedContentAPI({ lang: "fr-fr", page: "2" })
+	await client.dangerouslyGetAll({ lang: "fr-fr" })
+	expect(client).toHaveLastFetchedContentAPI({ lang: "fr-fr" })
 })
 
 it("supports default params", async ({ expect, client }) => {
 	client.defaultParams = { lang: "fr-fr" }
-	await client.get({ page: 2 })
-	expect(client).toHaveLastFetchedContentAPI({ lang: "fr-fr", page: "2" })
+	await client.dangerouslyGetAll({ routes: [] })
+	expect(client).toHaveLastFetchedContentAPI({ lang: "fr-fr", routes: "[]" })
 })
 
 it("uses cached repository metadata within the client's repository cache TTL", async ({
@@ -31,10 +98,10 @@ it("uses cached repository metadata within the client's repository cache TTL", a
 	client,
 }) => {
 	vi.useFakeTimers()
-	await client.get()
-	await client.get()
+	await client.dangerouslyGetAll()
+	await client.dangerouslyGetAll()
 	vi.advanceTimersByTime(5000)
-	await client.get()
+	await client.dangerouslyGetAll()
 	expect(client).toHaveFetchedRepoTimes(2)
 	vi.useRealTimers()
 })
@@ -48,7 +115,7 @@ it("retries with the master ref when an invalid ref is used", async ({
 	vi.mocked(client.fetchFn)
 		.mockResolvedValueOnce(response.repo("invalid"))
 		.mockResolvedValueOnce(response.refNotFound(masterRef))
-	await client.get()
+	await client.dangerouslyGetAll()
 	expect(client).toHaveFetchedContentAPI({ ref: "invalid" })
 	expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
 	expect(client).toHaveFetchedRepoTimes(1)
@@ -62,7 +129,9 @@ it("throws if the maximum number of retries with invalid refs is reached", async
 	vi.mocked(client.fetchFn)
 		.mockResolvedValueOnce(response.repo("invalid"))
 		.mockResolvedValue(response.refNotFound("invalid"))
-	await expect(() => client.get()).rejects.toThrow(RefNotFoundError)
+	await expect(() => client.dangerouslyGetAll()).rejects.toThrow(
+		RefNotFoundError,
+	)
 	expect(client).toHaveFetchedContentAPITimes(3)
 })
 
@@ -75,10 +144,10 @@ it("fetches a new master ref on subsequent queries if an invalid ref is used", a
 	vi.mocked(client.fetchFn)
 		.mockResolvedValueOnce(response.repo("invalid"))
 		.mockResolvedValueOnce(response.refNotFound(masterRef))
-	await client.get()
+	await client.dangerouslyGetAll()
 	expect(client).toHaveFetchedContentAPI({ ref: "invalid" })
 	expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
-	await client.get()
+	await client.dangerouslyGetAll()
 	expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
 	expect(client).toHaveFetchedRepoTimes(2)
 })
@@ -92,7 +161,7 @@ it("retries with the master ref when an expired ref is used", async ({
 	vi.mocked(client.fetchFn)
 		.mockResolvedValueOnce(response.repo("expired"))
 		.mockResolvedValueOnce(response.refExpired(masterRef))
-	await client.get()
+	await client.dangerouslyGetAll()
 	expect(client).toHaveFetchedContentAPI({ ref: "expired" })
 	expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
 	expect(client).toHaveFetchedRepoTimes(1)
@@ -102,18 +171,20 @@ it("throttles invalid ref logs", async ({ expect, client, response }) => {
 	vi.mocked(client.fetchFn)
 		.mockResolvedValueOnce(response.repo("invalid"))
 		.mockResolvedValue(response.refNotFound("invalid"))
-	await expect(() => client.get()).rejects.toThrow(RefNotFoundError)
+	await expect(() => client.dangerouslyGetAll()).rejects.toThrow(
+		RefNotFoundError,
+	)
 	expect(console.warn).toHaveBeenCalledTimes(1)
 })
 
 it("supports fetch options", async ({ expect, client }) => {
-	await client.get({ fetchOptions: { cache: "no-cache" } })
+	await client.dangerouslyGetAll({ fetchOptions: { cache: "no-cache" } })
 	expect(client).toHaveLastFetchedContentAPI({}, { cache: "no-cache" })
 })
 
 it("supports default fetch options", async ({ expect, client }) => {
 	client.fetchOptions = { cache: "no-cache" }
-	await client.get({ fetchOptions: { headers: { foo: "bar" } } })
+	await client.dangerouslyGetAll({ fetchOptions: { headers: { foo: "bar" } } })
 	expect(client).toHaveLastFetchedContentAPI(
 		{},
 		{ cache: "no-cache", headers: { foo: "bar" } },
@@ -122,7 +193,7 @@ it("supports default fetch options", async ({ expect, client }) => {
 
 it("supports signal", async ({ expect, client }) => {
 	await expect(() =>
-		client.get({ fetchOptions: { signal: AbortSignal.abort() } }),
+		client.dangerouslyGetAll({ fetchOptions: { signal: AbortSignal.abort() } }),
 	).rejects.toThrow("aborted")
 })
 
@@ -133,14 +204,14 @@ it("shares concurrent equivalent network requests", async ({
 	const controller1 = new AbortController()
 	const controller2 = new AbortController()
 	await Promise.all([
-		client.get(),
-		client.get(),
-		client.get({ signal: controller1.signal }),
-		client.get({ signal: controller1.signal }),
-		client.get({ signal: controller2.signal }),
-		client.get({ signal: controller2.signal }),
+		client.dangerouslyGetAll(),
+		client.dangerouslyGetAll(),
+		client.dangerouslyGetAll({ signal: controller1.signal }),
+		client.dangerouslyGetAll({ signal: controller1.signal }),
+		client.dangerouslyGetAll({ signal: controller2.signal }),
+		client.dangerouslyGetAll({ signal: controller2.signal }),
 	])
-	await client.get()
+	await client.dangerouslyGetAll()
 	expect(client).toHaveFetchedRepoTimes(3)
 	expect(client).toHaveFetchedContentAPITimes(4)
 })

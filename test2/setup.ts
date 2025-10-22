@@ -15,212 +15,195 @@ afterEach(() => {
 })
 
 expect.extend({
-	toHaveFetchedContentAPI(client: unknown, requiredSearchParams) {
-		if (!isMockedClient(client)) {
-			return {
-				pass: false,
-				message: () =>
-					".toHaveFetchedContentAPI() can only be called with a mocked Prismic client.",
-			}
-		}
+	toHaveFetchedContentAPI(client: unknown, expectedParams, expectedInit = {}) {
+		assertMockedClient(client)
 
-		const { isNot } = this
+		expectedParams = new URLSearchParams(expectedParams)
 
-		requiredSearchParams = new URLSearchParams(requiredSearchParams)
-
-		const { calls } = vi.mocked(client.fetchFn).mock
-
-		const pass = calls.some((call) => {
-			const url = new URL(call[0])
-
-			const contentAPIEndpoint = ensureTrailingSlash(
-				new URL(client.documentAPIEndpoint),
+		const pass = vi.mocked(client.fetchFn).mock.calls.some(([url, init]) => {
+			const actual = new Request(
+				filterURLParams(url, Array.from(expectedParams.keys())),
+				filterRequestInit(init, Object.keys(expectedInit)),
 			)
-			const isContentAPI =
-				url.origin === contentAPIEndpoint.origin &&
-				url.pathname === contentAPIEndpoint.pathname + "documents/search"
-
-			return (
-				isContentAPI &&
-				requiredSearchParams
-					.entries()
-					.every(([key, value]) => url.searchParams.has(key, value))
+			const expected = new Request(
+				getContentAPIURL(client, expectedParams),
+				expectedInit,
 			)
+
+			return isDeepEqual(actual, expected)
 		})
 
 		return {
 			pass,
 			message: () =>
-				`Client ${!pass || !isNot ? "did not call" : "called"} the Content API${requiredSearchParams.size > 0 ? ` with the required params` : ""}`,
+				`Client ${!pass || !this.isNot ? "did not call" : "called"} the Content API${expectedParams.size > 0 ? ` with the required params` : ""}`,
 		}
 	},
 	toHaveLastFetchedContentAPI(
 		client: unknown,
-		expectedSearchParams,
-		expectedRequestInit = {},
+		expectedParams,
+		expectedInit = {},
 	) {
-		if (!isMockedClient(client)) {
-			throw new Error(
-				".toHaveLastFetchedContentAPI() can only be called with a mocked Prismic client.",
-			)
-		}
+		assertMockedClient(client)
+		assertHasBeenCalled(client.fetchFn)
 
-		const { isNot } = this
+		expectedParams = new URLSearchParams(expectedParams)
+		const [url, init] = client.fetchFn.mock.lastCall
 
-		const call = vi.mocked(client.fetchFn).mock.lastCall
-		if (!call) {
-			throw new Error("The client did not make any network requests.")
-		}
-
-		expectedSearchParams = new URLSearchParams(expectedSearchParams)
-
-		const actualURLBase = new URL(call[0])
-		const actualURL = new URL(actualURLBase.pathname, actualURLBase.origin)
-		for (const [key] of expectedSearchParams) {
-			for (const value of actualURLBase.searchParams.getAll(key)) {
-				actualURL.searchParams.append(key, value)
-			}
-		}
-		const actualRequestInit = call[1] ?? {}
-		for (const key in actualRequestInit) {
-			if (!(key in expectedRequestInit)) {
-				delete actualRequestInit[key as keyof typeof actualRequestInit]
-			}
-		}
-		const actual = new Request(actualURL, actualRequestInit)
-
-		const expectedURL = new URL(
-			"documents/search",
-			ensureTrailingSlash(client.documentAPIEndpoint),
+		const actual = new Request(
+			filterURLParams(url, Array.from(expectedParams.keys())),
+			filterRequestInit(init, Object.keys(expectedInit)),
 		)
-		expectedSearchParams.forEach((value, key) =>
-			expectedURL.searchParams.append(key, value),
+		const expected = new Request(
+			getContentAPIURL(client, expectedParams),
+			expectedInit,
 		)
-		const expected = new Request(expectedURL, expectedRequestInit)
-
 		const pass = isDeepEqual(actual, expected)
 
 		return {
 			pass,
 			message: () =>
-				`The client ${!pass || !isNot ? "did not last call" : "last called"} the Content API${expectedSearchParams.size > 0 || Object.keys(expectedRequestInit).length > 0 ? ` with the expected parameters` : ""}`,
-			actual: JSON.stringify(requestToObject(actual), null, 2),
-			expected: JSON.stringify(requestToObject(expected), null, 2),
+				`The client ${!pass || !this.isNot ? "did not last call" : "last called"} the Content API${expectedParams.size > 0 || Object.keys(expectedInit).length > 0 ? ` with the expected parameters` : ""}`,
+			actual: stringifyRequest(actual),
+			expected: stringifyRequest(expected),
 		}
 	},
 	toHaveFetchedContentAPITimes(client: unknown, expected) {
-		if (!isMockedClient(client)) {
-			return {
-				pass: false,
-				message: () =>
-					".toHaveFetchedContentAPITimes() can only be called with a mocked Prismic client.",
-			}
-		}
+		assertMockedClient(client)
 
-		const calls = vi.mocked(client.fetchFn).mock.calls.filter(([url]) => {
-			return new URL(url).pathname.endsWith("/documents/search")
-		})
-
-		const actual = calls.length
+		const actual = vi
+			.mocked(client.fetchFn)
+			.mock.calls.filter(([url]) => isContentAPICall(url, client)).length
 
 		return {
 			pass: actual === expected,
 			message: () =>
-				`Client fetched Content API ${expected} time${expected === 1 ? "" : "s"}.`,
+				`Client fetched Content API ${actual} time${actual === 1 ? "" : "s"}.`,
 			actual,
 			expected,
 		}
 	},
 	toHaveFetchedRepoTimes(client: unknown, expected) {
-		if (!isMockedClient(client)) {
-			return {
-				pass: false,
-				message: () =>
-					".toHaveFetchedRepoMetadataTimes() can only be called with a mocked Prismic client.",
-			}
-		}
+		assertMockedClient(client)
 
-		const calls = vi.mocked(client.fetchFn).mock.calls.filter(([url]) => {
-			const actual = new URL(url).pathname
-			const expected = new URL(client.documentAPIEndpoint).pathname
-
-			return actual === expected
-		})
-
-		const actual = calls.length
+		const actual = vi
+			.mocked(client.fetchFn)
+			.mock.calls.filter(([url]) => isRepoURL(url, client)).length
 
 		return {
 			pass: actual === expected,
 			message: () =>
-				`Client fetched repo ${expected} time${expected === 1 ? "" : "s"}.`,
+				`Client fetched repo ${actual} time${actual === 1 ? "" : "s"}.`,
 			actual,
 			expected,
 		}
 	},
-	toHaveSearchParam(url: unknown, key, expectedValue) {
-		try {
-			url = new URL(url as string)
-		} catch {
-			return {
-				pass: false,
-				message: () => ".toNotHaveSearchParam() can only be called on URLs.",
-			}
-		}
-
-		const { isNot } = this
-
-		let pass = (url as URL).searchParams.has(key)
-		if (typeof expectedValue === "string") {
-			pass &&= (url as URL).searchParams.get(key) === expectedValue
-		}
-
-		const actual = (url as URL).searchParams
-		const expected = new URLSearchParams((url as URL).searchParams)
-		if (isNot) {
+	toHaveSearchParam(received: unknown, key, value) {
+		const actual = new URL(String(received)).searchParams
+		const expected = new URLSearchParams(actual)
+		if (this.isNot) {
 			expected.delete(key)
 		} else {
-			expected.set(key, expectedValue ?? "")
+			expected.set(key, value ?? "")
 		}
+
+		const pass = actual.has(key, value)
 
 		return {
 			pass,
 			message: () =>
-				`URL ${!pass || isNot ? "does not have" : "has"} search param "${key}"`,
+				`URL ${!pass || this.isNot ? "does not have" : "has"} search param "${key}"${typeof value === "string" ? ` with value "${value}"` : ""}`,
 			actual: `?${actual}`,
 			expected: `?${expected}`,
 		}
 	},
 })
 
-function isMockedClient(
+function assertMockedClient(
 	input: unknown,
-): input is Client & { fetchFn: MockInstance } {
-	return input instanceof Client && vi.isMockFunction(input.fetchFn)
+): asserts input is Client & { fetchFn: MockInstance<Client["fetchFn"]> } {
+	if (!(input instanceof Client) || !vi.isMockFunction(input.fetchFn)) {
+		throw new Error("Not a mocked Prismic client")
+	}
 }
 
-function ensureTrailingSlash(url: string): string
-function ensureTrailingSlash(url: URL): URL
-function ensureTrailingSlash(url: string | URL) {
-	const newURL = new URL(url)
+function assertHasBeenCalled(
+	mock: MockInstance,
+): asserts mock is typeof mock & {
+	mock: { lastCall: NonNullable<typeof mock.mock.lastCall> }
+} {
+	if (!mock.mock.lastCall) {
+		throw new Error("The mock was never called")
+	}
+}
 
-	if (!newURL.pathname.endsWith("/")) {
-		newURL.pathname += "/"
+function isContentAPICall(url: URL | string, client: Client): boolean {
+	return hasBaseURL(url, getContentAPIURL(client))
+}
+
+function isRepoURL(url: URL | string, client: Client): boolean {
+	return hasBaseURL(url, getRepoURL(client))
+}
+
+function getContentAPIURL(
+	client: Client,
+	params?: ConstructorParameters<typeof URLSearchParams>[0],
+): URL {
+	const url = new URL("documents/search", getRepoURL(client))
+	url.search = new URLSearchParams(params).toString()
+
+	return url
+}
+
+function getRepoURL(client: Client): URL {
+	const url = new URL(client.documentAPIEndpoint)
+	if (!url.pathname.endsWith("/")) {
+		url.pathname += "/"
 	}
 
-	return typeof url === "string" ? newURL.toString() : newURL
+	return url
 }
 
-function requestToObject(request: Request) {
-	return {
+function hasBaseURL(url: string | URL, base: string | URL) {
+	url = new URL(url)
+	base = new URL(base)
+
+	return url.origin === base.origin && url.pathname === base.pathname
+}
+
+function filterURLParams(url: string | URL, keys: string[]) {
+	url = new URL(url)
+
+	const res = new URL(url.pathname, url.origin)
+	for (const key of keys) {
+		for (const value of url.searchParams.getAll(key)) {
+			res.searchParams.append(key, value)
+		}
+	}
+
+	return res
+}
+
+function filterRequestInit<T extends RequestInit>(
+	init: T | undefined,
+	keys: (keyof T | (string & {}))[],
+) {
+	return Object.fromEntries(
+		Object.entries(init ?? {}).filter(([key]) => keys.includes(key as keyof T)),
+	)
+}
+
+function stringifyRequest(request: Request) {
+	const obj = {
 		url: request.url,
 		method: request.method,
 		cache: request.cache,
-		headers: Object.fromEntries(Array.from(request.headers.entries()).sort()),
-		signal: {
-			aborted: request.signal.aborted,
-		},
-		body: request.body ? request.body.toString() : null,
+		headers: Object.fromEntries([...request.headers].sort()),
+		signal: { aborted: request.signal.aborted },
+		body: request.body?.toString(),
 	}
+
+	return JSON.stringify(obj, null, 2)
 }
 
 function isDeepEqual<T>(actual: unknown, expected: T): expected is T {

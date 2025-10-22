@@ -1,14 +1,20 @@
 import "vitest"
 
-import type { Client } from "../src"
+declare module "vitest" {
+	export interface ProvidedContext {
+		repo: string
+		docs: string
+	}
+}
 
 interface CustomMatchers<R = unknown> {
 	toHaveFetchedContentAPI: (
-		requiredSearchParams?: ConstructorParameters<typeof URLSearchParams>[0],
+		expectedParams?: ConstructorParameters<typeof URLSearchParams>[0],
+		expectedInit?: RequestInit,
 	) => R
 	toHaveLastFetchedContentAPI: (
-		expectedSearchParams?: ConstructorParameters<typeof URLSearchParams>[0],
-		expectedRequestInit?: RequestInit,
+		expectedParams?: ConstructorParameters<typeof URLSearchParams>[0],
+		expectedInit?: RequestInit,
 	) => R
 	toHaveFetchedContentAPITimes: (expected: number) => R
 	toHaveFetchedRepoTimes: (expected: number) => R
@@ -16,5 +22,5 @@ interface CustomMatchers<R = unknown> {
 }
 
 declare module "vitest" {
-	interface Matchers<T = any> extends CustomMatchers<T> {}
+	interface Matchers<T> extends CustomMatchers<T> {}
 }
