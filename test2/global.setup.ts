@@ -32,7 +32,10 @@ export async function setup({ provide }: TestProject): Promise<void> {
 	provide("repo", repo.name)
 
 	const mock = createMockFactory({ seed: "foo" })
-	const model = mock.model.customType({ id: "page" })
+	const model = mock.model.customType({
+		id: "page",
+		fields: { uid: mock.model.uid() },
+	})
 	await repo.createCustomTypes([model])
 
 	const doc1 = await repo.createDocument(buildDocument({ model }), "published")
@@ -41,12 +44,17 @@ export async function setup({ provide }: TestProject): Promise<void> {
 		buildDocument({ model, locale: "fr-fr" }),
 		"published",
 	)
+	const doc4 = await repo.createDocument(
+		buildDocument({ model, locale: "fr-fr" }),
+		"published",
+	)
 
 	const client = repo.getContentApiClient()
 	const basic = await client.getDocumentByID(doc1.id)
 	const another = await client.getDocumentByID(doc2.id)
 	const french = await client.getDocumentByID(doc3.id, { lang: doc3.locale })
-	provide("docs", JSON.stringify({ basic, another, french }))
+	const french2 = await client.getDocumentByID(doc4.id, { lang: doc4.locale })
+	provide("docs", JSON.stringify({ basic, another, french, french2 }))
 }
 
 export async function teardown(): Promise<void> {
@@ -61,7 +69,10 @@ function buildDocument(args: {
 
 	return {
 		custom_type_id: model.id,
-		data: {},
+		data: {
+			uid: crypto.randomUUID(),
+			uid_TYPE: "UID",
+		},
 		title: "",
 		tags: [],
 		locale,

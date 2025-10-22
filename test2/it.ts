@@ -28,9 +28,10 @@ type Fixtures = {
 		) => Response
 	}
 	docs: {
-		basic: ContentApiDocument
-		another: ContentApiDocument
-		french: ContentApiDocument
+		basic: ContentApiDocument & { uid: string }
+		another: ContentApiDocument & { uid: string }
+		french: ContentApiDocument & { uid: string }
+		french2: ContentApiDocument & { uid: string }
 	}
 }
 

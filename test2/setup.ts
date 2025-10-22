@@ -175,7 +175,7 @@ function filterURLParams(url: string | URL, keys: string[]) {
 	url = new URL(url)
 
 	const res = new URL(url.pathname, url.origin)
-	for (const key of keys) {
+	for (const key of new Set(keys)) {
 		for (const value of url.searchParams.getAll(key)) {
 			res.searchParams.append(key, value)
 		}
