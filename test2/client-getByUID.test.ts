@@ -5,8 +5,8 @@ import { it } from "./it"
 import { NotFoundError, RefNotFoundError } from "../src"
 
 it("returns single document", async ({ expect, client, docs }) => {
-	const res = await client.getByUID(docs.basic.type, docs.basic.uid)
-	expect(res).toMatchObject({ uid: docs.basic.uid })
+	const res = await client.getByUID(docs.default.type, docs.default.uid)
+	expect(res).toMatchObject({ uid: docs.default.uid })
 })
 
 it("throws if no document is returned", async ({
@@ -19,15 +19,18 @@ it("throws if no document is returned", async ({
 		.mockImplementationOnce(fetch)
 		.mockResolvedValueOnce(response.search([]))
 	await expect(() =>
-		client.getByUID(docs.basic.type, "invalid"),
+		client.getByUID(docs.default.type, "invalid"),
 	).rejects.toThrow(NotFoundError)
 })
 
 it("includes filter", async ({ expect, client, docs }) => {
-	await client.getByUID(docs.basic.type, docs.basic.uid)
+	await client.getByUID(docs.default.type, docs.default.uid)
 	const params = new URLSearchParams()
-	params.append("q", `[[at(document.type, "${docs.basic.type}")]]`)
-	params.append("q", `[[at(my.${docs.basic.type}.uid, "${docs.basic.uid}")]]`)
+	params.append("q", `[[at(document.type, "${docs.default.type}")]]`)
+	params.append(
+		"q",
+		`[[at(my.${docs.default.type}.uid, "${docs.default.uid}")]]`,
+	)
 	expect(client).toHaveLastFetchedContentAPI(params)
 })
 
@@ -51,10 +54,10 @@ it("uses cached repository metadata within the client's repository cache TTL", a
 	docs,
 }) => {
 	vi.useFakeTimers()
-	await client.getByUID(docs.basic.type, docs.basic.uid)
-	await client.getByUID(docs.basic.type, docs.basic.uid)
+	await client.getByUID(docs.default.type, docs.default.uid)
+	await client.getByUID(docs.default.type, docs.default.uid)
 	vi.advanceTimersByTime(5000)
-	await client.getByUID(docs.basic.type, docs.basic.uid)
+	await client.getByUID(docs.default.type, docs.default.uid)
 	expect(client).toHaveFetchedRepoTimes(2)
 	vi.useRealTimers()
 })
@@ -69,7 +72,7 @@ it("retries with the master ref when an invalid ref is used", async ({
 	vi.mocked(client.fetchFn)
 		.mockResolvedValueOnce(response.repo("invalid"))
 		.mockResolvedValueOnce(response.refNotFound(masterRef))
-	await client.getByUID(docs.basic.type, docs.basic.uid)
+	await client.getByUID(docs.default.type, docs.default.uid)
 	expect(client).toHaveFetchedContentAPI({ ref: "invalid" })
 	expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
 	expect(client).toHaveFetchedRepoTimes(1)
@@ -85,7 +88,7 @@ it("throws if the maximum number of retries with invalid refs is reached", async
 		.mockResolvedValueOnce(response.repo("invalid"))
 		.mockResolvedValue(response.refNotFound("invalid"))
 	await expect(() =>
-		client.getByUID(docs.basic.type, docs.basic.uid),
+		client.getByUID(docs.default.type, docs.default.uid),
 	).rejects.toThrow(RefNotFoundError)
 	expect(client).toHaveFetchedContentAPITimes(3)
 })
@@ -100,10 +103,10 @@ it("fetches a new master ref on subsequent queries if an invalid ref is used", a
 	vi.mocked(client.fetchFn)
 		.mockResolvedValueOnce(response.repo("invalid"))
 		.mockResolvedValueOnce(response.refNotFound(masterRef))
-	await client.getByUID(docs.basic.type, docs.basic.uid)
+	await client.getByUID(docs.default.type, docs.default.uid)
 	expect(client).toHaveFetchedContentAPI({ ref: "invalid" })
 	expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
-	await client.getByUID(docs.basic.type, docs.basic.uid)
+	await client.getByUID(docs.default.type, docs.default.uid)
 	expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
 	expect(client).toHaveFetchedRepoTimes(2)
 })
@@ -118,7 +121,7 @@ it("retries with the master ref when an expired ref is used", async ({
 	vi.mocked(client.fetchFn)
 		.mockResolvedValueOnce(response.repo("expired"))
 		.mockResolvedValueOnce(response.refExpired(masterRef))
-	await client.getByUID(docs.basic.type, docs.basic.uid)
+	await client.getByUID(docs.default.type, docs.default.uid)
 	expect(client).toHaveFetchedContentAPI({ ref: "expired" })
 	expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
 	expect(client).toHaveFetchedRepoTimes(1)
@@ -129,13 +132,13 @@ it("throttles invalid ref logs", async ({ expect, client, docs, response }) => {
 		.mockResolvedValueOnce(response.repo("invalid"))
 		.mockResolvedValue(response.refNotFound("invalid"))
 	await expect(() =>
-		client.getByUID(docs.basic.type, docs.basic.uid),
+		client.getByUID(docs.default.type, docs.default.uid),
 	).rejects.toThrow(RefNotFoundError)
 	expect(console.warn).toHaveBeenCalledTimes(1)
 })
 
 it("supports fetch options", async ({ expect, client, docs }) => {
-	await client.getByUID(docs.basic.type, docs.basic.uid, {
+	await client.getByUID(docs.default.type, docs.default.uid, {
 		fetchOptions: { cache: "no-cache" },
 	})
 	expect(client).toHaveLastFetchedContentAPI({}, { cache: "no-cache" })
@@ -143,7 +146,7 @@ it("supports fetch options", async ({ expect, client, docs }) => {
 
 it("supports default fetch options", async ({ expect, client, docs }) => {
 	client.fetchOptions = { cache: "no-cache" }
-	await client.getByUID(docs.basic.type, docs.basic.uid, {
+	await client.getByUID(docs.default.type, docs.default.uid, {
 		fetchOptions: { headers: { foo: "bar" } },
 	})
 	expect(client).toHaveLastFetchedContentAPI(
@@ -154,7 +157,7 @@ it("supports default fetch options", async ({ expect, client, docs }) => {
 
 it("supports signal", async ({ expect, client, docs }) => {
 	await expect(() =>
-		client.getByUID(docs.basic.type, docs.basic.uid, {
+		client.getByUID(docs.default.type, docs.default.uid, {
 			fetchOptions: { signal: AbortSignal.abort() },
 		}),
 	).rejects.toThrow("aborted")
@@ -168,22 +171,22 @@ it("shares concurrent equivalent network requests", async ({
 	const controller1 = new AbortController()
 	const controller2 = new AbortController()
 	await Promise.all([
-		client.getByUID(docs.basic.type, docs.basic.uid),
-		client.getByUID(docs.basic.type, docs.basic.uid),
-		client.getByUID(docs.basic.type, docs.basic.uid, {
+		client.getByUID(docs.default.type, docs.default.uid),
+		client.getByUID(docs.default.type, docs.default.uid),
+		client.getByUID(docs.default.type, docs.default.uid, {
 			signal: controller1.signal,
 		}),
-		client.getByUID(docs.basic.type, docs.basic.uid, {
+		client.getByUID(docs.default.type, docs.default.uid, {
 			signal: controller1.signal,
 		}),
-		client.getByUID(docs.basic.type, docs.basic.uid, {
+		client.getByUID(docs.default.type, docs.default.uid, {
 			signal: controller2.signal,
 		}),
-		client.getByUID(docs.basic.type, docs.basic.uid, {
+		client.getByUID(docs.default.type, docs.default.uid, {
 			signal: controller2.signal,
 		}),
 	])
-	await client.getByUID(docs.basic.type, docs.basic.uid)
+	await client.getByUID(docs.default.type, docs.default.uid)
 	expect(client).toHaveFetchedRepoTimes(3)
 	expect(client).toHaveFetchedContentAPITimes(4)
 })

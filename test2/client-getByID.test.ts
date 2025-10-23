@@ -5,8 +5,8 @@ import { it } from "./it"
 import { NotFoundError, RefNotFoundError } from "../src"
 
 it("returns single document", async ({ expect, client, docs }) => {
-	const res = await client.getByID(docs.basic.id)
-	expect(res).toMatchObject({ id: docs.basic.id })
+	const res = await client.getByID(docs.default.id)
+	expect(res).toMatchObject({ id: docs.default.id })
 })
 
 it("throws if no document is returned", async ({
@@ -21,9 +21,9 @@ it("throws if no document is returned", async ({
 })
 
 it("includes filter", async ({ expect, client, docs }) => {
-	await client.getByID(docs.basic.id)
+	await client.getByID(docs.default.id)
 	expect(client).toHaveLastFetchedContentAPI({
-		q: `[[at(document.id, "${docs.basic.id}")]]`,
+		q: `[[at(document.id, "${docs.default.id}")]]`,
 	})
 })
 
@@ -44,10 +44,10 @@ it("uses cached repository metadata within the client's repository cache TTL", a
 	docs,
 }) => {
 	vi.useFakeTimers()
-	await client.getByID(docs.basic.id)
-	await client.getByID(docs.basic.id)
+	await client.getByID(docs.default.id)
+	await client.getByID(docs.default.id)
 	vi.advanceTimersByTime(5000)
-	await client.getByID(docs.basic.id)
+	await client.getByID(docs.default.id)
 	expect(client).toHaveFetchedRepoTimes(2)
 	vi.useRealTimers()
 })
@@ -62,7 +62,7 @@ it("retries with the master ref when an invalid ref is used", async ({
 	vi.mocked(client.fetchFn)
 		.mockResolvedValueOnce(response.repo("invalid"))
 		.mockResolvedValueOnce(response.refNotFound(masterRef))
-	await client.getByID(docs.basic.id)
+	await client.getByID(docs.default.id)
 	expect(client).toHaveFetchedContentAPI({ ref: "invalid" })
 	expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
 	expect(client).toHaveFetchedRepoTimes(1)
@@ -77,7 +77,7 @@ it("throws if the maximum number of retries with invalid refs is reached", async
 	vi.mocked(client.fetchFn)
 		.mockResolvedValueOnce(response.repo("invalid"))
 		.mockResolvedValue(response.refNotFound("invalid"))
-	await expect(() => client.getByID(docs.basic.id)).rejects.toThrow(
+	await expect(() => client.getByID(docs.default.id)).rejects.toThrow(
 		RefNotFoundError,
 	)
 	expect(client).toHaveFetchedContentAPITimes(3)
@@ -93,10 +93,10 @@ it("fetches a new master ref on subsequent queries if an invalid ref is used", a
 	vi.mocked(client.fetchFn)
 		.mockResolvedValueOnce(response.repo("invalid"))
 		.mockResolvedValueOnce(response.refNotFound(masterRef))
-	await client.getByID(docs.basic.id)
+	await client.getByID(docs.default.id)
 	expect(client).toHaveFetchedContentAPI({ ref: "invalid" })
 	expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
-	await client.getByID(docs.basic.id)
+	await client.getByID(docs.default.id)
 	expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
 	expect(client).toHaveFetchedRepoTimes(2)
 })
@@ -111,7 +111,7 @@ it("retries with the master ref when an expired ref is used", async ({
 	vi.mocked(client.fetchFn)
 		.mockResolvedValueOnce(response.repo("expired"))
 		.mockResolvedValueOnce(response.refExpired(masterRef))
-	await client.getByID(docs.basic.id)
+	await client.getByID(docs.default.id)
 	expect(client).toHaveFetchedContentAPI({ ref: "expired" })
 	expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
 	expect(client).toHaveFetchedRepoTimes(1)
@@ -121,20 +121,20 @@ it("throttles invalid ref logs", async ({ expect, client, docs, response }) => {
 	vi.mocked(client.fetchFn)
 		.mockResolvedValueOnce(response.repo("invalid"))
 		.mockResolvedValue(response.refNotFound("invalid"))
-	await expect(() => client.getByID(docs.basic.id)).rejects.toThrow(
+	await expect(() => client.getByID(docs.default.id)).rejects.toThrow(
 		RefNotFoundError,
 	)
 	expect(console.warn).toHaveBeenCalledTimes(1)
 })
 
 it("supports fetch options", async ({ expect, client, docs }) => {
-	await client.getByID(docs.basic.id, { fetchOptions: { cache: "no-cache" } })
+	await client.getByID(docs.default.id, { fetchOptions: { cache: "no-cache" } })
 	expect(client).toHaveLastFetchedContentAPI({}, { cache: "no-cache" })
 })
 
 it("supports default fetch options", async ({ expect, client, docs }) => {
 	client.fetchOptions = { cache: "no-cache" }
-	await client.getByID(docs.basic.id, {
+	await client.getByID(docs.default.id, {
 		fetchOptions: { headers: { foo: "bar" } },
 	})
 	expect(client).toHaveLastFetchedContentAPI(
@@ -145,7 +145,7 @@ it("supports default fetch options", async ({ expect, client, docs }) => {
 
 it("supports signal", async ({ expect, client, docs }) => {
 	await expect(() =>
-		client.getByID(docs.basic.id, {
+		client.getByID(docs.default.id, {
 			fetchOptions: { signal: AbortSignal.abort() },
 		}),
 	).rejects.toThrow("aborted")
@@ -159,14 +159,14 @@ it("shares concurrent equivalent network requests", async ({
 	const controller1 = new AbortController()
 	const controller2 = new AbortController()
 	await Promise.all([
-		client.getByID(docs.basic.id),
-		client.getByID(docs.basic.id),
-		client.getByID(docs.basic.id, { signal: controller1.signal }),
-		client.getByID(docs.basic.id, { signal: controller1.signal }),
-		client.getByID(docs.basic.id, { signal: controller2.signal }),
-		client.getByID(docs.basic.id, { signal: controller2.signal }),
+		client.getByID(docs.default.id),
+		client.getByID(docs.default.id),
+		client.getByID(docs.default.id, { signal: controller1.signal }),
+		client.getByID(docs.default.id, { signal: controller1.signal }),
+		client.getByID(docs.default.id, { signal: controller2.signal }),
+		client.getByID(docs.default.id, { signal: controller2.signal }),
 	])
-	await client.getByID(docs.basic.id)
+	await client.getByID(docs.default.id)
 	expect(client).toHaveFetchedRepoTimes(3)
 	expect(client).toHaveFetchedContentAPITimes(4)
 })

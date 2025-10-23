@@ -31,51 +31,111 @@ export async function setup({ provide }: TestProject): Promise<void> {
 	})
 	provide("repo", repo.name)
 
+	const accessToken = await repo.createContentAPIToken(
+		"test",
+		"master+releases",
+	)
+	provide("accessToken", accessToken)
+
+	const client = repo.getContentApiClient({ accessToken })
+
 	const mock = createMockFactory({ seed: "foo" })
 	const model = mock.model.customType({
 		id: "page",
 		fields: { uid: mock.model.uid() },
 	})
-	await repo.createCustomTypes([model])
+	const singleModel = mock.model.customType({
+		id: "single",
+		repeatable: false,
+	})
+	await repo.createCustomTypes([model, singleModel])
 
-	const doc1 = await repo.createDocument(buildDocument({ model }), "published")
-	const doc2 = await repo.createDocument(buildDocument({ model }), "published")
-	const doc3 = await repo.createDocument(
-		buildDocument({ model, locale: "fr-fr" }),
+	const default1Meta = await repo.createDocument(
+		buildDocument(model, { tags: ["foo"] }),
 		"published",
 	)
-	const doc4 = await repo.createDocument(
-		buildDocument({ model, locale: "fr-fr" }),
+	const default2Meta = await repo.createDocument(
+		buildDocument(model, { tags: ["bar"] }),
+		"published",
+	)
+	const default3Meta = await repo.createDocument(
+		buildDocument(model, { tags: ["foo", "bar"] }),
+		"published",
+	)
+	const default4Meta = await repo.createDocument(
+		buildDocument(model, { tags: ["foo", "bar"] }),
+		"published",
+	)
+	const defaultSingleMeta = await repo.createDocument(
+		buildDocument(singleModel),
+		"published",
+	)
+	const french1Meta = await repo.createDocument(
+		buildDocument(model, { locale: "fr-fr", tags: ["foo"] }),
+		"published",
+	)
+	const french2Meta = await repo.createDocument(
+		buildDocument(model, { locale: "fr-fr", tags: ["bar"] }),
+		"published",
+	)
+	const frenchSingleMeta = await repo.createDocument(
+		buildDocument(singleModel, { locale: "fr-fr" }),
 		"published",
 	)
 
-	const client = repo.getContentApiClient()
-	const basic = await client.getDocumentByID(doc1.id)
-	const another = await client.getDocumentByID(doc2.id)
-	const french = await client.getDocumentByID(doc3.id, { lang: doc3.locale })
-	const french2 = await client.getDocumentByID(doc4.id, { lang: doc4.locale })
-	provide("docs", JSON.stringify({ basic, another, french, french2 }))
+	const default1 = await client.getDocumentByID(default1Meta.id)
+	const default2 = await client.getDocumentByID(default2Meta.id)
+	const default3 = await client.getDocumentByID(default3Meta.id)
+	const default4 = await client.getDocumentByID(default4Meta.id)
+	const defaultSingle = await client.getDocumentByID(defaultSingleMeta.id)
+	const french1 = await client.getDocumentByID(french1Meta.id, {
+		lang: french1Meta.locale,
+	})
+	const french2 = await client.getDocumentByID(french2Meta.id, {
+		lang: french2Meta.locale,
+	})
+	const frenchSingle = await client.getDocumentByID(frenchSingleMeta.id, {
+		lang: frenchSingleMeta.locale,
+	})
+	provide(
+		"docs",
+		JSON.stringify({
+			default: default1,
+			default2,
+			default3,
+			default4,
+			defaultSingle,
+			french: french1,
+			french2,
+			frenchSingle,
+		}),
+	)
+
+	const releaseResult = await repo.createRelease("test")
+	const refs = await client.getRefs()
+	const release = refs.find((ref) => ref.id === releaseResult.id)!
+	provide("release", JSON.stringify(release))
 }
 
 export async function teardown(): Promise<void> {
 	await repos.tearDown()
 }
 
-function buildDocument(args: {
-	model: { id: string }
-	locale?: string
-}): CoreApiDocumentCreationPayload {
-	const { model, locale = "en-us" } = args
-
+function buildDocument(
+	model: { id: string },
+	doc?: Partial<CoreApiDocumentCreationPayload>,
+): CoreApiDocumentCreationPayload {
 	return {
 		custom_type_id: model.id,
+		title: "",
+		tags: [],
+		locale: "en-us",
+		integration_field_ids: [],
+		...doc,
 		data: {
 			uid: crypto.randomUUID(),
 			uid_TYPE: "UID",
+			...doc?.data,
 		},
-		title: "",
-		tags: [],
-		locale,
-		integration_field_ids: [],
 	}
 }

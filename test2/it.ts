@@ -14,6 +14,7 @@ import { createClient } from "../src"
 
 type Fixtures = {
 	repo: RepositoryManager
+	endpoint: string
 	client: Client
 	accessToken: string
 	masterRef: string
@@ -28,10 +29,14 @@ type Fixtures = {
 		) => Response
 	}
 	docs: {
-		basic: ContentApiDocument & { uid: string }
-		another: ContentApiDocument & { uid: string }
+		default: ContentApiDocument & { uid: string }
+		default2: ContentApiDocument & { uid: string }
+		default3: ContentApiDocument & { uid: string }
+		default4: ContentApiDocument & { uid: string }
+		defaultSingle: ContentApiDocument & { uid: null }
 		french: ContentApiDocument & { uid: string }
 		french2: ContentApiDocument & { uid: string }
+		frenchSingle: ContentApiDocument & { uid: null }
 	}
 }
 
@@ -41,24 +46,30 @@ export const it = test.extend<Fixtures>({
 		const repo = repos.getRepositoryManager(name)
 		await use(repo)
 	},
-	client: async ({ repo }, use) => {
-		const endpoint = new URL("api/v2/", repo.getBaseCdnURL())
-		const client = createClient(endpoint.toString())
+	endpoint: async ({ repo }, use) => {
+		const endpoint = new URL("api/v2/", repo.getBaseCdnURL()).toString()
+		await use(endpoint)
+	},
+	client: async ({ endpoint, docs }, use) => {
+		const client = createClient(endpoint, {
+			routes: [
+				{ type: docs.default.type, path: "/:uid" },
+				{ type: docs.defaultSingle.type, path: "/single" },
+			],
+		})
 		vi.spyOn(client, "fetchFn")
 		await use(client)
 	},
-	accessToken: async ({ task, repo }, use) => {
-		const token = await repo.createContentAPIToken(task.id, "master+releases")
+	accessToken: async ({}, use) => {
+		const token = inject("accessToken")
 		await use(token)
 	},
 	masterRef: async ({ repo }, use) => {
 		const masterRef = await repo.getContentApiClient().getMasterRef()
 		await use(masterRef)
 	},
-	release: async ({ task, repo, accessToken }, use) => {
-		const { id } = await repo.createRelease(task.id)
-		const refs = await repo.getContentApiClient({ accessToken }).getRefs()
-		const release = refs.find((ref) => ref.id === id)!
+	release: async ({}, use) => {
+		const release = JSON.parse(inject("release"))
 		await use(release)
 	},
 	response: async ({}, use) => {

@@ -3,6 +3,8 @@ import "vitest"
 declare module "vitest" {
 	export interface ProvidedContext {
 		repo: string
+		accessToken: string
+		release: string
 		docs: string
 	}
 }

@@ -106,6 +106,12 @@ it("throws if fetch is unavailable", ({ expect }) => {
 	vi.unstubAllGlobals()
 })
 
+it("accepts a custom fetch", async ({ expect }) => {
+	const fetch = vi.fn()
+	const client = createClient("example", { fetch })
+	expect(client.fetchFn).toBe(fetch)
+})
+
 it("throws if given fetch is not a function", ({ expect }) => {
 	vi.stubGlobal("fetch", undefined)
 	const invalid = () =>
@@ -114,4 +120,15 @@ it("throws if given fetch is not a function", ({ expect }) => {
 	expect(invalid).toThrow(PrismicError)
 	expect(invalid).toThrow(/fetch implementation was not provided/i)
 	vi.unstubAllGlobals()
+})
+
+it("supports routes", async ({ expect, endpoint, docs }) => {
+	const client = createClient(endpoint, {
+		routes: [{ type: docs.default.type, path: "/:uid" }],
+	})
+	vi.spyOn(client, "fetchFn")
+	await client.get()
+	expect(client).toHaveLastFetchedContentAPI({
+		routes: `[{"type":"${docs.default.type}","path":"/:uid"}]`,
+	})
 })

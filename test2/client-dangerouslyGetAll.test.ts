@@ -6,7 +6,7 @@ import { RefNotFoundError } from "../src"
 
 it("returns multiple documents", async ({ expect, client }) => {
 	const res = await client.dangerouslyGetAll()
-	expect(res).toHaveLength(2)
+	expect(res).toHaveLength(5)
 	expect(res).toContainEqual(
 		expect.objectContaining({ id: expect.any(String) }),
 	)
