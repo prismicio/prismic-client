@@ -107,11 +107,7 @@ expect.extend({
 				`Client ${!pass || !this.isNot ? "did not call" : "called"} the repository${expectedParams.size > 0 ? ` with the required params` : ""}`,
 		}
 	},
-	toHaveLastFetchedRepo(
-		client: unknown,
-		expectedParams,
-		expectedInit = {},
-	) {
+	toHaveLastFetchedRepo(client: unknown, expectedParams, expectedInit = {}) {
 		assertMockedClient(client)
 		assertHasBeenCalled(client.fetchFn)
 

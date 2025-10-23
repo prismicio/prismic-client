@@ -1,23 +1,8 @@
-import { vi } from "vitest"
-
 import { it } from "./it"
 
 it("returns master ref", async ({ expect, client, masterRef }) => {
 	const res = await client.getMasterRef()
 	expect(res).toMatchObject({ ref: masterRef })
-})
-
-it("uses cached repository within the client's repository cache TTL", async ({
-	expect,
-	client,
-}) => {
-	vi.useFakeTimers()
-	await client.getMasterRef()
-	await client.getMasterRef()
-	vi.advanceTimersByTime(5000)
-	await client.getMasterRef()
-	expect(client).toHaveFetchedRepoTimes(2)
-	vi.useRealTimers()
 })
 
 it("supports fetch options", async ({ expect, client }) => {
@@ -62,5 +47,5 @@ it("shares concurrent equivalent network requests", async ({
 		client.getMasterRef({ signal: controller2.signal }),
 	])
 	await client.getMasterRef()
-	expect(client).toHaveFetchedRepoTimes(3)
+	expect(client).toHaveFetchedRepoTimes(4)
 })

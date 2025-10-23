@@ -1,10 +1,14 @@
-import { vi } from "vitest"
-
 import { it } from "./it"
 
 import { PrismicError } from "../src"
 
-it("returns ref with matching label", async ({ expect, client, release }) => {
+it("returns ref with matching label", async ({
+	expect,
+	client,
+	accessToken,
+	release,
+}) => {
+	client.accessToken = accessToken
 	const res = await client.getRefByLabel(release.label)
 	expect(res).toMatchObject({ ref: release.ref })
 })
@@ -15,28 +19,26 @@ it("throws if ref with label is not found", async ({ expect, client }) => {
 	)
 })
 
-it("uses cached repository within the client's repository cache TTL", async ({
+it("supports fetch options", async ({
 	expect,
 	client,
+	accessToken,
 	release,
 }) => {
-	vi.useFakeTimers()
-	await client.getRefByLabel(release.label)
-	await client.getRefByLabel(release.label)
-	vi.advanceTimersByTime(5000)
-	await client.getRefByLabel(release.label)
-	expect(client).toHaveFetchedRepoTimes(2)
-	vi.useRealTimers()
-})
-
-it("supports fetch options", async ({ expect, client, release }) => {
+	client.accessToken = accessToken
 	await client.getRefByLabel(release.label, {
 		fetchOptions: { cache: "no-cache" },
 	})
 	expect(client).toHaveLastFetchedRepo({}, { cache: "no-cache" })
 })
 
-it("supports default fetch options", async ({ expect, client, release }) => {
+it("supports default fetch options", async ({
+	expect,
+	client,
+	accessToken,
+	release,
+}) => {
+	client.accessToken = accessToken
 	client.fetchOptions = { cache: "no-cache" }
 	await client.getRefByLabel(release.label, {
 		fetchOptions: { headers: { foo: "bar" } },
@@ -61,8 +63,10 @@ it("supports signal", async ({ expect, client, release }) => {
 it("shares concurrent equivalent network requests", async ({
 	expect,
 	client,
+	accessToken,
 	release,
 }) => {
+	client.accessToken = accessToken
 	const controller1 = new AbortController()
 	const controller2 = new AbortController()
 	await Promise.all([
@@ -74,5 +78,5 @@ it("shares concurrent equivalent network requests", async ({
 		client.getRefByLabel(release.label, { signal: controller2.signal }),
 	])
 	await client.getRefByLabel(release.label)
-	expect(client).toHaveFetchedRepoTimes(3)
+	expect(client).toHaveFetchedRepoTimes(4)
 })

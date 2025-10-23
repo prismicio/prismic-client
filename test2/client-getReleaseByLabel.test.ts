@@ -2,19 +2,26 @@ import { it } from "./it"
 
 import { PrismicError } from "../src"
 
-it("returns ref with matching ID", async ({
+it("returns release with matching label", async ({
 	expect,
 	client,
 	accessToken,
 	release,
 }) => {
 	client.accessToken = accessToken
-	const res = await client.getRefByID(release.id)
+	const res = await client.getReleaseByLabel(release.label)
 	expect(res).toMatchObject({ ref: release.ref })
 })
 
-it("throws if ref is not found", async ({ expect, client }) => {
-	await expect(() => client.getRefByID("invalid")).rejects.toThrow(PrismicError)
+it("throws if release with label is not found", async ({
+	expect,
+	accessToken,
+	client,
+}) => {
+	client.accessToken = accessToken
+	await expect(() => client.getReleaseByLabel("invalid")).rejects.toThrow(
+		PrismicError,
+	)
 })
 
 it("supports fetch options", async ({
@@ -24,7 +31,7 @@ it("supports fetch options", async ({
 	release,
 }) => {
 	client.accessToken = accessToken
-	await client.getRefByID(release.id, {
+	await client.getReleaseByLabel(release.label, {
 		fetchOptions: { cache: "no-cache" },
 	})
 	expect(client).toHaveLastFetchedRepo({}, { cache: "no-cache" })
@@ -38,7 +45,7 @@ it("supports default fetch options", async ({
 }) => {
 	client.accessToken = accessToken
 	client.fetchOptions = { cache: "no-cache" }
-	await client.getRefByID(release.id, {
+	await client.getReleaseByLabel(release.label, {
 		fetchOptions: { headers: { foo: "bar" } },
 	})
 	expect(client).toHaveLastFetchedRepo(
@@ -52,7 +59,7 @@ it("supports default fetch options", async ({
 
 it("supports signal", async ({ expect, client, release }) => {
 	await expect(() =>
-		client.getRefByID(release.id, {
+		client.getReleaseByLabel(release.label, {
 			fetchOptions: { signal: AbortSignal.abort() },
 		}),
 	).rejects.toThrow("aborted")
@@ -61,20 +68,20 @@ it("supports signal", async ({ expect, client, release }) => {
 it("shares concurrent equivalent network requests", async ({
 	expect,
 	client,
-	release,
 	accessToken,
+	release,
 }) => {
 	client.accessToken = accessToken
 	const controller1 = new AbortController()
 	const controller2 = new AbortController()
 	await Promise.all([
-		client.getRefByID(release.id),
-		client.getRefByID(release.id),
-		client.getRefByID(release.id, { signal: controller1.signal }),
-		client.getRefByID(release.id, { signal: controller1.signal }),
-		client.getRefByID(release.id, { signal: controller2.signal }),
-		client.getRefByID(release.id, { signal: controller2.signal }),
+		client.getReleaseByLabel(release.label),
+		client.getReleaseByLabel(release.label),
+		client.getReleaseByLabel(release.label, { signal: controller1.signal }),
+		client.getReleaseByLabel(release.label, { signal: controller1.signal }),
+		client.getReleaseByLabel(release.label, { signal: controller2.signal }),
+		client.getReleaseByLabel(release.label, { signal: controller2.signal }),
 	])
-	await client.getRefByID(release.id)
+	await client.getReleaseByLabel(release.label)
 	expect(client).toHaveFetchedRepoTimes(4)
 })

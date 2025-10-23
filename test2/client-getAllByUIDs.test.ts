@@ -233,30 +233,22 @@ it("shares concurrent equivalent network requests", async ({
 		client.getAllByUIDs(
 			docs.default.type,
 			[docs.default.uid, docs.default2.uid],
-			{
-				signal: controller1.signal,
-			},
+			{ signal: controller1.signal },
 		),
 		client.getAllByUIDs(
 			docs.default.type,
 			[docs.default.uid, docs.default2.uid],
-			{
-				signal: controller1.signal,
-			},
+			{ signal: controller1.signal },
 		),
 		client.getAllByUIDs(
 			docs.default.type,
 			[docs.default.uid, docs.default2.uid],
-			{
-				signal: controller2.signal,
-			},
+			{ signal: controller2.signal },
 		),
 		client.getAllByUIDs(
 			docs.default.type,
 			[docs.default.uid, docs.default2.uid],
-			{
-				signal: controller2.signal,
-			},
+			{ signal: controller2.signal },
 		),
 	])
 	await client.getAllByUIDs(docs.default.type, [
