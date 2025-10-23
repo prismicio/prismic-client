@@ -83,6 +83,59 @@ expect.extend({
 			expected,
 		}
 	},
+	toHaveFetchedRepo(client: unknown, expectedParams, expectedInit = {}) {
+		assertMockedClient(client)
+
+		expectedParams = new URLSearchParams(expectedParams)
+
+		const pass = vi.mocked(client.fetchFn).mock.calls.some(([url, init]) => {
+			const actual = new Request(
+				filterURLParams(url, Array.from(expectedParams.keys())),
+				filterRequestInit(init, Object.keys(expectedInit)),
+			)
+			const expected = new Request(
+				getRepoURL(client, expectedParams),
+				expectedInit,
+			)
+
+			return isDeepEqual(actual, expected)
+		})
+
+		return {
+			pass,
+			message: () =>
+				`Client ${!pass || !this.isNot ? "did not call" : "called"} the repository${expectedParams.size > 0 ? ` with the required params` : ""}`,
+		}
+	},
+	toHaveLastFetchedRepo(
+		client: unknown,
+		expectedParams,
+		expectedInit = {},
+	) {
+		assertMockedClient(client)
+		assertHasBeenCalled(client.fetchFn)
+
+		expectedParams = new URLSearchParams(expectedParams)
+		const [url, init] = client.fetchFn.mock.lastCall
+
+		const actual = new Request(
+			filterURLParams(url, Array.from(expectedParams.keys())),
+			filterRequestInit(init, Object.keys(expectedInit)),
+		)
+		const expected = new Request(
+			getRepoURL(client, expectedParams),
+			expectedInit,
+		)
+		const pass = isDeepEqual(actual, expected)
+
+		return {
+			pass,
+			message: () =>
+				`The client ${!pass || !this.isNot ? "did not last call" : "last called"} the repository${expectedParams.size > 0 || Object.keys(expectedInit).length > 0 ? ` with the expected parameters` : ""}`,
+			actual: stringifyRequest(actual),
+			expected: stringifyRequest(expected),
+		}
+	},
 	toHaveFetchedRepoTimes(client: unknown, expected) {
 		assertMockedClient(client)
 
@@ -155,8 +208,12 @@ function getContentAPIURL(
 	return url
 }
 
-function getRepoURL(client: Client): URL {
+function getRepoURL(
+	client: Client,
+	params?: ConstructorParameters<typeof URLSearchParams>[0],
+): URL {
 	const url = new URL(client.documentAPIEndpoint)
+	url.search = new URLSearchParams(params).toString()
 	if (!url.pathname.endsWith("/")) {
 		url.pathname += "/"
 	}

@@ -19,6 +19,14 @@ interface CustomMatchers<R = unknown> {
 		expectedInit?: RequestInit,
 	) => R
 	toHaveFetchedContentAPITimes: (expected: number) => R
+	toHaveFetchedRepo: (
+		expectedParams?: ConstructorParameters<typeof URLSearchParams>[0],
+		expectedInit?: RequestInit,
+	) => R
+	toHaveLastFetchedRepo: (
+		expectedParams?: ConstructorParameters<typeof URLSearchParams>[0],
+		expectedInit?: RequestInit,
+	) => R
 	toHaveFetchedRepoTimes: (expected: number) => R
 	toHaveSearchParam: (key: string, value?: string) => R
 }
