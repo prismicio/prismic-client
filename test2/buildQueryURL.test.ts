@@ -6,7 +6,7 @@ import { it } from "./it"
 
 import { buildQueryURL } from "../src"
 
-it("creates a Content API URL", async ({ expect, endpoint }) => {
+it("returns a content api url", async ({ expect, endpoint }) => {
 	const res = new URL(buildQueryURL(endpoint, { ref: "foo" }))
 	expect(res.origin).toBe(new URL(endpoint).origin)
 	expect(res.pathname).toBe(new URL("documents/search", endpoint).pathname)
