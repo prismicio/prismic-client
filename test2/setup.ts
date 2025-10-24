@@ -239,7 +239,7 @@ function filterURLParams(url: string | URL, keys: string[]) {
 
 function filterRequestInit<T extends RequestInit>(
 	init: T | undefined,
-	keys: (keyof T | (string & {}))[],
+	keys: (keyof T | (string & Record<never, never>))[],
 ) {
 	return Object.fromEntries(
 		Object.entries(init ?? {}).filter(([key]) => keys.includes(key as keyof T)),
