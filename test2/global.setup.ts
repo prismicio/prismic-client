@@ -83,19 +83,26 @@ export async function setup({ provide }: TestProject): Promise<void> {
 		"published",
 	)
 
-	const default1 = await client.getDocumentByID(default1Meta.id)
-	const default2 = await client.getDocumentByID(default2Meta.id)
-	const default3 = await client.getDocumentByID(default3Meta.id)
-	const default4 = await client.getDocumentByID(default4Meta.id)
-	const defaultSingle = await client.getDocumentByID(defaultSingleMeta.id)
+	const routes = JSON.stringify([{ type: model.id, path: "/:uid" }])
+
+	const default1 = await client.getDocumentByID(default1Meta.id, { routes })
+	const default2 = await client.getDocumentByID(default2Meta.id, { routes })
+	const default3 = await client.getDocumentByID(default3Meta.id, { routes })
+	const default4 = await client.getDocumentByID(default4Meta.id, { routes })
+	const defaultSingle = await client.getDocumentByID(defaultSingleMeta.id, {
+		routes,
+	})
 	const french1 = await client.getDocumentByID(french1Meta.id, {
 		lang: french1Meta.locale,
+		routes,
 	})
 	const french2 = await client.getDocumentByID(french2Meta.id, {
 		lang: french2Meta.locale,
+		routes,
 	})
 	const frenchSingle = await client.getDocumentByID(frenchSingleMeta.id, {
 		lang: frenchSingleMeta.locale,
+		routes,
 	})
 	provide(
 		"docs",
