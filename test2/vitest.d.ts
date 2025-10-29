@@ -2,7 +2,9 @@ import "vitest"
 
 declare module "vitest" {
 	export interface ProvidedContext {
+		repoName: string
 		repo: string
+		writeToken: string
 		accessToken: string
 		release: string
 		docs: string
@@ -10,6 +12,7 @@ declare module "vitest" {
 }
 
 interface CustomMatchers<R = unknown> {
+	toHaveEntry: (key: unknown, value?: unknown) => R
 	toHaveFetchedContentAPI: (
 		expectedParams?: ConstructorParameters<typeof URLSearchParams>[0],
 		expectedInit?: RequestInit,
@@ -28,6 +31,8 @@ interface CustomMatchers<R = unknown> {
 		expectedInit?: RequestInit,
 	) => R
 	toHaveFetchedRepoTimes: (expected: number) => R
+	toContainDocument: (id: string) => R
+	toContainDocumentWithUID: (type: string, uid: string | null | undefined) => R
 	toHaveSearchParam: (key: string, value?: string) => R
 }
 

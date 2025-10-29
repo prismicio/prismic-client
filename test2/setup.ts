@@ -3,6 +3,8 @@ import { afterEach, beforeEach, expect, vi } from "vitest"
 
 import { deepEqual } from "node:assert/strict"
 
+import type { CoreApiDocumentsResponse } from "@prismicio/e2e-tests-utils"
+
 import { Client } from "../src"
 
 beforeEach(() => {
@@ -15,6 +17,22 @@ afterEach(() => {
 })
 
 expect.extend({
+	toHaveEntry(map: unknown, key, value) {
+		if (!(map instanceof Map)) {
+			throw new Error("Not a map")
+		}
+
+		const pass =
+			value === undefined
+				? map.has(key)
+				: map.has(key) && map.get(key) === value
+
+		return {
+			pass,
+			message: () =>
+				`The Map ${!pass || this.isNot ? "does not have" : "has"} the entry.`,
+		}
+	},
 	toHaveFetchedContentAPI(client: unknown, expectedParams, expectedInit = {}) {
 		assertMockedClient(client)
 
@@ -147,6 +165,31 @@ expect.extend({
 			expected,
 		}
 	},
+	toContainDocument(documents: unknown, id) {
+		assertDocuments(documents)
+
+		const pass = documents.results.some((result) => result.id === id)
+
+		return {
+			pass,
+			message: () =>
+				`${id} is ${!pass || this.isNot ? "not" : ""} in the documents.`,
+		}
+	},
+	toContainDocumentWithUID(documents: unknown, type, uid) {
+		assertDocuments(documents)
+
+		const pass = documents.results.some(
+			(result) =>
+				result.custom_type_id === type && result.versions[0].uid === uid,
+		)
+
+		return {
+			pass,
+			message: () =>
+				`Document of type "${type}" with UID "${uid}" is ${!pass || this.isNot ? "not" : ""} in the documents.`,
+		}
+	},
 	toHaveSearchParam(received: unknown, key, value) {
 		const actual = new URL(String(received)).searchParams
 		const expected = new URLSearchParams(actual)
@@ -184,6 +227,21 @@ function assertHasBeenCalled(
 	if (!mock.mock.lastCall) {
 		throw new Error("The mock was never called")
 	}
+}
+
+function assertDocuments(
+	input: unknown,
+): asserts input is CoreApiDocumentsResponse {
+	if (
+		typeof input === "object" &&
+		input !== null &&
+		"results" in input &&
+		"total" in input &&
+		"cursor" in input
+	) {
+		return
+	}
+	throw new Error("Not a Core API documents response")
 }
 
 function isContentAPICall(url: URL | string, client: Client): boolean {

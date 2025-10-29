@@ -372,7 +372,7 @@ export class WriteClient<
 	): Promise<void> {
 		// Resolve master locale
 		const repository = await this.getRepository(fetchParams)
-		const masterLocale = repository.languages.find((lang) => lang.is_master)!.id
+		const masterLocale = repository.languages[0].id
 		reporter?.({
 			type: "documents:masterLocale",
 			data: {

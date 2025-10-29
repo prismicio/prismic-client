@@ -4,21 +4,25 @@ import type {
 	ContentApiDocument,
 	ContentApiRef,
 	ContentApiSearchResponse,
+	CoreApiDocumentCreationPayload,
 	RepositoryManager,
 } from "@prismicio/e2e-tests-utils"
 
-import { repos } from "./global.setup"
+import { createDocument, repos } from "./global.setup"
 
-import type { Client } from "../src"
-import { createClient } from "../src"
+import type { Client, Migration, WriteClient } from "../src"
+import { createClient, createMigration, createWriteClient } from "../src"
 
-type Fixtures = {
+export type Fixtures = {
 	repo: RepositoryManager
 	endpoint: string
 	client: Client
+	writeClient: WriteClient
+	writeToken: string
 	accessToken: string
 	masterRef: string
 	release: ContentApiRef
+	migration: Migration
 	response: {
 		repo: (masterRef: string) => Response
 		refNotFound: (newRef: string) => Response
@@ -38,11 +42,15 @@ type Fixtures = {
 		french2: ContentApiDocument & { uid: string }
 		frenchSingle: ContentApiDocument & { uid: null }
 	}
+	createDocument: (
+		type: string,
+		params?: Partial<CoreApiDocumentCreationPayload>,
+	) => Promise<ContentApiDocument>
 }
 
 export const it = test.extend<Fixtures>({
 	repo: async ({}, use) => {
-		const name = inject("repo")
+		const name = inject("repoName")
 		const repo = repos.getRepositoryManager(name)
 		await use(repo)
 	},
@@ -60,6 +68,18 @@ export const it = test.extend<Fixtures>({
 		vi.spyOn(client, "fetchFn")
 		await use(client)
 	},
+	writeClient: async ({ repo, endpoint, writeToken }, use) => {
+		const client = createWriteClient(repo.name, {
+			documentAPIEndpoint: endpoint,
+			writeToken: writeToken,
+		})
+		vi.spyOn(client, "fetchFn")
+		await use(client)
+	},
+	writeToken: async ({}, use) => {
+		const token = inject("writeToken")
+		await use(token)
+	},
 	accessToken: async ({}, use) => {
 		const token = inject("accessToken")
 		await use(token)
@@ -72,7 +92,12 @@ export const it = test.extend<Fixtures>({
 		const release = JSON.parse(inject("release"))
 		await use(release)
 	},
+	migration: async ({}, use) => {
+		const migration = createMigration()
+		await use(migration)
+	},
 	response: async ({}, use) => {
+		const { languages } = JSON.parse(inject("repo"))
 		await use({
 			repo: (masterRef) =>
 				Response.json({
@@ -82,6 +107,7 @@ export const it = test.extend<Fixtures>({
 							isMasterRef: true,
 						},
 					],
+					languages,
 				}),
 			refNotFound: (ref) =>
 				Response.json(
@@ -108,5 +134,10 @@ export const it = test.extend<Fixtures>({
 	docs: async ({}, use) => {
 		const docs = JSON.parse(inject("docs"))
 		await use(docs)
+	},
+	createDocument: async ({ repo }, use) => {
+		await use(async (type, params) => {
+			return createDocument(repo, type, params)
+		})
 	},
 })

@@ -2,9 +2,11 @@ import type { TestProject } from "vitest/node"
 
 import { ok } from "node:assert"
 
+import type { RepositoryManager } from "@prismicio/e2e-tests-utils"
 import { createRepositoriesManager } from "@prismicio/e2e-tests-utils"
 import type { CoreApiDocumentCreationPayload } from "@prismicio/e2e-tests-utils/dist/clients/coreApi"
-import { createMockFactory } from "@prismicio/mock"
+
+import type { CustomType } from "@prismicio/types-internal/lib/customtypes"
 
 try {
 	process.loadEnvFile(".env.test.local")
@@ -29,7 +31,13 @@ export async function setup({ provide }: TestProject): Promise<void> {
 		customTypes: [],
 		slices: [],
 	})
-	provide("repo", repo.name)
+	provide("repoName", repo.name)
+
+	const repoMetadata = await repo.getContentApiClient().getAsJson("/api/v2")
+	provide("repo", JSON.stringify(repoMetadata))
+
+	const writeToken = await repos.getUserApiToken()
+	provide("writeToken", writeToken)
 
 	const accessToken = await repo.createContentAPIToken(
 		"test",
@@ -37,71 +45,71 @@ export async function setup({ provide }: TestProject): Promise<void> {
 	)
 	provide("accessToken", accessToken)
 
-	const client = repo.getContentApiClient({ accessToken })
-
-	const mock = createMockFactory({ seed: "foo" })
-	const model = mock.model.customType({
+	const model: CustomType = {
 		id: "page",
-		fields: { uid: mock.model.uid() },
-	})
-	const singleModel = mock.model.customType({
+		status: true,
+		label: "Page",
+		format: "page",
+		repeatable: true,
+		json: {
+			Main: {
+				uid: {
+					type: "UID",
+				},
+				link: {
+					type: "Link",
+					config: { allowText: true },
+				},
+				var_link: {
+					type: "Link",
+					config: { variants: ["foo"] },
+				},
+			},
+		},
+	}
+	const singleModel: CustomType = {
 		id: "single",
+		status: true,
+		label: "Single",
+		format: "custom",
 		repeatable: false,
-	})
+		json: { Main: {} },
+	}
 	await repo.createCustomTypes([model, singleModel])
-
-	const default1Meta = await repo.createDocument(
-		buildDocument(model, { tags: ["foo"] }),
-		"published",
-	)
-	const default2Meta = await repo.createDocument(
-		buildDocument(model, { tags: ["bar"] }),
-		"published",
-	)
-	const default3Meta = await repo.createDocument(
-		buildDocument(model, { tags: ["foo", "bar"] }),
-		"published",
-	)
-	const default4Meta = await repo.createDocument(
-		buildDocument(model, { tags: ["foo", "bar"] }),
-		"published",
-	)
-	const defaultSingleMeta = await repo.createDocument(
-		buildDocument(singleModel),
-		"published",
-	)
-	const french1Meta = await repo.createDocument(
-		buildDocument(model, { locale: "fr-fr", tags: ["foo"] }),
-		"published",
-	)
-	const french2Meta = await repo.createDocument(
-		buildDocument(model, { locale: "fr-fr", tags: ["bar"] }),
-		"published",
-	)
-	const frenchSingleMeta = await repo.createDocument(
-		buildDocument(singleModel, { locale: "fr-fr" }),
-		"published",
-	)
 
 	const routes = JSON.stringify([{ type: model.id, path: "/:uid" }])
 
-	const default1 = await client.getDocumentByID(default1Meta.id, { routes })
-	const default2 = await client.getDocumentByID(default2Meta.id, { routes })
-	const default3 = await client.getDocumentByID(default3Meta.id, { routes })
-	const default4 = await client.getDocumentByID(default4Meta.id, { routes })
-	const defaultSingle = await client.getDocumentByID(defaultSingleMeta.id, {
+	const default1 = await createDocument(repo, model.id, {
+		tags: ["foo"],
 		routes,
 	})
-	const french1 = await client.getDocumentByID(french1Meta.id, {
-		lang: french1Meta.locale,
+	const default2 = await createDocument(repo, model.id, {
+		tags: ["bar"],
 		routes,
 	})
-	const french2 = await client.getDocumentByID(french2Meta.id, {
-		lang: french2Meta.locale,
+	const default3 = await createDocument(repo, model.id, {
+		tags: ["foo", "bar"],
 		routes,
 	})
-	const frenchSingle = await client.getDocumentByID(frenchSingleMeta.id, {
-		lang: frenchSingleMeta.locale,
+	const default4 = await createDocument(repo, model.id, {
+		tags: ["foo", "bar"],
+		routes,
+	})
+	const defaultSingle = await createDocument(repo, singleModel.id, {
+		routes,
+	})
+	const french1 = await createDocument(repo, model.id, {
+		locale: "fr-fr",
+		tags: ["foo"],
+		routes,
+	})
+	const french2 = await createDocument(repo, model.id, {
+		locale: "fr-fr",
+		tags: ["bar"],
+		routes,
+	})
+	const frenchSingle = await createDocument(repo, singleModel.id, {
+		locale: "fr-fr",
 		routes,
 	})
 	provide(
@@ -118,6 +126,7 @@ export async function setup({ provide }: TestProject): Promise<void> {
 		}),
 	)
 
+	const client = repo.getContentApiClient({ accessToken })
 	const releaseResult = await repo.createRelease("test")
 	const refs = await client.getRefs()
 	const release = refs.find((ref) => ref.id === releaseResult.id)!
@@ -128,21 +137,35 @@ export async function teardown(): Promise<void> {
 	await repos.tearDown()
 }
 
-function buildDocument(
-	model: { id: string },
-	doc?: Partial<CoreApiDocumentCreationPayload>,
-): CoreApiDocumentCreationPayload {
-	return {
-		custom_type_id: model.id,
-		title: "",
-		tags: [],
-		locale: "en-us",
-		integration_field_ids: [],
-		...doc,
-		data: {
-			uid: crypto.randomUUID(),
-			uid_TYPE: "UID",
-			...doc?.data,
+export async function createDocument(
+	repo: RepositoryManager,
+	type: string,
+	params: Partial<CoreApiDocumentCreationPayload> & { routes?: string } = {},
+) {
+	const { routes, ...doc } = params
+
+	const docMeta = await repo.createDocument(
+		{
+			custom_type_id: type,
+			title: "",
+			tags: [],
+			locale: "en-us",
+			integration_field_ids: [],
+			...doc,
+			data: {
+				uid: crypto.randomUUID(),
+				uid_TYPE: "UID",
+				...doc?.data,
+			},
 		},
+		"published",
+	)
+	const publishedDoc = await repo
+		.getContentApiClient()
+		.getDocumentByID(docMeta.id, { lang: docMeta.locale, routes })
+	if (!publishedDoc) {
+		throw new Error("Document was not published")
 	}
+
+	return publishedDoc
 }
