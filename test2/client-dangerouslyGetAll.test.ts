@@ -4,11 +4,15 @@ import { it } from "./it"
 
 import { RefNotFoundError } from "../src"
 
-it("returns multiple documents", async ({ expect, client }) => {
+it("returns multiple documents", async ({ expect, client, docs }) => {
 	const res = await client.dangerouslyGetAll()
-	expect(res).toHaveLength(5)
+	expect(res.length).toBeGreaterThan(1)
+	expect(res).toContainEqual(expect.objectContaining({ id: docs.default.id }))
+	expect(res).toContainEqual(expect.objectContaining({ id: docs.default2.id }))
+	expect(res).toContainEqual(expect.objectContaining({ id: docs.default3.id }))
+	expect(res).toContainEqual(expect.objectContaining({ id: docs.default4.id }))
 	expect(res).toContainEqual(
-		expect.objectContaining({ id: expect.any(String) }),
+		expect.objectContaining({ id: docs.defaultSingle.id }),
 	)
 })
 

@@ -1,7 +1,4 @@
-import type { ExpectStatic } from "vitest"
 import { describe, vi } from "vitest"
-
-import type { RepositoryManager } from "@prismicio/e2e-tests-utils"
 
 import { version } from "../package.json"
 
@@ -124,23 +121,23 @@ describe("documents", () => {
 })
 
 describe.concurrent("assets", () => {
-	it("supports File", async ({ expect, writeClient, migration, repo }) => {
+	it("supports File", async ({ expect, writeClient, migration, getAsset }) => {
 		const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='1' height='1'/>"
 		const file = new File([new TextEncoder().encode(svg)], crypto.randomUUID())
 		migration.createAsset(file, file.name)
 		await writeClient.migrate(migration)
-		const asset = await getAsset(file.name, { expect, repo })
+		const asset = await getAsset({ filename: file.name })
 		expect(asset.filename).toBe(file.name)
 	})
 
-	it("supports URL", async ({ expect, writeClient, migration, repo }) => {
+	it("supports URL", async ({ expect, writeClient, migration, getAsset }) => {
 		const url = new URL(
 			"https://images.prismic.io/prismic-main/a1307082-512a-4088-bace-30cdae70148e_stairs.jpg?w=100",
 		)
 		const filename = crypto.randomUUID()
 		migration.createAsset(url, filename)
 		await writeClient.migrate(migration)
-		const asset = await getAsset(filename, { expect, repo })
+		const asset = await getAsset({ filename })
 		expect(asset.filename).toBe(filename)
 	})
 
@@ -148,18 +145,23 @@ describe.concurrent("assets", () => {
 		expect,
 		writeClient,
 		migration,
-		repo,
+		getAsset,
 	}) => {
 		const url =
 			"https://images.prismic.io/prismic-main/a1307082-512a-4088-bace-30cdae70148e_stairs.jpg?w=100"
 		const filename = crypto.randomUUID()
 		migration.createAsset(url, filename)
 		await writeClient.migrate(migration)
-		const asset = await getAsset(filename, { expect, repo })
+		const asset = await getAsset({ filename })
 		expect(asset.filename).toBe(filename)
 	})
 
-	it("supports params", async ({ expect, writeClient, migration, repo }) => {
+	it("supports params", async ({
+		expect,
+		writeClient,
+		migration,
+		getAsset,
+	}) => {
 		const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='1' height='1'/>"
 		const file = new File([new TextEncoder().encode(svg)], crypto.randomUUID())
 		migration.createAsset(file, file.name, {
@@ -169,7 +171,7 @@ describe.concurrent("assets", () => {
 			tags: ["tag"],
 		})
 		await writeClient.migrate(migration)
-		const asset = await getAsset(file.name, { expect, repo })
+		const asset = await getAsset({ filename: file.name })
 		expect(asset).toMatchObject({
 			filename: file.name,
 			alt: "alt",
@@ -349,25 +351,3 @@ it("supports signal", async ({ expect, writeClient, migration, docs }) => {
 		writeClient.migrate(migration, { signal: AbortSignal.abort() }),
 	).rejects.toThrow(/aborted/i)
 })
-
-async function getAsset(
-	name: string,
-	args: { expect: ExpectStatic; repo: RepositoryManager },
-) {
-	const { expect, repo } = args
-
-	// Need to wait for the asset to be indexed.
-	const { items } = await vi.waitFor(async () => {
-		const assets = await repo.getAssetApiClient().search(name)
-		expect(assets.items.length).toBeGreaterThanOrEqual(1)
-
-		return assets
-	}, 10000)
-
-	const asset = items.find((item) => item.filename === name)
-	if (!asset) {
-		throw new Error(`Asset with name "${name}" does not exist`)
-	}
-
-	return asset
-}

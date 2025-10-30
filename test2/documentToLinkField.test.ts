@@ -13,6 +13,7 @@ it("returns equivalent link field from document", async ({ expect, docs }) => {
 		lang: docs.default.lang,
 		url: docs.default.url,
 		slug: docs.default.slugs?.[0],
+		data: docs.default.data,
 	})
 })
 

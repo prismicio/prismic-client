@@ -1,6 +1,7 @@
 import { inject, test, vi } from "vitest"
 
 import type {
+	AssetApiCreateResponse,
 	ContentApiDocument,
 	ContentApiRef,
 	ContentApiSearchResponse,
@@ -46,6 +47,9 @@ export type Fixtures = {
 		type: string,
 		params?: Partial<CoreApiDocumentCreationPayload>,
 	) => Promise<ContentApiDocument>
+	getAsset: (
+		params: { id: string; filename?: never } | { filename: string; id?: never },
+	) => Promise<AssetApiCreateResponse>
 }
 
 export const it = test.extend<Fixtures>({
@@ -88,9 +92,12 @@ export const it = test.extend<Fixtures>({
 		const masterRef = await repo.getContentApiClient().getMasterRef()
 		await use(masterRef)
 	},
-	release: async ({}, use) => {
+	release: async ({ repo, accessToken }, use) => {
 		const release = JSON.parse(inject("release"))
-		await use(release)
+		const ref = await repo
+			.getContentApiClient({ accessToken })
+			.getRefByReleaseID(release.id)
+		await use({ ...release, ref })
 	},
 	migration: async ({}, use) => {
 		const migration = createMigration()
@@ -138,6 +145,26 @@ export const it = test.extend<Fixtures>({
 	createDocument: async ({ repo }, use) => {
 		await use(async (type, params) => {
 			return createDocument(repo, type, params)
+		})
+	},
+	getAsset: async ({ expect, repo }, use) => {
+		const assetAPIClient = repo.getAssetApiClient()
+		await use(async (params) => {
+			// Need to wait for new assets to be indexed.
+			return await vi.waitFor(async () => {
+				const assets = await assetAPIClient.search({
+					limit: 100,
+					keyword: params.filename,
+				})
+				const asset = assets.items.find((item) => {
+					return params.filename
+						? item.filename === params.filename
+						: item.id === params.id
+				})
+				expect(asset).toBeDefined()
+
+				return asset!
+			}, 10000)
 		})
 	},
 })

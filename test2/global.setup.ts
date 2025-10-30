@@ -64,6 +64,14 @@ export async function setup({ provide }: TestProject): Promise<void> {
 					type: "Link",
 					config: { variants: ["foo"] },
 				},
+				image: {
+					type: "Image",
+					config: { thumbnails: [{ name: "square" }] },
+				},
+				richtext: {
+					type: "StructuredText",
+					config: { multi: "paragraph,image,hyperlink" },
+				},
 			},
 		},
 	}
