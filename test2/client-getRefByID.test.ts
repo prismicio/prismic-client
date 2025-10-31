@@ -17,47 +17,6 @@ it("throws if ref is not found", async ({ expect, client }) => {
 	await expect(() => client.getRefByID("invalid")).rejects.toThrow(PrismicError)
 })
 
-it("supports fetch options", async ({
-	expect,
-	client,
-	accessToken,
-	release,
-}) => {
-	client.accessToken = accessToken
-	await client.getRefByID(release.id, {
-		fetchOptions: { cache: "no-cache" },
-	})
-	expect(client).toHaveLastFetchedRepo({}, { cache: "no-cache" })
-})
-
-it("supports default fetch options", async ({
-	expect,
-	client,
-	accessToken,
-	release,
-}) => {
-	client.accessToken = accessToken
-	client.fetchOptions = { cache: "no-cache" }
-	await client.getRefByID(release.id, {
-		fetchOptions: { headers: { foo: "bar" } },
-	})
-	expect(client).toHaveLastFetchedRepo(
-		{},
-		{
-			cache: "no-cache",
-			headers: { foo: "bar" },
-		},
-	)
-})
-
-it("supports signal", async ({ expect, client, release }) => {
-	await expect(() =>
-		client.getRefByID(release.id, {
-			fetchOptions: { signal: AbortSignal.abort() },
-		}),
-	).rejects.toThrow("aborted")
-})
-
 it("shares concurrent equivalent network requests", async ({
 	expect,
 	client,

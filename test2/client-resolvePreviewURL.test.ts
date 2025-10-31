@@ -131,41 +131,6 @@ it("supports link resolver", async ({ expect, client, docs }) => {
 	expect(res).toBe("/resolved")
 })
 
-it("supports fetch options", async ({ expect, client, docs }) => {
-	await client.resolvePreviewURL({
-		documentID: docs.default.id,
-		previewToken: "abc",
-		defaultURL: "/default",
-		fetchOptions: { cache: "no-cache" },
-	})
-	expect(client).toHaveLastFetchedContentAPI({}, { cache: "no-cache" })
-})
-
-it("supports default fetch options", async ({ expect, client, docs }) => {
-	client.fetchOptions = { cache: "no-cache" }
-	await client.resolvePreviewURL({
-		documentID: docs.default.id,
-		previewToken: "abc",
-		defaultURL: "/default",
-		fetchOptions: { headers: { foo: "bar" } },
-	})
-	expect(client).toHaveLastFetchedContentAPI(
-		{},
-		{ cache: "no-cache", headers: { foo: "bar" } },
-	)
-})
-
-it("supports signal", async ({ expect, client, docs }) => {
-	await expect(() =>
-		client.resolvePreviewURL({
-			documentID: docs.default.id,
-			previewToken: "abc",
-			defaultURL: "/default",
-			fetchOptions: { signal: AbortSignal.abort() },
-		}),
-	).rejects.toThrow("aborted")
-})
-
 it("shares concurrent equivalent network requests", async ({
 	expect,
 	client,

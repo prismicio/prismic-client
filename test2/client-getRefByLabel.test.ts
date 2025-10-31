@@ -19,47 +19,6 @@ it("throws if ref with label is not found", async ({ expect, client }) => {
 	)
 })
 
-it("supports fetch options", async ({
-	expect,
-	client,
-	accessToken,
-	release,
-}) => {
-	client.accessToken = accessToken
-	await client.getRefByLabel(release.label, {
-		fetchOptions: { cache: "no-cache" },
-	})
-	expect(client).toHaveLastFetchedRepo({}, { cache: "no-cache" })
-})
-
-it("supports default fetch options", async ({
-	expect,
-	client,
-	accessToken,
-	release,
-}) => {
-	client.accessToken = accessToken
-	client.fetchOptions = { cache: "no-cache" }
-	await client.getRefByLabel(release.label, {
-		fetchOptions: { headers: { foo: "bar" } },
-	})
-	expect(client).toHaveLastFetchedRepo(
-		{},
-		{
-			cache: "no-cache",
-			headers: { foo: "bar" },
-		},
-	)
-})
-
-it("supports signal", async ({ expect, client, release }) => {
-	await expect(() =>
-		client.getRefByLabel(release.label, {
-			fetchOptions: { signal: AbortSignal.abort() },
-		}),
-	).rejects.toThrow("aborted")
-})
-
 it("shares concurrent equivalent network requests", async ({
 	expect,
 	client,

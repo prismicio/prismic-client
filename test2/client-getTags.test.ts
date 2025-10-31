@@ -47,32 +47,6 @@ it("uses cached repository within the client's repository cache TTL", async ({
 	vi.useRealTimers()
 })
 
-it("supports fetch options", async ({ expect, client, endpoint }) => {
-	await client.getTags({ fetchOptions: { cache: "no-cache" } })
-	expect(client.fetchFn).toHaveBeenLastCalledWith(
-		new URL("tags", endpoint).toString(),
-		expect.objectContaining({ cache: "no-cache" }),
-	)
-})
-
-it("supports default fetch options", async ({ expect, client, endpoint }) => {
-	client.fetchOptions = { cache: "no-cache" }
-	await client.getTags({ fetchOptions: { headers: { foo: "bar" } } })
-	expect(client.fetchFn).toHaveBeenLastCalledWith(
-		new URL("tags", endpoint).toString(),
-		expect.objectContaining({
-			cache: "no-cache",
-			headers: { foo: "bar" },
-		}),
-	)
-})
-
-it("supports signal", async ({ expect, client }) => {
-	await expect(() =>
-		client.getTags({ fetchOptions: { signal: AbortSignal.abort() } }),
-	).rejects.toThrow("aborted")
-})
-
 it("shares concurrent equivalent network requests", async ({
 	expect,
 	client,

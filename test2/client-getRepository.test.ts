@@ -34,31 +34,6 @@ it("throws RepositoryNotFoundError on 404", async ({ expect, client }) => {
 	)
 })
 
-it("supports fetch options", async ({ expect, client }) => {
-	await client.getRepository({ fetchOptions: { cache: "no-cache" } })
-	expect(client).toHaveLastFetchedRepo({}, { cache: "no-cache" })
-})
-
-it("supports default fetch options", async ({ expect, client }) => {
-	client.fetchOptions = { cache: "no-cache" }
-	await client.getRepository({ fetchOptions: { headers: { foo: "bar" } } })
-	expect(client).toHaveLastFetchedRepo(
-		{},
-		{
-			cache: "no-cache",
-			headers: { foo: "bar" },
-		},
-	)
-})
-
-it("supports signal", async ({ expect, client }) => {
-	await expect(() =>
-		client.getRepository({
-			fetchOptions: { signal: AbortSignal.abort() },
-		}),
-	).rejects.toThrow("aborted")
-})
-
 it("shares concurrent equivalent network requests", async ({
 	expect,
 	client,

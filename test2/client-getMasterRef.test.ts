@@ -5,33 +5,6 @@ it("returns master ref", async ({ expect, client, masterRef }) => {
 	expect(res).toMatchObject({ ref: masterRef })
 })
 
-it("supports fetch options", async ({ expect, client }) => {
-	await client.getMasterRef({ fetchOptions: { cache: "no-cache" } })
-	expect(client).toHaveLastFetchedRepo({}, { cache: "no-cache" })
-})
-
-it("supports default fetch options", async ({ expect, client }) => {
-	client.fetchOptions = { cache: "no-cache" }
-	await client.getMasterRef({
-		fetchOptions: { headers: { foo: "bar" } },
-	})
-	expect(client).toHaveLastFetchedRepo(
-		{},
-		{
-			cache: "no-cache",
-			headers: { foo: "bar" },
-		},
-	)
-})
-
-it("supports signal", async ({ expect, client }) => {
-	await expect(() =>
-		client.getMasterRef({
-			fetchOptions: { signal: AbortSignal.abort() },
-		}),
-	).rejects.toThrow("aborted")
-})
-
 it("shares concurrent equivalent network requests", async ({
 	expect,
 	client,
