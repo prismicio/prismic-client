@@ -81,11 +81,11 @@ export const title = richText as (
 ) => field is TitleField<"filled">
 
 /**
- * Determines if an Image thumbnail is filled.
+ * Determines if an image thumbnail is filled.
  *
  * @param thumbnail - Image thumbnail to check.
  *
- * @returns `true` if `field` is filled, `false` otherwise.
+ * @returns `true` if the thumbnail is filled, `false` otherwise.
  */
 export const imageThumbnail = (
 	thumbnail: ImageFieldImage | null | undefined,
@@ -139,9 +139,9 @@ export const linkToMedia = link as (
 /**
  * Determines if a content relationship field is filled.
  *
- * @param field - Content Relationship field to check.
+ * @param field - Content relationship field to check.
  *
- * @returns `true` if `field` is filled, `false` otherwise.
+ * @returns `true` if the field is filled, `false` otherwise.
  */
 export const contentRelationship = link as <
 	Field extends ContentRelationshipField,
@@ -196,14 +196,14 @@ export const number = isNonNullish as (
 /**
  * Determines if a key text field is filled.
  *
- * @param field - Key Text field to check.
+ * @param field - Key text field to check.
  *
- * @returns `true` if `field` is filled, `false` otherwise.
+ * @returns `true` if the field is filled, `false` otherwise.
  */
 export const keyText = (
 	field: KeyTextField | null | undefined,
 ): field is KeyTextField<"filled"> => {
-	return isNonNullish(keyText) && !!field
+	return !!field
 }
 
 /**
@@ -233,9 +233,9 @@ export const embed = <Field extends EmbedField<AnyOEmbed>>(
 /**
  * Determines if a geopoint field is filled.
  *
- * @param field - GeoPoint field to check.
+ * @param field - Geopoint field to check.
  *
- * @returns `true` if `field` is filled, `false` otherwise.
+ * @returns `true` if the field is filled, `false` otherwise.
  */
 export const geoPoint = (
 	field: GeoPointField | null | undefined,
@@ -290,11 +290,11 @@ export const repeatable = <T extends LinkField>(
 }
 
 /**
- * Determines if a Group has at least one item.
+ * Determines if a group has at least one item.
  *
  * @param group - Group to check.
  *
- * @returns `true` if `group` contains at least one item, `false` otherwise.
+ * @returns `true` if the group contains at least one item, `false` otherwise.
  */
 export const group = <
 	Fields extends Record<string, AnyRegularField | NestedGroupField>,
@@ -305,11 +305,12 @@ export const group = <
 }
 
 /**
- * Determines if a Slice Zone has at least one Slice.
+ * Determines if a slice zone has at least one slice.
  *
- * @param slices - Slice Zone to check.
+ * @param slices - Slice zone to check.
  *
- * @returns `true` if `slices` contains at least one Slice, `false` otherwise.
+ * @returns `true` if the slice zone contains at least one slice, `false`
+ *   otherwise.
  */
 export const sliceZone = <Slices extends Slice | SharedSlice>(
 	slices: SliceZone<Slices> | null | undefined,

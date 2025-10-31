@@ -28,13 +28,13 @@ type AsImagePixelDensitySrcSetReturnType<
 	Field extends ImageFieldImage<"filled">
 		? {
 				/**
-				 * The image field's image URL with Imgix URL parameters (if given).
+				 * The image field's URL with imgix URL parameters (if given).
 				 */
 				src: string
 
 				/**
-				 * A pixel-densitye-based `srcset` attribute value for the image field's
-				 * image with Imgix URL parameters (if given).
+				 * A pixel-density-based `srcset` attribute value for the image field
+				 * with imgix URL parameters (if given).
 				 */
 				srcset: string
 			}
@@ -42,7 +42,7 @@ type AsImagePixelDensitySrcSetReturnType<
 
 /**
  * Creates a pixel-density-based `srcset` from an image field with optional
- * image transformations (via Imgix URL parameters).
+ * image transformations via imgix URL parameters.
  *
  * If a `pixelDensities` parameter is not given, the following pixel densities
  * will be used by default: 1, 2, 3.
@@ -50,26 +50,27 @@ type AsImagePixelDensitySrcSetReturnType<
  * @example
  *
  * ```ts
- * const srcset = asImagePixelDensitySrcSet(document.data.imageField, {
+ * const srcset = asImagePixelDensitySrcSet(document.data.photo, {
  * 	pixelDensities: [1, 2],
  * 	sat: -100,
  * })
  * // => {
- * //   src:    'https://images.prismic.io/repo/image.png?sat=-100',
- * //   srcset: 'https://images.prismic.io/repo/image.png?sat=-100&dpr=1 1x, ' +
- * //           'https://images.prismic.io/repo/image.png?sat=-100&dpr=2 2x'
+ * //   src: "https://images.prismic.io/repo/image.png?sat=-100",
+ * //   srcset: "https://images.prismic.io/repo/image.png?sat=-100&dpr=1 1x, " +
+ * //           "https://images.prismic.io/repo/image.png?sat=-100&dpr=2 2x"
  * // }
  * ```
  *
- * @param field - Image field (or one of its responsive views) from which to get
- *   an image URL.
- * @param config - An object of Imgix URL API parameters. The `pixelDensities`
- *   parameter defines the resulting `srcset` widths.
+ * @param field - An image field (or one of its responsive views) from which to
+ *   get an image URL.
+ * @param config - An object of imgix URL API parameters. The `pixelDensities`
+ *   parameter defines the resulting `srcset` pixel densities.
  *
- * @returns A `srcset` attribute value for the image field with Imgix URL
- *   parameters (if given). If the image field is empty, `null` is returned.
+ * @returns A `srcset` attribute value for the image field with imgix URL
+ *   parameters, or `null` if the field is empty.
  *
- * @see Imgix URL parameters reference: https://docs.imgix.com/apis/rendering
+ * @see Learn how to optimize images with imgix: {@link https://prismic.io/docs/fields/image}
+ * @see imgix URL parameters reference: {@link https://docs.imgix.com/apis/rendering}
  */
 export const asImagePixelDensitySrcSet = <
 	Field extends ImageFieldImage | null | undefined,

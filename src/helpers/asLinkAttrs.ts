@@ -67,26 +67,23 @@ type AsLinkAttrsReturnType<
 		}
 
 /**
- * Resolves any type of link field or Prismic document to a set of link
- * attributes. The attributes are designed to be passed to link HTML elements,
- * like `<a>`.
+ * Resolves any type of link field or Prismic page to a set of link attributes.
+ * The attributes are designed to be passed to link HTML elements, like `<a>`.
  *
  * If a resolved URL is external (i.e. starts with a protocol like `https://`),
  * `rel` is returned as `"noreferrer"`.
  *
  * @typeParam LinkResolverFunctionReturnType - link resolver function return
  *   type
- * @typeParam Field - Link field or Prismic document to resolve to link
- *   attributes
+ * @typeParam Field - Link field or Prismic page to resolve to link attributes
  *
- * @param linkFieldOrDocument - Any kind of link field or a document to resolve
+ * @param linkFieldOrDocument - Any kind of link field or a page to resolve
  * @param config - Configuration that determines the output of `asLinkAttrs()`
  *
  * @returns Resolved set of link attributes or, if the provided link field or
- *   document is empty, and empty object
+ *   page is empty, and empty object
  *
- * @see Prismic link resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
- * @see Prismic API `routes` options documentation: {@link https://prismic.io/docs/route-resolver}
+ * @see Learn about route resolvers and link resolvers: {@link https://prismic.io/docs/routes}
  */
 export const asLinkAttrs = <
 	LinkResolverFunctionReturnType = ReturnType<LinkResolverFunction>,
