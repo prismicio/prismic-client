@@ -530,8 +530,9 @@ async function getMigrationReleaseDocData(
 	const { repo } = args
 
 	const release = await repo.getMigrationRelease()
-	const versionID = release.results.find((result) => result.id === id)!
-		.versions[0].version_id
+	const docs = await repo.getDocuments({ statuses: [`release:${release.id}`] })
+	const versionID = docs.results.find((result) => result.id === id)!.versions[0]
+		.version_id
 
-	return await repo.getDocumentVersionData(versionID)
+	return await repo.getDocumentData(versionID)
 }

@@ -28,7 +28,10 @@ describe("documents", () => {
 		)
 		await writeClient.migrate(migration)
 		const release = await repo.getMigrationRelease()
-		expect(release).toContainDocumentWithUID(
+		const releaseDocs = await repo.getDocuments({
+			statuses: [`release:${release.id}`],
+		})
+		expect(releaseDocs).toContainDocumentWithUID(
 			docs.default.type,
 			doc.document.uid,
 		)
@@ -47,7 +50,10 @@ describe("documents", () => {
 		})
 		await writeClient.migrate(migration)
 		const release = await repo.getMigrationRelease()
-		expect(release).toContainDocumentWithUID(
+		const releaseDocs = await repo.getDocuments({
+			statuses: [`release:${release.id}`],
+		})
+		expect(releaseDocs).toContainDocumentWithUID(
 			docs.default.type,
 			doc.document.uid,
 		)
@@ -65,10 +71,12 @@ describe("documents", () => {
 			uid: crypto.randomUUID(),
 		})
 		await writeClient.migrate(migration)
-		const release = await repo.getMigrationRelease({
+		const release = await repo.getMigrationRelease()
+		const releaseDocs = await repo.getDocuments({
 			language: docs.french.lang,
+			statuses: [`release:${release.id}`],
 		})
-		expect(release).toContainDocumentWithUID(
+		expect(releaseDocs).toContainDocumentWithUID(
 			docs.default.type,
 			doc.document.uid,
 		)
@@ -94,10 +102,12 @@ describe("documents", () => {
 			{ masterLanguageDocument: baseDoc },
 		)
 		await writeClient.migrate(migration)
-		const release = await repo.getMigrationRelease({
+		const release = await repo.getMigrationRelease()
+		const releaseDocs = await repo.getDocuments({
 			language: docs.french.lang,
+			statuses: [`release:${release.id}`],
 		})
-		const releaseDoc = release.results.find(
+		const releaseDoc = releaseDocs.results.find(
 			(result) => result.id === doc.document.id,
 		)!
 		const localizedDocs = await repo.getDocuments({
