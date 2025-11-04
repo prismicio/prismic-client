@@ -9,6 +9,10 @@ it("ignores browser preview cookie when disabled", async ({
 	vi.stubGlobal("document", { cookie: `io.prismic.preview=foo` })
 	client.disableAutoPreviews()
 	await client.get()
+	console.debug(
+		"ignores browser preview cookie when disabled",
+		vi.mocked(client.fetchFn).mock.calls,
+	)
 	expect(client).not.toHaveFetchedContentAPI({ ref: "foo" })
 	vi.unstubAllGlobals()
 })
@@ -22,6 +26,10 @@ it("ignores server request preview cookie when disabled", async ({
 	})
 	client.disableAutoPreviews()
 	await client.get()
+	console.debug(
+		"ignores server request preview cookie when disabled",
+		vi.mocked(client.fetchFn).mock.calls,
+	)
 	expect(client).not.toHaveFetchedContentAPI({ ref: "foo" })
 })
 
@@ -36,5 +44,9 @@ it("ignores Request preview cookie when disabled", async ({
 	)
 	client.disableAutoPreviews()
 	await client.get()
+	console.debug(
+		"ignores Request preview cookie when disabled",
+		vi.mocked(client.fetchFn).mock.calls,
+	)
 	expect(client).not.toHaveFetchedContentAPI({ ref: "foo" })
 })
