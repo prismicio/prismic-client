@@ -13,13 +13,13 @@ export default defineConfig({
 		},
 	},
 	test: {
-		include: [".\/test2\/*.test.ts"],
-		globalSetup: ["./test2/global.setup.ts"],
+		include: [".\/test2\/**/*.test.ts"],
+		globalSetup: ["./test2/setup.global.ts"],
 		setupFiles: ["./test2/setup.ts"],
 		typecheck: {
 			enabled: true,
-			include: [".\/test2\/*.test-d.ts"],
 		},
+		retry: 1,
 		coverage: {
 			provider: "v8",
 			reporter: ["lcovonly", "text"],

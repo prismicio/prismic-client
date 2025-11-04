@@ -9,7 +9,7 @@ import type {
 	RepositoryManager,
 } from "@prismicio/e2e-tests-utils"
 
-import { createDocument, repos } from "./global.setup"
+import { createDocument, repos } from "./setup.global"
 
 import type { Client, Migration, WriteClient } from "../src"
 import { createClient, createMigration, createWriteClient } from "../src"
