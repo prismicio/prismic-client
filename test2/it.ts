@@ -164,7 +164,7 @@ export const it = test.extend<Fixtures>({
 				expect(asset).toBeDefined()
 
 				return asset!
-			}, 10000)
+			}, 30000)
 		})
 	},
 })

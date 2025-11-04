@@ -130,7 +130,7 @@ describe("documents", () => {
 	})
 })
 
-describe("assets", () => {
+describe.concurrent("assets", () => {
 	it("supports File", async ({ expect, writeClient, migration, getAsset }) => {
 		const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='1' height='1'/>"
 		const file = new File([new TextEncoder().encode(svg)], crypto.randomUUID())
@@ -306,23 +306,21 @@ it("supports a reporter", async ({ expect, writeClient, migration, docs }) => {
 	vi.useRealTimers()
 })
 
-it("includes x-client version header", async ({
-	expect,
-	writeClient,
-	migration,
-	docs,
-}) => {
-	migration.updateDocument(docs.default2)
-	await writeClient.migrate(migration)
-	expect(writeClient.fetchFn).toHaveBeenCalledWith(
-		expect.anything(),
-		expect.objectContaining({
-			headers: expect.objectContaining({
-				"x-client": `prismicio-client/${version}`,
+it.concurrent(
+	"includes x-client version header",
+	async ({ expect, writeClient, migration, docs }) => {
+		migration.updateDocument(docs.default2)
+		await writeClient.migrate(migration)
+		expect(writeClient.fetchFn).toHaveBeenCalledWith(
+			expect.anything(),
+			expect.objectContaining({
+				headers: expect.objectContaining({
+					"x-client": `prismicio-client/${version}`,
+				}),
 			}),
-		}),
-	)
-})
+		)
+	},
+)
 
 it("throws if using an invalid token", async ({
 	expect,
