@@ -82,7 +82,7 @@
 		"imgix-url-builder": "^0.0.6"
 	},
 	"devDependencies": {
-		"@prismicio/e2e-tests-utils": "^1.11.0",
+		"@prismicio/e2e-tests-utils": "^1.13.0",
 		"@prismicio/mock": "0.7.1",
 		"@prismicio/types-internal": "^3.16.1",
 		"@size-limit/preset-small-lib": "^11.2.0",
