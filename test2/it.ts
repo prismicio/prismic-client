@@ -152,10 +152,7 @@ export const it = test.extend<Fixtures>({
 		await use(async (params) => {
 			// Need to wait for new assets to be indexed.
 			return await vi.waitFor(async () => {
-				const assets = await assetAPIClient.search({
-					limit: 100,
-					keyword: params.filename,
-				})
+				const assets = await assetAPIClient.search({ limit: 100 })
 				const asset = assets.items.find((item) => {
 					return params.filename
 						? item.filename === params.filename
