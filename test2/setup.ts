@@ -39,16 +39,18 @@ expect.extend({
 		const parsedExpectedParams = new URLSearchParams(expectedParams)
 
 		const pass = vi.mocked(client.fetchFn).mock.calls.some(([url, init]) => {
-			const actual = new Request(
-				filterURLParams(url, Array.from(parsedExpectedParams.keys())),
+			const urlMatches =
+				filterURLParams(
+					url,
+					Array.from(parsedExpectedParams.keys()),
+				).toString() ===
+				getContentAPIURL(client, parsedExpectedParams).toString()
+			const initMatches = isDeepEqual(
 				filterRequestInit(init, Object.keys(expectedInit)),
-			)
-			const expected = new Request(
-				getContentAPIURL(client, parsedExpectedParams),
 				expectedInit,
 			)
 
-			return isDeepEqual(actual, expected)
+			return urlMatches && initMatches
 		})
 
 		return {
@@ -68,6 +70,18 @@ expect.extend({
 		const parsedExpectedParams = new URLSearchParams(expectedParams)
 		const [url, init] = client.fetchFn.mock.lastCall
 
+		const urlMatches =
+			filterURLParams(
+				url,
+				Array.from(parsedExpectedParams.keys()),
+			).toString() ===
+			getContentAPIURL(client, parsedExpectedParams).toString()
+		const initMatches = isDeepEqual(
+			filterRequestInit(init, Object.keys(expectedInit)),
+			expectedInit,
+		)
+		const pass = urlMatches && initMatches
+
 		const actual = new Request(
 			filterURLParams(url, Array.from(parsedExpectedParams.keys())),
 			filterRequestInit(init, Object.keys(expectedInit)),
@@ -76,7 +90,6 @@ expect.extend({
 			getContentAPIURL(client, parsedExpectedParams),
 			expectedInit,
 		)
-		const pass = isDeepEqual(actual, expected)
 
 		return {
 			pass,
@@ -107,16 +120,17 @@ expect.extend({
 		const parsedExpectedParams = new URLSearchParams(expectedParams)
 
 		const pass = vi.mocked(client.fetchFn).mock.calls.some(([url, init]) => {
-			const actual = new Request(
-				filterURLParams(url, Array.from(parsedExpectedParams.keys())),
+			const urlMatches =
+				filterURLParams(
+					url,
+					Array.from(parsedExpectedParams.keys()),
+				).toString() === getRepoURL(client, parsedExpectedParams).toString()
+			const initMatches = isDeepEqual(
 				filterRequestInit(init, Object.keys(expectedInit)),
-			)
-			const expected = new Request(
-				getRepoURL(client, parsedExpectedParams),
 				expectedInit,
 			)
 
-			return isDeepEqual(actual, expected)
+			return urlMatches && initMatches
 		})
 
 		return {
@@ -132,6 +146,17 @@ expect.extend({
 		const parsedExpectedParams = new URLSearchParams(expectedParams)
 		const [url, init] = client.fetchFn.mock.lastCall
 
+		const urlMatches =
+			filterURLParams(
+				url,
+				Array.from(parsedExpectedParams.keys()),
+			).toString() === getRepoURL(client, parsedExpectedParams).toString()
+		const initMatches = isDeepEqual(
+			filterRequestInit(init, Object.keys(expectedInit)),
+			expectedInit,
+		)
+		const pass = urlMatches && initMatches
+
 		const actual = new Request(
 			filterURLParams(url, Array.from(parsedExpectedParams.keys())),
 			filterRequestInit(init, Object.keys(expectedInit)),
@@ -140,7 +165,6 @@ expect.extend({
 			getRepoURL(client, parsedExpectedParams),
 			expectedInit,
 		)
-		const pass = isDeepEqual(actual, expected)
 
 		return {
 			pass,
