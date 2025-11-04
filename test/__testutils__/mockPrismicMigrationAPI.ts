@@ -136,7 +136,7 @@ export const mockPrismicMigrationAPI = (
 				const document = documentsDatabase[req.params.id as string]
 
 				if (!document) {
-					return res(ctx.status(404))
+					return res(ctx.status(404), ctx.json({ message: "Not Found" }))
 				}
 
 				const body = await req.json<PutDocumentParams>()

@@ -908,45 +908,34 @@ export class WriteClient<
 	 * @throws {@link PrismicError} For 500, and other unexpected errors.
 	 */
 	async #handleMigrationAPIError(response: ResponseLike): Promise<never> {
-		// Some responses come with a JSON body, some with a text body.
-		const text = await response.text()
-		let json: unknown
-		try {
-			json = JSON.parse(text)
-		} catch {
-			// no-op
-		}
+		const payload = (await response.json()) as unknown
+
+		// Common message across all branches
+		const message = (payload as { message?: string }).message
 
 		switch (response.status) {
-			case 400:
-				if (json) {
-					throw new InvalidDataError(
-						"Validation failed, check the response property of the error for details",
-						response.url,
-						json, // `json` has the shape Array<{ property: string, value: unknown, error: string }>
-					)
-				}
-				throw new InvalidDataError(text, response.url, text)
+			case 400: {
+				throw new InvalidDataError(message, response.url, payload)
+			}
 
-			case 401:
-				throw new ForbiddenError(text, response.url, text)
+			case 401: {
+				throw new ForbiddenError(message, response.url, payload)
+			}
 
-			case 403:
-				if (json) {
-					throw new ForbiddenError(
-						(json as { Message: string }).Message,
-						response.url,
-						json,
-					)
-				}
-				throw new ForbiddenError(text, response.url, text)
+			case 403: {
+				// The lambda authorizer uses an uppercase key, remove this once it is fixed
+				const msg = message ?? (payload as { Message?: string }).Message
+				throw new ForbiddenError(msg, response.url, payload)
+			}
 
-			case 404:
-				throw new NotFoundError(text, response.url, text)
+			case 404: {
+				throw new NotFoundError(message, response.url, payload)
+			}
 
 			case 500:
-			default:
-				throw new PrismicError(text, response.url, text)
+			default: {
+				throw new PrismicError(message, response.url, payload)
+			}
 		}
 	}
 }
