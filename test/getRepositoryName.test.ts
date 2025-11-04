@@ -31,4 +31,3 @@ it("throws if the input is not a valid URL", () => {
 		prismic.getRepositoryName("qwerty")
 	}).toThrowError(prismic.PrismicError)
 })
-

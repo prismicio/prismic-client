@@ -2,7 +2,10 @@ import type { TestProject } from "vitest/node"
 
 import { ok } from "node:assert"
 
-import type { RepositoryManager } from "@prismicio/e2e-tests-utils"
+import type {
+	ContentApiDocument,
+	RepositoryManager,
+} from "@prismicio/e2e-tests-utils"
 import { createRepositoriesManager } from "@prismicio/e2e-tests-utils"
 import type { CoreApiDocumentCreationPayload } from "@prismicio/e2e-tests-utils/dist/clients/coreApi"
 
@@ -149,7 +152,7 @@ export async function createDocument(
 	repo: RepositoryManager,
 	type: string,
 	params: Partial<CoreApiDocumentCreationPayload> & { routes?: string } = {},
-) {
+): Promise<ContentApiDocument> {
 	const { routes, ...doc } = params
 
 	const docMeta = await repo.createDocument(

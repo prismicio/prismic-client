@@ -36,15 +36,15 @@ expect.extend({
 	toHaveFetchedContentAPI(client: unknown, expectedParams, expectedInit = {}) {
 		assertMockedClient(client)
 
-		expectedParams = new URLSearchParams(expectedParams)
+		const parsedExpectedParams = new URLSearchParams(expectedParams)
 
 		const pass = vi.mocked(client.fetchFn).mock.calls.some(([url, init]) => {
 			const actual = new Request(
-				filterURLParams(url, Array.from(expectedParams.keys())),
+				filterURLParams(url, Array.from(parsedExpectedParams.keys())),
 				filterRequestInit(init, Object.keys(expectedInit)),
 			)
 			const expected = new Request(
-				getContentAPIURL(client, expectedParams),
+				getContentAPIURL(client, parsedExpectedParams),
 				expectedInit,
 			)
 
@@ -54,7 +54,7 @@ expect.extend({
 		return {
 			pass,
 			message: () =>
-				`Client ${!pass || !this.isNot ? "did not call" : "called"} the Content API${expectedParams.size > 0 ? ` with the required params` : ""}`,
+				`Client ${!pass || !this.isNot ? "did not call" : "called"} the Content API${parsedExpectedParams.size > 0 ? ` with the required params` : ""}`,
 		}
 	},
 	toHaveLastFetchedContentAPI(
@@ -65,15 +65,15 @@ expect.extend({
 		assertMockedClient(client)
 		assertHasBeenCalled(client.fetchFn)
 
-		expectedParams = new URLSearchParams(expectedParams)
+		const parsedExpectedParams = new URLSearchParams(expectedParams)
 		const [url, init] = client.fetchFn.mock.lastCall
 
 		const actual = new Request(
-			filterURLParams(url, Array.from(expectedParams.keys())),
+			filterURLParams(url, Array.from(parsedExpectedParams.keys())),
 			filterRequestInit(init, Object.keys(expectedInit)),
 		)
 		const expected = new Request(
-			getContentAPIURL(client, expectedParams),
+			getContentAPIURL(client, parsedExpectedParams),
 			expectedInit,
 		)
 		const pass = isDeepEqual(actual, expected)
@@ -81,7 +81,7 @@ expect.extend({
 		return {
 			pass,
 			message: () =>
-				`The client ${!pass || !this.isNot ? "did not last call" : "last called"} the Content API${expectedParams.size > 0 || Object.keys(expectedInit).length > 0 ? ` with the expected parameters` : ""}`,
+				`The client ${!pass || !this.isNot ? "did not last call" : "last called"} the Content API${parsedExpectedParams.size > 0 || Object.keys(expectedInit).length > 0 ? ` with the expected parameters` : ""}`,
 			actual: stringifyRequest(actual),
 			expected: stringifyRequest(expected),
 		}
@@ -104,15 +104,15 @@ expect.extend({
 	toHaveFetchedRepo(client: unknown, expectedParams, expectedInit = {}) {
 		assertMockedClient(client)
 
-		expectedParams = new URLSearchParams(expectedParams)
+		const parsedExpectedParams = new URLSearchParams(expectedParams)
 
 		const pass = vi.mocked(client.fetchFn).mock.calls.some(([url, init]) => {
 			const actual = new Request(
-				filterURLParams(url, Array.from(expectedParams.keys())),
+				filterURLParams(url, Array.from(parsedExpectedParams.keys())),
 				filterRequestInit(init, Object.keys(expectedInit)),
 			)
 			const expected = new Request(
-				getRepoURL(client, expectedParams),
+				getRepoURL(client, parsedExpectedParams),
 				expectedInit,
 			)
 
@@ -122,22 +122,22 @@ expect.extend({
 		return {
 			pass,
 			message: () =>
-				`Client ${!pass || !this.isNot ? "did not call" : "called"} the repository${expectedParams.size > 0 ? ` with the required params` : ""}`,
+				`Client ${!pass || !this.isNot ? "did not call" : "called"} the repository${parsedExpectedParams.size > 0 ? ` with the required params` : ""}`,
 		}
 	},
 	toHaveLastFetchedRepo(client: unknown, expectedParams, expectedInit = {}) {
 		assertMockedClient(client)
 		assertHasBeenCalled(client.fetchFn)
 
-		expectedParams = new URLSearchParams(expectedParams)
+		const parsedExpectedParams = new URLSearchParams(expectedParams)
 		const [url, init] = client.fetchFn.mock.lastCall
 
 		const actual = new Request(
-			filterURLParams(url, Array.from(expectedParams.keys())),
+			filterURLParams(url, Array.from(parsedExpectedParams.keys())),
 			filterRequestInit(init, Object.keys(expectedInit)),
 		)
 		const expected = new Request(
-			getRepoURL(client, expectedParams),
+			getRepoURL(client, parsedExpectedParams),
 			expectedInit,
 		)
 		const pass = isDeepEqual(actual, expected)
@@ -145,7 +145,7 @@ expect.extend({
 		return {
 			pass,
 			message: () =>
-				`The client ${!pass || !this.isNot ? "did not last call" : "last called"} the repository${expectedParams.size > 0 || Object.keys(expectedInit).length > 0 ? ` with the expected parameters` : ""}`,
+				`The client ${!pass || !this.isNot ? "did not last call" : "last called"} the repository${parsedExpectedParams.size > 0 || Object.keys(expectedInit).length > 0 ? ` with the expected parameters` : ""}`,
 			actual: stringifyRequest(actual),
 			expected: stringifyRequest(expected),
 		}
