@@ -174,9 +174,7 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 			masterRef,
 			response,
 		}) => {
-			vi.mocked(client.fetchFn)
-				.mockResolvedValueOnce(response.repo("invalid"))
-				.mockResolvedValueOnce(response.refNotFound(masterRef))
+			vi.mocked(client.fetchFn).mockResolvedValueOnce(response.repo("invalid"))
 			await fn({ client, docs })
 			expect(client).toHaveFetchedContentAPI({ ref: "invalid" })
 			expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
@@ -209,9 +207,7 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 			masterRef,
 			response,
 		}) => {
-			vi.mocked(client.fetchFn)
-				.mockResolvedValueOnce(response.repo("invalid"))
-				.mockResolvedValueOnce(response.refNotFound(masterRef))
+			vi.mocked(client.fetchFn).mockResolvedValueOnce(response.repo("invalid"))
 			await fn({ client, docs })
 			expect(client).toHaveFetchedContentAPI({ ref: "invalid" })
 			expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
@@ -232,9 +228,7 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 			masterRef,
 			response,
 		}) => {
-			vi.mocked(client.fetchFn)
-				.mockResolvedValueOnce(response.repo("expired"))
-				.mockResolvedValueOnce(response.refExpired(masterRef))
+			vi.mocked(client.fetchFn).mockResolvedValueOnce(response.repo("expired"))
 			await fn({ client, docs })
 			expect(client).toHaveFetchedContentAPI({ ref: "expired" })
 			expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
