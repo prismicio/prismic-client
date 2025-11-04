@@ -74,8 +74,7 @@ expect.extend({
 			filterURLParams(
 				url,
 				Array.from(parsedExpectedParams.keys()),
-			).toString() ===
-			getContentAPIURL(client, parsedExpectedParams).toString()
+			).toString() === getContentAPIURL(client, parsedExpectedParams).toString()
 		const initMatches = isDeepEqual(
 			filterRequestInit(init, Object.keys(expectedInit)),
 			expectedInit,

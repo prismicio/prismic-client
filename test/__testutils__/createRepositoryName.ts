@@ -1,8 +1,8 @@
-import type { TaskContext } from "vitest"
+import type { TestContext } from "vitest"
 
 import * as crypto from "node:crypto"
 
-export const createRepositoryName = (ctx: TaskContext): string => {
+export const createRepositoryName = (ctx: TestContext): string => {
 	const seed = ctx.task.name
 	if (!seed) {
 		throw new Error(

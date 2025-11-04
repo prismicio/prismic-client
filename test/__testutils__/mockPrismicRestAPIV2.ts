@@ -1,4 +1,4 @@
-import type { TaskContext, TestContext } from "vitest"
+import type { TestContext } from "vitest"
 import { expect } from "vitest"
 
 import { rest } from "msw"
@@ -10,7 +10,7 @@ import type * as prismic from "../../src"
 const DEFAULT_DELAY = 0
 
 type MockPrismicRestAPIV2Args = {
-	ctx: TestContext & TaskContext
+	ctx: TestContext
 	accessToken?: string
 	repositoryResponse?: prismic.Repository
 	queryResponse?: prismic.Query | prismic.Query[]
