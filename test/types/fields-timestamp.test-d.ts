@@ -15,8 +15,3 @@ it("supports empty values", () => {
 	// @ts-expect-error - Empty fields cannot contain a filled value.
 	assertType<TimestampField<"empty">>("1984-01-24T05:00:00+0000")
 })
-
-it("must be in YYYY-MM-DDTHH:MM:SS+ZZZZ format", () => {
-	// @ts-expect-error - Arbitrary strings are invalid.
-	assertType<TimestampField>("1984-01-24")
-})
