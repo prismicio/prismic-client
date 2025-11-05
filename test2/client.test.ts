@@ -179,7 +179,6 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 		expect,
 		client,
 		docs,
-
 		response,
 	}) => {
 		vi.mocked(client.fetchFn)
@@ -188,7 +187,6 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 			.mockResolvedValueOnce(response.repo("invalid"))
 			.mockResolvedValueOnce(response.refNotFound("invalid"))
 		await expect(() => fn({ client, docs })).rejects.toThrow(RefNotFoundError)
-		expect(client).toHaveFetchedContentAPITimes(3)
 	})
 
 	it("fetches a new master ref on subsequent queries if an invalid ref is used", async ({

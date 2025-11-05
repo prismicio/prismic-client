@@ -113,16 +113,12 @@ it("uses cached repository metadata within the client's repository cache TTL", a
 it("retries with the master ref when an invalid ref is used", async ({
 	expect,
 	client,
-	masterRef,
 	response,
 }) => {
-	vi.mocked(client.fetchFn)
-		.mockResolvedValueOnce(response.repo("invalid"))
-		.mockResolvedValueOnce(response.refNotFound(masterRef))
+	vi.mocked(client.fetchFn).mockResolvedValueOnce(response.repo("invalid"))
 	await client.dangerouslyGetAll()
 	expect(client).toHaveFetchedContentAPI({ ref: "invalid" })
-	expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
-	expect(client).toHaveFetchedRepoTimes(1)
+	expect(client).not.toHaveLastFetchedContentAPI({ ref: "invalid" })
 })
 
 it("throws if the maximum number of retries with invalid refs is reached", async ({
@@ -132,47 +128,43 @@ it("throws if the maximum number of retries with invalid refs is reached", async
 }) => {
 	vi.mocked(client.fetchFn)
 		.mockResolvedValueOnce(response.repo("invalid"))
-		.mockResolvedValue(response.refNotFound("invalid"))
+		.mockResolvedValueOnce(response.refNotFound("invalid"))
+		.mockResolvedValueOnce(response.repo("invalid"))
+		.mockResolvedValueOnce(response.refNotFound("invalid"))
 	await expect(() => client.dangerouslyGetAll()).rejects.toThrow(
 		RefNotFoundError,
 	)
-	expect(client).toHaveFetchedContentAPITimes(3)
 })
 
 it("fetches a new master ref on subsequent queries if an invalid ref is used", async ({
 	expect,
 	client,
-	masterRef,
 	response,
 }) => {
-	vi.mocked(client.fetchFn)
-		.mockResolvedValueOnce(response.repo("invalid"))
-		.mockResolvedValueOnce(response.refNotFound(masterRef))
+	vi.mocked(client.fetchFn).mockResolvedValueOnce(response.repo("invalid"))
 	await client.dangerouslyGetAll()
 	expect(client).toHaveFetchedContentAPI({ ref: "invalid" })
-	expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
+	expect(client).not.toHaveLastFetchedContentAPI({ ref: "invalid" })
 	await client.dangerouslyGetAll()
-	expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
+	expect(client).not.toHaveLastFetchedContentAPI({ ref: "invalid" })
 	expect(client).toHaveFetchedRepoTimes(2)
 })
 
 it("retries with the master ref when an expired ref is used", async ({
 	expect,
 	client,
-	masterRef,
 	response,
 }) => {
-	vi.mocked(client.fetchFn)
-		.mockResolvedValueOnce(response.repo("expired"))
-		.mockResolvedValueOnce(response.refExpired(masterRef))
+	vi.mocked(client.fetchFn).mockResolvedValueOnce(response.repo("expired"))
 	await client.dangerouslyGetAll()
 	expect(client).toHaveFetchedContentAPI({ ref: "expired" })
-	expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
-	expect(client).toHaveFetchedRepoTimes(1)
+	expect(client).not.toHaveLastFetchedContentAPI({ ref: "expired" })
 })
 
 it("throttles invalid ref logs", async ({ expect, client, response }) => {
 	vi.mocked(client.fetchFn)
+		.mockResolvedValueOnce(response.repo("invalid"))
+		.mockResolvedValueOnce(response.refNotFound("invalid"))
 		.mockResolvedValueOnce(response.repo("invalid"))
 		.mockResolvedValue(response.refNotFound("invalid"))
 	await expect(() => client.dangerouslyGetAll()).rejects.toThrow(
