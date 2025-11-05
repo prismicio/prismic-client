@@ -4,10 +4,10 @@ import { ok } from "node:assert"
 
 import type {
 	ContentApiDocument,
+	CoreApiDocumentCreationPayload,
 	RepositoryManager,
 } from "@prismicio/e2e-tests-utils"
 import { createRepositoriesManager } from "@prismicio/e2e-tests-utils"
-import type { CoreApiDocumentCreationPayload } from "@prismicio/e2e-tests-utils/dist/clients/coreApi"
 
 import type { CustomType } from "@prismicio/types-internal/lib/customtypes"
 
@@ -26,103 +26,85 @@ export const repos = createRepositoriesManager({
 	},
 })
 
+const model: CustomType = {
+	id: "page",
+	status: true,
+	label: "Page",
+	format: "page",
+	repeatable: true,
+	json: {
+		Main: {
+			uid: {
+				type: "UID",
+			},
+			link: {
+				type: "Link",
+				config: { allowText: true },
+			},
+			var_link: {
+				type: "Link",
+				config: { variants: ["foo"] },
+			},
+			image: {
+				type: "Image",
+				config: { thumbnails: [{ name: "square" }] },
+			},
+			richtext: {
+				type: "StructuredText",
+				config: { multi: "paragraph,image,hyperlink" },
+			},
+		},
+	},
+}
+const singleModel: CustomType = {
+	id: "single",
+	status: true,
+	label: "Single",
+	format: "custom",
+	repeatable: false,
+	json: { Main: {} },
+}
+const routes = JSON.stringify([{ type: model.id, path: "/:uid" }])
+
 export async function setup({ provide }: TestProject): Promise<void> {
 	const repo = await repos.createRepository({
 		prefix: "e2e-tests-prismicio-client",
 		defaultLocale: "en-us",
 		locales: ["en-us", "fr-fr"],
-		customTypes: [],
+		customTypes: [model, singleModel],
 		slices: [],
 	})
 	provide("repoName", repo.name)
 
-	const repoMetadata = await repo.getContentApiClient().getAsJson("/api/v2")
-	provide("repo", JSON.stringify(repoMetadata))
-
-	const writeToken = await repos.getUserApiToken()
+	const [repoMeta, writeToken, accessToken, releaseMeta] = await Promise.all([
+		repo.getContentApiClient().getAsJson("/api/v2"),
+		repos.getUserApiToken(),
+		repo.createContentAPIToken("test", "master+releases"),
+		repo.createRelease("test"),
+	])
+	provide("repo", JSON.stringify(repoMeta))
 	provide("writeToken", writeToken)
-
-	const accessToken = await repo.createContentAPIToken(
-		"test",
-		"master+releases",
-	)
 	provide("accessToken", accessToken)
 
-	const model: CustomType = {
-		id: "page",
-		status: true,
-		label: "Page",
-		format: "page",
-		repeatable: true,
-		json: {
-			Main: {
-				uid: {
-					type: "UID",
-				},
-				link: {
-					type: "Link",
-					config: { allowText: true },
-				},
-				var_link: {
-					type: "Link",
-					config: { variants: ["foo"] },
-				},
-				image: {
-					type: "Image",
-					config: { thumbnails: [{ name: "square" }] },
-				},
-				richtext: {
-					type: "StructuredText",
-					config: { multi: "paragraph,image,hyperlink" },
-				},
-			},
-		},
-	}
-	const singleModel: CustomType = {
-		id: "single",
-		status: true,
-		label: "Single",
-		format: "custom",
-		repeatable: false,
-		json: { Main: {} },
-	}
-	await repo.createCustomTypes([model, singleModel])
-
-	const routes = JSON.stringify([{ type: model.id, path: "/:uid" }])
-
-	const default1 = await createDocument(repo, model.id, {
-		tags: ["foo"],
-		routes,
-	})
-	const default2 = await createDocument(repo, model.id, {
-		tags: ["bar"],
-		routes,
-	})
-	const default3 = await createDocument(repo, model.id, {
-		tags: ["foo", "bar"],
-		routes,
-	})
-	const default4 = await createDocument(repo, model.id, {
-		tags: ["foo", "bar"],
-		routes,
-	})
-	const defaultSingle = await createDocument(repo, singleModel.id, {
-		routes,
-	})
-	const french1 = await createDocument(repo, model.id, {
-		locale: "fr-fr",
-		tags: ["foo"],
-		routes,
-	})
-	const french2 = await createDocument(repo, model.id, {
-		locale: "fr-fr",
-		tags: ["bar"],
-		routes,
-	})
-	const frenchSingle = await createDocument(repo, singleModel.id, {
-		locale: "fr-fr",
-		routes,
-	})
+	const [
+		default1,
+		default2,
+		default3,
+		default4,
+		defaultSingle,
+		french1,
+		french2,
+		frenchSingle,
+	] = await Promise.all([
+		createDocument(repo, model.id, { tags: ["foo"], routes }),
+		createDocument(repo, model.id, { tags: ["bar"], routes }),
+		createDocument(repo, model.id, { tags: ["foo", "bar"], routes }),
+		createDocument(repo, model.id, { tags: ["foo", "bar"], routes }),
+		createDocument(repo, singleModel.id, { routes }),
+		createDocument(repo, model.id, { locale: "fr-fr", tags: ["foo"], routes }),
+		createDocument(repo, model.id, { locale: "fr-fr", tags: ["bar"], routes }),
+		createDocument(repo, singleModel.id, { locale: "fr-fr", routes }),
+	])
 	provide(
 		"docs",
 		JSON.stringify({
@@ -138,9 +120,8 @@ export async function setup({ provide }: TestProject): Promise<void> {
 	)
 
 	const client = repo.getContentApiClient({ accessToken })
-	const releaseResult = await repo.createRelease("test")
 	const refs = await client.getRefs()
-	const release = refs.find((ref) => ref.id === releaseResult.id)!
+	const release = refs.find((ref) => ref.id === releaseMeta.id)!
 	provide("release", JSON.stringify(release))
 }
 
