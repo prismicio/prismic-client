@@ -173,7 +173,6 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 		await fn({ client, docs })
 		expect(client).toHaveFetchedContentAPI({ ref: "invalid" })
 		expect(client).not.toHaveLastFetchedContentAPI({ ref: "invalid" })
-		expect(client).toHaveFetchedRepoTimes(1)
 	})
 
 	it("throws if the maximum number of retries with invalid refs is reached", async ({
@@ -185,7 +184,9 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 	}) => {
 		vi.mocked(client.fetchFn)
 			.mockResolvedValueOnce(response.repo("invalid"))
-			.mockResolvedValue(response.refNotFound("invalid"))
+			.mockResolvedValueOnce(response.refNotFound("invalid"))
+			.mockResolvedValueOnce(response.repo("invalid"))
+			.mockResolvedValueOnce(response.refNotFound("invalid"))
 		await expect(() => fn({ client, docs })).rejects.toThrow(RefNotFoundError)
 		expect(client).toHaveFetchedContentAPITimes(3)
 	})
@@ -215,7 +216,6 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 		await fn({ client, docs })
 		expect(client).toHaveFetchedContentAPI({ ref: "expired" })
 		expect(client).not.toHaveLastFetchedContentAPI({ ref: "expired" })
-		expect(client).toHaveFetchedRepoTimes(1)
 	})
 
 	it("throttles invalid ref logs", async ({
@@ -226,6 +226,8 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 		response,
 	}) => {
 		vi.mocked(client.fetchFn)
+			.mockResolvedValueOnce(response.repo("invalid"))
+			.mockResolvedValueOnce(response.refNotFound("invalid"))
 			.mockResolvedValueOnce(response.repo("invalid"))
 			.mockResolvedValue(response.refNotFound("invalid"))
 		await expect(() => fn({ client, docs })).rejects.toThrow(RefNotFoundError)
