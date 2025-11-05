@@ -77,19 +77,14 @@ export async function setup({ provide }: TestProject): Promise<void> {
 	})
 	provide("repoName", repo.name)
 
-	const [
-		repoMeta,
-		writeToken,
-		accessToken,
-		// initRelease,
-		testReleaseMeta,
-	] = await Promise.all([
-		repo.getContentApiClient().getAsJson("/api/v2"),
-		repos.getUserApiToken(),
-		repo.createContentAPIToken("test", "master+releases"),
-		// repo.createRelease("init"),
-		repo.createRelease("test"),
-	])
+	const [repoMeta, writeToken, accessToken, initRelease, testReleaseMeta] =
+		await Promise.all([
+			repo.getContentApiClient().getAsJson("/api/v2"),
+			repos.getUserApiToken(),
+			repo.createContentAPIToken("test", "master+releases"),
+			repo.createRelease("init"),
+			repo.createRelease("test"),
+		])
 	provide("repo", JSON.stringify(repoMeta))
 	provide("writeToken", writeToken)
 	provide("accessToken", accessToken)
@@ -97,8 +92,8 @@ export async function setup({ provide }: TestProject): Promise<void> {
 	const doc = {
 		accessToken,
 		routes,
-		// release_id: initRelease.id,
-		// status: "draft",
+		release_id: initRelease.id,
+		status: "draft",
 	} as const
 	const [
 		default1,
@@ -119,7 +114,6 @@ export async function setup({ provide }: TestProject): Promise<void> {
 		createDocument(repo, model.id, { ...doc, locale: "fr-fr", tags: ["bar"] }),
 		createDocument(repo, singleModel.id, { ...doc, locale: "fr-fr" }),
 	])
-	// await repo.publishRelease(initRelease.id)
 	provide(
 		"docs",
 		JSON.stringify({
@@ -133,6 +127,8 @@ export async function setup({ provide }: TestProject): Promise<void> {
 			frenchSingle,
 		}),
 	)
+
+	await repo.publishRelease(initRelease.id)
 
 	const client = repo.getContentApiClient({ accessToken })
 	const refs = await client.getRefs()
@@ -180,7 +176,7 @@ export async function createDocument(
 	)
 	const client = repo.getContentApiClient({ accessToken })
 
-	const publishedDoc = waitFor(async () => {
+	return await waitFor(async () => {
 		const ref = release_id
 			? await client.getRefByReleaseID(release_id)
 			: undefined
@@ -193,8 +189,6 @@ export async function createDocument(
 
 		return publishedDoc
 	})
-
-	return publishedDoc
 }
 
 async function waitFor<T>(
