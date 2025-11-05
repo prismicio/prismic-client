@@ -1873,10 +1873,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 				{ level: "warn" },
 			)
 
-			return await this._get<TDocument>(
-				{ ...params, ref: masterRef },
-				attemptCount + 1,
-			)
+			return await this._get({ ...params, ref: masterRef }, attemptCount + 1)
 		}
 	}
 
