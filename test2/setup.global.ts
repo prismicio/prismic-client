@@ -1,6 +1,7 @@
 import type { TestProject } from "vitest/node"
 
 import { ok } from "node:assert"
+import { setTimeout as wait } from "node:timers/promises"
 
 import type {
 	ContentApiDocument,
@@ -76,16 +77,29 @@ export async function setup({ provide }: TestProject): Promise<void> {
 	})
 	provide("repoName", repo.name)
 
-	const [repoMeta, writeToken, accessToken, releaseMeta] = await Promise.all([
+	const [
+		repoMeta,
+		writeToken,
+		accessToken,
+		// initRelease,
+		testReleaseMeta,
+	] = await Promise.all([
 		repo.getContentApiClient().getAsJson("/api/v2"),
 		repos.getUserApiToken(),
 		repo.createContentAPIToken("test", "master+releases"),
+		// repo.createRelease("init"),
 		repo.createRelease("test"),
 	])
 	provide("repo", JSON.stringify(repoMeta))
 	provide("writeToken", writeToken)
 	provide("accessToken", accessToken)
 
+	const doc = {
+		accessToken,
+		routes,
+		// release_id: initRelease.id,
+		// status: "draft",
+	} as const
 	const [
 		default1,
 		default2,
@@ -96,15 +110,16 @@ export async function setup({ provide }: TestProject): Promise<void> {
 		french2,
 		frenchSingle,
 	] = await Promise.all([
-		createDocument(repo, model.id, { tags: ["foo"], routes }),
-		createDocument(repo, model.id, { tags: ["bar"], routes }),
-		createDocument(repo, model.id, { tags: ["foo", "bar"], routes }),
-		createDocument(repo, model.id, { tags: ["foo", "bar"], routes }),
-		createDocument(repo, singleModel.id, { routes }),
-		createDocument(repo, model.id, { locale: "fr-fr", tags: ["foo"], routes }),
-		createDocument(repo, model.id, { locale: "fr-fr", tags: ["bar"], routes }),
-		createDocument(repo, singleModel.id, { locale: "fr-fr", routes }),
+		createDocument(repo, model.id, { ...doc, tags: ["foo"] }),
+		createDocument(repo, model.id, { ...doc, tags: ["bar"] }),
+		createDocument(repo, model.id, { ...doc, tags: ["foo", "bar"] }),
+		createDocument(repo, model.id, { ...doc, tags: ["foo", "bar"] }),
+		createDocument(repo, singleModel.id, { ...doc }),
+		createDocument(repo, model.id, { ...doc, locale: "fr-fr", tags: ["foo"] }),
+		createDocument(repo, model.id, { ...doc, locale: "fr-fr", tags: ["bar"] }),
+		createDocument(repo, singleModel.id, { ...doc, locale: "fr-fr" }),
 	])
+	// await repo.publishRelease(initRelease.id)
 	provide(
 		"docs",
 		JSON.stringify({
@@ -121,7 +136,7 @@ export async function setup({ provide }: TestProject): Promise<void> {
 
 	const client = repo.getContentApiClient({ accessToken })
 	const refs = await client.getRefs()
-	const release = refs.find((ref) => ref.id === releaseMeta.id)!
+	const release = refs.find((ref) => ref.id === testReleaseMeta.id)!
 	provide("release", JSON.stringify(release))
 }
 
@@ -132,9 +147,19 @@ export async function teardown(): Promise<void> {
 export async function createDocument(
 	repo: RepositoryManager,
 	type: string,
-	params: Partial<CoreApiDocumentCreationPayload> & { routes?: string } = {},
+	params: Partial<CoreApiDocumentCreationPayload> & {
+		accessToken?: string
+		routes?: string
+		status?: "published" | "draft"
+	} = {},
 ): Promise<ContentApiDocument> {
-	const { routes, ...doc } = params
+	const {
+		accessToken,
+		routes,
+		status = "published",
+		release_id,
+		...doc
+	} = params
 
 	const docMeta = await repo.createDocument(
 		{
@@ -143,6 +168,7 @@ export async function createDocument(
 			tags: [],
 			locale: "en-us",
 			integration_field_ids: [],
+			release_id,
 			...doc,
 			data: {
 				uid: crypto.randomUUID(),
@@ -150,14 +176,48 @@ export async function createDocument(
 				...doc?.data,
 			},
 		},
-		"published",
+		status,
 	)
-	const publishedDoc = await repo
-		.getContentApiClient()
-		.getDocumentByID(docMeta.id, { lang: docMeta.locale, routes })
-	if (!publishedDoc) {
-		throw new Error("Document was not published")
-	}
+	const client = repo.getContentApiClient({ accessToken })
+
+	const publishedDoc = waitFor(async () => {
+		const ref = release_id
+			? await client.getRefByReleaseID(release_id)
+			: undefined
+		const publishedDoc = await client.getDocumentByID(docMeta.id, {
+			ref,
+			lang: docMeta.locale,
+			routes,
+		})
+		ok(publishedDoc, `Failed to find document ${docMeta.id} in the Content API`)
+
+		return publishedDoc
+	})
 
 	return publishedDoc
+}
+
+async function waitFor<T>(
+	fn: () => T | Promise<T>,
+	config: { timeout?: number; interval?: number } = {},
+): Promise<T> {
+	const { timeout = 3000, interval = 1000 } = config
+
+	let error: unknown
+
+	const timer = setTimeout(() => {
+		throw error
+	}, timeout)
+
+	while (true) {
+		try {
+			const res = await fn()
+			clearTimeout(timer)
+
+			return res
+		} catch (e) {
+			error = e
+			await wait(interval)
+		}
+	}
 }
