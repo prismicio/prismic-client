@@ -1,4 +1,4 @@
-import type { TaskContext } from "vitest"
+import type { TestContext } from "vitest"
 
 import fetch from "node-fetch"
 
@@ -16,7 +16,7 @@ type CreateTestClientArgs = (
 			documentAPIEndpoint?: string
 	  }
 ) & {
-	ctx: TaskContext
+	ctx: TestContext
 	clientConfig?: prismic.ClientConfig
 }
 

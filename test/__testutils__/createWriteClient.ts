@@ -1,4 +1,4 @@
-import type { TaskContext } from "vitest"
+import type { TestContext } from "vitest"
 
 import fetch from "node-fetch"
 
@@ -9,7 +9,7 @@ import * as prismic from "../../src"
 type CreateTestWriteClientArgs = {
 	repositoryName?: string
 } & {
-	ctx: TaskContext
+	ctx: TestContext
 	clientConfig?: Partial<prismic.WriteClientConfig>
 }
 
