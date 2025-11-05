@@ -1,8 +1,9 @@
 import { it } from "./it"
 
+import type { ImageField } from "../src"
 import { asImageWidthSrcSet } from "../src"
 
-const field = {
+const field: ImageField = {
 	id: "id",
 	edit: {
 		x: 0,
@@ -16,7 +17,7 @@ const field = {
 	dimensions: { width: 400, height: 300 },
 }
 
-const fieldWithThumbnails = {
+const fieldWithThumbnails: ImageField<"foo" | "bar"> = {
 	id: "id",
 	edit: {
 		x: 0,

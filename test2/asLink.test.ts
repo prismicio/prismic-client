@@ -1,8 +1,9 @@
 import { it } from "./it"
 
+import type { LinkField } from "../src"
 import { LinkType, asLink } from "../src"
 
-const docLink = {
+const docLink: LinkField = {
 	id: "XvoFFREAAM0WGBng",
 	type: "page",
 	tags: [],
@@ -12,7 +13,7 @@ const docLink = {
 	link_type: LinkType.Document,
 	isBroken: false,
 }
-const docLinkWithURL = {
+const docLinkWithURL: LinkField = {
 	...docLink,
 	uid: "uid",
 	url: "url",

@@ -1,8 +1,9 @@
 import { it } from "./it"
 
+import type { ImageField } from "../src"
 import { asImageSrc } from "../src"
 
-const field = {
+const field: ImageField = {
 	id: "id",
 	edit: {
 		x: 0,
