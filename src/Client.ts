@@ -1232,11 +1232,14 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *
 	 * @returns Repository metadata.
 	 */
-	async getRepository(params?: FetchParams): Promise<Repository> {
+	async getRepository(
+		params?: Pick<BuildQueryURLArgs, "accessToken"> & FetchParams,
+	): Promise<Repository> {
 		const url = new URL(this.documentAPIEndpoint)
 
-		if (this.accessToken) {
-			url.searchParams.set("access_token", this.accessToken)
+		const accessToken = params?.accessToken || this.accessToken
+		if (accessToken) {
+			url.searchParams.set("access_token", accessToken)
 		}
 
 		const response = await this.#request(url, params)
@@ -1390,11 +1393,21 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		...params
 	}: Partial<BuildQueryURLArgs> & FetchParams = {}): Promise<string> {
 		const ref =
-			params.ref || (await this.getResolvedRefString({ signal, fetchOptions }))
+			params.ref ||
+			(await this.getResolvedRefString({
+				accessToken: params.accessToken,
+				signal,
+				fetchOptions,
+			}))
 		const integrationFieldsRef =
 			params.integrationFieldsRef ||
-			(await this.getCachedRepository({ signal, fetchOptions }))
-				.integrationFieldsRef ||
+			(
+				await this.getCachedRepository({
+					accessToken: params.accessToken,
+					signal,
+					fetchOptions,
+				})
+			).integrationFieldsRef ||
 			undefined
 
 		return buildQueryURL(this.documentAPIEndpoint, {
@@ -1674,7 +1687,9 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *
 	 * @returns Cached repository metadata.
 	 */
-	private async getCachedRepository(params?: FetchParams): Promise<Repository> {
+	private async getCachedRepository(
+		params?: Pick<BuildQueryURLArgs, "accessToken"> & FetchParams,
+	): Promise<Repository> {
 		if (
 			!this.cachedRepository ||
 			Date.now() >= this.cachedRepositoryExpiration
@@ -1709,7 +1724,9 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *
 	 * @returns The ref to use during a query.
 	 */
-	private async getResolvedRefString(params?: FetchParams): Promise<string> {
+	private async getResolvedRefString(
+		params?: Pick<BuildQueryURLArgs, "accessToken"> & FetchParams,
+	): Promise<string> {
 		if (this.refState.autoPreviewsEnabled) {
 			let previewRef: string | undefined
 

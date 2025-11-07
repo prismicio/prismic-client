@@ -61,6 +61,9 @@ jobs:
 
       - name: Unit
         run: npm run unit
+        env:
+          E2E_PRISMIC_EMAIL: ${{ secrets.E2E_PRISMIC_EMAIL }}
+          E2E_PRISMIC_PASSWORD: ${{ secrets.E2E_PRISMIC_PASSWORD }}
 
       - name: Build
         run: npm run build

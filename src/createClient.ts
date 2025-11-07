@@ -36,7 +36,7 @@ export interface CreateClient {
  *
  * @returns A client that can query content from the repository.
  *
- * @see @prismicio/client technical reference: {@link https://prismic.io/docs/technical-reference/prismicio-client/v7}
+ * @see https://prismic.io/docs/technical-reference/prismicio-client/v7
  */
 export const createClient: CreateClient = <TDocuments extends PrismicDocument>(
 	repositoryNameOrEndpoint: string,
