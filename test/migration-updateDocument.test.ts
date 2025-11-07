@@ -1,17 +1,16 @@
-import { expect, it } from "vitest"
+import { it } from "./it"
 
-import * as prismic from "../src"
-import { PrismicMigrationDocument } from "../src/types/migration/Document"
+import { PrismicMigrationDocument } from "../src"
 
-it("updates a document", (ctx) => {
-	const migration = prismic.createMigration()
+it("returns a migration document", async ({ expect, migration, docs }) => {
+	const res = migration.updateDocument(docs.default, "title")
+	expect(res).toBeInstanceOf(PrismicMigrationDocument)
+	expect(res.document).toBe(docs.default)
+	expect(res.originalPrismicDocument).toBe(undefined)
+	expect(res.title).toBe("title")
+})
 
-	const document = ctx.mock.value.document()
-	const documentTitle = "documentTitle"
-
-	migration.updateDocument(document, documentTitle)
-
-	expect(migration._documents[0]).toStrictEqual(
-		new PrismicMigrationDocument(document, documentTitle),
-	)
+it("updates a document", async ({ expect, docs, migration }) => {
+	const res = migration.updateDocument(docs.default, "title")
+	expect(migration._documents).toContain(res)
 })

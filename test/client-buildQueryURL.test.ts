@@ -1,146 +1,78 @@
-import { expect, it } from "vitest"
+import { vi } from "vitest"
 
-import { createTestClient } from "./__testutils__/createClient"
-import { getMasterRef } from "./__testutils__/getMasterRef"
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
+import { it } from "./it"
 
-import { version } from "../package.json"
+it("returns a content api url", async ({ expect, client, endpoint }) => {
+	const res = new URL(await client.buildQueryURL())
+	expect(res.origin).toBe(new URL(endpoint).origin)
+	expect(res.pathname).toBe(new URL("documents/search", endpoint).pathname)
+})
 
-import type * as prismic from "../src"
-
-const xClientVersion = `js-${version}`
-
-it("builds a query URL using the master ref", async (ctx) => {
-	const repositoryResponse = ctx.mock.api.repository()
-	const ref = getMasterRef(repositoryResponse)
-
-	mockPrismicRestAPIV2({
-		repositoryResponse,
-		ctx,
-	})
-
-	const client = createTestClient({ ctx })
+it("includes master ref", async ({ expect, client, masterRef }) => {
 	const res = await client.buildQueryURL()
-	const url = new URL(res)
-
-	const expectedSearchParams = new URLSearchParams({
-		ref,
-		"x-c": xClientVersion,
-	})
-	url.searchParams.delete("integrationFieldsRef")
-	url.searchParams.sort()
-	expectedSearchParams.sort()
-
-	expect(url.host).toBe(new URL(client.endpoint).host)
-	expect(url.pathname).toBe("/api/v2/documents/search")
-	expect(url.searchParams.toString()).toBe(expectedSearchParams.toString())
+	expect(res).toHaveSearchParam("ref", masterRef)
 })
 
-it("includes the `x-d` param in development", async (ctx) => {
-	const originalEnv = { ...process.env }
-	process.env.NODE_ENV = "development"
-
-	mockPrismicRestAPIV2({ ctx })
-
-	const client = createTestClient({ ctx })
-	const res = await client.buildQueryURL()
-	const url = new URL(res)
-
-	expect(url.searchParams.get("x-d")).toBe("1")
-
-	process.env = originalEnv
+it("supports params", async ({ expect, client }) => {
+	const res = await client.buildQueryURL({ lang: "fr-fr", page: 2 })
+	expect(res).toHaveSearchParam("lang", "fr-fr")
+	expect(res).toHaveSearchParam("page", "2")
 })
 
-it("includes params if provided", async (ctx) => {
-	const params: prismic.BuildQueryURLArgs = {
-		accessToken: "custom-accessToken",
-		ref: "custom-ref",
-		lang: "*",
-	}
-
-	mockPrismicRestAPIV2({ ctx })
-
-	const client = createTestClient({ ctx })
-	const res = await client.buildQueryURL(params)
-	const url = new URL(res)
-
-	const expectedSearchParams = new URLSearchParams({
-		ref: params.ref,
-		lang: params.lang?.toString() ?? "",
-		// TODO: Remove when Authorization header support works in browsers with CORS.
-		access_token: params.accessToken ?? "",
-		"x-c": xClientVersion,
-	})
-
-	url.searchParams.delete("integrationFieldsRef")
-	url.searchParams.sort()
-	expectedSearchParams.sort()
-
-	expect(url.host).toBe(new URL(client.endpoint).host)
-	expect(url.pathname).toBe("/api/v2/documents/search")
-	expect(url.searchParams.toString()).toBe(expectedSearchParams.toString())
+it("supports default params", async ({ expect, client }) => {
+	client.defaultParams = { lang: "fr-fr" }
+	const res = await client.buildQueryURL({ page: 2 })
+	expect(res).toHaveSearchParam("lang", "fr-fr")
+	expect(res).toHaveSearchParam("page", "2")
 })
 
-it("includes default params if provided", async (ctx) => {
-	const clientConfig: prismic.ClientConfig = {
-		accessToken: "custom-accessToken",
-		ref: "custom-ref",
-		defaultParams: { lang: "*" },
-	}
-
-	mockPrismicRestAPIV2({ ctx })
-
-	const client = createTestClient({ clientConfig, ctx })
-	const res = await client.buildQueryURL()
-	const url = new URL(res)
-
-	const expectedSearchParams = new URLSearchParams({
-		ref: clientConfig.ref?.toString() ?? "",
-		lang: clientConfig.defaultParams?.lang?.toString() ?? "",
-		// TODO: Remove when Authorization header support works in browsers with CORS.
-		access_token: clientConfig.accessToken ?? "",
-		"x-c": xClientVersion,
-	})
-
-	url.searchParams.delete("integrationFieldsRef")
-	url.searchParams.sort()
-	expectedSearchParams.sort()
-
-	expect(url.host).toBe(new URL(client.endpoint).host)
-	expect(url.pathname).toBe("/api/v2/documents/search")
-	expect(url.searchParams.toString()).toBe(expectedSearchParams.toString())
+it("uses cached repository metadata within the client's repository cache TTL", async ({
+	expect,
+	client,
+}) => {
+	vi.useFakeTimers()
+	await client.buildQueryURL()
+	await client.buildQueryURL()
+	vi.advanceTimersByTime(5000)
+	await client.buildQueryURL()
+	expect(client).toHaveFetchedRepoTimes(2)
+	vi.useRealTimers()
 })
 
-it("merges params and default params if provided", async (ctx) => {
-	const clientConfig: prismic.ClientConfig = {
-		accessToken: "custom-accessToken",
-		ref: "custom-ref",
-		defaultParams: { lang: "*", page: 2 },
-	}
-	const params: prismic.BuildQueryURLArgs = {
-		ref: "overridden-ref",
-	}
+it("supports fetch options", async ({ expect, client }) => {
+	await client.buildQueryURL({ fetchOptions: { cache: "no-cache" } })
+	expect(client).toHaveLastFetchedRepo({}, { cache: "no-cache" })
+})
 
-	mockPrismicRestAPIV2({ ctx })
+it("supports default fetch options", async ({ expect, client }) => {
+	client.fetchOptions = { cache: "no-cache" }
+	await client.buildQueryURL({ fetchOptions: { headers: { foo: "bar" } } })
+	expect(client).toHaveLastFetchedRepo(
+		{},
+		{ cache: "no-cache", headers: { foo: "bar" } },
+	)
+})
 
-	const client = createTestClient({ clientConfig, ctx })
-	const res = await client.buildQueryURL(params)
-	const url = new URL(res)
+it("supports signal", async ({ expect, client }) => {
+	await expect(() =>
+		client.buildQueryURL({ fetchOptions: { signal: AbortSignal.abort() } }),
+	).rejects.toThrow("aborted")
+})
 
-	const expectedSearchParams = new URLSearchParams({
-		ref: params.ref,
-		lang: clientConfig.defaultParams?.lang?.toString() ?? "",
-		page: clientConfig.defaultParams?.page?.toString() ?? "",
-		// TODO: Remove when Authorization header support works in browsers with CORS.
-		access_token: clientConfig.accessToken ?? "",
-		"x-c": xClientVersion,
-	})
-
-	url.searchParams.delete("integrationFieldsRef")
-	url.searchParams.sort()
-	expectedSearchParams.sort()
-
-	expect(url.host).toBe(new URL(client.endpoint).host)
-	expect(url.pathname).toBe("/api/v2/documents/search")
-	expect(url.searchParams.toString()).toBe(expectedSearchParams.toString())
+it("shares concurrent equivalent network requests", async ({
+	expect,
+	client,
+}) => {
+	const controller1 = new AbortController()
+	const controller2 = new AbortController()
+	await Promise.all([
+		client.buildQueryURL(),
+		client.buildQueryURL(),
+		client.buildQueryURL({ signal: controller1.signal }),
+		client.buildQueryURL({ signal: controller1.signal }),
+		client.buildQueryURL({ signal: controller2.signal }),
+		client.buildQueryURL({ signal: controller2.signal }),
+	])
+	await client.buildQueryURL()
+	expect(client).toHaveFetchedRepoTimes(3)
 })

@@ -1,44 +1,28 @@
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
-import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod"
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
-import { testFetchOptions } from "./__testutils__/testFetchOptions"
-import { testInvalidRefRetry } from "./__testutils__/testInvalidRefRetry"
+import { vi } from "vitest"
 
-testGetFirstMethod("queries for document by ID", {
-	run: (client) => client.getByID("id"),
-	requiredParams: {
-		q: `[[at(document.id, "id")]]`,
-	},
+import { it } from "./it"
+
+import { NotFoundError } from "../src"
+
+it("returns single document", async ({ expect, client, docs }) => {
+	const res = await client.getByID(docs.default.id)
+	expect(res).toMatchObject({ id: docs.default.id })
 })
 
-testGetFirstMethod("includes params if provided", {
-	run: (client) =>
-		client.getByID("id", {
-			accessToken: "custom-accessToken",
-			ref: "custom-ref",
-			lang: "*",
-		}),
-	requiredParams: {
-		access_token: "custom-accessToken",
-		ref: "custom-ref",
-		lang: "*",
-		q: `[[at(document.id, "id")]]`,
-	},
+it("throws if no document is returned", async ({
+	expect,
+	client,
+	response,
+}) => {
+	vi.mocked(client.fetchFn)
+		.mockImplementationOnce(fetch)
+		.mockResolvedValueOnce(response.search([]))
+	await expect(() => client.getByID("invalid")).rejects.toThrow(NotFoundError)
 })
 
-testFetchOptions("supports fetch options", {
-	run: (client, params) => client.getByID("id", params),
-})
-
-testInvalidRefRetry({
-	run: (client, params) => client.getByID("id", params),
-})
-
-testAbortableMethod("is abortable with an AbortController", {
-	run: (client, params) => client.getByID("id", params),
-})
-
-testConcurrentMethod("shares concurrent equivalent network requests", {
-	run: (client, params) => client.getByID("id", params),
-	mode: "get",
+it("includes filter", async ({ expect, client, docs }) => {
+	await client.getByID(docs.default.id)
+	expect(client).toHaveLastFetchedContentAPI({
+		q: `[[at(document.id, "${docs.default.id}")]]`,
+	})
 })

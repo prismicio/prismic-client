@@ -1,20 +1,15 @@
-import { expect, it } from "vitest"
+import { it } from "./it"
 
-import * as prismic from "../src"
+import { PrismicError, getGraphQLEndpoint } from "../src"
 
-it("returns default GraphQL API CDN URL", () => {
-	const endpoint = prismic.getGraphQLEndpoint("qwerty")
-
-	expect(endpoint).toBe("https://qwerty.cdn.prismic.io/graphql")
+it("returns GraphQL API CDN URL", async ({ expect }) => {
+	const endpoint = getGraphQLEndpoint("example")
+	expect(endpoint).toBe("https://example.cdn.prismic.io/graphql")
 })
 
-it("throws if an invalid repository name is given", () => {
-	expect(() => {
-		prismic.getGraphQLEndpoint("this is invalid")
-	}).toThrowError(
-		/an invalid Prismic repository name was given: this is invalid/i,
+it("throws if an invalid repository name is given", async ({ expect }) => {
+	expect(() => getGraphQLEndpoint("this is invalid")).toThrow(
+		/invalid Prismic repository name/i,
 	)
-	expect(() => {
-		prismic.getGraphQLEndpoint("this is invalid")
-	}).toThrowError(prismic.PrismicError)
+	expect(() => getGraphQLEndpoint("this is invalid")).toThrow(PrismicError)
 })

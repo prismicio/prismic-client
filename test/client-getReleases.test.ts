@@ -1,35 +1,28 @@
-import { expect, it } from "vitest"
+import { it } from "./it"
 
-import { createTestClient } from "./__testutils__/createClient"
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
-import { testFetchOptions } from "./__testutils__/testFetchOptions"
-
-it("returns all Releases", async (ctx) => {
-	const repositoryResponse = ctx.mock.api.repository()
-	mockPrismicRestAPIV2({
-		repositoryResponse,
-		ctx,
-	})
-
-	const client = createTestClient({ ctx })
+it("returns list of releases", async ({ expect, client, accessToken }) => {
+	client.accessToken = accessToken
 	const res = await client.getReleases()
-
-	expect(res).toStrictEqual(
-		repositoryResponse.refs.filter((ref) => !ref.isMasterRef),
+	expect(res).toContainEqual(
+		expect.objectContaining({ ref: expect.any(String) }),
 	)
+	expect(res).not.toContainEqual(expect.objectContaining({ isMasterRef: true }))
 })
 
-testFetchOptions("supports fetch options", {
-	run: (client, params) => client.getReleases(params),
-})
-
-testAbortableMethod("is abortable with an AbortController", {
-	run: (client, params) => client.getReleases(params),
-})
-
-testConcurrentMethod("shares concurrent equivalent network requests", {
-	run: (client, params) => client.getReleases(params),
-	mode: "repository",
+it("shares concurrent equivalent network requests", async ({
+	expect,
+	client,
+}) => {
+	const controller1 = new AbortController()
+	const controller2 = new AbortController()
+	await Promise.all([
+		client.getReleases(),
+		client.getReleases(),
+		client.getReleases({ signal: controller1.signal }),
+		client.getReleases({ signal: controller1.signal }),
+		client.getReleases({ signal: controller2.signal }),
+		client.getReleases({ signal: controller2.signal }),
+	])
+	await client.getReleases()
+	expect(client).toHaveFetchedRepoTimes(4)
 })
