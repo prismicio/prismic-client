@@ -1,96 +1,66 @@
-import { expect, it } from "vitest"
+import { vi } from "vitest"
 
-import * as msw from "msw"
+import { it } from "./it"
 
-import { createTestClient } from "./__testutils__/createClient"
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
-import { testFetchOptions } from "./__testutils__/testFetchOptions"
-
-it("returns all tags", async (ctx) => {
-	const repositoryResponse = ctx.mock.api.repository()
-	mockPrismicRestAPIV2({
-		repositoryResponse,
-		ctx,
-	})
-
-	const client = createTestClient({ ctx })
+it("returns list of tags", async ({ expect, client, docs }) => {
 	const res = await client.getTags()
-
-	expect(res).toStrictEqual(repositoryResponse.tags)
+	expect(res).toHaveLength(2)
+	expect(res).toContain(docs.default.tags[0])
+	expect(res).toContain(docs.default2.tags[0])
 })
 
-it("uses form endpoint if available", async (ctx) => {
-	const tagsEndpoint = "https://example.com/tags-form-endpoint"
-	const tagsResponse = ["foo", "bar"]
+it("uses form endpoint if available", async ({ expect, client, endpoint }) => {
+	await client.getTags()
+	const url = vi.mocked(client.fetchFn).mock.lastCall![0]
+	expect(url).toBe(new URL("tags", endpoint).toString())
+})
 
-	const repositoryResponse = ctx.mock.api.repository()
-	repositoryResponse.forms = {
-		tags: {
-			method: "GET",
-			action: tagsEndpoint,
-			enctype: "",
-			fields: {},
-		},
-	}
-	mockPrismicRestAPIV2({
-		repositoryResponse,
-		ctx,
-	})
-	ctx.server.use(
-		msw.rest.get(tagsEndpoint, (_req, res, ctx) => {
-			return res(ctx.json(tagsResponse))
-		}),
+it("sends access token to the form endpoint", async ({
+	expect,
+	client,
+	accessToken,
+}) => {
+	client.accessToken = accessToken
+	await client.getTags()
+	const url = vi.mocked(client.fetchFn).mock.lastCall![0]
+	expect(url).toHaveSearchParam("access_token", accessToken)
+})
+
+it("uses repo meta if tags form is undefined", async ({ expect, client }) => {
+	vi.mocked(client.fetchFn).mockResolvedValue(
+		Response.json({ tags: ["foo"], forms: {} }),
 	)
-
-	const client = createTestClient({ ctx })
 	const res = await client.getTags()
-
-	expect(res).toStrictEqual(tagsResponse)
+	expect(res).toStrictEqual(["foo"])
 })
 
-it("sends access token if form endpoint is used", async (ctx) => {
-	const tagsEndpoint = "https://example.com/tags-form-endpoint"
-	const tagsResponse = ["foo", "bar"]
-	const accessToken = "accessToken"
-
-	const repositoryResponse = ctx.mock.api.repository()
-	repositoryResponse.forms = {
-		tags: {
-			method: "GET",
-			action: tagsEndpoint,
-			enctype: "",
-			fields: {},
-		},
-	}
-	mockPrismicRestAPIV2({
-		repositoryResponse,
-		ctx,
-	})
-	ctx.server.use(
-		msw.rest.get(tagsEndpoint, (req, res, ctx) => {
-			if (req.url.searchParams.get("access_token") === accessToken) {
-				return res(ctx.json(tagsResponse))
-			}
-		}),
-	)
-
-	const client = createTestClient({ clientConfig: { accessToken }, ctx })
-	const res = await client.getTags()
-
-	expect(res).toStrictEqual(tagsResponse)
+it("uses cached repository within the client's repository cache TTL", async ({
+	expect,
+	client,
+}) => {
+	vi.useFakeTimers()
+	await client.getTags()
+	await client.getTags()
+	vi.advanceTimersByTime(5000)
+	await client.getTags()
+	expect(client).toHaveFetchedRepoTimes(2)
+	vi.useRealTimers()
 })
 
-testFetchOptions("supports fetch options", {
-	run: (client, params) => client.getTags(params),
-})
-
-testAbortableMethod("is abortable with an AbortController", {
-	run: (client, params) => client.getTags(params),
-})
-
-testConcurrentMethod("shares concurrent equivalent network requests", {
-	run: (client, params) => client.getTags(params),
-	mode: "tags",
+it("shares concurrent equivalent network requests", async ({
+	expect,
+	client,
+}) => {
+	const controller1 = new AbortController()
+	const controller2 = new AbortController()
+	await Promise.all([
+		client.getTags(),
+		client.getTags(),
+		client.getTags({ signal: controller1.signal }),
+		client.getTags({ signal: controller1.signal }),
+		client.getTags({ signal: controller2.signal }),
+		client.getTags({ signal: controller2.signal }),
+	])
+	await client.getTags()
+	expect(client).toHaveFetchedRepoTimes(3)
 })

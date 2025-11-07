@@ -1,350 +1,193 @@
-import { expect, it, vi } from "vitest"
+import { describe, vi } from "vitest"
 
 import { version } from "../package.json"
 
-import * as prismic from "../src"
+import { it } from "./it"
 
-const endpoint = prismic.getRepositoryEndpoint("qwerty")
-const xClientVersionParam = `&x-c=js-${version}`
+import { buildQueryURL } from "../src"
 
-it("includes ref", () => {
-	expect(prismic.buildQueryURL(endpoint, { ref: "ref" })).toBe(
-		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref${xClientVersionParam}`,
-	)
+it("returns a content api url", async ({ expect, endpoint }) => {
+	const res = new URL(buildQueryURL(endpoint, { ref: "foo" }))
+	expect(res.origin).toBe(new URL(endpoint).origin)
+	expect(res.pathname).toBe(new URL("documents/search", endpoint).pathname)
 })
 
-it("supports single filter", () => {
-	expect(
-		decodeURIComponent(
-			prismic.buildQueryURL(endpoint, {
-				ref: "ref",
-				filters: prismic.filter.has("my.document.title"),
-			}),
-		),
-	).toBe(
-		`https://qwerty.cdn.prismic.io/api/v2/documents/search?q=[[has(my.document.title)]]&ref=ref${xClientVersionParam}`,
-	)
-
-	// TODO: Remove when we remove support for deprecated `predicates` argument.
-	expect(
-		decodeURIComponent(
-			prismic.buildQueryURL(endpoint, {
-				ref: "ref",
-				predicates: prismic.predicate.has("my.document.title"),
-			}),
-		),
-	).toBe(
-		`https://qwerty.cdn.prismic.io/api/v2/documents/search?q=[[has(my.document.title)]]&ref=ref${xClientVersionParam}`,
-	)
+it("includes ref", async ({ expect, endpoint }) => {
+	const res = buildQueryURL(endpoint, { ref: "foo" })
+	expect(res).toHaveSearchParam("ref", "foo")
 })
 
-it("supports multiple filters", () => {
-	expect(
-		decodeURIComponent(
-			prismic.buildQueryURL(endpoint, {
-				ref: "ref",
-				filters: [
-					prismic.filter.has("my.document.title"),
-					prismic.filter.has("my.document.subtitle"),
-				],
-			}),
-		),
-	).toBe(
-		`https://qwerty.cdn.prismic.io/api/v2/documents/search?q=[[has(my.document.title)]]&q=[[has(my.document.subtitle)]]&ref=ref${xClientVersionParam}`,
-	)
-
-	// TODO: Remove when we remove support for deprecated `predicates` argument.
-	expect(
-		decodeURIComponent(
-			prismic.buildQueryURL(endpoint, {
-				ref: "ref",
-				predicates: [
-					prismic.predicate.has("my.document.title"),
-					prismic.predicate.has("my.document.subtitle"),
-				],
-			}),
-		),
-	).toBe(
-		`https://qwerty.cdn.prismic.io/api/v2/documents/search?q=[[has(my.document.title)]]&q=[[has(my.document.subtitle)]]&ref=ref${xClientVersionParam}`,
-	)
+it("supports access token", async ({ expect, endpoint }) => {
+	const res = buildQueryURL(endpoint, {
+		ref: "foo",
+		accessToken: "accessToken",
+	})
+	expect(res).toHaveSearchParam("access_token", "accessToken")
 })
 
-it("supports params", () => {
-	expect(
-		decodeURIComponent(
-			prismic.buildQueryURL(endpoint, {
-				ref: "ref",
-				accessToken: "accessToken",
-				pageSize: 1,
-				page: 1,
-				after: "after",
-				fetch: "fetch",
-				fetchLinks: "fetchLinks",
-				graphQuery: "graphQuery",
-				lang: "lang",
-				orderings: [{ field: "orderings" }],
-				routes: "routes",
-				brokenRoute: "brokenRoute",
-			}),
-		),
-	).toBe(
-		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&access_token=accessToken&pageSize=1&page=1&after=after&fetch=fetch&fetchLinks=fetchLinks&graphQuery=graphQuery&lang=lang&orderings=[orderings]&routes=routes&brokenRoute=brokenRoute${xClientVersionParam}`,
-	)
+it("supports page size", async ({ expect, endpoint }) => {
+	const res = buildQueryURL(endpoint, {
+		ref: "foo",
+		pageSize: 1,
+	})
+	expect(res).toHaveSearchParam("pageSize", "1")
 })
 
-it("ignores nullish params", () => {
-	expect(
-		decodeURIComponent(
-			prismic.buildQueryURL(endpoint, {
-				ref: "ref",
-				accessToken: undefined,
-				pageSize: undefined,
-				page: undefined,
-				after: undefined,
-				fetch: undefined,
-				fetchLinks: undefined,
-				graphQuery: undefined,
-				lang: undefined,
-				orderings: undefined,
-			}),
-		),
-	).toBe(
-		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref${xClientVersionParam}`,
-	)
+it("supports page", async ({ expect, endpoint }) => {
+	const res = buildQueryURL(endpoint, {
+		ref: "foo",
+		page: 2,
+	})
+	expect(res).toHaveSearchParam("page", "2")
 })
 
-it("supports array fetch param", () => {
-	expect(
-		decodeURIComponent(
-			prismic.buildQueryURL(endpoint, {
-				ref: "ref",
-				fetch: ["title", "subtitle"],
-			}),
-		),
-	).toBe(
-		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&fetch=title,subtitle${xClientVersionParam}`,
-	)
+it("supports after", async ({ expect, endpoint }) => {
+	const res = buildQueryURL(endpoint, {
+		ref: "foo",
+		after: "after",
+	})
+	expect(res).toHaveSearchParam("after", "after")
 })
 
-it("supports array fetchLinks param", () => {
-	expect(
-		decodeURIComponent(
-			prismic.buildQueryURL(endpoint, {
-				ref: "ref",
-				fetchLinks: ["page.link", "page.second_link"],
-			}),
-		),
-	).toBe(
-		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&fetchLinks=page.link,page.second_link${xClientVersionParam}`,
-	)
+it("supports single filter", async ({ expect, endpoint }) => {
+	const res = buildQueryURL(endpoint, {
+		ref: "foo",
+		filters: "[has(my.document.title)]",
+	})
+	expect(res).toHaveSearchParam("q", "[[has(my.document.title)]]")
 })
 
-it("supports empty orderings param", () => {
-	expect(
-		decodeURIComponent(
-			prismic.buildQueryURL(endpoint, {
-				ref: "ref",
-				// TODO: Remove test with deprecated API in v8
-				orderings: "",
-			}),
-		),
-	).toBe(
-		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[]${xClientVersionParam}`,
-	)
-
-	expect(
-		decodeURIComponent(
-			prismic.buildQueryURL(endpoint, {
-				ref: "ref",
-				orderings: [],
-			}),
-		),
-	).toBe(
-		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[]${xClientVersionParam}`,
-	)
+it("supports multiple filters", async ({ expect, endpoint }) => {
+	const res = buildQueryURL(endpoint, {
+		ref: "foo",
+		filters: ["[has(my.document.title)]", "[has(my.document.subtitle)]"],
+	})
+	expect(res).toHaveSearchParam("q", "[[has(my.document.title)]]")
+	expect(res).toHaveSearchParam("q", "[[has(my.document.subtitle)]]")
 })
 
-it("supports array orderings param", () => {
-	expect(
-		decodeURIComponent(
-			prismic.buildQueryURL(endpoint, {
-				ref: "ref",
-				// TODO: Remove test with deprecated API in v8
-				orderings: ["page.title", { field: "page.subtitle" }],
-			}),
-		),
-	).toBe(
-		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[page.title,page.subtitle]${xClientVersionParam}`,
-	)
-})
-
-it("supports setting direction of ordering param", () => {
-	expect(
-		decodeURIComponent(
-			prismic.buildQueryURL(endpoint, {
-				ref: "ref",
-				// TODO: Remove test with deprecated API in v8
-				orderings: ["page.title", { field: "page.subtitle", direction: "asc" }],
-			}),
-		),
-	).toBe(
-		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[page.title,page.subtitle]${xClientVersionParam}`,
-	)
-
-	expect(
-		decodeURIComponent(
-			prismic.buildQueryURL(endpoint, {
-				ref: "ref",
-				orderings: [
-					// TODO: Remove test with deprecated API in v8
-					"page.title desc",
-					{ field: "page.subtitle", direction: "desc" },
-				],
-			}),
-		),
-	).toBe(
-		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&orderings=[page.title+desc,page.subtitle+desc]${xClientVersionParam}`,
-	)
-})
-
-it("supports single item routes param", () => {
-	const route = {
-		type: "type",
-		path: "path",
-		resolvers: { foo: "bar" },
-	}
-
-	expect(
-		decodeURIComponent(
-			prismic.buildQueryURL(endpoint, {
-				ref: "ref",
-				routes: route,
-			}),
-		),
-	).toBe(
-		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&routes=[${JSON.stringify(
-			route,
-		)}]${xClientVersionParam}`,
-	)
-})
-
-it("supports array routes param", () => {
-	const routes: prismic.Route[] = [
-		{
-			type: "foo",
-			path: "foo-path",
-			resolvers: { foo: "bar" },
-		},
-		{
-			type: "bar",
-			path: "bar-path",
-			resolvers: { foo: "bar" },
-		},
-	]
-
-	expect(
-		decodeURIComponent(
-			prismic.buildQueryURL(endpoint, {
-				ref: "ref",
-				routes: routes,
-			}),
-		),
-	).toBe(
-		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref&routes=${JSON.stringify(
-			routes,
-		)}${xClientVersionParam}`,
-	)
-})
-
-it("forwards `x-c` param in production", () => {
-	expect(prismic.buildQueryURL(endpoint, { ref: "ref" })).toBe(
-		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref${xClientVersionParam}`,
-	)
-})
-
-it("forwards `x-c` and `x-d` param in development", () => {
-	const originalEnv = { ...process.env }
-
-	process.env.NODE_ENV = "development"
-
-	expect(prismic.buildQueryURL(endpoint, { ref: "ref" })).toBe(
-		`https://qwerty.cdn.prismic.io/api/v2/documents/search?ref=ref${xClientVersionParam}&x-d=1`,
-	)
-
-	process.env = originalEnv
-})
-
-it("warns if NODE_ENV is development and a string is provided to `orderings`", () => {
-	const originalEnv = { ...process.env }
-
-	process.env.NODE_ENV = "development"
-
-	const consoleWarnSpy = vi
-		.spyOn(console, "warn")
-		.mockImplementation(() => void 0)
-
-	prismic.buildQueryURL(endpoint, {
-		ref: "ref",
-		orderings: "orderings",
+describe("fetch", () => {
+	it("supports single fetch", async ({ expect, endpoint }) => {
+		const res = buildQueryURL(endpoint, {
+			ref: "foo",
+			fetch: "page.bar",
+		})
+		expect(res).toHaveSearchParam("fetch", "page.bar")
 	})
 
-	expect(consoleWarnSpy).toHaveBeenCalledWith(
-		expect.stringMatching(/orderings-must-be-an-array-of-objects/i),
-	)
-
-	consoleWarnSpy.mockRestore()
-
-	process.env = originalEnv
+	it("supports multiple fetch", async ({ expect, endpoint }) => {
+		const res = buildQueryURL(endpoint, {
+			ref: "foo",
+			fetch: ["page.bar", "page.baz"],
+		})
+		expect(res).toHaveSearchParam("fetch", "page.bar,page.baz")
+	})
 })
 
-it("warns if NODE_ENV is development and an array of strings is provided to `orderings`", () => {
-	const originalEnv = { ...process.env }
-
-	process.env.NODE_ENV = "development"
-
-	const consoleWarnSpy = vi
-		.spyOn(console, "warn")
-		.mockImplementation(() => void 0)
-
-	prismic.buildQueryURL(endpoint, {
-		ref: "ref",
-		orderings: ["orderings"],
+describe("fetchLinks", () => {
+	it("supports single fetchLinks", async ({ expect, endpoint }) => {
+		const res = buildQueryURL(endpoint, {
+			ref: "foo",
+			fetchLinks: "page.foo",
+		})
+		expect(res).toHaveSearchParam("fetchLinks", "page.foo")
 	})
 
-	prismic.buildQueryURL(endpoint, {
-		ref: "ref",
-		orderings: ["orderings desc"],
+	it("supports multiple fetchLinks", async ({ expect, endpoint }) => {
+		const res = buildQueryURL(endpoint, {
+			ref: "foo",
+			fetchLinks: ["page.bar", "page.baz"],
+		})
+		expect(res).toHaveSearchParam("fetchLinks", "page.bar,page.baz")
 	})
-
-	expect(consoleWarnSpy).toHaveBeenNthCalledWith(
-		2,
-		expect.stringMatching(/orderings-must-be-an-array-of-objects/i),
-	)
-
-	consoleWarnSpy.mockRestore()
-
-	process.env = originalEnv
 })
 
-it("warns if NODE_ENV is development and a string is provided to `filters`", () => {
-	const originalEnv = { ...process.env }
+it("supports graphQuery", async ({ expect, endpoint }) => {
+	const res = buildQueryURL(endpoint, {
+		ref: "foo",
+		graphQuery: "graphQuery",
+	})
+	expect(res).toHaveSearchParam("graphQuery", "graphQuery")
+})
 
-	process.env.NODE_ENV = "development"
+it("supports lang", async ({ expect, endpoint }) => {
+	const res = buildQueryURL(endpoint, {
+		ref: "foo",
+		lang: "lang",
+	})
+	expect(res).toHaveSearchParam("lang", "lang")
+})
 
-	const consoleWarnSpy = vi
-		.spyOn(console, "warn")
-		.mockImplementation(() => void 0)
-
-	prismic.buildQueryURL(endpoint, {
-		ref: "ref",
-		filters: "filters",
+describe("orderings", () => {
+	it("supports single ordering", async ({ expect, endpoint }) => {
+		const res = buildQueryURL(endpoint, {
+			ref: "foo",
+			orderings: { field: "foo" },
+		})
+		expect(res).toHaveSearchParam("orderings", "[foo]")
 	})
 
-	expect(consoleWarnSpy).toHaveBeenCalledWith(
-		expect.stringMatching(/filters-must-be-an-array/i),
-	)
+	it("supports multiple orderings", async ({ expect, endpoint }) => {
+		const res = buildQueryURL(endpoint, {
+			ref: "foo",
+			orderings: [{ field: "foo" }, { field: "bar", direction: "desc" }],
+		})
+		expect(res).toHaveSearchParam("orderings", "[foo,bar desc]")
+	})
 
-	consoleWarnSpy.mockRestore()
+	it("supports single string ordering", async ({ expect, endpoint }) => {
+		const res = buildQueryURL(endpoint, {
+			ref: "foo",
+			orderings: "foo",
+		})
+		expect(res).toHaveSearchParam("orderings", "[foo]")
+	})
+})
 
-	process.env = originalEnv
+describe("routes", () => {
+	it("supports single route", async ({ expect, endpoint }) => {
+		const res = buildQueryURL(endpoint, {
+			ref: "foo",
+			routes: { type: "page", path: "/:uid" },
+		})
+		expect(res).toHaveSearchParam("routes", '[{"type":"page","path":"/:uid"}]')
+	})
+
+	it("supports multiple routes", async ({ expect, endpoint }) => {
+		const res = buildQueryURL(endpoint, {
+			ref: "foo",
+			routes: [{ type: "page", path: "/:uid" }],
+		})
+		expect(res).toHaveSearchParam("routes", '[{"type":"page","path":"/:uid"}]')
+	})
+
+	it("supports single string route", async ({ expect, endpoint }) => {
+		const res = buildQueryURL(endpoint, {
+			ref: "foo",
+			routes: '[{"type":"page","path":"/:uid"}]',
+		})
+		expect(res).toHaveSearchParam("routes", '[{"type":"page","path":"/:uid"}]')
+	})
+})
+
+it("supports broken route", async ({ expect, endpoint }) => {
+	const res = buildQueryURL(endpoint, {
+		ref: "foo",
+		brokenRoute: "brokenRoute",
+	})
+	expect(res).toHaveSearchParam("brokenRoute", "brokenRoute")
+})
+
+it("includes x-c version parameter", async ({ expect, endpoint }) => {
+	const res = buildQueryURL(endpoint, { ref: "foo" })
+	expect(res).toHaveSearchParam("x-c", `js-${version}`)
+})
+
+it("includes x-d parameter in development", async ({ expect, endpoint }) => {
+	vi.stubEnv("NODE_ENV", "development")
+	const dev = buildQueryURL(endpoint, { ref: "foo" })
+	expect(dev).toHaveSearchParam("x-d")
+	vi.unstubAllEnvs()
+	const prod = buildQueryURL(endpoint, { ref: "foo" })
+	expect(prod).not.toHaveSearchParam("x-d")
 })

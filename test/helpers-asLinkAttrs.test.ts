@@ -1,143 +1,132 @@
-import { expect, it, vi } from "vitest"
+import { vi } from "vitest"
 
+import { it } from "./it"
+
+import type { LinkField } from "../src"
 import { LinkType, asLinkAttrs } from "../src"
 
-it("returns empty object for nullish inputs", () => {
-	expect(asLinkAttrs(null)).toEqual({})
-	expect(asLinkAttrs(undefined)).toEqual({})
-})
+const docLink: LinkField = {
+	id: "XvoFFREAAM0WGBng",
+	type: "page",
+	tags: [],
+	lang: "en-us",
+	link_type: LinkType.Document,
+	isBroken: false,
+}
+const docLinkWithURL: LinkField = {
+	...docLink,
+	url: "/url",
+}
 
-it("returns empty object when link field is empty", () => {
-	const field = { link_type: LinkType.Any }
-
-	expect(asLinkAttrs(field)).toEqual({})
-})
-
-it("resolves a link to document field with route resolver", (ctx) => {
-	const field = ctx.mock.value.link({ type: "Document" })
-	field.url = "/url"
-
-	expect(asLinkAttrs(field)).toEqual({
-		href: field.url,
-		target: undefined,
-		rel: undefined,
+it("resolves web link", async ({ expect }) => {
+	const res = asLinkAttrs({
+		link_type: LinkType.Web,
+		url: "https://example.org",
 	})
-	expect(asLinkAttrs(field, { linkResolver: () => "/linkResolver" })).toEqual({
-		href: "/linkResolver",
+	expect(res).toEqual({
+		href: "https://example.org",
 		target: undefined,
-		rel: undefined,
+		rel: "noreferrer",
 	})
 })
 
-it("resolves a link to document field without route resolver", (ctx) => {
-	const field = ctx.mock.value.link({ type: "Document" })
-	field.url = undefined
+it("includes target on web link with target", async ({ expect }) => {
+	const res = asLinkAttrs({
+		link_type: LinkType.Web,
+		url: "https://example.org",
+		target: "_blank",
+	})
+	expect(res).toEqual({
+		href: "https://example.org",
+		target: "_blank",
+		rel: "noreferrer",
+	})
+})
 
-	expect(asLinkAttrs(field)).toEqual({
+it("resolves media link", async ({ expect }) => {
+	const res = asLinkAttrs({
+		link_type: LinkType.Media,
+		id: "foo",
+		name: "foo.jpg",
+		kind: "image",
+		url: "https://prismic.io/foo.jpg",
+		size: "420",
+		height: "42",
+		width: "42",
+	})
+	expect(res).toEqual({
+		href: "https://prismic.io/foo.jpg",
+		target: undefined,
+		rel: "noreferrer",
+	})
+})
+
+it("resolves document link with route resolver", async ({ expect }) => {
+	const res = asLinkAttrs(docLinkWithURL)
+	expect(res).toEqual({
+		href: docLinkWithURL.url,
+		target: undefined,
+		rel: undefined,
+	})
+})
+
+it("resolves document", async ({ expect, docs }) => {
+	const res = asLinkAttrs({ ...docs.default, url: "/url" })
+	expect(res).toEqual({
+		href: "/url",
+		target: undefined,
+		rel: undefined,
+	})
+})
+
+it("resolves document link with link resolver", async ({ expect }) => {
+	const res = asLinkAttrs(docLinkWithURL, { linkResolver: () => "/resolver" })
+	expect(res).toEqual({
+		href: "/resolver",
+		target: undefined,
+		rel: undefined,
+	})
+})
+
+it("customizes rel value with config", async ({ expect }) => {
+	const relFn = vi.fn().mockReturnValue("custom")
+	const res = asLinkAttrs(
+		{
+			link_type: LinkType.Web,
+			url: "https://example.org",
+		},
+		{ rel: relFn },
+	)
+	expect(res.rel).toBe("custom")
+	expect(relFn).toHaveBeenCalledWith({
+		href: "https://example.org",
+		target: undefined,
+		isExternal: true,
+	})
+})
+
+it("returns undefined href for document link without resolver", async ({
+	expect,
+}) => {
+	const res = asLinkAttrs(docLink)
+	expect(res).toEqual({
 		href: undefined,
 		target: undefined,
 		rel: undefined,
 	})
-	expect(asLinkAttrs(field, { linkResolver: () => "/linkResolver" })).toEqual({
-		href: "/linkResolver",
-		target: undefined,
-		rel: undefined,
-	})
 })
 
-it("resolves a link to web field", (ctx) => {
-	const field = ctx.mock.value.link({ type: "Web" })
-
-	expect(asLinkAttrs(field)).toEqual({
-		href: field.url,
-		target: undefined,
-		rel: "noreferrer",
-	})
-	expect(asLinkAttrs(field, { linkResolver: () => "/linkResolver" })).toEqual({
-		href: field.url,
-		target: undefined,
-		rel: "noreferrer",
-	})
+it("returns empty object for null input", async ({ expect }) => {
+	const res = asLinkAttrs(null)
+	expect(res).toEqual({})
 })
 
-it("returns correct target when field has a target", (ctx) => {
-	const field = ctx.mock.value.link({ type: "Web", withTargetBlank: true })
-
-	expect(asLinkAttrs(field)).toEqual({
-		href: field.url,
-		target: field.target,
-		rel: "noreferrer",
-	})
-	expect(asLinkAttrs(field, { linkResolver: () => "/linkResolver" })).toEqual({
-		href: field.url,
-		target: field.target,
-		rel: "noreferrer",
-	})
+it("returns empty object for undefined input", async ({ expect }) => {
+	const res = asLinkAttrs(undefined)
+	expect(res).toEqual({})
 })
 
-it("resolves a link to media field", (ctx) => {
-	const field = ctx.mock.value.link({ type: "Media" })
-
-	expect(asLinkAttrs(field)).toEqual({
-		href: field.url,
-		target: undefined,
-		rel: "noreferrer",
-	})
-	expect(asLinkAttrs(field, { linkResolver: () => "/linkResolver" })).toEqual({
-		href: field.url,
-		target: undefined,
-		rel: "noreferrer",
-	})
-})
-
-it("resolves a document", (ctx) => {
-	const doc = ctx.mock.value.document()
-	doc.url = "/foo"
-
-	expect(asLinkAttrs(doc)).toEqual({
-		href: doc.url,
-		target: undefined,
-		rel: undefined,
-	})
-	expect(asLinkAttrs(doc, { linkResolver: () => "/linkResolver" })).toEqual({
-		href: "/linkResolver",
-		target: undefined,
-		rel: undefined,
-	})
-})
-
-it('returns "noreferrer" `rel` value when the field\'s `href` is external', (ctx) => {
-	const field = ctx.mock.value.link({ type: "Web" })
-
-	expect(asLinkAttrs(field).rel).toBe("noreferrer")
-	expect(asLinkAttrs(field, { linkResolver: () => "/linkResolver" }).rel).toBe(
-		"noreferrer",
-	)
-})
-
-it("allows the `rel` value to be configured using `config.rel`", (ctx) => {
-	const internalField = ctx.mock.value.link({ type: "Document" })
-	internalField.url = "/foo"
-
-	const externalField = ctx.mock.value.link({ type: "Web" })
-	externalField.url = "https://prismic.io"
-	externalField.target = "_blank"
-
-	const relFn = vi.fn().mockImplementation(() => "bar")
-
-	const internalRes = asLinkAttrs(internalField, { rel: relFn })
-	expect(internalRes.rel).toBe("bar")
-	expect(relFn).toHaveBeenNthCalledWith(1, {
-		href: internalField.url,
-		target: undefined,
-		isExternal: false,
-	})
-
-	const externalRes = asLinkAttrs(externalField, { rel: relFn })
-	expect(externalRes.rel).toBe("bar")
-	expect(relFn).toHaveBeenNthCalledWith(2, {
-		href: externalField.url,
-		target: externalField.target,
-		isExternal: true,
-	})
+it("returns empty object for empty link field", async ({ expect }) => {
+	const res = asLinkAttrs({ link_type: LinkType.Any })
+	expect(res).toEqual({})
 })

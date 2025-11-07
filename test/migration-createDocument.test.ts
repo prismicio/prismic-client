@@ -1,22 +1,20 @@
-import { expect, it } from "vitest"
+import { it } from "./it"
 
-import * as prismic from "../src"
-import { PrismicMigrationDocument } from "../src/types/migration/Document"
+import { PrismicMigrationDocument } from "../src"
 
-it("creates a document", () => {
-	const migration = prismic.createMigration()
+it("returns a migration document", async ({ expect, migration }) => {
+	const doc = { type: "type", uid: "uid", lang: "lang", data: {} }
+	const res = migration.createDocument(doc, "title")
+	expect(res).toBeInstanceOf(PrismicMigrationDocument)
+	expect(res.document).toBe(doc)
+	expect(res.originalPrismicDocument).toBe(undefined)
+	expect(res.title).toBe("title")
+})
 
-	const document: prismic.PendingPrismicDocument = {
-		type: "type",
-		uid: "uid",
-		lang: "lang",
-		data: {},
-	}
-	const documentTitle = "documentTitle"
-
-	migration.createDocument(document, documentTitle)
-
-	expect(migration._documents[0]).toStrictEqual(
-		new PrismicMigrationDocument(document, documentTitle),
+it("creates a document", async ({ expect, migration }) => {
+	const res = migration.createDocument(
+		{ type: "type", uid: "uid", lang: "lang", data: {} },
+		"title",
 	)
+	expect(migration._documents).toContain(res)
 })

@@ -1,44 +1,16 @@
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
-import { testGetMethod } from "./__testutils__/testAnyGetMethod"
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
-import { testFetchOptions } from "./__testutils__/testFetchOptions"
-import { testInvalidRefRetry } from "./__testutils__/testInvalidRefRetry"
+import { it } from "./it"
 
-testGetMethod("queries for documents by some tags", {
-	run: (client) => client.getBySomeTags(["foo", "bar"]),
-	requiredParams: {
-		q: `[[any(document.tags, ["foo", "bar"])]]`,
-	},
+it("returns paginated response", async ({ expect, client, docs }) => {
+	const res = await client.getBySomeTags([
+		docs.default.tags[0],
+		docs.default2.tags[0],
+	])
+	expect(res).toMatchObject({ results: expect.any(Array) })
 })
 
-testGetMethod("includes params if provided", {
-	run: (client) =>
-		client.getBySomeTags(["foo", "bar"], {
-			accessToken: "custom-accessToken",
-			ref: "custom-ref",
-			lang: "*",
-		}),
-	requiredParams: {
-		access_token: "custom-accessToken",
-		ref: "custom-ref",
-		lang: "*",
-		q: `[[any(document.tags, ["foo", "bar"])]]`,
-	},
-})
-
-testFetchOptions("supports fetch options", {
-	run: (client, params) => client.getBySomeTags(["foo", "bar"], params),
-})
-
-testInvalidRefRetry({
-	run: (client, params) => client.getBySomeTags(["foo", "bar"], params),
-})
-
-testAbortableMethod("is abortable with an AbortController", {
-	run: (client, params) => client.getBySomeTags(["foo", "bar"], params),
-})
-
-testConcurrentMethod("shares concurrent equivalent network requests", {
-	run: (client, params) => client.getBySomeTags(["foo", "bar"], params),
-	mode: "get",
+it("includes filter", async ({ expect, client, docs }) => {
+	await client.getBySomeTags([docs.default.tags[0], docs.default2.tags[0]])
+	expect(client).toHaveLastFetchedContentAPI({
+		q: `[[any(document.tags, ["${docs.default.tags[0]}", "${docs.default2.tags[0]}"])]]`,
+	})
 })

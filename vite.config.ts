@@ -13,9 +13,8 @@ export default defineConfig({
 		},
 	},
 	test: {
-		include: [".\/test2\/**/*.test.ts"],
-		globalSetup: ["./test2/setup.global.ts"],
-		setupFiles: ["./test2/setup.ts"],
+		globalSetup: ["./test/setup.global.ts"],
+		setupFiles: ["./test/setup.ts"],
 		typecheck: {
 			enabled: true,
 		},

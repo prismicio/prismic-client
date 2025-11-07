@@ -1,64 +1,231 @@
-import { it as _it, expect, vi } from "vitest"
+import { describe, vi } from "vitest"
 
-import { createTestWriteClient } from "./__testutils__/createWriteClient"
-import {
-	mockAsset,
-	mockPrismicAssetAPI,
-} from "./__testutils__/mockPrismicAssetAPI"
-import { mockPrismicMigrationAPI } from "./__testutils__/mockPrismicMigrationAPI"
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
+import { version } from "../package.json"
 
-import * as prismic from "../src"
+import { it } from "./it"
 
-// Skip test on Node 16 and 18 (File and FormData support)
-const isNode16 = process.version.startsWith("v16")
-const isNode18 = process.version.startsWith("v18")
-const it = _it.skipIf(isNode16 || isNode18)
+import { ForbiddenError, NotFoundError } from "../src"
 
-it.concurrent("performs migration", async (ctx) => {
-	const client = createTestWriteClient({ ctx })
+// The Migration API is slow and has low rate limits.
+vi.setConfig({ testTimeout: 20000 })
 
-	const asset = mockAsset(ctx)
-	const newDocuments = [{ id: "foo" }, { id: "bar" }]
-
-	mockPrismicRestAPIV2({ ctx })
-	const { assetsDatabase } = mockPrismicAssetAPI({
-		ctx,
-		client,
-		newAssets: [asset],
+describe("documents", () => {
+	it("creates documents in the migration release", async ({
+		expect,
+		writeClient,
+		migration,
+		docs,
+		repository,
+	}) => {
+		const doc = migration.createDocument(
+			{
+				type: docs.default.type,
+				lang: docs.default.lang,
+				uid: crypto.randomUUID(),
+				data: {},
+			},
+			"title",
+		)
+		await writeClient.migrate(migration)
+		const release = await repository.getMigrationRelease()
+		const releaseDocs = await repository.getDocuments({
+			statuses: [`release:${release.id}`],
+		})
+		expect(releaseDocs).toContainDocumentWithUID(
+			docs.default.type,
+			doc.document.uid,
+		)
 	})
-	const { documentsDatabase } = mockPrismicMigrationAPI({
-		ctx,
-		client,
-		newDocuments,
+
+	it("updates documents in the migration release", async ({
+		expect,
+		writeClient,
+		migration,
+		docs,
+		repository,
+	}) => {
+		const doc = migration.updateDocument({
+			...docs.default,
+			uid: crypto.randomUUID(),
+		})
+		await writeClient.migrate(migration)
+		const release = await repository.getMigrationRelease()
+		const releaseDocs = await repository.getDocuments({
+			statuses: [`release:${release.id}`],
+		})
+		expect(releaseDocs).toContainDocumentWithUID(
+			docs.default.type,
+			doc.document.uid,
+		)
 	})
 
-	const migration = prismic.createMigration()
+	it("supports lang", async ({
+		expect,
+		writeClient,
+		migration,
+		docs,
+		repository,
+	}) => {
+		const doc = migration.updateDocument({
+			...docs.french,
+			uid: crypto.randomUUID(),
+		})
+		await writeClient.migrate(migration)
+		const release = await repository.getMigrationRelease()
+		const releaseDocs = await repository.getDocuments({
+			language: docs.french.lang,
+			statuses: [`release:${release.id}`],
+		})
+		expect(releaseDocs).toContainDocumentWithUID(
+			docs.default.type,
+			doc.document.uid,
+		)
+	})
 
-	const { id: _id, ...documentFoo } =
-		ctx.mock.value.document() as prismic.ExistingPrismicDocument
-	documentFoo.data = {
-		image: migration.createAsset("foo", "foo.png"),
-		link: () => migration.getByUID("bar", "bar"),
-	}
+	it("supports alternate lang", async ({
+		expect,
+		writeClient,
+		migration,
+		docs,
+		repository,
+		createDocument,
+	}) => {
+		const baseDoc = await createDocument(docs.default.type)
+		const doc = migration.createDocument(
+			{
+				uid: crypto.randomUUID(),
+				type: baseDoc.type,
+				lang: docs.french.lang,
+				data: {},
+			},
+			"title",
+			{ masterLanguageDocument: baseDoc },
+		)
+		await writeClient.migrate(migration)
+		const release = await repository.getMigrationRelease()
+		const releaseDocs = await repository.getDocuments({
+			language: docs.french.lang,
+			statuses: [`release:${release.id}`],
+		})
+		const releaseDoc = releaseDocs.results.find(
+			(result) => result.id === doc.document.id,
+		)!
+		const localizedDocs = await repository.getDocuments({
+			groupLangIds: [releaseDoc.group_lang_id],
+		})
+		expect(localizedDocs).toContainDocument(baseDoc.id)
+		expect(localizedDocs).toContainDocument(doc.document.id!)
+	})
 
-	const { id: __id, ...documentBar } = ctx.mock.value.document()
-	documentBar.type = "bar"
-	documentBar.uid = "bar"
+	it("throws when an updated document does not exist", async ({
+		expect,
+		writeClient,
+		migration,
+		docs,
+	}) => {
+		migration.updateDocument({ ...docs.default, id: "foo" })
+		await expect(() => writeClient.migrate(migration)).rejects.toThrow(
+			NotFoundError,
+		)
+	})
+})
 
-	migration.createDocument(documentFoo, "foo")
-	migration.createDocument(documentBar, "bar")
+describe.concurrent("assets", () => {
+	it("supports File", async ({ expect, writeClient, migration, getAsset }) => {
+		const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='1' height='1'/>"
+		const file = new File([new TextEncoder().encode(svg)], crypto.randomUUID())
+		migration.createAsset(file, file.name)
+		await writeClient.migrate(migration)
+		const asset = await getAsset({ filename: file.name })
+		expect(asset.filename).toBe(file.name)
+	})
 
+	it("supports URL", async ({ expect, writeClient, migration, getAsset }) => {
+		const url = new URL(
+			"https://images.prismic.io/prismic-main/a1307082-512a-4088-bace-30cdae70148e_stairs.jpg?w=100",
+		)
+		const filename = crypto.randomUUID()
+		migration.createAsset(url, filename)
+		await writeClient.migrate(migration)
+		const asset = await getAsset({ filename })
+		expect(asset.filename).toBe(filename)
+	})
+
+	it("supports url string", async ({
+		expect,
+		writeClient,
+		migration,
+		getAsset,
+	}) => {
+		const url =
+			"https://images.prismic.io/prismic-main/a1307082-512a-4088-bace-30cdae70148e_stairs.jpg?w=100"
+		const filename = crypto.randomUUID()
+		migration.createAsset(url, filename)
+		await writeClient.migrate(migration)
+		const asset = await getAsset({ filename })
+		expect(asset.filename).toBe(filename)
+	})
+
+	it("supports params", async ({
+		expect,
+		writeClient,
+		migration,
+		getAsset,
+	}) => {
+		const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='1' height='1'/>"
+		const file = new File([new TextEncoder().encode(svg)], crypto.randomUUID())
+		migration.createAsset(file, file.name, {
+			alt: "alt",
+			credits: "credits",
+			notes: "notes",
+			tags: ["tag"],
+		})
+		await writeClient.migrate(migration)
+		const asset = await getAsset({ filename: file.name })
+		expect(asset).toMatchObject({
+			filename: file.name,
+			alt: "alt",
+			credits: "credits",
+			notes: "notes",
+			tags: expect.arrayContaining([expect.objectContaining({ name: "tag" })]),
+		})
+	})
+
+	it("throws when a url cannot be fetched", async ({
+		expect,
+		writeClient,
+		migration,
+	}) => {
+		vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(
+			new Response(null, { status: 429 }),
+		)
+		migration.createAsset(
+			"https://images.prismic.io/prismic-main/a1307082-512a-4088-bace-30cdae70148e_stairs.jpg?w=100",
+			"filename",
+		)
+		await expect(() => writeClient.migrate(migration)).rejects.toThrow(
+			/could not fetch foreign asset/i,
+		)
+	})
+})
+
+it("supports a reporter", async ({ expect, writeClient, migration, docs }) => {
 	const reporter = vi.fn()
-
-	await client.migrate(migration, { reporter })
-
-	expect(migration._assets?.size).toBe(1)
-	expect(assetsDatabase.flat()).toHaveLength(1)
-	expect(migration._documents.length).toBe(2)
-	expect(Object.keys(documentsDatabase)).toHaveLength(2)
-
-	expect(reporter).toHaveBeenCalledWith({
+	const newDoc = migration.createDocument(
+		{
+			uid: crypto.randomUUID(),
+			type: docs.default.type,
+			lang: docs.default.lang,
+			data: {},
+		},
+		"title",
+	)
+	const existingDoc = migration.updateDocument(docs.default)
+	const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='1' height='1'/>"
+	const file = new File([new TextEncoder().encode(svg)], crypto.randomUUID())
+	const asset = migration.createAsset(file, file.name)
+	await writeClient.migrate(migration, { reporter })
+	expect(reporter).toHaveBeenNthCalledWith(1, {
 		type: "start",
 		data: {
 			pending: {
@@ -67,29 +234,67 @@ it.concurrent("performs migration", async (ctx) => {
 			},
 		},
 	})
-
-	expect(reporter).toHaveBeenCalledWith({
+	expect(reporter).toHaveBeenNthCalledWith(2, {
+		type: "assets:creating",
+		data: {
+			asset,
+			current: 1,
+			remaining: 0,
+			total: 1,
+		},
+	})
+	expect(reporter).toHaveBeenNthCalledWith(3, {
 		type: "assets:created",
 		data: {
 			created: 1,
 		},
 	})
-
-	expect(reporter).toHaveBeenCalledWith({
-		type: "documents:created",
+	expect(reporter).toHaveBeenNthCalledWith(4, {
+		type: "documents:masterLocale",
 		data: {
-			created: 2,
+			masterLocale: "en-us",
 		},
 	})
-
-	expect(reporter).toHaveBeenCalledWith({
+	expect(reporter).toHaveBeenNthCalledWith(5, {
+		type: "documents:creating",
+		data: {
+			document: newDoc,
+			current: 1,
+			remaining: 0,
+			total: 1,
+		},
+	})
+	expect(reporter).toHaveBeenNthCalledWith(6, {
+		type: "documents:created",
+		data: {
+			created: 1,
+		},
+	})
+	expect(reporter).toHaveBeenNthCalledWith(7, {
+		type: "documents:updating",
+		data: {
+			document: newDoc,
+			current: 1,
+			remaining: 1,
+			total: 2,
+		},
+	})
+	expect(reporter).toHaveBeenNthCalledWith(8, {
+		type: "documents:updating",
+		data: {
+			document: existingDoc,
+			current: 2,
+			remaining: 0,
+			total: 2,
+		},
+	})
+	expect(reporter).toHaveBeenNthCalledWith(9, {
 		type: "documents:updated",
 		data: {
 			updated: 2,
 		},
 	})
-
-	expect(reporter).toHaveBeenCalledWith({
+	expect(reporter).toHaveBeenNthCalledWith(10, {
 		type: "end",
 		data: {
 			migrated: {
@@ -98,60 +303,61 @@ it.concurrent("performs migration", async (ctx) => {
 			},
 		},
 	})
+	vi.useRealTimers()
 })
 
-it.concurrent("migrates nothing when migration is empty", async (ctx) => {
-	const client = createTestWriteClient({ ctx })
+it.concurrent(
+	"includes x-client version header",
+	async ({ expect, writeClient, migration, docs }) => {
+		migration.updateDocument(docs.default2)
+		await writeClient.migrate(migration)
+		expect(writeClient.fetchFn).toHaveBeenCalledWith(
+			expect.anything(),
+			expect.objectContaining({
+				headers: expect.objectContaining({
+					"x-client": `prismicio-client/${version}`,
+				}),
+			}),
+		)
+	},
+)
 
-	mockPrismicRestAPIV2({ ctx })
-	mockPrismicAssetAPI({ ctx, client })
-	// Not mocking Migration API to test we're not calling it
-	// mockPrismicMigrationAPI({ ctx, client })
+it("throws if using an invalid token", async ({
+	expect,
+	writeClient,
+	migration,
+	docs,
+}) => {
+	writeClient.writeToken = "invalid"
+	migration.updateDocument(docs.default2)
+	await expect(() => writeClient.migrate(migration)).rejects.toThrow(
+		ForbiddenError,
+	)
+})
 
-	const migration = prismic.createMigration()
-
-	const reporter = vi.fn()
-
-	await client.migrate(migration, { reporter })
-
-	expect(reporter).toHaveBeenCalledWith({
-		type: "start",
-		data: {
-			pending: {
-				documents: 0,
-				assets: 0,
-			},
-		},
+it("supports fetch options", async ({
+	expect,
+	writeClient,
+	migration,
+	docs,
+}) => {
+	migration.updateDocument(docs.default)
+	await writeClient.migrate(migration, {
+		fetchOptions: { headers: { foo: "bar" } },
 	})
+	expect(writeClient.fetchFn).toHaveBeenCalledWith(
+		expect.anything(),
+		expect.objectContaining({
+			headers: expect.objectContaining({
+				foo: "bar",
+			}),
+		}),
+	)
+})
 
-	expect(reporter).toHaveBeenCalledWith({
-		type: "assets:created",
-		data: {
-			created: 0,
-		},
-	})
-
-	expect(reporter).toHaveBeenCalledWith({
-		type: "documents:created",
-		data: {
-			created: 0,
-		},
-	})
-
-	expect(reporter).toHaveBeenCalledWith({
-		type: "documents:updated",
-		data: {
-			updated: 0,
-		},
-	})
-
-	expect(reporter).toHaveBeenCalledWith({
-		type: "end",
-		data: {
-			migrated: {
-				documents: 0,
-				assets: 0,
-			},
-		},
-	})
+it("supports signal", async ({ expect, writeClient, migration, docs }) => {
+	migration.updateDocument(docs.default)
+	await expect(() =>
+		writeClient.migrate(migration, { signal: AbortSignal.abort() }),
+	).rejects.toThrow(/aborted/i)
 })

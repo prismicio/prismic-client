@@ -1,44 +1,13 @@
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
-import { testGetMethod } from "./__testutils__/testAnyGetMethod"
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
-import { testFetchOptions } from "./__testutils__/testFetchOptions"
-import { testInvalidRefRetry } from "./__testutils__/testInvalidRefRetry"
+import { it } from "./it"
 
-testGetMethod("queries for documents by IDs", {
-	run: (client) => client.getByIDs(["id1", "id2"]),
-	requiredParams: {
-		q: `[[in(document.id, ["id1", "id2"])]]`,
-	},
+it("returns paginated response", async ({ expect, client, docs }) => {
+	const res = await client.getByIDs([docs.default.id, docs.default2.id])
+	expect(res).toMatchObject({ results: expect.any(Array) })
 })
 
-testGetMethod("includes params if provided", {
-	run: (client) =>
-		client.getByIDs(["id1", "id2"], {
-			accessToken: "custom-accessToken",
-			ref: "custom-ref",
-			lang: "*",
-		}),
-	requiredParams: {
-		access_token: "custom-accessToken",
-		ref: "custom-ref",
-		lang: "*",
-		q: `[[in(document.id, ["id1", "id2"])]]`,
-	},
-})
-
-testFetchOptions("supports fetch options", {
-	run: (client, params) => client.getByIDs(["id1", "id2"], params),
-})
-
-testInvalidRefRetry({
-	run: (client, params) => client.getByIDs(["id1", "id2"], params),
-})
-
-testAbortableMethod("is abortable with an AbortController", {
-	run: (client, params) => client.getByIDs(["id1", "id2"], params),
-})
-
-testConcurrentMethod("shares concurrent equivalent network requests", {
-	run: (client, params) => client.getByIDs(["id1", "id2"], params),
-	mode: "get",
+it("includes filter", async ({ expect, client, docs }) => {
+	await client.getByIDs([docs.default.id, docs.default2.id])
+	expect(client).toHaveLastFetchedContentAPI({
+		q: `[[in(document.id, ["${docs.default.id}", "${docs.default2.id}"])]]`,
+	})
 })

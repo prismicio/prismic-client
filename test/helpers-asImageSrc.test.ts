@@ -1,53 +1,43 @@
-import { expect, it } from "vitest"
+import { it } from "./it"
 
 import type { ImageField } from "../src"
 import { asImageSrc } from "../src"
 
-it("returns null for nullish inputs", () => {
-	expect(asImageSrc(null)).toBeNull()
-	expect(asImageSrc(undefined)).toBeNull()
+const field: ImageField = {
+	id: "id",
+	edit: {
+		x: 0,
+		y: 0,
+		zoom: 1,
+		background: "background",
+	},
+	url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
+	alt: null,
+	copyright: null,
+	dimensions: { width: 400, height: 300 },
+}
+
+it("returns the image field URL", async ({ expect }) => {
+	const res = asImageSrc(field)
+	expect(res).toBe(field.url)
 })
 
-it("returns an image field URL", () => {
-	const field: ImageField = {
-		id: "id",
-		edit: {
-			x: 0,
-			y: 0,
-			zoom: 1,
-			background: "background",
-		},
-		url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
-		alt: null,
-		copyright: null,
-		dimensions: { width: 400, height: 300 },
-	}
-
-	expect(asImageSrc(field)).toBe(field.url)
+it("applies given Imgix URL parameters", async ({ expect }) => {
+	const res = asImageSrc(field, { sat: 100 })
+	expect(res).toHaveSearchParam("sat", "100")
 })
 
-it("applies given Imgix URL parameters", () => {
-	const field: ImageField = {
-		id: "id",
-		edit: {
-			x: 0,
-			y: 0,
-			zoom: 1,
-			background: "background",
-		},
-		url: "https://images.prismic.io/qwerty/image.png?auto=compress%2Cformat",
-		alt: null,
-		copyright: null,
-		dimensions: { width: 400, height: 300 },
-	}
-
-	expect(asImageSrc(field, { sat: 100 })).toBe(`${field.url}&sat=100`)
-	expect(asImageSrc(field, { w: 100 })).toBe(`${field.url}&w=100`)
-	expect(asImageSrc(field, { width: 100 })).toBe(`${field.url}&width=100`)
+it("returns null for empty image field", async ({ expect }) => {
+	const res = asImageSrc({})
+	expect(res).toBeNull()
 })
 
-it("returns null when image field is empty", () => {
-	const field: ImageField<null, "empty"> = {}
+it("returns null for null input", async ({ expect }) => {
+	const res = asImageSrc(null)
+	expect(res).toBeNull()
+})
 
-	expect(asImageSrc(field)).toBeNull()
+it("returns null for undefined input", async ({ expect }) => {
+	const res = asImageSrc(undefined)
+	expect(res).toBeNull()
 })

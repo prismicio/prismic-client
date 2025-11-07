@@ -1,96 +1,75 @@
-import { expect, it } from "vitest"
-
-import { createRichTextFixtures } from "./__testutils__/createRichTextFixtures"
-
-import { linkResolver } from "./__fixtures__/linkResolver"
-import { partialHTMLRichTextFunctionSerializer } from "./__fixtures__/partialHTMLRichTextFunctionSerializer"
-import { partialHTMLRichTextMapSerializer } from "./__fixtures__/partialHTMLRichTextMapSerializer"
+import { it } from "./it"
 
 import type { RichTextField } from "../src"
 import { asHTML } from "../src"
 
-it("serializes with default serializer", () => {
-	const richTextFixtures = createRichTextFixtures()
+const field: RichTextField = [
+	{
+		type: "paragraph",
+		text: "foo bar baz",
+		spans: [{ start: 4, end: 7, type: "strong" }],
+	},
+]
 
-	expect(asHTML(richTextFixtures.en, { linkResolver })).toMatchSnapshot()
-
-	// TODO: Remove when we remove support for deprecated tuple-style configuration.
-	expect(asHTML(richTextFixtures.en, linkResolver)).toBe(
-		asHTML(richTextFixtures.en, { linkResolver }),
-	)
+it("converts rich text to html", async ({ expect }) => {
+	const res = asHTML(field)
+	expect(res).toBe("<p>foo <strong>bar</strong> baz</p>")
 })
 
-it("serializes with a custom function serializer", () => {
-	const richTextFixtures = createRichTextFixtures()
-
-	expect(
-		asHTML(richTextFixtures.en, {
-			linkResolver,
-			serializer: partialHTMLRichTextFunctionSerializer,
-		}),
-	).toMatchSnapshot()
-
-	// TODO: Remove when we remove support for deprecated tuple-style configuration.
-	expect(
-		asHTML(
-			richTextFixtures.en,
-			linkResolver,
-			partialHTMLRichTextFunctionSerializer,
-		),
-	).toBe(
-		asHTML(richTextFixtures.en, {
-			linkResolver,
-			serializer: partialHTMLRichTextFunctionSerializer,
-		}),
-	)
+it("supports serializer", async ({ expect }) => {
+	const res = asHTML(field, {
+		serializer: {
+			paragraph: ({ children }) => `<p data-foo>${children}</p>`,
+		},
+	})
+	expect(res).toBe("<p data-foo>foo <strong>bar</strong> baz</p>")
 })
 
-it("serializes with a custom map serializer", () => {
-	const richTextFixtures = createRichTextFixtures()
-
-	expect(
-		asHTML(richTextFixtures.en, {
-			linkResolver,
-			serializer: partialHTMLRichTextMapSerializer,
-		}),
-	).toMatchSnapshot()
-
-	// TODO: Remove when we remove support for deprecated tuple-style configuration.
-	expect(
-		asHTML(richTextFixtures.en, linkResolver, partialHTMLRichTextMapSerializer),
-	).toBe(
-		asHTML(richTextFixtures.en, {
-			linkResolver,
-			serializer: partialHTMLRichTextMapSerializer,
-		}),
-	)
+it("supports attribute serializer", async ({ expect }) => {
+	const res = asHTML(field, {
+		serializer: {
+			paragraph: { "data-foo": true },
+		},
+	})
+	expect(res).toBe("<p data-foo>foo <strong>bar</strong> baz</p>")
 })
 
-it("serializes with a custom shorthand map serializer", () => {
-	const richTextFixtures = createRichTextFixtures()
+it("supports function serializer", async ({ expect }) => {
+	const res = asHTML(field, {
+		serializer: (type, _node, _text, children) => {
+			if (type === "paragraph") {
+				return `<p data-foo>${children}</p>`
+			}
+		},
+	})
+	expect(res).toBe("<p data-foo>foo <strong>bar</strong> baz</p>")
+})
 
-	expect(
-		asHTML(richTextFixtures.en, {
-			linkResolver,
-			serializer: {
-				heading1: { class: "text-xl", "data-heading": true },
-				heading2: {
-					xss: 'https://example.org" onmouseover="alert(document.cookie);',
+it("escapes external links to prevent XSS", async ({ expect }) => {
+	const res = asHTML([
+		{
+			type: "paragraph",
+			text: 'This is a link with XSS (")',
+			spans: [
+				{
+					start: 10,
+					end: 14,
+					type: "hyperlink",
+					data: {
+						link_type: "Web",
+						url: 'https://example.org" onmouseover="alert(document.cookie);',
+					},
 				},
-				label: { class: "shorthand" },
-			},
-		}),
-	).toMatchSnapshot()
+			],
+		},
+	])
+	expect(res).toBe(
+		'<p>This is a <a href="https://example.org&quot; onmouseover=&quot;alert(document.cookie);" rel="noopener noreferrer">link</a> with XSS (&quot;)</p>',
+	)
 })
 
-it("escapes external links to prevent XSS", () => {
-	const richTextFixtures = createRichTextFixtures()
-
-	expect(asHTML(richTextFixtures.xss, { linkResolver })).toMatchSnapshot()
-})
-
-it("omits target attribute on links without a target value", () => {
-	const field: RichTextField = [
+it("omits target attribute on links without target", async ({ expect }) => {
+	const res = asHTML([
 		{
 			type: "paragraph",
 			text: "link",
@@ -106,15 +85,13 @@ it("omits target attribute on links without a target value", () => {
 				},
 			],
 		},
-	]
-
-	expect(asHTML(field, { linkResolver })).toMatchInlineSnapshot(
-		`"<p><a href="https://example.org" rel="noopener noreferrer">link</a></p>"`,
-	)
+	])
+	expect(res).toContain('href="https://example.org"')
+	expect(res).not.toContain("target=")
 })
 
-it("includes target attribute on links with a target value", () => {
-	const field: RichTextField = [
+it("includes target attribute on links with target", async ({ expect }) => {
+	const res = asHTML([
 		{
 			type: "paragraph",
 			text: "link",
@@ -131,20 +108,59 @@ it("includes target attribute on links with a target value", () => {
 				},
 			],
 		},
-	]
+	])
+	expect(res).toContain('target="_blank"')
+})
 
-	expect(asHTML(field, { linkResolver })).toMatchInlineSnapshot(
-		`"<p><a href="https://example.org" target="_blank" rel="noopener noreferrer">link</a></p>"`,
+it("includes dir attribute on right-to-left languages", async ({ expect }) => {
+	const res = asHTML([
+		{
+			type: "paragraph",
+			text: "foo bar baz",
+			spans: [{ start: 4, end: 7, type: "strong" }],
+			direction: "rtl",
+		},
+	])
+	expect(res).toContain('<p dir="rtl"')
+})
+
+it("supports link resolver", async ({ expect }) => {
+	const res = asHTML(
+		[
+			{
+				type: "paragraph",
+				text: "link",
+				spans: [
+					{
+						type: "hyperlink",
+						start: 0,
+						end: 4,
+						data: {
+							link_type: "Document",
+							id: "id",
+							type: "page",
+							tags: ["tag"],
+							lang: "en-us",
+							uid: "home",
+							isBroken: false,
+						},
+					},
+				],
+			},
+		],
+		{ linkResolver: ({ uid }) => `/${uid}` },
 	)
+	expect(res).toContain('href="/home"')
 })
 
-it("includes `dir` attribute on right-to-left languages", () => {
-	const richTextFixtures = createRichTextFixtures()
-
-	expect(asHTML(richTextFixtures.ar, { linkResolver })).toMatchSnapshot()
+it("returns empty string for empty field", async ({ expect }) => {
+	expect(asHTML([])).toBe("")
 })
 
-it("returns null for nullish inputs", () => {
+it("returns null for null input", async ({ expect }) => {
 	expect(asHTML(null)).toBeNull()
+})
+
+it("returns null for undefined input", async ({ expect }) => {
 	expect(asHTML(undefined)).toBeNull()
 })

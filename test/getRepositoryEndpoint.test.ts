@@ -1,20 +1,15 @@
-import { expect, it } from "vitest"
+import { it } from "./it"
 
-import * as prismic from "../src"
+import { PrismicError, getRepositoryEndpoint } from "../src"
 
-it("returns default Rest API V2 CDN URL", () => {
-	const endpoint = prismic.getRepositoryEndpoint("qwerty")
-
-	expect(endpoint).toBe("https://qwerty.cdn.prismic.io/api/v2")
+it("returns Content API CDN URL", async ({ expect }) => {
+	const endpoint = getRepositoryEndpoint("example")
+	expect(endpoint).toBe("https://example.cdn.prismic.io/api/v2")
 })
 
-it("throws if an invalid repository name is given", () => {
-	expect(() => {
-		prismic.getRepositoryEndpoint("this is invalid")
-	}).toThrowError(
-		/An invalid Prismic repository name was given: this is invalid/i,
+it("throws if an invalid repository name is given", async ({ expect }) => {
+	expect(() => getRepositoryEndpoint("this is invalid")).toThrow(
+		/invalid Prismic repository name/i,
 	)
-	expect(() => {
-		prismic.getRepositoryEndpoint("this is invalid")
-	}).toThrowError(prismic.PrismicError)
+	expect(() => getRepositoryEndpoint("this is invalid")).toThrow(PrismicError)
 })

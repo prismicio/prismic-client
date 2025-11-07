@@ -1,44 +1,26 @@
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
-import { testGetAllMethod } from "./__testutils__/testAnyGetMethod"
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
-import { testFetchOptions } from "./__testutils__/testFetchOptions"
-import { testInvalidRefRetry } from "./__testutils__/testInvalidRefRetry"
+import { it } from "./it"
 
-testGetAllMethod("returns all documents by tag from paginated response", {
-	run: (client) => client.getAllByTag("tag"),
-	requiredParams: {
-		q: `[[any(document.tags, ["tag"])]]`,
-	},
+it("returns multiple documents", async ({ expect, client, docs }) => {
+	const res = await client.getAllByTag(docs.default.tags[0])
+	expect(res).toHaveLength(3)
+	expect(res).toContainEqual(expect.objectContaining({ id: docs.default.id }))
+	expect(res).toContainEqual(expect.objectContaining({ id: docs.default3.id }))
+	expect(res).toContainEqual(expect.objectContaining({ id: docs.default4.id }))
 })
 
-testGetAllMethod("includes params if provided", {
-	run: (client) =>
-		client.getAllByTag("tag", {
-			accessToken: "custom-accessToken",
-			ref: "custom-ref",
-			lang: "*",
-		}),
-	requiredParams: {
-		access_token: "custom-accessToken",
-		ref: "custom-ref",
-		lang: "*",
-		q: `[[any(document.tags, ["tag"])]]`,
-	},
+it("can be limited", async ({ expect, client, docs }) => {
+	const res = await client.getAllByTag(docs.default.tags[0], { limit: 1 })
+	expect(res).toHaveLength(1)
 })
 
-testFetchOptions("supports fetch options", {
-	run: (client, params) => client.getAllByTag("tag", params),
+it("includes filter", async ({ expect, client, docs }) => {
+	await client.getAllByTag(docs.default.tags[0])
+	expect(client).toHaveLastFetchedContentAPI({
+		q: `[[any(document.tags, ["${docs.default.tags[0]}"])]]`,
+	})
 })
 
-testInvalidRefRetry({
-	run: (client, params) => client.getAllByTag("tag", params),
-})
-
-testAbortableMethod("is abortable with an AbortController", {
-	run: (client, params) => client.getAllByTag("tag", params),
-})
-
-testConcurrentMethod("shares concurrent equivalent network requests", {
-	run: (client, params) => client.getAllByTag("tag", params),
-	mode: "getAll",
+it("uses a default page size", async ({ expect, client, docs }) => {
+	await client.getAllByTag(docs.default.tags[0])
+	expect(client).toHaveLastFetchedContentAPI({ pageSize: "100" })
 })

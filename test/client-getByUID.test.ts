@@ -1,44 +1,35 @@
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
-import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod"
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
-import { testFetchOptions } from "./__testutils__/testFetchOptions"
-import { testInvalidRefRetry } from "./__testutils__/testInvalidRefRetry"
+import { vi } from "vitest"
 
-testGetFirstMethod("queries for document by UID", {
-	run: (client) => client.getByUID("type", "uid"),
-	requiredParams: {
-		q: [`[[at(document.type, "type")]]`, `[[at(my.type.uid, "uid")]]`],
-	},
+import { it } from "./it"
+
+import { NotFoundError } from "../src"
+
+it("returns single document", async ({ expect, client, docs }) => {
+	const res = await client.getByUID(docs.default.type, docs.default.uid)
+	expect(res).toMatchObject({ uid: docs.default.uid })
 })
 
-testGetFirstMethod("includes params if provided", {
-	run: (client) =>
-		client.getByUID("type", "uid", {
-			accessToken: "custom-accessToken",
-			ref: "custom-ref",
-			lang: "*",
-		}),
-	requiredParams: {
-		access_token: "custom-accessToken",
-		ref: "custom-ref",
-		lang: "*",
-		q: [`[[at(document.type, "type")]]`, `[[at(my.type.uid, "uid")]]`],
-	},
+it("throws if no document is returned", async ({
+	expect,
+	client,
+	docs,
+	response,
+}) => {
+	vi.mocked(client.fetchFn)
+		.mockImplementationOnce(fetch)
+		.mockResolvedValueOnce(response.search([]))
+	await expect(() =>
+		client.getByUID(docs.default.type, "invalid"),
+	).rejects.toThrow(NotFoundError)
 })
 
-testFetchOptions("supports fetch options", {
-	run: (client, params) => client.getByUID("type", "uid", params),
-})
-
-testInvalidRefRetry({
-	run: (client, params) => client.getByUID("type", "uid", params),
-})
-
-testAbortableMethod("is abortable with an AbortController", {
-	run: (client, params) => client.getByUID("type", "uid", params),
-})
-
-testConcurrentMethod("shares concurrent equivalent network requests", {
-	run: (client, params) => client.getByUID("type", "uid", params),
-	mode: "get",
+it("includes filter", async ({ expect, client, docs }) => {
+	await client.getByUID(docs.default.type, docs.default.uid)
+	const params = new URLSearchParams()
+	params.append("q", `[[at(document.type, "${docs.default.type}")]]`)
+	params.append(
+		"q",
+		`[[at(my.${docs.default.type}.uid, "${docs.default.uid}")]]`,
+	)
+	expect(client).toHaveLastFetchedContentAPI(params)
 })

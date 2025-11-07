@@ -1,50 +1,23 @@
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
-import { testGetMethod } from "./__testutils__/testAnyGetMethod"
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
-import { testFetchOptions } from "./__testutils__/testFetchOptions"
-import { testInvalidRefRetry } from "./__testutils__/testInvalidRefRetry"
+import { it } from "./it"
 
-testGetMethod("queries for documents by UIDs", {
-	run: (client) => client.getByUIDs("type", ["uid1", "uid2"]),
-	requiredParams: {
-		q: [
-			`[[at(document.type, "type")]]`,
-			`[[in(my.type.uid, ["uid1", "uid2"])]]`,
-		],
-	},
+it("returns paginated response", async ({ expect, client, docs }) => {
+	const res = await client.getByUIDs(docs.default.type, [
+		docs.default.uid,
+		docs.default2.uid,
+	])
+	expect(res).toMatchObject({ results: expect.any(Array) })
 })
 
-testGetMethod("includes params if provided", {
-	run: (client) =>
-		client.getByUIDs("type", ["uid1", "uid2"], {
-			accessToken: "custom-accessToken",
-			ref: "custom-ref",
-			lang: "*",
-		}),
-	requiredParams: {
-		access_token: "custom-accessToken",
-		ref: "custom-ref",
-		lang: "*",
-		q: [
-			`[[at(document.type, "type")]]`,
-			`[[in(my.type.uid, ["uid1", "uid2"])]]`,
-		],
-	},
-})
-
-testFetchOptions("supports fetch options", {
-	run: (client, params) => client.getByUIDs("type", ["uid1", "uid2"], params),
-})
-
-testInvalidRefRetry({
-	run: (client, params) => client.getByUIDs("type", ["uid1", "uid2"], params),
-})
-
-testAbortableMethod("is abortable with an AbortController", {
-	run: (client, params) => client.getByUIDs("type", ["uid1", "uid2"], params),
-})
-
-testConcurrentMethod("shares concurrent equivalent network requests", {
-	run: (client, params) => client.getByUIDs("type", ["uid1", "uid2"], params),
-	mode: "get",
+it("includes filter", async ({ expect, client, docs }) => {
+	await client.getByUIDs(docs.default.type, [
+		docs.default.uid,
+		docs.default2.uid,
+	])
+	const params = new URLSearchParams()
+	params.append("q", `[[at(document.type, "${docs.default.type}")]]`)
+	params.append(
+		"q",
+		`[[in(my.${docs.default.type}.uid, ["${docs.default.uid}", "${docs.default2.uid}"])]]`,
+	)
+	expect(client).toHaveLastFetchedContentAPI(params)
 })

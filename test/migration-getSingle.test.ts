@@ -1,33 +1,21 @@
-import { expect, it } from "vitest"
+import { it } from "./it"
 
-import * as prismic from "../src"
-
-it("returns a document of a given singleton type", () => {
-	const migration = prismic.createMigration()
-
-	const document = {
-		type: "foo",
-		lang: "lang",
-		data: {},
-	}
-	const documentName = "documentName"
-
-	const doc = migration.createDocument(document, documentName)
-
-	expect(migration.getSingle(document.type)).toStrictEqual(doc)
+it("returns a document of a given singleton type", async ({
+	expect,
+	migration,
+}) => {
+	const doc = migration.createDocument(
+		{ type: "foo", lang: "lang", data: {} },
+		"title",
+	)
+	const res = migration.getSingle("foo")
+	expect(res).toBe(doc)
 })
 
-it("returns `undefined` if a document is not found", () => {
-	const migration = prismic.createMigration()
-
-	const document = {
-		type: "foo",
-		lang: "lang",
-		data: {},
-	}
-	const documentName = "documentName"
-
-	migration.createDocument(document, documentName)
-
-	expect(migration.getSingle("bar")).toStrictEqual(undefined)
+it("returns `undefined` if a document is not found", async ({
+	expect,
+	migration,
+}) => {
+	const res = migration.getSingle("foo")
+	expect(res).toBe(undefined)
 })

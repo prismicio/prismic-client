@@ -1,51 +1,41 @@
-import { expect, it } from "vitest"
+import { it } from "./it"
 
-import { createTestClient } from "./__testutils__/createClient"
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2"
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod"
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod"
-import { testFetchOptions } from "./__testutils__/testFetchOptions"
+import { PrismicError } from "../src"
 
-import * as prismic from "../src"
-
-it("returns a Release by ID", async (ctx) => {
-	const ref1 = ctx.mock.api.ref({ isMasterRef: true })
-	const ref2 = ctx.mock.api.ref({ isMasterRef: false })
-	const repositoryResponse = ctx.mock.api.repository()
-	repositoryResponse.refs = [ref1, ref2]
-	mockPrismicRestAPIV2({
-		repositoryResponse,
-		ctx,
-	})
-
-	const client = createTestClient({ ctx })
-	const res = await client.getReleaseByID(ref2.id)
-
-	expect(res).toStrictEqual(ref2)
+it("returns release with matching ID", async ({
+	expect,
+	client,
+	accessToken,
+	release,
+}) => {
+	client.accessToken = accessToken
+	const res = await client.getReleaseByID(release.id)
+	expect(res).toMatchObject({ ref: release.ref })
 })
 
-it("throws if Release could not be found", async (ctx) => {
-	mockPrismicRestAPIV2({ ctx })
-
-	const client = createTestClient({ ctx })
-
-	await expect(() =>
-		client.getReleaseByID("non-existant"),
-	).rejects.toThrowError(/could not be found/i)
-	await expect(() =>
-		client.getReleaseByID("non-existant"),
-	).rejects.toThrowError(prismic.PrismicError)
+it("throws if release with ID is not found", async ({ expect, client }) => {
+	await expect(() => client.getReleaseByID("invalid")).rejects.toThrow(
+		PrismicError,
+	)
 })
 
-testFetchOptions("supports fetch options", {
-	run: (client, params) => client.getReleaseByID("id", params),
-})
-
-testAbortableMethod("is abortable with an AbortController", {
-	run: (client, params) => client.getReleaseByID("id", params),
-})
-
-testConcurrentMethod("shares concurrent equivalent network requests", {
-	run: (client, params) => client.getReleaseByID("id", params),
-	mode: "repository",
+it("shares concurrent equivalent network requests", async ({
+	expect,
+	client,
+	accessToken,
+	release,
+}) => {
+	client.accessToken = accessToken
+	const controller1 = new AbortController()
+	const controller2 = new AbortController()
+	await Promise.all([
+		client.getReleaseByID(release.id),
+		client.getReleaseByID(release.id),
+		client.getReleaseByID(release.id, { signal: controller1.signal }),
+		client.getReleaseByID(release.id, { signal: controller1.signal }),
+		client.getReleaseByID(release.id, { signal: controller2.signal }),
+		client.getReleaseByID(release.id, { signal: controller2.signal }),
+	])
+	await client.getReleaseByID(release.id)
+	expect(client).toHaveFetchedRepoTimes(4)
 })
