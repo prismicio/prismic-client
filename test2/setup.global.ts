@@ -16,8 +16,14 @@ try {
 	process.loadEnvFile(".env.test.local")
 } catch {}
 
-ok(process.env.E2E_PRISMIC_EMAIL, "Missing E2E_PRISMIC_EMAIL")
-ok(process.env.E2E_PRISMIC_PASSWORD, "Missing E2E_PRISMIC_PASSWORD")
+ok(
+	process.env.E2E_PRISMIC_EMAIL,
+	"Missing E2E_PRISMIC_EMAIL. See the .env.test.example file.",
+)
+ok(
+	process.env.E2E_PRISMIC_PASSWORD,
+	"Missing E2E_PRISMIC_PASSWORD. See the .env.test.example file.",
+)
 
 export const repos = createRepositoriesManager({
 	urlConfig: process.env.PRISMIC_WROOM_BASE_URL || "https://prismic.io",
