@@ -9,7 +9,7 @@ it("uses preview ref from server request", async ({
 	response,
 }) => {
 	vi.mocked(client.fetchFn)
-		.mockResolvedValueOnce(response.repo(masterRef))
+		.mockResolvedValueOnce(response.repository(masterRef))
 		.mockResolvedValueOnce(response.search([]))
 	client.enableAutoPreviewsFromReq({
 		headers: { cookie: `io.prismic.preview=foo` },
@@ -25,7 +25,7 @@ it("uses preview ref from Request", async ({
 	response,
 }) => {
 	vi.mocked(client.fetchFn)
-		.mockResolvedValueOnce(response.repo(masterRef))
+		.mockResolvedValueOnce(response.repository(masterRef))
 		.mockResolvedValueOnce(response.search([]))
 	client.enableAutoPreviewsFromReq(
 		new Request("https://example.com/preview", {
@@ -43,7 +43,7 @@ it("falls back to master ref without preview cookie", async ({
 	response,
 }) => {
 	vi.mocked(client.fetchFn)
-		.mockResolvedValueOnce(response.repo(masterRef))
+		.mockResolvedValueOnce(response.repository(masterRef))
 		.mockResolvedValueOnce(response.search([]))
 	client.enableAutoPreviewsFromReq({ headers: { cookie: "" } })
 	await client.get()

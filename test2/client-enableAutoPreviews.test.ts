@@ -10,7 +10,7 @@ it("uses preview ref from browser cookie", async ({
 }) => {
 	vi.stubGlobal("document", { cookie: `io.prismic.preview=foo` })
 	vi.mocked(client.fetchFn)
-		.mockResolvedValueOnce(response.repo(masterRef))
+		.mockResolvedValueOnce(response.repository(masterRef))
 		.mockResolvedValueOnce(response.search([]))
 	client.enableAutoPreviews()
 	await client.get()
@@ -30,7 +30,7 @@ it("re-enables after being disabled", async ({
 	expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
 	client.enableAutoPreviews()
 	vi.mocked(client.fetchFn)
-		.mockResolvedValueOnce(response.repo(masterRef))
+		.mockResolvedValueOnce(response.repository(masterRef))
 		.mockResolvedValueOnce(response.search([]))
 	await client.get()
 	expect(client).toHaveLastFetchedContentAPI({ ref: "foo" })

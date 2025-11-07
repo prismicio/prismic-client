@@ -25,7 +25,7 @@ ok(
 	"Missing E2E_PRISMIC_PASSWORD. See the .env.test.example file.",
 )
 
-export const repos = createRepositoriesManager({
+export const repositories = createRepositoriesManager({
 	urlConfig: process.env.PRISMIC_WROOM_BASE_URL || "https://prismic.io",
 	authConfig: {
 		email: process.env.E2E_PRISMIC_EMAIL,
@@ -74,24 +74,29 @@ const singleModel: CustomType = {
 const routes = JSON.stringify([{ type: model.id, path: "/:uid" }])
 
 export async function setup({ provide }: TestProject): Promise<void> {
-	const repo = await repos.createRepository({
+	const repository = await repositories.createRepository({
 		prefix: "e2e-tests-prismicio-client",
 		defaultLocale: "en-us",
 		locales: ["en-us", "fr-fr"],
 		customTypes: [model, singleModel],
 		slices: [],
 	})
-	provide("repoName", repo.name)
+	provide("repositoryName", repository.name)
 
-	const [repoMeta, writeToken, accessToken, initRelease, testReleaseMeta] =
-		await Promise.all([
-			repo.getContentApiClient().getAsJson("/api/v2"),
-			repos.getUserApiToken(),
-			repo.createContentAPIToken("test", "master+releases"),
-			repo.createRelease("init"),
-			repo.createRelease("test"),
-		])
-	provide("repo", JSON.stringify(repoMeta))
+	const [
+		repositoryMeta,
+		writeToken,
+		accessToken,
+		initRelease,
+		testReleaseMeta,
+	] = await Promise.all([
+		repository.getContentApiClient().getAsJson("/api/v2"),
+		repositories.getUserApiToken(),
+		repository.createContentAPIToken("test", "master+releases"),
+		repository.createRelease("init"),
+		repository.createRelease("test"),
+	])
+	provide("repository", JSON.stringify(repositoryMeta))
 	provide("writeToken", writeToken)
 	provide("accessToken", accessToken)
 
@@ -111,14 +116,22 @@ export async function setup({ provide }: TestProject): Promise<void> {
 		french2,
 		frenchSingle,
 	] = await Promise.all([
-		createDocument(repo, model.id, { ...doc, tags: ["foo"] }),
-		createDocument(repo, model.id, { ...doc, tags: ["bar"] }),
-		createDocument(repo, model.id, { ...doc, tags: ["foo", "bar"] }),
-		createDocument(repo, model.id, { ...doc, tags: ["foo", "bar"] }),
-		createDocument(repo, singleModel.id, { ...doc }),
-		createDocument(repo, model.id, { ...doc, locale: "fr-fr", tags: ["foo"] }),
-		createDocument(repo, model.id, { ...doc, locale: "fr-fr", tags: ["bar"] }),
-		createDocument(repo, singleModel.id, { ...doc, locale: "fr-fr" }),
+		createDocument(repository, model.id, { ...doc, tags: ["foo"] }),
+		createDocument(repository, model.id, { ...doc, tags: ["bar"] }),
+		createDocument(repository, model.id, { ...doc, tags: ["foo", "bar"] }),
+		createDocument(repository, model.id, { ...doc, tags: ["foo", "bar"] }),
+		createDocument(repository, singleModel.id, { ...doc }),
+		createDocument(repository, model.id, {
+			...doc,
+			locale: "fr-fr",
+			tags: ["foo"],
+		}),
+		createDocument(repository, model.id, {
+			...doc,
+			locale: "fr-fr",
+			tags: ["bar"],
+		}),
+		createDocument(repository, singleModel.id, { ...doc, locale: "fr-fr" }),
 	])
 	provide(
 		"docs",
@@ -134,20 +147,20 @@ export async function setup({ provide }: TestProject): Promise<void> {
 		}),
 	)
 
-	await repo.publishRelease(initRelease.id)
+	await repository.publishRelease(initRelease.id)
 
-	const client = repo.getContentApiClient({ accessToken })
+	const client = repository.getContentApiClient({ accessToken })
 	const refs = await client.getRefs()
 	const release = refs.find((ref) => ref.id === testReleaseMeta.id)!
 	provide("release", JSON.stringify(release))
 }
 
 export async function teardown(): Promise<void> {
-	await repos.tearDown()
+	await repositories.tearDown()
 }
 
 export async function createDocument(
-	repo: RepositoryManager,
+	repository: RepositoryManager,
 	type: string,
 	params: Partial<CoreApiDocumentCreationPayload> & {
 		accessToken?: string
@@ -163,7 +176,7 @@ export async function createDocument(
 		...doc
 	} = params
 
-	const docMeta = await repo.createDocument(
+	const docMeta = await repository.createDocument(
 		{
 			custom_type_id: type,
 			title: "",
@@ -180,7 +193,7 @@ export async function createDocument(
 		},
 		status,
 	)
-	const client = repo.getContentApiClient({ accessToken })
+	const client = repository.getContentApiClient({ accessToken })
 
 	return await waitFor(async () => {
 		const ref = release_id

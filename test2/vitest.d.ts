@@ -2,8 +2,8 @@ import "vitest"
 
 declare module "vitest" {
 	export interface ProvidedContext {
-		repoName: string
-		repo: string
+		repositoryName: string
+		repository: string
 		writeToken: string
 		accessToken: string
 		release: string

@@ -169,7 +169,9 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 		docs,
 		response,
 	}) => {
-		vi.mocked(client.fetchFn).mockResolvedValueOnce(response.repo("invalid"))
+		vi.mocked(client.fetchFn).mockResolvedValueOnce(
+			response.repository("invalid"),
+		)
 		await fn({ client, docs })
 		expect(client).toHaveFetchedContentAPI({ ref: "invalid" })
 		expect(client).not.toHaveLastFetchedContentAPI({ ref: "invalid" })
@@ -182,9 +184,9 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 		response,
 	}) => {
 		vi.mocked(client.fetchFn)
-			.mockResolvedValueOnce(response.repo("invalid"))
+			.mockResolvedValueOnce(response.repository("invalid"))
 			.mockResolvedValueOnce(response.refNotFound("invalid"))
-			.mockResolvedValueOnce(response.repo("invalid"))
+			.mockResolvedValueOnce(response.repository("invalid"))
 			.mockResolvedValueOnce(response.refNotFound("invalid"))
 		await expect(() => fn({ client, docs })).rejects.toThrow(RefNotFoundError)
 	})
@@ -195,7 +197,9 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 		docs,
 		response,
 	}) => {
-		vi.mocked(client.fetchFn).mockResolvedValueOnce(response.repo("invalid"))
+		vi.mocked(client.fetchFn).mockResolvedValueOnce(
+			response.repository("invalid"),
+		)
 		await fn({ client, docs })
 		expect(client).toHaveFetchedContentAPI({ ref: "invalid" })
 		expect(client).not.toHaveLastFetchedContentAPI({ ref: "invalid" })
@@ -210,7 +214,9 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 		docs,
 		response,
 	}) => {
-		vi.mocked(client.fetchFn).mockResolvedValueOnce(response.repo("expired"))
+		vi.mocked(client.fetchFn).mockResolvedValueOnce(
+			response.repository("expired"),
+		)
 		await fn({ client, docs })
 		expect(client).toHaveFetchedContentAPI({ ref: "expired" })
 		expect(client).not.toHaveLastFetchedContentAPI({ ref: "expired" })
@@ -224,9 +230,9 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 		response,
 	}) => {
 		vi.mocked(client.fetchFn)
-			.mockResolvedValueOnce(response.repo("invalid"))
+			.mockResolvedValueOnce(response.repository("invalid"))
 			.mockResolvedValueOnce(response.refNotFound("invalid"))
-			.mockResolvedValueOnce(response.repo("invalid"))
+			.mockResolvedValueOnce(response.repository("invalid"))
 			.mockResolvedValue(response.refNotFound("invalid"))
 		await expect(() => fn({ client, docs })).rejects.toThrow(RefNotFoundError)
 		expect(console.warn).toHaveBeenCalledTimes(1)

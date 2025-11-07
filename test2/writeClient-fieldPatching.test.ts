@@ -28,7 +28,7 @@ describe.concurrent("image", () => {
 		writeClient,
 		migration,
 		docs,
-		repo,
+		repository,
 	}) => {
 		const file = new File(png, crypto.randomUUID())
 		const image = migration.createAsset(file, file.name)
@@ -37,7 +37,9 @@ describe.concurrent("image", () => {
 			"title",
 		)
 		await writeClient.migrate(migration)
-		const data = await getMigrationReleaseDocData(doc.document.id, { repo })
+		const data = await getMigrationReleaseDocData(doc.document.id, {
+			repository,
+		})
 		expect(data.image.origin.id).toBe(image.asset?.id)
 		expect(data.image.url).toBe(image.asset?.url)
 	})
@@ -47,7 +49,7 @@ describe.concurrent("image", () => {
 		writeClient,
 		migration,
 		docs,
-		repo,
+		repository,
 	}) => {
 		const file = new File(png, crypto.randomUUID())
 		const image = migration.createAsset(file, file.name)
@@ -56,7 +58,9 @@ describe.concurrent("image", () => {
 			"title",
 		)
 		await writeClient.migrate(migration)
-		const data = await getMigrationReleaseDocData(doc.document.id, { repo })
+		const data = await getMigrationReleaseDocData(doc.document.id, {
+			repository,
+		})
 		expect(data.image.origin.id).toBe(image.asset?.id)
 		expect(data.image.url).toBe(image.asset?.url)
 	})
@@ -66,7 +70,7 @@ describe.concurrent("image", () => {
 		writeClient,
 		migration,
 		docs,
-		repo,
+		repository,
 	}) => {
 		const file = new File(png, crypto.randomUUID())
 		const file2 = new File(png, crypto.randomUUID())
@@ -77,7 +81,9 @@ describe.concurrent("image", () => {
 			"title",
 		)
 		await writeClient.migrate(migration)
-		const data = await getMigrationReleaseDocData(doc.document.id, { repo })
+		const data = await getMigrationReleaseDocData(doc.document.id, {
+			repository,
+		})
 		expect(data.image.origin.id).toBe(image.asset?.id)
 		expect(data.image.url).toBe(image.asset?.url)
 		expect(data.image.thumbnails.square.origin.id).toBe(square.asset?.id)
@@ -89,7 +95,7 @@ describe.concurrent("image", () => {
 		writeClient,
 		migration,
 		docs,
-		repo,
+		repository,
 		getAsset,
 	}) => {
 		const url =
@@ -122,7 +128,9 @@ describe.concurrent("image", () => {
 			"title",
 		)
 		await writeClient.migrate(migration)
-		const data = await getMigrationReleaseDocData(doc.document.id, { repo })
+		const data = await getMigrationReleaseDocData(doc.document.id, {
+			repository,
+		})
 		const asset = await getAsset({ id: doc.document.data.image.id.asset.id })
 		expect(data.image.origin.id).toBe(asset.id)
 		expect(data.image.url).toBe(asset.url)
@@ -135,7 +143,7 @@ describe.concurrent("link to media", () => {
 		writeClient,
 		migration,
 		docs,
-		repo,
+		repository,
 	}) => {
 		const file = new File(png, crypto.randomUUID())
 		const asset = migration.createAsset(file, file.name)
@@ -146,7 +154,9 @@ describe.concurrent("link to media", () => {
 			"title",
 		)
 		await writeClient.migrate(migration)
-		const data = await getMigrationReleaseDocData(doc.document.id, { repo })
+		const data = await getMigrationReleaseDocData(doc.document.id, {
+			repository,
+		})
 		expect(data.link.id).toBe(asset.asset?.id)
 	})
 
@@ -155,7 +165,7 @@ describe.concurrent("link to media", () => {
 		writeClient,
 		migration,
 		docs,
-		repo,
+		repository,
 	}) => {
 		const file = new File(png, crypto.randomUUID())
 		const asset = migration.createAsset(file, file.name)
@@ -166,7 +176,9 @@ describe.concurrent("link to media", () => {
 			"title",
 		)
 		await writeClient.migrate(migration)
-		const data = await getMigrationReleaseDocData(doc.document.id, { repo })
+		const data = await getMigrationReleaseDocData(doc.document.id, {
+			repository,
+		})
 		expect(data.link.id).toBe(asset.asset?.id)
 		expect(data.link.text).toBe("Download")
 	})
@@ -176,7 +188,7 @@ describe.concurrent("link to media", () => {
 		writeClient,
 		migration,
 		docs,
-		repo,
+		repository,
 	}) => {
 		const file = new File(["%PDF-1.4"], "document.pdf", {
 			type: "application/pdf",
@@ -189,7 +201,9 @@ describe.concurrent("link to media", () => {
 			"title",
 		)
 		await writeClient.migrate(migration)
-		const data = await getMigrationReleaseDocData(doc.document.id, { repo })
+		const data = await getMigrationReleaseDocData(doc.document.id, {
+			repository,
+		})
 		expect(data.link.id).toBe(asset.asset?.id)
 		expect(data.link.url).toMatch(/.pdf$/)
 	})
@@ -204,7 +218,7 @@ describe.concurrent("content relationship", () => {
 		({ docs }: ForArgs) => ({ link_type: "Document", id: docs.default.id }),
 	])(
 		"supports documents: %s",
-		async (field, { expect, writeClient, migration, docs, repo }) => {
+		async (field, { expect, writeClient, migration, docs, repository }) => {
 			const doc = migration.createDocument(
 				buildDocData(docs.default, {
 					link: field({ docs }),
@@ -212,7 +226,9 @@ describe.concurrent("content relationship", () => {
 				"title",
 			)
 			await writeClient.migrate(migration)
-			const data = await getMigrationReleaseDocData(doc.document.id, { repo })
+			const data = await getMigrationReleaseDocData(doc.document.id, {
+				repository,
+			})
 			expect(data.link.id).toBe(docs.default.id)
 		},
 	)
@@ -222,7 +238,7 @@ describe.concurrent("content relationship", () => {
 		writeClient,
 		migration,
 		docs,
-		repo,
+		repository,
 	}) => {
 		const doc1 = migration.createDocument(buildDocData(docs.default), "title")
 		const doc2 = migration.createDocument(
@@ -230,7 +246,9 @@ describe.concurrent("content relationship", () => {
 			"title",
 		)
 		await writeClient.migrate(migration)
-		const data = await getMigrationReleaseDocData(doc2.document.id, { repo })
+		const data = await getMigrationReleaseDocData(doc2.document.id, {
+			repository,
+		})
 		expect(data.link.id).toBe(doc1.document.id)
 	})
 
@@ -239,7 +257,7 @@ describe.concurrent("content relationship", () => {
 		writeClient,
 		migration,
 		docs,
-		repo,
+		repository,
 	}) => {
 		const doc1 = migration.createDocument(buildDocData(docs.default), "title")
 		const doc2 = migration.createDocument(
@@ -247,7 +265,9 @@ describe.concurrent("content relationship", () => {
 			"title",
 		)
 		await writeClient.migrate(migration)
-		const data = await getMigrationReleaseDocData(doc2.document.id, { repo })
+		const data = await getMigrationReleaseDocData(doc2.document.id, {
+			repository,
+		})
 		expect(data.link.id).toBe(doc1.document.id)
 	})
 
@@ -256,7 +276,7 @@ describe.concurrent("content relationship", () => {
 		writeClient,
 		migration,
 		docs,
-		repo,
+		repository,
 	}) => {
 		// Simulate an external document by setting unknown IDs
 		const doc1 = migration.createDocumentFromPrismic(
@@ -285,7 +305,9 @@ describe.concurrent("content relationship", () => {
 			"title",
 		)
 		await writeClient.migrate(migration)
-		const data = await getMigrationReleaseDocData(doc2.document.id, { repo })
+		const data = await getMigrationReleaseDocData(doc2.document.id, {
+			repository,
+		})
 		expect(data.link.id).toBe(doc1.document.id)
 	})
 
@@ -294,7 +316,7 @@ describe.concurrent("content relationship", () => {
 		writeClient,
 		migration,
 		docs,
-		repo,
+		repository,
 	}) => {
 		const doc = migration.createDocument(
 			buildDocData(docs.default, {
@@ -307,7 +329,9 @@ describe.concurrent("content relationship", () => {
 			"title",
 		)
 		await writeClient.migrate(migration)
-		const data = await getMigrationReleaseDocData(doc.document.id, { repo })
+		const data = await getMigrationReleaseDocData(doc.document.id, {
+			repository,
+		})
 		expect(data.link.id).toBe(docs.default.id)
 		expect(data.link.text).toBe("foo")
 	})
@@ -317,7 +341,7 @@ describe.concurrent("content relationship", () => {
 		writeClient,
 		migration,
 		docs,
-		repo,
+		repository,
 	}) => {
 		const doc = migration.createDocument(
 			buildDocData(docs.default, {
@@ -330,7 +354,9 @@ describe.concurrent("content relationship", () => {
 			"title",
 		)
 		await writeClient.migrate(migration)
-		const data = await getMigrationReleaseDocData(doc.document.id, { repo })
+		const data = await getMigrationReleaseDocData(doc.document.id, {
+			repository,
+		})
 		expect(data.var_link.id).toBe(docs.default.id)
 		expect(data.var_link.variant).toBe("foo")
 	})
@@ -342,7 +368,7 @@ describe.concurrent("rich text", () => {
 		writeClient,
 		migration,
 		docs,
-		repo,
+		repository,
 	}) => {
 		const file = new File(png, crypto.randomUUID())
 		const image = migration.createAsset(file, file.name)
@@ -353,7 +379,9 @@ describe.concurrent("rich text", () => {
 			"title",
 		)
 		await writeClient.migrate(migration)
-		const data = await getMigrationReleaseDocData(doc.document.id, { repo })
+		const data = await getMigrationReleaseDocData(doc.document.id, {
+			repository,
+		})
 		expect(data.richtext[0].data.origin.id).toBe(image.asset?.id)
 		expect(data.richtext[0].data.url).toBe(image.asset?.url)
 	})
@@ -363,7 +391,7 @@ describe.concurrent("rich text", () => {
 		writeClient,
 		migration,
 		docs,
-		repo,
+		repository,
 	}) => {
 		const file = new File(png, crypto.randomUUID())
 		const image = migration.createAsset(file, file.name)
@@ -374,7 +402,9 @@ describe.concurrent("rich text", () => {
 			"title",
 		)
 		await writeClient.migrate(migration)
-		const data = await getMigrationReleaseDocData(doc.document.id, { repo })
+		const data = await getMigrationReleaseDocData(doc.document.id, {
+			repository,
+		})
 		expect(data.richtext[0].data.origin.id).toBe(image.asset?.id)
 		expect(data.richtext[0].data.linkTo.id).toBe(docs.default.id)
 	})
@@ -384,7 +414,7 @@ describe.concurrent("rich text", () => {
 		writeClient,
 		migration,
 		docs,
-		repo,
+		repository,
 		getAsset,
 	}) => {
 		const url =
@@ -411,7 +441,9 @@ describe.concurrent("rich text", () => {
 			"title",
 		)
 		await writeClient.migrate(migration)
-		const data = await getMigrationReleaseDocData(doc.document.id, { repo })
+		const data = await getMigrationReleaseDocData(doc.document.id, {
+			repository,
+		})
 		const asset = await getAsset({
 			id: doc.document.data.richtext[0].id.asset.id,
 		})
@@ -424,7 +456,7 @@ describe.concurrent("rich text", () => {
 		writeClient,
 		migration,
 		docs,
-		repo,
+		repository,
 	}) => {
 		const file = new File(png, crypto.randomUUID())
 		const asset = migration.createAsset(file, file.name)
@@ -448,7 +480,9 @@ describe.concurrent("rich text", () => {
 			"title",
 		)
 		await writeClient.migrate(migration)
-		const data = await getMigrationReleaseDocData(doc.document.id, { repo })
+		const data = await getMigrationReleaseDocData(doc.document.id, {
+			repository,
+		})
 		expect(data.richtext[0].content.spans[0].data.id).toBe(asset.asset?.id)
 	})
 
@@ -457,7 +491,7 @@ describe.concurrent("rich text", () => {
 		writeClient,
 		migration,
 		docs,
-		repo,
+		repository,
 	}) => {
 		const doc = migration.createDocument(
 			buildDocData(docs.default, {
@@ -474,7 +508,9 @@ describe.concurrent("rich text", () => {
 			"title",
 		)
 		await writeClient.migrate(migration)
-		const data = await getMigrationReleaseDocData(doc.document.id, { repo })
+		const data = await getMigrationReleaseDocData(doc.document.id, {
+			repository,
+		})
 		expect(data.richtext[0].content.spans[0].data.id).toBe(docs.default2.id)
 	})
 
@@ -483,7 +519,7 @@ describe.concurrent("rich text", () => {
 		writeClient,
 		migration,
 		docs,
-		repo,
+		repository,
 	}) => {
 		const doc1 = migration.createDocument(
 			buildDocData(docs.default2, {}),
@@ -502,7 +538,9 @@ describe.concurrent("rich text", () => {
 			"title",
 		)
 		await writeClient.migrate(migration)
-		const data = await getMigrationReleaseDocData(doc2.document.id, { repo })
+		const data = await getMigrationReleaseDocData(doc2.document.id, {
+			repository,
+		})
 		expect(data.richtext[0].content.spans[0].data.id).toBe(doc1.document.id)
 	})
 })
@@ -525,14 +563,16 @@ function buildDocData(
 
 async function getMigrationReleaseDocData(
 	id: string | undefined,
-	args: { repo: RepositoryManager },
+	args: { repository: RepositoryManager },
 ) {
-	const { repo } = args
+	const { repository } = args
 
-	const release = await repo.getMigrationRelease()
-	const docs = await repo.getDocuments({ statuses: [`release:${release.id}`] })
+	const release = await repository.getMigrationRelease()
+	const docs = await repository.getDocuments({
+		statuses: [`release:${release.id}`],
+	})
 	const versionID = docs.results.find((result) => result.id === id)!.versions[0]
 		.version_id
 
-	return await repo.getDocumentData(versionID)
+	return await repository.getDocumentData(versionID)
 }
