@@ -87,7 +87,7 @@ export const asImageWidthSrcSet = <
 		// we will pass to `buildURL()`.
 		let {
 			widths = DEFAULT_WIDTHS,
-			// eslint-disable-next-line prefer-const
+			// oxlint-disable-next-line prefer-const
 			...imgixParams
 		} = config
 		const {

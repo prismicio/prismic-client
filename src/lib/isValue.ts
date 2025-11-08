@@ -44,8 +44,6 @@ export const filledLinkToMedia = (
 			"url" in value &&
 			"size" in value
 		) {
-			value
-
 			return true
 		}
 	}
@@ -104,8 +102,6 @@ export const filledImage = (
 		imageLike(value) &&
 		(!("type" in value) || value.type !== RichTextNodeType.image)
 	) {
-		value
-
 		return true
 	}
 
@@ -128,8 +124,6 @@ export const rtImageNode = (value: UnknownValue): value is RTImageNode => {
 		"type" in value &&
 		value.type === RichTextNodeType.image
 	) {
-		value
-
 		return true
 	}
 

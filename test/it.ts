@@ -53,6 +53,7 @@ export type Fixtures = {
 }
 
 export const it = test.extend<Fixtures>({
+	// oxlint-disable-next-line no-empty-pattern
 	repository: async ({}, use) => {
 		const name = inject("repositoryName")
 		const repository = repositories.getRepositoryManager(name)
@@ -80,10 +81,12 @@ export const it = test.extend<Fixtures>({
 		vi.spyOn(client, "fetchFn")
 		await use(client)
 	},
+	// oxlint-disable-next-line no-empty-pattern
 	writeToken: async ({}, use) => {
 		const token = inject("writeToken")
 		await use(token)
 	},
+	// oxlint-disable-next-line no-empty-pattern
 	accessToken: async ({}, use) => {
 		const token = inject("accessToken")
 		await use(token)
@@ -99,10 +102,12 @@ export const it = test.extend<Fixtures>({
 			.getRefByReleaseID(release.id)
 		await use({ ...release, ref })
 	},
+	// oxlint-disable-next-line no-empty-pattern
 	migration: async ({}, use) => {
 		const migration = createMigration()
 		await use(migration)
 	},
+	// oxlint-disable-next-line no-empty-pattern
 	response: async ({}, use) => {
 		const { languages } = JSON.parse(inject("repository"))
 		await use({
@@ -138,6 +143,7 @@ export const it = test.extend<Fixtures>({
 				}),
 		})
 	},
+	// oxlint-disable-next-line no-empty-pattern
 	docs: async ({}, use) => {
 		const docs = JSON.parse(inject("docs"))
 		await use(docs)
