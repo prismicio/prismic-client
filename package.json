@@ -27,8 +27,8 @@
 			"require": "./dist/index.cjs"
 		},
 		"./richtext": {
-			"import": "./dist/richtext/index.js",
-			"require": "./dist/richtext/index.cjs"
+			"import": "./dist/richtext.js",
+			"require": "./dist/richtext.cjs"
 		},
 		"./package.json": "./package.json"
 	},
