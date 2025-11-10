@@ -1,17 +1,6 @@
-/// <reference types="vitest/config" />
-import { defineConfig } from "vite"
-import sdk from "vite-plugin-sdk"
+import { defineConfig } from "vitest/config"
 
 export default defineConfig({
-	plugins: [sdk()],
-	build: {
-		lib: {
-			entry: {
-				index: "./src/index.ts",
-				richtext: "./src/richtext/index.ts",
-			},
-		},
-	},
 	test: {
 		globalSetup: ["./test/setup.global.ts"],
 		setupFiles: ["./test/setup.ts"],
