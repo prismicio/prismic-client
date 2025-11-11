@@ -1,4 +1,4 @@
-name: canary-cleanup
+name: prerelease-cleanup
 
 permissions:
   id-token: write
