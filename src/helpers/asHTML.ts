@@ -93,10 +93,10 @@ type HTMLRichTextMapSerializerFunction<
  */
 type ExtractNodeGeneric<T> =
 	T extends RichTextMapSerializerFunction<
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		// oxlint-disable-next-line no-explicit-any
 		any,
 		infer U,
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		// oxlint-disable-next-line no-explicit-any
 		any
 	>
 		? U
@@ -110,9 +110,9 @@ type ExtractNodeGeneric<T> =
  */
 type ExtractTextTypeGeneric<T> =
 	T extends RichTextMapSerializerFunction<
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		// oxlint-disable-next-line no-explicit-any
 		any,
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		// oxlint-disable-next-line no-explicit-any
 		any,
 		infer U
 	>

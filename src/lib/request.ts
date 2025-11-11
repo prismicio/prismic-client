@@ -40,7 +40,7 @@ export type FetchLike = (
 // different AbortSignal implementations. The types of each property are not
 // important to validate since it is blindly passed to a given `fetch()`
 // function.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// oxlint-disable-next-line no-explicit-any
 export type AbortSignalLike = any
 
 /**
@@ -62,7 +62,7 @@ export interface RequestInitLike extends Pick<RequestInit, "cache"> {
 	 */
 	// We want to keep the body type as compatible as possible, so
 	// we only declare the type we need and accept anything else.
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// oxlint-disable-next-line no-explicit-any
 	body?: any | FormData | string
 
 	/**
@@ -90,7 +90,7 @@ export interface ResponseLike {
 	status: number
 	headers: HeadersLike
 	url: string
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// oxlint-disable-next-line no-explicit-any
 	json(): Promise<any>
 	text(): Promise<string>
 	blob(): Promise<Blob>
