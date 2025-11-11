@@ -35,7 +35,6 @@ jobs:
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
           echo "tag=${TAG}" >> $GITHUB_OUTPUT
       - run: npm version ${{ steps.version.outputs.version }} --no-git-tag-version
-      - run: npm publish --tag ${{ steps.version.outputs.tag }}
+      - run: npm publish --provenance --tag ${{ steps.version.outputs.tag }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: true
