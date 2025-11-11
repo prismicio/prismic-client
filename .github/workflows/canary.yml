@@ -38,3 +38,15 @@ jobs:
       - run: npm publish --provenance --tag ${{ steps.version.outputs.tag }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - if: github.event_name == 'push'
+        run: |
+          CURRENT_TAG=${{ steps.version.outputs.tag }}
+          PACKAGE_NAME=$(jq -r ".name" package.json)
+          PREVIOUS_VERSION=$(npm view "$PACKAGE_NAME" dist-tags."$CURRENT_TAG" 2>/dev/null || echo "")
+          if [ -n "$PREVIOUS_VERSION" ] && [ "$PREVIOUS_VERSION" != "${{ steps.version.outputs.version }}" ]; then
+            npm deprecate "$PACKAGE_NAME@$PREVIOUS_VERSION" "Superseded by newer canary version ${{ steps.version.outputs.version }}"
+          else
+            echo "No previous canary to deprecate"
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

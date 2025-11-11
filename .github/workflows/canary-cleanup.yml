@@ -1,0 +1,32 @@
+name: canary-cleanup
+
+permissions:
+  id-token: write
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  cleanup:
+    if: github.repository_owner == 'prismicio'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+      - run: |
+          PR_NUMBER=${{ github.event.number }}
+          PR_TAG="pr-${PR_NUMBER}"
+          PACKAGE_NAME=$(jq -r ".name" package.json)
+          PR_VERSION=$(npm view "$PACKAGE_NAME" dist-tags."$PR_TAG" 2>/dev/null || echo "")
+          if [ -z "$PR_VERSION" ]; then
+            echo "No version found for tag $PR_TAG, skipping cleanup"
+            exit 0
+          fi
+          npm deprecate "$PACKAGE_NAME@$PR_VERSION" "PR #${PR_NUMBER} was closed"
+          npm dist-tag rm "$PACKAGE_NAME" "$PR_TAG"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
