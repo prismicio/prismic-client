@@ -3,7 +3,7 @@
  ** Many thanks to @sindresorhus
  */
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// oxlint-disable-next-line no-explicit-any
 type AnyFunction = (...arguments_: readonly any[]) => unknown
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))

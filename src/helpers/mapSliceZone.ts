@@ -11,7 +11,7 @@ type LazyModule<T> = () => Promise<T | { default: T }>
  */
 type MaybeLazyModule<T> = T | LazyModule<T>
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// oxlint-disable-next-line no-explicit-any
 type AnyFunction = (...args: any[]) => any
 
 /**
@@ -132,7 +132,7 @@ type SliceMappers<TSlice extends SliceLike = SliceLike, TContext = unknown> = {
 	[P in ExtractSliceType<TSlice>]?: MaybeLazyModule<
 		SliceMapper<
 			Extract<TSlice, SliceLike<P>>,
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			// oxlint-disable-next-line no-explicit-any
 			any,
 			TContext
 		>
@@ -158,7 +158,7 @@ export type SliceMapper<
  * Unwraps a lazily loaded mapper module.
  */
 type ResolveLazySliceMapperModule<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// oxlint-disable-next-line no-explicit-any
 	TSliceMapper extends SliceMapper<any, any> | LazyModule<SliceMapper>,
 > =
 	TSliceMapper extends LazyModule<SliceMapper>
@@ -173,11 +173,11 @@ type ResolveLazySliceMapperModule<
  * Transforms a Slice into its mapped version.
  */
 type MapSliceLike<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// oxlint-disable-next-line no-explicit-any
 	TSliceLike extends SliceLike<any>,
 	TSliceMappers extends SliceMappers<
 		TSliceLike,
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		// oxlint-disable-next-line no-explicit-any
 		any
 	>,
 > = TSliceLike extends Slice

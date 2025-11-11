@@ -23,31 +23,19 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"require": {
-				"types": "./dist/index.d.ts",
-				"default": "./dist/index.cjs"
-			},
-			"import": {
-				"types": "./dist/index.d.ts",
-				"default": "./dist/index.js"
-			}
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
 		},
 		"./richtext": {
-			"require": {
-				"types": "./dist/richtext/index.d.ts",
-				"default": "./dist/richtext.cjs"
-			},
-			"import": {
-				"types": "./dist/richtext/index.d.ts",
-				"default": "./dist/richtext.js"
-			}
+			"import": "./dist/richtext.js",
+			"require": "./dist/richtext.cjs"
 		},
 		"./package.json": "./package.json"
 	},
 	"main": "./dist/index.cjs",
 	"module": "./dist/index.js",
 	"react-native": "./dist/index.js",
-	"types": "./dist/index.d.ts",
+	"types": "./dist/index.d.cts",
 	"typesVersions": {
 		"*": {
 			"*": [
@@ -63,11 +51,11 @@
 		"src"
 	],
 	"scripts": {
-		"build": "vite build",
-		"dev": "vite build --watch",
+		"build": "tsdown",
+		"dev": "tsdown --watch",
 		"format": "prettier --write .",
 		"prepare": "npm run build",
-		"lint": "eslint --ext .js,.ts .",
+		"lint": "oxlint --deny-warnings",
 		"types": "tsc --noEmit",
 		"unit": "vitest run --coverage",
 		"unit:watch": "vitest watch",
@@ -81,19 +69,13 @@
 		"@prismicio/types-internal": "^3.16.1",
 		"@trivago/prettier-plugin-sort-imports": "^4.3.0",
 		"@types/node": "^24.10.0",
-		"@typescript-eslint/eslint-plugin": "^6.21.0",
-		"@typescript-eslint/parser": "^6.21.0",
 		"@vitest/coverage-v8": "^4.0.6",
 		"commit-and-tag-version": "^11.0.0",
-		"eslint": "^8.57.1",
-		"eslint-config-prettier": "^9.1.2",
-		"eslint-plugin-prettier": "^5.5.4",
-		"eslint-plugin-tsdoc": "^0.3.0",
+		"oxlint": "^1.26.0",
 		"prettier": "^3.6.2",
 		"prettier-plugin-jsdoc": "1.3.3",
+		"tsdown": "^0.16.1",
 		"typescript": "^5.9.3",
-		"vite": "^7.1.12",
-		"vite-plugin-sdk": "^0.1.5",
 		"vitest": "^4.0.6"
 	},
 	"engines": {

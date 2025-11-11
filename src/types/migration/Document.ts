@@ -39,7 +39,7 @@ export type InjectMigrationSpecificTypes<T> = T extends RTImageNode
 								| InjectMigrationSpecificTypes<
 										Omit<T, "id" | "slice_label" | "version">
 								  >
-						: // eslint-disable-next-line @typescript-eslint/no-explicit-any
+						: // oxlint-disable-next-line no-explicit-any
 							T extends Record<any, any>
 							? { [P in keyof T]: InjectMigrationSpecificTypes<T[P]> }
 							: T extends Array<infer U>
