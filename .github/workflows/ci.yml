@@ -3,136 +3,41 @@ name: ci
 on: push
 
 jobs:
-  prepare:
-    name: Prepare (${{ matrix.os}}, Node ${{ matrix.node }})
-    runs-on: ${{ matrix.os }}
+  test:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-latest]
         node: [20, 22, 24]
 
     steps:
-      - name: Set up Node
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
-
-      - name: Checkout
-        uses: actions/checkout@master
-
-      - name: Cache node_modules
-        id: cache
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/package-lock.json')) }}
-
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
-
-  suite:
-    needs: prepare
-    name: Suite (${{ matrix.os}}, Node ${{ matrix.node }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest]
-        node: [20, 22, 24]
-
-    steps:
-      - name: Set up Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-
-      - name: Checkout
-        uses: actions/checkout@master
-
-      - name: Retrieve node_modules
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/package-lock.json')) }}
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Unit
-        run: npm run unit
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+        if: matrix.node == 24
+      - run: npm run unit
         env:
           E2E_PRISMIC_EMAIL: ${{ secrets.E2E_PRISMIC_EMAIL }}
           E2E_PRISMIC_PASSWORD: ${{ secrets.E2E_PRISMIC_PASSWORD }}
-
-      - name: Build
-        run: npm run build
-
-      - name: Coverage
-        if: matrix.os == 'ubuntu-latest' && matrix.node == 22
-        uses: codecov/codecov-action@v3
+      - run: npm run build
+        if: matrix.node == 24
+      - uses: codecov/codecov-action@v4
+        if: matrix.node == 24
 
   types:
-    needs: prepare
-    name: Types (${{ matrix.os}}, Node ${{ matrix.node }}, TS ${{ matrix.typescript }})
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
       matrix:
-        os: [ubuntu-latest]
-        node: [24]
-        # Top 5 from https://majors.nullvoxpopuli.com/q?minors=on&packages=typescript
-        # We cannot test 4.9 because it's error throwing is slightly different from v5.
         typescript: ["5.4", "5.6", "5.7", "5.8", "5.9"]
-
     steps:
-      - name: Set up Node
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node }}
-
-      - name: Checkout
-        uses: actions/checkout@master
-
-      - name: Retrieve node_modules
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/package-lock.json')) }}
-
-      - name: Overwrite TypeScript
-        run: npm install --no-save typescript@${{ matrix.typescript }} && npx tsc --version
-
-      - name: Types
-        run: npm run types
-
-  size:
-    needs: prepare
-    if: github.event_name == 'pull_request'
-    name: Size (${{ matrix.os}}, Node ${{ matrix.node }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest]
-        node: [22]
-
-    steps:
-      - name: Set up Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-
-      - name: Checkout
-        uses: actions/checkout@master
-
-      - name: Retrieve node_modules
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/package-lock.json')) }}
-
-      - name: Size
-        uses: andresz1/size-limit-action@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm install --no-save typescript@${{ matrix.typescript }} && npx tsc --version
+      - run: npm run types

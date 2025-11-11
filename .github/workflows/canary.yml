@@ -1,0 +1,41 @@
+name: canary
+
+permissions:
+  id-token: write
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    if: github.repository_owner == 'prismicio'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+      - run: npm ci
+      - id: version
+        run: |
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          CURRENT_VERSION=$(jq -r '.version' package.json)
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            PR_NUMBER=${{ github.event.number }}
+            VERSION="${CURRENT_VERSION}-pr.${PR_NUMBER}.${SHORT_SHA}"
+            TAG="pr-${PR_NUMBER}"
+          else
+            VERSION="${CURRENT_VERSION}-canary.${SHORT_SHA}"
+            TAG="canary"
+          fi
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+      - run: npm version ${{ steps.version.outputs.version }} --no-git-tag-version
+      - run: npm publish --tag ${{ steps.version.outputs.tag }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
