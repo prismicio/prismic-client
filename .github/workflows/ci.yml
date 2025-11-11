@@ -42,8 +42,6 @@ jobs:
         env:
           E2E_PRISMIC_EMAIL: ${{ secrets.E2E_PRISMIC_EMAIL }}
           E2E_PRISMIC_PASSWORD: ${{ secrets.E2E_PRISMIC_PASSWORD }}
-      - uses: codecov/codecov-action@v4
-        if: matrix.node == 24
 
   types:
     name: "types (TypeScript ${{ matrix.typescript }})"
