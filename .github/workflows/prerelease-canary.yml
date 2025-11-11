@@ -1,10 +1,9 @@
-name: prerelease
+name: prerelease-canary
 
 permissions:
   id-token: write
 
 on:
-  pull_request:
   push:
     branches:
       - main
@@ -20,26 +19,20 @@ jobs:
           node-version: 24
           registry-url: "https://registry.npmjs.org"
       - run: npm ci
-      - id: version
+      - name: "Generate canary version"
+        id: version
         run: |
           SHORT_SHA=$(git rev-parse --short HEAD)
           CURRENT_VERSION=$(jq -r '.version' package.json)
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            PR_NUMBER=${{ github.event.number }}
-            VERSION="${CURRENT_VERSION}-pr.${PR_NUMBER}.${SHORT_SHA}"
-            TAG="pr-${PR_NUMBER}"
-          else
-            VERSION="${CURRENT_VERSION}-canary.${SHORT_SHA}"
-            TAG="canary"
-          fi
+          VERSION="${CURRENT_VERSION}-canary.${SHORT_SHA}"
+          TAG="canary"
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
           echo "tag=${TAG}" >> $GITHUB_OUTPUT
       - run: npm version ${{ steps.version.outputs.version }} --no-git-tag-version
       - run: npm publish --provenance --tag ${{ steps.version.outputs.tag }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: "Clean up prerelease"
-        if: github.event_name == 'push'
+      - name: "Deprecate previous canary"
         run: |
           CURRENT_TAG=${{ steps.version.outputs.tag }}
           PACKAGE_NAME=$(jq -r ".name" package.json)
