@@ -23,31 +23,19 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"require": {
-				"types": "./dist/index.d.ts",
-				"default": "./dist/index.cjs"
-			},
-			"import": {
-				"types": "./dist/index.d.ts",
-				"default": "./dist/index.js"
-			}
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
 		},
 		"./richtext": {
-			"require": {
-				"types": "./dist/richtext/index.d.ts",
-				"default": "./dist/richtext.cjs"
-			},
-			"import": {
-				"types": "./dist/richtext/index.d.ts",
-				"default": "./dist/richtext.js"
-			}
+			"import": "./dist/richtext.js",
+			"require": "./dist/richtext.cjs"
 		},
 		"./package.json": "./package.json"
 	},
 	"main": "./dist/index.cjs",
 	"module": "./dist/index.js",
 	"react-native": "./dist/index.js",
-	"types": "./dist/index.d.ts",
+	"types": "./dist/index.d.cts",
 	"typesVersions": {
 		"*": {
 			"*": [
@@ -63,8 +51,8 @@
 		"src"
 	],
 	"scripts": {
-		"build": "vite build",
-		"dev": "vite build --watch",
+		"build": "tsdown",
+		"dev": "tsdown --watch",
 		"format": "prettier --write .",
 		"prepare": "npm run build",
 		"release": "npm run test && standard-version && git push --follow-tags && npm run build && npm publish",
@@ -93,9 +81,8 @@
 		"prettier-plugin-jsdoc": "1.3.3",
 		"size-limit": "^11.2.0",
 		"standard-version": "^9.5.0",
+		"tsdown": "^0.16.1",
 		"typescript": "^5.9.3",
-		"vite": "^7.1.12",
-		"vite-plugin-sdk": "^0.1.5",
 		"vitest": "^4.0.6"
 	},
 	"engines": {
