@@ -513,7 +513,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			this.documentAPIEndpoint = repositoryNameOrEndpoint
 			try {
 				this.repositoryName = getRepositoryName(repositoryNameOrEndpoint)
-			} catch (error) {
+			} catch {
 				console.warn(
 					`[@prismicio/client] A repository name could not be inferred from the provided endpoint (\`${repositoryNameOrEndpoint}\`). Some methods will be disabled. Create the client using a repository name to prevent this warning. For more details, see ${devMsg("prefer-repository-name")}`,
 				)

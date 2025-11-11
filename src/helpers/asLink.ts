@@ -145,9 +145,6 @@ export const asLink: {
 	const linkField =
 		// prettier-ignore
 		(
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore - Bug in TypeScript 4.9: https://github.com/microsoft/TypeScript/issues/51501
-			// TODO: Remove the `prettier-ignore` comment when this bug is fixed.
 			"link_type" in linkFieldOrDocument
 				? linkFieldOrDocument
 				: documentToLinkField(linkFieldOrDocument)

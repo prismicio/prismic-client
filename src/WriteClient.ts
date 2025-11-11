@@ -37,7 +37,7 @@ import { name, version } from "../package.json"
 import { Client } from "./Client"
 import type { ClientConfig, FetchParams } from "./Client"
 import type { Migration } from "./Migration"
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// oxlint-disable-next-line no-unused-vars
 import type { createMigration } from "./createMigration"
 
 const CLIENT_IDENTIFIER = `${name.replace("@", "").replace("/", "-")}/${version}`
@@ -315,7 +315,7 @@ export class WriteClient<
 				let url: URL | undefined
 				try {
 					url = new URL(file)
-				} catch (error) {
+				} catch {
 					// noop only on invalid URL, fetch errors will throw in the next if statement
 				}
 
@@ -340,7 +340,10 @@ export class WriteClient<
 			}
 
 			const asset = await this.createAsset(resolvedFile, filename, {
-				...{ notes, credits, alt, tags },
+				notes,
+				credits,
+				alt,
+				tags,
 				...fetchParams,
 			})
 

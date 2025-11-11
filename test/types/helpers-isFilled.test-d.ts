@@ -147,6 +147,7 @@ it("narrows ContentRelationshipField with type, lang, and data from generic to f
 
 it("supports type guards for ContentRelationshipField", () => {
 	type ContentRelationshipData = { baz: RichTextField }
+	// oxlint-disable-next-line no-unused-expressions
 	;(value: ContentRelationshipField<"foo", "bar", ContentRelationshipData>) => {
 		isFilled.contentRelationship<typeof value>(value)
 		isFilled.contentRelationship<ContentRelationshipField>(value)
