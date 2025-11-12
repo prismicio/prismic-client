@@ -83,7 +83,7 @@ export interface PrismicDocument<
 	DataInterface extends Record<
 		string,
 		AnyRegularField | GroupField | SliceZone
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		// oxlint-disable-next-line no-explicit-any
 	> = Record<string, any>,
 	TypeEnum = string,
 	LangEnum = string,
@@ -105,7 +105,7 @@ export interface PrismicDocumentWithoutUID<
 	DataInterface extends Record<
 		string,
 		AnyRegularField | GroupField | SliceZone
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		// oxlint-disable-next-line no-explicit-any
 	> = Record<string, any>,
 	TypeEnum = string,
 	LangEnum = string,
@@ -131,7 +131,7 @@ export interface PrismicDocumentWithUID<
 	DataInterface extends Record<
 		string,
 		AnyRegularField | GroupField | SliceZone
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		// oxlint-disable-next-line no-explicit-any
 	> = Record<string, any>,
 	TypeEnum = string,
 	LangEnum = string,

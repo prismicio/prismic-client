@@ -35,6 +35,5 @@ export const throttledLog = (
 	lastCalledAt = Date.now()
 	lastMessage = message
 
-	// eslint-disable-next-line no-console
 	console[level](message)
 }

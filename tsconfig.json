@@ -5,7 +5,8 @@
 
 		"target": "esnext",
 		"module": "esnext",
-		"declaration": false,
+		"declaration": true,
+		"declarationMap": true,
 		"moduleResolution": "node",
 		"resolveJsonModule": true,
 		"allowSyntheticDefaultImports": true,
