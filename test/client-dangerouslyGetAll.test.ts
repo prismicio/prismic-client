@@ -208,10 +208,10 @@ it("shares concurrent equivalent network requests", async ({
 	await Promise.all([
 		client.dangerouslyGetAll(),
 		client.dangerouslyGetAll(),
-		client.dangerouslyGetAll({ signal: controller1.signal }),
-		client.dangerouslyGetAll({ signal: controller1.signal }),
-		client.dangerouslyGetAll({ signal: controller2.signal }),
-		client.dangerouslyGetAll({ signal: controller2.signal }),
+		client.dangerouslyGetAll({ fetchOptions: { signal: controller1.signal } }),
+		client.dangerouslyGetAll({ fetchOptions: { signal: controller1.signal } }),
+		client.dangerouslyGetAll({ fetchOptions: { signal: controller2.signal } }),
+		client.dangerouslyGetAll({ fetchOptions: { signal: controller2.signal } }),
 	])
 	await client.dangerouslyGetAll()
 	expect(client).toHaveFetchedRepoTimes(3)

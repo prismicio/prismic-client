@@ -17,7 +17,7 @@ import { filter } from "./filter"
 
 // Primary Client API.
 export { createClient } from "./createClient"
-export { Client } from "./Client"
+export { Client } from "./Client2"
 
 // Write Client API.
 export { createWriteClient } from "./createWriteClient"
@@ -51,7 +51,7 @@ export * as cookie from "./cookie"
 
 // General types used to query content from Prismic. These are made public to allow users to better type their projects.
 export type { CreateClient } from "./createClient"
-export type { ClientConfig, HttpRequestLike } from "./Client"
+export type { ClientConfig, RequestLike } from "./Client2"
 export type { CreateWriteClient } from "./createWriteClient"
 export type { WriteClientConfig, MigrateReporterEvents } from "./WriteClient"
 export type {
@@ -117,15 +117,21 @@ export type { HTMLRichTextSerializer } from "./helpers/asHTML"
 //=============================================================================
 
 // Client Errors
-export { PrismicError } from "./errors/PrismicError"
-export { ForbiddenError } from "./errors/ForbiddenError"
-export { InvalidDataError } from "./errors/InvalidDataError"
-export { NotFoundError } from "./errors/NotFoundError"
-export { RefNotFoundError } from "./errors/RefNotFoundError"
-export { RefExpiredError } from "./errors/RefExpiredError"
-export { PreviewTokenExpiredError } from "./errors/PreviewTokenExpired"
-export { ParsingError } from "./errors/ParsingError"
-export { RepositoryNotFoundError } from "./errors/RepositoryNotFoundError"
+export {
+	PrismicError,
+	APIError,
+	ContentAPIError,
+	ForbiddenError,
+	InvalidDataError,
+	ParsingError,
+	RefExpiredError,
+	PreviewTokenExpiredError,
+	NotFoundError,
+	DocumentNotFoundError,
+	RepositoryNotFoundError,
+	RefNotFoundError,
+	ReleaseNotFoundError,
+} from "./errors"
 
 //=============================================================================
 // Types - Types representing Prismic content, models, and API payloads.

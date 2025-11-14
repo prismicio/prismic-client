@@ -12,6 +12,7 @@ it("uses preview ref from server request", async ({
 		.mockResolvedValueOnce(response.repository(masterRef))
 		.mockResolvedValueOnce(response.search([]))
 	client.enableAutoPreviewsFromReq({
+		query: {},
 		headers: { cookie: `io.prismic.preview=foo` },
 	})
 	await client.get()
@@ -45,7 +46,7 @@ it("falls back to master ref without preview cookie", async ({
 	vi.mocked(client.fetchFn)
 		.mockResolvedValueOnce(response.repository(masterRef))
 		.mockResolvedValueOnce(response.search([]))
-	client.enableAutoPreviewsFromReq({ headers: { cookie: "" } })
+	client.enableAutoPreviewsFromReq({ query: {}, headers: { cookie: "" } })
 	await client.get()
 	expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
 })

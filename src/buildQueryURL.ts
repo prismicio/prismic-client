@@ -194,7 +194,7 @@ export interface QueryParams {
 	 *
 	 * {@link https://prismic.io/docs/route-resolver}
 	 */
-	routes?: Route | string | (Route | string)[]
+	routes?: Route[]
 
 	/**
 	 * The `brokenRoute` option allows you to define the route populated in the
@@ -230,13 +230,7 @@ type BuildQueryURLParams = {
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#q}
 	 */
-	filters?: string | string[]
-
-	/**
-	 * @deprecated Renamed to `filters`. Ensure the value is an array of filters,
-	 *   not a single, non-array filter.
-	 */
-	predicates?: string | string[]
+	filters?: string[]
 }
 
 /**
@@ -324,7 +318,7 @@ export const buildQueryURL = (
 	endpoint: string,
 	args: BuildQueryURLArgs,
 ): string => {
-	const { filters, predicates, ...params } = args
+	const { filters, ...params } = args
 
 	if (!endpoint.endsWith("/")) {
 		endpoint += "/"
@@ -344,13 +338,6 @@ export const buildQueryURL = (
 		// TODO: Remove `castArray` when we remove support for string `filters` values.
 		for (const filter of castArray(filters)) {
 			url.searchParams.append("q", `[${filter}]`)
-		}
-	}
-
-	// TODO: Remove when we remove support for deprecated `predicates` argument.
-	if (predicates) {
-		for (const predicate of castArray(predicates)) {
-			url.searchParams.append("q", `[${predicate}]`)
 		}
 	}
 

@@ -86,10 +86,7 @@ export const serializePreFormatted = (
 }
 
 export const serializeImage = (
-	linkResolver:
-		| LinkResolverFunction<string | null | undefined>
-		| undefined
-		| null,
+	linkResolver: LinkResolverFunction | undefined | null,
 	serializerOrShorthand?: HTMLRichTextMapSerializer["image"],
 ): NonNullable<HTMLStrictRichTextMapSerializer["image"]> => {
 	const generalAttributes = getGeneralAttributes(serializerOrShorthand)
@@ -142,10 +139,7 @@ export const serializeEmbed = (
 }
 
 export const serializeHyperlink = (
-	linkResolver:
-		| LinkResolverFunction<string | null | undefined>
-		| undefined
-		| null,
+	linkResolver: LinkResolverFunction | undefined | null,
 	serializerOrShorthand?: HTMLRichTextMapSerializer["hyperlink"],
 ): NonNullable<HTMLStrictRichTextMapSerializer["hyperlink"]> => {
 	const generalAttributes = getGeneralAttributes(serializerOrShorthand)

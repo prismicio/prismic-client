@@ -1,6 +1,6 @@
 import type { Ref } from "../types/api/ref"
 
-import { PrismicError } from "../errors/PrismicError"
+import { PrismicError } from "../errors"
 
 /**
  * Returns the first ref from a list that passes a filter (a function that

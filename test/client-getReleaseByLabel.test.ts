@@ -36,11 +36,19 @@ it("shares concurrent equivalent network requests", async ({
 	await Promise.all([
 		client.getReleaseByLabel(release.label),
 		client.getReleaseByLabel(release.label),
-		client.getReleaseByLabel(release.label, { signal: controller1.signal }),
-		client.getReleaseByLabel(release.label, { signal: controller1.signal }),
-		client.getReleaseByLabel(release.label, { signal: controller2.signal }),
-		client.getReleaseByLabel(release.label, { signal: controller2.signal }),
+		client.getReleaseByLabel(release.label, {
+			fetchOptions: { signal: controller1.signal },
+		}),
+		client.getReleaseByLabel(release.label, {
+			fetchOptions: { signal: controller1.signal },
+		}),
+		client.getReleaseByLabel(release.label, {
+			fetchOptions: { signal: controller2.signal },
+		}),
+		client.getReleaseByLabel(release.label, {
+			fetchOptions: { signal: controller2.signal },
+		}),
 	])
 	await client.getReleaseByLabel(release.label)
-	expect(client).toHaveFetchedRepoTimes(4)
+	expect(client).toHaveFetchedRepoTimes(3)
 })

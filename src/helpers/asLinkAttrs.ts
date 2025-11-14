@@ -10,39 +10,32 @@ import { asLink } from "./asLink"
 import { link as isFilledLink } from "./isFilled"
 
 type AsLinkAttrsConfigRelArgs<
-	LinkResolverFunctionReturnType = ReturnType<LinkResolverFunction>,
 	Field extends LinkField | PrismicDocument | null | undefined =
 		| LinkField
 		| PrismicDocument
 		| null
 		| undefined,
 > = {
-	href:
-		| NonNullable<AsLinkReturnType<LinkResolverFunctionReturnType, Field>>
-		| undefined
+	href: NonNullable<AsLinkReturnType<Field>> | undefined
 	isExternal: boolean
 	target?: string
 }
 
 export type AsLinkAttrsConfig<
-	LinkResolverFunctionReturnType = ReturnType<LinkResolverFunction>,
 	Field extends LinkField | PrismicDocument | null | undefined =
 		| LinkField
 		| PrismicDocument
 		| null
 		| undefined,
 > = {
-	linkResolver?: LinkResolverFunction<LinkResolverFunctionReturnType>
-	rel?: (
-		args: AsLinkAttrsConfigRelArgs<LinkResolverFunctionReturnType, Field>,
-	) => string | undefined | void
+	linkResolver?: LinkResolverFunction
+	rel?: (args: AsLinkAttrsConfigRelArgs<Field>) => string | undefined | void
 }
 
 /**
  * The return type of `asLinkAttrs()`.
  */
 type AsLinkAttrsReturnType<
-	LinkResolverFunctionReturnType = ReturnType<LinkResolverFunction>,
 	Field extends LinkField | PrismicDocument | null | undefined =
 		| LinkField
 		| PrismicDocument
@@ -54,9 +47,7 @@ type AsLinkAttrsReturnType<
 	| FilledContentRelationshipField
 	| PrismicDocument
 	? {
-			href:
-				| NonNullable<AsLinkReturnType<LinkResolverFunctionReturnType, Field>>
-				| undefined
+			href: NonNullable<AsLinkReturnType<Field>> | undefined
 			target?: string
 			rel?: string
 		}
@@ -86,7 +77,6 @@ type AsLinkAttrsReturnType<
  * @see Learn about route resolvers and link resolvers: {@link https://prismic.io/docs/routes}
  */
 export const asLinkAttrs = <
-	LinkResolverFunctionReturnType = ReturnType<LinkResolverFunction>,
 	Field extends LinkField | PrismicDocument | null | undefined =
 		| LinkField
 		| PrismicDocument
@@ -94,8 +84,8 @@ export const asLinkAttrs = <
 		| undefined,
 >(
 	linkFieldOrDocument: Field,
-	config: AsLinkAttrsConfig<LinkResolverFunctionReturnType> = {},
-): AsLinkAttrsReturnType<LinkResolverFunctionReturnType> => {
+	config: AsLinkAttrsConfig = {},
+): AsLinkAttrsReturnType => {
 	if (
 		linkFieldOrDocument &&
 		("link_type" in linkFieldOrDocument
@@ -105,7 +95,9 @@ export const asLinkAttrs = <
 		const target =
 			"target" in linkFieldOrDocument ? linkFieldOrDocument.target : undefined
 
-		const rawHref = asLink(linkFieldOrDocument, config.linkResolver)
+		const rawHref = asLink(linkFieldOrDocument, {
+			linkResolver: config.linkResolver,
+		})
 		const href =
 			rawHref == null ? undefined : (rawHref as NonNullable<typeof rawHref>)
 

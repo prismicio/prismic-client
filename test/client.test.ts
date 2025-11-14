@@ -13,13 +13,6 @@ it("throws if repositoryName is accessed but unavailable", async ({
 	expect(() => client.repositoryName).toThrow(/prefer-repository-name/i)
 })
 
-// TODO: Remove when alias gets removed
-it("aliases endpoint to documentAPIEndpoint", async ({ expect, client }) => {
-	expect(client.endpoint).toBe(client.documentAPIEndpoint)
-	client.endpoint = "https://example.com/custom"
-	expect(client.documentAPIEndpoint).toBe("https://example.com/custom")
-})
-
 type QueryCase = {
 	name: keyof Client
 	fn: (
@@ -268,10 +261,10 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 		await Promise.all([
 			fn({ client, docs }),
 			fn({ client, docs }),
-			fn({ client, docs }, { signal: controller1.signal }),
-			fn({ client, docs }, { signal: controller1.signal }),
-			fn({ client, docs }, { signal: controller2.signal }),
-			fn({ client, docs }, { signal: controller2.signal }),
+			fn({ client, docs }, { fetchOptions: { signal: controller1.signal } }),
+			fn({ client, docs }, { fetchOptions: { signal: controller1.signal } }),
+			fn({ client, docs }, { fetchOptions: { signal: controller2.signal } }),
+			fn({ client, docs }, { fetchOptions: { signal: controller2.signal } }),
 		])
 		await fn({ client, docs })
 		expect(client).toHaveFetchedRepoTimes(3)

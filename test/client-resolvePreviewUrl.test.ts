@@ -23,7 +23,7 @@ it("resolves a preview URL using a server req", async ({
 }) => {
 	client.enableAutoPreviewsFromReq({
 		query: { documentId: docs.default.id, token: "abc" },
-		url: `/preview?documentId=${docs.default.id}&token=abc`,
+		headers: { cookie: "abc" },
 	})
 	const res = await client.resolvePreviewURL({ defaultURL: "/failed" })
 	expect(res).toBe(`/${docs.default.uid}`)
@@ -85,7 +85,7 @@ it("returns the default URL when the server req is not in a preview session", as
 	expect,
 	client,
 }) => {
-	client.enableAutoPreviewsFromReq({})
+	client.enableAutoPreviewsFromReq({ headers: {}, query: {} })
 	const res = await client.resolvePreviewURL({ defaultURL: "/default" })
 	expect(res).toBe("/default")
 })
@@ -146,19 +146,19 @@ it("shares concurrent equivalent network requests", async ({
 		client.resolvePreviewURL({ defaultURL: "/default" }),
 		client.resolvePreviewURL({
 			defaultURL: "/default",
-			signal: controller1.signal,
+			fetchOptions: { signal: controller1.signal },
 		}),
 		client.resolvePreviewURL({
 			defaultURL: "/default",
-			signal: controller1.signal,
+			fetchOptions: { signal: controller1.signal },
 		}),
 		client.resolvePreviewURL({
 			defaultURL: "/default",
-			signal: controller2.signal,
+			fetchOptions: { signal: controller2.signal },
 		}),
 		client.resolvePreviewURL({
 			defaultURL: "/default",
-			signal: controller2.signal,
+			fetchOptions: { signal: controller2.signal },
 		}),
 	])
 	await client.resolvePreviewURL({ defaultURL: "/default" })

@@ -358,6 +358,8 @@ it("supports fetch options", async ({
 it("supports signal", async ({ expect, writeClient, migration, docs }) => {
 	migration.updateDocument(docs.default)
 	await expect(() =>
-		writeClient.migrate(migration, { signal: AbortSignal.abort() }),
+		writeClient.migrate(migration, {
+			fetchOptions: { signal: AbortSignal.abort() },
+		}),
 	).rejects.toThrow(/aborted/i)
 })

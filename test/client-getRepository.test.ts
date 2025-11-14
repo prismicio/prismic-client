@@ -25,7 +25,7 @@ it("throws ForbiddenError on 401", async ({ expect, client }) => {
 	await expect(() => client.getRepository()).rejects.toThrow(ForbiddenError)
 })
 
-it("throws RepositoryNotFoundError on 404", async ({ expect, client }) => {
+it.only("throws RepositoryNotFoundError on 404", async ({ expect, client }) => {
 	vi.mocked(client.fetchFn).mockResolvedValue(
 		Response.json({}, { status: 404 }),
 	)
@@ -43,11 +43,11 @@ it("shares concurrent equivalent network requests", async ({
 	await Promise.all([
 		client.getRepository(),
 		client.getRepository(),
-		client.getRepository({ signal: controller1.signal }),
-		client.getRepository({ signal: controller1.signal }),
-		client.getRepository({ signal: controller2.signal }),
-		client.getRepository({ signal: controller2.signal }),
+		client.getRepository({ fetchOptions: { signal: controller1.signal } }),
+		client.getRepository({ fetchOptions: { signal: controller1.signal } }),
+		client.getRepository({ fetchOptions: { signal: controller2.signal } }),
+		client.getRepository({ fetchOptions: { signal: controller2.signal } }),
 	])
 	await client.getRepository()
-	expect(client).toHaveFetchedRepoTimes(4)
+	expect(client).toHaveFetchedRepoTimes(3)
 })

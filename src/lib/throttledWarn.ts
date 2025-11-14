@@ -12,17 +12,7 @@ let lastCalledAt = 0
  * @param message - A message to log.
  * @param config - Configuration for the log.
  */
-export const throttledLog = (
-	message: string,
-	config: {
-		/**
-		 * The log level. Matches the global `console` log levels.
-		 */
-		level?: "log" | "warn" | "error"
-	} = {},
-): void => {
-	const { level = "log" } = config
-
+export const throttledWarn = (message: string): void => {
 	if (
 		message === lastMessage &&
 		Date.now() - lastCalledAt < THROTTLE_THRESHOLD_MS
@@ -35,5 +25,5 @@ export const throttledLog = (
 	lastCalledAt = Date.now()
 	lastMessage = message
 
-	console[level](message)
+	console.warn(message)
 }

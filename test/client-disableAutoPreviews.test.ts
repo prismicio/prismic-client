@@ -18,6 +18,7 @@ it("ignores server request preview cookie when disabled", async ({
 	client,
 }) => {
 	client.enableAutoPreviewsFromReq({
+		query: {},
 		headers: { cookie: `io.prismic.preview=foo` },
 	})
 	client.disableAutoPreviews()

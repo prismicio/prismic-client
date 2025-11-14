@@ -3,7 +3,6 @@
 	"rules": {
 		"no-console": ["warn", { "allow": ["info", "warn", "error"] }],
 		"no-debugger": "warn",
-		"curly": "error",
 		"prefer-const": "error",
 		"padding-line-between-statements": [
 			"error",

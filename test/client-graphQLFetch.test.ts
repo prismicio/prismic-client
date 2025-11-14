@@ -89,7 +89,7 @@ it("supports signal", async ({ expect, client }) => {
 		client.graphQLFetch("https://foo.cdn.prismic.io/graphql", {
 			signal: AbortSignal.abort(),
 		}),
-	).rejects.toThrow()
+	).rejects.toThrow("aborted")
 })
 
 it("does not share concurrent equivalent network requests", async ({

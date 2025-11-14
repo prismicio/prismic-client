@@ -15,7 +15,7 @@ import {
 	request,
 } from "./lib/request"
 import { someTagsFilter } from "./lib/someTagsFilter"
-import { throttledLog } from "./lib/throttledLog"
+import { throttledWarn } from "./lib/throttledWarn"
 import { typeFilter } from "./lib/typeFilter"
 
 import type { Query } from "./types/api/query"
@@ -23,14 +23,16 @@ import type { Ref } from "./types/api/ref"
 import type { Repository } from "./types/api/repository"
 import type { PrismicDocument } from "./types/value/document"
 
-import { ForbiddenError } from "./errors/ForbiddenError"
-import { NotFoundError } from "./errors/NotFoundError"
-import { ParsingError } from "./errors/ParsingError"
-import { PreviewTokenExpiredError } from "./errors/PreviewTokenExpired"
-import { PrismicError } from "./errors/PrismicError"
-import { RefExpiredError } from "./errors/RefExpiredError"
-import { RefNotFoundError } from "./errors/RefNotFoundError"
-import { RepositoryNotFoundError } from "./errors/RepositoryNotFoundError"
+import {
+	ForbiddenError,
+	NotFoundError,
+	ParsingError,
+	PreviewTokenExpiredError,
+	PrismicError,
+	RefExpiredError,
+	RefNotFoundError,
+	RepositoryNotFoundError,
+} from "./errors"
 
 import type { LinkResolverFunction } from "./helpers/asLink"
 import { asLink } from "./helpers/asLink"
@@ -285,11 +287,11 @@ type GetAllParams = {
 /**
  * Arguments to determine how the URL for a preview session is resolved.
  */
-type ResolvePreviewArgs<LinkResolverReturnType> = {
+type ResolvePreviewArgs = {
 	/**
 	 * A function that maps a Prismic document to a URL within your app.
 	 */
-	linkResolver?: LinkResolverFunction<LinkResolverReturnType>
+	linkResolver?: LinkResolverFunction
 
 	/**
 	 * A fallback URL if the link resolver does not return a value.
@@ -1440,8 +1442,8 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * @returns The URL for the previewed document during an active preview
 	 *   session. The user should be redirected to this URL.
 	 */
-	async resolvePreviewURL<LinkResolverReturnType>(
-		args: ResolvePreviewArgs<LinkResolverReturnType> & FetchParams,
+	async resolvePreviewURL(
+		args: ResolvePreviewArgs & FetchParams,
 	): Promise<string> {
 		let documentID: string | undefined | null = args.documentID
 		let previewToken: string | undefined | null = args.previewToken
@@ -1868,9 +1870,8 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 			const badRef = new URL(url).searchParams.get("ref")
 			const issue = error instanceof RefNotFoundError ? "invalid" : "expired"
-			throttledLog(
+			throttledWarn(
 				`[@prismicio/client] The ref (${badRef}) was ${issue}. Now retrying with the latest master ref (${masterRef}). If you were previewing content, the response will not include draft content.`,
-				{ level: "warn" },
 			)
 
 			return await this._get({ ...params, ref: masterRef }, attemptCount + 1)

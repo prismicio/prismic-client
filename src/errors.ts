@@ -1,12 +1,14 @@
-import type { ResponseLike } from "./Client2"
+import type { ResponseLike } from "./lib/request"
 
 export class PrismicError extends Error {}
 
-export class ContentAPIError extends PrismicError {
-	response: ResponseLike
+export class InvalidDataError extends PrismicError {}
+
+export class APIError extends PrismicError {
+	response?: ResponseLike
 	constructor(
 		message: string | undefined,
-		options: ErrorOptions & { response: ResponseLike },
+		options: ErrorOptions & { response?: ResponseLike } = {},
 	) {
 		const { response, ...otherOptions } = options
 
@@ -15,19 +17,20 @@ export class ContentAPIError extends PrismicError {
 		this.response = response
 	}
 
-	get url(): string {
-		return this.response.url
+	get url(): string | undefined {
+		return this.response?.url
 	}
 }
 
+export class ContentAPIError extends APIError {}
 export class ParsingError extends ContentAPIError {}
-
 export class ForbiddenError extends ContentAPIError {}
 
-export class RefNotFoundError extends ContentAPIError {}
-
 export class RefExpiredError extends ContentAPIError {}
-
-export class PreviewTokenExpiredError extends ContentAPIError {}
+export class PreviewTokenExpiredError extends RefExpiredError {}
 
 export class NotFoundError extends ContentAPIError {}
+export class DocumentNotFoundError extends NotFoundError {}
+export class RepositoryNotFoundError extends NotFoundError {}
+export class RefNotFoundError extends NotFoundError {}
+export class ReleaseNotFoundError extends RefNotFoundError {}

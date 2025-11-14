@@ -17,12 +17,18 @@ it("accepts a repository name", ({ expect }) => {
 	)
 })
 
-it("accepts an endpoint", ({ expect }) => {
-	const client = createClient("https://example.cdn.prismic.io/api/v2")
+it("supports a custom endpoint", ({ expect }) => {
+	const client = createClient("example", {
+		documentAPIEndpoint: "https://example.com/custom",
+	})
 	expect(client.repositoryName).toBe("example")
-	expect(client.documentAPIEndpoint).toBe(
-		"https://example.cdn.prismic.io/api/v2",
-	)
+	expect(client.documentAPIEndpoint).toBe("https://example.com/custom")
+})
+
+it("throws when given an endpoint", ({ expect }) => {
+	const fn = () => createClient("https://example.cdn.prismic.io/api/v2")
+	expect(fn).toThrow(PrismicError)
+	expect(fn).toThrow(/invalid prismic repository name/i)
 })
 
 it("throws when given an invalid repository name", ({ expect }) => {
@@ -32,62 +38,43 @@ it("throws when given an invalid repository name", ({ expect }) => {
 })
 
 it("throws when given an invalid endpoint", ({ expect }) => {
-	const fn = () => createClient("https://invalid url.cdn.prismic.io/api/v2")
-	expect(fn).toThrow(PrismicError)
-	expect(fn).toThrow(/invalid prismic repository name/i)
+	const fn = () =>
+		createClient("example", {
+			documentAPIEndpoint: "https://invalid url.cdn.prismic.io/api/v2",
+		})
+	expect(fn).toThrow(TypeError)
+	expect(fn).toThrow(/not a valid url/i)
 })
 
-it("throws in development when given an incompatible endpoint", ({
-	expect,
-}) => {
-	vi.stubEnv("NODE_ENV", "development")
-	const invalid = () => createClient("https://example.cdn.prismic.io/api/v1")
-	expect(invalid).toThrow(PrismicError)
-	expect(invalid).toThrow(/only supports prismic rest api v2/i)
-	expect(() => createClient("https://example.com/custom")).not.toThrow()
-	vi.unstubAllEnvs()
+it("throws when given an incompatible endpoint", ({ expect }) => {
+	const invalid = () =>
+		createClient("example", {
+			documentAPIEndpoint: "https://example.cdn.prismic.io/api/v1",
+		})
+	expect(invalid).toThrow(TypeError)
+	expect(invalid).toThrow(/only supports content api/i)
 })
 
 it("warns in development when given a non-CDN endpoint", ({ expect }) => {
-	vi.stubEnv("NODE_ENV", "development")
-	createClient("https://example.prismic.io/api/v2")
+	createClient("example", {
+		documentAPIEndpoint: "https://example.prismic.io/api/v2",
+	})
 	expect(console.warn).toBeCalledWith(
 		expect.stringMatching(/endpoint-must-use-cdn/i),
 	)
 	vi.mocked(console.warn).mockClear()
-	createClient("https://example.com/custom")
-	expect(console.warn).not.toBeCalledWith(
-		expect.stringMatching(/endpoint-must-use-cdn/i),
-	)
-	createClient("https://example.cdn.prismic.io/api/v2")
-	expect(console.warn).not.toBeCalledWith(
-		expect.stringMatching(/endpoint-must-use-cdn/i),
-	)
-	vi.unstubAllEnvs()
-})
-
-it("warns in development when endpoint and documentAPIEndpoint option don't match", ({
-	expect,
-}) => {
-	vi.stubEnv("NODE_ENV", "development")
-	createClient("https://foo.cdn.prismic.io/api/v2", {
-		documentAPIEndpoint: "https://bar.prismic.io/api/v2",
+	createClient("example", {
+		documentAPIEndpoint: "https://example.com/custom",
 	})
-	expect(console.warn).toBeCalledWith(
-		expect.stringMatching(/prefer-repository-name/i),
+	expect(console.warn).not.toBeCalledWith(
+		expect.stringMatching(/endpoint-must-use-cdn/i),
 	)
-	vi.unstubAllEnvs()
-})
-
-it("warns in development when a repository name cannot be inferred from an endpoint", ({
-	expect,
-}) => {
-	vi.stubEnv("NODE_ENV", "development")
-	createClient("https://example.com/custom")
-	expect(console.warn).toBeCalledWith(
-		expect.stringMatching(/prefer-repository-name/i),
+	createClient("example", {
+		documentAPIEndpoint: "https://example.cdn.prismic.io/api/v2",
+	})
+	expect(console.warn).not.toBeCalledWith(
+		expect.stringMatching(/endpoint-must-use-cdn/i),
 	)
-	vi.unstubAllEnvs()
 })
 
 it("uses global fetch by default", async ({ expect }) => {
@@ -101,8 +88,8 @@ it("uses global fetch by default", async ({ expect }) => {
 it("throws if fetch is unavailable", ({ expect }) => {
 	vi.stubGlobal("fetch", undefined)
 	const invalid = () => createClient("example")
-	expect(invalid).toThrow(PrismicError)
-	expect(invalid).toThrow(/fetch implementation was not provided/i)
+	expect(invalid).toThrow(TypeError)
+	expect(invalid).toThrow(/a fetch implementation must be provided/i)
 	vi.unstubAllGlobals()
 })
 
@@ -117,16 +104,17 @@ it("throws if given fetch is not a function", ({ expect }) => {
 	const invalid = () =>
 		// @ts-expect-error - Intentional wrong type
 		createClient("example", { fetch: "invalid" })
-	expect(invalid).toThrow(PrismicError)
-	expect(invalid).toThrow(/fetch implementation was not provided/i)
+	expect(invalid).toThrow(TypeError)
+	expect(invalid).toThrow(/fetch must be a function/i)
 	vi.unstubAllGlobals()
 })
 
-it("supports routes", async ({ expect, endpoint, docs }) => {
-	const client = createClient(endpoint, {
+it("supports routes", async ({ expect, repository, endpoint, docs }) => {
+	const client = createClient(repository.name, {
+		documentAPIEndpoint: endpoint,
 		routes: [{ type: docs.default.type, path: "/:uid" }],
 	})
-	vi.spyOn(client, "fetchFn")
+	vi.spyOn(client, "fetch")
 	await client.get()
 	expect(client).toHaveLastFetchedContentAPI({
 		routes: `[{"type":"${docs.default.type}","path":"/:uid"}]`,

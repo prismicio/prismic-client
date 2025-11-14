@@ -29,11 +29,19 @@ it("shares concurrent equivalent network requests", async ({
 	await Promise.all([
 		client.getRefByID(release.id),
 		client.getRefByID(release.id),
-		client.getRefByID(release.id, { signal: controller1.signal }),
-		client.getRefByID(release.id, { signal: controller1.signal }),
-		client.getRefByID(release.id, { signal: controller2.signal }),
-		client.getRefByID(release.id, { signal: controller2.signal }),
+		client.getRefByID(release.id, {
+			fetchOptions: { signal: controller1.signal },
+		}),
+		client.getRefByID(release.id, {
+			fetchOptions: { signal: controller1.signal },
+		}),
+		client.getRefByID(release.id, {
+			fetchOptions: { signal: controller2.signal },
+		}),
+		client.getRefByID(release.id, {
+			fetchOptions: { signal: controller2.signal },
+		}),
 	])
 	await client.getRefByID(release.id)
-	expect(client).toHaveFetchedRepoTimes(4)
+	expect(client).toHaveFetchedRepoTimes(3)
 })

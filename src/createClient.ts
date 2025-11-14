@@ -1,7 +1,7 @@
 import type { PrismicDocument } from "./types/value/document"
 
-import type { ClientConfig } from "./Client"
-import { Client } from "./Client"
+import type { ClientConfig } from "./Client2"
+import { Client } from "./Client2"
 
 /**
  * Type definitions for the `createClient()` function. May be augmented by
