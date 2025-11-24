@@ -26,7 +26,5 @@ export const getRepositoryName = (repositoryEndpoint: string): string => {
 
 	throw new PrismicError(
 		`An invalid Prismic Document API endpoint was provided: ${repositoryEndpoint}`,
-		undefined,
-		undefined,
 	)
 }

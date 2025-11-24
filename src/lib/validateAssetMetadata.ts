@@ -75,8 +75,6 @@ export const validateAssetMetadata = ({
 	if (errors.length) {
 		throw new PrismicError(
 			`Errors validating asset metadata: ${errors.join(", ")}`,
-			undefined,
-			{ notes, credits, alt, tags },
 		)
 	}
 }

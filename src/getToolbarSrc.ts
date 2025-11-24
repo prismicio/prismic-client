@@ -43,8 +43,6 @@ export const getToolbarSrc = <TRepositoryName extends string>(
 	} else {
 		throw new PrismicError(
 			`An invalid Prismic repository name was given: ${repositoryName}`,
-			undefined,
-			undefined,
 		)
 	}
 }

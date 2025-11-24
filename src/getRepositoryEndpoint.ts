@@ -28,8 +28,6 @@ export const getRepositoryEndpoint = <RepositoryName extends string>(
 	} else {
 		throw new PrismicError(
 			`An invalid Prismic repository name was given: ${repositoryName}`,
-			undefined,
-			undefined,
 		)
 	}
 }

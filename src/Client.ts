@@ -24,6 +24,8 @@ import type { Repository } from "./types/api/repository"
 import type { PrismicDocument } from "./types/value/document"
 
 import {
+	ContentAPIError,
+	DocumentNotFoundError,
 	ForbiddenError,
 	NotFoundError,
 	ParsingError,
@@ -346,8 +348,6 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		if (!this.#repositoryName) {
 			throw new PrismicError(
 				`A repository name is required for this method but one could not be inferred from the provided API endpoint (\`${this.documentAPIEndpoint}\`). To fix this error, provide a repository name when creating the client. For more details, see ${devMsg("prefer-repository-name")}`,
-				undefined,
-				undefined,
 			)
 		}
 
@@ -460,8 +460,6 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		} else {
 			throw new PrismicError(
 				"A valid fetch implementation was not provided. In environments where fetch is not available (including Node.js), a fetch implementation must be provided via a polyfill or the `fetch` option.",
-				undefined,
-				undefined,
 			)
 		}
 
@@ -482,8 +480,6 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			if (/\.prismic\.io\/(?!api\/v2\/?)/i.test(documentAPIEndpoint)) {
 				throw new PrismicError(
 					"@prismicio/client only supports Prismic Rest API V2. Please provide only the repository name to the first createClient() parameter or use the getRepositoryEndpoint() helper to generate a valid Rest API V2 endpoint URL.",
-					undefined,
-					undefined,
 				)
 			}
 
@@ -645,7 +641,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		if (!(params && params.page) && !params?.pageSize) {
 			actualParams.pageSize = this.defaultParams?.pageSize ?? 1
 		}
-		const { data, url } = await this._get<TDocument>(actualParams)
+		const { data, response } = await this._get<TDocument>(actualParams)
 
 		const firstResult = data.results[0]
 
@@ -653,7 +649,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			return firstResult
 		}
 
-		throw new NotFoundError("No documents were returned", url, undefined)
+		throw new DocumentNotFoundError("No documents were returned", { response })
 	}
 
 	/**
@@ -1250,18 +1246,17 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 				return (await response.json()) as Repository
 			}
 			case 401: {
-				const json = await response.json()
-				throw new ForbiddenError(json.error, url.toString(), json)
+				const json = await response.clone().json()
+				throw new ForbiddenError(json.error, { response })
 			}
 			case 404: {
 				throw new RepositoryNotFoundError(
 					`Prismic repository not found. Check that "${this.documentAPIEndpoint}" is pointing to the correct repository.`,
-					url.toString(),
-					undefined,
+					{ response },
 				)
 			}
 			default: {
-				throw new PrismicError(undefined, url.toString(), await response.text())
+				throw new ContentAPIError(undefined, { response })
 			}
 		}
 	}
@@ -1796,7 +1791,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	private async _get<TDocument extends TDocuments>(
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 		attemptCount = 0,
-	): Promise<{ data: Query<TDocument>; url: string }> {
+	): Promise<{ data: Query<TDocument>; url: string; response: ResponseLike }> {
 		const url = await this.buildQueryURL(params)
 
 		try {
@@ -1807,41 +1802,42 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 						return {
 							data: (await response.clone().json()) as Query<TDocument>,
 							url,
+							response,
 						}
 					} catch {
-						throw new PrismicError(undefined, url, await response.text())
+						throw new ContentAPIError(undefined, { response })
 					}
 				}
 				case 400: {
-					const json = await response.json()
-					throw new ParsingError(json.message, url, json)
+					const json = await response.clone().json()
+					throw new ParsingError(json.message, { response })
 				}
 				case 401: {
-					const json = await response.json()
-					throw new ForbiddenError(json.message, url, json)
+					const json = await response.clone().json()
+					throw new ForbiddenError(json.message, { response })
 				}
 				case 404: {
-					const json = await response.json()
+					const json = await response.clone().json()
 					switch (json.type) {
 						case "api_notfound_error": {
-							throw new RefNotFoundError(json.message, url, json)
+							throw new RefNotFoundError(json.message, { response })
 						}
 						case "api_security_error": {
 							if (/preview token.*expired/i.test(json.message)) {
-								throw new PreviewTokenExpiredError(json.message, url, json)
+								throw new PreviewTokenExpiredError(json.message, { response })
 							}
 						}
 						default: {
-							throw new NotFoundError(json.message, url, json)
+							throw new NotFoundError(json.message, { response })
 						}
 					}
 				}
 				case 410: {
-					const json = await response.json()
-					throw new RefExpiredError(json.message, url, json)
+					const json = await response.clone().json()
+					throw new RefExpiredError(json.message, { response })
 				}
 				default: {
-					throw new PrismicError(undefined, url, await response.text())
+					throw new ContentAPIError(undefined, { response })
 				}
 			}
 		} catch (error) {

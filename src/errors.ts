@@ -34,3 +34,7 @@ export class DocumentNotFoundError extends NotFoundError {}
 export class RepositoryNotFoundError extends NotFoundError {}
 export class RefNotFoundError extends NotFoundError {}
 export class ReleaseNotFoundError extends RefNotFoundError {}
+
+export class AssetAPIError extends APIError {}
+
+export class MigrationAPIError extends APIError {}

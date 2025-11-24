@@ -1,6 +1,6 @@
 import type { Ref } from "../types/api/ref"
 
-import { PrismicError } from "../errors"
+import { RefNotFoundError } from "../errors"
 
 /**
  * Returns the first ref from a list that passes a filter (a function that
@@ -18,7 +18,7 @@ export const findRef = (refs: Ref[], filter: (ref: Ref) => boolean): Ref => {
 	const ref = refs.find((ref) => filter(ref))
 
 	if (!ref) {
-		throw new PrismicError("Ref could not be found.", undefined, undefined)
+		throw new RefNotFoundError("Ref could not be found.")
 	}
 
 	return ref

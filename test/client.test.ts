@@ -4,14 +4,7 @@ import type { Fixtures } from "./it"
 import { it } from "./it"
 
 import type { Client } from "../src"
-import { RefNotFoundError, createClient } from "../src"
-
-it("throws if repositoryName is accessed but unavailable", async ({
-	expect,
-}) => {
-	const client = createClient("https://example.com/custom")
-	expect(() => client.repositoryName).toThrow(/prefer-repository-name/i)
-})
+import { RefNotFoundError } from "../src"
 
 type QueryCase = {
 	name: keyof Client

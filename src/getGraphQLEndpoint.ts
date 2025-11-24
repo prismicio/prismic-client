@@ -19,8 +19,6 @@ export const getGraphQLEndpoint = <RepositoryName extends string>(
 	} else {
 		throw new PrismicError(
 			`An invalid Prismic repository name was given: ${repositoryName}`,
-			undefined,
-			undefined,
 		)
 	}
 }

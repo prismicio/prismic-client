@@ -28,8 +28,10 @@ import type {
 import type { PrismicDocument } from "./types/value/document"
 
 import {
+	AssetAPIError,
 	ForbiddenError,
 	InvalidDataError,
+	MigrationAPIError,
 	NotFoundError,
 	PrismicError,
 } from "./errors"
@@ -630,7 +632,7 @@ export class WriteClient<
 		const res = await this.fetchFn(url, this._buildRequestInit(params))
 
 		if (!res.ok) {
-			throw new PrismicError("Could not fetch foreign asset", url, undefined)
+			throw new AssetAPIError("Could not fetch foreign asset", { response: res })
 		}
 
 		const blob = await res.blob()
@@ -882,22 +884,22 @@ export class WriteClient<
 	 * @throws {@link PrismicError} For 500, 503, and other unexpected errors.
 	 */
 	async #handleAssetAPIError(response: ResponseLike): Promise<never> {
-		const json = await response.json()
+		const json = await response.clone().json()
 		switch (response.status) {
 			case 401:
 			case 403:
-				throw new ForbiddenError(json.error, response.url, json)
+				throw new ForbiddenError(json.error, { response })
 
 			case 404:
-				throw new NotFoundError(json.error, response.url, json)
+				throw new NotFoundError(json.error, { response })
 
 			case 400:
-				throw new InvalidDataError(json.error, response.url, json)
+				throw new AssetAPIError(json.error, { response })
 
 			case 500:
 			case 503:
 			default:
-				throw new PrismicError(json.error, response.url, json)
+				throw new AssetAPIError(json.error, { response })
 		}
 	}
 
@@ -913,33 +915,33 @@ export class WriteClient<
 	 * @throws {@link PrismicError} For 500, and other unexpected errors.
 	 */
 	async #handleMigrationAPIError(response: ResponseLike): Promise<never> {
-		const payload = (await response.json()) as unknown
+		const payload = (await response.clone().json()) as unknown
 
 		// Common message across all branches
 		const message = (payload as { message?: string }).message
 
 		switch (response.status) {
 			case 400: {
-				throw new InvalidDataError(message, response.url, payload)
+				throw new MigrationAPIError(message, { response })
 			}
 
 			case 401: {
-				throw new ForbiddenError(message, response.url, payload)
+				throw new ForbiddenError(message, { response })
 			}
 
 			case 403: {
 				// The lambda authorizer uses an uppercase key, remove this once it is fixed
 				const msg = message ?? (payload as { Message?: string }).Message
-				throw new ForbiddenError(msg, response.url, payload)
+				throw new ForbiddenError(msg, { response })
 			}
 
 			case 404: {
-				throw new NotFoundError(message, response.url, payload)
+				throw new NotFoundError(message, { response })
 			}
 
 			case 500:
 			default: {
-				throw new PrismicError(message, response.url, payload)
+				throw new MigrationAPIError(message, { response })
 			}
 		}
 	}
