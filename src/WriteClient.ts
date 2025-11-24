@@ -30,10 +30,8 @@ import type { PrismicDocument } from "./types/value/document"
 import {
 	AssetAPIError,
 	ForbiddenError,
-	InvalidDataError,
 	MigrationAPIError,
 	NotFoundError,
-	PrismicError,
 } from "./errors"
 
 import { name, version } from "../package.json"
@@ -632,7 +630,9 @@ export class WriteClient<
 		const res = await this.fetchFn(url, this._buildRequestInit(params))
 
 		if (!res.ok) {
-			throw new AssetAPIError("Could not fetch foreign asset", { response: res })
+			throw new AssetAPIError("Could not fetch foreign asset", {
+				response: res,
+			})
 		}
 
 		const blob = await res.blob()
