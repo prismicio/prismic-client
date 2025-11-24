@@ -25,7 +25,7 @@ it("throws ForbiddenError on 401", async ({ expect, client }) => {
 	await expect(() => client.getRepository()).rejects.toThrow(ForbiddenError)
 })
 
-it.only("throws RepositoryNotFoundError on 404", async ({ expect, client }) => {
+it("throws RepositoryNotFoundError on 404", async ({ expect, client }) => {
 	vi.mocked(client.fetchFn).mockResolvedValue(
 		Response.json({}, { status: 404 }),
 	)
