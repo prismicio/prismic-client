@@ -232,25 +232,21 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		id: string,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<TDocument> {
-		return await this.getFirst(
-			appendFilters(params, filter.at("document.id", id)),
-		)
+		return this.getFirst(appendFilters(params, filter.at("document.id", id)))
 	}
 
 	async getByIDs<TDocument extends TDocuments>(
 		ids: string[],
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<Query<TDocument>> {
-		return await this.get(appendFilters(params, filter.in("document.id", ids)))
+		return this.get(appendFilters(params, filter.in("document.id", ids)))
 	}
 
 	async getAllByIDs<TDocument extends TDocuments>(
 		ids: string[],
-		params?: Partial<Omit<BuildQueryURLArgs, "page">> &
-			GetAllParams &
-			FetchParams,
+		params?: Partial<BuildQueryURLArgs> & GetAllParams & FetchParams,
 	): Promise<TDocument[]> {
-		return await this.dangerouslyGetAll(
+		return this.dangerouslyGetAll(
 			appendFilters(params, filter.in("document.id", ids)),
 		)
 	}
@@ -263,7 +259,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		uid: string,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<ExtractDocumentType<TDocument, TDocumentType>> {
-		return await this.getFirst(
+		return this.getFirst(
 			appendFilters(
 				params,
 				filter.at("document.type", type),
@@ -280,7 +276,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		uids: string[],
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<Query<ExtractDocumentType<TDocument, TDocumentType>>> {
-		return await this.get(
+		return this.get(
 			appendFilters(
 				params,
 				filter.at("document.type", type),
@@ -295,11 +291,9 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	>(
 		type: TDocumentType,
 		uids: string[],
-		params?: Partial<Omit<BuildQueryURLArgs, "page">> &
-			GetAllParams &
-			FetchParams,
+		params?: Partial<BuildQueryURLArgs> & GetAllParams & FetchParams,
 	): Promise<ExtractDocumentType<TDocument, TDocumentType>[]> {
-		return await this.dangerouslyGetAll(
+		return this.dangerouslyGetAll(
 			appendFilters(
 				params,
 				filter.at("document.type", type),
@@ -315,7 +309,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		type: TDocumentType,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<ExtractDocumentType<TDocument, TDocumentType>> {
-		return await this.getFirst(
+		return this.getFirst(
 			appendFilters(params, filter.at("document.type", type)),
 		)
 	}
@@ -327,9 +321,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		type: TDocumentType,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<Query<ExtractDocumentType<TDocument, TDocumentType>>> {
-		return await this.get(
-			appendFilters(params, filter.at("document.type", type)),
-		)
+		return this.get(appendFilters(params, filter.at("document.type", type)))
 	}
 
 	async getAllByType<
@@ -337,11 +329,9 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		TDocumentType extends TDocument["type"] = TDocument["type"],
 	>(
 		type: TDocumentType,
-		params?: Partial<Omit<BuildQueryURLArgs, "page">> &
-			GetAllParams &
-			FetchParams,
+		params?: Partial<BuildQueryURLArgs> & GetAllParams & FetchParams,
 	): Promise<ExtractDocumentType<TDocument, TDocumentType>[]> {
-		return await this.dangerouslyGetAll(
+		return this.dangerouslyGetAll(
 			appendFilters(params, filter.at("document.type", type)),
 		)
 	}
@@ -350,38 +340,28 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		tag: string,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<Query<TDocument>> {
-		return await this.get(
-			appendFilters(params, filter.any("document.tags", [tag])),
-		)
+		return this.getBySomeTags([tag], params)
 	}
 
 	async getAllByTag<TDocument extends TDocuments>(
 		tag: string,
-		params?: Partial<Omit<BuildQueryURLArgs, "page">> &
-			GetAllParams &
-			FetchParams,
+		params?: Partial<BuildQueryURLArgs> & GetAllParams & FetchParams,
 	): Promise<TDocument[]> {
-		return await this.dangerouslyGetAll(
-			appendFilters(params, filter.any("document.tags", [tag])),
-		)
+		return this.getAllBySomeTags([tag], params)
 	}
 
 	async getByEveryTag<TDocument extends TDocuments>(
 		tags: string[],
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<Query<TDocument>> {
-		return await this.get(
-			appendFilters(params, filter.at("document.tags", tags)),
-		)
+		return this.get(appendFilters(params, filter.at("document.tags", tags)))
 	}
 
 	async getAllByEveryTag<TDocument extends TDocuments>(
 		tags: string[],
-		params?: Partial<Omit<BuildQueryURLArgs, "page">> &
-			GetAllParams &
-			FetchParams,
+		params?: Partial<BuildQueryURLArgs> & GetAllParams & FetchParams,
 	): Promise<TDocument[]> {
-		return await this.dangerouslyGetAll(
+		return this.dangerouslyGetAll(
 			appendFilters(params, filter.at("document.tags", tags)),
 		)
 	}
@@ -390,18 +370,14 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		tags: string[],
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<Query<TDocument>> {
-		return await this.get(
-			appendFilters(params, filter.any("document.tags", tags)),
-		)
+		return this.get(appendFilters(params, filter.any("document.tags", tags)))
 	}
 
 	async getAllBySomeTags<TDocument extends TDocuments>(
 		tags: string[],
-		params?: Partial<Omit<BuildQueryURLArgs, "page">> &
-			GetAllParams &
-			FetchParams,
+		params?: Partial<BuildQueryURLArgs> & GetAllParams & FetchParams,
 	): Promise<TDocument[]> {
-		return await this.dangerouslyGetAll(
+		return this.dangerouslyGetAll(
 			appendFilters(params, filter.any("document.tags", tags)),
 		)
 	}
@@ -418,10 +394,9 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 		const response = await this.#request(url, params)
 		if (response.ok) {
-			const repository: Repository = await response.json()
-			this.#cachedRepository = repository
+			this.#cachedRepository = await response.json()
 			this.#cachedRepositoryExpiration = Date.now() + REPOSITORY_CACHE_TTL
-			return repository
+			return this.#cachedRepository!
 		}
 
 		if (response.status === 404) {
@@ -705,13 +680,11 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		params?: Pick<BuildQueryURLArgs, "accessToken"> & FetchParams,
 	) {
 		if (this.#autoPreviews) {
-			let cookies: string | null | undefined = globalThis.document?.cookie
-			if (this.#autoPreviewsRequest) {
-				cookies =
-					"get" in this.#autoPreviewsRequest.headers
-						? this.#autoPreviewsRequest.headers.get("cookie")
-						: this.#autoPreviewsRequest.headers.cookie
-			}
+			const cookies = this.#autoPreviewsRequest
+				? "get" in this.#autoPreviewsRequest.headers
+					? this.#autoPreviewsRequest.headers.get("cookie")
+					: this.#autoPreviewsRequest.headers.cookie
+				: globalThis.document?.cookie
 			const previewRef = getPreviewCookie(cookies ?? "")
 			if (previewRef) return previewRef
 		}
