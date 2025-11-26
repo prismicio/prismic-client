@@ -14,10 +14,10 @@ it("shares concurrent equivalent network requests", async ({
 	await Promise.all([
 		client.getMasterRef(),
 		client.getMasterRef(),
-		client.getMasterRef({ fetchOptions: { signal: controller1.signal } }),
-		client.getMasterRef({ fetchOptions: { signal: controller1.signal } }),
-		client.getMasterRef({ fetchOptions: { signal: controller2.signal } }),
-		client.getMasterRef({ fetchOptions: { signal: controller2.signal } }),
+		client.getMasterRef({ signal: controller1.signal }),
+		client.getMasterRef({ signal: controller1.signal }),
+		client.getMasterRef({ signal: controller2.signal }),
+		client.getMasterRef({ signal: controller2.signal }),
 	])
 	await client.getMasterRef()
 	expect(client).toHaveFetchedRepoTimes(3)

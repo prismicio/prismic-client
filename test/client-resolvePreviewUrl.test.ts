@@ -146,19 +146,19 @@ it("shares concurrent equivalent network requests", async ({
 		client.resolvePreviewURL({ defaultURL: "/default" }),
 		client.resolvePreviewURL({
 			defaultURL: "/default",
-			fetchOptions: { signal: controller1.signal },
+			signal: controller1.signal,
 		}),
 		client.resolvePreviewURL({
 			defaultURL: "/default",
-			fetchOptions: { signal: controller1.signal },
+			signal: controller1.signal,
 		}),
 		client.resolvePreviewURL({
 			defaultURL: "/default",
-			fetchOptions: { signal: controller2.signal },
+			signal: controller2.signal,
 		}),
 		client.resolvePreviewURL({
 			defaultURL: "/default",
-			fetchOptions: { signal: controller2.signal },
+			signal: controller2.signal,
 		}),
 	])
 	await client.resolvePreviewURL({ defaultURL: "/default" })

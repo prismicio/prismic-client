@@ -31,18 +31,10 @@ it("shares concurrent equivalent network requests", async ({
 	await Promise.all([
 		client.getReleaseByID(release.id),
 		client.getReleaseByID(release.id),
-		client.getReleaseByID(release.id, {
-			fetchOptions: { signal: controller1.signal },
-		}),
-		client.getReleaseByID(release.id, {
-			fetchOptions: { signal: controller1.signal },
-		}),
-		client.getReleaseByID(release.id, {
-			fetchOptions: { signal: controller2.signal },
-		}),
-		client.getReleaseByID(release.id, {
-			fetchOptions: { signal: controller2.signal },
-		}),
+		client.getReleaseByID(release.id, { signal: controller1.signal }),
+		client.getReleaseByID(release.id, { signal: controller1.signal }),
+		client.getReleaseByID(release.id, { signal: controller2.signal }),
+		client.getReleaseByID(release.id, { signal: controller2.signal }),
 	])
 	await client.getReleaseByID(release.id)
 	expect(client).toHaveFetchedRepoTimes(3)

@@ -17,18 +17,21 @@ it("accepts a repository name", ({ expect }) => {
 	)
 })
 
+// TODO: Remove in v8 when endpoints are not supported as the first argument.
+it("accepts an endpoint", ({ expect }) => {
+	const client = createClient("https://example.cdn.prismic.io/api/v2")
+	expect(client.repositoryName).toBe("example")
+	expect(client.documentAPIEndpoint).toBe(
+		"https://example.cdn.prismic.io/api/v2",
+	)
+})
+
 it("supports a custom endpoint", ({ expect }) => {
 	const client = createClient("example", {
 		documentAPIEndpoint: "https://example.com/custom",
 	})
 	expect(client.repositoryName).toBe("example")
 	expect(client.documentAPIEndpoint).toBe("https://example.com/custom")
-})
-
-it("throws when given an endpoint", ({ expect }) => {
-	const fn = () => createClient("https://example.cdn.prismic.io/api/v2")
-	expect(fn).toThrow(PrismicError)
-	expect(fn).toThrow(/invalid prismic repository name/i)
 })
 
 it("throws when given an invalid repository name", ({ expect }) => {
@@ -46,16 +49,21 @@ it("throws when given an invalid endpoint", ({ expect }) => {
 	expect(fn).toThrow(/not a valid url/i)
 })
 
-it("throws when given an incompatible endpoint", ({ expect }) => {
+it("throws in development when given an incompatible endpoint", ({
+	expect,
+}) => {
+	vi.stubEnv("NODE_ENV", "development")
 	const invalid = () =>
 		createClient("example", {
 			documentAPIEndpoint: "https://example.cdn.prismic.io/api/v1",
 		})
 	expect(invalid).toThrow(TypeError)
 	expect(invalid).toThrow(/only supports content api/i)
+	vi.unstubAllEnvs()
 })
 
 it("warns in development when given a non-CDN endpoint", ({ expect }) => {
+	vi.stubEnv("NODE_ENV", "development")
 	createClient("example", {
 		documentAPIEndpoint: "https://example.prismic.io/api/v2",
 	})
@@ -75,6 +83,18 @@ it("warns in development when given a non-CDN endpoint", ({ expect }) => {
 	expect(console.warn).not.toBeCalledWith(
 		expect.stringMatching(/endpoint-must-use-cdn/i),
 	)
+	vi.unstubAllEnvs()
+})
+
+it("warns in development when a repository name cannot be inferred from an endpoint", ({
+	expect,
+}) => {
+	vi.stubEnv("NODE_ENV", "development")
+	createClient("https://example.com/custom")
+	expect(console.warn).toBeCalledWith(
+		expect.stringMatching(/prefer-repository-name/i),
+	)
+	vi.unstubAllEnvs()
 })
 
 it("uses global fetch by default", async ({ expect }) => {
@@ -96,7 +116,7 @@ it("throws if fetch is unavailable", ({ expect }) => {
 it("accepts a custom fetch", async ({ expect }) => {
 	const fetch = vi.fn()
 	const client = createClient("example", { fetch })
-	expect(client.fetchFn).toBe(fetch)
+	expect(client.fetch).toBe(fetch)
 })
 
 it("throws if given fetch is not a function", ({ expect }) => {

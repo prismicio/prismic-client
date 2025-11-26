@@ -49,7 +49,15 @@ it("supports after", async ({ expect, endpoint }) => {
 	expect(res).toHaveSearchParam("after", "after")
 })
 
-it("supports filters", async ({ expect, endpoint }) => {
+it("supports single filter", async ({ expect, endpoint }) => {
+	const res = buildQueryURL(endpoint, {
+		ref: "foo",
+		filters: "[has(my.document.title)]",
+	})
+	expect(res).toHaveSearchParam("q", "[[has(my.document.title)]]")
+})
+
+it("supports multiple filters", async ({ expect, endpoint }) => {
 	const res = buildQueryURL(endpoint, {
 		ref: "foo",
 		filters: ["[has(my.document.title)]", "[has(my.document.subtitle)]"],
@@ -137,10 +145,26 @@ describe("orderings", () => {
 })
 
 describe("routes", () => {
-	it("supports routes", async ({ expect, endpoint }) => {
+	it("supports single route", async ({ expect, endpoint }) => {
+		const res = buildQueryURL(endpoint, {
+			ref: "foo",
+			routes: { type: "page", path: "/:uid" },
+		})
+		expect(res).toHaveSearchParam("routes", '[{"type":"page","path":"/:uid"}]')
+	})
+
+	it("supports multiple routes", async ({ expect, endpoint }) => {
 		const res = buildQueryURL(endpoint, {
 			ref: "foo",
 			routes: [{ type: "page", path: "/:uid" }],
+		})
+		expect(res).toHaveSearchParam("routes", '[{"type":"page","path":"/:uid"}]')
+	})
+
+	it("supports single string route", async ({ expect, endpoint }) => {
+		const res = buildQueryURL(endpoint, {
+			ref: "foo",
+			routes: '[{"type":"page","path":"/:uid"}]',
 		})
 		expect(res).toHaveSearchParam("routes", '[{"type":"page","path":"/:uid"}]')
 	})

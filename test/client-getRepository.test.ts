@@ -43,10 +43,10 @@ it("shares concurrent equivalent network requests", async ({
 	await Promise.all([
 		client.getRepository(),
 		client.getRepository(),
-		client.getRepository({ fetchOptions: { signal: controller1.signal } }),
-		client.getRepository({ fetchOptions: { signal: controller1.signal } }),
-		client.getRepository({ fetchOptions: { signal: controller2.signal } }),
-		client.getRepository({ fetchOptions: { signal: controller2.signal } }),
+		client.getRepository({ signal: controller1.signal }),
+		client.getRepository({ signal: controller1.signal }),
+		client.getRepository({ signal: controller2.signal }),
+		client.getRepository({ signal: controller2.signal }),
 	])
 	await client.getRepository()
 	expect(client).toHaveFetchedRepoTimes(3)

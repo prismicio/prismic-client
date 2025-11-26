@@ -4,7 +4,22 @@ import type { Fixtures } from "./it"
 import { it } from "./it"
 
 import type { Client } from "../src"
-import { RefNotFoundError } from "../src"
+import { RefNotFoundError, createClient } from "../src"
+
+// TODO: Remove in v8 when endpoints are not supported as the first argument.
+it("throws if repositoryName is accessed but unavailable", async ({
+	expect,
+}) => {
+	const client = createClient("https://example.com/custom")
+	expect(() => client.repositoryName).toThrow(/prefer-repository-name/i)
+})
+
+// TODO: Remove when alias gets removed
+it("aliases endpoint to documentAPIEndpoint", async ({ expect, client }) => {
+	expect(client.endpoint).toBe(client.documentAPIEndpoint)
+	client.endpoint = "https://example.com/custom"
+	expect(client.documentAPIEndpoint).toBe("https://example.com/custom")
+})
 
 type QueryCase = {
 	name: keyof Client
@@ -254,10 +269,10 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 		await Promise.all([
 			fn({ client, docs }),
 			fn({ client, docs }),
-			fn({ client, docs }, { fetchOptions: { signal: controller1.signal } }),
-			fn({ client, docs }, { fetchOptions: { signal: controller1.signal } }),
-			fn({ client, docs }, { fetchOptions: { signal: controller2.signal } }),
-			fn({ client, docs }, { fetchOptions: { signal: controller2.signal } }),
+			fn({ client, docs }, { signal: controller1.signal }),
+			fn({ client, docs }, { signal: controller1.signal }),
+			fn({ client, docs }, { signal: controller2.signal }),
+			fn({ client, docs }, { signal: controller2.signal }),
 		])
 		await fn({ client, docs })
 		expect(client).toHaveFetchedRepoTimes(3)

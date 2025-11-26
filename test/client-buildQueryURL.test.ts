@@ -68,10 +68,10 @@ it("shares concurrent equivalent network requests", async ({
 	await Promise.all([
 		client.buildQueryURL(),
 		client.buildQueryURL(),
-		client.buildQueryURL({ fetchOptions: { signal: controller1.signal } }),
-		client.buildQueryURL({ fetchOptions: { signal: controller1.signal } }),
-		client.buildQueryURL({ fetchOptions: { signal: controller2.signal } }),
-		client.buildQueryURL({ fetchOptions: { signal: controller2.signal } }),
+		client.buildQueryURL({ signal: controller1.signal }),
+		client.buildQueryURL({ signal: controller1.signal }),
+		client.buildQueryURL({ signal: controller2.signal }),
+		client.buildQueryURL({ signal: controller2.signal }),
 	])
 	await client.buildQueryURL()
 	expect(client).toHaveFetchedRepoTimes(3)

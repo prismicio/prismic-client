@@ -1,6 +1,7 @@
 import { devMsg } from "./lib/devMsg"
 import { getPreviewCookie } from "./lib/getPreviewCookie"
 import {
+	type AbortSignalLike,
 	type FetchLike,
 	type RequestInitLike,
 	type ResponseLike,
@@ -20,6 +21,7 @@ import {
 	NotFoundError,
 	ParsingError,
 	PreviewTokenExpiredError,
+	PrismicError,
 	RefExpiredError,
 	RefNotFoundError,
 	ReleaseNotFoundError,
@@ -35,6 +37,7 @@ import {
 } from "./buildQueryURL"
 import { filter } from "./filter"
 import { getRepositoryEndpoint } from "./getRepositoryEndpoint"
+import { getRepositoryName } from "./getRepositoryName"
 import { isRepositoryEndpoint } from "./isRepositoryEndpoint"
 
 const REPOSITORY_CACHE_TTL = 5000
@@ -64,7 +67,7 @@ export type ClientConfig = {
 	fetch?: FetchLike
 }
 
-export type RequestLike =
+export type HttpRequestLike =
 	| {
 			headers: {
 				get(name: string): string | null
@@ -80,6 +83,10 @@ export type RequestLike =
 
 type FetchParams = {
 	fetchOptions?: RequestInitLike
+	/**
+	 * @deprecated Move the `signal` parameter into `fetchOptions.signal`:
+	 */
+	signal?: AbortSignalLike
 }
 
 type GetAllParams = {
@@ -98,10 +105,22 @@ type ResolvePreviewArgs = {
 }
 
 export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
-	/**
-	 * The repository's domain name.
-	 */
-	repositoryName: string
+	#repositoryName: string | undefined
+
+	set repositoryName(value: string) {
+		this.#repositoryName = value
+	}
+
+	get repositoryName(): string {
+		if (!this.#repositoryName) {
+			throw new PrismicError(
+				`A repository name is required for this method but one could not be inferred from the provided API endpoint (\`${this.documentAPIEndpoint}\`). To fix this error, provide a repository name when creating the client. For more details, see ${devMsg("prefer-repository-name")}`,
+			)
+		}
+
+		return this.#repositoryName
+	}
+
 	/**
 	 * The client's Content API endpoint.
 	 *
@@ -160,11 +179,11 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	#cachedRepositoryExpiration = 0
 	#getRef?: GetRef
 	#autoPreviews = true
-	#autoPreviewsRequest?: RequestLike
+	#autoPreviewsRequest?: HttpRequestLike
 
-	constructor(repositoryName: string, config: ClientConfig = {}) {
+	constructor(repositoryNameOrEndpoint: string, config: ClientConfig = {}) {
 		const {
-			documentAPIEndpoint = getRepositoryEndpoint(repositoryName),
+			documentAPIEndpoint,
 			accessToken,
 			ref,
 			routes,
@@ -174,6 +193,25 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			fetch = globalThis.fetch,
 		} = config
 
+		// TODO: Simplify in v8 when endpoints are not supported as the first argument.
+		if (isRepositoryEndpoint(repositoryNameOrEndpoint)) {
+			console.warn(
+				`[@prismicio/client] Passing an endpoint URL as the first argument is deprecated. Pass the repository name instead and use the \`documentAPIEndpoint\` option if needed. For more details, see ${devMsg("prefer-repository-name")}`,
+			)
+			try {
+				this.repositoryName = getRepositoryName(repositoryNameOrEndpoint)
+			} catch {
+				console.warn(
+					`[@prismicio/client] A repository name could not be inferred from the provided endpoint (\`${repositoryNameOrEndpoint}\`). Some methods will be disabled. Create the client using a repository name to prevent this warning. For more details, see ${devMsg("prefer-repository-name")}`,
+				)
+			}
+			this.documentAPIEndpoint = documentAPIEndpoint || repositoryNameOrEndpoint
+		} else {
+			this.repositoryName = repositoryNameOrEndpoint
+			this.documentAPIEndpoint =
+				documentAPIEndpoint || getRepositoryEndpoint(repositoryNameOrEndpoint)
+		}
+
 		if (!fetch)
 			throw new TypeError(
 				`A fetch implementation must be provided via the \`fetch\` config`,
@@ -182,25 +220,29 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			throw new TypeError(
 				`fetch must be a function but received: ${typeof fetch}`,
 			)
-		if (isRepositoryEndpoint(repositoryName))
-			throw new TypeError(
-				`createClient's first argument must be a repository name. You may provide a custom endpoint to the documentAPIEndpoint option.`,
-			)
-		if (!isRepositoryEndpoint(documentAPIEndpoint))
+		if (!isRepositoryEndpoint(this.documentAPIEndpoint))
 			throw new TypeError(
 				`documentAPIEndpoint is not a valid URL: ${documentAPIEndpoint}`,
 			)
-		if (/\.prismic\.io\/(?!api\/v2\/?)/i.test(documentAPIEndpoint))
+		// TODO: Throw in all environments in v8.
+		if (
+			/\.prismic\.io\/(?!api\/v2\/?)/i.test(this.documentAPIEndpoint) &&
+			process.env.NODE_ENV === "development"
+		)
 			throw new TypeError(
 				`@prismicio/client only supports Content API with the /api/v2 path`,
 			)
-		if (/(?<!\.cdn)\.prismic\.io$/i.test(new URL(documentAPIEndpoint).hostname))
+		// TODO: Throw in all environments in v8.
+		if (
+			/(?<!\.cdn)\.prismic\.io$/i.test(
+				new URL(this.documentAPIEndpoint).hostname,
+			) &&
+			process.env.NODE_ENV === "development"
+		)
 			console.warn(
 				`[@prismicio/client] The client was created with a non-CDN endpoint. Convert it to the CDN endpoint for better performance. For more details, see ${devMsg("endpoint-must-use-cdn")}`,
 			)
 
-		this.repositoryName = repositoryName
-		this.documentAPIEndpoint = documentAPIEndpoint
 		this.accessToken = accessToken
 		this.routes = routes
 		this.brokenRoute = brokenRoute
@@ -223,6 +265,22 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 */
 	set fetchFn(fetch: FetchLike) {
 		this.fetch = fetch
+	}
+
+	/**
+	 * @deprecated Use `documentAPIEndpoint` instead.
+	 */
+	// TODO: Remove in v8.
+	get endpoint(): string {
+		return this.documentAPIEndpoint
+	}
+
+	/**
+	 * @deprecated Use `documentAPIEndpoint` instead.
+	 */
+	// TODO: Remove in v8.
+	set endpoint(value: string) {
+		this.documentAPIEndpoint = value
 	}
 
 	/**
@@ -908,7 +966,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		this.#autoPreviews = true
 	}
 
-	enableAutoPreviewsFromReq(request: RequestLike): void {
+	enableAutoPreviewsFromReq(request: HttpRequestLike): void {
 		this.enableAutoPreviews()
 		this.#autoPreviewsRequest = request
 	}
@@ -970,7 +1028,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	async resolvePreviewURL(
 		args: ResolvePreviewArgs & FetchParams,
 	): Promise<string> {
-		let { documentID, previewToken } = args
+		let { documentID, previewToken, defaultURL, linkResolver, ...params } = args
 
 		if (this.#autoPreviewsRequest) {
 			if ("url" in this.#autoPreviewsRequest) {
@@ -993,15 +1051,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 		if (documentID && previewToken) {
 			const page = await this.getByID(documentID, {
+				...params,
 				ref: previewToken,
 				lang: "*",
-				fetchOptions: args.fetchOptions,
 			})
-			const url = asLink(page, { linkResolver: args.linkResolver })
+			const url = asLink(page, { linkResolver })
 			if (url) return url
 		}
 
-		return args.defaultURL
+		return defaultURL
 	}
 
 	/**
@@ -1176,14 +1234,17 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 				...this.fetchOptions?.headers,
 				...params?.fetchOptions?.headers,
 			},
-			signal: params?.fetchOptions?.signal || this.fetchOptions?.signal,
+			signal:
+				params?.fetchOptions?.signal ||
+				params?.signal ||
+				this.fetchOptions?.signal,
 		}
 
 		return await request(url, init, this.fetch)
 	}
 }
 
-function appendFilters<T extends { filters?: string[] }>(
+function appendFilters<T extends Pick<BuildQueryURLArgs, "filters">>(
 	obj = {} as T,
 	...filters: string[]
 ): T & { filters: string[] } {
