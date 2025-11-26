@@ -24,7 +24,7 @@ import type { Repository } from "./types/api/repository"
 import type { PrismicDocument } from "./types/value/document"
 
 import {
-	ContentAPIError,
+	APIError,
 	DocumentNotFoundError,
 	ForbiddenError,
 	NotFoundError,
@@ -1256,7 +1256,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 				)
 			}
 			default: {
-				throw new ContentAPIError(undefined, { response })
+				throw new APIError(undefined, { response })
 			}
 		}
 	}
@@ -1805,7 +1805,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 							response,
 						}
 					} catch {
-						throw new ContentAPIError(undefined, { response })
+						throw new APIError(undefined, { response })
 					}
 				}
 				case 400: {
@@ -1837,7 +1837,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 					throw new RefExpiredError(json.message, { response })
 				}
 				default: {
-					throw new ContentAPIError(undefined, { response })
+					throw new APIError(undefined, { response })
 				}
 			}
 		} catch (error) {

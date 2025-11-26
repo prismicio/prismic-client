@@ -120,7 +120,6 @@ export type { HTMLRichTextSerializer } from "./helpers/asHTML"
 export {
 	PrismicError,
 	APIError,
-	ContentAPIError,
 	ForbiddenError,
 	InvalidDataError,
 	ParsingError,

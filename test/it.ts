@@ -63,8 +63,8 @@ export const it = test.extend<Fixtures>({
 		const endpoint = new URL("api/v2/", repository.getBaseCdnURL()).toString()
 		await use(endpoint)
 	},
-	client: async ({ endpoint, docs }, use) => {
-		const client = createClient(endpoint, {
+	client: async ({ repository, endpoint, docs }, use) => {
+		const client = createClient(repository.name, {
 			documentAPIEndpoint: endpoint,
 			routes: [
 				{ type: docs.default.type, path: "/:uid" },

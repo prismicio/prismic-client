@@ -28,9 +28,9 @@ import type {
 import type { PrismicDocument } from "./types/value/document"
 
 import {
-	AssetAPIError,
+	APIError,
 	ForbiddenError,
-	MigrationAPIError,
+	InvalidDataError,
 	NotFoundError,
 } from "./errors"
 
@@ -630,7 +630,7 @@ export class WriteClient<
 		const res = await this.fetchFn(url, this._buildRequestInit(params))
 
 		if (!res.ok) {
-			throw new AssetAPIError("Could not fetch foreign asset", {
+			throw new APIError("Could not fetch foreign asset", {
 				response: res,
 			})
 		}
@@ -894,12 +894,12 @@ export class WriteClient<
 				throw new NotFoundError(json.error, { response })
 
 			case 400:
-				throw new AssetAPIError(json.error, { response })
+				throw new InvalidDataError(json.error, { response })
 
 			case 500:
 			case 503:
 			default:
-				throw new AssetAPIError(json.error, { response })
+				throw new APIError(json.error, { response })
 		}
 	}
 
@@ -922,7 +922,7 @@ export class WriteClient<
 
 		switch (response.status) {
 			case 400: {
-				throw new MigrationAPIError(message, { response })
+				throw new APIError(message, { response })
 			}
 
 			case 401: {
@@ -941,7 +941,7 @@ export class WriteClient<
 
 			case 500:
 			default: {
-				throw new MigrationAPIError(message, { response })
+				throw new APIError(message, { response })
 			}
 		}
 	}

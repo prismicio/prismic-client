@@ -2,8 +2,6 @@ import type { ResponseLike } from "./lib/request"
 
 export class PrismicError extends Error {}
 
-export class InvalidDataError extends PrismicError {}
-
 export class APIError extends PrismicError {
 	response?: ResponseLike
 	constructor(
@@ -22,19 +20,15 @@ export class APIError extends PrismicError {
 	}
 }
 
-export class ContentAPIError extends APIError {}
-export class ParsingError extends ContentAPIError {}
-export class ForbiddenError extends ContentAPIError {}
+export class InvalidDataError extends APIError {}
+export class ParsingError extends APIError {}
+export class ForbiddenError extends APIError {}
 
-export class RefExpiredError extends ContentAPIError {}
+export class RefExpiredError extends APIError {}
 export class PreviewTokenExpiredError extends RefExpiredError {}
 
-export class NotFoundError extends ContentAPIError {}
+export class NotFoundError extends APIError {}
 export class DocumentNotFoundError extends NotFoundError {}
 export class RepositoryNotFoundError extends NotFoundError {}
 export class RefNotFoundError extends NotFoundError {}
 export class ReleaseNotFoundError extends RefNotFoundError {}
-
-export class AssetAPIError extends APIError {}
-
-export class MigrationAPIError extends APIError {}

@@ -15,7 +15,7 @@ import type { Repository } from "./types/api/repository"
 import type { PrismicDocument } from "./types/value/document"
 
 import {
-	ContentAPIError,
+	APIError,
 	DocumentNotFoundError,
 	ForbiddenError,
 	NotFoundError,
@@ -1127,13 +1127,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	): Promise<ResponseLike> {
 		const url = await this.buildQueryURL(params)
 		const response = await this.#request(new URL(url), params)
-		if (response.ok) {
-			try {
-				return response
-			} catch (cause) {
-				throw new ContentAPIError("Invalid response.", { response, cause })
-			}
-		}
+		if (response.ok) return response
 
 		try {
 			return await this.#throwContentAPIError(response)
@@ -1219,7 +1213,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 				throw new RefExpiredError(json.message, { response })
 			}
 			default: {
-				throw new ContentAPIError("An unknown Content API error occured.", {
+				throw new APIError("An unknown Content API error occured.", {
 					response,
 				})
 			}
