@@ -17,7 +17,7 @@ import { filter } from "./filter"
 
 // Primary Client API.
 export { createClient } from "./createClient"
-export { Client } from "./Client2"
+export { Client } from "./Client"
 
 // Write Client API.
 export { createWriteClient } from "./createWriteClient"
@@ -51,7 +51,7 @@ export * as cookie from "./cookie"
 
 // General types used to query content from Prismic. These are made public to allow users to better type their projects.
 export type { CreateClient } from "./createClient"
-export type { ClientConfig, HttpRequestLike } from "./Client2"
+export type { ClientConfig, HttpRequestLike } from "./Client"
 export type { CreateWriteClient } from "./createWriteClient"
 export type { WriteClientConfig, MigrateReporterEvents } from "./WriteClient"
 export type {
