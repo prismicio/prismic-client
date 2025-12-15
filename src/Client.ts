@@ -81,7 +81,7 @@ export type HttpRequestLike =
 			query: Record<string, unknown>
 	  }
 
-type FetchParams = {
+export type FetchParams = {
 	fetchOptions?: RequestInitLike
 	/**
 	 * @deprecated Move the `signal` parameter into `fetchOptions.signal`:

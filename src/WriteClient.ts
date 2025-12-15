@@ -627,7 +627,7 @@ export class WriteClient<
 		url: string,
 		params: FetchParams = {},
 	): Promise<Blob> {
-		const res = await this.fetchFn(url, this._buildRequestInit(params))
+		const res = await this.#request(new URL(url), params)
 
 		if (!res.ok) {
 			throw new APIError("Could not fetch foreign asset", {
@@ -851,25 +851,27 @@ export class WriteClient<
 	 */
 	async #request(
 		url: URL,
-		params?: RequestInitLike,
+		params?: FetchParams,
 		init?: RequestInitLike,
 	): Promise<ResponseLike> {
-		const baseInit = this._buildRequestInit(params)
-
-		return await request(
-			url,
-			{
-				...baseInit,
-				...init,
-				headers: {
-					...baseInit.headers,
-					...init?.headers,
-					repository: this.repositoryName,
-					authorization: `Bearer ${this.writeToken}`,
-				},
+		const resolvedInit = {
+			...this.fetchOptions,
+			...params?.fetchOptions,
+			...init,
+			headers: {
+				...this.fetchOptions?.headers,
+				...params?.fetchOptions?.headers,
+				...init?.headers,
+				repository: this.repositoryName,
+				authorization: `Bearer ${this.writeToken}`,
 			},
-			this.fetchFn,
-		)
+			signal:
+				params?.fetchOptions?.signal ||
+				params?.signal ||
+				this.fetchOptions?.signal,
+		}
+
+		return await request(url, resolvedInit, this.fetch)
 	}
 
 	/**
