@@ -538,11 +538,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Enables the client to automatically query content from a preview session if
-	 * one is active in browser environments. This is enabled by default in the
-	 * browser.
-	 *
-	 * For server environments, use `enableAutoPreviewsFromReq`.
+	 * Enables the client to automatically query content from a preview session.
 	 *
 	 * @example
 	 *
@@ -550,30 +546,23 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * client.enableAutoPreviews()
 	 * ```
 	 *
-	 * @see enableAutoPreviewsFromReq
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#enableautopreviews}
 	 */
 	enableAutoPreviews(): void {
 		this.refState.autoPreviewsEnabled = true
 	}
 
 	/**
-	 * Enables the client to automatically query content from a preview session if
-	 * one is active in server environments. This is disabled by default on the
-	 * server.
-	 *
-	 * For browser environments, use `enableAutoPreviews`.
+	 * Enables the client to automatically query content from a preview session
+	 * using an HTTP request object.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * // In an express app
-	 * app.get("/", function (req, res) {
-	 * 	client.enableAutoPreviewsFromReq(req)
-	 * })
+	 * client.enableAutoPreviewsFromReq(req)
 	 * ```
 	 *
-	 * @param req - An HTTP server request object containing the request's
-	 *   cookies.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#enableautopreviewsfromreq}
 	 */
 	enableAutoPreviewsFromReq<R extends HttpRequestLike>(req: R): void {
 		this.refState.httpRequest = req
@@ -582,35 +571,30 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 	/**
 	 * Disables the client from automatically querying content from a preview
-	 * session if one is active.
-	 *
-	 * Automatic preview content querying is enabled by default unless this method
-	 * is called.
+	 * session.
 	 *
 	 * @example
 	 *
 	 * ```ts
 	 * client.disableAutoPreviews()
 	 * ```
+	 *
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#disableautopreviews}
 	 */
 	disableAutoPreviews(): void {
 		this.refState.autoPreviewsEnabled = false
 	}
 
 	/**
-	 * Queries content from the Prismic repository.
+	 * Fetches pages based on the `params` argument. Results are paginated.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * const response = await client.get()
+	 * const response = await client.get({ pageSize: 10 })
 	 * ```
 	 *
-	 * @typeParam TDocument - Type of Prismic documents returned.
-	 *
-	 * @param params - Parameters to filter, sort, and paginate results.
-	 *
-	 * @returns A paginated response containing the result of the query.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#get}
 	 */
 	async get<TDocument extends TDocuments>(
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
@@ -621,20 +605,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Queries content from the Prismic repository and returns only the first
-	 * result, if any.
+	 * Fetches the first page returned based on the `params` argument.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * const document = await client.getFirst()
+	 * const page = await client.getFirst()
 	 * ```
 	 *
-	 * @typeParam TDocument - Type of the Prismic document returned.
-	 *
-	 * @param params - Parameters to filter, sort, and paginate results.
-	 *
-	 * @returns The first result of the query, if any.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getfirst}
 	 */
 	async getFirst<TDocument extends TDocuments>(
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
@@ -655,27 +634,16 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * **IMPORTANT**: Avoid using `dangerouslyGetAll` as it may be slower and
-	 * require more resources than other methods. Prefer using other methods that
-	 * filter by filters such as `getAllByType`.
-	 *
-	 * Queries content from the Prismic repository and returns all matching
-	 * content. If no filters are provided, all documents will be fetched.
-	 *
-	 * This method may make multiple network requests to query all matching
-	 * content.
+	 * Fetches all pages based on the `params` argument. This method may make
+	 * multiple network requests to fetch all matching pages.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * const response = await client.dangerouslyGetAll()
+	 * const pages = await client.dangerouslyGetAll()
 	 * ```
 	 *
-	 * @typeParam TDocument - Type of Prismic documents returned.
-	 *
-	 * @param params - Parameters to filter, sort, and paginate results.
-	 *
-	 * @returns A list of documents matching the query.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#dangerouslygetall}
 	 */
 	async dangerouslyGetAll<TDocument extends TDocuments>(
 		params: Partial<Omit<BuildQueryURLArgs, "page">> &
@@ -712,27 +680,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Queries a document from the Prismic repository with a specific ID.
-	 *
-	 * @remarks
-	 * A document's UID is different from its ID. An ID is automatically generated
-	 * for all documents and is made available on its `id` property. A UID is
-	 * provided in the Prismic editor and is unique among all documents of its
-	 * custom type.
+	 * Fetches a page with a specific ID.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * const document = await client.getByID("WW4bKScAAMAqmluX")
+	 * const page = await client.getByID("WW4bKScAAMAqmluX")
 	 * ```
 	 *
-	 * @typeParam TDocument- Type of the Prismic document returned.
-	 *
-	 * @param id - ID of the document.
-	 * @param params - Parameters to filter, sort, and paginate the results.
-	 *
-	 * @returns The document with an ID matching the `id` parameter, if a matching
-	 *   document exists.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getbyid}
 	 */
 	async getByID<TDocument extends TDocuments>(
 		id: string,
@@ -744,13 +700,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Queries documents from the Prismic repository with specific IDs.
-	 *
-	 * @remarks
-	 * A document's UID is different from its ID. An ID is automatically generated
-	 * for all documents and is made available on its `id` property. A UID is
-	 * provided in the Prismic editor and is unique among all documents of its
-	 * custom type.
+	 * Fetches pages with specific IDs. Results are paginated.
 	 *
 	 * @example
 	 *
@@ -761,13 +711,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ])
 	 * ```
 	 *
-	 * @typeParam TDocument - Type of Prismic documents returned.
-	 *
-	 * @param ids - A list of document IDs.
-	 * @param params - Parameters to filter, sort, and paginate the results.
-	 *
-	 * @returns A paginated response containing documents with IDs matching the
-	 *   `ids` parameter.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getbyids}
 	 */
 	async getByIDs<TDocument extends TDocuments>(
 		ids: string[],
@@ -779,32 +723,19 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Queries all documents from the Prismic repository with specific IDs.
-	 *
-	 * This method may make multiple network requests to query all matching
-	 * content.
-	 *
-	 * @remarks
-	 * A document's UID is different from its ID. An ID is automatically generated
-	 * for all documents and is made available on its `id` property. A UID is
-	 * provided in the Prismic editor and is unique among all documents of its
-	 * custom type.
+	 * Fetches pages with specific IDs. This method may make multiple network
+	 * requests to fetch all matching pages.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * const response = await client.getAllByIDs([
+	 * const pages = await client.getAllByIDs([
 	 * 	"WW4bKScAAMAqmluX",
 	 * 	"U1kTRgEAAC8A5ldS",
 	 * ])
 	 * ```
 	 *
-	 * @typeParam TDocument - Type of Prismic documents returned.
-	 *
-	 * @param ids - A list of document IDs.
-	 * @param params - Parameters to filter, sort, and paginate the results.
-	 *
-	 * @returns A list of documents with IDs matching the `ids` parameter.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getallbyids}
 	 */
 	async getAllByIDs<TDocument extends TDocuments>(
 		ids: string[],
@@ -818,29 +749,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Queries a document from the Prismic repository with a specific UID and
-	 * custom type.
-	 *
-	 * @remarks
-	 * A document's UID is different from its ID. An ID is automatically generated
-	 * for all documents and is made available on its `id` property. A UID is
-	 * provided in the Prismic editor and is unique among all documents of its
-	 * custom type.
+	 * Fetches a page with a specific UID and type.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * const document = await client.getByUID("blog_post", "my-first-post")
+	 * const page = await client.getByUID("blog_post", "my-first-post")
 	 * ```
 	 *
-	 * @typeParam TDocument - Type of the Prismic document returned.
-	 *
-	 * @param documentType - The API ID of the document's custom type.
-	 * @param uid - UID of the document.
-	 * @param params - Parameters to filter, sort, and paginate the results.
-	 *
-	 * @returns The document with a UID matching the `uid` parameter, if a
-	 *   matching document exists.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getbyuid}
 	 */
 	async getByUID<
 		TDocument extends TDocuments,
@@ -859,32 +776,19 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Queries document from the Prismic repository with specific UIDs and Custom
-	 * Type.
-	 *
-	 * @remarks
-	 * A document's UID is different from its ID. An ID is automatically generated
-	 * for all documents and is made available on its `id` property. A UID is
-	 * provided in the Prismic editor and is unique among all documents of its
-	 * custom type.
+	 * Fetches pages with specific UIDs and a specific type. Results are
+	 * paginated.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * const document = await client.getByUIDs("blog_post", [
+	 * const response = await client.getByUIDs("blog_post", [
 	 * 	"my-first-post",
 	 * 	"my-second-post",
 	 * ])
 	 * ```
 	 *
-	 * @typeParam TDocument - Type of the Prismic document returned.
-	 *
-	 * @param documentType - The API ID of the document's custom type.
-	 * @param uids - A list of document UIDs.
-	 * @param params - Parameters to filter, sort, and paginate the results.
-	 *
-	 * @returns A paginated response containing documents with UIDs matching the
-	 *   `uids` parameter.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getbyuids}
 	 */
 	async getByUIDs<
 		TDocument extends TDocuments,
@@ -903,34 +807,19 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Queries all documents from the Prismic repository with specific UIDs and
-	 * custom type.
-	 *
-	 * This method may make multiple network requests to query all matching
-	 * content.
-	 *
-	 * @remarks
-	 * A document's UID is different from its ID. An ID is automatically generated
-	 * for all documents and is made available on its `id` property. A UID is
-	 * provided in the Prismic editor and is unique among all documents of its
-	 * custom type.
+	 * Fetches pages with specific UIDs and a specific type. This method may make
+	 * multiple network requests to fetch all matching pages.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * const response = await client.getAllByUIDs([
+	 * const pages = await client.getAllByUIDs("blog_post", [
 	 * 	"my-first-post",
 	 * 	"my-second-post",
 	 * ])
 	 * ```
 	 *
-	 * @typeParam TDocument - Type of Prismic documents returned.
-	 *
-	 * @param documentType - The API ID of the document's custom type.
-	 * @param uids - A list of document UIDs.
-	 * @param params - Parameters to filter, sort, and paginate the results.
-	 *
-	 * @returns A list of documents with UIDs matching the `uids` parameter.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getallbyuids}
 	 */
 	async getAllByUIDs<
 		TDocument extends TDocuments,
@@ -953,28 +842,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Queries a singleton document from the Prismic repository for a specific
-	 * custom type.
-	 *
-	 * @remarks
-	 * A singleton document is one that is configured in Prismic to only allow one
-	 * instance. For example, a repository may be configured to contain just one
-	 * Settings document. This is in contrast to a repeatable custom type which
-	 * allows multiple instances of itself.
+	 * Fetches a specific single type page.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * const document = await client.getSingle("settings")
+	 * const page = await client.getSingle("settings")
 	 * ```
 	 *
-	 * @typeParam TDocument - Type of the Prismic document returned.
-	 *
-	 * @param documentType - The API ID of the singleton custom type.
-	 * @param params - Parameters to filter, sort, and paginate the results.
-	 *
-	 * @returns The singleton document for the custom type, if a matching document
-	 *   exists.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getsingle}
 	 */
 	async getSingle<
 		TDocument extends TDocuments,
@@ -989,10 +865,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Queries documents from the Prismic repository for a specific custom type.
-	 *
-	 * Use `getAllByType` instead if you need to query all documents for a
-	 * specific custom type.
+	 * Fetches pages with a specific type. Results are paginated.
 	 *
 	 * @example
 	 *
@@ -1000,12 +873,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * const response = await client.getByType("blog_post")
 	 * ```
 	 *
-	 * @typeParam TDocument - Type of Prismic documents returned.
-	 *
-	 * @param documentType - The API ID of the custom type.
-	 * @param params - Parameters to filter, sort, and paginate the results.
-	 *
-	 * @returns A paginated response containing documents of the custom type.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getbytype}
 	 */
 	async getByType<
 		TDocument extends TDocuments,
@@ -1020,24 +888,16 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Queries all documents from the Prismic repository for a specific Custom
-	 * Type.
-	 *
-	 * This method may make multiple network requests to query all matching
-	 * content.
+	 * Fetches pages with a specific type. This method may make multiple network
+	 * requests to fetch all matching documents.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * const response = await client.getByType("blog_post")
+	 * const pages = await client.getAllByType("blog_post")
 	 * ```
 	 *
-	 * @typeParam TDocument - Type of Prismic documents returned.
-	 *
-	 * @param documentType - The API ID of the custom type.
-	 * @param params - Parameters to filter, sort, and paginate the results.
-	 *
-	 * @returns A list of all documents of the custom type.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getallbytype}
 	 */
 	async getAllByType<
 		TDocument extends TDocuments,
@@ -1054,23 +914,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Queries documents from the Prismic repository with a specific tag.
-	 *
-	 * Use `getAllByTag` instead if you need to query all documents with a
-	 * specific tag.
+	 * Fetches pages with a specific tag. Results are paginated.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * const response = await client.getByTag("food")
+	 * const response = await client.getByTag("featured")
 	 * ```
 	 *
-	 * @typeParam TDocument - Type of Prismic documents returned.
-	 *
-	 * @param tag - The tag that must be included on a document.
-	 * @param params - Parameters to filter, sort, and paginate the results.
-	 *
-	 * @returns A paginated response containing documents with the tag.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getbytag}
 	 */
 	async getByTag<TDocument extends TDocuments>(
 		tag: string,
@@ -1080,23 +932,16 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Queries all documents from the Prismic repository with a specific tag.
-	 *
-	 * This method may make multiple network requests to query all matching
-	 * content.
+	 * Fetches pages with a specific tag. This method may make multiple network
+	 * requests to fetch all matching documents.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * const response = await client.getAllByTag("food")
+	 * const pages = await client.getAllByTag("featured")
 	 * ```
 	 *
-	 * @typeParam TDocument - Type of Prismic documents returned.
-	 *
-	 * @param tag - The tag that must be included on a document.
-	 * @param params - Parameters to filter, sort, and paginate the results.
-	 *
-	 * @returns A list of all documents with the tag.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getallbytag}
 	 */
 	async getAllByTag<TDocument extends TDocuments>(
 		tag: string,
@@ -1110,21 +955,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Queries documents from the Prismic repository with specific tags. A
-	 * document must be tagged with all of the queried tags to be included.
+	 * Fetches pages with every tag from a list of tags. Results are paginated.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * const response = await client.getByEveryTag(["food", "fruit"])
+	 * const response = await client.getByEveryTag(["featured", "homepage"])
 	 * ```
 	 *
-	 * @typeParam TDocument - Type of Prismic documents returned.
-	 *
-	 * @param tags - A list of tags that must be included on a document.
-	 * @param params - Parameters to filter, sort, and paginate the results.
-	 *
-	 * @returns A paginated response containing documents with the tags.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getbyeverytag}
 	 */
 	async getByEveryTag<TDocument extends TDocuments>(
 		tags: string[],
@@ -1136,24 +975,16 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Queries documents from the Prismic repository with specific tags. A
-	 * document must be tagged with all of the queried tags to be included.
-	 *
-	 * This method may make multiple network requests to query all matching
-	 * content.
+	 * Fetches pages with every tag from a list of tags. This method may make
+	 * multiple network requests to fetch all matching pages.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * const response = await client.getAllByEveryTag(["food", "fruit"])
+	 * const pages = await client.getAllByEveryTag(["featured", "homepage"])
 	 * ```
 	 *
-	 * @typeParam TDocument - Type of Prismic documents returned.
-	 *
-	 * @param tags - A list of tags that must be included on a document.
-	 * @param params - Parameters to filter, sort, and paginate the results.
-	 *
-	 * @returns A list of all documents with the tags.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getallbyeverytag}
 	 */
 	async getAllByEveryTag<TDocument extends TDocuments>(
 		tags: string[],
@@ -1167,23 +998,16 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Queries documents from the Prismic repository with specific tags. A
-	 * document must be tagged with at least one of the queried tags to be
-	 * included.
+	 * Fetches pages with at least one tag from a list of tags. Results are
+	 * paginated.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * const response = await client.getByEveryTag(["food", "fruit"])
+	 * const response = await client.getBySomeTags(["featured", "homepage"])
 	 * ```
 	 *
-	 * @typeParam TDocument - Type of Prismic documents returned.
-	 *
-	 * @param tags - A list of tags that must be included on a document.
-	 * @param params - Parameters to filter, sort, and paginate the results.
-	 *
-	 * @returns A paginated response containing documents with at least one of the
-	 *   tags.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getbysometags}
 	 */
 	async getBySomeTags<TDocument extends TDocuments>(
 		tags: string[],
@@ -1195,25 +1019,16 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Queries documents from the Prismic repository with specific tags. A
-	 * document must be tagged with at least one of the queried tags to be
-	 * included.
-	 *
-	 * This method may make multiple network requests to query all matching
-	 * content.
+	 * Fetches pages with at least one tag from a list of tags. This method may
+	 * make multiple network requests to fetch all matching documents.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * const response = await client.getAllBySomeTags(["food", "fruit"])
+	 * const pages = await client.getAllBySomeTags(["featured", "homepage"])
 	 * ```
 	 *
-	 * @typeParam TDocument - Type of Prismic documents returned.
-	 *
-	 * @param tags - A list of tags that must be included on a document.
-	 * @param params - Parameters to filter, sort, and paginate the results.
-	 *
-	 * @returns A list of all documents with at least one of the tags.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getallbysometags}
 	 */
 	async getAllBySomeTags<TDocument extends TDocuments>(
 		tags: string[],
@@ -1227,10 +1042,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Returns metadata about the Prismic repository, such as its refs, releases,
-	 * and custom types.
+	 * Fetches metadata about the client's Prismic repository.
 	 *
-	 * @returns Repository metadata.
+	 * @example
+	 *
+	 * ```ts
+	 * const repository = await client.getRepository()
+	 * ```
+	 *
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getrepository}
 	 */
 	async getRepository(
 		params?: Pick<BuildQueryURLArgs, "accessToken"> & FetchParams,
@@ -1265,13 +1085,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Returns a list of all refs for the Prismic repository.
+	 * Fetches the repository's active refs.
 	 *
-	 * Refs are used to identify which version of the repository's content should
-	 * be queried. All repositories will have at least one ref pointing to the
-	 * latest published content called the "master ref".
+	 * @example
 	 *
-	 * @returns A list of all refs for the Prismic repository.
+	 * ```ts
+	 * const refs = await client.getRefs()
+	 * ```
+	 *
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getrefs}
 	 */
 	async getRefs(params?: FetchParams): Promise<Ref[]> {
 		const repository = await this.getRepository(params)
@@ -1280,11 +1102,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Returns a ref for the Prismic repository with a matching ID.
+	 * Fetches a ref by its ID.
 	 *
-	 * @param id - ID of the ref.
+	 * @example
 	 *
-	 * @returns The ref with a matching ID, if it exists.
+	 * ```ts
+	 * const ref = await client.getRefByID("YhE3YhEAACIA4321")
+	 * ```
+	 *
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getrefbyid}
 	 */
 	async getRefByID(id: string, params?: FetchParams): Promise<Ref> {
 		const refs = await this.getRefs(params)
@@ -1293,11 +1119,16 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Returns a ref for the Prismic repository with a matching label.
+	 * Fetches a ref by its label. A release ref's label is its name shown in the
+	 * Page Builder.
 	 *
-	 * @param label - Label of the ref.
+	 * @example
 	 *
-	 * @returns The ref with a matching label, if it exists.
+	 * ```ts
+	 * const ref = await client.getRefByLabel("My Release")
+	 * ```
+	 *
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getrefbylabel}
 	 */
 	async getRefByLabel(label: string, params?: FetchParams): Promise<Ref> {
 		const refs = await this.getRefs(params)
@@ -1306,10 +1137,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Returns the master ref for the Prismic repository. The master ref points to
-	 * the repository's latest published content.
+	 * Fetches the repository's master ref.
 	 *
-	 * @returns The repository's master ref.
+	 * @example
+	 *
+	 * ```ts
+	 * const masterRef = await client.getMasterRef()
+	 * ```
+	 *
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getmasterref}
 	 */
 	async getMasterRef(params?: FetchParams): Promise<Ref> {
 		const refs = await this.getRefs(params)
@@ -1318,10 +1154,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Returns a list of all Releases for the Prismic repository. Releases are
-	 * used to group content changes before publishing.
+	 * Fetches the repository's active releases.
 	 *
-	 * @returns A list of all Releases for the Prismic repository.
+	 * @example
+	 *
+	 * ```ts
+	 * const releases = await client.getReleases()
+	 * ```
+	 *
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getreleases}
 	 */
 	async getReleases(params?: FetchParams): Promise<Ref[]> {
 		const refs = await this.getRefs(params)
@@ -1330,11 +1171,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Returns a Release for the Prismic repository with a matching ID.
+	 * Fetches a release with a specific ID.
 	 *
-	 * @param id - ID of the Release.
+	 * @example
 	 *
-	 * @returns The Release with a matching ID, if it exists.
+	 * ```ts
+	 * const release = await client.getReleaseByID("YhE3YhEAACIA4321")
+	 * ```
+	 *
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getreleasebyid}
 	 */
 	async getReleaseByID(id: string, params?: FetchParams): Promise<Ref> {
 		const releases = await this.getReleases(params)
@@ -1343,11 +1188,16 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Returns a Release for the Prismic repository with a matching label.
+	 * Fetches a release by its label. A release ref's label is its name shown in
+	 * the Page Builder.
 	 *
-	 * @param label - Label of the ref.
+	 * @example
 	 *
-	 * @returns The ref with a matching label, if it exists.
+	 * ```ts
+	 * const release = await client.getReleaseByLabel("My Release")
+	 * ```
+	 *
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getreleasebylabel}
 	 */
 	async getReleaseByLabel(label: string, params?: FetchParams): Promise<Ref> {
 		const releases = await this.getReleases(params)
@@ -1356,9 +1206,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Returns a list of all tags used in the Prismic repository.
+	 * Fetches the repository's page tags.
 	 *
-	 * @returns A list of all tags used in the repository.
+	 * @example
+	 *
+	 * ```ts
+	 * const tags = await client.getTags()
+	 * ```
+	 *
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#gettags}
 	 */
 	async getTags(params?: FetchParams): Promise<string[]> {
 		const cachedRepository = await this.getCachedRepository(params)
@@ -1381,11 +1237,17 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Builds a URL used to query content from the Prismic repository.
+	 * Builds a Content API query URL with a set of parameters.
 	 *
-	 * @param params - Parameters to filter, sort, and paginate the results.
+	 * @example
 	 *
-	 * @returns A URL string that can be requested to query content.
+	 * ```ts
+	 * const url = await client.buildQueryURL({
+	 * 	filters: [filter.at("document.type", "blog_post")],
+	 * })
+	 * ```
+	 *
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#buildqueryurl}
 	 */
 	async buildQueryURL({
 		signal,
@@ -1422,23 +1284,18 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Determines the URL for a previewed document during an active preview
-	 * session. The result of this method should be used to redirect the user to
-	 * the document's URL.
+	 * Fetches a previewed page's URL using a preview token and page ID.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * 	const url = client.resolvePreviewURL({
-	 * 	linkResolver: (document) => `/${document.uid}`
-	 * 	defaultURL: '/'
-	 * 	})
+	 * const url = await client.resolvePreviewURL({
+	 * 	linkResolver,
+	 * 	defaultURL: "/",
+	 * })
 	 * ```
 	 *
-	 * @param args - Arguments to configure the URL resolving.
-	 *
-	 * @returns The URL for the previewed document during an active preview
-	 *   session. The user should be redirected to this URL.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#resolvepreviewurl}
 	 */
 	async resolvePreviewURL<LinkResolverReturnType>(
 		args: ResolvePreviewArgs<LinkResolverReturnType> & FetchParams,
@@ -1495,38 +1352,31 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Configures the client to query the latest published content for all future
-	 * queries.
-	 *
-	 * If the `ref` parameter is provided during a query, it takes priority for
-	 * that query.
+	 * Configures the client to query the latest published content. This is the
+	 * client's default mode.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * await client.queryLatestContent()
-	 * const document = await client.getByID("WW4bKScAAMAqmluX")
+	 * client.queryLatestContent()
 	 * ```
+	 *
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#querylatestcontent}
 	 */
 	queryLatestContent(): void {
 		this.refState.mode = RefStateMode.Master
 	}
 
 	/**
-	 * Configures the client to query content from a specific Release identified
-	 * by its ID for all future queries.
-	 *
-	 * If the `ref` parameter is provided during a query, it takes priority for
-	 * that query.
+	 * Configures the client to query content from a release with a specific ID.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * await client.queryContentFromReleaseByID("YLB7OBAAACMA7Cpa")
-	 * const document = await client.getByID("WW4bKScAAMAqmluX")
+	 * client.queryContentFromReleaseByID("YhE3YhEAACIA4321")
 	 * ```
 	 *
-	 * @param releaseID - The ID of the Release.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#querycontentfromreleasebyid}
 	 */
 	queryContentFromReleaseByID(releaseID: string): void {
 		this.refState = {
@@ -1537,20 +1387,16 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Configures the client to query content from a specific Release identified
-	 * by its label for all future queries.
-	 *
-	 * If the `ref` parameter is provided during a query, it takes priority for
-	 * that query.
+	 * Configures the client to query content from a release with a specific
+	 * label.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * await client.queryContentFromReleaseByLabel("My Release")
-	 * const document = await client.getByID("WW4bKScAAMAqmluX")
+	 * client.queryContentFromReleaseByLabel("My Release")
 	 * ```
 	 *
-	 * @param releaseLabel - The label of the Release.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#querycontentfromreleasebylabel}
 	 */
 	queryContentFromReleaseByLabel(releaseLabel: string): void {
 		this.refState = {
@@ -1561,21 +1407,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * Configures the client to query content from a specific ref. The ref can be
-	 * provided as a string or a function.
-	 *
-	 * If a function is provided, the ref is fetched lazily before each query. The
-	 * function may also be asynchronous.
+	 * Configures the client to query content from a specific ref.
 	 *
 	 * @example
 	 *
 	 * ```ts
-	 * await client.queryContentFromRef("my-ref")
-	 * const document = await client.getByID("WW4bKScAAMAqmluX")
+	 * client.queryContentFromRef("my-ref")
 	 * ```
 	 *
-	 * @param ref - The ref or a function that returns the ref from which to query
-	 *   content.
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#querycontentfromref}
 	 */
 	queryContentFromRef(ref: RefStringOrThunk): void {
 		this.refState = {
@@ -1586,17 +1426,18 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}
 
 	/**
-	 * A `fetch()` function to be used with GraphQL clients configured for
-	 * Prismic's GraphQL API. It automatically applies the necessary `prismic-ref`
-	 * and Authorization headers. Queries will automatically be minified by
-	 * removing whitespace where possible.
+	 * A preconfigured `fetch()` function for Prismic's GraphQL API that can be
+	 * provided to GraphQL clients.
 	 *
 	 * @example
 	 *
 	 * ```ts
+	 * import { createClient, getGraphQLEndpoint } from "@prismicio/client"
+	 *
+	 * const client = createClient("example-prismic-repo")
 	 * const graphQLClient = new ApolloClient({
 	 * 	link: new HttpLink({
-	 * 		uri: prismic.getGraphQLEndpoint(repositoryName),
+	 * 		uri: getGraphQLEndpoint(client.repositoryName),
 	 * 		// Provide `client.graphQLFetch` as the fetch implementation.
 	 * 		fetch: client.graphQLFetch,
 	 * 		// Using GET is required.
@@ -1606,13 +1447,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * })
 	 * ```
 	 *
-	 * @param input - The `fetch()` `input` parameter. Only strings are supported.
-	 * @param init - The `fetch()` `init` parameter. Only plain objects are
-	 *   supported.
-	 *
-	 * @returns The `fetch()` Response for the request.
-	 *
-	 * @experimental
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#graphqlfetch}
 	 */
 	async graphQLFetch(
 		input: RequestInfo,
