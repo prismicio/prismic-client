@@ -8,7 +8,7 @@ Learn more about migrating to Prismic on the [migration documentation](https://p
 
 ## How to run the example
 
-> Scripts in this example uses an hypothetical WordPress client, therefore, they are not runnable as-is.
+> Scripts in this example use an hypothetical live WordPress API, therefore, they are not runnable as-is.
 
 ```sh
 # Clone the repository to your computer
