@@ -35,5 +35,5 @@ it("shares concurrent equivalent network requests", async ({
 		client.getRefByID(release.id, { signal: controller2.signal }),
 	])
 	await client.getRefByID(release.id)
-	expect(client).toHaveFetchedRepoTimes(4)
+	expect(client).toHaveFetchedRepoTimes(3)
 })

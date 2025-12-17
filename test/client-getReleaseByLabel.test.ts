@@ -42,5 +42,5 @@ it("shares concurrent equivalent network requests", async ({
 		client.getReleaseByLabel(release.label, { signal: controller2.signal }),
 	])
 	await client.getReleaseByLabel(release.label)
-	expect(client).toHaveFetchedRepoTimes(4)
+	expect(client).toHaveFetchedRepoTimes(3)
 })
