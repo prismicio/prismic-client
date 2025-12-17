@@ -18,9 +18,6 @@ cd prismic-client/examples/migrate
 # Install the dependencies
 npm install
 
-# Run the example (TypeScript)
+# Run the example
 npx tsx migrate.ts
-
-# Run the example (JavaScript)
-node migrate.mjs
 ```
