@@ -637,9 +637,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		const response = await this.#internalGet(actualParams)
 		const { results }: Query<TDocument> = await response.clone().json()
 
-		if (results[0]) return results[0]
+		if (results[0]) {
+			return results[0]
+		}
 
-		throw new NotFoundError("No documents were returned", response.url, undefined)
+		throw new NotFoundError(
+			"No documents were returned",
+			response.url,
+			undefined,
+		)
 	}
 
 	/**
@@ -1753,7 +1759,9 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		const url = await this.buildQueryURL(params)
 		const response = await this.#request(new URL(url), params)
 
-		if (response.ok) return response
+		if (response.ok) {
+			return response
+		}
 
 		try {
 			return await this.#throwContentAPIError(response, url)
@@ -1773,7 +1781,9 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 				const masterRef = error.message.match(/master ref is: (?<ref>.*)$/i)
 					?.groups?.ref
-				if (!masterRef) throw error
+				if (!masterRef) {
+					throw error
+				}
 
 				const badRef = new URL(url).searchParams.get("ref")
 				const issue = error instanceof RefNotFoundError ? "invalid" : "expired"
