@@ -8,7 +8,7 @@ Learn more about migrating to Prismic on the [migration documentation](https://p
 
 ## How to run the example
 
-> Scripts in this example uses an hypothetical WordPress client, therefore, they are not runnable as-is.
+> The WordPress API endpoint used in the example script is not real. Therefore, the script is not runnable as is.
 
 ```sh
 # Clone the repository to your computer
@@ -18,9 +18,6 @@ cd prismic-client/examples/migrate
 # Install the dependencies
 npm install
 
-# Run the example (TypeScript)
+# Run the example
 npx tsx migrate.ts
-
-# Run the example (JavaScript)
-node migrate.mjs
 ```

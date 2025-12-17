@@ -2,10 +2,12 @@
 	"type": "module",
 	"dependencies": {
 		"@prismicio/client": "latest",
-		"@prismicio/migrate": "latest"
+		"@prismicio/migrate": "latest",
+		"@wordpress/api-fetch": "^7.36.0"
 	},
 	"devDependencies": {
-		"tsx": "^4.19.1",
-		"typescript": "^5.6.2"
+		"tsx": "^4.21.0",
+		"typescript": "^5.9.3",
+		"wp-types": "^4.69.0"
 	}
 }
