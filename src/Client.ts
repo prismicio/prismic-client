@@ -360,15 +360,8 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	#autoPreviews = true
 	#autoPreviewsRequest?: HttpRequestLike
 
-	/**
-	 * Cached repository value.
-	 */
-	private cachedRepository: Repository | undefined
-
-	/**
-	 * Timestamp at which the cached repository data is considered stale.
-	 */
-	private cachedRepositoryExpiration = 0
+	#cachedRepository: Repository | undefined
+	#cachedRepositoryExpiration = 0
 
 	/**
 	 * Creates a Prismic client that can be used to query a repository.
@@ -1172,6 +1165,13 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	async getRepository(
 		params?: Pick<BuildQueryURLArgs, "accessToken"> & FetchParams,
 	): Promise<Repository> {
+		if (
+			this.#cachedRepository &&
+			this.#cachedRepositoryExpiration > Date.now()
+		) {
+			return this.#cachedRepository
+		}
+
 		const url = new URL(this.documentAPIEndpoint)
 
 		const accessToken = params?.accessToken || this.accessToken
@@ -1182,7 +1182,10 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		const response = await this.#request(url, params)
 		switch (response.status) {
 			case 200: {
-				return (await response.json()) as Repository
+				this.#cachedRepository = (await response.json()) as Repository
+				this.#cachedRepositoryExpiration = Date.now() + REPOSITORY_CACHE_TTL
+
+				return this.#cachedRepository
 			}
 			case 401: {
 				const json = await response.json()
@@ -1298,8 +1301,8 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * @returns A list of all tags used in the repository.
 	 */
 	async getTags(params?: FetchParams): Promise<string[]> {
-		const cachedRepository = await this.getCachedRepository(params)
-		const form = cachedRepository.forms.tags
+		const repository = await this.getRepository(params)
+		const form = repository.forms.tags
 		if (form) {
 			const url = new URL(form.action)
 			if (this.accessToken) {
@@ -1311,8 +1314,6 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 				return (await response.json()) as string[]
 			}
 		}
-
-		const repository = await this.getRepository(params)
 
 		return repository.tags
 	}
@@ -1339,7 +1340,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		const integrationFieldsRef =
 			params.integrationFieldsRef ||
 			(
-				await this.getCachedRepository({
+				await this.getRepository({
 					accessToken: params.accessToken,
 					signal,
 					fetchOptions,
@@ -1549,7 +1550,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		input: RequestInfo,
 		init?: Omit<RequestInit, "signal"> & { signal?: AbortSignalLike },
 	): Promise<Response> {
-		const cachedRepository = await this.getCachedRepository()
+		const repository = await this.getRepository()
 		const ref = await this.#getResolvedRef()
 
 		const unsanitizedHeaders: Record<string, string> = {
@@ -1561,9 +1562,9 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			...(init ? (init.headers as Record<string, string>) : {}),
 		}
 
-		if (cachedRepository.integrationFieldsRef) {
+		if (repository.integrationFieldsRef) {
 			unsanitizedHeaders["Prismic-integration-field-ref"] =
-				cachedRepository.integrationFieldsRef
+				repository.integrationFieldsRef
 		}
 
 		// Normalize header keys to lowercase. This prevents header
@@ -1611,25 +1612,6 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			...init,
 			headers,
 		})) as Response
-	}
-
-	/**
-	 * Returns a cached version of `getRepository` with a TTL.
-	 *
-	 * @returns Cached repository metadata.
-	 */
-	private async getCachedRepository(
-		params?: Pick<BuildQueryURLArgs, "accessToken"> & FetchParams,
-	): Promise<Repository> {
-		if (
-			!this.cachedRepository ||
-			Date.now() >= this.cachedRepositoryExpiration
-		) {
-			this.cachedRepository = await this.getRepository(params)
-			this.cachedRepositoryExpiration = Date.now() + REPOSITORY_CACHE_TTL
-		}
-
-		return this.cachedRepository
 	}
 
 	/**
@@ -1757,10 +1739,10 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			// Clearing the cached value prevents other methods from
 			// using a known-stale ref.
 			if (!params?.ref) {
-				this.cachedRepository = undefined
+				this.#cachedRepository = undefined
 			}
 
-			const masterRef = error.message.match(/Master ref is: (?<ref>.*)$/)
+			const masterRef = error.message.match(/master ref is: (?<ref>.*)$/i)
 				?.groups?.ref
 			if (!masterRef) {
 				throw error
