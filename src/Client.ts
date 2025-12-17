@@ -1647,11 +1647,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 					: this.#autoPreviewsRequest.headers.cookie
 				: globalThis.document?.cookie
 			const previewRef = getPreviewCookie(cookies ?? "")
-			if (previewRef) return previewRef
+			if (previewRef) {
+				return previewRef
+			}
 		}
 
 		const ref = await this.#getRef?.(params)
-		if (ref) return ref
+		if (ref) {
+			return ref
+		}
 
 		const masterRef = await this.getMasterRef(params)
 		return masterRef.ref
