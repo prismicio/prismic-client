@@ -1,5 +1,4 @@
 import { appendFilters } from "./lib/appendFilters"
-import { castThunk } from "./lib/castThunk"
 import { devMsg } from "./lib/devMsg"
 import { everyTagFilter } from "./lib/everyTagFilter"
 import { findMasterRef } from "./lib/findMasterRef"
@@ -89,31 +88,6 @@ type ExtractDocumentType<
 		: Extract<TDocuments, { type: TDocumentType }>
 
 /**
- * Modes for client ref management.
- */
-enum RefStateMode {
-	/**
-	 * Use the repository's master ref.
-	 */
-	Master = "Master",
-
-	/**
-	 * Use a given Release identified by its ID.
-	 */
-	ReleaseID = "ReleaseID",
-
-	/**
-	 * Use a given Release identified by its label.
-	 */
-	ReleaseLabel = "ReleaseLabel",
-
-	/**
-	 * Use a given ref.
-	 */
-	Manual = "Manual",
-}
-
-/**
  * The minimum required properties to treat as an HTTP Request for automatic
  * Prismic preview support.
  */
@@ -141,45 +115,12 @@ export type HttpRequestLike =
 	  }
 
 /**
- * An object containing stateful information about a client's ref strategy.
+ * A function that returns a ref string. Used to configure which ref the client
+ * queries content from.
  */
-type RefState = {
-	/**
-	 * Determines if automatic preview support is enabled.
-	 */
-	autoPreviewsEnabled: boolean
-
-	/**
-	 * An optional HTTP server request object used during previews if automatic
-	 * previews are enabled.
-	 */
-	httpRequest?: HttpRequestLike
-} & (
-	| {
-			mode: RefStateMode.Master
-	  }
-	| {
-			mode: RefStateMode.ReleaseID
-			releaseID: string
-	  }
-	| {
-			mode: RefStateMode.ReleaseLabel
-			releaseLabel: string
-	  }
-	| {
-			mode: RefStateMode.Manual
-			ref: RefStringOrThunk
-	  }
-)
-
-/**
- * A ref or a function that returns a ref. If a static ref is known, one can be
- * given. If the ref must be fetched on-demand, a function can be provided. This
- * function can optionally be asynchronous.
- */
-type RefStringOrThunk =
-	| string
-	| (() => string | undefined | Promise<string | undefined>)
+type GetRef = (
+	params?: Pick<BuildQueryURLArgs, "accessToken"> & FetchParams,
+) => string | undefined | Promise<string | undefined>
 
 /**
  * Parameters for any client method that use `fetch()`.
@@ -226,7 +167,7 @@ export type ClientConfig = {
 	 * may point to the latest version (called the "master ref"), or a preview
 	 * with draft content.
 	 */
-	ref?: RefStringOrThunk
+	ref?: string | GetRef
 
 	/**
 	 * A list of route resolver objects that define how a document's `url`
@@ -415,14 +356,9 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		"ref" | "integrationFieldsRef" | "accessToken" | "routes"
 	>
 
-	/**
-	 * The client's ref mode state. This determines which ref is used during
-	 * queries.
-	 */
-	private refState: RefState = {
-		mode: RefStateMode.Master,
-		autoPreviewsEnabled: true,
-	}
+	#getRef?: GetRef
+	#autoPreviews = true
+	#autoPreviewsRequest?: HttpRequestLike
 
 	/**
 	 * Cached repository value.
@@ -553,7 +489,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * @see enableAutoPreviewsFromReq
 	 */
 	enableAutoPreviews(): void {
-		this.refState.autoPreviewsEnabled = true
+		this.#autoPreviews = true
 	}
 
 	/**
@@ -575,9 +511,9 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * @param req - An HTTP server request object containing the request's
 	 *   cookies.
 	 */
-	enableAutoPreviewsFromReq<R extends HttpRequestLike>(req: R): void {
-		this.refState.httpRequest = req
-		this.refState.autoPreviewsEnabled = true
+	enableAutoPreviewsFromReq(request: HttpRequestLike): void {
+		this.enableAutoPreviews()
+		this.#autoPreviewsRequest = request
 	}
 
 	/**
@@ -594,7 +530,8 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 */
 	disableAutoPreviews(): void {
-		this.refState.autoPreviewsEnabled = false
+		this.#autoPreviews = false
+		this.#autoPreviewsRequest = undefined
 	}
 
 	/**
@@ -1394,7 +1331,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	}: Partial<BuildQueryURLArgs> & FetchParams = {}): Promise<string> {
 		const ref =
 			params.ref ||
-			(await this.getResolvedRefString({
+			(await this.#getResolvedRef({
 				accessToken: params.accessToken,
 				signal,
 				fetchOptions,
@@ -1451,15 +1388,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 			documentID = documentID || searchParams.get("documentId")
 			previewToken = previewToken || searchParams.get("token")
-		} else if (this.refState.httpRequest) {
-			if ("query" in this.refState.httpRequest) {
+		} else if (this.#autoPreviewsRequest) {
+			if ("query" in this.#autoPreviewsRequest) {
 				documentID =
-					documentID || (this.refState.httpRequest.query?.documentId as string)
+					documentID || (this.#autoPreviewsRequest.query?.documentId as string)
 				previewToken =
-					previewToken || (this.refState.httpRequest.query?.token as string)
+					previewToken || (this.#autoPreviewsRequest.query?.token as string)
 			} else if (
-				"url" in this.refState.httpRequest &&
-				this.refState.httpRequest.url
+				"url" in this.#autoPreviewsRequest &&
+				this.#autoPreviewsRequest.url
 			) {
 				// Including "missing-host://" by default
 				// handles a case where Next.js Route Handlers
@@ -1467,7 +1404,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 				// parameters in the `url` property
 				// (e.g. `/api/preview?foo=bar`).
 				const searchParams = new URL(
-					this.refState.httpRequest.url,
+					this.#autoPreviewsRequest.url,
 					"missing-host://",
 				).searchParams
 
@@ -1509,7 +1446,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * ```
 	 */
 	queryLatestContent(): void {
-		this.refState.mode = RefStateMode.Master
+		this.#getRef = undefined
 	}
 
 	/**
@@ -1528,11 +1465,10 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *
 	 * @param releaseID - The ID of the Release.
 	 */
-	queryContentFromReleaseByID(releaseID: string): void {
-		this.refState = {
-			...this.refState,
-			mode: RefStateMode.ReleaseID,
-			releaseID,
+	queryContentFromReleaseByID(id: string): void {
+		this.#getRef = async (params) => {
+			const release = await this.getReleaseByID(id, params)
+			return release.ref
 		}
 	}
 
@@ -1552,11 +1488,10 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *
 	 * @param releaseLabel - The label of the Release.
 	 */
-	queryContentFromReleaseByLabel(releaseLabel: string): void {
-		this.refState = {
-			...this.refState,
-			mode: RefStateMode.ReleaseLabel,
-			releaseLabel,
+	queryContentFromReleaseByLabel(label: string): void {
+		this.#getRef = async (params) => {
+			const release = await this.getReleaseByLabel(label, params)
+			return release.ref
 		}
 	}
 
@@ -1577,12 +1512,8 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * @param ref - The ref or a function that returns the ref from which to query
 	 *   content.
 	 */
-	queryContentFromRef(ref: RefStringOrThunk): void {
-		this.refState = {
-			...this.refState,
-			mode: RefStateMode.Manual,
-			ref,
-		}
+	queryContentFromRef(ref: string | GetRef): void {
+		this.#getRef = typeof ref === "string" ? () => ref : ref
 	}
 
 	/**
@@ -1619,7 +1550,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		init?: Omit<RequestInit, "signal"> & { signal?: AbortSignalLike },
 	): Promise<Response> {
 		const cachedRepository = await this.getCachedRepository()
-		const ref = await this.getResolvedRefString()
+		const ref = await this.#getResolvedRef()
 
 		const unsanitizedHeaders: Record<string, string> = {
 			"Prismic-ref": ref,
@@ -1724,55 +1655,24 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *
 	 * @returns The ref to use during a query.
 	 */
-	private async getResolvedRefString(
+	async #getResolvedRef(
 		params?: Pick<BuildQueryURLArgs, "accessToken"> & FetchParams,
-	): Promise<string> {
-		if (this.refState.autoPreviewsEnabled) {
-			let previewRef: string | undefined
-
-			let cookieJar: string | null | undefined
-
-			if (this.refState.httpRequest?.headers) {
-				if (
-					"get" in this.refState.httpRequest.headers &&
-					typeof this.refState.httpRequest.headers.get === "function"
-				) {
-					// Web API Headers
-					cookieJar = this.refState.httpRequest.headers.get("cookie")
-				} else if ("cookie" in this.refState.httpRequest.headers) {
-					// Express-style headers
-					cookieJar = this.refState.httpRequest.headers.cookie
-				}
-			} else if (globalThis.document?.cookie) {
-				cookieJar = globalThis.document.cookie
-			}
-
-			if (cookieJar) {
-				previewRef = getPreviewCookie(cookieJar)
-			}
-
-			if (previewRef) {
-				return previewRef
-			}
+	) {
+		if (this.#autoPreviews) {
+			const cookies = this.#autoPreviewsRequest?.headers
+				? "get" in this.#autoPreviewsRequest.headers
+					? this.#autoPreviewsRequest.headers.get("cookie")
+					: this.#autoPreviewsRequest.headers.cookie
+				: globalThis.document?.cookie
+			const previewRef = getPreviewCookie(cookies ?? "")
+			if (previewRef) return previewRef
 		}
 
-		const cachedRepository = await this.getCachedRepository(params)
+		const ref = await this.#getRef?.(params)
+		if (ref) return ref
 
-		const refModeType = this.refState.mode
-		if (refModeType === RefStateMode.ReleaseID) {
-			return findRefByID(cachedRepository.refs, this.refState.releaseID).ref
-		} else if (refModeType === RefStateMode.ReleaseLabel) {
-			return findRefByLabel(cachedRepository.refs, this.refState.releaseLabel)
-				.ref
-		} else if (refModeType === RefStateMode.Manual) {
-			const res = await castThunk(this.refState.ref)()
-
-			if (typeof res === "string") {
-				return res
-			}
-		}
-
-		return findMasterRef(cachedRepository.refs).ref
+		const masterRef = await this.getMasterRef(params)
+		return masterRef.ref
 	}
 
 	/**
