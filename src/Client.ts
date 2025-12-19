@@ -450,7 +450,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			brokenRoute,
 			defaultParams,
 			fetchOptions = {},
-			fetch = globalThis.fetch.bind(globalThis),
+			fetch = globalThis.fetch?.bind(globalThis),
 		} = options
 
 		if (isRepositoryEndpoint(repositoryNameOrEndpoint)) {
@@ -488,6 +488,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 				`documentAPIEndpoint is not a valid URL: ${documentAPIEndpoint}`,
 				undefined,
 				undefined,
+			)
+		}
+		if (
+			isRepositoryEndpoint(repositoryNameOrEndpoint) &&
+			documentAPIEndpoint &&
+			repositoryNameOrEndpoint !== options.documentAPIEndpoint
+		) {
+			console.warn(
+				`[@prismicio/client] Multiple incompatible endpoints were provided. Create the client using a repository name to prevent this error. For more details, see ${devMsg("prefer-repository-name")}`,
 			)
 		}
 		if (
