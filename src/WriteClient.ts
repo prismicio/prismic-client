@@ -27,10 +27,12 @@ import type {
 } from "./types/migration/Document"
 import type { PrismicDocument } from "./types/value/document"
 
-import { ForbiddenError } from "./errors/ForbiddenError"
-import { InvalidDataError } from "./errors/InvalidDataError"
-import { NotFoundError } from "./errors/NotFoundError"
-import { PrismicError } from "./errors/PrismicError"
+import {
+	ForbiddenError,
+	InvalidDataError,
+	NotFoundError,
+	PrismicError,
+} from "./errors"
 
 import { name, version } from "../package.json"
 

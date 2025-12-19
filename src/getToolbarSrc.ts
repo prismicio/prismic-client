@@ -1,4 +1,4 @@
-import { PrismicError } from "./errors/PrismicError"
+import { PrismicError } from "./errors"
 
 import { isRepositoryName } from "./isRepositoryName"
 

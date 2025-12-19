@@ -1,11 +1,5 @@
-import { appendFilters } from "./lib/appendFilters"
 import { devMsg } from "./lib/devMsg"
-import { everyTagFilter } from "./lib/everyTagFilter"
-import { findMasterRef } from "./lib/findMasterRef"
-import { findRefByID } from "./lib/findRefByID"
-import { findRefByLabel } from "./lib/findRefByLabel"
 import { getPreviewCookie } from "./lib/getPreviewCookie"
-import { minifyGraphQLQuery } from "./lib/minifyGraphQLQuery"
 import type { ResponseLike } from "./lib/request"
 import {
 	type AbortSignalLike,
@@ -13,71 +7,40 @@ import {
 	type RequestInitLike,
 	request,
 } from "./lib/request"
-import { someTagsFilter } from "./lib/someTagsFilter"
-import { throttledLog } from "./lib/throttledLog"
-import { typeFilter } from "./lib/typeFilter"
+import { throttledWarn } from "./lib/throttledWarn"
 
 import type { Query } from "./types/api/query"
 import type { Ref } from "./types/api/ref"
 import type { Repository } from "./types/api/repository"
 import type { PrismicDocument } from "./types/value/document"
 
-import { ForbiddenError } from "./errors/ForbiddenError"
-import { NotFoundError } from "./errors/NotFoundError"
-import { ParsingError } from "./errors/ParsingError"
-import { PreviewTokenExpiredError } from "./errors/PreviewTokenExpired"
-import { PrismicError } from "./errors/PrismicError"
-import { RefExpiredError } from "./errors/RefExpiredError"
-import { RefNotFoundError } from "./errors/RefNotFoundError"
-import { RepositoryNotFoundError } from "./errors/RepositoryNotFoundError"
+import {
+	ForbiddenError,
+	NotFoundError,
+	ParsingError,
+	PreviewTokenExpiredError,
+	PrismicError,
+	RefExpiredError,
+	RefNotFoundError,
+	RepositoryNotFoundError,
+} from "./errors"
 
-import type { LinkResolverFunction } from "./helpers/asLink"
-import { asLink } from "./helpers/asLink"
+import { type LinkResolverFunction, asLink } from "./helpers/asLink"
 
-import type { BuildQueryURLArgs } from "./buildQueryURL"
-import { buildQueryURL } from "./buildQueryURL"
+import { type BuildQueryURLArgs, buildQueryURL } from "./buildQueryURL"
 import { filter } from "./filter"
 import { getRepositoryEndpoint } from "./getRepositoryEndpoint"
 import { getRepositoryName } from "./getRepositoryName"
 import { isRepositoryEndpoint } from "./isRepositoryEndpoint"
 
-/**
- * The largest page size allowed by the Prismic REST API V2. This value is used
- * to minimize the number of requests required to query content.
- */
 const MAX_PAGE_SIZE = 100
-
-/**
- * The number of milliseconds in which repository metadata is considered valid.
- * A ref can be invalidated quickly depending on how frequently content is
- * updated in the Prismic repository. As such, repository's metadata can only be
- * considered valid for a short amount of time.
- */
-export const REPOSITORY_CACHE_TTL = 5000
-
-/**
- * The number of milliseconds in which a multi-page `getAll` (e.g. `getAll`,
- * `getAllByType`, `getAllByTag`) will wait between individual page requests.
- *
- * This is done to ensure API performance is sustainable and reduces the chance
- * of a failed API request due to overloading.
- */
-export const GET_ALL_QUERY_DELAY = 500
-
-/**
- * The maximum number of attempts to retry a query with an invalid ref. We allow
- * multiple attempts since each attempt may use a different (and possibly
- * invalid) ref. Capping the number of attempts prevents infinite loops.
- */
+const REPOSITORY_CACHE_TTL = 5000
+const GET_ALL_QUERY_DELAY = 500
 const MAX_INVALID_REF_RETRY_ATTEMPTS = 3
 
 /**
- * Extracts one or more Prismic document types that match a given Prismic
- * document type. If no matches are found, no extraction is performed and the
- * union of all provided Prismic document types are returned.
- *
- * @typeParam TDocuments - Prismic document types from which to extract.
- * @typeParam TDocumentType - Type(s) to match `TDocuments` against.
+ * Extracts a document type with a matching `type` property from a union of
+ * document types.
  */
 type ExtractDocumentType<
 	TDocuments extends PrismicDocument,
@@ -92,21 +55,14 @@ type ExtractDocumentType<
  * Prismic preview support.
  */
 export type HttpRequestLike =
-	| /**
-	 * Web API Request
-	 *
-	 * @see http://developer.mozilla.org/en-US/docs/Web/API/Request
-	 */
+	| // Web API Request
 	{
 			headers?: {
 				get(name: string): string | null
 			}
 			url?: string
 	  }
-
-	/**
-	 * Express-style Request
-	 */
+	// Express-style request
 	| {
 			headers?: {
 				cookie?: string
@@ -122,9 +78,7 @@ type GetRef = (
 	params?: Pick<BuildQueryURLArgs, "accessToken"> & FetchParams,
 ) => string | undefined | Promise<string | undefined>
 
-/**
- * Parameters for any client method that use `fetch()`.
- */
+/** Parameters for client methods that use `fetch()`. */
 export type FetchParams = {
 	/**
 	 * Options provided to the client's `fetch()` on all network requests. These
@@ -132,256 +86,168 @@ export type FetchParams = {
 	 * overriden on a per-query basis using the query's `fetchOptions` parameter.
 	 */
 	fetchOptions?: RequestInitLike
-
-	/**
-	 * An `AbortSignal` provided by an `AbortController`. This allows the network
-	 * request to be cancelled if necessary.
-	 *
-	 * @deprecated Move the `signal` parameter into `fetchOptions.signal`:
-	 *
-	 * @see \<https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal\>
-	 */
+	/** @deprecated Move to `fetchOptions.signal`: */
+	// TODO: Remove in v8.
 	signal?: AbortSignalLike
 }
 
-/**
- * Configuration for clients that determine how content is queried.
- */
+/** Prismic client configuration. */
 export type ClientConfig = {
 	/**
-	 * The full Rest API V2 endpoint for the repository. This is only helpful if
-	 * you're using Prismic behind a proxy which we do not recommend.
+	 * The client's Content API endpoint.
 	 *
-	 * @defaultValue `getRepositoryEndpoint(repositoryNameOrEndpoint)`
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#config-options}
 	 */
 	documentAPIEndpoint?: string
-
 	/**
-	 * The secure token for accessing the Prismic repository. This is only
-	 * required if the repository is set to private.
+	 * The secure token used for the Content API.
+	 *
+	 * @see {@link https://prismic.io/docs/fetch-content#content-visibility}
 	 */
 	accessToken?: string
-
 	/**
-	 * A string representing a version of the Prismic repository's content. This
-	 * may point to the latest version (called the "master ref"), or a preview
-	 * with draft content.
+	 * The version of the repository's content. It can optionally be a function
+	 * that returns a ref.
+	 *
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#config-options}
 	 */
 	ref?: string | GetRef
-
 	/**
 	 * A list of route resolver objects that define how a document's `url`
 	 * property is resolved.
 	 *
-	 * {@link https://prismic.io/docs/route-resolver}
+	 * @see {@link https://prismic.io/docs/routes}
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#config-options}
 	 */
 	routes?: NonNullable<BuildQueryURLArgs["routes"]>
-
 	/**
-	 * The `brokenRoute` option allows you to define the route populated in the
-	 * `url` property for broken link or content relationship fields. A broken
-	 * link is a link or content relationship field whose linked document has been
-	 * unpublished or deleted.
+	 * The URL used for link or content relationship fields that point to an
+	 * archived or deleted page.
 	 *
-	 * {@link https://prismic.io/docs/route-resolver}
+	 * @see {@link https://prismic.io/docs/routes}
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#config-options}
 	 */
 	brokenRoute?: NonNullable<BuildQueryURLArgs["brokenRoute"]>
-
 	/**
-	 * Default parameters that will be sent with each query. These parameters can
-	 * be overridden on each query if needed.
+	 * Default parameters sent with each Content API request. These parameters can
+	 * be overridden on each method.
+	 *
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#config-options}
 	 */
 	defaultParams?: Omit<
 		BuildQueryURLArgs,
 		"ref" | "integrationFieldsRef" | "accessToken" | "routes" | "brokenRoute"
 	>
-
 	/**
-	 * The function used to make network requests to the Prismic REST API. In
-	 * environments where a global `fetch` function does not exist, such as
-	 * Node.js, this function must be provided.
+	 * The `fetch` function used to make network requests.
+	 *
+	 * @default The global `fetch` function.
+	 *
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#config-options}
 	 */
 	fetch?: FetchLike
-
 	/**
-	 * Options provided to the client's `fetch()` on all network requests. These
-	 * options will be merged with internally required options. They can also be
-	 * overriden on a per-query basis using the query's `fetchOptions` parameter.
+	 * The default `fetch` options sent with each Content API request. These
+	 * parameters can be overriden on each method.
+	 *
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#config-options}
 	 */
 	fetchOptions?: RequestInitLike
 }
 
 /**
  * Parameters specific to client methods that fetch all documents. These methods
- * start with `getAll` (for example, `getAllByType`).
+ * start with `getAll` (e.g. `getAllByType`).
  */
 type GetAllParams = {
 	/**
-	 * Limit the number of documents queried. If a number is not provided, there
-	 * will be no limit and all matching documents will be returned.
+	 * Limit the number of documents queried.
+	 *
+	 * @default No limit.
 	 */
 	limit?: number
 }
 
 /**
- * Arguments to determine how the URL for a preview session is resolved.
- */
-type ResolvePreviewArgs<LinkResolverReturnType> = {
-	/**
-	 * A function that maps a Prismic document to a URL within your app.
-	 */
-	linkResolver?: LinkResolverFunction<LinkResolverReturnType>
-
-	/**
-	 * A fallback URL if the link resolver does not return a value.
-	 */
-	defaultURL: string
-
-	/**
-	 * The preview token (also known as a ref) that will be used to query preview
-	 * content from the Prismic repository.
-	 */
-	previewToken?: string
-
-	/**
-	 * The previewed document that will be used to determine the destination URL.
-	 */
-	documentID?: string
-}
-
-/**
- * A client that allows querying content from a Prismic repository.
+ * A client for fetching content from a Prismic repository.
  *
- * If used in an environment where a global `fetch` function is unavailable,
- * such as Node.js, the `fetch` option must be provided as part of the `options`
- * parameter.
- *
- * @typeParam TDocuments - Document types that are registered for the Prismic
- *   repository. Query methods will automatically be typed based on this type.
+ * @see {@link https://prismic.io/docs/fetch-content}
+ * @see {@link https://prismic.io/docs/technical-reference/prismicio-client}
  */
 export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	/**
-	 * The function used to make network requests to the Prismic REST API. In
-	 * environments where a global `fetch` function does not exist, such as
-	 * Node.js, this function must be provided.
-	 */
-	fetchFn: FetchLike
-
-	fetchOptions?: RequestInitLike
-
-	#repositoryName: string | undefined
-
-	/**
-	 * The Prismic repository's name.
-	 */
-	set repositoryName(value: string) {
-		this.#repositoryName = value
-	}
-
-	/**
-	 * The Prismic repository's name.
-	 */
-	get repositoryName(): string {
-		if (!this.#repositoryName) {
-			throw new PrismicError(
-				`A repository name is required for this method but one could not be inferred from the provided API endpoint (\`${this.documentAPIEndpoint}\`). To fix this error, provide a repository name when creating the client. For more details, see ${devMsg("prefer-repository-name")}`,
-				undefined,
-				undefined,
-			)
-		}
-
-		return this.#repositoryName
-	}
-
-	/**
-	 * The Prismic REST API V2 endpoint for the repository (use
-	 * `prismic.getRepositoryEndpoint` for the default endpoint).
+	 * The client's Content API endpoint.
+	 *
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#config-options}
 	 */
 	documentAPIEndpoint: string
-
 	/**
-	 * The Prismic REST API V2 endpoint for the repository (use
-	 * `prismic.getRepositoryEndpoint` for the default endpoint).
+	 * The secure token used for the Content API.
 	 *
-	 * @deprecated Use `documentAPIEndpoint` instead.
-	 */
-	// TODO: Remove in v8.
-	set endpoint(value: string) {
-		this.documentAPIEndpoint = value
-	}
-
-	/**
-	 * The Prismic REST API V2 endpoint for the repository (use
-	 * `prismic.getRepositoryEndpoint` for the default endpoint).
-	 *
-	 * @deprecated Use `documentAPIEndpoint` instead.
-	 */
-	// TODO: Remove in v8.
-	get endpoint(): string {
-		return this.documentAPIEndpoint
-	}
-
-	/**
-	 * The secure token for accessing the API (only needed if your repository is
-	 * set to private).
-	 *
-	 * {@link https://user-guides.prismic.io/en/articles/1036153-generating-an-access-token}
+	 * @see {@link https://prismic.io/docs/fetch-content#content-visibility}
 	 */
 	accessToken?: string
-
 	/**
-	 * A list of route resolver objects that define how a document's `url` field
-	 * is resolved.
+	 * A list of route resolver objects that define how a document's `url`
+	 * property is resolved.
 	 *
-	 * {@link https://prismic.io/docs/route-resolver}
+	 * @see {@link https://prismic.io/docs/routes}
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#config-options}
 	 */
 	routes?: NonNullable<BuildQueryURLArgs["routes"]>
-
 	/**
-	 * The `brokenRoute` option allows you to define the route populated in the
-	 * `url` property for broken link or content relationship fields. A broken
-	 * link is a link or content relationship field whose linked document has been
-	 * unpublished or deleted.
+	 * The URL used for link or content relationship fields that point to an
+	 * archived or deleted page.
 	 *
-	 * {@link https://prismic.io/docs/route-resolver}
+	 * @see {@link https://prismic.io/docs/routes}
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#config-options}
 	 */
 	brokenRoute?: NonNullable<BuildQueryURLArgs["brokenRoute"]>
-
 	/**
-	 * Default parameters that will be sent with each query. These parameters can
-	 * be overridden on each query if needed.
+	 * Default parameters sent with each Content API request. These parameters can
+	 * be overridden on each method.
+	 *
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#config-options}
 	 */
 	defaultParams?: Omit<
 		BuildQueryURLArgs,
 		"ref" | "integrationFieldsRef" | "accessToken" | "routes"
 	>
+	/**
+	 * The `fetch` function used to make network requests.
+	 *
+	 * @default The global `fetch` function.
+	 *
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#config-options}
+	 */
+	fetchFn: FetchLike
+	/**
+	 * The default `fetch` options sent with each Content API request. These
+	 * parameters can be overriden on each method.
+	 *
+	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#config-options}
+	 */
+	fetchOptions?: RequestInitLike
+
+	#repositoryName: string | undefined
 
 	#getRef?: GetRef
 	#autoPreviews = true
 	#autoPreviewsRequest?: HttpRequestLike
 
 	#cachedRepository: Repository | undefined
-	#cachedRepositoryExpiration = 0
+	#cachedRepositoryExpiration = 0 // Timestamp
 
 	/**
-	 * Creates a Prismic client that can be used to query a repository.
-	 *
-	 * If used in an environment where a global `fetch` function is unavailable,
-	 * such as in some Node.js versions, the `fetch` option must be provided as
-	 * part of the `options` parameter.
-	 *
-	 * @param repositoryNameOrEndpoint - The Prismic repository name or full Rest
-	 *   API V2 endpoint for the repository.
-	 * @param options - Configuration that determines how content will be queried
-	 *   from the Prismic repository.
-	 *
-	 * @returns A client that can query content from the repository.
+	 * @param repositoryNameOrEndpoint - The Prismic repository name or full
+	 *   Content API endpoint for the repository.
+	 * @param config - Client configuration.
 	 */
-	constructor(repositoryNameOrEndpoint: string, options: ClientConfig = {}) {
-		this.fetchOptions = options.fetchOptions
+	constructor(repositoryNameOrEndpoint: string, config: ClientConfig = {}) {
+		this.fetchOptions = config.fetchOptions
 
-		if (typeof options.fetch === "function") {
-			this.fetchFn = options.fetch
+		if (typeof config.fetch === "function") {
+			this.fetchFn = config.fetch
 		} else if (typeof globalThis.fetch === "function") {
 			this.fetchFn = globalThis.fetch as FetchLike
 		} else {
@@ -398,12 +264,12 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		}
 
 		if (
-			(options.documentAPIEndpoint ||
+			(config.documentAPIEndpoint ||
 				isRepositoryEndpoint(repositoryNameOrEndpoint)) &&
 			process.env.NODE_ENV === "development"
 		) {
 			const documentAPIEndpoint =
-				options.documentAPIEndpoint || repositoryNameOrEndpoint
+				config.documentAPIEndpoint || repositoryNameOrEndpoint
 
 			// Matches non-API v2 `.prismic.io` endpoints, see: https://regex101.com/r/xRsavu/1
 			if (/\.prismic\.io\/(?!api\/v2\/?)/i.test(documentAPIEndpoint)) {
@@ -428,9 +294,9 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 			// Warn if the user provided both a repository endpoint and an `documentAPIEndpoint` and they are different
 			if (
-				options.documentAPIEndpoint &&
+				config.documentAPIEndpoint &&
 				isRepositoryEndpoint(repositoryNameOrEndpoint) &&
-				repositoryNameOrEndpoint !== options.documentAPIEndpoint
+				repositoryNameOrEndpoint !== config.documentAPIEndpoint
 			) {
 				console.warn(
 					`[@prismicio/client] Multiple incompatible endpoints were provided. Create the client using a repository name to prevent this error. For more details, see ${devMsg("prefer-repository-name")}`,
@@ -449,21 +315,49 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			}
 		} else {
 			this.documentAPIEndpoint =
-				options.documentAPIEndpoint ||
+				config.documentAPIEndpoint ||
 				getRepositoryEndpoint(repositoryNameOrEndpoint)
 			this.repositoryName = repositoryNameOrEndpoint
 		}
 
-		this.accessToken = options.accessToken
-		this.routes = options.routes
-		this.brokenRoute = options.brokenRoute
-		this.defaultParams = options.defaultParams
+		this.accessToken = config.accessToken
+		this.routes = config.routes
+		this.brokenRoute = config.brokenRoute
+		this.defaultParams = config.defaultParams
 
-		if (options.ref) {
-			this.queryContentFromRef(options.ref)
+		if (config.ref) {
+			this.queryContentFromRef(config.ref)
 		}
 
 		this.graphQLFetch = this.graphQLFetch.bind(this)
+	}
+
+	/** The Prismic repository's name. */
+	set repositoryName(value: string) {
+		this.#repositoryName = value
+	}
+	/** The Prismic repository's name. */
+	get repositoryName(): string {
+		if (!this.#repositoryName) {
+			throw new PrismicError(
+				`A repository name is required for this method but one could not be inferred from the provided API endpoint (\`${this.documentAPIEndpoint}\`). To fix this error, provide a repository name when creating the client. For more details, see ${devMsg("prefer-repository-name")}`,
+				undefined,
+				undefined,
+			)
+		}
+
+		return this.#repositoryName
+	}
+
+	/** @deprecated Replace with `documentAPIEndpoint`. */
+	// TODO: Remove in v8.
+	set endpoint(value: string) {
+		this.documentAPIEndpoint = value
+	}
+	/** @deprecated Replace with `documentAPIEndpoint`. */
+	// TODO: Remove in v8.
+	get endpoint(): string {
+		return this.documentAPIEndpoint
 	}
 
 	/**
@@ -699,10 +593,11 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<ExtractDocumentType<TDocument, TDocumentType>> {
 		return await this.getFirst<ExtractDocumentType<TDocument, TDocumentType>>(
-			appendFilters(params, [
-				typeFilter(documentType),
+			appendFilters(
+				params,
+				filter.at("document.type", documentType),
 				filter.at(`my.${documentType}.uid`, uid),
-			]),
+			),
 		)
 	}
 
@@ -730,10 +625,11 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<Query<ExtractDocumentType<TDocument, TDocumentType>>> {
 		return await this.get<ExtractDocumentType<TDocument, TDocumentType>>(
-			appendFilters(params, [
-				typeFilter(documentType),
+			appendFilters(
+				params,
+				filter.at("document.type", documentType),
 				filter.in(`my.${documentType}.uid`, uids),
-			]),
+			),
 		)
 	}
 
@@ -765,10 +661,11 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		return await this.dangerouslyGetAll<
 			ExtractDocumentType<TDocument, TDocumentType>
 		>(
-			appendFilters(params, [
-				typeFilter(documentType),
+			appendFilters(
+				params,
+				filter.at("document.type", documentType),
 				filter.in(`my.${documentType}.uid`, uids),
-			]),
+			),
 		)
 	}
 
@@ -791,7 +688,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<ExtractDocumentType<TDocument, TDocumentType>> {
 		return await this.getFirst<ExtractDocumentType<TDocument, TDocumentType>>(
-			appendFilters(params, typeFilter(documentType)),
+			appendFilters(params, filter.at("document.type", documentType)),
 		)
 	}
 
@@ -814,7 +711,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<Query<ExtractDocumentType<TDocument, TDocumentType>>> {
 		return await this.get<ExtractDocumentType<TDocument, TDocumentType>>(
-			appendFilters(params, typeFilter(documentType)),
+			appendFilters(params, filter.at("document.type", documentType)),
 		)
 	}
 
@@ -841,7 +738,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	): Promise<ExtractDocumentType<TDocument, TDocumentType>[]> {
 		return await this.dangerouslyGetAll<
 			ExtractDocumentType<TDocument, TDocumentType>
-		>(appendFilters(params, typeFilter(documentType)))
+		>(appendFilters(params, filter.at("document.type", documentType)))
 	}
 
 	/**
@@ -859,7 +756,9 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		tag: string,
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<Query<TDocument>> {
-		return await this.get<TDocument>(appendFilters(params, someTagsFilter(tag)))
+		return await this.get<TDocument>(
+			appendFilters(params, filter.any("document.tags", [tag])),
+		)
 	}
 
 	/**
@@ -881,7 +780,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			FetchParams,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
-			appendFilters(params, someTagsFilter(tag)),
+			appendFilters(params, filter.any("document.tags", [tag])),
 		)
 	}
 
@@ -901,7 +800,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<Query<TDocument>> {
 		return await this.get<TDocument>(
-			appendFilters(params, everyTagFilter(tags)),
+			appendFilters(params, filter.at("document.tags", tags)),
 		)
 	}
 
@@ -924,7 +823,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			FetchParams,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
-			appendFilters(params, everyTagFilter(tags)),
+			appendFilters(params, filter.at("document.tags", tags)),
 		)
 	}
 
@@ -945,7 +844,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<Query<TDocument>> {
 		return await this.get<TDocument>(
-			appendFilters(params, someTagsFilter(tags)),
+			appendFilters(params, filter.any("document.tags", tags)),
 		)
 	}
 
@@ -968,7 +867,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			FetchParams,
 	): Promise<TDocument[]> {
 		return await this.dangerouslyGetAll<TDocument>(
-			appendFilters(params, someTagsFilter(tags)),
+			appendFilters(params, filter.any("document.tags", tags)),
 		)
 	}
 
@@ -1050,8 +949,17 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 */
 	async getRefByID(id: string, params?: FetchParams): Promise<Ref> {
 		const refs = await this.getRefs(params)
+		const ref = refs.find((ref) => ref.id === id)
 
-		return findRefByID(refs, id)
+		if (!ref) {
+			throw new PrismicError(
+				`Ref with ID "${id}" could not be found.`,
+				undefined,
+				undefined,
+			)
+		}
+
+		return ref
 	}
 
 	/**
@@ -1068,8 +976,17 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 */
 	async getRefByLabel(label: string, params?: FetchParams): Promise<Ref> {
 		const refs = await this.getRefs(params)
+		const ref = refs.find((ref) => ref.label === label)
 
-		return findRefByLabel(refs, label)
+		if (!ref) {
+			throw new PrismicError(
+				`Ref with label "${label}" could not be found.`,
+				undefined,
+				undefined,
+			)
+		}
+
+		return ref
 	}
 
 	/**
@@ -1085,8 +1002,17 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 */
 	async getMasterRef(params?: FetchParams): Promise<Ref> {
 		const refs = await this.getRefs(params)
+		const ref = refs.find((ref) => ref.isMasterRef)
 
-		return findMasterRef(refs)
+		if (!ref) {
+			throw new PrismicError(
+				"Master ref could not be found.",
+				undefined,
+				undefined,
+			)
+		}
+
+		return ref
 	}
 
 	/**
@@ -1119,8 +1045,17 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 */
 	async getReleaseByID(id: string, params?: FetchParams): Promise<Ref> {
 		const releases = await this.getReleases(params)
+		const release = releases.find((ref) => ref.id === id)
 
-		return findRefByID(releases, id)
+		if (!release) {
+			throw new PrismicError(
+				`Release with ID "${id}" could not be found.`,
+				undefined,
+				undefined,
+			)
+		}
+
+		return release
 	}
 
 	/**
@@ -1137,8 +1072,17 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 */
 	async getReleaseByLabel(label: string, params?: FetchParams): Promise<Ref> {
 		const releases = await this.getReleases(params)
+		const release = releases.find((ref) => ref.label === label)
 
-		return findRefByLabel(releases, label)
+		if (!release) {
+			throw new PrismicError(
+				`Release with label "${label}" could not be found.`,
+				undefined,
+				undefined,
+			)
+		}
+
+		return release
 	}
 
 	/**
@@ -1232,7 +1176,16 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#resolvepreviewurl}
 	 */
 	async resolvePreviewURL<LinkResolverReturnType>(
-		args: ResolvePreviewArgs<LinkResolverReturnType> & FetchParams,
+		args: {
+			/** A function converts a document to a URL in your website. */
+			linkResolver?: LinkResolverFunction<LinkResolverReturnType>
+			/** A fallback URL used when the document does not have a URL. */
+			defaultURL: string
+			/** The preview token for the preview session. */
+			previewToken?: string
+			/** The previewed document's ID. */
+			documentID?: string
+		} & FetchParams,
 	): Promise<string> {
 		let documentID: string | undefined | null = args.documentID
 		let previewToken: string | undefined | null = args.previewToken
@@ -1381,63 +1334,34 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		input: RequestInfo,
 		init?: Omit<RequestInit, "signal"> & { signal?: AbortSignalLike },
 	): Promise<Response> {
-		const repository = await this.getRepository()
-		const ref = await this.#getResolvedRef()
-
-		const unsanitizedHeaders: Record<string, string> = {
-			"Prismic-ref": ref,
-			Authorization: this.accessToken ? `Token ${this.accessToken}` : "",
-			// Asserting `init.headers` is a Record since popular GraphQL
-			// libraries pass this as a Record. Header objects as input
-			// are unsupported.
-			...(init ? (init.headers as Record<string, string>) : {}),
+		const params = {
+			accessToken: this.accessToken,
+			fetchOptions: this.fetchOptions,
 		}
+		const repository = await this.getRepository(params)
+		const ref = await this.#getResolvedRef(params)
 
+		const headers: NonNullable<RequestInitLike["headers"]> = {}
+		headers["prismic-ref"] = ref
+		if (this.accessToken) {
+			headers["authorization"] = `Token ${this.accessToken}`
+		}
 		if (repository.integrationFieldsRef) {
-			unsanitizedHeaders["Prismic-integration-field-ref"] =
-				repository.integrationFieldsRef
+			headers["prismic-integration-field-ref"] = repository.integrationFieldsRef
+		}
+		for (const [key, value] of Object.entries(init?.headers ?? {})) {
+			headers[key.toLowerCase()] = value
 		}
 
-		// Normalize header keys to lowercase. This prevents header
-		// conflicts between the Prismic client and the GraphQL
-		// client.
-		const headers: Record<string, string> = {}
-		for (const key in unsanitizedHeaders) {
-			if (unsanitizedHeaders[key]) {
-				headers[key.toLowerCase()] =
-					unsanitizedHeaders[key as keyof typeof unsanitizedHeaders]
-			}
-		}
-
-		const url = new URL(
-			// Asserting `input` is a string since popular GraphQL
-			// libraries pass this as a string. Request objects as
-			// input are unsupported.
-			input as string,
+		const url = new URL(typeof input === "string" ? input : input.url)
+		const query = (url.searchParams.get("query") ?? "").replace(
+			// Minify the query
+			/(\n| )*( |{|})(\n| )*/gm,
+			(_chars, _spaces, brackets) => brackets,
 		)
-
-		// This prevents the request from being cached unnecessarily.
-		// Without adding this `ref` param, re-running a query
-		// could return a locally cached response, even if the
-		// `ref` changed. This happens because the URL is
-		// identical when the `ref` is not included. Caches may ignore
-		// headers.
-		//
-		// The Prismic GraphQL API ignores the `ref` param.
+		url.searchParams.set("query", query)
+		// Only used to prevent caching; caches ignore header differences
 		url.searchParams.set("ref", ref)
-
-		const query = url.searchParams.get("query")
-		if (query) {
-			url.searchParams.set(
-				"query",
-				// Compress the GraphQL query (if it exists) by
-				// removing whitespace. This is done to
-				// optimize the query size and avoid
-				// hitting the upper limit of GET requests
-				// (2048 characters).
-				minifyGraphQLQuery(query),
-			)
-		}
 
 		return (await this.fetchFn(url.toString(), {
 			...init,
@@ -1450,7 +1374,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * method may make a network request to fetch a ref or resolve the user's ref
 	 * thunk.
 	 *
-	 * If auto previews are enabled, the preview ref takes priority if available.
+	 * If auto previews are enabled, the preview ref takes priority.
 	 *
 	 * The following strategies are used depending on the client's state:
 	 *
@@ -1465,8 +1389,6 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *   release is fetched.
 	 * - If the user called `queryContentFromRef`: Use the provided ref. Fall back
 	 *   to the master ref if the ref is not a string.
-	 *
-	 * @returns The ref to use during a query.
 	 */
 	async #getResolvedRef(
 		params?: Pick<BuildQueryURLArgs, "accessToken"> & FetchParams,
@@ -1492,6 +1414,10 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		return masterRef.ref
 	}
 
+	/**
+	 * Performs a low-level Content API request with the given parameters.
+	 * Automatically retries if an invalid ref is used.
+	 */
 	async #internalGet(
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 		attempt = 1,
@@ -1527,9 +1453,8 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 				const badRef = new URL(url).searchParams.get("ref")
 				const issue = error instanceof RefNotFoundError ? "invalid" : "expired"
-				throttledLog(
+				throttledWarn(
 					`[@prismicio/client] The ref (${badRef}) was ${issue}. Now retrying with the latest master ref (${masterRef}). If you were previewing content, the response will not include draft content.`,
-					{ level: "warn" },
 				)
 
 				return await this.#internalGet(
@@ -1542,6 +1467,10 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		}
 	}
 
+	/**
+	 * Throws an error based on a Content API response. Only call in known-errored
+	 * states.
+	 */
 	async #throwContentAPIError(
 		response: ResponseLike,
 		url: string,
@@ -1581,15 +1510,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		}
 	}
 
-	/**
-	 * Makes an HTTP request using the client's configured fetch function and
-	 * options.
-	 *
-	 * @param url - The URL to request.
-	 * @param params - Fetch options.
-	 *
-	 * @returns The response from the fetch request.
-	 */
+	/** Performs a low-level network request with the client's fetch options. */
 	async #request(url: URL, params?: FetchParams): Promise<ResponseLike> {
 		return await request(
 			url,
@@ -1608,4 +1529,12 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			this.fetchFn,
 		)
 	}
+}
+
+/** Appends filters to a params object. */
+function appendFilters<T extends Pick<BuildQueryURLArgs, "filters">>(
+	params = {} as T,
+	...filters: string[]
+): T & { filters: string[] } {
+	return { ...params, filters: [...(params.filters ?? []), ...filters] }
 }
