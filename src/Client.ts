@@ -450,7 +450,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			brokenRoute,
 			defaultParams,
 			fetchOptions = {},
-			fetch = globalThis.fetch,
+			fetch = globalThis.fetch.bind(globalThis),
 		} = options
 
 		if (isRepositoryEndpoint(repositoryNameOrEndpoint)) {
@@ -470,7 +470,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 		if (!fetch) {
 			throw new PrismicError(
-				"A valid fetch implementation was not provided. In environments where fetch is not available (including Node.js), a fetch implementation must be provided via a polyfill or the `fetch` option.",
+				"A valid fetch implementation was not provided. In environments where fetch is not available, a fetch implementation must be provided via a polyfill or the `fetch` option.",
 				undefined,
 				undefined,
 			)
@@ -518,15 +518,11 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		this.fetchOptions = fetchOptions
 		this.fetchFn = fetch
 
-		if (this.fetchFn === globalThis.fetch) {
-			this.fetchFn = this.fetchFn.bind(globalThis)
-		}
+		this.graphQLFetch = this.graphQLFetch.bind(this)
 
 		if (ref) {
 			this.queryContentFromRef(ref)
 		}
-
-		this.graphQLFetch = this.graphQLFetch.bind(this)
 	}
 
 	/**
