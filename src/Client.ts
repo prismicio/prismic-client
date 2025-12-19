@@ -1850,22 +1850,22 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *
 	 * @returns The response from the fetch request.
 	 */
-	async #request(url: URL, params?: RequestInitLike): Promise<ResponseLike> {
-		return await request(url, this._buildRequestInit(params), this.fetchFn)
-	}
-
-	protected _buildRequestInit(params?: FetchParams): RequestInitLike {
-		return {
-			...this.fetchOptions,
-			...params?.fetchOptions,
-			headers: {
-				...this.fetchOptions?.headers,
-				...params?.fetchOptions?.headers,
+	async #request(url: URL, params?: FetchParams): Promise<ResponseLike> {
+		return await request(
+			url,
+			{
+				...this.fetchOptions,
+				...params?.fetchOptions,
+				headers: {
+					...this.fetchOptions?.headers,
+					...params?.fetchOptions?.headers,
+				},
+				signal:
+					params?.fetchOptions?.signal ||
+					params?.signal ||
+					this.fetchOptions?.signal,
 			},
-			signal:
-				params?.fetchOptions?.signal ||
-				params?.signal ||
-				this.fetchOptions?.signal,
-		}
+			this.fetchFn,
+		)
 	}
 }
