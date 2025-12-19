@@ -529,9 +529,9 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	async get<TDocument extends TDocuments>(
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<Query<TDocument>> {
-		const { data } = await this._get<TDocument>(params)
+		const response = await this.#internalGet(params)
 
-		return data
+		return await response.json()
 	}
 
 	/**
@@ -548,19 +548,20 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	async getFirst<TDocument extends TDocuments>(
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
 	): Promise<TDocument> {
-		const actualParams = { ...params }
-		if (!(params && params.page) && !params?.pageSize) {
-			actualParams.pageSize = this.defaultParams?.pageSize ?? 1
-		}
-		const { data, url } = await this._get<TDocument>(actualParams)
+		const actualParams =
+			params?.page || params?.pageSize ? params : { ...params, pageSize: 1 }
+		const response = await this.#internalGet(actualParams)
+		const { results }: Query<TDocument> = await response.clone().json()
 
-		const firstResult = data.results[0]
-
-		if (firstResult) {
-			return firstResult
+		if (results[0]) {
+			return results[0]
 		}
 
-		throw new NotFoundError("No documents were returned", url, undefined)
+		throw new NotFoundError(
+			"No documents were returned",
+			response.url,
+			undefined,
+		)
 	}
 
 	/**
@@ -1000,28 +1001,23 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		}
 
 		const response = await this.#request(url, params)
-		switch (response.status) {
-			case 200: {
-				this.#cachedRepository = (await response.json()) as Repository
-				this.#cachedRepositoryExpiration = Date.now() + REPOSITORY_CACHE_TTL
 
-				return this.#cachedRepository
-			}
-			case 401: {
-				const json = await response.json()
-				throw new ForbiddenError(json.error, url.toString(), json)
-			}
-			case 404: {
-				throw new RepositoryNotFoundError(
-					`Prismic repository not found. Check that "${this.documentAPIEndpoint}" is pointing to the correct repository.`,
-					url.toString(),
-					undefined,
-				)
-			}
-			default: {
-				throw new PrismicError(undefined, url.toString(), await response.text())
-			}
+		if (response.ok) {
+			this.#cachedRepository = (await response.json()) as Repository
+			this.#cachedRepositoryExpiration = Date.now() + REPOSITORY_CACHE_TTL
+
+			return this.#cachedRepository
 		}
+
+		if (response.status === 404) {
+			throw new RepositoryNotFoundError(
+				`Prismic repository not found. Check that "${this.documentAPIEndpoint}" is pointing to the correct repository.`,
+				url.toString(),
+				undefined,
+			)
+		}
+
+		return await this.#throwContentAPIError(response, url.toString())
 	}
 
 	/**
@@ -1496,105 +1492,92 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		return masterRef.ref
 	}
 
-	/**
-	 * The private implementation of `this.get`. It returns the API response and
-	 * the URL used to make the request. The URL is sometimes used in the public
-	 * method to include in thrown errors.
-	 *
-	 * This method retries requests that throw `RefNotFoundError` or
-	 * `RefExpiredError`. It contains special logic to retry with the latest
-	 * master ref, provided in the API's error message.
-	 *
-	 * @typeParam TDocument - Type of Prismic documents returned.
-	 *
-	 * @param params - Parameters to filter, sort, and paginate results.
-	 *
-	 * @returns An object containing the paginated response containing the result
-	 *   of the query and the URL used to make the API request.
-	 */
-	private async _get<TDocument extends TDocuments>(
+	async #internalGet(
 		params?: Partial<BuildQueryURLArgs> & FetchParams,
-		attemptCount = 0,
-	): Promise<{ data: Query<TDocument>; url: string }> {
+		attempt = 1,
+	): Promise<ResponseLike> {
 		const url = await this.buildQueryURL(params)
+		const response = await this.#request(new URL(url), params)
+
+		if (response.ok) {
+			return response
+		}
 
 		try {
-			const response = await this.#request(new URL(url), params)
-			switch (response.status) {
-				case 200: {
-					try {
-						return {
-							data: (await response.clone().json()) as Query<TDocument>,
-							url,
-						}
-					} catch {
-						throw new PrismicError(undefined, url, await response.text())
-					}
-				}
-				case 400: {
-					const json = await response.json()
-					throw new ParsingError(json.message, url, json)
-				}
-				case 401: {
-					const json = await response.json()
-					throw new ForbiddenError(json.message, url, json)
-				}
-				case 404: {
-					const json = await response.json()
-					switch (json.type) {
-						case "api_notfound_error": {
-							throw new RefNotFoundError(json.message, url, json)
-						}
-						case "api_security_error": {
-							if (/preview token.*expired/i.test(json.message)) {
-								throw new PreviewTokenExpiredError(json.message, url, json)
-							}
-						}
-						default: {
-							throw new NotFoundError(json.message, url, json)
-						}
-					}
-				}
-				case 410: {
-					const json = await response.json()
-					throw new RefExpiredError(json.message, url, json)
-				}
-				default: {
-					throw new PrismicError(undefined, url, await response.text())
-				}
-			}
+			return await this.#throwContentAPIError(response, url)
 		} catch (error) {
 			if (
-				!(
-					error instanceof RefNotFoundError || error instanceof RefExpiredError
-				) ||
-				attemptCount >= MAX_INVALID_REF_RETRY_ATTEMPTS - 1
+				(error instanceof RefNotFoundError ||
+					error instanceof RefExpiredError) &&
+				attempt < MAX_INVALID_REF_RETRY_ATTEMPTS
 			) {
-				throw error
+				// If no explicit ref is given (i.e. the master ref from
+				// /api/v2 is used), clear the cached repository value.
+				// Clearing the cached value prevents other methods from
+				// using a known-stale ref.
+				if (!params?.ref) {
+					this.#cachedRepository = undefined
+				}
+
+				const masterRef = error.message.match(/master ref is: (?<ref>.*)$/i)
+					?.groups?.ref
+				if (!masterRef) {
+					throw error
+				}
+
+				const badRef = new URL(url).searchParams.get("ref")
+				const issue = error instanceof RefNotFoundError ? "invalid" : "expired"
+				throttledLog(
+					`[@prismicio/client] The ref (${badRef}) was ${issue}. Now retrying with the latest master ref (${masterRef}). If you were previewing content, the response will not include draft content.`,
+					{ level: "warn" },
+				)
+
+				return await this.#internalGet(
+					{ ...params, ref: masterRef },
+					attempt + 1,
+				)
 			}
 
-			// If no explicit ref is given (i.e. the master ref from
-			// /api/v2 is used), clear the cached repository value.
-			// Clearing the cached value prevents other methods from
-			// using a known-stale ref.
-			if (!params?.ref) {
-				this.#cachedRepository = undefined
+			throw error
+		}
+	}
+
+	async #throwContentAPIError(
+		response: ResponseLike,
+		url: string,
+	): Promise<never> {
+		switch (response.status) {
+			case 400: {
+				const json = await response.clone().json()
+				throw new ParsingError(json.message, url, json)
 			}
-
-			const masterRef = error.message.match(/master ref is: (?<ref>.*)$/i)
-				?.groups?.ref
-			if (!masterRef) {
-				throw error
+			case 401: {
+				const json = await response.clone().json()
+				throw new ForbiddenError(json.message, url, json)
 			}
-
-			const badRef = new URL(url).searchParams.get("ref")
-			const issue = error instanceof RefNotFoundError ? "invalid" : "expired"
-			throttledLog(
-				`[@prismicio/client] The ref (${badRef}) was ${issue}. Now retrying with the latest master ref (${masterRef}). If you were previewing content, the response will not include draft content.`,
-				{ level: "warn" },
-			)
-
-			return await this._get({ ...params, ref: masterRef }, attemptCount + 1)
+			case 404: {
+				const json = await response.clone().json()
+				switch (json.type) {
+					case "api_notfound_error": {
+						throw new RefNotFoundError(json.message, url, json)
+					}
+					case "api_security_error": {
+						if (/preview token.*expired/i.test(json.message)) {
+							throw new PreviewTokenExpiredError(json.message, url, json)
+						}
+					}
+					default: {
+						throw new NotFoundError(json.message, url, json)
+					}
+				}
+			}
+			case 410: {
+				const json = await response.clone().json()
+				throw new RefExpiredError(json.message, url, json)
+			}
+			default: {
+				throw new PrismicError(undefined, url, await response.text())
+			}
 		}
 	}
 
@@ -1607,22 +1590,22 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 *
 	 * @returns The response from the fetch request.
 	 */
-	async #request(url: URL, params?: RequestInitLike): Promise<ResponseLike> {
-		return await request(url, this._buildRequestInit(params), this.fetchFn)
-	}
-
-	protected _buildRequestInit(params?: FetchParams): RequestInitLike {
-		return {
-			...this.fetchOptions,
-			...params?.fetchOptions,
-			headers: {
-				...this.fetchOptions?.headers,
-				...params?.fetchOptions?.headers,
+	async #request(url: URL, params?: FetchParams): Promise<ResponseLike> {
+		return await request(
+			url,
+			{
+				...this.fetchOptions,
+				...params?.fetchOptions,
+				headers: {
+					...this.fetchOptions?.headers,
+					...params?.fetchOptions?.headers,
+				},
+				signal:
+					params?.fetchOptions?.signal ||
+					params?.signal ||
+					this.fetchOptions?.signal,
 			},
-			signal:
-				params?.fetchOptions?.signal ||
-				params?.signal ||
-				this.fetchOptions?.signal,
-		}
+			this.fetchFn,
+		)
 	}
 }

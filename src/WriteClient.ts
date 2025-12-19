@@ -625,7 +625,7 @@ export class WriteClient<
 		url: string,
 		params: FetchParams = {},
 	): Promise<Blob> {
-		const res = await this.fetchFn(url, this._buildRequestInit(params))
+		const res = await this.#request(new URL(url), params)
 
 		if (!res.ok) {
 			throw new PrismicError("Could not fetch foreign asset", url, undefined)
@@ -847,22 +847,26 @@ export class WriteClient<
 	 */
 	async #request(
 		url: URL,
-		params?: RequestInitLike,
+		params?: FetchParams,
 		init?: RequestInitLike,
 	): Promise<ResponseLike> {
-		const baseInit = this._buildRequestInit(params)
-
 		return await request(
 			url,
 			{
-				...baseInit,
+				...this.fetchOptions,
+				...params?.fetchOptions,
 				...init,
 				headers: {
-					...baseInit.headers,
+					...this.fetchOptions?.headers,
+					...params?.fetchOptions?.headers,
 					...init?.headers,
 					repository: this.repositoryName,
 					authorization: `Bearer ${this.writeToken}`,
 				},
+				signal:
+					params?.fetchOptions?.signal ||
+					params?.signal ||
+					this.fetchOptions?.signal,
 			},
 			this.fetchFn,
 		)
