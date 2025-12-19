@@ -197,7 +197,7 @@ describe.concurrent("assets", () => {
 		migration,
 	}) => {
 		vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(
-			new Response(null, { status: 429 }),
+			new Response(null, { status: 404 }),
 		)
 		migration.createAsset(
 			"https://images.prismic.io/prismic-main/a1307082-512a-4088-bace-30cdae70148e_stairs.jpg?w=100",
