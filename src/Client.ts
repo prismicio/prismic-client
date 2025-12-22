@@ -267,7 +267,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 */
 	fetchFn: FetchLike
 
-	fetchOptions?: RequestInitLike
+	fetchOptions: RequestInitLike
 
 	#repositoryName: string | undefined
 
@@ -378,68 +378,18 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * @returns A client that can query content from the repository.
 	 */
 	constructor(repositoryNameOrEndpoint: string, options: ClientConfig = {}) {
-		this.fetchOptions = options.fetchOptions
-
-		if (typeof options.fetch === "function") {
-			this.fetchFn = options.fetch
-		} else if (typeof globalThis.fetch === "function") {
-			this.fetchFn = globalThis.fetch as FetchLike
-		} else {
-			throw new PrismicError(
-				"A valid fetch implementation was not provided. In environments where fetch is not available (including Node.js), a fetch implementation must be provided via a polyfill or the `fetch` option.",
-				undefined,
-				undefined,
-			)
-		}
-
-		// If the global fetch function is used, we must bind it to the global scope.
-		if (this.fetchFn === globalThis.fetch) {
-			this.fetchFn = this.fetchFn.bind(globalThis)
-		}
-
-		if (
-			(options.documentAPIEndpoint ||
-				isRepositoryEndpoint(repositoryNameOrEndpoint)) &&
-			process.env.NODE_ENV === "development"
-		) {
-			const documentAPIEndpoint =
-				options.documentAPIEndpoint || repositoryNameOrEndpoint
-
-			// Matches non-API v2 `.prismic.io` endpoints, see: https://regex101.com/r/xRsavu/1
-			if (/\.prismic\.io\/(?!api\/v2\/?)/i.test(documentAPIEndpoint)) {
-				throw new PrismicError(
-					"@prismicio/client only supports Prismic Rest API V2. Please provide only the repository name to the first createClient() parameter or use the getRepositoryEndpoint() helper to generate a valid Rest API V2 endpoint URL.",
-					undefined,
-					undefined,
-				)
-			}
-
-			const hostname = new URL(documentAPIEndpoint).hostname.toLowerCase()
-
-			// Matches non-.cdn `.prismic.io` endpoints
-			if (
-				hostname.endsWith(".prismic.io") &&
-				!hostname.endsWith(".cdn.prismic.io")
-			) {
-				console.warn(
-					`[@prismicio/client] The client was created with a non-CDN endpoint. Convert it to the CDN endpoint for better performance. For more details, see ${devMsg("endpoint-must-use-cdn")}`,
-				)
-			}
-
-			// Warn if the user provided both a repository endpoint and an `documentAPIEndpoint` and they are different
-			if (
-				options.documentAPIEndpoint &&
-				isRepositoryEndpoint(repositoryNameOrEndpoint) &&
-				repositoryNameOrEndpoint !== options.documentAPIEndpoint
-			) {
-				console.warn(
-					`[@prismicio/client] Multiple incompatible endpoints were provided. Create the client using a repository name to prevent this error. For more details, see ${devMsg("prefer-repository-name")}`,
-				)
-			}
-		}
+		const {
+			documentAPIEndpoint,
+			accessToken,
+			ref,
+			routes,
+			brokenRoute,
+			defaultParams,
+			fetchOptions = {},
+			fetch = globalThis.fetch?.bind(globalThis),
+		} = options
 
 		if (isRepositoryEndpoint(repositoryNameOrEndpoint)) {
-			this.documentAPIEndpoint = repositoryNameOrEndpoint
 			try {
 				this.repositoryName = getRepositoryName(repositoryNameOrEndpoint)
 			} catch {
@@ -447,23 +397,77 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 					`[@prismicio/client] A repository name could not be inferred from the provided endpoint (\`${repositoryNameOrEndpoint}\`). Some methods will be disabled. Create the client using a repository name to prevent this warning. For more details, see ${devMsg("prefer-repository-name")}`,
 				)
 			}
+			this.documentAPIEndpoint = documentAPIEndpoint || repositoryNameOrEndpoint
 		} else {
-			this.documentAPIEndpoint =
-				options.documentAPIEndpoint ||
-				getRepositoryEndpoint(repositoryNameOrEndpoint)
 			this.repositoryName = repositoryNameOrEndpoint
+			this.documentAPIEndpoint =
+				documentAPIEndpoint || getRepositoryEndpoint(repositoryNameOrEndpoint)
 		}
 
-		this.accessToken = options.accessToken
-		this.routes = options.routes
-		this.brokenRoute = options.brokenRoute
-		this.defaultParams = options.defaultParams
-
-		if (options.ref) {
-			this.queryContentFromRef(options.ref)
+		if (!fetch) {
+			throw new PrismicError(
+				"A valid fetch implementation was not provided. In environments where fetch is not available, a fetch implementation must be provided via a polyfill or the `fetch` option.",
+				undefined,
+				undefined,
+			)
 		}
+		if (typeof fetch !== "function") {
+			throw new PrismicError(
+				`fetch must be a function, but received: ${typeof fetch}`,
+				undefined,
+				undefined,
+			)
+		}
+
+		if (!isRepositoryEndpoint(this.documentAPIEndpoint)) {
+			throw new PrismicError(
+				`documentAPIEndpoint is not a valid URL: ${documentAPIEndpoint}`,
+				undefined,
+				undefined,
+			)
+		}
+		if (
+			isRepositoryEndpoint(repositoryNameOrEndpoint) &&
+			documentAPIEndpoint &&
+			repositoryNameOrEndpoint !== documentAPIEndpoint
+		) {
+			console.warn(
+				`[@prismicio/client] Multiple incompatible endpoints were provided. Create the client using a repository name to prevent this error. For more details, see ${devMsg("prefer-repository-name")}`,
+			)
+		}
+		if (
+			/\.prismic\.io\/(?!api\/v2\/?)/i.test(this.documentAPIEndpoint) &&
+			process.env.NODE_ENV === "development"
+		) {
+			throw new PrismicError(
+				"@prismicio/client only supports Prismic Rest API V2. Please provide only the repository name to the first createClient() parameter or use the getRepositoryEndpoint() helper to generate a valid Rest API V2 endpoint URL.",
+				undefined,
+				undefined,
+			)
+		}
+		if (
+			/(?<!\.cdn)\.prismic\.io$/i.test(
+				new URL(this.documentAPIEndpoint).hostname,
+			) &&
+			process.env.NODE_ENV === "development"
+		) {
+			console.warn(
+				`[@prismicio/client] The client was created with a non-CDN endpoint. Convert it to the CDN endpoint for better performance. For more details, see ${devMsg("endpoint-must-use-cdn")}`,
+			)
+		}
+
+		this.accessToken = accessToken
+		this.routes = routes
+		this.brokenRoute = brokenRoute
+		this.defaultParams = defaultParams
+		this.fetchOptions = fetchOptions
+		this.fetchFn = fetch
 
 		this.graphQLFetch = this.graphQLFetch.bind(this)
+
+		if (ref) {
+			this.queryContentFromRef(ref)
+		}
 	}
 
 	/**
