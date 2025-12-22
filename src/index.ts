@@ -117,15 +117,17 @@ export type { HTMLRichTextSerializer } from "./helpers/asHTML"
 //=============================================================================
 
 // Client Errors
-export { PrismicError } from "./errors/PrismicError"
-export { ForbiddenError } from "./errors/ForbiddenError"
-export { InvalidDataError } from "./errors/InvalidDataError"
-export { NotFoundError } from "./errors/NotFoundError"
-export { RefNotFoundError } from "./errors/RefNotFoundError"
-export { RefExpiredError } from "./errors/RefExpiredError"
-export { PreviewTokenExpiredError } from "./errors/PreviewTokenExpired"
-export { ParsingError } from "./errors/ParsingError"
-export { RepositoryNotFoundError } from "./errors/RepositoryNotFoundError"
+export {
+	ForbiddenError,
+	InvalidDataError,
+	NotFoundError,
+	ParsingError,
+	PreviewTokenExpiredError,
+	PrismicError,
+	RefExpiredError,
+	RefNotFoundError,
+	RepositoryNotFoundError,
+} from "./errors"
 
 //=============================================================================
 // Types - Types representing Prismic content, models, and API payloads.

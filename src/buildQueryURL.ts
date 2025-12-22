@@ -1,4 +1,3 @@
-import { castArray } from "./lib/castArray"
 import { devMsg } from "./lib/devMsg"
 
 import { version } from "../package.json"
@@ -9,9 +8,7 @@ import { version } from "../package.json"
  */
 const PRISMIC_DEV_PARAM = "x-d"
 
-/**
- * The query parameter used to indicate the version of the client to the API.
- */
+/** The query parameter used to indicate the version of the client to the API. */
 const PRISMIC_CLIENT_VERSION_PARAM = "x-c"
 
 /**
@@ -65,9 +62,7 @@ export interface Ordering {
  * ```
  */
 export interface Route {
-	/**
-	 * The custom type of the page.
-	 */
+	/** The custom type of the page. */
 	type: string
 
 	/**
@@ -82,14 +77,10 @@ export interface Route {
 	 */
 	lang?: string
 
-	/**
-	 * The resolved path of the page with optional placeholders.
-	 */
+	/** The resolved path of the page with optional placeholders. */
 	path: string
 
-	/**
-	 * An object that lists the API IDs of the Content Relationships in the route.
-	 */
+	/** An object that lists the API IDs of the Content Relationships in the route. */
 	resolvers?: Record<string, string>
 }
 
@@ -207,9 +198,7 @@ export interface QueryParams {
 	brokenRoute?: string
 }
 
-/**
- * Arguments for `buildQueryURL` to construct a Query URL.
- */
+/** Arguments for `buildQueryURL` to construct a Query URL. */
 type BuildQueryURLParams = {
 	/**
 	 * Ref used to query documents.
@@ -249,9 +238,7 @@ const RENAMED_PARAMS = {
 	accessToken: "access_token",
 } as const
 
-/**
- * A valid parameter name for the Prismic REST API V2.
- */
+/** A valid parameter name for the Prismic REST API V2. */
 type ValidParamName =
 	| Exclude<
 			keyof QueryParams,
@@ -405,4 +392,8 @@ export const buildQueryURL = (
 	}
 
 	return url.toString()
+}
+
+function castArray<A>(a: A | A[]): A[] {
+	return Array.isArray(a) ? a : [a]
 }

@@ -1,4 +1,4 @@
-import { PrismicError } from "../errors/PrismicError"
+import { PrismicError } from "../errors"
 
 import type { CreateAssetParams } from "../WriteClient"
 
