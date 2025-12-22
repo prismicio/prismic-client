@@ -39,7 +39,9 @@ const formatValue = (
  * @returns Filter builder function for the given name.
  */
 const pathWithArgsFilter = <Args extends unknown[]>(name: string) => {
-	/** @param path - Path to the value to be compared. */
+	/**
+	 * @param path - Path to the value to be compared.
+	 */
 	const fn = (path: string, ...args: Args): string => {
 		const formattedArgs = args.map(formatValue).join(", ")
 		const joiner = path && args.length ? ", " : ""
@@ -60,7 +62,9 @@ const pathWithArgsFilter = <Args extends unknown[]>(name: string) => {
 const pathFilter = (name: string) => {
 	const filterFn = pathWithArgsFilter(name)
 
-	/** @param path - Path for the filter. */
+	/**
+	 * @param path - Path for the filter.
+	 */
 	const fn = (path: string): string => {
 		return filterFn(path)
 	}
@@ -79,7 +83,9 @@ const pathFilter = (name: string) => {
 const argsFilter = <Args extends unknown[]>(name: string) => {
 	const filterFn = pathWithArgsFilter<Args>(name)
 
-	/** @param args - Arguments for the filter. */
+	/**
+	 * @param args - Arguments for the filter.
+	 */
 	const fn = (...args: Args): string => {
 		return filterFn("", ...args)
 	}
