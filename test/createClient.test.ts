@@ -118,7 +118,7 @@ it("throws if given fetch is not a function", ({ expect }) => {
 		// @ts-expect-error - Intentional wrong type
 		createClient("example", { fetch: "invalid" })
 	expect(invalid).toThrow(PrismicError)
-	expect(invalid).toThrow(/fetch implementation was not provided/i)
+	expect(invalid).toThrow(/fetch must be a function/i)
 	vi.unstubAllGlobals()
 })
 
