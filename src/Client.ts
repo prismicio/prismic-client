@@ -493,7 +493,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		if (
 			isRepositoryEndpoint(repositoryNameOrEndpoint) &&
 			documentAPIEndpoint &&
-			repositoryNameOrEndpoint !== options.documentAPIEndpoint
+			repositoryNameOrEndpoint !== documentAPIEndpoint
 		) {
 			console.warn(
 				`[@prismicio/client] Multiple incompatible endpoints were provided. Create the client using a repository name to prevent this error. For more details, see ${devMsg("prefer-repository-name")}`,
