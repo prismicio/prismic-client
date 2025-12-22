@@ -19,7 +19,7 @@ const formatValue = (
 	}
 
 	if (typeof value === "string") {
-		return `"${value}"`
+		return `"${value.replace(/"/g, '\\"')}"`
 	}
 
 	if (value instanceof Date) {
