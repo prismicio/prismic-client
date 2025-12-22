@@ -24,6 +24,11 @@ describe("any", () => {
 			"[any(my.product.restock_date, [1600000000000, 1700000000000])]",
 		)
 	})
+
+	it("supports quotation marks", async ({ expect }) => {
+		const res = filter.any("my.product.description", ['"quote"'])
+		expect(res).toBe('[any(my.product.description, ["\\"quote\\""])]')
+	})
 })
 
 describe("at", () => {
@@ -50,6 +55,11 @@ describe("at", () => {
 	it("supports dates", async ({ expect }) => {
 		const res = filter.at("my.product.restock_date", new Date(1600000000000))
 		expect(res).toBe("[at(my.product.restock_date, 1600000000000)]")
+	})
+
+	it("supports quotation marks", async ({ expect }) => {
+		const res = filter.at("my.product.description", '"quote"')
+		expect(res).toBe('[at(my.product.description, "\\"quote\\"")]')
 	})
 })
 
@@ -341,6 +351,11 @@ describe("fulltext", () => {
 		const res = filter.fulltext("my.product.title", "phone")
 		expect(res).toBe('[fulltext(my.product.title, "phone")]')
 	})
+
+	it("supports quotation marks", async ({ expect }) => {
+		const res = filter.fulltext("my.product.description", '"quote"')
+		expect(res).toBe('[fulltext(my.product.description, "\\"quote\\"")]')
+	})
 })
 
 describe("geopointNear", () => {
@@ -412,6 +427,11 @@ describe("not", () => {
 	it("supports dates", async ({ expect }) => {
 		const res = filter.not("my.product.restock_date", new Date(1600000000000))
 		expect(res).toBe("[not(my.product.restock_date, 1600000000000)]")
+	})
+
+	it("supports quotation marks", async ({ expect }) => {
+		const res = filter.not("my.product.description", '"quote"')
+		expect(res).toBe('[not(my.product.description, "\\"quote\\"")]')
 	})
 })
 
