@@ -1,39 +1,28 @@
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
-import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod";
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
-import { testFetchOptions } from "./__testutils__/testFetchOptions";
+import { vi } from "vitest"
 
-testGetFirstMethod("queries for singleton document", {
-	run: (client) => client.getSingle("type"),
-	requiredParams: {
-		q: `[[at(document.type, "type")]]`,
-	},
-});
+import { it } from "./it"
 
-testGetFirstMethod("includes params if provided", {
-	run: (client) =>
-		client.getSingle("type", {
-			accessToken: "custom-accessToken",
-			ref: "custom-ref",
-			lang: "*",
-		}),
-	requiredParams: {
-		access_token: "custom-accessToken",
-		ref: "custom-ref",
-		lang: "*",
-		q: `[[at(document.type, "type")]]`,
-	},
-});
+import { NotFoundError } from "../src"
 
-testFetchOptions("supports fetch options", {
-	run: (client, params) => client.getSingle("type", params),
-});
+it("returns single document", async ({ expect, client, docs }) => {
+	const res = await client.getSingle(docs.defaultSingle.type)
+	expect(res).toMatchObject({ type: docs.defaultSingle.type })
+})
 
-testAbortableMethod("is abortable with an AbortController", {
-	run: (client, params) => client.getSingle("type", params),
-});
+it("throws if no document is returned", async ({
+	expect,
+	client,
+	response,
+}) => {
+	vi.mocked(client.fetchFn)
+		.mockImplementationOnce(fetch)
+		.mockResolvedValueOnce(response.search([]))
+	await expect(() => client.getSingle("invalid")).rejects.toThrow(NotFoundError)
+})
 
-testConcurrentMethod("shares concurrent equivalent network requests", {
-	run: (client, params) => client.getSingle("type", params),
-	mode: "get",
-});
+it("includes filter", async ({ expect, client, docs }) => {
+	await client.getSingle(docs.defaultSingle.type)
+	expect(client).toHaveLastFetchedContentAPI({
+		q: `[[at(document.type, "${docs.defaultSingle.type}")]]`,
+	})
+})

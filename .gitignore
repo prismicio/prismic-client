@@ -1,4 +1,5 @@
 # custom
+*.tgz
 dist
 examples/**/package-lock.json
 

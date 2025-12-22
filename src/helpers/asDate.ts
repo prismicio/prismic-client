@@ -1,21 +1,28 @@
-import type { DateField } from "../types/value/date";
-import type { TimestampField } from "../types/value/timestamp";
+import type { DateField } from "../types/value/date"
+import type { TimestampField } from "../types/value/timestamp"
 
 /**
  * The return type of `asDate()`.
  */
 type AsDateReturnType<
 	Field extends DateField | TimestampField | null | undefined,
-> = Field extends DateField<"filled"> | TimestampField<"filled"> ? Date : null;
+> = Field extends DateField<"filled"> | TimestampField<"filled"> ? Date : null
 
 /**
- * Transforms a date or timestamp field into a JavaScript Date object
+ * Converts a date or timestamp field to a JavaScript Date object.
  *
- * @param dateOrTimestampField - A date or timestamp field from Prismic
+ * @example
  *
- * @returns A Date object, null if provided date is falsy
+ * ```ts
+ * const date = asDate(document.data.release_date)
+ * // => Date object or null
+ * ```
  *
- * @see Templating date field from Prismic {@link https://prismic.io/docs/template-content-vanilla-javascript#date-and-timestamp}
+ * @param dateOrTimestampField - A date or timestamp field from Prismic.
+ *
+ * @returns A Date object, or `null` if the field is empty.
+ *
+ * @see Learn about date and timestamp fields: {@link https://prismic.io/docs/fields/date}
  */
 export const asDate = <
 	Field extends DateField | TimestampField | null | undefined,
@@ -23,7 +30,7 @@ export const asDate = <
 	dateOrTimestampField: Field,
 ): AsDateReturnType<Field> => {
 	if (!dateOrTimestampField) {
-		return null as AsDateReturnType<Field>;
+		return null as AsDateReturnType<Field>
 	}
 
 	// If field is a timestamp field...
@@ -41,9 +48,9 @@ export const asDate = <
 		 */
 		return new Date(
 			dateOrTimestampField.replace(/(\+|-)(\d{2})(\d{2})$/, ".000$1$2:$3"),
-		) as AsDateReturnType<Field>;
+		) as AsDateReturnType<Field>
 	} else {
 		// ...else field is a date field
-		return new Date(dateOrTimestampField) as AsDateReturnType<Field>;
+		return new Date(dateOrTimestampField) as AsDateReturnType<Field>
 	}
-};
+}

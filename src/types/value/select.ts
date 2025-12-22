@@ -1,4 +1,4 @@
-import type { FieldState } from "./types";
+import type { FieldState } from "./types"
 
 /**
  * A select field.
@@ -11,4 +11,4 @@ import type { FieldState } from "./types";
 export type SelectField<
 	Enum extends string = string,
 	State extends FieldState = FieldState,
-> = State extends "empty" ? null : Enum;
+> = State extends "empty" ? null : Enum

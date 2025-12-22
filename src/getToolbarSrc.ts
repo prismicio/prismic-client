@@ -1,6 +1,6 @@
-import { PrismicError } from "./errors/PrismicError";
+import { PrismicError } from "./errors"
 
-import { isRepositoryName } from "./isRepositoryName";
+import { isRepositoryName } from "./isRepositoryName"
 
 /**
  * Returns the URL for a Prismic repository's Prismic Toolbar script. Use the
@@ -39,12 +39,12 @@ export const getToolbarSrc = <TRepositoryName extends string>(
 	repositoryName: TRepositoryName,
 ): `https://static.cdn.prismic.io/prismic.js?new=true&repo=${TRepositoryName}` => {
 	if (isRepositoryName(repositoryName)) {
-		return `https://static.cdn.prismic.io/prismic.js?new=true&repo=${repositoryName}` as const;
+		return `https://static.cdn.prismic.io/prismic.js?new=true&repo=${repositoryName}` as const
 	} else {
 		throw new PrismicError(
 			`An invalid Prismic repository name was given: ${repositoryName}`,
 			undefined,
 			undefined,
-		);
+		)
 	}
-};
+}

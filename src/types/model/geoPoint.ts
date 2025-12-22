@@ -1,4 +1,4 @@
-import type { CustomTypeModelFieldType } from "./types";
+import type { CustomTypeModelFieldType } from "./types"
 
 /**
  * A geopoint custom type field.
@@ -6,8 +6,8 @@ import type { CustomTypeModelFieldType } from "./types";
  * More details: {@link https://prismic.io/docs/geopoint}
  */
 export interface CustomTypeModelGeoPointField {
-	type: typeof CustomTypeModelFieldType.GeoPoint;
+	type: typeof CustomTypeModelFieldType.GeoPoint
 	config?: {
-		label?: string | null;
-	};
+		label?: string | null
+	}
 }

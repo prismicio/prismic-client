@@ -1,12 +1,13 @@
-import { isInternalURL } from "../lib/isInternalURL";
+import { isInternalURL } from "../lib/isInternalURL"
 
-import type { FilledContentRelationshipField } from "../types/value/contentRelationship";
-import type { PrismicDocument } from "../types/value/document";
-import { FilledLinkToWebField, LinkField } from "../types/value/link";
-import type { FilledLinkToMediaField } from "../types/value/linkToMedia";
+import type { FilledContentRelationshipField } from "../types/value/contentRelationship"
+import type { PrismicDocument } from "../types/value/document"
+import type { FilledLinkToWebField, LinkField } from "../types/value/link"
+import type { FilledLinkToMediaField } from "../types/value/linkToMedia"
 
-import { AsLinkReturnType, LinkResolverFunction, asLink } from "./asLink";
-import { link as isFilledLink } from "./isFilled";
+import type { AsLinkReturnType, LinkResolverFunction } from "./asLink"
+import { asLink } from "./asLink"
+import { link as isFilledLink } from "./isFilled"
 
 type AsLinkAttrsConfigRelArgs<
 	LinkResolverFunctionReturnType = ReturnType<LinkResolverFunction>,
@@ -18,10 +19,10 @@ type AsLinkAttrsConfigRelArgs<
 > = {
 	href:
 		| NonNullable<AsLinkReturnType<LinkResolverFunctionReturnType, Field>>
-		| undefined;
-	isExternal: boolean;
-	target?: string;
-};
+		| undefined
+	isExternal: boolean
+	target?: string
+}
 
 export type AsLinkAttrsConfig<
 	LinkResolverFunctionReturnType = ReturnType<LinkResolverFunction>,
@@ -31,11 +32,11 @@ export type AsLinkAttrsConfig<
 		| null
 		| undefined,
 > = {
-	linkResolver?: LinkResolverFunction<LinkResolverFunctionReturnType>;
+	linkResolver?: LinkResolverFunction<LinkResolverFunctionReturnType>
 	rel?: (
 		args: AsLinkAttrsConfigRelArgs<LinkResolverFunctionReturnType, Field>,
-	) => string | undefined | void;
-};
+	) => string | undefined | void
+}
 
 /**
  * The return type of `asLinkAttrs()`.
@@ -55,37 +56,34 @@ type AsLinkAttrsReturnType<
 	? {
 			href:
 				| NonNullable<AsLinkReturnType<LinkResolverFunctionReturnType, Field>>
-				| undefined;
-			target?: string;
-			rel?: string;
-	  }
+				| undefined
+			target?: string
+			rel?: string
+		}
 	: {
-			href?: undefined;
-			target?: undefined;
-			rel?: undefined;
-	  };
+			href?: undefined
+			target?: undefined
+			rel?: undefined
+		}
 
 /**
- * Resolves any type of link field or Prismic document to a set of link
- * attributes. The attributes are designed to be passed to link HTML elements,
- * like `<a>`.
+ * Resolves any type of link field or Prismic page to a set of link attributes.
+ * The attributes are designed to be passed to link HTML elements, like `<a>`.
  *
  * If a resolved URL is external (i.e. starts with a protocol like `https://`),
  * `rel` is returned as `"noreferrer"`.
  *
  * @typeParam LinkResolverFunctionReturnType - link resolver function return
  *   type
- * @typeParam Field - Link field or Prismic document to resolve to link
- *   attributes
+ * @typeParam Field - Link field or Prismic page to resolve to link attributes
  *
- * @param linkFieldOrDocument - Any kind of link field or a document to resolve
+ * @param linkFieldOrDocument - Any kind of link field or a page to resolve
  * @param config - Configuration that determines the output of `asLinkAttrs()`
  *
  * @returns Resolved set of link attributes or, if the provided link field or
- *   document is empty, and empty object
+ *   page is empty, and empty object
  *
- * @see Prismic link resolver documentation: {@link https://prismic.io/docs/route-resolver#link-resolver}
- * @see Prismic API `routes` options documentation: {@link https://prismic.io/docs/route-resolver}
+ * @see Learn about route resolvers and link resolvers: {@link https://prismic.io/docs/routes}
  */
 export const asLinkAttrs = <
 	LinkResolverFunctionReturnType = ReturnType<LinkResolverFunction>,
@@ -100,35 +98,31 @@ export const asLinkAttrs = <
 ): AsLinkAttrsReturnType<LinkResolverFunctionReturnType> => {
 	if (
 		linkFieldOrDocument &&
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore - Bug in TypeScript 4.9: https://github.com/microsoft/TypeScript/issues/51501
 		("link_type" in linkFieldOrDocument
 			? isFilledLink(linkFieldOrDocument)
 			: linkFieldOrDocument)
 	) {
 		const target =
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-ignore - Bug in TypeScript 4.9: https://github.com/microsoft/TypeScript/issues/51501
-			"target" in linkFieldOrDocument ? linkFieldOrDocument.target : undefined;
+			"target" in linkFieldOrDocument ? linkFieldOrDocument.target : undefined
 
-		const rawHref = asLink(linkFieldOrDocument, config.linkResolver);
+		const rawHref = asLink(linkFieldOrDocument, config.linkResolver)
 		const href =
-			rawHref == null ? undefined : (rawHref as NonNullable<typeof rawHref>);
+			rawHref == null ? undefined : (rawHref as NonNullable<typeof rawHref>)
 
-		const isExternal = typeof href === "string" ? !isInternalURL(href) : false;
+		const isExternal = typeof href === "string" ? !isInternalURL(href) : false
 
 		const rel = config.rel
 			? config.rel({ href, isExternal, target })
 			: isExternal
-			? "noreferrer"
-			: undefined;
+				? "noreferrer"
+				: undefined
 
 		return {
 			href,
 			target,
 			rel: rel == null ? undefined : rel,
-		};
+		}
 	}
 
-	return {};
-};
+	return {}
+}

@@ -1,6 +1,6 @@
-import type { CustomTypeModelFieldType } from "./types";
+import type { CustomTypeModelFieldType } from "./types"
 
-import type { CustomTypeModelLinkSelectType } from "./link";
+import type { CustomTypeModelLinkSelectType } from "./link"
 
 /**
  * A link to media custom type field.
@@ -8,10 +8,12 @@ import type { CustomTypeModelLinkSelectType } from "./link";
  * More details: {@link https://prismic.io/docs/media}
  */
 export interface CustomTypeModelLinkToMediaField {
-	type: typeof CustomTypeModelFieldType.Link;
+	type: typeof CustomTypeModelFieldType.Link
 	config?: {
-		label?: string | null;
-		placeholder?: string;
-		select: typeof CustomTypeModelLinkSelectType.Media;
-	};
+		label?: string | null
+		placeholder?: string
+		select: typeof CustomTypeModelLinkSelectType.Media
+		allowText?: boolean
+		variants?: string[]
+	}
 }

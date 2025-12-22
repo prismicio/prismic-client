@@ -1,17 +1,17 @@
-import { AnyRegularField } from "./types";
+import type { AnyRegularField } from "./types"
 
-import { GroupField } from "./group";
-import { SliceZone } from "./sliceZone";
-import { TimestampField } from "./timestamp";
+import type { GroupField } from "./group"
+import type { SliceZone } from "./sliceZone"
+import type { TimestampField } from "./timestamp"
 
 /**
  * Document metadata for a translation of a Prismic document.
  */
 export interface AlternateLanguage<TypeEnum = string, LangEnum = string> {
-	id: string;
-	uid?: string;
-	type: TypeEnum;
-	lang: LangEnum;
+	id: string
+	uid?: string
+	type: TypeEnum
+	lang: LangEnum
 }
 
 /**
@@ -22,36 +22,36 @@ export interface PrismicDocumentHeader<TypeEnum = string, LangEnum = string> {
 	 * The unique identifier for the document. Guaranteed to be unique among all
 	 * documents in the Prismic repository.
 	 */
-	id: string;
+	id: string
 	/**
 	 * The unique identifier for the document. Guaranteed to be unique among all
 	 * Prismic documents of the same type.
 	 */
-	uid: string | null;
+	uid: string | null
 	/**
 	 * Url that refers to document.
 	 */
-	url: string | null;
+	url: string | null
 	/**
 	 * Type of the document.
 	 */
-	type: TypeEnum;
+	type: TypeEnum
 	/**
 	 * Href for document.
 	 */
-	href: string;
+	href: string
 	/**
 	 * Tags associated with document.
 	 */
-	tags: string[];
+	tags: string[]
 	/**
 	 * The timestamp at which the document was first published.
 	 */
-	first_publication_date: TimestampField<"filled">;
+	first_publication_date: TimestampField<"filled">
 	/**
 	 * The timestamp at which the document was last published.
 	 */
-	last_publication_date: TimestampField<"filled">;
+	last_publication_date: TimestampField<"filled">
 	/**
 	 * Slugs associated with document.
 	 *
@@ -59,19 +59,19 @@ export interface PrismicDocumentHeader<TypeEnum = string, LangEnum = string> {
 	 *   introduced. Migrate to the UID field. For more details, see
 	 *   https://community.prismic.io/t/what-are-slugs/6493
 	 */
-	slugs: string[];
+	slugs: string[]
 	/**
 	 * Documents that are related to this document.
 	 */
-	linked_documents: unknown[]; // TODO: Not sure of the type for this one
+	linked_documents: unknown[] // TODO: Not sure of the type for this one
 	/**
 	 * Language of document.
 	 */
-	lang: LangEnum;
+	lang: LangEnum
 	/**
 	 * Array to access alternate language versions for document.
 	 */
-	alternate_languages: AlternateLanguage<TypeEnum, LangEnum>[];
+	alternate_languages: AlternateLanguage<TypeEnum, LangEnum>[]
 }
 
 /**
@@ -83,7 +83,7 @@ export interface PrismicDocument<
 	DataInterface extends Record<
 		string,
 		AnyRegularField | GroupField | SliceZone
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		// oxlint-disable-next-line no-explicit-any
 	> = Record<string, any>,
 	TypeEnum = string,
 	LangEnum = string,
@@ -91,7 +91,7 @@ export interface PrismicDocument<
 	/**
 	 * Data contained in the document.
 	 */
-	data: DataInterface;
+	data: DataInterface
 }
 
 /**
@@ -105,7 +105,7 @@ export interface PrismicDocumentWithoutUID<
 	DataInterface extends Record<
 		string,
 		AnyRegularField | GroupField | SliceZone
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		// oxlint-disable-next-line no-explicit-any
 	> = Record<string, any>,
 	TypeEnum = string,
 	LangEnum = string,
@@ -117,7 +117,7 @@ export interface PrismicDocumentWithoutUID<
 	 * The unique identifier for the document. Guaranteed to be unique among all
 	 * Prismic documents of the same type.
 	 */
-	uid: null;
+	uid: null
 }
 
 /**
@@ -131,7 +131,7 @@ export interface PrismicDocumentWithUID<
 	DataInterface extends Record<
 		string,
 		AnyRegularField | GroupField | SliceZone
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		// oxlint-disable-next-line no-explicit-any
 	> = Record<string, any>,
 	TypeEnum = string,
 	LangEnum = string,
@@ -140,5 +140,5 @@ export interface PrismicDocumentWithUID<
 	 * The unique identifier for the document. Guaranteed to be unique among all
 	 * Prismic documents of the same type.
 	 */
-	uid: string;
+	uid: string
 }

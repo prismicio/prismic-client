@@ -1,233 +1,111 @@
-import { expect, it } from "vitest";
+import { vi } from "vitest"
 
-import * as msw from "msw";
+import { it } from "./it"
 
-import { createAuthorizationHeader } from "./__testutils__/createAuthorizationHeader";
-import { createTestClient } from "./__testutils__/createClient";
-import { createRepositoryName } from "./__testutils__/createRepositoryName";
-import { getMasterRef } from "./__testutils__/getMasterRef";
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
+it("performs a graphql query", async ({ expect, client, endpoint }) => {
+	const input = new URL("/graphql", endpoint)
+	input.searchParams.set("query", "{_allDocuments{totalCount}}")
+	const res = await client.graphQLFetch(input.toString())
+	const json = await res.json()
+	expect(json).toHaveProperty("data")
+})
 
-it("resolves a query", async (ctx) => {
-	const repositoryResponse = ctx.mock.api.repository();
-	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`;
-	const graphqlResponse = { foo: "bar" };
+it("includes prismic-ref header with master ref", async ({
+	expect,
+	client,
+	endpoint,
+	masterRef,
+}) => {
+	const input = new URL("/graphql", endpoint)
+	input.searchParams.set("query", "{_allDocuments{totalCount}}")
+	await client.graphQLFetch(input.toString())
+	const init = vi.mocked(client.fetchFn).mock.lastCall![1]!
+	expect(init.headers).toHaveProperty("prismic-ref", masterRef)
+})
 
-	mockPrismicRestAPIV2({
-		repositoryResponse,
-		ctx,
-	});
-	ctx.server.use(
-		msw.rest.get(graphqlURL, (req, res, ctx) => {
-			if (req.headers.get("Prismic-Ref") === getMasterRef(repositoryResponse)) {
-				return res(ctx.json(graphqlResponse));
-			}
-		}),
-	);
+it("supports access token", async ({
+	expect,
+	client,
+	endpoint,
+	accessToken,
+}) => {
+	const input = new URL("/graphql", endpoint)
+	input.searchParams.set("query", "{_allDocuments{totalCount}}")
+	client.accessToken = accessToken
+	await client.graphQLFetch(input.toString())
+	const init = vi.mocked(client.fetchFn).mock.lastCall![1]!
+	expect(init.headers).toHaveProperty("authorization", `Token ${accessToken}`)
+})
 
-	const client = createTestClient();
-	const res = await client.graphQLFetch(graphqlURL);
-	const json = await res.json();
+it("supports custom headers", async ({
+	expect,
+	client,
+	endpoint,
+	masterRef,
+}) => {
+	const input = new URL("/graphql", endpoint)
+	input.searchParams.set("query", "{_allDocuments{totalCount}}")
+	await client.graphQLFetch(input.toString(), { headers: { foo: "bar" } })
+	const init = vi.mocked(client.fetchFn).mock.lastCall![1]!
+	expect(init.headers).toHaveProperty("prismic-ref", masterRef)
+	expect(init.headers).toHaveProperty("foo", "bar")
+})
 
-	expect(json).toStrictEqual(graphqlResponse);
-});
+it("includes ref URL parameter for cache-busting", async ({
+	expect,
+	client,
+	endpoint,
+	masterRef,
+}) => {
+	const input = new URL("/graphql", endpoint)
+	input.searchParams.set("query", "{_allDocuments{totalCount}}")
+	await client.graphQLFetch(input.toString())
+	const url = vi.mocked(client.fetchFn).mock.lastCall![0]
+	expect(url).toHaveSearchParam("ref", masterRef)
+})
 
-it("merges provided headers with defaults", async (ctx) => {
-	const repositoryResponse = ctx.mock.api.repository();
-	repositoryResponse.integrationFieldsRef = ctx.mock.api.ref().ref;
-	const ref = "custom-ref";
-
-	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`;
-	const graphqlResponse = { foo: "bar" };
-
-	mockPrismicRestAPIV2({
-		repositoryResponse,
-		ctx,
-	});
-	ctx.server.use(
-		msw.rest.get(graphqlURL, (req, res, ctx) => {
-			if (
-				req.headers.get("Prismic-Ref") === ref &&
-				req.headers.get("Prismic-integration-field-ref") ===
-					repositoryResponse.integrationFieldsRef
-			) {
-				return res(ctx.json(graphqlResponse));
-			}
-		}),
-	);
-
-	const client = createTestClient();
-	const res = await client.graphQLFetch(graphqlURL, {
-		headers: {
-			"Prismic-Ref": ref,
-		},
-	});
-	const json = await res.json();
-
-	expect(json).toStrictEqual(graphqlResponse);
-});
-
-// TODO: This test doesn't seem to test what the description claims.
-it("includes Authorization header if access token is provided", async (ctx) => {
-	const repositoryResponse = ctx.mock.api.repository();
-	repositoryResponse.integrationFieldsRef = ctx.mock.api.ref().ref;
-
-	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`;
-	const graphqlResponse = { foo: "bar" };
-
-	mockPrismicRestAPIV2({
-		repositoryResponse,
-		ctx,
-	});
-	ctx.server.use(
-		msw.rest.get(graphqlURL, (req, res, ctx) => {
-			if (
-				req.headers.get("Prismic-Ref") === getMasterRef(repositoryResponse) &&
-				req.headers.get("Prismic-integration-field-ref") ===
-					repositoryResponse.integrationFieldsRef
-			) {
-				return res(ctx.json(graphqlResponse));
-			}
-		}),
-	);
-
-	const client = createTestClient();
-	const res = await client.graphQLFetch(graphqlURL);
-	const json = await res.json();
-
-	expect(json).toStrictEqual(graphqlResponse);
-});
-
-// TODO: This test doesn't seem to test what the description claims.
-it("includes integration fields header if ref is available", async (ctx) => {
-	const repositoryResponse = ctx.mock.api.repository();
-	const accessToken = "accessToken";
-
-	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`;
-	const graphqlResponse = { foo: "bar" };
-
-	mockPrismicRestAPIV2({
-		repositoryResponse,
-		ctx,
-	});
-	ctx.server.use(
-		msw.rest.get(graphqlURL, (req, res, ctx) => {
-			if (
-				req.headers.get("Prismic-Ref") === getMasterRef(repositoryResponse) &&
-				req.headers.get("Authorization") ===
-					createAuthorizationHeader(accessToken)
-			) {
-				return res(ctx.json(graphqlResponse));
-			}
-		}),
-	);
-
-	const client = createTestClient({ clientConfig: { accessToken } });
-	const res = await client.graphQLFetch(graphqlURL);
-	const json = await res.json();
-
-	expect(json).toStrictEqual(graphqlResponse);
-});
-
-it("optimizes queries by removing whitespace", async (ctx) => {
-	const repositoryResponse = ctx.mock.api.repository();
-
-	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`;
-	const graphqlResponse = { foo: "bar" };
-
-	const graphqlURLWithUncompressedQuery = new URL(graphqlURL);
-	graphqlURLWithUncompressedQuery.searchParams.set(
+it("optimizes queries by removing whitespace", async ({
+	expect,
+	client,
+	endpoint,
+}) => {
+	const input = new URL("/graphql", endpoint)
+	input.searchParams.set(
 		"query",
-		`query {
-  allPage {
-    edges {
-      node {
-        _meta {
-          uid
-        }
-      }
-    }
+		`{
+  _allDocuments {
+    totalCount
   }
-}`,
-	);
+}
+`.trim(),
+	)
+	await client.graphQLFetch(input.toString())
+	const url = vi.mocked(client.fetchFn).mock.lastCall![0]
+	expect(url).toHaveSearchParam("query", "{_allDocuments{totalCount}}")
+})
 
-	mockPrismicRestAPIV2({
-		repositoryResponse,
-		ctx,
-	});
-	ctx.server.use(
-		msw.rest.get(graphqlURL, (req, res, ctx) => {
-			if (
-				req.url.searchParams.get("query") ===
-					"query{allPage{edges{node{_meta{uid}}}}}" &&
-				req.headers.get("Prismic-Ref") === getMasterRef(repositoryResponse)
-			) {
-				return res(ctx.json(graphqlResponse));
-			}
+it("supports signal", async ({ expect, client }) => {
+	await expect(() =>
+		client.graphQLFetch("https://foo.cdn.prismic.io/graphql", {
+			signal: AbortSignal.abort(),
 		}),
-	);
+	).rejects.toThrow()
+})
 
-	const client = createTestClient();
-	const res = await client.graphQLFetch(
-		graphqlURLWithUncompressedQuery.toString(),
-	);
-	const json = await res.json();
-
-	expect(json).toStrictEqual(graphqlResponse);
-});
-
-it("includes a ref URL parameter to cache-bust", async (ctx) => {
-	const repositoryResponse = ctx.mock.api.repository();
-	const ref = getMasterRef(repositoryResponse);
-
-	const graphqlURL = `https://${createRepositoryName()}.cdn.prismic.io/graphql`;
-	const graphqlResponse = { foo: "bar" };
-
-	mockPrismicRestAPIV2({
-		repositoryResponse,
-		ctx,
-	});
-	ctx.server.use(
-		msw.rest.get(graphqlURL, (req, res, ctx) => {
-			if (
-				req.url.searchParams.get("ref") === ref &&
-				req.headers.get("Prismic-Ref") === ref
-			) {
-				return res(ctx.json(graphqlResponse));
-			}
-		}),
-	);
-
-	const client = createTestClient();
-	const res = await client.graphQLFetch(graphqlURL);
-	const json = await res.json();
-
-	expect(json).toStrictEqual(graphqlResponse);
-});
-
-// `graphQLFetch()` uses a different function signature from query methods, so
-// we cannot use the generalized `testAbortableMethod()` test util.
-it("is abortable with an AbortController", async (ctx) => {
-	const controller = new AbortController();
-	controller.abort();
-
-	mockPrismicRestAPIV2({ ctx });
-
-	const client = createTestClient();
-
-	await expect(async () => {
-		await client.graphQLFetch("https://foo.cdn.prismic.io/graphql", {
-			signal: controller.signal,
-		});
-	}).rejects.toThrow(/aborted/i);
-});
-
-testConcurrentMethod("does not share concurrent equivalent network requests", {
-	run: (client, params) =>
-		client.graphQLFetch(
-			`https://${createRepositoryName()}.cdn.prismic.io/graphql`,
-			params,
-		),
-	mode: "NOT-SHARED___graphQL",
-});
+it("does not share concurrent equivalent network requests", async ({
+	expect,
+	client,
+	endpoint,
+}) => {
+	const input = new URL("/graphql", endpoint)
+	input.searchParams.set("query", "{_allDocuments{totalCount}}")
+	await Promise.all([
+		client.graphQLFetch(input.toString()),
+		client.graphQLFetch(input.toString()),
+	])
+	expect(client).toHaveFetchedRepoTimes(1)
+	const graphqlCalls = vi
+		.mocked(client.fetchFn)
+		.mock.calls.filter(([url]) => new URL(url).pathname === "/graphql")
+	expect(graphqlCalls).toHaveLength(2)
+})

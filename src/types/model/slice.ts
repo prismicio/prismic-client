@@ -1,7 +1,7 @@
-import type { CustomTypeModelFieldForNestedGroup } from "./types";
+import type { CustomTypeModelFieldForNestedGroup } from "./types"
 
-import type { CustomTypeModelNestedGroupField } from "./group";
-import type { CustomTypeModelSliceType } from "./sliceZone";
+import type { CustomTypeModelNestedGroupField } from "./group"
+import type { CustomTypeModelSliceType } from "./sliceZone"
 
 /**
  * A Slice for a custom type.
@@ -21,15 +21,15 @@ export interface CustomTypeModelSlice<
 		CustomTypeModelFieldForNestedGroup
 	> = Record<string, CustomTypeModelFieldForNestedGroup>,
 > {
-	type: typeof CustomTypeModelSliceType.Slice;
-	fieldset?: string | null;
-	description?: string;
-	icon?: string;
+	type: typeof CustomTypeModelSliceType.Slice
+	fieldset?: string | null
+	description?: string
+	icon?: string
 	display?:
 		| (typeof CustomTypeModelSliceDisplay)[keyof typeof CustomTypeModelSliceDisplay]
-		| string;
-	"non-repeat"?: NonRepeatFields;
-	repeat?: RepeatFields;
+		| string
+	"non-repeat"?: NonRepeatFields
+	repeat?: RepeatFields
 }
 
 /**
@@ -40,11 +40,11 @@ export interface CustomTypeModelSlice<
 export const CustomTypeModelSliceDisplay = {
 	List: "list",
 	Grid: "grid",
-} as const;
+} as const
 
 /**
  * @deprecated - Legacy slice type. Do not use.
  */
 export type CustomTypeModelLegacySlice =
 	| CustomTypeModelNestedGroupField
-	| CustomTypeModelFieldForNestedGroup;
+	| CustomTypeModelFieldForNestedGroup

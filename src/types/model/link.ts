@@ -1,4 +1,4 @@
-import type { CustomTypeModelFieldType } from "./types";
+import type { CustomTypeModelFieldType } from "./types"
 
 /**
  * A link custom type field.
@@ -6,15 +6,18 @@ import type { CustomTypeModelFieldType } from "./types";
  * More details: {@link https://prismic.io/docs/link}
  */
 export interface CustomTypeModelLinkField {
-	type: typeof CustomTypeModelFieldType.Link;
+	type: typeof CustomTypeModelFieldType.Link
 	config?: {
-		label?: string | null;
-		placeholder?: string;
+		label?: string | null
+		placeholder?: string
 		select?:
 			| null
-			| (typeof CustomTypeModelLinkSelectType)[keyof typeof CustomTypeModelLinkSelectType];
-		allowTargetBlank?: boolean;
-	};
+			| (typeof CustomTypeModelLinkSelectType)[keyof typeof CustomTypeModelLinkSelectType]
+		allowText?: boolean
+		allowTargetBlank?: boolean
+		repeat?: boolean
+		variants?: string[]
+	}
 }
 
 /**
@@ -26,4 +29,4 @@ export const CustomTypeModelLinkSelectType = {
 	Document: "document",
 	Media: "media",
 	Web: "web",
-} as const;
+} as const

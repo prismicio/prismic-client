@@ -1,4 +1,4 @@
-import type { CustomTypeModelFieldType } from "./types";
+import type { CustomTypeModelFieldType } from "./types"
 
 /**
  * A key text custom type field.
@@ -6,9 +6,9 @@ import type { CustomTypeModelFieldType } from "./types";
  * More details: {@link https://prismic.io/docs/key-text}
  */
 export interface CustomTypeModelKeyTextField {
-	type: typeof CustomTypeModelFieldType.Text;
+	type: typeof CustomTypeModelFieldType.Text
 	config?: {
-		label?: string | null;
-		placeholder?: string;
-	};
+		label?: string | null
+		placeholder?: string
+	}
 }

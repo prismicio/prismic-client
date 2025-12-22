@@ -1,52 +1,30 @@
-import { expect, it } from "vitest";
+import { it } from "./it"
 
-import * as prismicM from "@prismicio/mock";
+it("supports string ref", async ({ expect, client }) => {
+	client.queryContentFromRef("ref")
+	await client.get()
+	expect(client).toHaveFetchedContentAPI({ ref: "ref" })
+})
 
-import { createTestClient } from "./__testutils__/createClient";
-import { getMasterRef } from "./__testutils__/getMasterRef";
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
-import { testGetMethod } from "./__testutils__/testAnyGetMethod";
+it("supports thunk ref", async ({ expect, client }) => {
+	client.queryContentFromRef(() => "ref")
+	await client.get()
+	expect(client).toHaveFetchedContentAPI({ ref: "ref" })
+})
 
-testGetMethod("supports manual string ref", {
-	run: (client) => {
-		client.queryContentFromRef("ref");
+it("supports async thunk ref", async ({ expect, client }) => {
+	client.queryContentFromRef(async () => "ref")
+	await client.get()
+	expect(client).toHaveFetchedContentAPI({ ref: "ref" })
+})
 
-		return client.get();
-	},
-	requiredParams: {
-		ref: "ref",
-	},
-});
-
-testGetMethod("supports manual thunk ref", {
-	run: (client) => {
-		client.queryContentFromRef(async () => "thunk");
-
-		return client.get();
-	},
-	requiredParams: {
-		ref: "thunk",
-	},
-});
-
-it("uses master ref if manual thunk ref returns non-string value", async (ctx) => {
-	const repositoryResponse = ctx.mock.api.repository();
-	const queryResponse = prismicM.api.query({ seed: ctx.meta.name });
-
-	mockPrismicRestAPIV2({
-		repositoryResponse,
-		queryResponse,
-		queryRequiredParams: {
-			ref: getMasterRef(repositoryResponse),
-		},
-		ctx,
-	});
-
-	const client = createTestClient();
-
-	client.queryContentFromRef(async () => undefined);
-
-	const res = await client.get();
-
-	expect(res).toStrictEqual(queryResponse);
-});
+it("uses master ref if thunk returns non-string", async ({
+	expect,
+	client,
+	masterRef,
+}) => {
+	client.queryContentFromRef(async () => undefined)
+	await client.get()
+	expect(client).toHaveFetchedContentAPITimes(1)
+	expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
+})

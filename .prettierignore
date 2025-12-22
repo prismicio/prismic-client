@@ -4,6 +4,7 @@ CHANGELOG.md
 # .gitignore copy
 
 # custom
+*.tgz
 dist
 examples/**/package-lock.json
 

@@ -1,7 +1,7 @@
-import { WebhookBodyAPIUpdate } from "./apiUpdate";
-import { WebhookBodyTestTrigger } from "./testTrigger";
+import type { WebhookBodyAPIUpdate } from "./apiUpdate"
+import type { WebhookBodyTestTrigger } from "./testTrigger"
 
-export type WebhookBody = WebhookBodyAPIUpdate | WebhookBodyTestTrigger;
+export type WebhookBody = WebhookBodyAPIUpdate | WebhookBodyTestTrigger
 
 /**
  * Types of Prismic Webhooks.
@@ -11,11 +11,11 @@ export type WebhookBody = WebhookBodyAPIUpdate | WebhookBodyTestTrigger;
 export const WebhookType = {
 	APIUpdate: "api-update",
 	TestTrigger: "test-trigger",
-} as const;
+} as const
 
 export interface WebhookBodyBase {
-	type: (typeof WebhookType)[keyof typeof WebhookType];
-	domain: string;
-	apiUrl: string;
-	secret: string | null;
+	type: (typeof WebhookType)[keyof typeof WebhookType]
+	domain: string
+	apiUrl: string
+	secret: string | null
 }

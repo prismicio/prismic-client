@@ -2,6 +2,472 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.21.0](https://github.com/prismicio/prismic-client/compare/v7.20.3...v7.21.0) (2025-11-03)
+
+### [7.20.3](https://github.com/prismicio/prismic-client/compare/v7.20.2...v7.20.3) (2025-10-16)
+
+
+### Bug Fixes
+
+* include extensions in `.d.ts` files ([#406](https://github.com/prismicio/prismic-client/issues/406)) ([857b2d4](https://github.com/prismicio/prismic-client/commit/857b2d4096ecac502c1d771bf0ce3be47f546372))
+
+### [7.20.2](https://github.com/prismicio/prismic-client/compare/v7.20.1...v7.20.2) (2025-10-14)
+
+
+### Refactor
+
+* `isFilled.keyText` ([#401](https://github.com/prismicio/prismic-client/issues/401)) ([d9f2b46](https://github.com/prismicio/prismic-client/commit/d9f2b46ce5532a4cd580a8487c36e06fc57ca891))
+
+
+### Documentation
+
+* improve TSDoc comments across codebase ([#400](https://github.com/prismicio/prismic-client/issues/400)) ([655affa](https://github.com/prismicio/prismic-client/commit/655affa0bd32ca91582f20678bb617be7d4556da))
+
+
+### Chore
+
+* rebuild `package-lock.json` ([0dbb393](https://github.com/prismicio/prismic-client/commit/0dbb393dbdce6d3dd3ba1f2b258cc414652c3e1d))
+
+### [7.20.1](https://github.com/prismicio/prismic-client/compare/v7.20.0...v7.20.1) (2025-08-19)
+
+## [7.20.0](https://github.com/prismicio/prismic-client/compare/v7.19.2...v7.20.0) (2025-08-13)
+
+
+### Features
+
+* add integration catalog API types ([#391](https://github.com/prismicio/prismic-client/issues/391)) ([270a084](https://github.com/prismicio/prismic-client/commit/270a08475b73865bbe74ef8bcabe4e8868a06590))
+
+## [7.20.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.19.0...v7.20.0-alpha.0) (2025-08-12)
+
+
+### Features
+
+* add integration catalog API types ([b49ee1b](https://github.com/prismicio/prismic-client/commit/b49ee1b1fda066d29999d47f4e2ca164cc9d9abd))
+
+
+### Bug Fixes
+
+* export types ([a5bef08](https://github.com/prismicio/prismic-client/commit/a5bef08582d694d5f14b4d85d31dc704e0f49233))
+* remove unimplemented `cursor` property ([5e7b53c](https://github.com/prismicio/prismic-client/commit/5e7b53cb1de31379ddb04fa27549baa0b8ffa13d))
+* update `isFilled` for new data type ([56f94ca](https://github.com/prismicio/prismic-client/commit/56f94ca45ca30ff731688c79fce82263c9a511c7))
+
+### [7.19.2](https://github.com/prismicio/prismic-client/compare/v7.19.1...v7.19.2) (2025-08-11)
+
+
+### Refactor
+
+* centralize request handling and improve error management ([#393](https://github.com/prismicio/prismic-client/issues/393)) ([cf4161a](https://github.com/prismicio/prismic-client/commit/cf4161ae5b4b0e05a80d6121174276ffc2baa69b))
+
+### [7.19.1](https://github.com/prismicio/prismic-client/compare/v7.19.0...v7.19.1) (2025-08-01)
+
+### [7.19.1-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.19.0...v7.19.1-alpha.0) (2025-08-01)
+
+## [7.19.0](https://github.com/prismicio/prismic-client/compare/v7.18.3...v7.19.0) (2025-07-25)
+
+
+### Bug Fixes
+
+* rename `isFilled.integrationField` to `isFilled.integration` ([#390](https://github.com/prismicio/prismic-client/issues/390)) ([0cc7b25](https://github.com/prismicio/prismic-client/commit/0cc7b25349e7a827ddf3a3e5b3eb2f83713774dd))
+
+
+### Chore
+
+* remove hard-coded `--release-as patch` ([2ce1008](https://github.com/prismicio/prismic-client/commit/2ce1008bf5813d446233707a3df1c24bb5eeffad))
+
+### [7.18.3](https://github.com/prismicio/prismic-client/compare/v7.18.2...v7.18.3) (2025-07-25)
+
+### [7.18.2](https://github.com/prismicio/prismic-client/compare/v7.18.1...v7.18.2) (2025-07-24)
+
+### [7.18.1](https://github.com/prismicio/prismic-client/compare/v7.18.0...v7.18.1) (2025-07-22)
+
+## [7.18.0](https://github.com/prismicio/prismic-client/compare/v7.18.0-alpha.0...v7.18.0) (2025-06-24)
+
+
+### Chore
+
+* update type names ([7ecf76a](https://github.com/prismicio/prismic-client/commit/7ecf76aa930571a508c210a5de838e6a4eb0a956))
+
+## [7.18.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.17.3...v7.18.0-alpha.0) (2025-06-23)
+
+
+### Features
+
+* export customtypes models ([6342133](https://github.com/prismicio/prismic-client/commit/63421334af9ba7b17ea6b3310a2a86350b14425e))
+* support content relationship v2 ([8a26cef](https://github.com/prismicio/prismic-client/commit/8a26cef3dc94884f9ea066eb738fed3c702d12a0))
+
+
+### Chore
+
+* rename CustomTypeIDs to CustomTypes ([918b298](https://github.com/prismicio/prismic-client/commit/918b2988bce8eb2bd04c57b8d2b81f11e1b71215))
+
+### [7.17.3](https://github.com/prismicio/prismic-client/compare/v7.17.2...v7.17.3) (2025-05-28)
+
+
+### Documentation
+
+* CONTRIBUTING.md ([5b0cd60](https://github.com/prismicio/prismic-client/commit/5b0cd60f6ec833ca0905847b4304a2266bf97f7b))
+
+
+### Refactor
+
+* `isFilled.contentRelationship` function overloads to support strict unions ([#384](https://github.com/prismicio/prismic-client/issues/384)) ([cdb4e06](https://github.com/prismicio/prismic-client/commit/cdb4e067f8f7ef0ebfd43d4eeac82e2c2e9362ad))
+
+### [7.17.2](https://github.com/prismicio/prismic-client/compare/v7.17.1...v7.17.2) (2025-04-10)
+
+
+### Bug Fixes
+
+* omit `page` from all `getAll*` method params ([#383](https://github.com/prismicio/prismic-client/issues/383)) ([5009087](https://github.com/prismicio/prismic-client/commit/5009087c3a3307040882faf4d130b7beeddf3ca7))
+* prevent logging the retry message many times ([#382](https://github.com/prismicio/prismic-client/issues/382)) ([c2bcf4b](https://github.com/prismicio/prismic-client/commit/c2bcf4b88cfba512fa23666ca5c7cd9ec38aa0a5))
+
+
+### Documentation
+
+* update contributing guide ([#381](https://github.com/prismicio/prismic-client/issues/381)) ([5966b61](https://github.com/prismicio/prismic-client/commit/5966b61b41609352c78d9d2ac1e1158ca492a261))
+
+### [7.17.1](https://github.com/prismicio/prismic-client/compare/v7.17.0...v7.17.1) (2025-03-31)
+
+
+### Chore
+
+* **deps:** bump `imgix-url-builder` ([e68e43e](https://github.com/prismicio/prismic-client/commit/e68e43e5b97503ca51ae9990bc100eaea7974f76))
+* **deps:** maintain dependencies ([f921d26](https://github.com/prismicio/prismic-client/commit/f921d266b00d56baa0671d56f86af818c0bc6b07))
+
+## [7.17.0](https://github.com/prismicio/prismic-client/compare/v7.15.0...v7.17.0) (2025-03-19)
+
+
+### Features
+
+* add TableField to AnyRegularField ([6f249d0](https://github.com/prismicio/prismic-client/commit/6f249d06c572f2ef09a2e253743e1045ebc2e8dc))
+* support key for table field content ([#380](https://github.com/prismicio/prismic-client/issues/380)) ([2fc4152](https://github.com/prismicio/prismic-client/commit/2fc4152d11bd51c0717b4228dc8070ed3bd783d0))
+* support table field ([#375](https://github.com/prismicio/prismic-client/issues/375)) ([39c66f0](https://github.com/prismicio/prismic-client/commit/39c66f09d9f6d7f84ca0b628a7cb0376372ca999))
+
+
+### Bug Fixes
+
+* allow generics with link variant ([#374](https://github.com/prismicio/prismic-client/issues/374)) ([7cff55e](https://github.com/prismicio/prismic-client/commit/7cff55e582458964353ac650346cbb0471a500ba))
+* export table field types ([a0f3e44](https://github.com/prismicio/prismic-client/commit/a0f3e44d514808f9f0ffc2acc9a1adc29323eea7))
+* export table field types ([2862321](https://github.com/prismicio/prismic-client/commit/2862321a186a3f4f617c018977e83dd001666267))
+
+
+### Chore
+
+* **release:** 7.15.1 ([c54c749](https://github.com/prismicio/prismic-client/commit/c54c7495dd748239e0ee615723ec9456204ea07a))
+* **release:** 7.16.0 ([821b360](https://github.com/prismicio/prismic-client/commit/821b3606c7a736971d219a33dbfa9032aa2cd7bf))
+* **release:** 7.16.1 ([16d066f](https://github.com/prismicio/prismic-client/commit/16d066fab315896b099929c1305e46d8bff93565))
+* update prismic-mock dep ([d5d7edb](https://github.com/prismicio/prismic-client/commit/d5d7edb23a491823766036d582969cdb4faeeba8))
+* update prismic-mock dep ([dbf56e6](https://github.com/prismicio/prismic-client/commit/dbf56e603ecb3507a30f4948c1454b142e3104d3))
+* update prismic-mock dep ([361b882](https://github.com/prismicio/prismic-client/commit/361b882c0f74627bd845d9146d4fb6aa0b65b49d))
+
+## [7.17.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.15.0...v7.17.0-alpha.0) (2025-03-18)
+
+
+### Features
+
+* add TableField to AnyRegularField ([6f249d0](https://github.com/prismicio/prismic-client/commit/6f249d06c572f2ef09a2e253743e1045ebc2e8dc))
+* support key for table field content ([165abef](https://github.com/prismicio/prismic-client/commit/165abef574729c77a63cbd3929cac08ae630e82b))
+* support table field ([#375](https://github.com/prismicio/prismic-client/issues/375)) ([39c66f0](https://github.com/prismicio/prismic-client/commit/39c66f09d9f6d7f84ca0b628a7cb0376372ca999))
+
+
+### Bug Fixes
+
+* allow generics with link variant ([#374](https://github.com/prismicio/prismic-client/issues/374)) ([7cff55e](https://github.com/prismicio/prismic-client/commit/7cff55e582458964353ac650346cbb0471a500ba))
+* export table field types ([a0f3e44](https://github.com/prismicio/prismic-client/commit/a0f3e44d514808f9f0ffc2acc9a1adc29323eea7))
+* export table field types ([2862321](https://github.com/prismicio/prismic-client/commit/2862321a186a3f4f617c018977e83dd001666267))
+
+
+### Chore
+
+* **release:** 7.15.1 ([c54c749](https://github.com/prismicio/prismic-client/commit/c54c7495dd748239e0ee615723ec9456204ea07a))
+* **release:** 7.16.0 ([821b360](https://github.com/prismicio/prismic-client/commit/821b3606c7a736971d219a33dbfa9032aa2cd7bf))
+* **release:** 7.16.1 ([16d066f](https://github.com/prismicio/prismic-client/commit/16d066fab315896b099929c1305e46d8bff93565))
+* update prismic-mock dep ([d5d7edb](https://github.com/prismicio/prismic-client/commit/d5d7edb23a491823766036d582969cdb4faeeba8))
+* update prismic-mock dep ([dbf56e6](https://github.com/prismicio/prismic-client/commit/dbf56e603ecb3507a30f4948c1454b142e3104d3))
+* update prismic-mock dep ([361b882](https://github.com/prismicio/prismic-client/commit/361b882c0f74627bd845d9146d4fb6aa0b65b49d))
+
+### [7.16.1](https://github.com/prismicio/prismic-client/compare/v7.16.0...v7.16.1) (2025-02-20)
+
+
+### Features
+
+* add TableField to AnyRegularField ([6f249d0](https://github.com/prismicio/prismic-client/commit/6f249d06c572f2ef09a2e253743e1045ebc2e8dc))
+
+
+### Bug Fixes
+
+* export table field types ([a0f3e44](https://github.com/prismicio/prismic-client/commit/a0f3e44d514808f9f0ffc2acc9a1adc29323eea7))
+* export table field types ([2862321](https://github.com/prismicio/prismic-client/commit/2862321a186a3f4f617c018977e83dd001666267))
+
+
+### Chore
+
+* update prismic-mock dep ([361b882](https://github.com/prismicio/prismic-client/commit/361b882c0f74627bd845d9146d4fb6aa0b65b49d))
+
+## [7.16.0](https://github.com/prismicio/prismic-client/compare/v7.15.1...v7.16.0) (2025-02-04)
+
+
+### Features
+
+* support table field ([#375](https://github.com/prismicio/prismic-client/issues/375)) ([39c66f0](https://github.com/prismicio/prismic-client/commit/39c66f09d9f6d7f84ca0b628a7cb0376372ca999))
+
+## [7.16.0-alpha.1](https://github.com/prismicio/prismic-client/compare/v7.16.0-alpha.0...v7.16.0-alpha.1) (2025-01-24)
+
+## [7.16.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.15.1...v7.16.0-alpha.0) (2025-01-21)
+
+
+### Features
+
+* add table field model ([d656a82](https://github.com/prismicio/prismic-client/commit/d656a82145e4786294b804da9d722d6dd49067f9))
+
+
+### Chore
+
+* update types-internal dep ([3e20131](https://github.com/prismicio/prismic-client/commit/3e20131ce4859e36569d3ea7e0536ee68a5bb003))
+
+### [7.15.1](https://github.com/prismicio/prismic-client/compare/v7.15.0...v7.15.1) (2025-01-16)
+
+
+### Bug Fixes
+
+* allow generics with link variant ([#374](https://github.com/prismicio/prismic-client/issues/374)) ([7cff55e](https://github.com/prismicio/prismic-client/commit/7cff55e582458964353ac650346cbb0471a500ba))
+
+## [7.15.0](https://github.com/prismicio/prismic-client/compare/v7.14.0...v7.15.0) (2025-01-15)
+
+
+### Bug Fixes
+
+* properly update document's title with `updateDocument` ([#373](https://github.com/prismicio/prismic-client/issues/373)) ([fa9ca0d](https://github.com/prismicio/prismic-client/commit/fa9ca0dfd762cc2cdab9c86b1f0edd51a71c5ef9))
+
+## [7.15.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.14.0...v7.15.0-alpha.0) (2025-01-14)
+
+## [7.14.0](https://github.com/prismicio/prismic-client/compare/v7.13.1...v7.14.0) (2025-01-09)
+
+
+### Features
+
+* support link variants ([#368](https://github.com/prismicio/prismic-client/issues/368)) ([a9f4a25](https://github.com/prismicio/prismic-client/commit/a9f4a25a5bc9abf74c171af9f745b3d0c29817c7))
+
+
+### Refactor
+
+* link types ([#367](https://github.com/prismicio/prismic-client/issues/367)) ([f4bf4e6](https://github.com/prismicio/prismic-client/commit/f4bf4e6f67b5f41b7dd128673bdd4a623d9b3ba6))
+
+## [7.14.0-alpha.2](https://github.com/prismicio/prismic-client/compare/v7.13.1...v7.14.0-alpha.2) (2024-12-24)
+
+
+### Features
+
+* support link variants ([#368](https://github.com/prismicio/prismic-client/issues/368)) ([a9f4a25](https://github.com/prismicio/prismic-client/commit/a9f4a25a5bc9abf74c171af9f745b3d0c29817c7))
+
+
+### Refactor
+
+* link types ([#367](https://github.com/prismicio/prismic-client/issues/367)) ([f4bf4e6](https://github.com/prismicio/prismic-client/commit/f4bf4e6f67b5f41b7dd128673bdd4a623d9b3ba6))
+
+### [7.13.1](https://github.com/prismicio/prismic-client/compare/v7.12.0...v7.13.1) (2024-12-11)
+
+
+### Features
+
+* add support for repeatable links in models  ([#355](https://github.com/prismicio/prismic-client/issues/355)) ([ed120a8](https://github.com/prismicio/prismic-client/commit/ed120a8606b8de0e6c651dc859e350a732d76768)), closes [#360](https://github.com/prismicio/prismic-client/issues/360)
+
+
+### Bug Fixes
+
+* link inside a repeatable contain a key ([#363](https://github.com/prismicio/prismic-client/issues/363)) ([eb32f54](https://github.com/prismicio/prismic-client/commit/eb32f5465afa24c6794f1dd47923af6e44c1f7e3))
+
+
+### Chore
+
+* **release:** 7.13.0 ([a001f06](https://github.com/prismicio/prismic-client/commit/a001f06778c934fdceaf31c460664a14957315a2))
+
+### [7.13.1-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.12.0...v7.13.1-alpha.0) (2024-12-11)
+
+
+### Features
+
+* add support for repeatable links in models  ([#355](https://github.com/prismicio/prismic-client/issues/355)) ([ed120a8](https://github.com/prismicio/prismic-client/commit/ed120a8606b8de0e6c651dc859e350a732d76768)), closes [#360](https://github.com/prismicio/prismic-client/issues/360)
+
+
+### Bug Fixes
+
+* link inside a repeatable contain a key ([939cac9](https://github.com/prismicio/prismic-client/commit/939cac9eb5d485f036d5895f4adabc912f2de3ae))
+
+
+### Chore
+
+* Release alpha as patch ([a2d778f](https://github.com/prismicio/prismic-client/commit/a2d778fa201b796578dd73750f6a7058d75542a2))
+* **release:** 7.13.0 ([a001f06](https://github.com/prismicio/prismic-client/commit/a001f06778c934fdceaf31c460664a14957315a2))
+
+## [7.13.0](https://github.com/prismicio/prismic-client/compare/v7.12.0...v7.13.0) (2024-12-05)
+
+
+### Features
+
+* add support for repeatable links in models  ([#355](https://github.com/prismicio/prismic-client/issues/355)) ([ed120a8](https://github.com/prismicio/prismic-client/commit/ed120a8606b8de0e6c651dc859e350a732d76768)), closes [#360](https://github.com/prismicio/prismic-client/issues/360)
+
+## [7.13.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.12.0...v7.13.0-alpha.0) (2024-11-28)
+
+
+### Features
+
+* support repeatable links in models ([00f8524](https://github.com/prismicio/prismic-client/commit/00f8524d3df5034e263f74c884a9d78627a37dce))
+
+
+### Chore
+
+* bump types-internal dep ([6a5eb26](https://github.com/prismicio/prismic-client/commit/6a5eb26b1bd3cb26eb68150ce43c081630bcfbfd))
+
+## [7.12.0](https://github.com/prismicio/prismic-client/compare/v7.11.1...v7.12.0) (2024-10-30)
+
+
+### Features
+
+* retry invalid/expired refs ([#356](https://github.com/prismicio/prismic-client/issues/356)) ([ee06efa](https://github.com/prismicio/prismic-client/commit/ee06efa480baf9e216741a883798eefec2a93bf9))
+
+### [7.11.1](https://github.com/prismicio/prismic-client/compare/v7.11.0...v7.11.1) (2024-10-30)
+
+
+### Bug Fixes
+
+* **helpers:** add missing `dir` attribute for right-to-left languages ([#357](https://github.com/prismicio/prismic-client/issues/357)) ([b607685](https://github.com/prismicio/prismic-client/commit/b607685f433e351ab93c52a1bf60ab0ca9099759))
+
+
+### Chore
+
+* **deps:** maintain dependencies ([9eb295e](https://github.com/prismicio/prismic-client/commit/9eb295e447f336635ab1810a9229639202c2f9f6))
+
+## [7.11.0](https://github.com/prismicio/prismic-client/compare/v7.10.1...v7.11.0) (2024-09-25)
+
+## [7.10.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.9.0...v7.10.0-alpha.0) (2024-09-20)
+
+
+### Chore
+
+* **release:** 7.10.0-alpha.0 ([c801c12](https://github.com/prismicio/prismic-client/commit/c801c12b3f2a1175530a17a0c45d414ef3412797))
+
+## [7.9.0-alpha.3](https://github.com/prismicio/prismic-client/compare/v7.8.1...v7.9.0-alpha.3) (2024-09-10)
+
+
+### Chore
+
+* **release:** 7.9.0-alpha.3 ([0d3fb98](https://github.com/prismicio/prismic-client/commit/0d3fb98743b79d3fc2a41dcb2fc6edfc67857478))
+
+## [7.9.0-alpha.2](https://github.com/prismicio/prismic-client/compare/v7.9.0-alpha.1...v7.9.0-alpha.2) (2024-08-27)
+
+
+### Chore
+
+* **release:** 7.9.0-alpha.2 ([000f146](https://github.com/prismicio/prismic-client/commit/000f146d25b84b2937c3accaffa54ab936a78de8))
+* revert previous changes ([c53de86](https://github.com/prismicio/prismic-client/commit/c53de86a7ed749f0f9d8999b9e58564d9a8efe35))
+
+## [7.9.0-alpha.1](https://github.com/prismicio/prismic-client/compare/v7.9.0-alpha.0...v7.9.0-alpha.1) (2024-08-27)
+
+
+### Features
+
+* use KeyTextField for link text value definition ([1a4c51a](https://github.com/prismicio/prismic-client/commit/1a4c51a389ed4d06cf69c3edcb215559ba91fe99))
+
+
+### Chore
+
+* **release:** 7.9.0-alpha.1 ([d940fcd](https://github.com/prismicio/prismic-client/commit/d940fcdb023de34765006607f7f34481de00a6ef))
+* remove changelog for alpha ([50fc797](https://github.com/prismicio/prismic-client/commit/50fc797372726c0abc575b9f1b0a56d5db939bb1))
+
+## [7.9.0-alpha.0](https://github.com/prismicio/prismic-client/compare/v7.8.0...v7.9.0-alpha.0) (2024-08-14)
+
+
+### Features
+
+* add text property to link models ([40d0e0b](https://github.com/prismicio/prismic-client/commit/40d0e0be3ce8038cd36e8cdf3350ffa9893ada98))
+* add text to link value models ([8459d75](https://github.com/prismicio/prismic-client/commit/8459d75608c1af8319adafd2b3bf73555569a434))
+
+
+### Chore
+
+* **release:** 7.9.0-alpha.0 ([f2021c0](https://github.com/prismicio/prismic-client/commit/f2021c053b9aac1c17b7bbd1845c91eab7b0d176))
+* update package version ([c06b383](https://github.com/prismicio/prismic-client/commit/c06b383ff41f01e253641c7852a4e9701725bdba))
+
+### [7.10.1](https://github.com/prismicio/prismic-client/compare/v7.10.0...v7.10.1) (2024-09-23)
+
+
+### Bug Fixes
+
+* ensure correct content type is attached to asset's blob ([80fe887](https://github.com/prismicio/prismic-client/commit/80fe887235e2eda594876f08db54cdb544e20b9f))
+
+## [7.10.0](https://github.com/prismicio/prismic-client/compare/v7.9.0...v7.10.0) (2024-09-23)
+
+
+### Features
+
+* add `createMigration` and `createWriteClient` ([#350](https://github.com/prismicio/prismic-client/issues/350)) ([7dc2950](https://github.com/prismicio/prismic-client/commit/7dc2950e25e7f8db706522175974b8aee36d170e))
+
+## [7.9.0](https://github.com/prismicio/prismic-client/compare/v7.8.1...v7.9.0) (2024-09-17)
+
+
+### Features
+
+* add client internal query params ([#349](https://github.com/prismicio/prismic-client/issues/349)) ([938d711](https://github.com/prismicio/prismic-client/commit/938d711845e4a51088a8f0e6374d27459f469315))
+
+
+### Chore
+
+* **deps:** maintain lock file ([601edd5](https://github.com/prismicio/prismic-client/commit/601edd55ed2594010da740f3f40250a7f517cf5c))
+
+### [7.8.1](https://github.com/prismicio/prismic-client/compare/v7.8.0...v7.8.1) (2024-08-27)
+
+
+### Bug Fixes
+
+* add missing `is_master` property on repository type ([0289698](https://github.com/prismicio/prismic-client/commit/0289698cc9ca7ed5b264f71f2a9f8d39e3710058))
+
+## [7.8.0](https://github.com/prismicio/prismic-client/compare/v7.7.4...v7.8.0) (2024-08-01)
+
+
+### Features
+
+* remove `*AsRichText` helpers ([#347](https://github.com/prismicio/prismic-client/issues/347)) ([cbd234b](https://github.com/prismicio/prismic-client/commit/cbd234b3a3cc72822ce1fe71dd39a85ce1860bcf))
+
+### [7.7.4](https://github.com/prismicio/prismic-client/compare/v7.7.3...v7.7.4) (2024-07-24)
+
+
+### Bug Fixes
+
+* remove `hast-util-whitespace` dependency ([2d9c098](https://github.com/prismicio/prismic-client/commit/2d9c0988e4b9910e61299a8aa1ea03e7d57ec2fe))
+
+### [7.7.3](https://github.com/prismicio/prismic-client/compare/v7.7.2...v7.7.3) (2024-07-23)
+
+
+### Bug Fixes
+
+* ignore trimmed empty spans ([6d1ce03](https://github.com/prismicio/prismic-client/commit/6d1ce035f7f5b3c112c3f00460190fdbd98e3543))
+
+### [7.7.2](https://github.com/prismicio/prismic-client/compare/v7.7.1...v7.7.2) (2024-07-23)
+
+
+### Bug Fixes
+
+* ignore empty spans ([ab94da3](https://github.com/prismicio/prismic-client/commit/ab94da302a57872966c4720b4d1b5afbe390c2c6))
+
+### [7.7.1](https://github.com/prismicio/prismic-client/compare/v7.7.0...v7.7.1) (2024-07-23)
+
+
+### Bug Fixes
+
+* support relative image URL ([5711f04](https://github.com/prismicio/prismic-client/commit/5711f046baf512f63f532da399c3f03146390d81))
+
+## [7.7.0](https://github.com/prismicio/prismic-client/compare/v7.6.0...v7.7.0) (2024-07-23)
+
+
+### Features
+
+* add `unstable_htmlAsRichText` helpers ([#342](https://github.com/prismicio/prismic-client/issues/342)) ([8c5a82b](https://github.com/prismicio/prismic-client/commit/8c5a82b859ef0266e562da1f20eea5c9a785726b))
+
+
+### Chore
+
+* **deps:** maintain dependencies ([24df0e9](https://github.com/prismicio/prismic-client/commit/24df0e98ceaaf7244649cf8c1cc588ac55e0a86e))
+
 ## [7.6.0](https://github.com/prismicio/prismic-client/compare/v7.5.0...v7.6.0) (2024-06-20)
 
 

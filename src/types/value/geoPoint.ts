@@ -1,4 +1,4 @@
-import type { EmptyObjectField, FieldState } from "./types";
+import type { EmptyObjectField, FieldState } from "./types"
 
 /**
  * A geopoint field.
@@ -11,6 +11,6 @@ export type GeoPointField<State extends FieldState = FieldState> =
 	State extends "empty"
 		? EmptyObjectField
 		: {
-				latitude: number;
-				longitude: number;
-		  };
+				latitude: number
+				longitude: number
+			}

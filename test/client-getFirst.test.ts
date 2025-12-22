@@ -1,108 +1,39 @@
-import { expect, it } from "vitest";
+import { vi } from "vitest"
 
-import * as prismicM from "@prismicio/mock";
+import { it } from "./it"
 
-import { createTestClient } from "./__testutils__/createClient";
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
-import { testGetFirstMethod } from "./__testutils__/testAnyGetMethod";
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
-import { testFetchOptions } from "./__testutils__/testFetchOptions";
+import { NotFoundError } from "../src"
 
-import * as prismic from "../src";
+it("returns single document", async ({ expect, client }) => {
+	const res = await client.getFirst()
+	expect(res).toMatchObject({ id: expect.any(String) })
+})
 
-testGetFirstMethod("returns the first document from a response", {
-	run: (client) => client.getFirst(),
-});
+it("optimizes page size", async ({ expect, client }) => {
+	await client.getFirst()
+	expect(client).toHaveLastFetchedContentAPI({ pageSize: "1" })
+	expect(client).toHaveFetchedContentAPITimes(1)
+})
 
-testGetFirstMethod("includes params if provided", {
-	run: (client) =>
-		client.getFirst({
-			accessToken: "custom-accessToken",
-			ref: "custom-ref",
-			lang: "*",
-		}),
-	requiredParams: {
-		access_token: "custom-accessToken",
-		ref: "custom-ref",
-		lang: "*",
-	},
-});
+it("allows overriding default pageSize param", async ({ expect, client }) => {
+	const res = await client.getFirst({ pageSize: 2 })
+	expect(res).toMatchObject({ id: expect.any(String) })
+	expect(client).toHaveLastFetchedContentAPI({ pageSize: "2" })
+})
 
-testGetFirstMethod("includes default params if provided", {
-	run: (client) => client.getFirst(),
-	clientConfig: {
-		defaultParams: {
-			lang: "*",
-		},
-	},
-	requiredParams: {
-		lang: "*",
-	},
-});
+it("throws if no document is returned", async ({
+	expect,
+	client,
+	response,
+}) => {
+	vi.mocked(client.fetchFn)
+		.mockImplementationOnce(fetch)
+		.mockResolvedValueOnce(response.search([]))
+	await expect(() => client.getFirst()).rejects.toThrow(NotFoundError)
+})
 
-testGetFirstMethod("merges params and default params if provided", {
-	run: (client) =>
-		client.getFirst({
-			accessToken: "overridden-accessToken",
-			ref: "overridden-ref",
-			lang: "fr-fr",
-		}),
-	clientConfig: {
-		accessToken: "custom-accessToken",
-		ref: "custom-ref",
-		defaultParams: {
-			lang: "*",
-		},
-	},
-	requiredParams: {
-		access_token: "overridden-accessToken",
-		ref: "overridden-ref",
-		lang: "fr-fr",
-	},
-});
-
-testGetFirstMethod(
-	"ignores default pageSize=1 param if a page param is given",
-	{
-		run: (client) =>
-			client.getFirst({
-				pageSize: 2,
-			}),
-		requiredParams: {
-			pageSize: "2",
-		},
-	},
-);
-
-it("throws if no documents were returned", async (ctx) => {
-	mockPrismicRestAPIV2({
-		queryResponse: prismicM.api.query({
-			seed: ctx.meta.name,
-			documents: [],
-		}),
-		ctx,
-	});
-
-	const client = createTestClient();
-
-	await expect(() => client.getFirst()).rejects.toThrowError(
-		/no documents were returned/i,
-	);
-	await expect(() => client.getFirst()).rejects.toThrowError(
-		prismic.NotFoundError,
-	);
-});
-
-testFetchOptions("supports fetch options", {
-	run: (client, params) => client.getFirst(params),
-});
-
-testAbortableMethod("is abortable with an AbortController", {
-	run: (client, params) => client.getFirst(params),
-});
-
-testConcurrentMethod("shares concurrent equivalent network requests", {
-	run: (client, params) => client.getFirst(params),
-	mode: "get",
-});
+it("does not include filters by default", async ({ expect, client }) => {
+	await client.getFirst()
+	const url = vi.mocked(client.fetchFn).mock.lastCall![0]
+	expect(url).not.toHaveSearchParam("q")
+})

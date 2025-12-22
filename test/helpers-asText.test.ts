@@ -1,26 +1,35 @@
-import { expect, it } from "vitest";
+import { it } from "./it"
 
-import { richTextFixture } from "./__fixtures__/richText";
+import type { RichTextField } from "../src"
+import { asText } from "../src"
 
-import { asText } from "../src";
-import { asText as richTextAsText } from "../src/richtext";
+const field: RichTextField = [
+	{
+		type: "paragraph",
+		text: "foo bar",
+		spans: [{ start: 4, end: 7, type: "strong" }],
+	},
+	{
+		type: "paragraph",
+		text: "baz",
+		spans: [],
+	},
+]
 
-it("is an alias for @prismicio/client/richtext's `asText` function for non-nullish inputs", () => {
-	expect(asText(richTextFixture.en)).toBe(richTextAsText(richTextFixture.en));
-});
+it("converts rich text to text", async ({ expect }) => {
+	const res = asText(field)
+	expect(res).toBe("foo bar baz")
+})
 
-it("returns null for nullish inputs", () => {
-	expect(asText(null)).toBeNull();
-	expect(asText(undefined)).toBeNull();
-});
+it("supports separator configuration", async ({ expect }) => {
+	const res = asText(field, { separator: "__separator__" })
+	expect(res).toBe("foo bar__separator__baz")
+})
 
-it("supports separator configuration", () => {
-	expect(asText(richTextFixture.en, { separator: "__separator__" })).toBe(
-		richTextAsText(richTextFixture.en, "__separator__"),
-	);
+it("returns null for null input", async ({ expect }) => {
+	expect(asText(null)).toBeNull()
+})
 
-	// TODO: Remove when we remove support for deprecated tuple-style configuration.
-	expect(asText(richTextFixture.en, "__separator__")).toBe(
-		richTextAsText(richTextFixture.en, "__separator__"),
-	);
-});
+it("returns null for undefined input", async ({ expect }) => {
+	expect(asText(undefined)).toBeNull()
+})

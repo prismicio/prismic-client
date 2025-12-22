@@ -1,22 +1,24 @@
-import { expect, it } from "vitest";
+import { it } from "./it"
 
-import * as prismic from "../src";
+import { PrismicError, getRepositoryName } from "../src"
 
-it("returns the repository name from a valid Prismic Rest API V2 endpoint", () => {
-	const repositoryName = prismic.getRepositoryName(
-		"https://qwerty.cdn.prismic.io/api/v2",
-	);
+it("returns the repository name from a valid Prismic Document API endpoint", async ({
+	expect,
+}) => {
+	const res = getRepositoryName("https://example.cdn.prismic.io/api/v2")
+	expect(res).toBe("example")
+})
 
-	expect(repositoryName).toBe("qwerty");
-});
+it("throws if the input is not a Content API endpoint", async ({ expect }) => {
+	expect(() => getRepositoryName("https://example.com")).toThrow(
+		/invalid prismic document api endpoint/i,
+	)
+	expect(() => getRepositoryName("https://example.com")).toThrow(PrismicError)
+})
 
-it("throws if the input is not a valid URL", () => {
-	expect(() => {
-		prismic.getRepositoryName("qwerty");
-	}).toThrowError(
-		/An invalid Prismic Rest API V2 endpoint was provided: qwerty/i,
-	);
-	expect(() => {
-		prismic.getRepositoryName("qwerty");
-	}).toThrowError(prismic.PrismicError);
-});
+it("throws if the input is not a valid URL", async ({ expect }) => {
+	expect(() => getRepositoryName("example")).toThrow(
+		/invalid prismic document api endpoint/i,
+	)
+	expect(() => getRepositoryName("example")).toThrow(PrismicError)
+})

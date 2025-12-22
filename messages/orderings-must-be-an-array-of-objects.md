@@ -5,9 +5,9 @@ Prismic's Rest API accepts an `orderings` parameter to determine the sort order 
 The `orderings` parameter can be provided to `@prismicio/client` queries like the following:
 
 ```typescript
-import * as prismic from "@prismicio/client";
+import * as prismic from "@prismicio/client"
 
-const client = prismic.createClient("my-repo-name");
+const client = prismic.createClient("my-repo-name")
 
 const blogPosts = await client.getAllByType("blog_post", {
 	orderings: [
@@ -15,7 +15,7 @@ const blogPosts = await client.getAllByType("blog_post", {
 		{ field: "blog_post.first_publication_date", direction: "desc" },
 		{ field: "my.blog_post.title" },
 	],
-});
+})
 ```
 
 This query will fetch all `blog_post` documents sorted in the following order:
@@ -38,7 +38,7 @@ await client.getAllByType("blog_post", {
 		{ field: "blog_post.first_publication_date", direction: "desc" },
 		{ field: "my.blog_post.title" },
 	],
-});
+})
 
 // ❌ Incorrect
 await client.getAllByType("blog_post", {
@@ -47,11 +47,11 @@ await client.getAllByType("blog_post", {
 		"blog_post.first_publication_date desc",
 		"my.blog_post.title",
 	],
-});
+})
 
 // ❌ Incorrect
 await client.getAllByType("blog_post", {
 	orderings:
 		"my.blog_post.published_at desc,blog_post.first_publication_date desc,my.blog_post.title",
-});
+})
 ```

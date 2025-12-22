@@ -1,4 +1,4 @@
-import { version } from "../../package.json";
+import { version } from "../../package.json"
 
 /**
  * Returns a `prismic.dev/msg` URL for a given message slug.
@@ -6,7 +6,7 @@ import { version } from "../../package.json";
  * @example
  *
  * ```ts
- * devMsg("missing-param");
+ * devMsg("missing-param")
  * // => "https://prismic.dev/msg/client/v1.2.3/missing-param.md"
  * ```
  *
@@ -16,5 +16,5 @@ import { version } from "../../package.json";
  * @returns The `prismic.dev/msg` URL for the given slug.
  */
 export const devMsg = (slug: string): string => {
-	return `https://prismic.dev/msg/client/v${version}/${slug}`;
-};
+	return `https://prismic.dev/msg/client/v${version}/${slug}`
+}

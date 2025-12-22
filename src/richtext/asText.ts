@@ -1,27 +1,27 @@
-import { RTTextNode, RichTextField } from "../types/value/richText";
+import type { RTTextNode, RichTextField } from "../types/value/richText"
 
 /**
- * Serializes a rich text or title field to a plain text string
+ * Converts a rich text field to a plain text string.
  *
- * @param richTextField - A rich text or title field from Prismic
- * @param separator - Separator used to join each element, defaults to a space
+ * @param richTextField - A rich text field from Prismic.
+ * @param separator - Separator used to join each element. Defaults to a space.
  *
- * @returns Plain text equivalent of the provided rich text or title field
+ * @returns Plain text equivalent of the rich text field.
  *
- * @see Templating rich text and title fields from Prismic {@link https://prismic.io/docs/technologies/templating-rich-text-and-title-fields-javascript}
+ * @see Learn how to work with rich text fields: {@link https://prismic.io/docs/fields/rich-text}
  */
 export const asText = (
 	richTextField: RichTextField,
 	separator = " ",
 ): string => {
-	let result = "";
+	let result = ""
 
 	for (let i = 0; i < richTextField.length; i++) {
 		if ("text" in richTextField[i]) {
 			result +=
-				(result ? separator : "") + (richTextField[i] as RTTextNode).text;
+				(result ? separator : "") + (richTextField[i] as RTTextNode).text
 		}
 	}
 
-	return result;
-};
+	return result
+}

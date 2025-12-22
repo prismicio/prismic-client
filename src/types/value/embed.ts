@@ -1,4 +1,4 @@
-import type { EmptyObjectField, FieldState } from "./types";
+import type { EmptyObjectField, FieldState } from "./types"
 
 /**
  * oEmbed 1.0 possible types.
@@ -10,7 +10,7 @@ export const OEmbedType = {
 	Video: "video",
 	Link: "link",
 	Rich: "rich",
-} as const;
+} as const
 
 /**
  * oEmbed response base fields. Those are every mandatory fields an oEmbed
@@ -22,13 +22,13 @@ type OEmbedBase<TType extends (typeof OEmbedType)[keyof typeof OEmbedType]> = {
 	/**
 	 * oEmbed resource type.
 	 */
-	type: TType;
+	type: TType
 
 	/**
 	 * oEmbed version number, this must be "1.0".
 	 */
-	version: string;
-};
+	version: string
+}
 
 /**
  * oEmbed response extra fields. Those are every non-mandatory and unknown
@@ -40,47 +40,47 @@ export type OEmbedExtra = {
 	/**
 	 * oEmbed text title, describing the resource.
 	 */
-	title?: string | null;
+	title?: string | null
 
 	/**
 	 * oEmbed resource author/owner name.
 	 */
-	author_name?: string | null;
+	author_name?: string | null
 
 	/**
 	 * oEmbed resource author/owner URL.
 	 */
-	author_url?: string | null;
+	author_url?: string | null
 
 	/**
 	 * oEmbed resource provider name.
 	 */
-	provider_name?: string | null;
+	provider_name?: string | null
 
 	/**
 	 * oEmbed resource provider URL.
 	 */
-	provider_url?: string | null;
+	provider_url?: string | null
 
 	/**
 	 * oEmbed suggested cache lifetime for the resource, in seconds.
 	 */
-	cache_age?: number | null;
+	cache_age?: number | null
 
 	/**
 	 * oEmbed resource thumbnail URL.
 	 */
-	thumbnail_url?: string | null;
+	thumbnail_url?: string | null
 
 	/**
 	 * oEmbed resource thumbnail width.
 	 */
-	thumbnail_width?: number | null;
+	thumbnail_width?: number | null
 
 	/**
 	 * oEmbed resource thumbnail height.
 	 */
-	thumbnail_height?: number | null;
+	thumbnail_height?: number | null
 
 	/**
 	 * Providers may optionally include any parameters not specified in this
@@ -90,8 +90,8 @@ export type OEmbedExtra = {
 	 *
 	 * @see oEmbed specification: {@link https://oembed.com}
 	 */
-	[key: string]: unknown | null;
-};
+	[key: string]: unknown | null
+}
 
 /**
  * oEmbed photo type. Those are every mandatory fields an oEmbed photo response
@@ -103,18 +103,18 @@ export type PhotoOEmbed = OEmbedBase<typeof OEmbedType.Photo> & {
 	/**
 	 * oEmbed source URL of the image.
 	 */
-	url: string;
+	url: string
 
 	/**
 	 * oEmbed width in pixels of the image.
 	 */
-	width: number;
+	width: number
 
 	/**
 	 * oEmbed height in pixels of the image.
 	 */
-	height: number;
-};
+	height: number
+}
 
 /**
  * oEmbed video type. Those are every mandatory fields an oEmbed video response
@@ -126,18 +126,18 @@ export type VideoOEmbed = OEmbedBase<typeof OEmbedType.Video> & {
 	/**
 	 * oEmbed HTML required to embed a video player.
 	 */
-	html: string;
+	html: string
 
 	/**
 	 * oEmbed width in pixels required to display the HTML.
 	 */
-	width: number;
+	width: number
 
 	/**
 	 * oEmbed height in pixels required to display the HTML.
 	 */
-	height: number;
-};
+	height: number
+}
 
 /**
  * oEmbed link type. Those are every mandatory fields an oEmbed link response
@@ -145,7 +145,7 @@ export type VideoOEmbed = OEmbedBase<typeof OEmbedType.Video> & {
  *
  * @see oEmbed specification: {@link https://oembed.com}
  */
-export type LinkOEmbed = OEmbedBase<typeof OEmbedType.Link>;
+export type LinkOEmbed = OEmbedBase<typeof OEmbedType.Link>
 
 /**
  * oEmbed rich type. Those are every mandatory fields an oEmbed rich response
@@ -157,18 +157,18 @@ export type RichOEmbed = OEmbedBase<typeof OEmbedType.Rich> & {
 	/**
 	 * oEmbed HTML required to display the resource.
 	 */
-	html: string;
+	html: string
 
 	/**
 	 * oEmbed width in pixels required to display the HTML.
 	 */
-	width: number;
+	width: number
 
 	/**
 	 * oEmbed height in pixels required to display the HTML.
 	 */
-	height: number;
-};
+	height: number
+}
 
 /**
  * Any of the possible types of oEmbed response. Those contains only mandatory
@@ -176,7 +176,7 @@ export type RichOEmbed = OEmbedBase<typeof OEmbedType.Rich> & {
  *
  * @see oEmbed specification: {@link https://oembed.com}
  */
-export type AnyOEmbed = PhotoOEmbed | VideoOEmbed | LinkOEmbed | RichOEmbed;
+export type AnyOEmbed = PhotoOEmbed | VideoOEmbed | LinkOEmbed | RichOEmbed
 
 /**
  * An embed field.
@@ -192,6 +192,6 @@ export type EmbedField<
 > = State extends "empty"
 	? EmptyObjectField
 	: Data & {
-			embed_url: string;
-			html: string | null;
-	  };
+			embed_url: string
+			html: string | null
+		}

@@ -1,206 +1,219 @@
-import { expect, it } from "vitest";
+import { vi } from "vitest"
 
-import { createTestClient } from "./__testutils__/createClient";
-import { createPagedQueryResponses } from "./__testutils__/createPagedQueryResponses";
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
-import { testGetAllMethod } from "./__testutils__/testAnyGetMethod";
-import { testConcurrentMethod } from "./__testutils__/testConcurrentMethod";
-import { testFetchOptions } from "./__testutils__/testFetchOptions";
+import { it } from "./it"
 
-/**
- * The number of milliseconds in which a multi-page `getAll` (e.g. `getAll`,
- * `getAllByType`, `getAllByTag`) will wait between individual page requests.
- *
- * This is done to ensure API performance is sustainable and reduces the chance
- * of a failed API request due to overloading.
- *
- * IMPORTANT: This value is linked to `GET_ALL_QUERY_DELAY` used in
- * `../src/createClient.ts`. The two values do not need to be kept in sync, but
- * note that changing `GET_ALL_QUERY_DELAY` in the public code may have an
- * effect on tests using this test-specific constant.
- */
-export const GET_ALL_QUERY_DELAY = 500;
+import { RefNotFoundError } from "../src"
 
-/**
- * Tolerance in number of milliseconds for the duration of a simulated network
- * request.
- *
- * If tests are failing due to incorrect timed durations, increase the tolerance
- * amount.
- */
-const NETWORK_REQUEST_DURATION_TOLERANCE = 300;
+it("returns multiple documents", async ({ expect, client, docs }) => {
+	const res = await client.dangerouslyGetAll()
+	expect(res.length).toBeGreaterThan(1)
+	expect(res).toContainEqual(expect.objectContaining({ id: docs.default.id }))
+	expect(res).toContainEqual(expect.objectContaining({ id: docs.default2.id }))
+	expect(res).toContainEqual(expect.objectContaining({ id: docs.default3.id }))
+	expect(res).toContainEqual(expect.objectContaining({ id: docs.default4.id }))
+	expect(res).toContainEqual(
+		expect.objectContaining({ id: docs.defaultSingle.id }),
+	)
+})
 
-testGetAllMethod("returns all documents from paginated response", {
-	run: (client) => client.dangerouslyGetAll(),
-});
+it("can be limited", async ({ expect, client }) => {
+	const res = await client.dangerouslyGetAll({ limit: 1 })
+	expect(res).toHaveLength(1)
+})
 
-testGetAllMethod("includes params if provided", {
-	run: (client) =>
-		client.dangerouslyGetAll({
-			accessToken: "custom-accessToken",
-			ref: "custom-ref",
-			lang: "*",
-		}),
-	requiredParams: {
-		access_token: "custom-accessToken",
-		ref: "custom-ref",
-		lang: "*",
-	},
-});
+it("does not include filters by default", async ({ expect, client }) => {
+	await client.dangerouslyGetAll()
+	const url = vi.mocked(client.fetchFn).mock.lastCall![0]
+	expect(url).not.toHaveSearchParam("q")
+})
 
-testGetAllMethod("includes default params if provided", {
-	run: (client) => client.dangerouslyGetAll(),
-	clientConfig: {
-		defaultParams: {
-			lang: "*",
-		},
-	},
-	requiredParams: {
-		lang: "*",
-	},
-});
+it("uses a default page size", async ({ expect, client }) => {
+	await client.dangerouslyGetAll()
+	expect(client).toHaveLastFetchedContentAPI({ pageSize: "100" })
+})
 
-testGetAllMethod("merges params and default params if provided", {
-	run: (client) =>
-		client.dangerouslyGetAll({
-			accessToken: "overridden-accessToken",
-			ref: "overridden-ref",
-			lang: "fr-fr",
-		}),
-	clientConfig: {
-		accessToken: "custom-accessToken",
-		ref: "custom-ref",
-		defaultParams: {
-			lang: "*",
-		},
-	},
-	requiredParams: {
-		access_token: "overridden-accessToken",
-		ref: "overridden-ref",
-		lang: "fr-fr",
-	},
-});
+it("throttles requests with multiple pages", async ({
+	expect,
+	client,
+	masterRef,
+	response,
+}) => {
+	vi.mocked(client.fetchFn)
+		.mockResolvedValueOnce(response.repository(masterRef))
+		.mockResolvedValueOnce(response.search([{ id: "1" }], { next_page: "1" }))
+		.mockResolvedValueOnce(response.search([{ id: "1" }]))
+	vi.useFakeTimers()
+	const start = performance.now()
+	const promise = client.dangerouslyGetAll()
+	await vi.runAllTimersAsync()
+	await promise
+	expect(client).toHaveFetchedContentAPITimes(2)
+	expect(performance.now() - start).toBe(500)
+	vi.useRealTimers()
+})
 
-testGetAllMethod(
-	"uses the default pageSize when given a falsey pageSize param",
-	{
-		run: (client) =>
-			client.dangerouslyGetAll({
-				pageSize: 0,
-			}),
-		requiredParams: {
-			pageSize: "100",
-		},
-	},
-);
+it("does not throttle single page requests", async ({
+	expect,
+	client,
+	masterRef,
+	response,
+}) => {
+	vi.mocked(client.fetchFn)
+		.mockResolvedValueOnce(response.repository(masterRef))
+		.mockResolvedValueOnce(response.search([{ id: "1" }]))
+	vi.useFakeTimers()
+	const start = performance.now()
+	const promise = client.dangerouslyGetAll()
+	await vi.runAllTimersAsync()
+	await promise
+	expect(performance.now() - start).toBe(0)
+	vi.useRealTimers()
+})
 
-testGetAllMethod("optimizes pageSize when limit is below the pageSize", {
-	run: (client) =>
-		client.dangerouslyGetAll({
-			limit: 3,
-		}),
-	resultLimit: 3,
-	requiredParams: {
-		pageSize: "3",
-	},
-});
+it("optimizes page size when the limit is below the page size", async ({
+	expect,
+	client,
+}) => {
+	await client.dangerouslyGetAll({ limit: 2 })
+	expect(client).toHaveLastFetchedContentAPI({ pageSize: "2" })
+})
 
-testGetAllMethod(
-	"does not optimize pageSize when limit is above the pageSize",
-	{
-		run: (client) =>
-			client.dangerouslyGetAll({
-				limit: 150,
-			}),
-		resultLimit: 150,
-		requiredParams: {
-			pageSize: "100",
-		},
-	},
-);
+it("does not optimize page size when the limit is above the page size", async ({
+	expect,
+	client,
+}) => {
+	await client.dangerouslyGetAll({ limit: 150 })
+	expect(client).toHaveLastFetchedContentAPI({ pageSize: "100" })
+})
 
-it("throttles requests past first page", async (ctx) => {
-	const numPages = 3;
-	const queryResponses = createPagedQueryResponses({
-		ctx,
-		pages: numPages,
-	});
+it("supports params", async ({ expect, client }) => {
+	await client.dangerouslyGetAll({ lang: "fr-fr" })
+	expect(client).toHaveLastFetchedContentAPI({ lang: "fr-fr" })
+})
 
-	const queryDelay = 200;
+it("supports default params", async ({ expect, client }) => {
+	client.defaultParams = { lang: "fr-fr" }
+	await client.dangerouslyGetAll({ routes: [] })
+	expect(client).toHaveLastFetchedContentAPI({ lang: "fr-fr", routes: "[]" })
+})
 
-	mockPrismicRestAPIV2({
-		ctx,
-		queryResponse: queryResponses,
-		queryRequiredParams: {
-			pageSize: "100",
-		},
-		queryDelay,
-	});
+it("uses cached repository metadata within the client's repository cache TTL", async ({
+	expect,
+	client,
+}) => {
+	vi.useFakeTimers()
+	await client.dangerouslyGetAll()
+	await client.dangerouslyGetAll()
+	vi.advanceTimersByTime(5000)
+	await client.dangerouslyGetAll()
+	expect(client).toHaveFetchedRepoTimes(2)
+	vi.useRealTimers()
+})
 
-	const client = createTestClient();
+it("retries with the master ref when an invalid ref is used", async ({
+	expect,
+	client,
+	response,
+}) => {
+	vi.mocked(client.fetchFn).mockResolvedValueOnce(
+		response.repository("invalid"),
+	)
+	await client.dangerouslyGetAll()
+	expect(client).toHaveFetchedContentAPI({ ref: "invalid" })
+	expect(client).not.toHaveLastFetchedContentAPI({ ref: "invalid" })
+})
 
-	const startTime = Date.now();
-	await client.dangerouslyGetAll();
-	const endTime = Date.now();
+it("throws if the maximum number of retries with invalid refs is reached", async ({
+	expect,
+	client,
+	response,
+}) => {
+	vi.mocked(client.fetchFn)
+		.mockResolvedValueOnce(response.repository("invalid"))
+		.mockResolvedValueOnce(response.refNotFound("invalid"))
+		.mockResolvedValueOnce(response.repository("invalid"))
+		.mockResolvedValueOnce(response.refNotFound("invalid"))
+	await expect(() => client.dangerouslyGetAll()).rejects.toThrow(
+		RefNotFoundError,
+	)
+})
 
-	const totalTime = endTime - startTime;
-	const minTime = numPages * queryDelay + (numPages - 1) * 500;
-	const maxTime = minTime + NETWORK_REQUEST_DURATION_TOLERANCE;
+it("fetches a new master ref on subsequent queries if an invalid ref is used", async ({
+	expect,
+	client,
+	response,
+}) => {
+	vi.mocked(client.fetchFn).mockResolvedValueOnce(
+		response.repository("invalid"),
+	)
+	await client.dangerouslyGetAll()
+	expect(client).toHaveFetchedContentAPI({ ref: "invalid" })
+	expect(client).not.toHaveLastFetchedContentAPI({ ref: "invalid" })
+	await client.dangerouslyGetAll()
+	expect(client).not.toHaveLastFetchedContentAPI({ ref: "invalid" })
+	expect(client).toHaveFetchedRepoTimes(2)
+})
 
-	// The total time should be the amount of time it takes to resolve all
-	// network requests in addition to a delay between requests (accounting for
-	// some tolerance). The last request does not start an artificial delay.
-	expect(
-		minTime <= totalTime && totalTime <= maxTime,
-		`Total time should be between ${minTime}ms and ${maxTime}ms (inclusive), but was ${totalTime}ms`,
-	).toBe(true);
-});
+it("retries with the master ref when an expired ref is used", async ({
+	expect,
+	client,
+	response,
+}) => {
+	vi.mocked(client.fetchFn).mockResolvedValueOnce(
+		response.repository("expired"),
+	)
+	await client.dangerouslyGetAll()
+	expect(client).toHaveFetchedContentAPI({ ref: "expired" })
+	expect(client).not.toHaveLastFetchedContentAPI({ ref: "expired" })
+})
 
-it("does not throttle single page queries", async (ctx) => {
-	const queryResponses = createPagedQueryResponses({
-		ctx,
-		pages: 1,
-	});
-	const queryDelay = 200;
+it("throttles invalid ref logs", async ({ expect, client, response }) => {
+	vi.mocked(client.fetchFn)
+		.mockResolvedValueOnce(response.repository("invalid"))
+		.mockResolvedValueOnce(response.refNotFound("invalid"))
+		.mockResolvedValueOnce(response.repository("invalid"))
+		.mockResolvedValue(response.refNotFound("invalid"))
+	await expect(() => client.dangerouslyGetAll()).rejects.toThrow(
+		RefNotFoundError,
+	)
+	expect(console.warn).toHaveBeenCalledTimes(1)
+})
 
-	mockPrismicRestAPIV2({
-		ctx,
-		queryResponse: queryResponses,
-		queryRequiredParams: {
-			pageSize: "100",
-		},
-		queryDelay,
-	});
+it("supports fetch options", async ({ expect, client }) => {
+	await client.dangerouslyGetAll({ fetchOptions: { cache: "no-cache" } })
+	expect(client).toHaveLastFetchedContentAPI({}, { cache: "no-cache" })
+})
 
-	const client = createTestClient();
+it("supports default fetch options", async ({ expect, client }) => {
+	client.fetchOptions = { cache: "no-cache" }
+	await client.dangerouslyGetAll({ fetchOptions: { headers: { foo: "bar" } } })
+	expect(client).toHaveLastFetchedContentAPI(
+		{},
+		{ cache: "no-cache", headers: { foo: "bar" } },
+	)
+})
 
-	const startTime = Date.now();
-	await client.dangerouslyGetAll();
-	const endTime = Date.now();
+it("supports signal", async ({ expect, client }) => {
+	await expect(() =>
+		client.dangerouslyGetAll({ fetchOptions: { signal: AbortSignal.abort() } }),
+	).rejects.toThrow("aborted")
+})
 
-	const totalTime = endTime - startTime;
-	const minTime = queryDelay;
-	const maxTime = minTime + NETWORK_REQUEST_DURATION_TOLERANCE;
-
-	// The total time should only be the amount of time it takes to resolve the
-	// network request (accounting for some tolerance). In other words, there is
-	// no artificial delay in a single page `getAll` query.
-	expect(
-		minTime <= totalTime && totalTime <= maxTime,
-		`Total time should be between ${minTime}ms and ${maxTime}ms (inclusive), but was ${totalTime}ms`,
-	).toBe(true);
-});
-
-testFetchOptions("supports fetch options", {
-	run: (client, params) => client.dangerouslyGetAll(params),
-});
-
-testAbortableMethod("is abortable with an AbortController", {
-	run: (client, params) => client.dangerouslyGetAll(params),
-});
-
-testConcurrentMethod("shares concurrent equivalent network requests", {
-	run: (client, params) => client.dangerouslyGetAll(params),
-	mode: "getAll",
-});
+it("shares concurrent equivalent network requests", async ({
+	expect,
+	client,
+}) => {
+	const controller1 = new AbortController()
+	const controller2 = new AbortController()
+	await Promise.all([
+		client.dangerouslyGetAll(),
+		client.dangerouslyGetAll(),
+		client.dangerouslyGetAll({ signal: controller1.signal }),
+		client.dangerouslyGetAll({ signal: controller1.signal }),
+		client.dangerouslyGetAll({ signal: controller2.signal }),
+		client.dangerouslyGetAll({ signal: controller2.signal }),
+	])
+	await client.dangerouslyGetAll()
+	expect(client).toHaveFetchedRepoTimes(3)
+	expect(client).toHaveFetchedContentAPITimes(4)
+})

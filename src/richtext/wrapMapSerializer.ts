@@ -1,8 +1,5 @@
-import {
-	RichTextFunctionSerializer,
-	RichTextMapSerializer,
-	RichTextReversedNodeType,
-} from "./types";
+import type { RichTextFunctionSerializer, RichTextMapSerializer } from "./types"
+import { RichTextReversedNodeType } from "./types"
 
 /**
  * Wraps a map serializer into a regular function serializer
@@ -26,7 +23,7 @@ export const wrapMapSerializer = <SerializerReturnType>(
 				(RichTextReversedNodeType[
 					type as keyof typeof RichTextReversedNodeType
 				] || type) as keyof RichTextMapSerializer<SerializerReturnType>
-			];
+			]
 
 		if (tagSerializer) {
 			return tagSerializer({
@@ -40,7 +37,7 @@ export const wrapMapSerializer = <SerializerReturnType>(
 				children,
 				// @ts-expect-error cannot type check here
 				key,
-			});
+			})
 		}
-	};
-};
+	}
+}

@@ -1,8 +1,7 @@
-import type { AnyRegularField, FieldState } from "./types";
+import type { AnyRegularField, FieldState } from "./types"
 
-import type { GroupField } from "./group";
-import type { EmptyLinkField, LinkType } from "./link";
-import type { SliceZone } from "./sliceZone";
+import type { GroupField } from "./group"
+import type { SliceZone } from "./sliceZone"
 
 /**
  * Field for related documents
@@ -21,8 +20,12 @@ export type ContentRelationshipField<
 		| unknown = unknown,
 	State extends FieldState = FieldState,
 > = State extends "empty"
-	? EmptyLinkField<typeof LinkType.Document>
-	: FilledContentRelationshipField<TypeEnum, LangEnum, DataInterface>;
+	? EmptyContentRelationshipField
+	: FilledContentRelationshipField<TypeEnum, LangEnum, DataInterface>
+
+export type EmptyContentRelationshipField = {
+	link_type: "Any"
+}
 
 /**
  * Links that refer to documents
@@ -34,14 +37,14 @@ export interface FilledContentRelationshipField<
 		| Record<string, AnyRegularField | GroupField | SliceZone>
 		| unknown = unknown,
 > {
-	link_type: typeof LinkType.Document;
-	id: string;
-	uid?: string;
-	type: TypeEnum;
-	tags: string[];
-	lang: LangEnum;
-	url?: string;
-	slug?: string;
-	isBroken?: boolean;
-	data?: DataInterface;
+	link_type: "Document"
+	id: string
+	uid?: string
+	type: TypeEnum
+	tags: string[]
+	lang: LangEnum
+	url?: string
+	slug?: string
+	isBroken?: boolean
+	data?: DataInterface
 }

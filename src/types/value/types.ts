@@ -1,30 +1,31 @@
-import type { BooleanField } from "./boolean";
-import type { ColorField } from "./color";
-import type { ContentRelationshipField } from "./contentRelationship";
-import type { DateField } from "./date";
-import type { EmbedField } from "./embed";
-import type { GeoPointField } from "./geoPoint";
-import type { GroupField } from "./group";
-import type { ImageField } from "./image";
-import type { IntegrationField } from "./integration";
-import type { KeyTextField } from "./keyText";
-import type { LinkField } from "./link";
-import type { LinkToMediaField } from "./linkToMedia";
-import type { NumberField } from "./number";
-import type { RichTextField } from "./richText";
-import type { SelectField } from "./select";
-import type { TimestampField } from "./timestamp";
-import type { TitleField } from "./title";
+import type { BooleanField } from "./boolean"
+import type { ColorField } from "./color"
+import type { ContentRelationshipField } from "./contentRelationship"
+import type { DateField } from "./date"
+import type { EmbedField } from "./embed"
+import type { GeoPointField } from "./geoPoint"
+import type { GroupField } from "./group"
+import type { ImageField } from "./image"
+import type { IntegrationField } from "./integration"
+import type { KeyTextField } from "./keyText"
+import type { LinkField } from "./link"
+import type { LinkToMediaField } from "./linkToMedia"
+import type { NumberField } from "./number"
+import type { RichTextField } from "./richText"
+import type { SelectField } from "./select"
+import type { TableField } from "./table"
+import type { TimestampField } from "./timestamp"
+import type { TitleField } from "./title"
 
 /**
  * Empty state for object-shaped fields.
  */
-export type EmptyObjectField = Record<string, never>;
+export type EmptyObjectField = Record<string, never>
 
 /**
  * Valid states for fields. Not all fields use this type (e.g. BooleanField).
  */
-export type FieldState = "empty" | "filled";
+export type FieldState = "empty" | "filled"
 
 /**
  * Any regular field that can be nested in a group-like field.
@@ -35,6 +36,7 @@ export type AnyRegularField =
 	| ImageField
 	| ContentRelationshipField
 	| LinkField
+	| Repeatable<LinkField>
 	| LinkToMediaField
 	| EmbedField
 	| DateField
@@ -45,12 +47,26 @@ export type AnyRegularField =
 	| SelectField
 	| BooleanField
 	| GeoPointField
-	| IntegrationField;
+	| IntegrationField
+	| TableField
 
 /**
  * Any field that can be used in a slice's primary section.
  */
-export type AnySlicePrimaryField = GroupField | AnyRegularField;
+export type AnySlicePrimaryField = GroupField | AnyRegularField
+
+/**
+ * A list of repeatable fields.
+ */
+export type Repeatable<
+	Field extends LinkField,
+	State extends FieldState = FieldState,
+> = State extends "empty" ? [] : [WithKey<Field>, ...WithKey<Field>[]]
+
+/**
+ * Wrapper to add a key to a field when inside a repeatable.
+ */
+type WithKey<Field extends LinkField> = Field & { key: string }
 
 /**
  * Useful to flatten the type output to improve type hints shown in editors. And
@@ -62,4 +78,4 @@ export type AnySlicePrimaryField = GroupField | AnyRegularField;
  *
  * @see https://github.com/sindresorhus/type-fest/blob/cbd7ec510bd136ac045bbc74e391ee686b8a9a2f/source/simplify.d.ts
  */
-export type Simplify<T> = { [P in keyof T]: T[P] };
+export type Simplify<T> = { [P in keyof T]: T[P] }

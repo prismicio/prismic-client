@@ -1,14 +1,17 @@
-import { expect, it } from "vitest";
+import { it } from "./it"
 
-import * as prismic from "../src";
+import { isRepositoryName } from "../src"
 
-it("returns true if the input is a repository name", () => {
-	expect(prismic.isRepositoryName("qwerty")).toBe(true);
-});
+it("returns true if the input is a repository name", async ({ expect }) => {
+	const res = isRepositoryName("example")
+	expect(res).toBe(true)
+})
 
-it("returns false if the input is not a repository name", () => {
-	expect(prismic.isRepositoryName("https://qwerty.cdn.prismic.io/api/v2")).toBe(
-		false,
-	);
-	expect(prismic.isRepositoryName("this is invalid")).toBe(false);
-});
+it("returns false if the input is not a repository name", async ({
+	expect,
+}) => {
+	const res1 = isRepositoryName("https://example.cdn.prismic.io/api/v2")
+	expect(res1).toBe(false)
+	const res2 = isRepositoryName("this is invalid")
+	expect(res2).toBe(false)
+})

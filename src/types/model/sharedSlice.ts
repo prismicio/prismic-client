@@ -1,5 +1,5 @@
-import type { SharedSliceModelVariation } from "./sharedSliceVariation";
-import type { CustomTypeModelSliceType } from "./sliceZone";
+import type { SharedSliceModelVariation } from "./sharedSliceVariation"
+import type { CustomTypeModelSliceType } from "./sliceZone"
 
 /**
  * A Prismic shared Slice model.
@@ -12,9 +12,9 @@ export interface SharedSliceModel<
 	ID extends string = string,
 	Variation extends SharedSliceModelVariation = SharedSliceModelVariation,
 > {
-	type: typeof CustomTypeModelSliceType.SharedSlice;
-	id: ID;
-	name: string;
-	description?: string;
-	variations: readonly Variation[];
+	type: typeof CustomTypeModelSliceType.SharedSlice
+	id: ID
+	name: string
+	description?: string
+	variations: readonly Variation[]
 }

@@ -1,48 +1,53 @@
-import { expect, it } from "vitest";
+import { vi } from "vitest"
 
-import { createTestClient } from "./__testutils__/createClient";
-import { mockPrismicRestAPIV2 } from "./__testutils__/mockPrismicRestAPIV2";
-import { testAbortableMethod } from "./__testutils__/testAbortableMethod";
-import { testFetchOptions } from "./__testutils__/testFetchOptions";
+import { it } from "./it"
 
-import * as prismic from "../src";
+import { ForbiddenError, RepositoryNotFoundError } from "../src"
 
-it("returns repository metadata", async (ctx) => {
-	const repositoryResponse = ctx.mock.api.repository();
-	mockPrismicRestAPIV2({
-		repositoryResponse,
-		ctx,
-	});
+it("returns repository metadata", async ({ expect, client }) => {
+	const res = await client.getRepository()
+	expect(res).toMatchObject({ refs: expect.any(Array) })
+})
 
-	const client = createTestClient();
-	const res = await client.getRepository();
+it("supports an explicit access token", async ({
+	expect,
+	client,
+	accessToken,
+}) => {
+	await client.getRepository({ accessToken })
+	expect(client).toHaveLastFetchedRepo({ access_token: accessToken })
+})
 
-	expect(res).toStrictEqual(repositoryResponse);
-});
+it("throws ForbiddenError on 401", async ({ expect, client }) => {
+	vi.mocked(client.fetchFn).mockResolvedValue(
+		Response.json({}, { status: 401 }),
+	)
+	await expect(() => client.getRepository()).rejects.toThrow(ForbiddenError)
+})
 
-// TODO: Remove when Authorization header support works in browsers with CORS.
-it("includes access token if configured", async (ctx) => {
-	const clientConfig: prismic.ClientConfig = {
-		accessToken: "accessToken",
-	};
+it("throws RepositoryNotFoundError on 404", async ({ expect, client }) => {
+	vi.mocked(client.fetchFn).mockResolvedValue(
+		Response.json({}, { status: 404 }),
+	)
+	await expect(() => client.getRepository()).rejects.toThrow(
+		RepositoryNotFoundError,
+	)
+})
 
-	const repositoryResponse = ctx.mock.api.repository();
-	mockPrismicRestAPIV2({
-		repositoryResponse,
-		accessToken: clientConfig.accessToken,
-		ctx,
-	});
-
-	const client = createTestClient({ clientConfig });
-	const res = await client.getRepository();
-
-	expect(res).toStrictEqual(repositoryResponse);
-});
-
-testFetchOptions("supports fetch options", {
-	run: (client, params) => client.getRepository(params),
-});
-
-testAbortableMethod("is abortable with an AbortController", {
-	run: (client, params) => client.getRepository(params),
-});
+it("shares concurrent equivalent network requests", async ({
+	expect,
+	client,
+}) => {
+	const controller1 = new AbortController()
+	const controller2 = new AbortController()
+	await Promise.all([
+		client.getRepository(),
+		client.getRepository(),
+		client.getRepository({ signal: controller1.signal }),
+		client.getRepository({ signal: controller1.signal }),
+		client.getRepository({ signal: controller2.signal }),
+		client.getRepository({ signal: controller2.signal }),
+	])
+	await client.getRepository()
+	expect(client).toHaveFetchedRepoTimes(3)
+})

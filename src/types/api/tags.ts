@@ -6,4 +6,4 @@
  *
  * @see More details on the Tags API: {@link https://prismic.io/docs/tags-api-technical-reference}
  */
-export type Tags<Tag extends string = string> = Tag[];
+export type Tags<Tag extends string = string> = Tag[]

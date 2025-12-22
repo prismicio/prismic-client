@@ -1,26 +1,16 @@
-import { getMasterRef } from "./__testutils__/getMasterRef";
-import {
-	testGetOutsideTTL,
-	testGetWithinTTL,
-} from "./__testutils__/testGetTTL";
+import { it } from "./it"
 
-testGetWithinTTL("uses the cached master ref within the ref's TTL", {
-	getContext: {
-		getRef: getMasterRef,
-	},
-	beforeFirstGet: (args) => args.client.queryLatestContent(),
-});
-
-testGetOutsideTTL(
-	"uses a fresh master ref outside of the cached ref's TTL",
-
-	{
-		getContext1: {
-			getRef: getMasterRef,
-		},
-		getContext2: {
-			getRef: getMasterRef,
-		},
-		beforeFirstGet: (args) => args.client.queryLatestContent(),
-	},
-);
+it("fetches the latest content", async ({
+	expect,
+	client,
+	accessToken,
+	release,
+	masterRef,
+}) => {
+	client.queryContentFromReleaseByID(release.id)
+	await client.get({ accessToken })
+	expect(client).toHaveLastFetchedContentAPI({ ref: release.ref })
+	client.queryLatestContent()
+	await client.get({ accessToken })
+	expect(client).toHaveLastFetchedContentAPI({ ref: masterRef })
+})

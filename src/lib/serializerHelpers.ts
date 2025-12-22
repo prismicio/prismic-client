@@ -1,55 +1,61 @@
-import type { RichTextMapSerializer } from "../richtext/types";
-import { LinkType } from "../types/value/link";
-import { RTAnyNode } from "../types/value/richText";
+import type { RichTextMapSerializer } from "../richtext/types"
+import { LinkType } from "../types/value/link"
+import type { RTAnyNode } from "../types/value/richText"
 
-import {
+import type {
 	HTMLRichTextMapSerializer,
 	HTMLStrictRichTextMapSerializer,
-} from "../helpers/asHTML";
-import { LinkResolverFunction, asLink } from "../helpers/asLink";
+} from "../helpers/asHTML"
+import type { LinkResolverFunction } from "../helpers/asLink"
+import { asLink } from "../helpers/asLink"
 
-import { escapeHTML } from "./escapeHTML";
+import { escapeHTML } from "./escapeHTML"
 
-type Attributes = Record<string, string | boolean | null | undefined>;
+type Attributes = Record<string, string | boolean | null | undefined>
 const formatAttributes = (node: RTAnyNode, attributes: Attributes): string => {
-	const _attributes = { ...attributes };
+	const _attributes = { ...attributes }
+
+	// Respect `ltr` and `rtl` direction
+	if ("direction" in node && node.direction === "rtl") {
+		_attributes.dir = node.direction
+	}
 
 	// Add label to attributes
 	if ("data" in node && "label" in node.data && node.data.label) {
 		_attributes.class = _attributes.class
 			? `${_attributes.class} ${node.data.label}`
-			: node.data.label;
+			: node.data.label
 	}
 
-	const result = [];
+	const result = []
 
 	for (const key in _attributes) {
-		const value = _attributes[key];
+		const value = _attributes[key]
 
 		if (value) {
 			if (typeof value === "boolean") {
-				result.push(key);
+				result.push(key)
 			} else {
-				result.push(`${key}="${escapeHTML(value)}"`);
+				result.push(`${key}="${escapeHTML(value)}"`)
 			}
 		}
 	}
 
 	// Add a space at the beginning if there's any result
 	if (result.length) {
-		result.unshift("");
+		result.unshift("")
 	}
 
-	return result.join(" ");
-};
+	return result.join(" ")
+}
 
 const getGeneralAttributes = (
 	serializerOrShorthand?: HTMLRichTextMapSerializer[keyof HTMLRichTextMapSerializer],
 ): Attributes => {
 	return serializerOrShorthand && typeof serializerOrShorthand !== "function"
 		? serializerOrShorthand
-		: {};
-};
+		: {}
+}
 
 export const serializeStandardTag = <
 	BlockType extends keyof RichTextMapSerializer<string>,
@@ -57,27 +63,27 @@ export const serializeStandardTag = <
 	tag: string,
 	serializerOrShorthand?: HTMLRichTextMapSerializer[BlockType],
 ): NonNullable<HTMLStrictRichTextMapSerializer[BlockType]> => {
-	const generalAttributes = getGeneralAttributes(serializerOrShorthand);
+	const generalAttributes = getGeneralAttributes(serializerOrShorthand)
 
 	return (({ node, children }) => {
 		return `<${tag}${formatAttributes(
 			node,
 			generalAttributes,
-		)}>${children}</${tag}>`;
-	}) as NonNullable<HTMLStrictRichTextMapSerializer[BlockType]>;
-};
+		)}>${children}</${tag}>`
+	}) as NonNullable<HTMLStrictRichTextMapSerializer[BlockType]>
+}
 
 export const serializePreFormatted = (
 	serializerOrShorthand?: HTMLRichTextMapSerializer["preformatted"],
 ): NonNullable<HTMLStrictRichTextMapSerializer["preformatted"]> => {
-	const generalAttributes = getGeneralAttributes(serializerOrShorthand);
+	const generalAttributes = getGeneralAttributes(serializerOrShorthand)
 
 	return ({ node }) => {
 		return `<pre${formatAttributes(node, generalAttributes)}>${escapeHTML(
 			node.text,
-		)}</pre>`;
-	};
-};
+		)}</pre>`
+	}
+}
 
 export const serializeImage = (
 	linkResolver:
@@ -86,7 +92,7 @@ export const serializeImage = (
 		| null,
 	serializerOrShorthand?: HTMLRichTextMapSerializer["image"],
 ): NonNullable<HTMLStrictRichTextMapSerializer["image"]> => {
-	const generalAttributes = getGeneralAttributes(serializerOrShorthand);
+	const generalAttributes = getGeneralAttributes(serializerOrShorthand)
 
 	return ({ node }) => {
 		const attributes = {
@@ -94,9 +100,9 @@ export const serializeImage = (
 			src: node.url,
 			alt: node.alt,
 			copyright: node.copyright,
-		};
+		}
 
-		let imageTag = `<img${formatAttributes(node, attributes)} />`;
+		let imageTag = `<img${formatAttributes(node, attributes)} />`
 
 		// If the image has a link, we wrap it with an anchor tag
 		if (node.linkTo) {
@@ -111,17 +117,17 @@ export const serializeImage = (
 				text: "",
 				children: imageTag,
 				key: "",
-			})!;
+			})!
 		}
 
-		return `<p class="block-img">${imageTag}</p>`;
-	};
-};
+		return `<p class="block-img">${imageTag}</p>`
+	}
+}
 
 export const serializeEmbed = (
 	serializerOrShorthand?: HTMLRichTextMapSerializer["embed"],
 ): NonNullable<HTMLStrictRichTextMapSerializer["embed"]> => {
-	const generalAttributes = getGeneralAttributes(serializerOrShorthand);
+	const generalAttributes = getGeneralAttributes(serializerOrShorthand)
 
 	return ({ node }) => {
 		const attributes = {
@@ -129,13 +135,11 @@ export const serializeEmbed = (
 			["data-oembed"]: node.oembed.embed_url,
 			["data-oembed-type"]: node.oembed.type,
 			["data-oembed-provider"]: node.oembed.provider_name,
-		};
+		}
 
-		return `<div${formatAttributes(node, attributes)}>${
-			node.oembed.html
-		}</div>`;
-	};
-};
+		return `<div${formatAttributes(node, attributes)}>${node.oembed.html}</div>`
+	}
+}
 
 export const serializeHyperlink = (
 	linkResolver:
@@ -144,31 +148,31 @@ export const serializeHyperlink = (
 		| null,
 	serializerOrShorthand?: HTMLRichTextMapSerializer["hyperlink"],
 ): NonNullable<HTMLStrictRichTextMapSerializer["hyperlink"]> => {
-	const generalAttributes = getGeneralAttributes(serializerOrShorthand);
+	const generalAttributes = getGeneralAttributes(serializerOrShorthand)
 
 	return ({ node, children }): string => {
 		const attributes = {
 			...generalAttributes,
-		};
-
-		if (node.data.link_type === LinkType.Web) {
-			attributes.href = node.data.url;
-			attributes.target = node.data.target;
-			attributes.rel = "noopener noreferrer";
-		} else if (node.data.link_type === LinkType.Document) {
-			attributes.href = asLink(node.data, { linkResolver });
-		} else if (node.data.link_type === LinkType.Media) {
-			attributes.href = node.data.url;
 		}
 
-		return `<a${formatAttributes(node, attributes)}>${children}</a>`;
-	};
-};
+		if (node.data.link_type === LinkType.Web) {
+			attributes.href = node.data.url
+			attributes.target = node.data.target
+			attributes.rel = "noopener noreferrer"
+		} else if (node.data.link_type === LinkType.Document) {
+			attributes.href = asLink(node.data, { linkResolver })
+		} else if (node.data.link_type === LinkType.Media) {
+			attributes.href = node.data.url
+		}
+
+		return `<a${formatAttributes(node, attributes)}>${children}</a>`
+	}
+}
 
 export const serializeSpan = (): NonNullable<
 	HTMLStrictRichTextMapSerializer["span"]
 > => {
 	return ({ text }): string => {
-		return text ? escapeHTML(text).replace(/\n/g, "<br />") : "";
-	};
-};
+		return text ? escapeHTML(text).replace(/\n/g, "<br />") : ""
+	}
+}

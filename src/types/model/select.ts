@@ -1,4 +1,4 @@
-import type { CustomTypeModelFieldType } from "./types";
+import type { CustomTypeModelFieldType } from "./types"
 
 /**
  * A select custom type field.
@@ -12,11 +12,11 @@ export interface CustomTypeModelSelectField<
 	Option extends string = string,
 	DefaultValue extends Option = Option,
 > {
-	type: typeof CustomTypeModelFieldType.Select;
+	type: typeof CustomTypeModelFieldType.Select
 	config?: {
-		label?: string | null;
-		placeholder?: string;
-		options?: readonly Option[];
-		default_value?: DefaultValue;
-	};
+		label?: string | null
+		placeholder?: string
+		options?: readonly Option[]
+		default_value?: DefaultValue
+	}
 }
