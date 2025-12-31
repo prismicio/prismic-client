@@ -302,8 +302,8 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			)
 		}
 		if (
-			/\.prismic\.io\/(?!api\/v2\/?)/i.test(this.documentAPIEndpoint) &&
-			process.env.NODE_ENV === "development"
+			process.env.NODE_ENV === "development" &&
+			/\.prismic\.io\/(?!api\/v2\/?)/i.test(this.documentAPIEndpoint)
 		) {
 			throw new PrismicError(
 				"@prismicio/client only supports Prismic Rest API V2. Please provide only the repository name to the first createClient() parameter or use the getRepositoryEndpoint() helper to generate a valid Rest API V2 endpoint URL.",
@@ -312,10 +312,10 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			)
 		}
 		if (
+			process.env.NODE_ENV === "development" &&
 			/(?<!\.cdn)\.prismic\.io$/i.test(
 				new URL(this.documentAPIEndpoint).hostname,
-			) &&
-			process.env.NODE_ENV === "development"
+			)
 		) {
 			console.warn(
 				`[@prismicio/client] The client was created with a non-CDN endpoint. Convert it to the CDN endpoint for better performance. For more details, see ${devMsg("endpoint-must-use-cdn")}`,
