@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.21.2](https://github.com/prismicio/prismic-client/compare/v7.21.1...v7.21.2) (2025-12-31)
+
+
+### Bug Fixes
+
+* move `NODE_ENV` checks first to fix treeshaking artifacts ([#425](https://github.com/prismicio/prismic-client/issues/425)) ([2241765](https://github.com/prismicio/prismic-client/commit/2241765d1827b78ec52638c966565ac153cd6595))
+
 ## [7.21.1](https://github.com/prismicio/prismic-client/compare/v7.21.0...v7.21.1) (2025-12-22)
 
 
