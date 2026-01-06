@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.21.3](https://github.com/prismicio/prismic-client/compare/v7.21.2...v7.21.3) (2026-01-06)
+
+
+### Bug Fixes
+
+* restore `@prismicio/client/richtext` type exports ([#428](https://github.com/prismicio/prismic-client/issues/428)) ([ae02ad7](https://github.com/prismicio/prismic-client/commit/ae02ad7099e91cf636d21e3063992146c4f3c076))
+
 ## [7.21.2](https://github.com/prismicio/prismic-client/compare/v7.21.1...v7.21.2) (2025-12-31)
 
 
