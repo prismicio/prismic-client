@@ -42,7 +42,7 @@
 				"dist/index.d.ts"
 			],
 			"richtext": [
-				"dist/richtext/index.d.ts"
+				"dist/richtext.d.ts"
 			]
 		}
 	},
