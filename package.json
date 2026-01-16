@@ -26,6 +26,10 @@
 			"import": "./dist/index.js",
 			"require": "./dist/index.cjs"
 		},
+		"./iac": {
+			"import": "./dist/iac.js",
+			"require": "./dist/iac.cjs"
+		},
 		"./richtext": {
 			"import": "./dist/richtext.js",
 			"require": "./dist/richtext.cjs"
@@ -43,6 +47,9 @@
 			],
 			"richtext": [
 				"dist/richtext.d.ts"
+			],
+			"iac": [
+				"dist/iac.d.ts"
 			]
 		}
 	},
