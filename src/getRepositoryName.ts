@@ -18,6 +18,9 @@ export const getRepositoryName = (repositoryEndpoint: string): string => {
 		if (
 			hostname.endsWith("prismic.io") || // Production
 			hostname.endsWith("wroom.io") || // Staging
+			hostname.endsWith("dev-tools-wroom.com") || // Dev-Tools
+			hostname.endsWith("marketing-tools-wroom.com") || // Marketing-Tools
+			hostname.endsWith("platform-wroom.com") || // Platform
 			hostname.endsWith("wroom.test") // Dev
 		) {
 			return hostname.split(".")[0]
