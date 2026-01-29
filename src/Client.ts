@@ -313,7 +313,10 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		}
 		if (
 			process.env.NODE_ENV === "development" &&
-			/(?<!\.cdn)\.prismic\.io$/i.test(
+			/\.prismic\.io$/i.test(
+				new URL(this.documentAPIEndpoint).hostname,
+			) &&
+			!/\.cdn\.prismic\.io$/i.test(
 				new URL(this.documentAPIEndpoint).hostname,
 			)
 		) {
