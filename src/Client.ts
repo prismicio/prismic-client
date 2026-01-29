@@ -1449,8 +1449,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 					this.#cachedRepository = undefined
 				}
 
-				const masterRef = error.message.match(/master ref is: (?<ref>.*)$/i)
-					?.groups?.ref
+				const masterRef = error.message.match(/master ref is: (.*)$/i)?.[1]
 				if (!masterRef) {
 					throw error
 				}
