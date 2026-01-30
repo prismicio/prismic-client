@@ -105,43 +105,39 @@ export interface HeadersLike {
 }
 
 function memoizeResponse(response: ResponseLike): ResponseLike {
-	const cache: {
-		text?: Promise<string>
-		json?: Promise<{ value: unknown }>
-		blob?: Promise<Blob>
-	} = {}
+	let text: Promise<string> | undefined
+	let json: Promise<unknown> | undefined
+	let blob: Promise<Blob> | undefined
 
-	function createWrapper(res: ResponseLike): ResponseLike {
-		return {
-			ok: res.ok,
-			status: res.status,
-			headers: res.headers,
-			url: res.url,
-			async text() {
-				if (!cache.text) {
-					cache.text = res.text()
-				}
-				return cache.text
-			},
-			async json() {
-				if (!cache.json) {
-					cache.json = this.text().then((text) => ({ value: JSON.parse(text) }))
-				}
-				return cache.json.then((cached) => cached.value)
-			},
-			async blob() {
-				if (!cache.blob) {
-					cache.blob = res.blob()
-				}
-				return cache.blob
-			},
-			clone() {
-				return createWrapper(res.clone())
-			},
-		}
+	const wrapper: ResponseLike = {
+		ok: response.ok,
+		status: response.status,
+		headers: response.headers,
+		url: response.url,
+		async text() {
+			if (!text) {
+				text = response.clone().text()
+			}
+			return text
+		},
+		async json() {
+			if (!json) {
+				json = this.text().then((text) => JSON.parse(text))
+			}
+			return json
+		},
+		async blob() {
+			if (!blob) {
+				blob = response.clone().blob()
+			}
+			return blob
+		},
+		clone() {
+			return wrapper
+		},
 	}
 
-	return createWrapper(response)
+	return wrapper
 }
 
 /**
