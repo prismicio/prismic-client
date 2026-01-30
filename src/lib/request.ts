@@ -104,6 +104,46 @@ export interface HeadersLike {
 	get(name: string): string | null
 }
 
+function memoizeResponse(response: ResponseLike): ResponseLike {
+	const cache: {
+		text?: Promise<string>
+		json?: Promise<{ value: unknown }>
+		blob?: Promise<Blob>
+	} = {}
+
+	function createWrapper(res: ResponseLike): ResponseLike {
+		return {
+			ok: res.ok,
+			status: res.status,
+			headers: res.headers,
+			url: res.url,
+			async text() {
+				if (!cache.text) {
+					cache.text = res.text()
+				}
+				return cache.text
+			},
+			async json() {
+				if (!cache.json) {
+					cache.json = this.text().then((text) => ({ value: JSON.parse(text) }))
+				}
+				return cache.json.then((cached) => cached.value)
+			},
+			async blob() {
+				if (!cache.blob) {
+					cache.blob = res.blob()
+				}
+				return cache.blob
+			},
+			clone() {
+				return createWrapper(res.clone())
+			},
+		}
+	}
+
+	return createWrapper(response)
+}
+
 /**
  * Makes an HTTP request with automatic retry for rate limits and request
  * deduplication.
@@ -137,12 +177,14 @@ export async function request(
 		if (existingJob) {
 			job = existingJob
 		} else {
-			job = fetchFn(stringURL, init).finally(() => {
-				DEDUPLICATED_JOBS[stringURL]?.delete(init?.signal)
-				if (DEDUPLICATED_JOBS[stringURL]?.size === 0) {
-					delete DEDUPLICATED_JOBS[stringURL]
-				}
-			})
+			job = fetchFn(stringURL, init)
+				.then(memoizeResponse)
+				.finally(() => {
+					DEDUPLICATED_JOBS[stringURL]?.delete(init?.signal)
+					if (DEDUPLICATED_JOBS[stringURL]?.size === 0) {
+						delete DEDUPLICATED_JOBS[stringURL]
+					}
+				})
 			const map = (DEDUPLICATED_JOBS[stringURL] ||= new Map())
 			map.set(init?.signal, job)
 		}
@@ -162,5 +204,5 @@ export async function request(
 		return request(url, init, fetchFn)
 	}
 
-	return response.clone()
+	return response
 }
