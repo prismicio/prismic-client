@@ -47,8 +47,8 @@ The following setup is required to work on this project:
 ##### TypeScript type tests
 
 - Any change to this library should be tested. A test can be as simple as ensuring a type is compatible with a payload.
-- Type tests should be placed in the `test/types` directory using the existing file name convention.
-- Tests are written using `ts-expect` and run using `tsc`.
+- Type tests should be placed in the `test/types` directory with the `.test-d.ts` extension.
+- Tests are written using Vitest type assertions (`assertType` and `expectTypeOf`).
 
 ## :construction_worker: Develop
 
@@ -114,28 +114,18 @@ gh pr create
 > [!CAUTION]
 > Publishing is restricted to the Prismic team.[^4]
 
-```sh
-# Checkout the master branch and pull the latest changes.
-git checkout master
-git pull
+Releases are automated with [Release Please](https://github.com/googleapis/release-please). When changes are pushed to `master`, a PR is created automatically with a version bump and changelog. Merging the release PR publishes a new version to npm.
 
-# Perform a dry-run and verify the output.
-# If it looks good, release a new version.
-npm run release:dry
-npm run release
+Prereleases are available for testing:
 
-# Or release an alpha.
-# Perform a dry-run and verify the output.
-# If it looks good, release a new alpha version.
-npm run release:alpha:dry
-npm run release:alpha
-```
-
-After publishing a new release, publish the tags as releases. This will show the latest release on the repository's homepage.
-
-1. Go to the repository's [Tags page](https://github.com/prismicio/prismic-client/tags).
-2. Open the options for the tag you just published to NPM and select "Create release."
-3. Ensure that the "Set as the latest release" box is checked, then publish the release.
+- **Canary** — Published on every push to `master`. Old canaries are deprecated automatically.
+  ```sh
+  npm install @prismicio/client@canary
+  ```
+- **PR** — Published on every push to a PR. Deprecated when the PR is closed.
+  ```sh
+  npm install @prismicio/client@pr-<number>
+  ```
 
 [^1]: This package is maintained by the DevX team. Prismic employees can ask for help or a review in the [#team-devx](https://prismic-team.slack.com/archives/C014VAACCQL) Slack channel.
 
