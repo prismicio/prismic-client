@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.21.4](https://github.com/prismicio/prismic-client/compare/v7.21.3...v7.21.4) (2026-01-30)
+
+
+### Bug Fixes
+
+* replace regex negative lookbehind for Safari compatibility ([#436](https://github.com/prismicio/prismic-client/issues/436)) ([582b31f](https://github.com/prismicio/prismic-client/commit/582b31fb1fe9a67dcdea6283ab4a1fe7efc74b72)), closes [#424](https://github.com/prismicio/prismic-client/issues/424)
+
 ## [7.21.3](https://github.com/prismicio/prismic-client/compare/v7.21.2...v7.21.3) (2026-01-06)
 
 
