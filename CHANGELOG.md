@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.21.5](https://github.com/prismicio/prismic-client/compare/v7.21.4...v7.21.5) (2026-02-02)
+
+
+### Bug Fixes
+
+* parse squad env urls ([3d6ca1f](https://github.com/prismicio/prismic-client/commit/3d6ca1fc63b5463c0c6da747930b9d82f7f9ec12))
+
 ## [7.21.4](https://github.com/prismicio/prismic-client/compare/v7.21.3...v7.21.4) (2026-01-30)
 
 
