@@ -105,40 +105,22 @@ export interface HeadersLike {
 }
 
 async function memoizeResponse(response: ResponseLike): Promise<ResponseLike> {
-	// Buffer as blob immediately - works for both binary (images) and text (JSON).
-	// This avoids response.clone() backpressure issues in Node.js 22+.
-	// See: https://github.com/node-fetch/node-fetch/issues/139
-	const blobContent = await response.blob()
+	// Avoid response.clone() backpressure issues in Node.js fetch by
+	// consuming the response immediately.
+	const blob = await response.blob()
 
-	let text: string | undefined
-	let json: unknown | undefined
-
-	const wrapper: ResponseLike = {
+	const memoized: ResponseLike = {
 		ok: response.ok,
 		status: response.status,
 		headers: response.headers,
 		url: response.url,
-		async text() {
-			if (!text) {
-				text = await blobContent.text()
-			}
-			return text
-		},
-		async json() {
-			if (!json) {
-				json = JSON.parse(await this.text())
-			}
-			return json
-		},
-		async blob() {
-			return blobContent
-		},
-		clone() {
-			return wrapper
-		},
+		text: async () => blob.text(),
+		json: async () => JSON.parse(await blob.text()),
+		blob: async () => blob,
+		clone: () => memoized,
 	}
 
-	return wrapper
+	return memoized
 }
 
 /**
