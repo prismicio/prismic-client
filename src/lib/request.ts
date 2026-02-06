@@ -105,8 +105,9 @@ export interface HeadersLike {
 }
 
 async function memoizeResponse(response: ResponseLike): Promise<ResponseLike> {
-	// Avoid response.clone() backpressure issues in Node.js fetch by
-	// consuming the response immediately.
+	// Deduplicated responses are shared across multiple callers. Calling
+	// response.clone() on a shared response can cause backpressure hangs
+	// in Node.js, so we buffer the body as a blob upfront instead.
 	const blob = await response.blob()
 
 	const memoized: ResponseLike = {
