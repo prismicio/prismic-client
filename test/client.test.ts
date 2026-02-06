@@ -233,7 +233,7 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 			.mockResolvedValueOnce(response.repository("invalid"))
 			.mockResolvedValueOnce(response.refNotFound("invalid"))
 			.mockResolvedValueOnce(response.repository("invalid"))
-			.mockResolvedValue(response.refNotFound("invalid"))
+			.mockImplementation(() => Promise.resolve(response.refNotFound("invalid")))
 		await expect(() => fn({ client, docs })).rejects.toThrow(RefNotFoundError)
 		expect(console.warn).toHaveBeenCalledTimes(1)
 	})

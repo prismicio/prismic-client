@@ -104,6 +104,26 @@ export interface HeadersLike {
 	get(name: string): string | null
 }
 
+async function memoizeResponse(response: ResponseLike): Promise<ResponseLike> {
+	// Deduplicated responses are shared across multiple callers. Calling
+	// response.clone() on a shared response can cause backpressure hangs
+	// in Node.js, so we buffer the body as a blob upfront instead.
+	const blob = await response.blob()
+
+	const memoized: ResponseLike = {
+		ok: response.ok,
+		status: response.status,
+		headers: response.headers,
+		url: response.url,
+		text: async () => blob.text(),
+		json: async () => JSON.parse(await blob.text()),
+		blob: async () => blob,
+		clone: () => memoized,
+	}
+
+	return memoized
+}
+
 /**
  * Makes an HTTP request with automatic retry for rate limits and request
  * deduplication.
@@ -137,12 +157,14 @@ export async function request(
 		if (existingJob) {
 			job = existingJob
 		} else {
-			job = fetchFn(stringURL, init).finally(() => {
-				DEDUPLICATED_JOBS[stringURL]?.delete(init?.signal)
-				if (DEDUPLICATED_JOBS[stringURL]?.size === 0) {
-					delete DEDUPLICATED_JOBS[stringURL]
-				}
-			})
+			job = fetchFn(stringURL, init)
+				.then(memoizeResponse)
+				.finally(() => {
+					DEDUPLICATED_JOBS[stringURL]?.delete(init?.signal)
+					if (DEDUPLICATED_JOBS[stringURL]?.size === 0) {
+						delete DEDUPLICATED_JOBS[stringURL]
+					}
+				})
 			const map = (DEDUPLICATED_JOBS[stringURL] ||= new Map())
 			map.set(init?.signal, job)
 		}
@@ -162,5 +184,5 @@ export async function request(
 		return request(url, init, fetchFn)
 	}
 
-	return response.clone()
+	return response
 }
