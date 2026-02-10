@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.21.6](https://github.com/prismicio/prismic-client/compare/v7.21.5...v7.21.6) (2026-02-10)
+
+
+### Bug Fixes
+
+* resolve request hang with large API responses ([#437](https://github.com/prismicio/prismic-client/issues/437)) ([e5828e2](https://github.com/prismicio/prismic-client/commit/e5828e27bfa04512f8a1879f4433161141f93a61))
+
 ## [7.21.5](https://github.com/prismicio/prismic-client/compare/v7.21.4...v7.21.5) (2026-02-02)
 
 
