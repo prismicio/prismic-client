@@ -172,7 +172,7 @@ it("throttles invalid ref logs", async ({ expect, client, response }) => {
 		.mockResolvedValueOnce(response.repository("invalid"))
 		.mockResolvedValueOnce(response.refNotFound("invalid"))
 		.mockResolvedValueOnce(response.repository("invalid"))
-		.mockResolvedValue(response.refNotFound("invalid"))
+		.mockImplementation(() => Promise.resolve(response.refNotFound("invalid")))
 	await expect(() => client.dangerouslyGetAll()).rejects.toThrow(
 		RefNotFoundError,
 	)
