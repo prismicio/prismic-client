@@ -85,6 +85,7 @@ export const asImageWidthSrcSet = <
 	if (field && isFilled.imageThumbnail(field)) {
 		// We are using destructuring to omit `widths` from the object
 		// we will pass to `buildURL()`.
+		// oxlint-disable-next-line prefer-const
 		let { widths = DEFAULT_WIDTHS, ...imgixParams } = config
 		const {
 			url,

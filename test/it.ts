@@ -1,4 +1,4 @@
-import { inject, test, vi } from "vitest"
+import { inject, test, expect, vi } from "vitest"
 
 import type {
 	AssetApiCreateResponse,
@@ -153,7 +153,7 @@ export const it = test.extend<Fixtures>({
 			return createDocument(repository, type, params)
 		})
 	},
-	getAsset: async ({ expect, repository }, use) => {
+	getAsset: async ({ repository }, use) => {
 		const assetAPIClient = repository.getAssetApiClient()
 		await use(async (params) => {
 			// Need to wait for new assets to be indexed.

@@ -1,14 +1,11 @@
 {
+	"$schema": "./node_modules/oxlint/configuration_schema.json",
 	"plugins": ["unicorn", "typescript", "oxc", "jsdoc"],
 	"rules": {
 		"no-console": ["warn", { "allow": ["info", "warn", "error"] }],
 		"no-debugger": "warn",
 		"curly": "error",
 		"prefer-const": "error",
-		"padding-line-between-statements": [
-			"error",
-			{ "blankLine": "always", "prev": "*", "next": "return" }
-		],
 		"no-unused-vars": [
 			"error",
 			{
