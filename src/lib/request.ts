@@ -93,6 +93,7 @@ export interface ResponseLike {
 	// oxlint-disable-next-line no-explicit-any
 	json(): Promise<any>
 	text(): Promise<string>
+	arrayBuffer(): Promise<ArrayBuffer>
 	blob(): Promise<Blob>
 	clone(): ResponseLike
 }
@@ -107,17 +108,18 @@ export interface HeadersLike {
 async function memoizeResponse(response: ResponseLike): Promise<ResponseLike> {
 	// Deduplicated responses are shared across multiple callers. Calling
 	// response.clone() on a shared response can cause backpressure hangs
-	// in Node.js, so we buffer the body as a blob upfront instead.
-	const blob = await response.blob()
+	// in Node.js, so we buffer the body as an ArrayBuffer upfront instead.
+	const buffer = await response.arrayBuffer()
 
 	const memoized: ResponseLike = {
 		ok: response.ok,
 		status: response.status,
 		headers: response.headers,
 		url: response.url,
-		text: async () => blob.text(),
-		json: async () => JSON.parse(await blob.text()),
-		blob: async () => blob,
+		text: async () => new TextDecoder().decode(buffer),
+		json: async () => JSON.parse(new TextDecoder().decode(buffer)),
+		arrayBuffer: async () => buffer,
+		blob: async () => new Blob([buffer]),
 		clone: () => memoized,
 	}
 
