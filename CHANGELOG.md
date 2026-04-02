@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.21.7](https://github.com/prismicio/prismic-client/compare/v7.21.6...v7.21.7) (2026-04-02)
+
+
+### Bug Fixes
+
+* use `arrayBuffer` instead of `blob` when memoizing ([#442](https://github.com/prismicio/prismic-client/issues/442)) ([bda71f4](https://github.com/prismicio/prismic-client/commit/bda71f4a4089d31ce710d10d4a3f293b82c098c3))
+
 ## [7.21.6](https://github.com/prismicio/prismic-client/compare/v7.21.5...v7.21.6) (2026-02-10)
 
 
