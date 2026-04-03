@@ -47,10 +47,7 @@ it("supports fetch options", async ({ expect, client }) => {
 it("supports default fetch options", async ({ expect, client }) => {
 	client.fetchOptions = { cache: "no-cache" }
 	await client.buildQueryURL({ fetchOptions: { headers: { foo: "bar" } } })
-	expect(client).toHaveLastFetchedRepo(
-		{},
-		{ cache: "no-cache", headers: { foo: "bar" } },
-	)
+	expect(client).toHaveLastFetchedRepo({}, { cache: "no-cache", headers: { foo: "bar" } })
 })
 
 it("supports signal", async ({ expect, client }) => {
@@ -59,10 +56,7 @@ it("supports signal", async ({ expect, client }) => {
 	).rejects.toThrow("aborted")
 })
 
-it("shares concurrent equivalent network requests", async ({
-	expect,
-	client,
-}) => {
+it("shares concurrent equivalent network requests", async ({ expect, client }) => {
 	const controller1 = new AbortController()
 	const controller2 = new AbortController()
 	await Promise.all([

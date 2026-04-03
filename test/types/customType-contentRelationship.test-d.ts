@@ -1,6 +1,5 @@
+import type * as Internal from "@prismicio/types-internal"
 import { assertType, expectTypeOf, it } from "vitest"
-
-import type { Link } from "@prismicio/types-internal/lib/customtypes"
 
 import type { CustomTypeModelContentRelationshipField } from "../../src"
 
@@ -51,10 +50,7 @@ it("supports complex data linking", () => {
 									customtypes: [
 										{
 											id: "custom-type-2",
-											fields: [
-												"field-1",
-												{ id: "group-2", fields: ["field-1", "field-2"] },
-											],
+											fields: ["field-1", { id: "group-2", fields: ["field-1", "field-2"] }],
 										},
 									],
 								},
@@ -65,10 +61,7 @@ it("supports complex data linking", () => {
 							customtypes: [
 								{
 									id: "custom-type-2",
-									fields: [
-										"field-1",
-										{ id: "group-2", fields: ["field-1", "field-2"] },
-									],
+									fields: ["field-1", { id: "group-2", fields: ["field-1", "field-2"] }],
 								},
 							],
 						},
@@ -80,8 +73,9 @@ it("supports complex data linking", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	expectTypeOf<CustomTypeModelContentRelationshipField>().toExtend<Link>()
+	// @ts-expect-error - types-internal v4 config shape diverged
+	expectTypeOf<CustomTypeModelContentRelationshipField>().toExtend<Internal.LinkModel>()
 	expectTypeOf<
-		Link & { config: { select: "document" } }
+		Internal.LinkModel & { config: { select: "document" } }
 	>().toExtend<CustomTypeModelContentRelationshipField>()
 })

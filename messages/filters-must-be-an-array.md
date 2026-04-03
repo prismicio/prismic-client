@@ -12,10 +12,7 @@ const client = prismic.createClient("my-repo-name")
 const blogPosts = await client.getAllByType("blog_post", {
 	filters: [
 		prismic.filter.not("my.document.uid", "hidden"),
-		prismic.filter.dateBefore(
-			"document.first_publication_date",
-			new Date("1991-03-07"),
-		),
+		prismic.filter.dateBefore("document.first_publication_date", new Date("1991-03-07")),
 	],
 })
 ```
@@ -36,10 +33,7 @@ In versions of `@prismicio/client` < v7.0, the `filters` parameter (previously c
 await client.getAllByType("blog_post", {
 	filters: [
 		prismic.filter.not("my.document.uid", "hidden"),
-		prismic.filter.dateBefore(
-			"document.first_publication_date",
-			new Date("1991-03-07"),
-		),
+		prismic.filter.dateBefore("document.first_publication_date", new Date("1991-03-07")),
 	],
 })
 

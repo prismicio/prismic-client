@@ -17,12 +17,12 @@ import * as prismic from "@prismicio/client"
 
 // ✅ Correct
 const client = prismic.createClient("my-repo-name", {
-	documentAPIEndpoint: "https://example.com/my-prismic-proxy"
+	documentAPIEndpoint: "https://example.com/my-prismic-proxy",
 })
 
 // ❌ Incorrect: repository name can't be inferred from a proxied endpoint
 const client = prismic.createClient("https://example.com/my-prismic-proxy", {
-	documentAPIEndpoint: "https://example.com/my-prismic-proxy"
+	documentAPIEndpoint: "https://example.com/my-prismic-proxy",
 })
 ```
 

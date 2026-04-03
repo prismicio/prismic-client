@@ -1,8 +1,7 @@
 import { vi } from "vitest"
 
-import { it } from "./it"
-
 import { NotFoundError } from "../src"
+import { it } from "./it"
 
 it("returns single document", async ({ expect, client }) => {
 	const res = await client.getFirst()
@@ -21,14 +20,8 @@ it("allows overriding default pageSize param", async ({ expect, client }) => {
 	expect(client).toHaveLastFetchedContentAPI({ pageSize: "2" })
 })
 
-it("throws if no document is returned", async ({
-	expect,
-	client,
-	response,
-}) => {
-	vi.mocked(client.fetchFn)
-		.mockImplementationOnce(fetch)
-		.mockResolvedValueOnce(response.search([]))
+it("throws if no document is returned", async ({ expect, client, response }) => {
+	vi.mocked(client.fetchFn).mockImplementationOnce(fetch).mockResolvedValueOnce(response.search([]))
 	await expect(() => client.getFirst()).rejects.toThrow(NotFoundError)
 })
 

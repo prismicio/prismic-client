@@ -1,6 +1,5 @@
+import type * as Internal from "@prismicio/types-internal"
 import { assertType, expectTypeOf, it } from "vitest"
-
-import type { DynamicSlices } from "@prismicio/types-internal/lib/customtypes"
 
 import type {
 	CustomTypeModelSharedSlice,
@@ -72,6 +71,7 @@ it("supports custom Slice types", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	expectTypeOf<CustomTypeModelSliceZoneField>().toExtend<DynamicSlices>()
-	expectTypeOf<DynamicSlices>().toExtend<CustomTypeModelSliceZoneField>()
+	// @ts-expect-error - types-internal v4 config shape diverged
+	expectTypeOf<CustomTypeModelSliceZoneField>().toExtend<Internal.DynamicSlicesModel>()
+	expectTypeOf<Internal.DynamicSlicesModel>().toExtend<CustomTypeModelSliceZoneField>()
 })

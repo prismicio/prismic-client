@@ -24,9 +24,7 @@ it("creates default migration", () => {
 		},
 		"",
 	)
-	expectTypeOf<
-		typeof defaultCreateDocument
-	>().toExtend<PrismicMigrationDocument>()
+	expectTypeOf<typeof defaultCreateDocument>().toExtend<PrismicMigrationDocument>()
 
 	const defaultUpdateDocument = defaultMigration.updateDocument(
 		{
@@ -46,32 +44,27 @@ it("creates default migration", () => {
 		},
 		"",
 	)
-	expectTypeOf<
-		typeof defaultUpdateDocument
-	>().toExtend<PrismicMigrationDocument>()
+	expectTypeOf<typeof defaultUpdateDocument>().toExtend<PrismicMigrationDocument>()
 
-	const defaultCreateFromPrismicDocument =
-		defaultMigration.createDocumentFromPrismic(
-			{
-				id: "",
-				type: "",
-				uid: "",
-				lang: "",
-				data: {},
-				tags: [],
-				href: "",
-				url: "",
-				last_publication_date: `0-0-0T0:0:0+0`,
-				first_publication_date: `0-0-0T0:0:0+0`,
-				slugs: [],
-				alternate_languages: [],
-				linked_documents: [],
-			},
-			"",
-		)
-	expectTypeOf<
-		typeof defaultCreateFromPrismicDocument
-	>().toExtend<PrismicMigrationDocument>()
+	const defaultCreateFromPrismicDocument = defaultMigration.createDocumentFromPrismic(
+		{
+			id: "",
+			type: "",
+			uid: "",
+			lang: "",
+			data: {},
+			tags: [],
+			href: "",
+			url: "",
+			last_publication_date: `0-0-0T0:0:0+0`,
+			first_publication_date: `0-0-0T0:0:0+0`,
+			slugs: [],
+			alternate_languages: [],
+			linked_documents: [],
+		},
+		"",
+	)
+	expectTypeOf<typeof defaultCreateFromPrismicDocument>().toExtend<PrismicMigrationDocument>()
 })
 
 it("creates migration with document types", () => {
@@ -96,9 +89,7 @@ it("creates migration with document types", () => {
 		},
 		"",
 	)
-	expectTypeOf<typeof documentsCreateDocument>().toExtend<
-		PrismicMigrationDocument<FooDocument>
-	>()
+	expectTypeOf<typeof documentsCreateDocument>().toExtend<PrismicMigrationDocument<FooDocument>>()
 
 	documentsMigration.createDocument(
 		{
@@ -191,9 +182,7 @@ it("supports updateDocument with type checking", () => {
 		},
 		"",
 	)
-	expectTypeOf<typeof documentsUpdateDocument>().toExtend<
-		PrismicMigrationDocument<FooDocument>
-	>()
+	expectTypeOf<typeof documentsUpdateDocument>().toExtend<PrismicMigrationDocument<FooDocument>>()
 
 	documentsMigration.updateDocument(
 		{
@@ -311,27 +300,26 @@ it("supports createDocumentFromPrismic with type checking", () => {
 
 	const documentsMigration = createMigration<Documents>()
 
-	const documentsCreateFromPrismicDocument =
-		documentsMigration.createDocumentFromPrismic(
-			{
-				id: "",
-				type: "foo",
-				uid: "",
-				lang: "",
-				data: {
-					foo: "",
-				},
-				tags: [],
-				href: "",
-				url: "",
-				last_publication_date: `0-0-0T0:0:0+0`,
-				first_publication_date: `0-0-0T0:0:0+0`,
-				slugs: [],
-				alternate_languages: [],
-				linked_documents: [],
+	const documentsCreateFromPrismicDocument = documentsMigration.createDocumentFromPrismic(
+		{
+			id: "",
+			type: "foo",
+			uid: "",
+			lang: "",
+			data: {
+				foo: "",
 			},
-			"",
-		)
+			tags: [],
+			href: "",
+			url: "",
+			last_publication_date: `0-0-0T0:0:0+0`,
+			first_publication_date: `0-0-0T0:0:0+0`,
+			slugs: [],
+			alternate_languages: [],
+			linked_documents: [],
+		},
+		"",
+	)
 	expectTypeOf<typeof documentsCreateFromPrismicDocument>().toExtend<
 		PrismicMigrationDocument<FooDocument>
 	>()

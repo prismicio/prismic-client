@@ -1,11 +1,7 @@
+import type * as Internal from "@prismicio/types-internal"
 import { assertType, expectTypeOf, it } from "vitest"
 
-import type { CompositeSlice } from "@prismicio/types-internal/lib/customtypes"
-
-import type {
-	CustomTypeModelBooleanField,
-	CustomTypeModelSlice,
-} from "../../src"
+import type { CustomTypeModelBooleanField, CustomTypeModelSlice } from "../../src"
 
 it("supports basic model", () => {
 	assertType<CustomTypeModelSlice>({
@@ -45,12 +41,7 @@ it("supports custom non-repeat fields", () => {
 })
 
 it("supports custom repeat fields", () => {
-	assertType<
-		CustomTypeModelSlice<
-			Record<string, never>,
-			{ foo: CustomTypeModelBooleanField }
-		>
-	>({
+	assertType<CustomTypeModelSlice<Record<string, never>, { foo: CustomTypeModelBooleanField }>>({
 		type: "Slice",
 		repeat: {
 			foo: {
@@ -71,6 +62,7 @@ it("supports custom repeat fields", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	expectTypeOf<CustomTypeModelSlice>().toExtend<CompositeSlice>()
-	expectTypeOf<CompositeSlice>().toExtend<CustomTypeModelSlice>()
+	// @ts-expect-error - types-internal v4 config shape diverged
+	expectTypeOf<CustomTypeModelSlice>().toExtend<Internal.CompositeSliceModel>()
+	expectTypeOf<Internal.CompositeSliceModel>().toExtend<CustomTypeModelSlice>()
 })

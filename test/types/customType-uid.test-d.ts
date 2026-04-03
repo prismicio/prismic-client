@@ -1,6 +1,5 @@
+import type * as Internal from "@prismicio/types-internal"
 import { assertType, expectTypeOf, it } from "vitest"
-
-import type { UID } from "@prismicio/types-internal/lib/customtypes"
 
 import type { CustomTypeModelUIDField } from "../../src"
 
@@ -21,6 +20,6 @@ it("supports config", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	expectTypeOf<CustomTypeModelUIDField>().toExtend<UID>()
-	expectTypeOf<UID>().toExtend<CustomTypeModelUIDField>()
+	expectTypeOf<CustomTypeModelUIDField>().toExtend<Internal.UIDModel>()
+	expectTypeOf<Internal.UIDModel>().toExtend<CustomTypeModelUIDField>()
 })

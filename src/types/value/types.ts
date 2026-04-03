@@ -17,19 +17,13 @@ import type { TableField } from "./table"
 import type { TimestampField } from "./timestamp"
 import type { TitleField } from "./title"
 
-/**
- * Empty state for object-shaped fields.
- */
+/** Empty state for object-shaped fields. */
 export type EmptyObjectField = Record<string, never>
 
-/**
- * Valid states for fields. Not all fields use this type (e.g. BooleanField).
- */
+/** Valid states for fields. Not all fields use this type (e.g. BooleanField). */
 export type FieldState = "empty" | "filled"
 
-/**
- * Any regular field that can be nested in a group-like field.
- */
+/** Any regular field that can be nested in a group-like field. */
 export type AnyRegularField =
 	| TitleField
 	| RichTextField
@@ -50,32 +44,25 @@ export type AnyRegularField =
 	| IntegrationField
 	| TableField
 
-/**
- * Any field that can be used in a slice's primary section.
- */
+/** Any field that can be used in a slice's primary section. */
 export type AnySlicePrimaryField = GroupField | AnyRegularField
 
-/**
- * A list of repeatable fields.
- */
+/** A list of repeatable fields. */
 export type Repeatable<
 	Field extends LinkField,
 	State extends FieldState = FieldState,
 > = State extends "empty" ? [] : [WithKey<Field>, ...WithKey<Field>[]]
 
-/**
- * Wrapper to add a key to a field when inside a repeatable.
- */
+/** Wrapper to add a key to a field when inside a repeatable. */
 type WithKey<Field extends LinkField> = Field & { key: string }
 
 /**
- * Useful to flatten the type output to improve type hints shown in editors. And
- * also to transform an interface into a type to aide with assignability.
+ * Useful to flatten the type output to improve type hints shown in editors. And also to transform
+ * an interface into a type to aide with assignability.
  *
  * Taken from the `type-fest` package.
  *
  * @typeParam T - The type to simplify.
- *
  * @see https://github.com/sindresorhus/type-fest/blob/cbd7ec510bd136ac045bbc74e391ee686b8a9a2f/source/simplify.d.ts
  */
 export type Simplify<T> = { [P in keyof T]: T[P] }

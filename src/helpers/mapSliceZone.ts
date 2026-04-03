@@ -1,14 +1,12 @@
 import type { Slice } from "../types/value/slice"
 
 /**
- * Convert a value to a lazyily loaded module. This is useful when using
- * functions like `() => import("...")`.
+ * Convert a value to a lazyily loaded module. This is useful when using functions like `() =>
+ * import("...")`.
  */
 type LazyModule<T> = () => Promise<T | { default: T }>
 
-/**
- * Mark a type as potentially lazy-loaded via a module.
- */
+/** Mark a type as potentially lazy-loaded via a module. */
 type MaybeLazyModule<T> = T | LazyModule<T>
 
 // oxlint-disable-next-line no-explicit-any
@@ -26,8 +24,8 @@ type ExtractSliceType<TSlice extends SliceLike> = TSlice extends SliceLikeRestV2
 		: never
 
 /**
- * The minimum required properties to represent a Prismic slice from the Prismic
- * Content API for the `mapSliceZone()` helper.
+ * The minimum required properties to represent a Prismic slice from the Prismic Content API for the
+ * `mapSliceZone()` helper.
  *
  * @typeParam SliceType - Type name of the slice.
  */
@@ -37,8 +35,8 @@ type SliceLikeRestV2<TSliceType extends string = string> = Pick<
 >
 
 /**
- * The minimum required properties to represent a Prismic slice from the Prismic
- * GraphQL API for the `mapSliceZone()` helper.
+ * The minimum required properties to represent a Prismic slice from the Prismic GraphQL API for the
+ * `mapSliceZone()` helper.
  *
  * @typeParam SliceType - Type name of the slice.
  */
@@ -47,11 +45,10 @@ type SliceLikeGraphQL<TSliceType extends string = string> = {
 }
 
 /**
- * The minimum required properties to represent a Prismic slice for the
- * `mapSliceZone()` helper.
+ * The minimum required properties to represent a Prismic slice for the `mapSliceZone()` helper.
  *
- * If using Prismic's Content API, use the `Slice` export from
- * `@prismicio/client` for a full interface.
+ * If using Prismic's Content API, use the `Slice` export from `@prismicio/client` for a full
+ * interface.
  *
  * @typeParam SliceType - Type name of the slice.
  */
@@ -60,25 +57,22 @@ type SliceLike<TSliceType extends string = string> =
 	| SliceLikeGraphQL<TSliceType>
 
 /**
- * A looser version of the `SliceZone` type from `@prismicio/client` using
- * `SliceLike`.
+ * A looser version of the `SliceZone` type from `@prismicio/client` using `SliceLike`.
  *
- * If using Prismic's Content API, use the `SliceZone` export from
- * `@prismicio/client` for the full type.
+ * If using Prismic's Content API, use the `SliceZone` export from `@prismicio/client` for the full
+ * type.
  *
  * @typeParam TSlice - The type(s) of a slice in the slice zone.
  */
 type SliceZoneLike<TSlice extends SliceLike = SliceLike> = readonly TSlice[]
 
 /**
- * A set of properties that identify a Slice as having been mapped. Consumers of
- * the mapped Slice Zone can use these properties to detect and specially handle
- * mapped Slices.
+ * A set of properties that identify a Slice as having been mapped. Consumers of the mapped Slice
+ * Zone can use these properties to detect and specially handle mapped Slices.
  */
 type MappedSliceLike = {
 	/**
-	 * If `true`, this Slice has been modified from its original value using a
-	 * mapper.
+	 * If `true`, this Slice has been modified from its original value using a mapper.
 	 *
 	 * @internal
 	 */
@@ -86,48 +80,31 @@ type MappedSliceLike = {
 }
 
 /**
- * Arguments for a function mapping content from a Prismic Slice using the
- * `mapSliceZone()` helper.
+ * Arguments for a function mapping content from a Prismic Slice using the `mapSliceZone()` helper.
  *
  * @typeParam TSlice - The Slice passed as a prop.
- * @typeParam TContext - Arbitrary data passed to `mapSliceZone()` and made
- *   available to all Slice mappers.
+ * @typeParam TContext - Arbitrary data passed to `mapSliceZone()` and made available to all Slice
+ *   mappers.
  */
-type SliceMapperArgs<
-	TSlice extends SliceLike = SliceLike,
-	TContext = unknown,
-> = {
-	/**
-	 * Slice data.
-	 */
+type SliceMapperArgs<TSlice extends SliceLike = SliceLike, TContext = unknown> = {
+	/** Slice data. */
 	slice: TSlice
 
-	/**
-	 * The index of the Slice in the Slice Zone.
-	 */
+	/** The index of the Slice in the Slice Zone. */
 	index: number
 
-	/**
-	 * All Slices from the Slice Zone to which the Slice belongs.
-	 */
+	/** All Slices from the Slice Zone to which the Slice belongs. */
 	// TODO: We have to keep this list of Slices general due to circular
 	// reference limtiations. If we had another generic to determine the full
 	// union of Slice types, it would include TSlice. This causes TypeScript to
 	// throw a compilation error.
-	slices: SliceZoneLike<
-		TSlice extends SliceLikeGraphQL ? SliceLikeGraphQL : SliceLikeRestV2
-	>
+	slices: SliceZoneLike<TSlice extends SliceLikeGraphQL ? SliceLikeGraphQL : SliceLikeRestV2>
 
-	/**
-	 * Arbitrary data passed to `mapSliceZone()` and made available to all Slice
-	 * mappers.
-	 */
+	/** Arbitrary data passed to `mapSliceZone()` and made available to all Slice mappers. */
 	context: TContext
 }
 
-/**
- * A record of mappers.
- */
+/** A record of mappers. */
 type SliceMappers<TSlice extends SliceLike = SliceLike, TContext = unknown> = {
 	[P in ExtractSliceType<TSlice>]?: MaybeLazyModule<
 		SliceMapper<
@@ -140,8 +117,8 @@ type SliceMappers<TSlice extends SliceLike = SliceLike, TContext = unknown> = {
 }
 
 /**
- * A function that maps a Slice and its metadata to a modified version. The
- * return value will replace the Slice in the Slice Zone.
+ * A function that maps a Slice and its metadata to a modified version. The return value will
+ * replace the Slice in the Slice Zone.
  */
 export type SliceMapper<
 	TSlice extends SliceLike = SliceLike,
@@ -150,13 +127,9 @@ export type SliceMapper<
 		| undefined
 		| void,
 	TContext = unknown,
-> = (
-	args: SliceMapperArgs<TSlice, TContext>,
-) => TMappedSlice | Promise<TMappedSlice>
+> = (args: SliceMapperArgs<TSlice, TContext>) => TMappedSlice | Promise<TMappedSlice>
 
-/**
- * Unwraps a lazily loaded mapper module.
- */
+/** Unwraps a lazily loaded mapper module. */
 type ResolveLazySliceMapperModule<
 	// oxlint-disable-next-line no-explicit-any
 	TSliceMapper extends SliceMapper<any, any> | LazyModule<SliceMapper>,
@@ -169,9 +142,7 @@ type ResolveLazySliceMapperModule<
 			: Awaited<ReturnType<TSliceMapper>>
 		: TSliceMapper
 
-/**
- * Transforms a Slice into its mapped version.
- */
+/** Transforms a Slice into its mapped version. */
 type MapSliceLike<
 	// oxlint-disable-next-line no-explicit-any
 	TSliceLike extends SliceLike<any>,
@@ -185,13 +156,7 @@ type MapSliceLike<
 		? TSliceMappers[TSliceLike["slice_type"]] extends AnyFunction
 			? SliceLikeRestV2<TSliceLike["slice_type"]> &
 					MappedSliceLike &
-					Awaited<
-						ReturnType<
-							ResolveLazySliceMapperModule<
-								TSliceMappers[TSliceLike["slice_type"]]
-							>
-						>
-					>
+					Awaited<ReturnType<ResolveLazySliceMapperModule<TSliceMappers[TSliceLike["slice_type"]]>>>
 			: TSliceLike
 		: TSliceLike
 	: TSliceLike extends SliceLikeGraphQL
@@ -199,31 +164,25 @@ type MapSliceLike<
 			? TSliceMappers[TSliceLike["type"]] extends AnyFunction
 				? SliceLikeGraphQL<TSliceLike["type"]> &
 						MappedSliceLike &
-						Awaited<
-							ReturnType<
-								ResolveLazySliceMapperModule<TSliceMappers[TSliceLike["type"]]>
-							>
-						>
+						Awaited<ReturnType<ResolveLazySliceMapperModule<TSliceMappers[TSliceLike["type"]]>>>
 				: TSliceLike
 			: TSliceLike
 		: never
 
 /**
- * Transforms a Slice Zone using a set of mapping functions, one for each type
- * of Slice. Mapping functions can be async.
+ * Transforms a Slice Zone using a set of mapping functions, one for each type of Slice. Mapping
+ * functions can be async.
  *
- * Whenever possible, use this function on the server to minimize client-side
- * processing.
+ * Whenever possible, use this function on the server to minimize client-side processing.
  *
  * @example
- *
- * ```typescript
- * const mappedSliceZone = await mapSliceZone(page.data.slices, {
+ * 	;```typescript
+ * 	const mappedSliceZone = await mapSliceZone(page.data.slices, {
  * 	code_block: ({ slice }) => ({
- * 		codeHTML: await highlight(slice.primary.code),
+ * 	codeHTML: await highlight(slice.primary.code),
  * 	}),
- * });
- * ```
+ * 	});
+ * 	```
  */
 export function mapSliceZone<
 	TSliceLike extends SliceLike,
@@ -262,8 +221,7 @@ export function mapSliceZone<
 				// function is something of the form:
 				// `() => import(...)`
 				mapper.length < 1 &&
-				(typeof result === "function" ||
-					(typeof result === "object" && "default" in result))
+				(typeof result === "function" || (typeof result === "object" && "default" in result))
 			) {
 				result = "default" in result ? result.default : result
 				result = await result(mapperArgs)

@@ -1,6 +1,5 @@
+import type * as Internal from "@prismicio/types-internal"
 import { assertType, expectTypeOf, it } from "vitest"
-
-import type { RichText } from "@prismicio/types-internal/lib/customtypes"
 
 import type {
 	CustomTypeModelRichTextField,
@@ -52,6 +51,7 @@ it("supports optional allowTargetBlank", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	expectTypeOf<CustomTypeModelRichTextField>().toExtend<RichText>()
-	expectTypeOf<RichText>().toExtend<CustomTypeModelRichTextField>()
+	// @ts-expect-error - types-internal v4 config shape diverged
+	expectTypeOf<CustomTypeModelRichTextField>().toExtend<Internal.RichTextModel>()
+	expectTypeOf<Internal.RichTextModel>().toExtend<CustomTypeModelRichTextField>()
 })

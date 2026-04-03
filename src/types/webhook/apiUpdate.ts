@@ -12,9 +12,7 @@ export interface WebhookBodyAPIUpdate extends WebhookBodyBase {
 	masks: WebhookBodyAPIUpdateOperations<WebhookBodyAPIUpdateMask>
 	tags: WebhookBodyAPIUpdateOperations<WebhookBodyAPIUpdateTag>
 	documents: string[]
-	/**
-	 * @deprecated Experiments are no longer supported by Prismic.
-	 */
+	/** @deprecated Experiments are no longer supported by Prismic. */
 	experiments?: WebhookBodyAPIUpdateOperations<unknown>
 }
 

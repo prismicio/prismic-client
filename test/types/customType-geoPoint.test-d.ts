@@ -1,6 +1,5 @@
+import type * as Internal from "@prismicio/types-internal"
 import { assertType, expectTypeOf, it } from "vitest"
-
-import type { GeoPoint } from "@prismicio/types-internal/lib/customtypes"
 
 import type { CustomTypeModelGeoPointField } from "../../src"
 
@@ -30,6 +29,6 @@ it("does not support a placeholder", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	expectTypeOf<CustomTypeModelGeoPointField>().toExtend<GeoPoint>()
-	expectTypeOf<GeoPoint>().toExtend<CustomTypeModelGeoPointField>()
+	expectTypeOf<CustomTypeModelGeoPointField>().toExtend<Internal.GeoPointModel>()
+	expectTypeOf<Internal.GeoPointModel>().toExtend<CustomTypeModelGeoPointField>()
 })

@@ -1,14 +1,9 @@
+import type { HTMLRichTextMapSerializer, HTMLStrictRichTextMapSerializer } from "../helpers/asHTML"
+import type { LinkResolverFunction } from "../helpers/asLink"
+import { asLink } from "../helpers/asLink"
 import type { RichTextMapSerializer } from "../richtext/types"
 import { LinkType } from "../types/value/link"
 import type { RTAnyNode } from "../types/value/richText"
-
-import type {
-	HTMLRichTextMapSerializer,
-	HTMLStrictRichTextMapSerializer,
-} from "../helpers/asHTML"
-import type { LinkResolverFunction } from "../helpers/asLink"
-import { asLink } from "../helpers/asLink"
-
 import { escapeHTML } from "./escapeHTML"
 
 type Attributes = Record<string, string | boolean | null | undefined>
@@ -57,19 +52,14 @@ const getGeneralAttributes = (
 		: {}
 }
 
-export const serializeStandardTag = <
-	BlockType extends keyof RichTextMapSerializer<string>,
->(
+export const serializeStandardTag = <BlockType extends keyof RichTextMapSerializer<string>>(
 	tag: string,
 	serializerOrShorthand?: HTMLRichTextMapSerializer[BlockType],
 ): NonNullable<HTMLStrictRichTextMapSerializer[BlockType]> => {
 	const generalAttributes = getGeneralAttributes(serializerOrShorthand)
 
 	return (({ node, children }) => {
-		return `<${tag}${formatAttributes(
-			node,
-			generalAttributes,
-		)}>${children}</${tag}>`
+		return `<${tag}${formatAttributes(node, generalAttributes)}>${children}</${tag}>`
 	}) as NonNullable<HTMLStrictRichTextMapSerializer[BlockType]>
 }
 
@@ -79,17 +69,12 @@ export const serializePreFormatted = (
 	const generalAttributes = getGeneralAttributes(serializerOrShorthand)
 
 	return ({ node }) => {
-		return `<pre${formatAttributes(node, generalAttributes)}>${escapeHTML(
-			node.text,
-		)}</pre>`
+		return `<pre${formatAttributes(node, generalAttributes)}>${escapeHTML(node.text)}</pre>`
 	}
 }
 
 export const serializeImage = (
-	linkResolver:
-		| LinkResolverFunction<string | null | undefined>
-		| undefined
-		| null,
+	linkResolver: LinkResolverFunction<string | null | undefined> | undefined | null,
 	serializerOrShorthand?: HTMLRichTextMapSerializer["image"],
 ): NonNullable<HTMLStrictRichTextMapSerializer["image"]> => {
 	const generalAttributes = getGeneralAttributes(serializerOrShorthand)
@@ -142,10 +127,7 @@ export const serializeEmbed = (
 }
 
 export const serializeHyperlink = (
-	linkResolver:
-		| LinkResolverFunction<string | null | undefined>
-		| undefined
-		| null,
+	linkResolver: LinkResolverFunction<string | null | undefined> | undefined | null,
 	serializerOrShorthand?: HTMLRichTextMapSerializer["hyperlink"],
 ): NonNullable<HTMLStrictRichTextMapSerializer["hyperlink"]> => {
 	const generalAttributes = getGeneralAttributes(serializerOrShorthand)
@@ -169,9 +151,7 @@ export const serializeHyperlink = (
 	}
 }
 
-export const serializeSpan = (): NonNullable<
-	HTMLStrictRichTextMapSerializer["span"]
-> => {
+export const serializeSpan = (): NonNullable<HTMLStrictRichTextMapSerializer["span"]> => {
 	return ({ text }): string => {
 		return text ? escapeHTML(text).replace(/\n/g, "<br />") : ""
 	}

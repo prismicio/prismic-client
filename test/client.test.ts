@@ -1,14 +1,11 @@
 import { describe, vi } from "vitest"
 
+import type { Client } from "../src"
+import { RefNotFoundError, createClient } from "../src"
 import type { Fixtures } from "./it"
 import { it } from "./it"
 
-import type { Client } from "../src"
-import { RefNotFoundError, createClient } from "../src"
-
-it("throws if repositoryName is accessed but unavailable", async ({
-	expect,
-}) => {
+it("throws if repositoryName is accessed but unavailable", async ({ expect }) => {
 	const client = createClient("https://example.com/custom")
 	expect(() => client.repositoryName).toThrow(/prefer-repository-name/i)
 })
@@ -22,10 +19,7 @@ it("aliases endpoint to documentAPIEndpoint", async ({ expect, client }) => {
 
 type QueryCase = {
 	name: keyof Client
-	fn: (
-		args: Pick<Fixtures, "client" | "docs">,
-		params?: Parameters<Client["get"]>[0],
-	) => unknown
+	fn: (args: Pick<Fixtures, "client" | "docs">, params?: Parameters<Client["get"]>[0]) => unknown
 }
 
 const queryCases: QueryCase[] = [
@@ -43,22 +37,16 @@ const queryCases: QueryCase[] = [
 	},
 	{
 		name: "getByIDs",
-		fn: ({ client, docs }, params) =>
-			client.getByIDs([docs.default.id, docs.default2.id], params),
+		fn: ({ client, docs }, params) => client.getByIDs([docs.default.id, docs.default2.id], params),
 	},
 	{
 		name: "getByUID",
-		fn: ({ client, docs }, params) =>
-			client.getByUID(docs.default.type, docs.default.uid, params),
+		fn: ({ client, docs }, params) => client.getByUID(docs.default.type, docs.default.uid, params),
 	},
 	{
 		name: "getByUIDs",
 		fn: ({ client, docs }, params) =>
-			client.getByUIDs(
-				docs.default.type,
-				[docs.default.uid, docs.default2.uid],
-				params,
-			),
+			client.getByUIDs(docs.default.type, [docs.default.uid, docs.default2.uid], params),
 	},
 	{
 		name: "getAllByIDs",
@@ -68,68 +56,47 @@ const queryCases: QueryCase[] = [
 	{
 		name: "getAllByUIDs",
 		fn: ({ client, docs }, params) =>
-			client.getAllByUIDs(
-				docs.default.type,
-				[docs.default.uid, docs.default2.uid],
-				params,
-			),
+			client.getAllByUIDs(docs.default.type, [docs.default.uid, docs.default2.uid], params),
 	},
 	{
 		name: "getByType",
-		fn: ({ client, docs }, params) =>
-			client.getByType(docs.default.type, params),
+		fn: ({ client, docs }, params) => client.getByType(docs.default.type, params),
 	},
 	{
 		name: "getAllByType",
-		fn: ({ client, docs }, params) =>
-			client.getAllByType(docs.default.type, params),
+		fn: ({ client, docs }, params) => client.getAllByType(docs.default.type, params),
 	},
 	{
 		name: "getSingle",
-		fn: ({ client, docs }, params) =>
-			client.getSingle(docs.defaultSingle.type, params),
+		fn: ({ client, docs }, params) => client.getSingle(docs.defaultSingle.type, params),
 	},
 	{
 		name: "getByTag",
-		fn: ({ client, docs }, params) =>
-			client.getByTag(docs.default.tags[0], params),
+		fn: ({ client, docs }, params) => client.getByTag(docs.default.tags[0], params),
 	},
 	{
 		name: "getAllByTag",
-		fn: ({ client, docs }, params) =>
-			client.getAllByTag(docs.default.tags[0], params),
+		fn: ({ client, docs }, params) => client.getAllByTag(docs.default.tags[0], params),
 	},
 	{
 		name: "getBySomeTags",
 		fn: ({ client, docs }, params) =>
-			client.getBySomeTags(
-				[docs.default.tags[0], docs.default2.tags[0]],
-				params,
-			),
+			client.getBySomeTags([docs.default.tags[0], docs.default2.tags[0]], params),
 	},
 	{
 		name: "getAllBySomeTags",
 		fn: ({ client, docs }, params) =>
-			client.getAllBySomeTags(
-				[docs.default.tags[0], docs.default2.tags[0]],
-				params,
-			),
+			client.getAllBySomeTags([docs.default.tags[0], docs.default2.tags[0]], params),
 	},
 	{
 		name: "getByEveryTag",
 		fn: ({ client, docs }, params) =>
-			client.getByEveryTag(
-				[docs.default.tags[0], docs.default2.tags[0]],
-				params,
-			),
+			client.getByEveryTag([docs.default.tags[0], docs.default2.tags[0]], params),
 	},
 	{
 		name: "getAllByEveryTag",
 		fn: ({ client, docs }, params) =>
-			client.getAllByEveryTag(
-				[docs.default.tags[0], docs.default2.tags[0]],
-				params,
-			),
+			client.getAllByEveryTag([docs.default.tags[0], docs.default2.tags[0]], params),
 	},
 	{
 		name: "dangerouslyGetAll",
@@ -169,9 +136,7 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 		docs,
 		response,
 	}) => {
-		vi.mocked(client.fetchFn).mockResolvedValueOnce(
-			response.repository("invalid"),
-		)
+		vi.mocked(client.fetchFn).mockResolvedValueOnce(response.repository("invalid"))
 		await fn({ client, docs })
 		expect(client).toHaveFetchedContentAPI({ ref: "invalid" })
 		expect(client).not.toHaveLastFetchedContentAPI({ ref: "invalid" })
@@ -197,9 +162,7 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 		docs,
 		response,
 	}) => {
-		vi.mocked(client.fetchFn).mockResolvedValueOnce(
-			response.repository("invalid"),
-		)
+		vi.mocked(client.fetchFn).mockResolvedValueOnce(response.repository("invalid"))
 		await fn({ client, docs })
 		expect(client).toHaveFetchedContentAPI({ ref: "invalid" })
 		expect(client).not.toHaveLastFetchedContentAPI({ ref: "invalid" })
@@ -214,9 +177,7 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 		docs,
 		response,
 	}) => {
-		vi.mocked(client.fetchFn).mockResolvedValueOnce(
-			response.repository("expired"),
-		)
+		vi.mocked(client.fetchFn).mockResolvedValueOnce(response.repository("expired"))
 		await fn({ client, docs })
 		expect(client).toHaveFetchedContentAPI({ ref: "expired" })
 		expect(client).not.toHaveLastFetchedContentAPI({ ref: "expired" })
@@ -246,10 +207,7 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 	it("supports default fetch options", async ({ expect, client, docs }) => {
 		client.fetchOptions = { cache: "no-cache" }
 		await fn({ client, docs }, { fetchOptions: { headers: { foo: "bar" } } })
-		expect(client).toHaveLastFetchedContentAPI(
-			{},
-			{ cache: "no-cache", headers: { foo: "bar" } },
-		)
+		expect(client).toHaveLastFetchedContentAPI({}, { cache: "no-cache", headers: { foo: "bar" } })
 	})
 
 	it("supports signal", async ({ expect, client, docs }) => {
@@ -258,11 +216,7 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 		).rejects.toThrow("aborted")
 	})
 
-	it("shares concurrent equivalent network requests", async ({
-		expect,
-		client,
-		docs,
-	}) => {
+	it("shares concurrent equivalent network requests", async ({ expect, client, docs }) => {
 		const controller1 = new AbortController()
 		const controller2 = new AbortController()
 		await Promise.all([
@@ -361,53 +315,26 @@ const metadataCases: MetadataCase[] = [
 ]
 
 describe.for(metadataCases)("$name", async ({ fn }) => {
-	it("supports fetch options", async ({
-		expect,
-		client,
-		accessToken,
-		docs,
-		release,
-	}) => {
-		await fn(
-			{ client, accessToken, docs, release },
-			{ fetchOptions: { cache: "no-cache" } },
-		)
+	it("supports fetch options", async ({ expect, client, accessToken, docs, release }) => {
+		await fn({ client, accessToken, docs, release }, { fetchOptions: { cache: "no-cache" } })
 		expect(client.fetchFn).toHaveBeenLastCalledWith(
 			expect.anything(),
 			expect.objectContaining({ cache: "no-cache" }),
 		)
 	})
 
-	it("supports default fetch options", async ({
-		expect,
-		client,
-		accessToken,
-		docs,
-		release,
-	}) => {
+	it("supports default fetch options", async ({ expect, client, accessToken, docs, release }) => {
 		client.fetchOptions = { cache: "no-cache" }
-		await fn(
-			{ client, accessToken, docs, release },
-			{ fetchOptions: { headers: { foo: "bar" } } },
-		)
+		await fn({ client, accessToken, docs, release }, { fetchOptions: { headers: { foo: "bar" } } })
 		expect(client.fetchFn).toHaveBeenLastCalledWith(
 			expect.anything(),
 			expect.objectContaining({ cache: "no-cache", headers: { foo: "bar" } }),
 		)
 	})
 
-	it("supports signal", async ({
-		expect,
-		client,
-		accessToken,
-		docs,
-		release,
-	}) => {
+	it("supports signal", async ({ expect, client, accessToken, docs, release }) => {
 		await expect(() =>
-			fn(
-				{ client, accessToken, docs, release },
-				{ fetchOptions: { signal: AbortSignal.abort() } },
-			),
+			fn({ client, accessToken, docs, release }, { fetchOptions: { signal: AbortSignal.abort() } }),
 		).rejects.toThrow("aborted")
 	})
 })

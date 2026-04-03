@@ -1,10 +1,8 @@
 import { describe, vi } from "vitest"
 
 import { version } from "../package.json"
-
-import { it } from "./it"
-
 import { ForbiddenError, NotFoundError } from "../src"
+import { it } from "./it"
 
 // The Migration API is slow and has low rate limits.
 vi.setConfig({ testTimeout: 20000 })
@@ -31,10 +29,7 @@ describe("documents", () => {
 		const releaseDocs = await repository.getDocuments({
 			statuses: [`release:${release.id}`],
 		})
-		expect(releaseDocs).toContainDocumentWithUID(
-			docs.default.type,
-			doc.document.uid,
-		)
+		expect(releaseDocs).toContainDocumentWithUID(docs.default.type, doc.document.uid)
 	})
 
 	it("updates documents in the migration release", async ({
@@ -53,19 +48,10 @@ describe("documents", () => {
 		const releaseDocs = await repository.getDocuments({
 			statuses: [`release:${release.id}`],
 		})
-		expect(releaseDocs).toContainDocumentWithUID(
-			docs.default.type,
-			doc.document.uid,
-		)
+		expect(releaseDocs).toContainDocumentWithUID(docs.default.type, doc.document.uid)
 	})
 
-	it("supports lang", async ({
-		expect,
-		writeClient,
-		migration,
-		docs,
-		repository,
-	}) => {
+	it("supports lang", async ({ expect, writeClient, migration, docs, repository }) => {
 		const doc = migration.updateDocument({
 			...docs.french,
 			uid: crypto.randomUUID(),
@@ -76,10 +62,7 @@ describe("documents", () => {
 			language: docs.french.lang,
 			statuses: [`release:${release.id}`],
 		})
-		expect(releaseDocs).toContainDocumentWithUID(
-			docs.default.type,
-			doc.document.uid,
-		)
+		expect(releaseDocs).toContainDocumentWithUID(docs.default.type, doc.document.uid)
 	})
 
 	it("supports alternate lang", async ({
@@ -107,9 +90,7 @@ describe("documents", () => {
 			language: docs.french.lang,
 			statuses: [`release:${release.id}`],
 		})
-		const releaseDoc = releaseDocs.results.find(
-			(result) => result.id === doc.document.id,
-		)!
+		const releaseDoc = releaseDocs.results.find((result) => result.id === doc.document.id)!
 		const localizedDocs = await repository.getDocuments({
 			groupLangIds: [releaseDoc.group_lang_id],
 		})
@@ -124,9 +105,7 @@ describe("documents", () => {
 		docs,
 	}) => {
 		migration.updateDocument({ ...docs.default, id: "foo" })
-		await expect(() => writeClient.migrate(migration)).rejects.toThrow(
-			NotFoundError,
-		)
+		await expect(() => writeClient.migrate(migration)).rejects.toThrow(NotFoundError)
 	})
 })
 
@@ -151,12 +130,7 @@ describe.concurrent("assets", () => {
 		expect(asset.filename).toBe(filename)
 	})
 
-	it("supports url string", async ({
-		expect,
-		writeClient,
-		migration,
-		getAsset,
-	}) => {
+	it("supports url string", async ({ expect, writeClient, migration, getAsset }) => {
 		const url =
 			"https://images.prismic.io/prismic-main/a1307082-512a-4088-bace-30cdae70148e_stairs.jpg?w=100"
 		const filename = crypto.randomUUID()
@@ -166,12 +140,7 @@ describe.concurrent("assets", () => {
 		expect(asset.filename).toBe(filename)
 	})
 
-	it("supports params", async ({
-		expect,
-		writeClient,
-		migration,
-		getAsset,
-	}) => {
+	it("supports params", async ({ expect, writeClient, migration, getAsset }) => {
 		const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='1' height='1'/>"
 		const file = new File([new TextEncoder().encode(svg)], crypto.randomUUID())
 		migration.createAsset(file, file.name, {
@@ -191,14 +160,8 @@ describe.concurrent("assets", () => {
 		})
 	})
 
-	it("throws when a url cannot be fetched", async ({
-		expect,
-		writeClient,
-		migration,
-	}) => {
-		vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(
-			new Response(null, { status: 404 }),
-		)
+	it("throws when a url cannot be fetched", async ({ expect, writeClient, migration }) => {
+		vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(new Response(null, { status: 404 }))
 		migration.createAsset(
 			"https://images.prismic.io/prismic-main/a1307082-512a-4088-bace-30cdae70148e_stairs.jpg?w=100",
 			"filename",
@@ -306,41 +269,31 @@ it("supports a reporter", async ({ expect, writeClient, migration, docs }) => {
 	vi.useRealTimers()
 })
 
-it.concurrent(
-	"includes x-client version header",
-	async ({ expect, writeClient, migration, docs }) => {
-		migration.updateDocument(docs.default2)
-		await writeClient.migrate(migration)
-		expect(writeClient.fetchFn).toHaveBeenCalledWith(
-			expect.anything(),
-			expect.objectContaining({
-				headers: expect.objectContaining({
-					"x-client": `prismicio-client/${version}`,
-				}),
-			}),
-		)
-	},
-)
-
-it("throws if using an invalid token", async ({
+it.concurrent("includes x-client version header", async ({
 	expect,
 	writeClient,
 	migration,
 	docs,
 }) => {
-	writeClient.writeToken = "invalid"
 	migration.updateDocument(docs.default2)
-	await expect(() => writeClient.migrate(migration)).rejects.toThrow(
-		ForbiddenError,
+	await writeClient.migrate(migration)
+	expect(writeClient.fetchFn).toHaveBeenCalledWith(
+		expect.anything(),
+		expect.objectContaining({
+			headers: expect.objectContaining({
+				"x-client": `prismicio-client/${version}`,
+			}),
+		}),
 	)
 })
 
-it("supports fetch options", async ({
-	expect,
-	writeClient,
-	migration,
-	docs,
-}) => {
+it("throws if using an invalid token", async ({ expect, writeClient, migration, docs }) => {
+	writeClient.writeToken = "invalid"
+	migration.updateDocument(docs.default2)
+	await expect(() => writeClient.migrate(migration)).rejects.toThrow(ForbiddenError)
+})
+
+it("supports fetch options", async ({ expect, writeClient, migration, docs }) => {
 	migration.updateDocument(docs.default)
 	await writeClient.migrate(migration, {
 		fetchOptions: { headers: { foo: "bar" } },

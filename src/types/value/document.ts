@@ -1,12 +1,9 @@
-import type { AnyRegularField } from "./types"
-
 import type { GroupField } from "./group"
 import type { SliceZone } from "./sliceZone"
 import type { TimestampField } from "./timestamp"
+import type { AnyRegularField } from "./types"
 
-/**
- * Document metadata for a translation of a Prismic document.
- */
+/** Document metadata for a translation of a Prismic document. */
 export interface AlternateLanguage<TypeEnum = string, LangEnum = string> {
 	id: string
 	uid?: string
@@ -14,43 +11,29 @@ export interface AlternateLanguage<TypeEnum = string, LangEnum = string> {
 	lang: LangEnum
 }
 
-/**
- * Metadata for Prismic document
- */
+/** Metadata for Prismic document */
 export interface PrismicDocumentHeader<TypeEnum = string, LangEnum = string> {
 	/**
-	 * The unique identifier for the document. Guaranteed to be unique among all
-	 * documents in the Prismic repository.
+	 * The unique identifier for the document. Guaranteed to be unique among all documents in the
+	 * Prismic repository.
 	 */
 	id: string
 	/**
-	 * The unique identifier for the document. Guaranteed to be unique among all
-	 * Prismic documents of the same type.
+	 * The unique identifier for the document. Guaranteed to be unique among all Prismic documents of
+	 * the same type.
 	 */
 	uid: string | null
-	/**
-	 * Url that refers to document.
-	 */
+	/** Url that refers to document. */
 	url: string | null
-	/**
-	 * Type of the document.
-	 */
+	/** Type of the document. */
 	type: TypeEnum
-	/**
-	 * Href for document.
-	 */
+	/** Href for document. */
 	href: string
-	/**
-	 * Tags associated with document.
-	 */
+	/** Tags associated with document. */
 	tags: string[]
-	/**
-	 * The timestamp at which the document was first published.
-	 */
+	/** The timestamp at which the document was first published. */
 	first_publication_date: TimestampField<"filled">
-	/**
-	 * The timestamp at which the document was last published.
-	 */
+	/** The timestamp at which the document was last published. */
 	last_publication_date: TimestampField<"filled">
 	/**
 	 * Slugs associated with document.
@@ -60,17 +43,11 @@ export interface PrismicDocumentHeader<TypeEnum = string, LangEnum = string> {
 	 *   https://community.prismic.io/t/what-are-slugs/6493
 	 */
 	slugs: string[]
-	/**
-	 * Documents that are related to this document.
-	 */
+	/** Documents that are related to this document. */
 	linked_documents: unknown[] // TODO: Not sure of the type for this one
-	/**
-	 * Language of document.
-	 */
+	/** Language of document. */
 	lang: LangEnum
-	/**
-	 * Array to access alternate language versions for document.
-	 */
+	/** Array to access alternate language versions for document. */
 	alternate_languages: AlternateLanguage<TypeEnum, LangEnum>[]
 }
 
@@ -88,15 +65,12 @@ export interface PrismicDocument<
 	TypeEnum = string,
 	LangEnum = string,
 > extends PrismicDocumentHeader<TypeEnum, LangEnum> {
-	/**
-	 * Data contained in the document.
-	 */
+	/** Data contained in the document. */
 	data: DataInterface
 }
 
 /**
- * A Prismic document served through REST API v2. Does not contain a UID (a
- * unique identifier).
+ * A Prismic document served through REST API v2. Does not contain a UID (a unique identifier).
  *
  * @see More details on custom types: {@link https://prismic.io/docs/custom-types}
  * @see More details on the UID field: {@link https://prismic.io/docs/uid}
@@ -111,18 +85,16 @@ export interface PrismicDocumentWithoutUID<
 	LangEnum = string,
 > extends PrismicDocument<DataInterface, TypeEnum, LangEnum> {
 	/**
-	 * This document does not have a UID field. This property will always be
-	 * `null`.
+	 * This document does not have a UID field. This property will always be `null`.
 	 *
-	 * The unique identifier for the document. Guaranteed to be unique among all
-	 * Prismic documents of the same type.
+	 * The unique identifier for the document. Guaranteed to be unique among all Prismic documents of
+	 * the same type.
 	 */
 	uid: null
 }
 
 /**
- * A Prismic document served through REST API v2. Contains a UID (a unique
- * identifier).
+ * A Prismic document served through REST API v2. Contains a UID (a unique identifier).
  *
  * @see More details on custom types: {@link https://prismic.io/docs/custom-types}
  * @see More details on the UID field: {@link https://prismic.io/docs/uid}
@@ -137,8 +109,8 @@ export interface PrismicDocumentWithUID<
 	LangEnum = string,
 > extends PrismicDocument<DataInterface, TypeEnum, LangEnum> {
 	/**
-	 * The unique identifier for the document. Guaranteed to be unique among all
-	 * Prismic documents of the same type.
+	 * The unique identifier for the document. Guaranteed to be unique among all Prismic documents of
+	 * the same type.
 	 */
 	uid: string
 }

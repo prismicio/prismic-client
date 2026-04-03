@@ -2,12 +2,7 @@ import { vi } from "vitest"
 
 import { it } from "./it"
 
-it("fetches content from a release", async ({
-	expect,
-	client,
-	accessToken,
-	release,
-}) => {
+it("fetches content from a release", async ({ expect, client, accessToken, release }) => {
 	client.queryContentFromReleaseByLabel(release.label)
 	await client.get({ accessToken })
 	expect(client).toHaveLastFetchedContentAPI({ ref: release.ref })

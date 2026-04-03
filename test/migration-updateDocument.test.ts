@@ -1,6 +1,5 @@
-import { it } from "./it"
-
 import { PrismicMigrationDocument } from "../src"
+import { it } from "./it"
 
 it("returns a migration document", async ({ expect, migration, docs }) => {
 	const res = migration.updateDocument(docs.default, "title")

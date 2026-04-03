@@ -1,9 +1,8 @@
 import { vi } from "vitest"
 
-import { it } from "./it"
-
 import type { LinkField } from "../src"
 import { LinkType, asLinkAttrs } from "../src"
+import { it } from "./it"
 
 const docLink: LinkField = {
 	id: "XvoFFREAAM0WGBng",
@@ -105,9 +104,7 @@ it("customizes rel value with config", async ({ expect }) => {
 	})
 })
 
-it("returns undefined href for document link without resolver", async ({
-	expect,
-}) => {
+it("returns undefined href for document link without resolver", async ({ expect }) => {
 	const res = asLinkAttrs(docLink)
 	expect(res).toEqual({
 		href: undefined,

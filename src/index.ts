@@ -1,15 +1,10 @@
+import { filter } from "./filter"
+import type { HTMLRichTextFunctionSerializer, HTMLRichTextMapSerializer } from "./helpers/asHTML"
+import { mapSliceZone } from "./helpers/mapSliceZone"
 // Imports are used for deprecations.
 import type { CustomTypeModelIntegrationField } from "./types/model/integration"
 import type { IntegrationField } from "./types/value/integration"
 import { RichTextNodeType } from "./types/value/richText"
-
-import type {
-	HTMLRichTextFunctionSerializer,
-	HTMLRichTextMapSerializer,
-} from "./helpers/asHTML"
-import { mapSliceZone } from "./helpers/mapSliceZone"
-
-import { filter } from "./filter"
 
 //=============================================================================
 // Client - Query content from Prismic.
@@ -39,9 +34,7 @@ export { buildQueryURL } from "./buildQueryURL"
 export { getToolbarSrc } from "./getToolbarSrc"
 
 // Query filters API.
-/**
- * @deprecated Renamed to `filter`
- */
+/** @deprecated Renamed to `filter` */
 // TODO: Remove when we remove support for deprecated `predicate` export.
 const predicate = filter
 export { filter, predicate }
@@ -54,19 +47,9 @@ export type { CreateClient } from "./createClient"
 export type { ClientConfig, HttpRequestLike } from "./Client"
 export type { CreateWriteClient } from "./createWriteClient"
 export type { WriteClientConfig, MigrateReporterEvents } from "./WriteClient"
-export type {
-	BuildQueryURLArgs,
-	Ordering,
-	QueryParams,
-	Route,
-} from "./buildQueryURL"
+export type { BuildQueryURLArgs, Ordering, QueryParams, Route } from "./buildQueryURL"
 export type { CreateMigration } from "./createMigration"
-export type {
-	AbortSignalLike,
-	FetchLike,
-	RequestInitLike,
-	ResponseLike,
-} from "./lib/request"
+export type { AbortSignalLike, FetchLike, RequestInitLike, ResponseLike } from "./lib/request"
 
 //=============================================================================
 // Helpers - Manipulate content from Prismic.
@@ -83,9 +66,7 @@ export { asImageWidthSrcSet } from "./helpers/asImageWidthSrcSet"
 export { asImagePixelDensitySrcSet } from "./helpers/asImagePixelDensitySrcSet"
 export * as isFilled from "./helpers/isFilled"
 
-/**
- * @deprecated Renamed to `mapSliceZone`
- */
+/** @deprecated Renamed to `mapSliceZone` */
 const unstable_mapSliceZone = mapSliceZone
 export { mapSliceZone, unstable_mapSliceZone }
 
@@ -96,13 +77,9 @@ export type { LinkResolverFunction } from "./helpers/asLink"
 export type { AsLinkAttrsConfig } from "./helpers/asLinkAttrs"
 export type { SliceMapper } from "./helpers/mapSliceZone"
 
-/**
- * @deprecated Renamed to `HTMLRichTextMapSerializer`
- */
+/** @deprecated Renamed to `HTMLRichTextMapSerializer` */
 type HTMLMapSerializer = HTMLRichTextMapSerializer
-/**
- * @deprecated Renamed to `HTMLRichTextFunctionSerializer`
- */
+/** @deprecated Renamed to `HTMLRichTextFunctionSerializer` */
 type HTMLFunctionSerializer = HTMLRichTextFunctionSerializer
 export type {
 	HTMLRichTextMapSerializer,
@@ -134,9 +111,7 @@ export {
 //=============================================================================
 
 // Values - Types representing Prismic content.
-/**
- * @deprecated Use {@link RichTextNodeType} instead.
- */
+/** @deprecated Use {@link RichTextNodeType} instead. */
 // TODO: Remove in v8.
 const Element = RichTextNodeType
 export { RichTextNodeType, Element }
@@ -197,19 +172,12 @@ export type {
 	EmptyImageFieldImage,
 } from "./types/value/image"
 
-export type {
-	EmptyLinkField,
-	LinkField,
-	FilledLinkToWebField,
-} from "./types/value/link"
+export type { EmptyLinkField, LinkField, FilledLinkToWebField } from "./types/value/link"
 export type {
 	ContentRelationshipField,
 	FilledContentRelationshipField,
 } from "./types/value/contentRelationship"
-export type {
-	LinkToMediaField,
-	FilledLinkToMediaField,
-} from "./types/value/linkToMedia"
+export type { LinkToMediaField, FilledLinkToMediaField } from "./types/value/linkToMedia"
 
 export type {
 	OEmbedExtra,
@@ -240,9 +208,7 @@ export type { SelectField } from "./types/value/select"
 export type { TimestampField } from "./types/value/timestamp"
 export type { GeoPointField } from "./types/value/geoPoint"
 
-/**
- * @deprecated Renamed to `IntegrationField`
- */
+/** @deprecated Renamed to `IntegrationField` */
 // TODO: Remove when we remove support for deprecated `IntegrationFields` export.
 type IntegrationFields = IntegrationField
 export type { IntegrationField, IntegrationFields }
@@ -310,15 +276,10 @@ export type { CustomTypeModelTimestampField } from "./types/model/timestamp"
 export type { CustomTypeModelGeoPointField } from "./types/model/geoPoint"
 export type { CustomTypeModelTableField } from "./types/model/table"
 
-/**
- * @deprecated Renamed to `CustomTypeModelIntegrationField`.
- */
+/** @deprecated Renamed to `CustomTypeModelIntegrationField`. */
 // TODO: Remove when we remove support for deprecated `CustomTypeModelIntegrationField` export.
 type CustomTypeModelIntegrationFieldsField = CustomTypeModelIntegrationField
-export {
-	CustomTypeModelIntegrationField,
-	CustomTypeModelIntegrationFieldsField,
-}
+export { CustomTypeModelIntegrationField, CustomTypeModelIntegrationFieldsField }
 export type {
 	CustomTypeModelGroupField,
 	CustomTypeModelNestedGroupField,
@@ -328,10 +289,7 @@ export type {
 	CustomTypeModelSliceLabel,
 	CustomTypeModelSharedSlice,
 } from "./types/model/sliceZone"
-export type {
-	CustomTypeModelSlice,
-	CustomTypeModelLegacySlice,
-} from "./types/model/slice"
+export type { CustomTypeModelSlice, CustomTypeModelLegacySlice } from "./types/model/slice"
 export type { SharedSliceModel } from "./types/model/sharedSlice"
 export type { SharedSliceModelVariation } from "./types/model/sharedSliceVariation"
 
@@ -370,20 +328,12 @@ export type { Ref } from "./types/api/ref"
 
 export type { Release } from "./types/api/release"
 
-export type {
-	Repository,
-	Language,
-	Form,
-	FormField,
-} from "./types/api/repository"
+export type { Repository, Language, Form, FormField } from "./types/api/repository"
 
 export type { Tags } from "./types/api/tags"
 
 // Integration - Types representing Prismic's integration API.
-export type {
-	IntegrationAPIItem,
-	IntegrationAPIResults,
-} from "./types/api/integration"
+export type { IntegrationAPIItem, IntegrationAPIResults } from "./types/api/integration"
 
 // Webhook - Types representing Prismic webhooks.
 export { WebhookType } from "./types/webhook/types"

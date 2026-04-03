@@ -1,22 +1,14 @@
+import { PrismicError } from "../src"
 import { it } from "./it"
 
-import { PrismicError } from "../src"
-
-it("returns ref with matching label", async ({
-	expect,
-	client,
-	accessToken,
-	release,
-}) => {
+it("returns ref with matching label", async ({ expect, client, accessToken, release }) => {
 	client.accessToken = accessToken
 	const res = await client.getRefByLabel(release.label)
 	expect(res).toMatchObject({ ref: release.ref })
 })
 
 it("throws if ref with label is not found", async ({ expect, client }) => {
-	await expect(() => client.getRefByLabel("invalid")).rejects.toThrow(
-		PrismicError,
-	)
+	await expect(() => client.getRefByLabel("invalid")).rejects.toThrow(PrismicError)
 })
 
 it("shares concurrent equivalent network requests", async ({

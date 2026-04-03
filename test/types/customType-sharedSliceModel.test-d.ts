@@ -1,6 +1,5 @@
+import type * as Internal from "@prismicio/types-internal"
 import { assertType, expectTypeOf, it } from "vitest"
-
-import type { SharedSlice } from "@prismicio/types-internal/lib/customtypes"
 
 import type { SharedSliceModel, SharedSliceModelVariation } from "../../src"
 
@@ -58,6 +57,7 @@ it("supports custom variations", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	expectTypeOf<SharedSliceModel>().toExtend<SharedSlice>()
-	expectTypeOf<SharedSlice>().toExtend<SharedSliceModel>()
+	// @ts-expect-error - types-internal v4 type shape diverged
+	expectTypeOf<SharedSliceModel>().toExtend<Internal.SharedSliceModel>()
+	expectTypeOf<Internal.SharedSliceModel>().toExtend<SharedSliceModel>()
 })

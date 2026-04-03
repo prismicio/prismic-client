@@ -1,9 +1,5 @@
+import type { ContentApiDocument, RepositoryManager } from "@prismicio/e2e-tests-utils"
 import { describe, vi } from "vitest"
-
-import type {
-	ContentApiDocument,
-	RepositoryManager,
-} from "@prismicio/e2e-tests-utils"
 
 import type { Fixtures } from "./it"
 import { it } from "./it"
@@ -23,19 +19,10 @@ const png = [
 ]
 
 describe.concurrent("image", () => {
-	it("supports asset", async ({
-		expect,
-		writeClient,
-		migration,
-		docs,
-		repository,
-	}) => {
+	it("supports asset", async ({ expect, writeClient, migration, docs, repository }) => {
 		const file = new File(png, crypto.randomUUID())
 		const image = migration.createAsset(file, file.name)
-		const doc = migration.createDocument(
-			buildDocData(docs.default, { image }),
-			"title",
-		)
+		const doc = migration.createDocument(buildDocData(docs.default, { image }), "title")
 		await writeClient.migrate(migration)
 		const data = await getMigrationReleaseDocData(doc.document.id, {
 			repository,
@@ -44,13 +31,7 @@ describe.concurrent("image", () => {
 		expect(data.image.url).toBe(image.asset?.url)
 	})
 
-	it("supports image field", async ({
-		expect,
-		writeClient,
-		migration,
-		docs,
-		repository,
-	}) => {
+	it("supports image field", async ({ expect, writeClient, migration, docs, repository }) => {
 		const file = new File(png, crypto.randomUUID())
 		const image = migration.createAsset(file, file.name)
 		const doc = migration.createDocument(
@@ -65,13 +46,7 @@ describe.concurrent("image", () => {
 		expect(data.image.url).toBe(image.asset?.url)
 	})
 
-	it("supports thumbnails", async ({
-		expect,
-		writeClient,
-		migration,
-		docs,
-		repository,
-	}) => {
+	it("supports thumbnails", async ({ expect, writeClient, migration, docs, repository }) => {
 		const file = new File(png, crypto.randomUUID())
 		const file2 = new File(png, crypto.randomUUID())
 		const image = migration.createAsset(file, file.name)
@@ -138,13 +113,7 @@ describe.concurrent("image", () => {
 })
 
 describe.concurrent("link to media", () => {
-	it("supports asset", async ({
-		expect,
-		writeClient,
-		migration,
-		docs,
-		repository,
-	}) => {
+	it("supports asset", async ({ expect, writeClient, migration, docs, repository }) => {
 		const file = new File(png, crypto.randomUUID())
 		const asset = migration.createAsset(file, file.name)
 		const doc = migration.createDocument(
@@ -160,13 +129,7 @@ describe.concurrent("link to media", () => {
 		expect(data.link.id).toBe(asset.asset?.id)
 	})
 
-	it("supports text", async ({
-		expect,
-		writeClient,
-		migration,
-		docs,
-		repository,
-	}) => {
+	it("supports text", async ({ expect, writeClient, migration, docs, repository }) => {
 		const file = new File(png, crypto.randomUUID())
 		const asset = migration.createAsset(file, file.name)
 		const doc = migration.createDocument(
@@ -183,13 +146,7 @@ describe.concurrent("link to media", () => {
 		expect(data.link.text).toBe("Download")
 	})
 
-	it("supports non-image files", async ({
-		expect,
-		writeClient,
-		migration,
-		docs,
-		repository,
-	}) => {
+	it("supports non-image files", async ({ expect, writeClient, migration, docs, repository }) => {
 		const file = new File(["%PDF-1.4"], "document.pdf", {
 			type: "application/pdf",
 		})
@@ -233,18 +190,9 @@ describe.concurrent("content relationship", () => {
 		},
 	)
 
-	it("supports release documents", async ({
-		expect,
-		writeClient,
-		migration,
-		docs,
-		repository,
-	}) => {
+	it("supports release documents", async ({ expect, writeClient, migration, docs, repository }) => {
 		const doc1 = migration.createDocument(buildDocData(docs.default), "title")
-		const doc2 = migration.createDocument(
-			buildDocData(docs.default, { link: doc1 }),
-			"title",
-		)
+		const doc2 = migration.createDocument(buildDocData(docs.default, { link: doc1 }), "title")
 		await writeClient.migrate(migration)
 		const data = await getMigrationReleaseDocData(doc2.document.id, {
 			repository,
@@ -260,10 +208,7 @@ describe.concurrent("content relationship", () => {
 		repository,
 	}) => {
 		const doc1 = migration.createDocument(buildDocData(docs.default), "title")
-		const doc2 = migration.createDocument(
-			buildDocData(docs.default, { link: () => doc1 }),
-			"title",
-		)
+		const doc2 = migration.createDocument(buildDocData(docs.default, { link: () => doc1 }), "title")
 		await writeClient.migrate(migration)
 		const data = await getMigrationReleaseDocData(doc2.document.id, {
 			repository,
@@ -311,13 +256,7 @@ describe.concurrent("content relationship", () => {
 		expect(data.link.id).toBe(doc1.document.id)
 	})
 
-	it("supports text", async ({
-		expect,
-		writeClient,
-		migration,
-		docs,
-		repository,
-	}) => {
+	it("supports text", async ({ expect, writeClient, migration, docs, repository }) => {
 		const doc = migration.createDocument(
 			buildDocData(docs.default, {
 				link: {
@@ -336,13 +275,7 @@ describe.concurrent("content relationship", () => {
 		expect(data.link.text).toBe("foo")
 	})
 
-	it("supports variant", async ({
-		expect,
-		writeClient,
-		migration,
-		docs,
-		repository,
-	}) => {
+	it("supports variant", async ({ expect, writeClient, migration, docs, repository }) => {
 		const doc = migration.createDocument(
 			buildDocData(docs.default, {
 				var_link: {
@@ -363,13 +296,7 @@ describe.concurrent("content relationship", () => {
 })
 
 describe.concurrent("rich text", () => {
-	it("supports image nodes", async ({
-		expect,
-		writeClient,
-		migration,
-		docs,
-		repository,
-	}) => {
+	it("supports image nodes", async ({ expect, writeClient, migration, docs, repository }) => {
 		const file = new File(png, crypto.randomUUID())
 		const image = migration.createAsset(file, file.name)
 		const doc = migration.createDocument(
@@ -451,13 +378,7 @@ describe.concurrent("rich text", () => {
 		expect(data.richtext[0].data.url).toBe(asset.url)
 	})
 
-	it("supports link to asset", async ({
-		expect,
-		writeClient,
-		migration,
-		docs,
-		repository,
-	}) => {
+	it("supports link to asset", async ({ expect, writeClient, migration, docs, repository }) => {
 		const file = new File(png, crypto.randomUUID())
 		const asset = migration.createAsset(file, file.name)
 		const doc = migration.createDocument(
@@ -486,22 +407,14 @@ describe.concurrent("rich text", () => {
 		expect(data.richtext[0].content.spans[0].data.id).toBe(asset.asset?.id)
 	})
 
-	it("supports link to document", async ({
-		expect,
-		writeClient,
-		migration,
-		docs,
-		repository,
-	}) => {
+	it("supports link to document", async ({ expect, writeClient, migration, docs, repository }) => {
 		const doc = migration.createDocument(
 			buildDocData(docs.default, {
 				richtext: [
 					{
 						type: "paragraph",
 						text: "Link text",
-						spans: [
-							{ type: "hyperlink", start: 0, end: 4, data: docs.default2 },
-						],
+						spans: [{ type: "hyperlink", start: 0, end: 4, data: docs.default2 }],
 					},
 				],
 			}),
@@ -521,10 +434,7 @@ describe.concurrent("rich text", () => {
 		docs,
 		repository,
 	}) => {
-		const doc1 = migration.createDocument(
-			buildDocData(docs.default2, {}),
-			"title",
-		)
+		const doc1 = migration.createDocument(buildDocData(docs.default2, {}), "title")
 		const doc2 = migration.createDocument(
 			buildDocData(docs.default, {
 				richtext: [
@@ -549,10 +459,7 @@ function randomDocID() {
 	return crypto.randomUUID().replaceAll("-", "").slice(0, 16)
 }
 
-function buildDocData(
-	baseDoc: ContentApiDocument,
-	data: Record<string, unknown> = {},
-) {
+function buildDocData(baseDoc: ContentApiDocument, data: Record<string, unknown> = {}) {
 	return {
 		type: baseDoc.type,
 		lang: baseDoc.lang,
@@ -571,8 +478,7 @@ async function getMigrationReleaseDocData(
 	const docs = await repository.getDocuments({
 		statuses: [`release:${release.id}`],
 	})
-	const versionID = docs.results.find((result) => result.id === id)!.versions[0]
-		.version_id
+	const versionID = docs.results.find((result) => result.id === id)!.versions[0].version_id
 
 	return await repository.getDocumentData(versionID)
 }

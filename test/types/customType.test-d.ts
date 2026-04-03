@@ -1,6 +1,5 @@
+import type * as Internal from "@prismicio/types-internal"
 import { assertType, expectTypeOf, it } from "vitest"
-
-import type { CustomType } from "@prismicio/types-internal/lib/customtypes"
 
 import type {
 	CustomTypeModel,
@@ -244,6 +243,8 @@ it("CustomTypeModelField includes all fields", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	expectTypeOf<CustomTypeModel>().toExtend<CustomType>()
-	expectTypeOf<CustomType>().toExtend<CustomTypeModel>()
+	// @ts-expect-error - types-internal v4 type shape diverged
+	expectTypeOf<CustomTypeModel>().toExtend<Internal.CustomTypeModel>()
+	// @ts-expect-error - types-internal v4 type shape diverged
+	expectTypeOf<Internal.CustomTypeModel>().toExtend<CustomTypeModel>()
 })

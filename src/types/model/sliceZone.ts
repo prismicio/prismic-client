@@ -1,6 +1,5 @@
-import type { CustomTypeModelFieldType } from "./types"
-
 import type { CustomTypeModelLegacySlice, CustomTypeModelSlice } from "./slice"
+import type { CustomTypeModelFieldType } from "./types"
 
 /**
  * A Slice Zone custom type field.
@@ -10,19 +9,13 @@ import type { CustomTypeModelLegacySlice, CustomTypeModelSlice } from "./slice"
 export interface CustomTypeModelSliceZoneField<
 	Slices extends Record<
 		string,
-		| CustomTypeModelSlice
-		| CustomTypeModelSharedSlice
-		| CustomTypeModelLegacySlice
+		CustomTypeModelSlice | CustomTypeModelSharedSlice | CustomTypeModelLegacySlice
 	> = Record<
 		string,
-		| CustomTypeModelSlice
-		| CustomTypeModelSharedSlice
-		| CustomTypeModelLegacySlice
+		CustomTypeModelSlice | CustomTypeModelSharedSlice | CustomTypeModelLegacySlice
 	>,
 > {
-	type:
-		| typeof CustomTypeModelFieldType.Slices
-		| typeof CustomTypeModelFieldType.LegacySlices
+	type: typeof CustomTypeModelFieldType.Slices | typeof CustomTypeModelFieldType.LegacySlices
 	fieldset?: string | null
 	config?: {
 		labels?: Record<string, readonly CustomTypeModelSliceLabel[]> | null

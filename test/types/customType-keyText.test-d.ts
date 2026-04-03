@@ -1,6 +1,5 @@
+import type * as Internal from "@prismicio/types-internal"
 import { assertType, expectTypeOf, it } from "vitest"
-
-import type { Text } from "@prismicio/types-internal/lib/customtypes"
 
 import type { CustomTypeModelKeyTextField } from "../../src"
 
@@ -21,6 +20,6 @@ it("supports config", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	expectTypeOf<CustomTypeModelKeyTextField>().toExtend<Text>()
-	expectTypeOf<Text>().toExtend<CustomTypeModelKeyTextField>()
+	expectTypeOf<CustomTypeModelKeyTextField>().toExtend<Internal.TextModel>()
+	expectTypeOf<Internal.TextModel>().toExtend<CustomTypeModelKeyTextField>()
 })

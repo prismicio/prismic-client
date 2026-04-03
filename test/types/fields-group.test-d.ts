@@ -1,11 +1,6 @@
 import { assertType, it } from "vitest"
 
-import type {
-	BooleanField,
-	GroupField,
-	NestedGroupField,
-	SliceZone,
-} from "../../src"
+import type { BooleanField, GroupField, NestedGroupField, SliceZone } from "../../src"
 
 it("supports filled values", () => {
 	assertType<GroupField>([

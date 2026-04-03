@@ -1,8 +1,7 @@
 import { describe } from "vitest"
 
-import { it } from "./it"
-
 import { filter } from "../src"
+import { it } from "./it"
 
 describe("any", () => {
 	it("supports strings", async ({ expect }) => {
@@ -20,9 +19,7 @@ describe("any", () => {
 			new Date(1600000000000),
 			new Date(1700000000000),
 		])
-		expect(res).toBe(
-			"[any(my.product.restock_date, [1600000000000, 1700000000000])]",
-		)
+		expect(res).toBe("[any(my.product.restock_date, [1600000000000, 1700000000000])]")
 	})
 
 	it("supports quotation marks", async ({ expect }) => {
@@ -65,23 +62,13 @@ describe("at", () => {
 
 describe("dateAfter", () => {
 	it("supports ISO dates", async ({ expect }) => {
-		const res = filter.dateAfter(
-			"document.first_publication_date",
-			"2017-05-18T17:00:00-0500",
-		)
-		expect(res).toBe(
-			'[date.after(document.first_publication_date, "2017-05-18T17:00:00-0500")]',
-		)
+		const res = filter.dateAfter("document.first_publication_date", "2017-05-18T17:00:00-0500")
+		expect(res).toBe('[date.after(document.first_publication_date, "2017-05-18T17:00:00-0500")]')
 	})
 
 	it("supports timestamps", async ({ expect }) => {
-		const res = filter.dateAfter(
-			"document.last_publication_date",
-			1495080000000,
-		)
-		expect(res).toBe(
-			"[date.after(document.last_publication_date, 1495080000000)]",
-		)
+		const res = filter.dateAfter("document.last_publication_date", 1495080000000)
+		expect(res).toBe("[date.after(document.last_publication_date, 1495080000000)]")
 	})
 
 	it("supports date strings", async ({ expect }) => {
@@ -90,33 +77,20 @@ describe("dateAfter", () => {
 	})
 
 	it("supports Date objects", async ({ expect }) => {
-		const res = filter.dateAfter(
-			"my.article.release-date",
-			Date.parse("2017-01-22"),
-		)
+		const res = filter.dateAfter("my.article.release-date", Date.parse("2017-01-22"))
 		expect(res).toBe("[date.after(my.article.release-date, 1485043200000)]")
 	})
 })
 
 describe("dateBefore", () => {
 	it("supports ISO dates", async ({ expect }) => {
-		const res = filter.dateBefore(
-			"document.first_publication_date",
-			"2016-09-19T14:00:00-0400",
-		)
-		expect(res).toBe(
-			'[date.before(document.first_publication_date, "2016-09-19T14:00:00-0400")]',
-		)
+		const res = filter.dateBefore("document.first_publication_date", "2016-09-19T14:00:00-0400")
+		expect(res).toBe('[date.before(document.first_publication_date, "2016-09-19T14:00:00-0400")]')
 	})
 
 	it("supports timestamps", async ({ expect }) => {
-		const res = filter.dateBefore(
-			"document.last_publication_date",
-			1476504000000,
-		)
-		expect(res).toBe(
-			"[date.before(document.last_publication_date, 1476504000000)]",
-		)
+		const res = filter.dateBefore("document.last_publication_date", 1476504000000)
+		expect(res).toBe("[date.before(document.last_publication_date, 1476504000000)]")
 	})
 
 	it("supports date strings", async ({ expect }) => {
@@ -132,14 +106,8 @@ describe("dateBefore", () => {
 
 describe("dateBetween", () => {
 	it("supports date strings", async ({ expect }) => {
-		const res = filter.dateBetween(
-			"document.first_publication_date",
-			"2017-01-16",
-			"2017-01-20",
-		)
-		expect(res).toBe(
-			'[date.between(document.first_publication_date, "2017-01-16", "2017-01-20")]',
-		)
+		const res = filter.dateBetween("document.first_publication_date", "2017-01-16", "2017-01-20")
+		expect(res).toBe('[date.between(document.first_publication_date, "2017-01-16", "2017-01-20")]')
 	})
 
 	it("supports ISO dates", async ({ expect }) => {
@@ -154,14 +122,8 @@ describe("dateBetween", () => {
 	})
 
 	it("supports timestamps", async ({ expect }) => {
-		const res = filter.dateBetween(
-			"my.query-fields.date",
-			1483074000000,
-			1483333200000,
-		)
-		expect(res).toBe(
-			"[date.between(my.query-fields.date, 1483074000000, 1483333200000)]",
-		)
+		const res = filter.dateBetween("my.query-fields.date", 1483074000000, 1483333200000)
+		expect(res).toBe("[date.between(my.query-fields.date, 1483074000000, 1483333200000)]")
 	})
 
 	it("supports Date objects", async ({ expect }) => {
@@ -170,9 +132,7 @@ describe("dateBetween", () => {
 			new Date(1583074000000),
 			new Date(1583333200000),
 		)
-		expect(res).toBe(
-			"[date.between(my.query-fields.date, 1583074000000, 1583333200000)]",
-		)
+		expect(res).toBe("[date.between(my.query-fields.date, 1583074000000, 1583333200000)]")
 	})
 })
 
@@ -185,44 +145,27 @@ describe("dateDayOfMonth", () => {
 
 describe("dateDayOfMonthAfter", () => {
 	it("supports day number", async ({ expect }) => {
-		const res = filter.dateDayOfMonthAfter(
-			"document.first_publication_date",
-			22,
-		)
-		expect(res).toBe(
-			"[date.day-of-month-after(document.first_publication_date, 22)]",
-		)
+		const res = filter.dateDayOfMonthAfter("document.first_publication_date", 22)
+		expect(res).toBe("[date.day-of-month-after(document.first_publication_date, 22)]")
 	})
 })
 
 describe("dateDayOfMonthBefore", () => {
 	it("supports day number", async ({ expect }) => {
-		const res = filter.dateDayOfMonthBefore(
-			"document.first_publication_date",
-			20,
-		)
-		expect(res).toBe(
-			"[date.day-of-month-before(document.first_publication_date, 20)]",
-		)
+		const res = filter.dateDayOfMonthBefore("document.first_publication_date", 20)
+		expect(res).toBe("[date.day-of-month-before(document.first_publication_date, 20)]")
 	})
 })
 
 describe("dateDayOfWeek", () => {
 	it("supports string names", async ({ expect }) => {
-		const res = filter.dateDayOfWeek(
-			"document.first_publication_date",
-			"monday",
-		)
-		expect(res).toBe(
-			'[date.day-of-week(document.first_publication_date, "monday")]',
-		)
+		const res = filter.dateDayOfWeek("document.first_publication_date", "monday")
+		expect(res).toBe('[date.day-of-week(document.first_publication_date, "monday")]')
 	})
 
 	it("supports abbreviated names", async ({ expect }) => {
 		const res = filter.dateDayOfWeek("document.last_publication_date", "sun")
-		expect(res).toBe(
-			'[date.day-of-week(document.last_publication_date, "sun")]',
-		)
+		expect(res).toBe('[date.day-of-week(document.last_publication_date, "sun")]')
 	})
 
 	it("supports day numbers", async ({ expect }) => {
@@ -233,13 +176,8 @@ describe("dateDayOfWeek", () => {
 
 describe("dateDayOfWeekAfter", () => {
 	it("supports string names", async ({ expect }) => {
-		const res = filter.dateDayOfWeekAfter(
-			"document.first_publication_date",
-			"fri",
-		)
-		expect(res).toBe(
-			'[date.day-of-week-after(document.first_publication_date, "fri")]',
-		)
+		const res = filter.dateDayOfWeekAfter("document.first_publication_date", "fri")
+		expect(res).toBe('[date.day-of-week-after(document.first_publication_date, "fri")]')
 	})
 
 	it("supports day numbers", async ({ expect }) => {
@@ -250,13 +188,8 @@ describe("dateDayOfWeekAfter", () => {
 
 describe("dateDayOfWeekBefore", () => {
 	it("supports string names", async ({ expect }) => {
-		const res = filter.dateDayOfWeekBefore(
-			"document.first_publication_date",
-			"Wed",
-		)
-		expect(res).toBe(
-			'[date.day-of-week-before(document.first_publication_date, "Wed")]',
-		)
+		const res = filter.dateDayOfWeekBefore("document.first_publication_date", "Wed")
+		expect(res).toBe('[date.day-of-week-before(document.first_publication_date, "Wed")]')
 	})
 
 	it("supports day numbers", async ({ expect }) => {
@@ -279,13 +212,8 @@ describe("dateMonth", () => {
 
 describe("dateMonthAfter", () => {
 	it("supports month names", async ({ expect }) => {
-		const res = filter.dateMonthAfter(
-			"document.first_publication_date",
-			"February",
-		)
-		expect(res).toBe(
-			'[date.month-after(document.first_publication_date, "February")]',
-		)
+		const res = filter.dateMonthAfter("document.first_publication_date", "February")
+		expect(res).toBe('[date.month-after(document.first_publication_date, "February")]')
 	})
 
 	it("supports month numbers", async ({ expect }) => {
@@ -302,9 +230,7 @@ describe("dateMonthBefore", () => {
 
 	it("supports month names", async ({ expect }) => {
 		const res = filter.dateMonthBefore("document.last_publication_date", "june")
-		expect(res).toBe(
-			'[date.month-before(document.last_publication_date, "june")]',
-		)
+		expect(res).toBe('[date.month-before(document.last_publication_date, "june")]')
 	})
 })
 
@@ -360,15 +286,8 @@ describe("fulltext", () => {
 
 describe("geopointNear", () => {
 	it("supports coordinates", async ({ expect }) => {
-		const res = filter.geopointNear(
-			"my.restaurant.location",
-			9.656896299,
-			-9.77508544,
-			10,
-		)
-		expect(res).toBe(
-			"[geopoint.near(my.restaurant.location, 9.656896299, -9.77508544, 10)]",
-		)
+		const res = filter.geopointNear("my.restaurant.location", 9.656896299, -9.77508544, 10)
+		expect(res).toBe("[geopoint.near(my.restaurant.location, 9.656896299, -9.77508544, 10)]")
 	})
 })
 
@@ -381,13 +300,8 @@ describe("has", () => {
 
 describe("in", () => {
 	it("supports string ids", async ({ expect }) => {
-		const res = filter.in("document.id", [
-			"V9rIvCQAAB0ACq6y",
-			"V9ZtvCcAALuRUzmO",
-		])
-		expect(res).toBe(
-			'[in(document.id, ["V9rIvCQAAB0ACq6y", "V9ZtvCcAALuRUzmO"])]',
-		)
+		const res = filter.in("document.id", ["V9rIvCQAAB0ACq6y", "V9ZtvCcAALuRUzmO"])
+		expect(res).toBe('[in(document.id, ["V9rIvCQAAB0ACq6y", "V9ZtvCcAALuRUzmO"])]')
 	})
 
 	it("supports uids", async ({ expect }) => {

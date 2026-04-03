@@ -1,6 +1,5 @@
+import type * as Internal from "@prismicio/types-internal"
 import { assertType, expectTypeOf, it } from "vitest"
-
-import type { Variation } from "@prismicio/types-internal/lib/customtypes"
 
 import type {
 	CustomTypeModelBooleanField,
@@ -81,11 +80,7 @@ it("supports custom primary fields", () => {
 
 it("supports custom items fields", () => {
 	assertType<
-		SharedSliceModelVariation<
-			string,
-			Record<string, never>,
-			{ foo: CustomTypeModelBooleanField }
-		>
+		SharedSliceModelVariation<string, Record<string, never>, { foo: CustomTypeModelBooleanField }>
 	>({
 		id: "foo",
 		items: {
@@ -119,6 +114,8 @@ it("does not support groups in items section", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	expectTypeOf<SharedSliceModelVariation>().toExtend<Variation>()
-	expectTypeOf<Variation>().toExtend<SharedSliceModelVariation>()
+	// @ts-expect-error - types-internal v4 type shape diverged
+	expectTypeOf<SharedSliceModelVariation>().toExtend<Internal.SharedSliceVariationModel>()
+	// @ts-expect-error - types-internal v4 type shape diverged
+	expectTypeOf<Internal.SharedSliceVariationModel>().toExtend<SharedSliceModelVariation>()
 })

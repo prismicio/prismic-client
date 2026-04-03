@@ -1,19 +1,15 @@
+import { version } from "../package.json"
 import { devMsg } from "./lib/devMsg"
 
-import { version } from "../package.json"
-
-/**
- * The query parameter used to indicate if the client is in development mode to
- * the API.
- */
+/** The query parameter used to indicate if the client is in development mode to the API. */
 const PRISMIC_DEV_PARAM = "x-d"
 
 /** The query parameter used to indicate the version of the client to the API. */
 const PRISMIC_CLIENT_VERSION_PARAM = "x-c"
 
 /**
- * Create a union of the given object's values, and optionally specify which
- * keys to get the values from.
+ * Create a union of the given object's values, and optionally specify which keys to get the values
+ * from.
  *
  * Taken from the `type-fest` package.
  *
@@ -40,40 +36,42 @@ export interface Ordering {
  *
  * {@link https://prismic.io/docs/route-resolver}
  *
- * @example With a page's UID field.
+ * @example
+ * 	With a page's UID field.
  *
- * ```ts
- * {
+ * 	```ts
+ * 	{
  * 	"type": "page",
  * 	"path": "/:uid"
- * }
- * ```
+ * 	}
+ * 	```
  *
- * @example With a Content Relationship `parent` field.
+ * @example
+ * 	With a Content Relationship `parent` field.
  *
- * ```ts
- * {
+ * 	```ts
+ * 	{
  * 	"type": "page",
  * 	"path": "/:parent?/:uid",
  * 	"resolvers": {
- * 		"parent": "parent"
+ * 	"parent": "parent"
  * 	}
- * }
- * ```
+ * 	}
+ * 	```
  */
 export interface Route {
 	/** The custom type of the page. */
 	type: string
 
 	/**
-	 * A specific UID to which this route definition is scoped. The route is only
-	 * defined for the page whose UID matches the given UID.
+	 * A specific UID to which this route definition is scoped. The route is only defined for the page
+	 * whose UID matches the given UID.
 	 */
 	uid?: string
 
 	/**
-	 * A specific language to which this route definition is scoped. The route is
-	 * only defined for pages whose language matches the given language.
+	 * A specific language to which this route definition is scoped. The route is only defined for
+	 * pages whose language matches the given language.
 	 */
 	lang?: string
 
@@ -91,16 +89,15 @@ export interface Route {
  */
 export interface QueryParams {
 	/**
-	 * The secure token for accessing the API (only needed if your repository is
-	 * set to private).
+	 * The secure token for accessing the API (only needed if your repository is set to private).
 	 *
 	 * {@link https://prismic.io/docs/access-token}
 	 */
 	accessToken?: string
 
 	/**
-	 * The `pageSize` parameter defines the maximum number of pages that the API
-	 * will return for your query.
+	 * The `pageSize` parameter defines the maximum number of pages that the API will return for your
+	 * query.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#pagesize}
 	 */
@@ -114,34 +111,31 @@ export interface QueryParams {
 	page?: number
 
 	/**
-	 * The `after` parameter can be used along with the orderings option. It will
-	 * remove all the pages except for those after the specified page in the
-	 * list.
+	 * The `after` parameter can be used along with the orderings option. It will remove all the pages
+	 * except for those after the specified page in the list.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#after}
 	 */
 	after?: string
 
 	/**
-	 * The `fetch` parameter is used to make queries faster by only retrieving the
-	 * specified field(s).
+	 * The `fetch` parameter is used to make queries faster by only retrieving the specified field(s).
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#fetch}
 	 */
 	fetch?: string | string[]
 
 	/**
-	 * The `fetchLinks` parameter allows you to retrieve a specific content field
-	 * from a linked page and add it to the page response object.
+	 * The `fetchLinks` parameter allows you to retrieve a specific content field from a linked page
+	 * and add it to the page response object.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#fetchlinks}
 	 */
 	fetchLinks?: string | string[]
 
 	/**
-	 * The `graphQuery` parameter allows you to specify which fields to retrieve
-	 * and what content to retrieve from Linked Documents / Content
-	 * Relationships.
+	 * The `graphQuery` parameter allows you to specify which fields to retrieve and what content to
+	 * retrieve from Linked Documents / Content Relationships.
 	 *
 	 * {@link https://prismic.io/docs/graphquery-rest-api}
 	 */
@@ -155,43 +149,38 @@ export interface QueryParams {
 	lang?: string
 
 	/**
-	 * The `orderings` parameter orders the results by the specified field(s). You
-	 * can specify as many fields as you want.
+	 * The `orderings` parameter orders the results by the specified field(s). You can specify as many
+	 * fields as you want.
 	 *
 	 * {@link https://prismic.io/docs/rest-api-technical-reference#orderings}
 	 *
 	 * @remarks
-	 * Strings and arrays of strings are deprecated as of
-	 * `@prismicio/client@7.0.0`. Please migrate to the more explicit array of
-	 * objects.
-	 *
+	 *   Strings and arrays of strings are deprecated as of `@prismicio/client@7.0.0`. Please migrate
+	 *   to the more explicit array of objects.
 	 * @example
-	 *
-	 * ```typescript
-	 * buildQueryURL(endpoint, {
-	 * 	orderings: [
-	 * 		{ field: "my.product.price", direction: "desc" },
-	 * 		{ field: "my.product.title" },
-	 * 	],
-	 * })
-	 * ```
+	 * 	;```typescript
+	 * 	buildQueryURL(endpoint, {
+	 * 		orderings: [
+	 * 			{ field: "my.product.price", direction: "desc" },
+	 * 			{ field: "my.product.title" },
+	 * 		],
+	 * 	})
+	 * 	```
 	 */
 	// TODO: Update TSDoc with deprecated API removal in v8
 	orderings?: string | Ordering | (string | Ordering)[]
 
 	/**
-	 * The `routes` option allows you to define how a page's `url` field is
-	 * resolved.
+	 * The `routes` option allows you to define how a page's `url` field is resolved.
 	 *
 	 * {@link https://prismic.io/docs/route-resolver}
 	 */
 	routes?: Route | string | (Route | string)[]
 
 	/**
-	 * The `brokenRoute` option allows you to define the route populated in the
-	 * `url` property for broken link or content relationship fields. A broken
-	 * link is a link or content relationship field whose linked page has been
-	 * unpublished or deleted.
+	 * The `brokenRoute` option allows you to define the route populated in the `url` property for
+	 * broken link or content relationship fields. A broken link is a link or content relationship
+	 * field whose linked page has been unpublished or deleted.
 	 *
 	 * {@link https://prismic.io/docs/route-resolver}
 	 */
@@ -229,8 +218,8 @@ type BuildQueryURLParams = {
 }
 
 /**
- * Parameters in this map have been renamed from the official Prismic REST API
- * V2 specification for better developer ergonomics.
+ * Parameters in this map have been renamed from the official Prismic REST API V2 specification for
+ * better developer ergonomics.
  *
  * These parameters are renamed to their mapped value.
  */
@@ -240,18 +229,14 @@ const RENAMED_PARAMS = {
 
 /** A valid parameter name for the Prismic REST API V2. */
 type ValidParamName =
-	| Exclude<
-			keyof QueryParams,
-			keyof typeof RENAMED_PARAMS | keyof BuildQueryURLParams
-	  >
+	| Exclude<keyof QueryParams, keyof typeof RENAMED_PARAMS | keyof BuildQueryURLParams>
 	| ValueOf<typeof RENAMED_PARAMS>
 
 /**
- * Converts an Ordering to a string that is compatible with Prismic's REST API.
- * If the value provided is already a string, no conversion is performed.
+ * Converts an Ordering to a string that is compatible with Prismic's REST API. If the value
+ * provided is already a string, no conversion is performed.
  *
  * @param ordering - Ordering to convert.
- *
  * @returns String representation of the Ordering.
  */
 const castOrderingToString = (ordering: Ordering | string): string => {
@@ -261,9 +246,7 @@ const castOrderingToString = (ordering: Ordering | string): string => {
 			const [field, direction] = ordering.split(" ")
 
 			const objectForm =
-				direction === "desc"
-					? `{ field: "${field}", direction: "desc" }`
-					: `{ field: "${field}" }`
+				direction === "desc" ? `{ field: "${field}", direction: "desc" }` : `{ field: "${field}" }`
 
 			console.warn(
 				`[@prismicio/client] A string value was provided to the \`orderings\` query parameter. Strings are deprecated. Please convert it to the object form: ${objectForm}. For more details, see ${devMsg(
@@ -275,42 +258,34 @@ const castOrderingToString = (ordering: Ordering | string): string => {
 		return ordering
 	}
 
-	return ordering.direction === "desc"
-		? `${ordering.field} desc`
-		: ordering.field
+	return ordering.direction === "desc" ? `${ordering.field} desc` : ordering.field
 }
 
 export type BuildQueryURLArgs = QueryParams & BuildQueryURLParams
 
 /**
- * Builds a Prismic Content API URL to request pages from a repository. The
- * paginated response for this URL includes pages matching the parameters.
+ * Builds a Prismic Content API URL to request pages from a repository. The paginated response for
+ * this URL includes pages matching the parameters.
  *
- * A ref is required to make a request. Request the `endpoint` URL to retrieve a
- * list of available refs.
+ * A ref is required to make a request. Request the `endpoint` URL to retrieve a list of available
+ * refs.
  *
  * Type the JSON response with `Query`.
  *
  * @example
- *
- * ```ts
- * const url = buildQueryURL("https://my-repo.cdn.prismic.io/api/v2", {
- * 	ref: "my-ref",
- * 	filters: [filter.at("document.type", "blog_post")],
- * })
- * ```
+ * 	;```ts
+ * 	const url = buildQueryURL("https://my-repo.cdn.prismic.io/api/v2", {
+ * 		ref: "my-ref",
+ * 		filters: [filter.at("document.type", "blog_post")],
+ * 	})
+ * 	```
  *
  * @param endpoint - URL to the repository's Content API.
  * @param args - Arguments to filter and scope the query.
- *
  * @returns URL that can be used to request pages from the repository.
- *
  * @see Prismic Content API technical reference: {@link https://prismic.io/docs/content-api}
  */
-export const buildQueryURL = (
-	endpoint: string,
-	args: BuildQueryURLArgs,
-): string => {
+export const buildQueryURL = (endpoint: string, args: BuildQueryURLArgs): string => {
 	const { filters, predicates, ...params } = args
 
 	if (!endpoint.endsWith("/")) {
@@ -344,8 +319,7 @@ export const buildQueryURL = (
 	// Iterate over each parameter and add it to the URL. In some cases, the
 	// parameter value needs to be transformed to fit the REST API.
 	for (const k in params) {
-		const name = (RENAMED_PARAMS[k as keyof typeof RENAMED_PARAMS] ||
-			k) as ValidParamName
+		const name = (RENAMED_PARAMS[k as keyof typeof RENAMED_PARAMS] || k) as ValidParamName
 
 		let value = params[k as keyof typeof params]
 
@@ -354,10 +328,7 @@ export const buildQueryURL = (
 
 			if (scopedValue != null) {
 				// TODO: Remove the following warning when `orderings` strings are no longer supported.
-				if (
-					process.env.NODE_ENV === "development" &&
-					typeof scopedValue === "string"
-				) {
+				if (process.env.NODE_ENV === "development" && typeof scopedValue === "string") {
 					console.warn(
 						`[@prismicio/client] A string value was provided to the \`orderings\` query parameter. Strings are deprecated. Please convert it to an array of objects. For more details, see ${devMsg(
 							"orderings-must-be-an-array-of-objects",
@@ -378,10 +349,7 @@ export const buildQueryURL = (
 		}
 
 		if (value != null) {
-			url.searchParams.set(
-				name,
-				castArray<string | number | Route | Ordering>(value).join(","),
-			)
+			url.searchParams.set(name, castArray<string | number | Route | Ordering>(value).join(","))
 		}
 	}
 

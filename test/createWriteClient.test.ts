@@ -1,8 +1,7 @@
 import { vi } from "vitest"
 
-import { it } from "./it"
-
 import { WriteClient, createWriteClient } from "../src"
+import { it } from "./it"
 
 it("returns a WriteClient", async ({ expect, writeToken }) => {
 	const res = createWriteClient("example", { writeToken })
@@ -15,15 +14,10 @@ it("accepts a repository name", async ({ expect, writeToken }) => {
 	expect(res.documentAPIEndpoint).toBe("https://example.cdn.prismic.io/api/v2")
 })
 
-it("warns if running in a browser-like environment", async ({
-	expect,
-	writeToken,
-}) => {
+it("warns if running in a browser-like environment", async ({ expect, writeToken }) => {
 	vi.stubGlobal("window", {})
 	createWriteClient("example", { writeToken })
-	expect(console.warn).toBeCalledWith(
-		expect.stringMatching(/avoid-write-client-in-browser/i),
-	)
+	expect(console.warn).toBeCalledWith(expect.stringMatching(/avoid-write-client-in-browser/i))
 	vi.unstubAllGlobals()
 })
 

@@ -1,10 +1,8 @@
 import { describe, vi } from "vitest"
 
 import { version } from "../package.json"
-
-import { it } from "./it"
-
 import { buildQueryURL } from "../src"
+import { it } from "./it"
 
 it("returns a content api url", async ({ expect, endpoint }) => {
 	const res = new URL(buildQueryURL(endpoint, { ref: "foo" }))

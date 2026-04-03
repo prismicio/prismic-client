@@ -2,11 +2,7 @@ import { vi } from "vitest"
 
 import { it } from "./it"
 
-it("resolves a preview URL in the browser", async ({
-	expect,
-	client,
-	docs,
-}) => {
+it("resolves a preview URL in the browser", async ({ expect, client, docs }) => {
 	vi.stubGlobal("location", {
 		search: `?documentId=${docs.default.id}&token=abc`,
 	})
@@ -16,11 +12,7 @@ it("resolves a preview URL in the browser", async ({
 	vi.unstubAllGlobals()
 })
 
-it("resolves a preview URL using a server req", async ({
-	expect,
-	client,
-	docs,
-}) => {
+it("resolves a preview URL using a server req", async ({ expect, client, docs }) => {
 	client.enableAutoPreviewsFromReq({
 		query: { documentId: docs.default.id, token: "abc" },
 		url: `/preview?documentId=${docs.default.id}&token=abc`,
@@ -30,11 +22,7 @@ it("resolves a preview URL using a server req", async ({
 	expect(client).toHaveFetchedContentAPI({ ref: "abc" })
 })
 
-it("resolves a preview URL using a Request", async ({
-	expect,
-	client,
-	docs,
-}) => {
+it("resolves a preview URL using a Request", async ({ expect, client, docs }) => {
 	const url = `https://example.com/preview?documentId=${docs.default.id}&token=abc`
 	client.enableAutoPreviewsFromReq(new Request(url))
 	const res = await client.resolvePreviewURL({ defaultURL: "/failed" })
@@ -57,11 +45,7 @@ it("resolves a preview URL using a Request without a URL host", async ({
 	expect(client).toHaveFetchedContentAPI({ ref: "abc" })
 })
 
-it("supports an explicit document ID and token", async ({
-	expect,
-	client,
-	docs,
-}) => {
+it("supports an explicit document ID and token", async ({ expect, client, docs }) => {
 	const res = await client.resolvePreviewURL({
 		documentID: docs.default.id,
 		previewToken: "abc",
@@ -99,10 +83,7 @@ it("returns the default URL when the Request is not in a preview session", async
 	expect(res).toBe("/default")
 })
 
-it("returns the default URL if no preview context is available", async ({
-	expect,
-	client,
-}) => {
+it("returns the default URL if no preview context is available", async ({ expect, client }) => {
 	const res = await client.resolvePreviewURL({ defaultURL: "/default" })
 	expect(res).toBe("/default")
 })
@@ -131,12 +112,7 @@ it("supports link resolver", async ({ expect, client, docs }) => {
 	expect(res).toBe("/resolved")
 })
 
-it("shares concurrent equivalent network requests", async ({
-	expect,
-	client,
-	masterRef,
-	docs,
-}) => {
+it("shares concurrent equivalent network requests", async ({ expect, client, masterRef, docs }) => {
 	const url = `https://example.com/preview?documentId=${docs.default.id}&token=${masterRef}`
 	client.enableAutoPreviewsFromReq(new Request(url))
 	const controller1 = new AbortController()

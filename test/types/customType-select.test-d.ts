@@ -1,6 +1,5 @@
+import type * as Internal from "@prismicio/types-internal"
 import { assertType, expectTypeOf, it } from "vitest"
-
-import type { Select } from "@prismicio/types-internal/lib/customtypes"
 
 import type { CustomTypeModelSelectField } from "../../src"
 
@@ -63,6 +62,7 @@ it("supports custom default value type", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	expectTypeOf<CustomTypeModelSelectField>().toExtend<Select>()
-	expectTypeOf<Select>().toExtend<CustomTypeModelSelectField>()
+	// @ts-expect-error - types-internal v4 config shape diverged
+	expectTypeOf<CustomTypeModelSelectField>().toExtend<Internal.SelectModel>()
+	expectTypeOf<Internal.SelectModel>().toExtend<CustomTypeModelSelectField>()
 })

@@ -7,14 +7,8 @@ import type { AnyRegularField } from "./types"
  */
 export interface Slice<
 	SliceType = string,
-	PrimaryFields extends Record<string, AnyRegularField> = Record<
-		string,
-		AnyRegularField
-	>,
-	ItemsFields extends Record<string, AnyRegularField> = Record<
-		string,
-		AnyRegularField
-	>,
+	PrimaryFields extends Record<string, AnyRegularField> = Record<string, AnyRegularField>,
+	ItemsFields extends Record<string, AnyRegularField> = Record<string, AnyRegularField>,
 > {
 	slice_type: SliceType
 	slice_label: string | null

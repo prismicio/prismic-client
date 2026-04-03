@@ -19,9 +19,6 @@ export type GroupField<
  * More details: {@link https://prismic.io/docs/group}
  */
 export type NestedGroupField<
-	Fields extends Record<string, AnyRegularField> = Record<
-		string,
-		AnyRegularField
-	>,
+	Fields extends Record<string, AnyRegularField> = Record<string, AnyRegularField>,
 	State extends FieldState = FieldState,
 > = GroupField<Fields, State>

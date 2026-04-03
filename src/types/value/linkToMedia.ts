@@ -1,6 +1,5 @@
-import type { FieldState } from "./types"
-
 import type { OptionalLinkProperties } from "./link"
+import type { FieldState } from "./types"
 
 /**
  * A link field that points to media.
@@ -11,9 +10,7 @@ import type { OptionalLinkProperties } from "./link"
 export type LinkToMediaField<
 	State extends FieldState = FieldState,
 	Variant = string,
-> = State extends "empty"
-	? EmptyLinkToMediaField<Variant>
-	: FilledLinkToMediaField<Variant>
+> = State extends "empty" ? EmptyLinkToMediaField<Variant> : FilledLinkToMediaField<Variant>
 
 type EmptyLinkToMediaField<Variant = string> = {
 	link_type: "Any"

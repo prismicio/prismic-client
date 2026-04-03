@@ -1,6 +1,5 @@
+import type * as Internal from "@prismicio/types-internal"
 import { assertType, expectTypeOf, it } from "vitest"
-
-import type { Embed } from "@prismicio/types-internal/lib/customtypes"
 
 import type { CustomTypeModelEmbedField } from "../../src"
 
@@ -21,6 +20,6 @@ it("supports config", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	expectTypeOf<CustomTypeModelEmbedField>().toExtend<Embed>()
-	expectTypeOf<Embed>().toExtend<CustomTypeModelEmbedField>()
+	expectTypeOf<CustomTypeModelEmbedField>().toExtend<Internal.EmbedModel>()
+	expectTypeOf<Internal.EmbedModel>().toExtend<CustomTypeModelEmbedField>()
 })

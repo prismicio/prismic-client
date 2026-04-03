@@ -1,6 +1,5 @@
+import type * as Internal from "@prismicio/types-internal"
 import { assertType, expectTypeOf, it } from "vitest"
-
-import type { Group } from "@prismicio/types-internal/lib/customtypes"
 
 import type {
 	CustomTypeModelBooleanField,
@@ -93,6 +92,7 @@ it("supports nested groups", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	expectTypeOf<CustomTypeModelGroupField>().toExtend<Group>()
-	expectTypeOf<Group>().toExtend<CustomTypeModelGroupField>()
+	// @ts-expect-error - types-internal v4 config shape diverged
+	expectTypeOf<CustomTypeModelGroupField>().toExtend<Internal.GroupModel>()
+	expectTypeOf<Internal.GroupModel>().toExtend<CustomTypeModelGroupField>()
 })

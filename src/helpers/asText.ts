@@ -1,10 +1,7 @@
+import { asText as baseAsText } from "../richtext/asText"
 import type { RichTextField } from "../types/value/richText"
 
-import { asText as baseAsText } from "../richtext/asText"
-
-/**
- * Configuration that determines the output of `asText()`.
- */
+/** Configuration that determines the output of `asText()`. */
 type AsTextConfig = {
 	/**
 	 * Separator used to join each element.
@@ -15,34 +12,28 @@ type AsTextConfig = {
 }
 
 // TODO: Remove when we remove support for deprecated tuple-style configuration.
-/**
- * @deprecated Use object-style configuration instead.
- */
+/** @deprecated Use object-style configuration instead. */
 type AsTextDeprecatedTupleConfig = [separator?: string]
 
-/**
- * The return type of `asText()`.
- */
-type AsTextReturnType<Field extends RichTextField | null | undefined> =
-	Field extends RichTextField ? string : null
+/** The return type of `asText()`. */
+type AsTextReturnType<Field extends RichTextField | null | undefined> = Field extends RichTextField
+	? string
+	: null
 
 export const asText: {
 	/**
 	 * Converts a rich text field to a plain text string.
 	 *
 	 * @example
-	 *
-	 * ```ts
-	 * const text = asText(document.data.content)
-	 * // => "Hello world"
-	 * ```
+	 * 	;```ts
+	 * 	const text = asText(document.data.content)
+	 * 	// => "Hello world"
+	 * 	```
 	 *
 	 * @param richTextField - A rich text field from Prismic.
 	 * @param config - Configuration that determines the output of `asText()`.
-	 *
 	 * @returns Plain text equivalent of the rich text field, or `null` if the
-	 *   field is empty.
-	 *
+	 * field is empty.
 	 * @see Learn how to work with rich text fields: {@link https://prismic.io/docs/fields/rich-text}
 	 */
 	<Field extends RichTextField | null | undefined>(
@@ -54,14 +45,10 @@ export const asText: {
 	 * Converts a rich text field to a plain text string.
 	 *
 	 * @deprecated Use object-style configuration instead.
-	 *
 	 * @param richTextField - A rich text field from Prismic.
-	 * @param separator - Separator used to join each element. Defaults to a
-	 *   space.
-	 *
+	 * @param separator - Separator used to join each element. Defaults to a space.
 	 * @returns Plain text equivalent of the rich text field, or `null` if the
-	 *   field is empty.
-	 *
+	 * field is empty.
 	 * @see Learn how to work with rich text fields: {@link https://prismic.io/docs/fields/rich-text}
 	 */
 	<Field extends RichTextField | null | undefined>(
@@ -85,10 +72,7 @@ export const asText: {
 			config = { ...configObjectOrSeparator }
 		}
 
-		return baseAsText(
-			richTextField,
-			config.separator,
-		) as AsTextReturnType<Field>
+		return baseAsText(richTextField, config.separator) as AsTextReturnType<Field>
 	} else {
 		return null as AsTextReturnType<Field>
 	}

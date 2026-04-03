@@ -1,32 +1,27 @@
 import type { DateField } from "../types/value/date"
 import type { TimestampField } from "../types/value/timestamp"
 
-/**
- * The return type of `asDate()`.
- */
-type AsDateReturnType<
-	Field extends DateField | TimestampField | null | undefined,
-> = Field extends DateField<"filled"> | TimestampField<"filled"> ? Date : null
+/** The return type of `asDate()`. */
+type AsDateReturnType<Field extends DateField | TimestampField | null | undefined> = Field extends
+	| DateField<"filled">
+	| TimestampField<"filled">
+	? Date
+	: null
 
 /**
  * Converts a date or timestamp field to a JavaScript Date object.
  *
  * @example
- *
- * ```ts
- * const date = asDate(document.data.release_date)
- * // => Date object or null
- * ```
+ * 	;```ts
+ * 	const date = asDate(document.data.release_date)
+ * 	// => Date object or null
+ * 	```
  *
  * @param dateOrTimestampField - A date or timestamp field from Prismic.
- *
  * @returns A Date object, or `null` if the field is empty.
- *
  * @see Learn about date and timestamp fields: {@link https://prismic.io/docs/fields/date}
  */
-export const asDate = <
-	Field extends DateField | TimestampField | null | undefined,
->(
+export const asDate = <Field extends DateField | TimestampField | null | undefined>(
 	dateOrTimestampField: Field,
 ): AsDateReturnType<Field> => {
 	if (!dateOrTimestampField) {
@@ -36,8 +31,8 @@ export const asDate = <
 	// If field is a timestamp field...
 	if (dateOrTimestampField.length === 24) {
 		/**
-		 * Converts basic ISO 8601 to ECMAScript simplified ISO 8601 format for
-		 * browser compatibility issues
+		 * Converts basic ISO 8601 to ECMAScript simplified ISO 8601 format for browser compatibility
+		 * issues
 		 *
 		 * From: YYYY-MM-DDTHH:mm:ssZ To: YYYY-MM-DDTHH:mm:ss.sssZ
 		 *

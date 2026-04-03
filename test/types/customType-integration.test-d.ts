@@ -1,6 +1,5 @@
+import type * as Internal from "@prismicio/types-internal"
 import { assertType, expectTypeOf, it } from "vitest"
-
-import type { IntegrationField } from "@prismicio/types-internal/lib/customtypes"
 
 import type { CustomTypeModelIntegrationField } from "../../src"
 
@@ -22,6 +21,6 @@ it("supports config", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	expectTypeOf<CustomTypeModelIntegrationField>().toExtend<IntegrationField>()
-	expectTypeOf<IntegrationField>().toExtend<CustomTypeModelIntegrationField>()
+	expectTypeOf<CustomTypeModelIntegrationField>().toExtend<Internal.IntegrationFieldModel>()
+	expectTypeOf<Internal.IntegrationFieldModel>().toExtend<CustomTypeModelIntegrationField>()
 })

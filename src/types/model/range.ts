@@ -1,8 +1,6 @@
 import type { CustomTypeModelFieldType } from "./types"
 
-/**
- * @deprecated - Legacy field. Use `CustomTypeModelNumberField` instead.
- */
+/** @deprecated - Legacy field. Use `CustomTypeModelNumberField` instead. */
 export interface CustomTypeModelRangeField {
 	type: typeof CustomTypeModelFieldType.Range
 	config?: {

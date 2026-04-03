@@ -1,7 +1,6 @@
-import { it } from "./it"
-
 import type { RichTextField } from "../src"
 import { asHTML } from "../src"
+import { it } from "./it"
 
 const field: RichTextField = [
 	{
