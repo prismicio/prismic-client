@@ -1,4 +1,4 @@
-import type * as Internal from "@prismicio/types-internal"
+import type { Variation } from "@prismicio/types-internal/lib/customtypes"
 import { assertType, expectTypeOf, it } from "vitest"
 
 import type {
@@ -114,8 +114,6 @@ it("does not support groups in items section", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	// @ts-expect-error - types-internal v4 type shape diverged
-	expectTypeOf<SharedSliceModelVariation>().toExtend<Internal.SharedSliceVariationModel>()
-	// @ts-expect-error - types-internal v4 type shape diverged
-	expectTypeOf<Internal.SharedSliceVariationModel>().toExtend<SharedSliceModelVariation>()
+	expectTypeOf<SharedSliceModelVariation>().toExtend<Variation>()
+	expectTypeOf<Variation>().toExtend<SharedSliceModelVariation>()
 })

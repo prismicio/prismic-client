@@ -7,7 +7,7 @@ import type {
 	RepositoryManager,
 } from "@prismicio/e2e-tests-utils"
 import { createRepositoriesManager } from "@prismicio/e2e-tests-utils"
-import type * as Internal from "@prismicio/types-internal"
+import type { CustomType } from "@prismicio/types-internal/lib/customtypes"
 import type { TestProject } from "vitest/node"
 
 try {
@@ -28,7 +28,7 @@ export const repositories = createRepositoriesManager({
 	},
 })
 
-const model: Internal.CustomTypeModel = {
+const model: CustomType = {
 	id: "page",
 	status: true,
 	label: "Page",
@@ -58,7 +58,7 @@ const model: Internal.CustomTypeModel = {
 		},
 	},
 }
-const singleModel: Internal.CustomTypeModel = {
+const singleModel: CustomType = {
 	id: "single",
 	status: true,
 	label: "Single",

@@ -1,4 +1,4 @@
-import type * as Internal from "@prismicio/types-internal"
+import type { Image } from "@prismicio/types-internal/lib/customtypes"
 import { assertType, expectTypeOf, it } from "vitest"
 
 import type {
@@ -91,7 +91,6 @@ it("supports configurable thumbnail name", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	// @ts-expect-error - types-internal v4 config shape diverged
-	expectTypeOf<CustomTypeModelImageField>().toExtend<Internal.ImageModel>()
-	expectTypeOf<Internal.ImageModel>().toExtend<CustomTypeModelImageField>()
+	expectTypeOf<CustomTypeModelImageField>().toExtend<Image>()
+	expectTypeOf<Image>().toExtend<CustomTypeModelImageField>()
 })

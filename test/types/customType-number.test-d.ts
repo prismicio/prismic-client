@@ -1,4 +1,4 @@
-import type * as Internal from "@prismicio/types-internal"
+import type { Number as NumberField } from "@prismicio/types-internal/lib/customtypes"
 import { assertType, expectTypeOf, it } from "vitest"
 
 import type { CustomTypeModelNumberField } from "../../src"
@@ -20,6 +20,6 @@ it("supports config", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	expectTypeOf<CustomTypeModelNumberField>().toExtend<Internal.NumberModel>()
-	expectTypeOf<Internal.NumberModel>().toExtend<CustomTypeModelNumberField>()
+	expectTypeOf<CustomTypeModelNumberField>().toExtend<NumberField>()
+	expectTypeOf<NumberField>().toExtend<CustomTypeModelNumberField>()
 })

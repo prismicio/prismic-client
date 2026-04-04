@@ -1,4 +1,4 @@
-import type * as Internal from "@prismicio/types-internal"
+import type { Link } from "@prismicio/types-internal/lib/customtypes"
 import { assertType, expectTypeOf, it } from "vitest"
 
 import type { CustomTypeModelLinkField } from "../../src"
@@ -65,6 +65,6 @@ it("supports optional variants property", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	expectTypeOf<CustomTypeModelLinkField>().toExtend<Internal.LinkModel>()
-	expectTypeOf<Internal.LinkModel>().toExtend<CustomTypeModelLinkField>()
+	expectTypeOf<CustomTypeModelLinkField>().toExtend<Link>()
+	expectTypeOf<Link>().toExtend<CustomTypeModelLinkField>()
 })

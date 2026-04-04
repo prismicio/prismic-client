@@ -1,4 +1,4 @@
-import type * as Internal from "@prismicio/types-internal"
+import type { Timestamp } from "@prismicio/types-internal/lib/customtypes"
 import { assertType, expectTypeOf, it } from "vitest"
 
 import type { CustomTypeModelTimestampField } from "../../src"
@@ -20,6 +20,6 @@ it("supports config", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	expectTypeOf<CustomTypeModelTimestampField>().toExtend<Internal.TimestampModel>()
-	expectTypeOf<Internal.TimestampModel>().toExtend<CustomTypeModelTimestampField>()
+	expectTypeOf<CustomTypeModelTimestampField>().toExtend<Timestamp>()
+	expectTypeOf<Timestamp>().toExtend<CustomTypeModelTimestampField>()
 })

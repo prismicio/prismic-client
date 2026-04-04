@@ -1,4 +1,4 @@
-import type * as Internal from "@prismicio/types-internal"
+import type { Color } from "@prismicio/types-internal/lib/customtypes"
 import { assertType, expectTypeOf, it } from "vitest"
 
 import type { CustomTypeModelColorField } from "../../src"
@@ -20,6 +20,6 @@ it("supports config", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	expectTypeOf<CustomTypeModelColorField>().toExtend<Internal.ColorModel>()
-	expectTypeOf<Internal.ColorModel>().toExtend<CustomTypeModelColorField>()
+	expectTypeOf<CustomTypeModelColorField>().toExtend<Color>()
+	expectTypeOf<Color>().toExtend<CustomTypeModelColorField>()
 })

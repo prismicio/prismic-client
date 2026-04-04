@@ -1,4 +1,4 @@
-import type * as Internal from "@prismicio/types-internal"
+import type { Link } from "@prismicio/types-internal/lib/customtypes"
 import { assertType, expectTypeOf, it } from "vitest"
 
 import type { CustomTypeModelContentRelationshipField } from "../../src"
@@ -73,9 +73,8 @@ it("supports complex data linking", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	// @ts-expect-error - types-internal v4 config shape diverged
-	expectTypeOf<CustomTypeModelContentRelationshipField>().toExtend<Internal.LinkModel>()
+	expectTypeOf<CustomTypeModelContentRelationshipField>().toExtend<Link>()
 	expectTypeOf<
-		Internal.LinkModel & { config: { select: "document" } }
+		Link & { config: { select: "document" } }
 	>().toExtend<CustomTypeModelContentRelationshipField>()
 })

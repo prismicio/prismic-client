@@ -1,4 +1,4 @@
-import type * as Internal from "@prismicio/types-internal"
+import type { Date } from "@prismicio/types-internal/lib/customtypes"
 import { assertType, expectTypeOf, it } from "vitest"
 
 import type { CustomTypeModelDateField } from "../../src"
@@ -20,6 +20,6 @@ it("supports config", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	expectTypeOf<CustomTypeModelDateField>().toExtend<Internal.DateModel>()
-	expectTypeOf<Internal.DateModel>().toExtend<CustomTypeModelDateField>()
+	expectTypeOf<CustomTypeModelDateField>().toExtend<Date>()
+	expectTypeOf<Date>().toExtend<CustomTypeModelDateField>()
 })

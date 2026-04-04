@@ -1,4 +1,4 @@
-import type * as Internal from "@prismicio/types-internal"
+import type { SharedSliceRef } from "@prismicio/types-internal/lib/customtypes"
 import { assertType, expectTypeOf, it } from "vitest"
 
 import type { CustomTypeModelSharedSlice } from "../../src"
@@ -10,6 +10,6 @@ it("supports basic model", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	expectTypeOf<CustomTypeModelSharedSlice>().toExtend<Internal.SharedSliceRefModel>()
-	expectTypeOf<Internal.SharedSliceRefModel>().toExtend<CustomTypeModelSharedSlice>()
+	expectTypeOf<CustomTypeModelSharedSlice>().toExtend<SharedSliceRef>()
+	expectTypeOf<SharedSliceRef>().toExtend<CustomTypeModelSharedSlice>()
 })

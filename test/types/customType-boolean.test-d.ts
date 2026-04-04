@@ -1,4 +1,4 @@
-import type * as Internal from "@prismicio/types-internal"
+import type { BooleanField } from "@prismicio/types-internal/lib/customtypes"
 import { assertType, expectTypeOf, it } from "vitest"
 
 import type { CustomTypeModelBooleanField } from "../../src"
@@ -29,6 +29,6 @@ it("does not support a placeholder", () => {
 })
 
 it("is compatible with @prismicio/types-internal", () => {
-	expectTypeOf<CustomTypeModelBooleanField>().toExtend<Internal.BooleanModel>()
-	expectTypeOf<Internal.BooleanModel>().toExtend<CustomTypeModelBooleanField>()
+	expectTypeOf<CustomTypeModelBooleanField>().toExtend<BooleanField>()
+	expectTypeOf<BooleanField>().toExtend<CustomTypeModelBooleanField>()
 })
