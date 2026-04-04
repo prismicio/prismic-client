@@ -2,12 +2,7 @@ import { vi } from "vitest"
 
 import { it } from "./it"
 
-it("uses preview ref from server request", async ({
-	expect,
-	client,
-	masterRef,
-	response,
-}) => {
+it("uses preview ref from server request", async ({ expect, client, masterRef, response }) => {
 	vi.mocked(client.fetchFn)
 		.mockResolvedValueOnce(response.repository(masterRef))
 		.mockResolvedValueOnce(response.search([]))
@@ -18,12 +13,7 @@ it("uses preview ref from server request", async ({
 	expect(client).toHaveLastFetchedContentAPI({ ref: "foo" })
 })
 
-it("uses preview ref from Request", async ({
-	expect,
-	client,
-	masterRef,
-	response,
-}) => {
+it("uses preview ref from Request", async ({ expect, client, masterRef, response }) => {
 	vi.mocked(client.fetchFn)
 		.mockResolvedValueOnce(response.repository(masterRef))
 		.mockResolvedValueOnce(response.search([]))

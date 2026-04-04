@@ -9,10 +9,7 @@ it("returns a document with a matching UID", async ({ expect, migration }) => {
 	expect(res).toBe(doc)
 })
 
-it("returns `undefined` if a document is not found", async ({
-	expect,
-	migration,
-}) => {
+it("returns `undefined` if a document is not found", async ({ expect, migration }) => {
 	const res = migration.getByUID("type", "foo")
 	expect(res).toBe(undefined)
 })

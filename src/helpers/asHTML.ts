@@ -6,24 +6,20 @@ import {
 	serializeSpan,
 	serializeStandardTag,
 } from "../lib/serializerHelpers"
-
-import type { RichTextField } from "../types/value/richText"
-
 import type {
 	RichTextFunctionSerializer,
 	RichTextMapSerializer,
 	RichTextMapSerializerFunction,
 } from "../richtext"
 import { composeSerializers, serialize, wrapMapSerializer } from "../richtext"
-
+import type { RichTextField } from "../types/value/richText"
 import type { LinkResolverFunction } from "./asLink"
 
 /**
  * Serializes a node from a rich text field with a function to HTML.
  *
- * Unlike a typical `@prismicio/client/richtext` function serializer, this
- * serializer converts the `children` argument to a single string rather than an
- * array of strings.
+ * Unlike a typical `@prismicio/client/richtext` function serializer, this serializer converts the
+ * `children` argument to a single string rather than an array of strings.
  *
  * @see Learn how to style rich text and customize rendering: {@link https://prismic.io/docs/fields/rich-text}
  */
@@ -38,9 +34,9 @@ export type HTMLRichTextFunctionSerializer = (
 /**
  * Serializes a node from a rich text field with a map to HTML.
  *
- * Unlike a typical `@prismicio/client/richtext` map serializer, this serializer
- * converts the `children` property to a single string rather than an array of
- * strings and accepts shorthand declarations.
+ * Unlike a typical `@prismicio/client/richtext` map serializer, this serializer converts the
+ * `children` property to a single string rather than an array of strings and accepts shorthand
+ * declarations.
  *
  * @see Learn how to style rich text and customize rendering: {@link https://prismic.io/docs/fields/rich-text}
  */
@@ -53,9 +49,9 @@ export type HTMLRichTextMapSerializer = {
 /**
  * Serializes a node from a rich text field with a map to HTML.
  *
- * Unlike a typical `@prismicio/client/richtext` map serializer, this serializer
- * converts the `children` property to a single string rather than an array of
- * strings but doesn't accept shorthand declarations.
+ * Unlike a typical `@prismicio/client/richtext` map serializer, this serializer converts the
+ * `children` property to a single string rather than an array of strings but doesn't accept
+ * shorthand declarations.
  *
  * @see Learn how to style rich text and customize rendering: {@link https://prismic.io/docs/fields/rich-text}
  */
@@ -64,32 +60,28 @@ export type HTMLStrictRichTextMapSerializer = {
 		type: Parameters<HTMLRichTextMapSerializerFunction<P>>[0]["type"]
 		node: Parameters<HTMLRichTextMapSerializerFunction<P>>[0]["node"]
 		text: Parameters<HTMLRichTextMapSerializerFunction<P>>[0]["text"]
-		children: Parameters<
-			HTMLRichTextMapSerializerFunction<P>
-		>[0]["children"][number]
+		children: Parameters<HTMLRichTextMapSerializerFunction<P>>[0]["children"][number]
 		key: Parameters<HTMLRichTextMapSerializerFunction<P>>[0]["key"]
 	}) => string | null | undefined
 }
 
 /**
- * A {@link RichTextMapSerializerFunction} type specifically for
- * {@link HTMLRichTextMapSerializer}.
+ * A {@link RichTextMapSerializerFunction} type specifically for {@link HTMLRichTextMapSerializer}.
  *
  * @typeParam BlockName - The serializer's rich text block type.
  */
-type HTMLRichTextMapSerializerFunction<
-	BlockType extends keyof RichTextMapSerializer<string>,
-> = RichTextMapSerializerFunction<
-	string,
-	ExtractNodeGeneric<RichTextMapSerializer<string>[BlockType]>,
-	ExtractTextTypeGeneric<RichTextMapSerializer<string>[BlockType]>
->
+type HTMLRichTextMapSerializerFunction<BlockType extends keyof RichTextMapSerializer<string>> =
+	RichTextMapSerializerFunction<
+		string,
+		ExtractNodeGeneric<RichTextMapSerializer<string>[BlockType]>,
+		ExtractTextTypeGeneric<RichTextMapSerializer<string>[BlockType]>
+	>
 
 /**
  * Returns the `Node` generic from {@link RichTextMapSerializerFunction}.
  *
  * @typeParam T - The `RichTextMapSerializerFunction` containing the needed
- *   `Node` generic.
+ * `Node` generic.
  */
 type ExtractNodeGeneric<T> =
 	T extends RichTextMapSerializerFunction<
@@ -106,7 +98,7 @@ type ExtractNodeGeneric<T> =
  * Returns the `TextType` generic from {@link RichTextMapSerializerFunction}.
  *
  * @typeParam T - The `RichTextMapSerializerFunction` containing the needed
- *   `TextType` generic.
+ * `TextType` generic.
  */
 type ExtractTextTypeGeneric<T> =
 	T extends RichTextMapSerializerFunction<
@@ -119,18 +111,12 @@ type ExtractTextTypeGeneric<T> =
 		? U
 		: never
 
-/**
- * A shorthand definition for {@link HTMLRichTextMapSerializer} element types.
- */
+/** A shorthand definition for {@link HTMLRichTextMapSerializer} element types. */
 export type HTMLRichTextMapSerializerShorthand = {
-	/**
-	 * Classes to apply to the element type.
-	 */
+	/** Classes to apply to the element type. */
 	class?: string
 
-	/**
-	 * Other attributes to apply to the element type.
-	 */
+	/** Other attributes to apply to the element type. */
 	[Attribute: string]: string | boolean | null | undefined
 }
 
@@ -140,13 +126,11 @@ export type HTMLRichTextMapSerializerShorthand = {
  * @see {@link HTMLRichTextMapSerializer} and {@link HTMLRichTextFunctionSerializer}
  * @see Learn how to style rich text and customize rendering: {@link https://prismic.io/docs/fields/rich-text}
  */
-export type HTMLRichTextSerializer =
-	| HTMLRichTextMapSerializer
-	| HTMLRichTextFunctionSerializer
+export type HTMLRichTextSerializer = HTMLRichTextMapSerializer | HTMLRichTextFunctionSerializer
 
 /**
- * Creates a HTML rich text serializer with a given link resolver and provide
- * sensible and safe defaults for every node type
+ * Creates a HTML rich text serializer with a given link resolver and provide sensible and safe
+ * defaults for every node type
  *
  * @internal
  */
@@ -154,20 +138,15 @@ const createHTMLRichTextSerializer = (
 	linkResolver: LinkResolverFunction | undefined | null,
 	serializer?: HTMLRichTextMapSerializer | null,
 ): RichTextFunctionSerializer<string> => {
-	const useSerializerOrDefault = <
-		BlockType extends keyof RichTextMapSerializer<string>,
-	>(
+	const useSerializerOrDefault = <BlockType extends keyof RichTextMapSerializer<string>>(
 		nodeSerializerOrShorthand: HTMLRichTextMapSerializer[BlockType],
-		defaultWithShorthand: NonNullable<
-			HTMLStrictRichTextMapSerializer[BlockType]
-		>,
+		defaultWithShorthand: NonNullable<HTMLStrictRichTextMapSerializer[BlockType]>,
 	): NonNullable<HTMLStrictRichTextMapSerializer[BlockType]> => {
 		if (typeof nodeSerializerOrShorthand === "function") {
 			return ((payload) => {
 				return (
-					(
-						nodeSerializerOrShorthand as HTMLStrictRichTextMapSerializer[BlockType]
-					)?.(payload) || defaultWithShorthand(payload)
+					(nodeSerializerOrShorthand as HTMLStrictRichTextMapSerializer[BlockType])?.(payload) ||
+					defaultWithShorthand(payload)
 				)
 			}) as NonNullable<HTMLStrictRichTextMapSerializer[BlockType]>
 		}
@@ -236,10 +215,7 @@ const createHTMLRichTextSerializer = (
 			serializer?.image,
 			serializeImage(linkResolver, serializer?.image),
 		),
-		embed: useSerializerOrDefault<"embed">(
-			serializer?.embed,
-			serializeEmbed(serializer?.embed),
-		),
+		embed: useSerializerOrDefault<"embed">(serializer?.embed, serializeEmbed(serializer?.embed)),
 		hyperlink: useSerializerOrDefault<"hyperlink">(
 			serializer?.hyperlink,
 			serializeHyperlink(linkResolver, serializer?.hyperlink),
@@ -255,12 +231,11 @@ const createHTMLRichTextSerializer = (
 }
 
 /**
- * Wraps a map serializer into a regular function serializer. The given map
- * serializer should accept children as a string, not as an array of strings
- * like `@prismicio/client/richtext`'s `wrapMapSerializer`.
+ * Wraps a map serializer into a regular function serializer. The given map serializer should accept
+ * children as a string, not as an array of strings like `@prismicio/client/richtext`'s
+ * `wrapMapSerializer`.
  *
  * @param mapSerializer - Map serializer to wrap
- *
  * @returns A regular function serializer
  */
 const wrapMapSerializerWithStringChildren = (
@@ -285,37 +260,29 @@ const wrapMapSerializerWithStringChildren = (
 	return wrapMapSerializer(modifiedMapSerializer)
 }
 
-/**
- * Configuration that determines the output of `asHTML()`.
- */
+/** Configuration that determines the output of `asHTML()`. */
 type AsHTMLConfig = {
 	/**
-	 * An optional link resolver function to resolve links. Without it, you're
-	 * expected to use the `routes` option from the API.
+	 * An optional link resolver function to resolve links. Without it, you're expected to use the
+	 * `routes` option from the API.
 	 */
 	linkResolver?: LinkResolverFunction | null
 
-	/**
-	 * An optional rich text serializer. Unhandled cases will fall back to the
-	 * default serializer.
-	 */
+	/** An optional rich text serializer. Unhandled cases will fall back to the default serializer. */
 	serializer?: HTMLRichTextSerializer | null
 }
 
 // TODO: Remove when we remove support for deprecated tuple-style configuration.
-/**
- * @deprecated Use object-style configuration instead.
- */
+/** @deprecated Use object-style configuration instead. */
 type AsHTMLDeprecatedTupleConfig = [
 	linkResolver?: LinkResolverFunction | null,
 	serializer?: HTMLRichTextSerializer | null,
 ]
 
-/**
- * The return type of `asHTML()`.
- */
-type AsHTMLReturnType<Field extends RichTextField | null | undefined> =
-	Field extends RichTextField ? string : null
+/** The return type of `asHTML()`. */
+type AsHTMLReturnType<Field extends RichTextField | null | undefined> = Field extends RichTextField
+	? string
+	: null
 
 // TODO: Remove overload when we remove support for deprecated tuple-style configuration.
 export const asHTML: {
@@ -323,18 +290,15 @@ export const asHTML: {
 	 * Converts a rich text field to an HTML string.
 	 *
 	 * @example
-	 *
-	 * ```ts
-	 * const html = asHTML(document.data.content)
-	 * // => "<p>Hello world</p>"
-	 * ```
+	 * 	;```ts
+	 * 	const html = asHTML(document.data.content)
+	 * 	// => "<p>Hello world</p>"
+	 * 	```
 	 *
 	 * @param richTextField - A rich text field from Prismic.
 	 * @param config - Configuration that determines the output of `asHTML()`.
-	 *
 	 * @returns HTML equivalent of the rich text field, or `null` if the field is
-	 *   empty.
-	 *
+	 * empty.
 	 * @see Learn how to style rich text and customize rendering: {@link https://prismic.io/docs/fields/rich-text}
 	 */
 	<Field extends RichTextField | null | undefined>(
@@ -346,16 +310,13 @@ export const asHTML: {
 	 * Converts a rich text field to an HTML string.
 	 *
 	 * @deprecated Use object-style configuration instead.
-	 *
 	 * @param richTextField - A rich text field from Prismic.
-	 * @param linkResolver - An optional link resolver function to resolve links.
-	 *   Without it, you're expected to use the `routes` option from the API.
-	 * @param serializer - An optional rich text serializer. Unhandled cases will
-	 *   fall back to the default serializer.
-	 *
+	 * @param linkResolver - An optional link resolver function to resolve links. Without it, you're
+	 *   expected to use the `routes` option from the API.
+	 * @param serializer - An optional rich text serializer. Unhandled cases will fall back to the
+	 *   default serializer.
 	 * @returns HTML equivalent of the rich text field, or `null` if the field is
-	 *   empty.
-	 *
+	 * empty.
 	 * @see Learn how to style rich text and customize rendering: {@link https://prismic.io/docs/fields/rich-text}
 	 */
 	<Field extends RichTextField | null | undefined>(
@@ -371,10 +332,7 @@ export const asHTML: {
 		// TODO: Remove when we remove support for deprecated tuple-style configuration.
 		const [configObjectOrLinkResolver, maybeSerializer] = configObjectOrTuple
 		let config: AsHTMLConfig
-		if (
-			typeof configObjectOrLinkResolver === "function" ||
-			configObjectOrLinkResolver == null
-		) {
+		if (typeof configObjectOrLinkResolver === "function" || configObjectOrLinkResolver == null) {
 			config = {
 				linkResolver: configObjectOrLinkResolver,
 				serializer: maybeSerializer,
@@ -399,18 +357,13 @@ export const asHTML: {
 					createHTMLRichTextSerializer(config.linkResolver),
 				)
 			} else {
-				serializer = createHTMLRichTextSerializer(
-					config.linkResolver,
-					config.serializer,
-				)
+				serializer = createHTMLRichTextSerializer(config.linkResolver, config.serializer)
 			}
 		} else {
 			serializer = createHTMLRichTextSerializer(config.linkResolver)
 		}
 
-		return serialize(richTextField, serializer).join(
-			"",
-		) as AsHTMLReturnType<Field>
+		return serialize(richTextField, serializer).join("") as AsHTMLReturnType<Field>
 	} else {
 		return null as AsHTMLReturnType<Field>
 	}

@@ -1,10 +1,7 @@
 import { it } from "./it"
 
 it("returns multiple documents", async ({ expect, client, docs }) => {
-	const res = await client.getAllBySomeTags([
-		docs.default.tags[0],
-		docs.default2.tags[0],
-	])
+	const res = await client.getAllBySomeTags([docs.default.tags[0], docs.default2.tags[0]])
 	expect(res).toHaveLength(4)
 	expect(res).toContainEqual(expect.objectContaining({ id: docs.default.id }))
 	expect(res).toContainEqual(expect.objectContaining({ id: docs.default2.id }))
@@ -13,10 +10,9 @@ it("returns multiple documents", async ({ expect, client, docs }) => {
 })
 
 it("can be limited", async ({ expect, client, docs }) => {
-	const res = await client.getAllBySomeTags(
-		[docs.default.tags[0], docs.default2.tags[0]],
-		{ limit: 1 },
-	)
+	const res = await client.getAllBySomeTags([docs.default.tags[0], docs.default2.tags[0]], {
+		limit: 1,
+	})
 	expect(res).toHaveLength(1)
 })
 

@@ -1,6 +1,5 @@
-import { assertType, expectTypeOf, it } from "vitest"
-
 import type { Timestamp } from "@prismicio/types-internal/lib/customtypes"
+import { assertType, expectTypeOf, it } from "vitest"
 
 import type { CustomTypeModelTimestampField } from "../../src"
 

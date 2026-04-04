@@ -5,13 +5,10 @@ import { RichTextReversedNodeType } from "./types"
  * Wraps a map serializer into a regular function serializer
  *
  * @remarks
- * This is a low level helper mainly intended to be used by higher level
- * packages Most users aren't expected to this function directly
- *
+ *   This is a low level helper mainly intended to be used by higher level packages Most users
+ *   aren't expected to this function directly
  * @typeParam SerializerReturnType - Return type of the map serializer
- *
  * @param mapSerializer - Map serializer to wrap
- *
  * @returns A regular function serializer
  */
 export const wrapMapSerializer = <SerializerReturnType>(
@@ -20,9 +17,8 @@ export const wrapMapSerializer = <SerializerReturnType>(
 	return (type, node, text, children, key) => {
 		const tagSerializer: RichTextMapSerializer<SerializerReturnType>[keyof RichTextMapSerializer<SerializerReturnType>] =
 			mapSerializer[
-				(RichTextReversedNodeType[
-					type as keyof typeof RichTextReversedNodeType
-				] || type) as keyof RichTextMapSerializer<SerializerReturnType>
+				(RichTextReversedNodeType[type as keyof typeof RichTextReversedNodeType] ||
+					type) as keyof RichTextMapSerializer<SerializerReturnType>
 			]
 
 		if (tagSerializer) {

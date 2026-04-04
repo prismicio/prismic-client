@@ -18,11 +18,7 @@ it("supports async thunk ref", async ({ expect, client }) => {
 	expect(client).toHaveFetchedContentAPI({ ref: "ref" })
 })
 
-it("uses master ref if thunk returns non-string", async ({
-	expect,
-	client,
-	masterRef,
-}) => {
+it("uses master ref if thunk returns non-string", async ({ expect, client, masterRef }) => {
 	client.queryContentFromRef(async () => undefined)
 	await client.get()
 	expect(client).toHaveFetchedContentAPITimes(1)

@@ -1,7 +1,6 @@
-import { it } from "./it"
-
 import type { ImageField } from "../src"
 import { asImagePixelDensitySrcSet } from "../src"
+import { it } from "./it"
 
 const field: ImageField = {
 	id: "id",
@@ -21,10 +20,7 @@ it("returns a srcset with default pixel densities", async ({ expect }) => {
 	const res = asImagePixelDensitySrcSet(field)
 	expect(res).toStrictEqual({
 		src: field.url,
-		srcset:
-			`${field.url}&dpr=1 1x, ` +
-			`${field.url}&dpr=2 2x, ` +
-			`${field.url}&dpr=3 3x`,
+		srcset: `${field.url}&dpr=1 1x, ` + `${field.url}&dpr=2 2x, ` + `${field.url}&dpr=3 3x`,
 	})
 })
 
@@ -34,10 +30,7 @@ it("supports custom pixel densities", async ({ expect }) => {
 	})
 	expect(res).toStrictEqual({
 		src: field.url,
-		srcset:
-			`${field.url}&dpr=2 2x, ` +
-			`${field.url}&dpr=4 4x, ` +
-			`${field.url}&dpr=6 6x`,
+		srcset: `${field.url}&dpr=2 2x, ` + `${field.url}&dpr=4 4x, ` + `${field.url}&dpr=6 6x`,
 	})
 })
 

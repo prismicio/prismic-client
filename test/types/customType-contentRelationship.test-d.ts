@@ -1,6 +1,5 @@
-import { assertType, expectTypeOf, it } from "vitest"
-
 import type { Link } from "@prismicio/types-internal/lib/customtypes"
+import { assertType, expectTypeOf, it } from "vitest"
 
 import type { CustomTypeModelContentRelationshipField } from "../../src"
 
@@ -51,10 +50,7 @@ it("supports complex data linking", () => {
 									customtypes: [
 										{
 											id: "custom-type-2",
-											fields: [
-												"field-1",
-												{ id: "group-2", fields: ["field-1", "field-2"] },
-											],
+											fields: ["field-1", { id: "group-2", fields: ["field-1", "field-2"] }],
 										},
 									],
 								},
@@ -65,10 +61,7 @@ it("supports complex data linking", () => {
 							customtypes: [
 								{
 									id: "custom-type-2",
-									fields: [
-										"field-1",
-										{ id: "group-2", fields: ["field-1", "field-2"] },
-									],
+									fields: ["field-1", { id: "group-2", fields: ["field-1", "field-2"] }],
 								},
 							],
 						},

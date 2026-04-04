@@ -1,7 +1,6 @@
-import { it } from "./it"
-
 import type { RichTextField } from "../src"
 import { composeSerializers, serialize } from "../src/richtext"
+import { it } from "./it"
 
 const field: RichTextField = [
 	{
@@ -39,18 +38,15 @@ it("composes multiple serializers", async ({ expect }) => {
 })
 
 it("ignores undefined serializers", async ({ expect }) => {
-	const res = composeSerializers(
-		undefined,
-		(type, _node, text, children, _key) => {
-			if (type === "paragraph") {
-				return `<p data-foo>${children.join("")}</p>`
-			} else if (type === "strong") {
-				return `<strong data-bar>${children.join("")}</strong>`
-			} else if (type === "span") {
-				return text
-			}
-		},
-	)
+	const res = composeSerializers(undefined, (type, _node, text, children, _key) => {
+		if (type === "paragraph") {
+			return `<p data-foo>${children.join("")}</p>`
+		} else if (type === "strong") {
+			return `<strong data-bar>${children.join("")}</strong>`
+		} else if (type === "span") {
+			return text
+		}
+	})
 	const serialized = serialize(field, res)
 	expect(serialized).toStrictEqual([
 		"<p data-foo>foo <strong data-bar>bar</strong></p>",

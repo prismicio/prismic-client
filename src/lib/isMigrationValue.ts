@@ -16,14 +16,13 @@ import type { OptionalLinkProperties } from "../types/value/link"
 import { RichTextNodeType } from "../types/value/richText"
 import type { SliceZone } from "../types/value/sliceZone"
 import type { AnyRegularField } from "../types/value/types"
-
 import * as is from "./isValue"
 
 /**
  * Unknown value to check if it's a specific field type.
  *
  * @remarks
- * Explicit types are added to help ensure narrowing is done effectively.
+ *   Explicit types are added to help ensure narrowing is done effectively.
  */
 type UnknownValue =
 	| PrismicDocument
@@ -34,14 +33,11 @@ type UnknownValue =
  * Checks if a value is a migration content relationship field.
  *
  * @remarks
- * `OptionalLinkProperties` is included because `MigrationContentRelationship`
- * may be a link field, not strictly a content relationship field.
- *
+ *   `OptionalLinkProperties` is included because `MigrationContentRelationship` may be a link
+ *   field, not strictly a content relationship field.
  * @param value - Value to check.
- *
  * @returns `true` if `value` is a migration content relationship field, `false`
- *   otherwise.
- *
+ * otherwise.
  * @internal
  * This is not an official helper function and it's only designed to work with internal processes.
  */
@@ -64,9 +60,7 @@ export const contentRelationship = (
  * Checks if a value is a migration image field.
  *
  * @param value - Value to check.
- *
  * @returns `true` if `value` is a migration image field, `false` otherwise.
- *
  * @internal
  * This is not an official helper function and it's only designed to work with internal processes.
  */
@@ -85,15 +79,12 @@ export const image = (value: UnknownValue): value is MigrationImage => {
 /**
  * Checks if a value is a migration link to media field.
  *
- * - @remarks `OptionalLinkProperties` is included because
- *   `MigrationContentRelationship` may be a link field, not strictly a content
- *   relationship field.
+ * - @remarks `OptionalLinkProperties` is included because `MigrationContentRelationship` may be a
+ *   link field, not strictly a content relationship field.
  *
  * @param value - Value to check.
- *
  * @returns `true` if `value` is a migration link to media field, `false`
- *   otherwise.
- *
+ * otherwise.
  * @internal
  * This is not an official helper function and it's only designed to work with internal processes.
  */
@@ -114,16 +105,12 @@ export const linkToMedia = (
  * Checks if a value is a migration rich text image node.
  *
  * @param value - Value to check.
- *
  * @returns `true` if `value` is a migration rich text image node, `false`
- *   otherwise.
- *
+ * otherwise.
  * @internal
  * This is not an official helper function and it's only designed to work with internal processes.
  */
-export const rtImageNode = (
-	value: UnknownValue,
-): value is MigrationRTImageNode => {
+export const rtImageNode = (value: UnknownValue): value is MigrationRTImageNode => {
 	return (
 		typeof value === "object" &&
 		value !== null &&

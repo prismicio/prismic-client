@@ -1,6 +1,5 @@
-import { assertType, expectTypeOf, it } from "vitest"
-
 import type { Select } from "@prismicio/types-internal/lib/customtypes"
+import { assertType, expectTypeOf, it } from "vitest"
 
 import type { CustomTypeModelSelectField } from "../../src"
 

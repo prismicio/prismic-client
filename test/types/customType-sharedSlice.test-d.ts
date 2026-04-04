@@ -1,6 +1,5 @@
-import { assertType, expectTypeOf, it } from "vitest"
-
 import type { SharedSliceRef } from "@prismicio/types-internal/lib/customtypes"
+import { assertType, expectTypeOf, it } from "vitest"
 
 import type { CustomTypeModelSharedSlice } from "../../src"
 

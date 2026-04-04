@@ -1,11 +1,6 @@
 import { assertType, it } from "vitest"
 
-import type {
-	BooleanField,
-	GroupField,
-	KeyTextField,
-	SharedSliceVariation,
-} from "../../src"
+import type { BooleanField, GroupField, KeyTextField, SharedSliceVariation } from "../../src"
 
 it("supports basic structure", () => {
 	assertType<SharedSliceVariation>({
@@ -30,9 +25,7 @@ it("supports custom API ID", () => {
 })
 
 it("supports custom primary fields type", () => {
-	assertType<
-		SharedSliceVariation<string, { foo: BooleanField; bar: GroupField }>
-	>({
+	assertType<SharedSliceVariation<string, { foo: BooleanField; bar: GroupField }>>({
 		variation: "string",
 		version: "string",
 		primary: {
@@ -46,9 +39,7 @@ it("supports custom primary fields type", () => {
 })
 
 it("supports custom items fields type", () => {
-	assertType<
-		SharedSliceVariation<string, Record<never, never>, { bar: KeyTextField }>
-	>({
+	assertType<SharedSliceVariation<string, Record<never, never>, { bar: KeyTextField }>>({
 		variation: "string",
 		version: "string",
 		primary: {},

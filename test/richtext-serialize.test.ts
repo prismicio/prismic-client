@@ -1,8 +1,7 @@
-import { it } from "./it"
-
 import type { RichTextField } from "../src"
 import type { RichTextFunctionSerializer } from "../src/richtext"
 import { serialize } from "../src/richtext"
+import { it } from "./it"
 
 const field: RichTextField = [
 	{
@@ -17,12 +16,7 @@ const field: RichTextField = [
 	},
 ]
 
-const serializer: RichTextFunctionSerializer<string> = (
-	type,
-	_node,
-	text,
-	children,
-) => {
+const serializer: RichTextFunctionSerializer<string> = (type, _node, text, children) => {
 	if (type === "paragraph") {
 		return `<p data-foo>${children.join("")}</p>`
 	} else if (type === "strong") {
@@ -161,12 +155,7 @@ it("handles overlapped styling correctly", async ({ expect }) => {
 })
 
 it("omits nullish serialized values from the result", async ({ expect }) => {
-	const serializer: RichTextFunctionSerializer<string> = (
-		type,
-		_node,
-		text,
-		children,
-	) => {
+	const serializer: RichTextFunctionSerializer<string> = (type, _node, text, children) => {
 		if (type === "paragraph") {
 			return `<p data-foo>${children.join("")}</p>`
 		} else if (type === "strong") {

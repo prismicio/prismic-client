@@ -1,19 +1,13 @@
-import type {
-	PrismicDocument,
-	PrismicDocumentWithUID,
-} from "../../value/document"
+import type { PrismicDocument, PrismicDocumentWithUID } from "../../value/document"
 
 /**
- * An object representing the parameters required when creating a document
- * through the Migration API.
+ * An object representing the parameters required when creating a document through the Migration
+ * API.
  *
  * @typeParam TDocument - Type of the Prismic document to create.
- *
  * @see Prismic Migration API technical reference: {@link https://prismic.io/docs/migration-api-technical-reference}
  */
-export type PostDocumentParams<
-	TDocument extends PrismicDocument = PrismicDocument,
-> =
+export type PostDocumentParams<TDocument extends PrismicDocument = PrismicDocument> =
 	TDocument extends PrismicDocument<infer TData, infer TType, infer TLang>
 		? {
 				title: string
@@ -33,12 +27,9 @@ export type PostDocumentParams<
  * Result of creating a document with the Migration API.
  *
  * @typeParam TDocument - Type of the created Prismic document.
- *
  * @see Prismic Asset API technical reference: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
-export type PostDocumentResult<
-	TDocument extends PrismicDocument = PrismicDocument,
-> =
+export type PostDocumentResult<TDocument extends PrismicDocument = PrismicDocument> =
 	TDocument extends PrismicDocument<infer _TData, infer TType, infer TLang>
 		? {
 				title: string
@@ -46,22 +37,17 @@ export type PostDocumentResult<
 				id: string
 				type: TType
 				lang: TLang
-			} & (TDocument["uid"] extends string
-				? { uid: TDocument["uid"] }
-				: { uid?: TDocument["uid"] })
+			} & (TDocument["uid"] extends string ? { uid: TDocument["uid"] } : { uid?: TDocument["uid"] })
 		: never
 
 /**
- * An object representing the parameters required when updating a document
- * through the Migration API.
+ * An object representing the parameters required when updating a document through the Migration
+ * API.
  *
  * @typeParam TDocument - Type of the Prismic document to update.
- *
  * @see Prismic Migration API technical reference: {@link https://prismic.io/docs/migration-api-technical-reference}
  */
-export type PutDocumentParams<
-	TDocument extends PrismicDocument = PrismicDocument,
-> = {
+export type PutDocumentParams<TDocument extends PrismicDocument = PrismicDocument> = {
 	title?: string
 
 	uid?: string
@@ -76,9 +62,7 @@ export type PutDocumentParams<
  * Result of updating a document with the Migration API.
  *
  * @typeParam TDocument - Type of the updated Prismic document.
- *
  * @see Prismic Asset API technical reference: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
-export type PutDocumentResult<
-	TDocument extends PrismicDocument = PrismicDocument,
-> = PostDocumentResult<TDocument>
+export type PutDocumentResult<TDocument extends PrismicDocument = PrismicDocument> =
+	PostDocumentResult<TDocument>

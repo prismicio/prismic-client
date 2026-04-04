@@ -1,15 +1,14 @@
 import type { FieldState, Simplify } from "./types"
 
 /**
- * An individual image within an image field. The base image and each thumbnail
- * uses this type.
+ * An individual image within an image field. The base image and each thumbnail uses this type.
  *
  * @typeParam State - State of the field which determines its shape.
- *
  * @see {@link ImageField} for a full image field type.
  */
-export type ImageFieldImage<State extends FieldState = FieldState> =
-	State extends "empty" ? EmptyImageFieldImage : FilledImageFieldImage
+export type ImageFieldImage<State extends FieldState = FieldState> = State extends "empty"
+	? EmptyImageFieldImage
+	: FilledImageFieldImage
 
 export interface FilledImageFieldImage {
 	id: string
@@ -40,13 +39,12 @@ export interface EmptyImageFieldImage {
 /**
  * An image field.
  *
- * **Note**: Passing `null` to the `ThumbnailNames` parameter is deprecated and
- * will be removed in a future version. Use `never` instead.
+ * **Note**: Passing `null` to the `ThumbnailNames` parameter is deprecated and will be removed in a
+ * future version. Use `never` instead.
  *
- * @typeParam ThumbnailNames - Names of thumbnails. If the field does not
- *   contain thumbnails, `never` can be used to "disable" thumbnail fields.
+ * @typeParam ThumbnailNames - Names of thumbnails. If the field does not contain thumbnails,
+ *   `never` can be used to "disable" thumbnail fields.
  * @typeParam State - State of the field which determines its shape.
- *
  * @see Image field documentation: {@link https://prismic.io/docs/image}
  */
 export type ImageField<
@@ -71,8 +69,6 @@ export type ImageField<
 		// version written below. This version leads to a better code
 		// editor experience.
 		State extends "filled"
-			? ImageFieldImage<State> &
-					Record<Extract<ThumbnailNames, string>, ImageFieldImage<State>>
-			: ImageFieldImage<State> &
-					Record<Extract<ThumbnailNames, string>, ImageFieldImage<State>>
+			? ImageFieldImage<State> & Record<Extract<ThumbnailNames, string>, ImageFieldImage<State>>
+			: ImageFieldImage<State> & Record<Extract<ThumbnailNames, string>, ImageFieldImage<State>>
 	>

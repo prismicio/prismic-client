@@ -1,5 +1,3 @@
-import type { TestProject } from "vitest/node"
-
 import { ok } from "node:assert"
 import { setTimeout as wait } from "node:timers/promises"
 
@@ -9,17 +7,14 @@ import type {
 	RepositoryManager,
 } from "@prismicio/e2e-tests-utils"
 import { createRepositoriesManager } from "@prismicio/e2e-tests-utils"
-
 import type { CustomType } from "@prismicio/types-internal/lib/customtypes"
+import type { TestProject } from "vitest/node"
 
 try {
 	process.loadEnvFile(".env.test.local")
 } catch {}
 
-ok(
-	process.env.E2E_PRISMIC_EMAIL,
-	"Missing E2E_PRISMIC_EMAIL. See the .env.test.example file.",
-)
+ok(process.env.E2E_PRISMIC_EMAIL, "Missing E2E_PRISMIC_EMAIL. See the .env.test.example file.")
 ok(
 	process.env.E2E_PRISMIC_PASSWORD,
 	"Missing E2E_PRISMIC_PASSWORD. See the .env.test.example file.",
@@ -83,19 +78,15 @@ export async function setup({ provide }: TestProject): Promise<void> {
 	})
 	provide("repositoryName", repository.name)
 
-	const [
-		repositoryMeta,
-		writeToken,
-		accessToken,
-		initRelease,
-		testReleaseMeta,
-	] = await Promise.all([
-		repository.getContentApiClient().getAsJson("/api/v2"),
-		repositories.getUserApiToken(),
-		repository.createContentAPIToken("test", "master+releases"),
-		repository.createRelease("init"),
-		repository.createRelease("test"),
-	])
+	const [repositoryMeta, writeToken, accessToken, initRelease, testReleaseMeta] = await Promise.all(
+		[
+			repository.getContentApiClient().getAsJson("/api/v2"),
+			repositories.getUserApiToken(),
+			repository.createContentAPIToken("test", "master+releases"),
+			repository.createRelease("init"),
+			repository.createRelease("test"),
+		],
+	)
 	provide("repository", JSON.stringify(repositoryMeta))
 	provide("writeToken", writeToken)
 	provide("accessToken", accessToken)
@@ -106,33 +97,25 @@ export async function setup({ provide }: TestProject): Promise<void> {
 		release_id: initRelease.id,
 		status: "draft",
 	} as const
-	const [
-		default1,
-		default2,
-		default3,
-		default4,
-		defaultSingle,
-		french1,
-		french2,
-		frenchSingle,
-	] = await Promise.all([
-		createDocument(repository, model.id, { ...doc, tags: ["foo"] }),
-		createDocument(repository, model.id, { ...doc, tags: ["bar"] }),
-		createDocument(repository, model.id, { ...doc, tags: ["foo", "bar"] }),
-		createDocument(repository, model.id, { ...doc, tags: ["foo", "bar"] }),
-		createDocument(repository, singleModel.id, { ...doc }),
-		createDocument(repository, model.id, {
-			...doc,
-			locale: "fr-fr",
-			tags: ["foo"],
-		}),
-		createDocument(repository, model.id, {
-			...doc,
-			locale: "fr-fr",
-			tags: ["bar"],
-		}),
-		createDocument(repository, singleModel.id, { ...doc, locale: "fr-fr" }),
-	])
+	const [default1, default2, default3, default4, defaultSingle, french1, french2, frenchSingle] =
+		await Promise.all([
+			createDocument(repository, model.id, { ...doc, tags: ["foo"] }),
+			createDocument(repository, model.id, { ...doc, tags: ["bar"] }),
+			createDocument(repository, model.id, { ...doc, tags: ["foo", "bar"] }),
+			createDocument(repository, model.id, { ...doc, tags: ["foo", "bar"] }),
+			createDocument(repository, singleModel.id, { ...doc }),
+			createDocument(repository, model.id, {
+				...doc,
+				locale: "fr-fr",
+				tags: ["foo"],
+			}),
+			createDocument(repository, model.id, {
+				...doc,
+				locale: "fr-fr",
+				tags: ["bar"],
+			}),
+			createDocument(repository, singleModel.id, { ...doc, locale: "fr-fr" }),
+		])
 	provide(
 		"docs",
 		JSON.stringify({
@@ -168,13 +151,7 @@ export async function createDocument(
 		status?: "published" | "draft"
 	} = {},
 ): Promise<ContentApiDocument> {
-	const {
-		accessToken,
-		routes,
-		status = "published",
-		release_id,
-		...doc
-	} = params
+	const { accessToken, routes, status = "published", release_id, ...doc } = params
 
 	const docMeta = await repository.createDocument(
 		{
@@ -196,9 +173,7 @@ export async function createDocument(
 	const client = repository.getContentApiClient({ accessToken })
 
 	return await waitFor(async () => {
-		const ref = release_id
-			? await client.getRefByReleaseID(release_id)
-			: undefined
+		const ref = release_id ? await client.getRefByReleaseID(release_id) : undefined
 		const publishedDoc = await client.getDocumentByID(docMeta.id, {
 			ref,
 			lang: docMeta.locale,

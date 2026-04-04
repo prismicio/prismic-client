@@ -3,38 +3,30 @@
 	"version": "7.21.7",
 	"description": "The official JavaScript + TypeScript client library for Prismic",
 	"keywords": [
-		"typescript",
 		"client",
-		"helpers",
-		"types",
-		"utils",
-		"toolbox",
 		"cms",
+		"helpers",
 		"prismic",
-		"prismic.io"
+		"prismic.io",
+		"toolbox",
+		"types",
+		"typescript",
+		"utils"
 	],
+	"license": "Apache-2.0",
+	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
 	"repository": {
 		"type": "git",
 		"url": "ssh://git@github.com/prismicio/prismic-client.git"
 	},
-	"license": "Apache-2.0",
-	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
-	"sideEffects": false,
+	"files": [
+		"./dist",
+		"./src"
+	],
 	"type": "module",
-	"exports": {
-		".": {
-			"import": "./dist/index.js",
-			"require": "./dist/index.cjs"
-		},
-		"./richtext": {
-			"import": "./dist/richtext.js",
-			"require": "./dist/richtext.cjs"
-		},
-		"./package.json": "./package.json"
-	},
+	"sideEffects": false,
 	"main": "./dist/index.cjs",
 	"module": "./dist/index.js",
-	"react-native": "./dist/index.js",
 	"types": "./dist/index.d.cts",
 	"typesVersions": {
 		"*": {
@@ -46,14 +38,25 @@
 			]
 		}
 	},
-	"files": [
-		"dist",
-		"src"
-	],
+	"react-native": "./dist/index.js",
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		},
+		"./richtext": {
+			"import": "./dist/richtext.js",
+			"require": "./dist/richtext.cjs"
+		},
+		"./package.json": "./package.json"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
 	"scripts": {
 		"build": "tsdown",
 		"dev": "tsdown --watch",
-		"format": "prettier --write .",
+		"format": "oxfmt",
 		"prepare": "npm run build",
 		"lint": "oxlint --deny-warnings",
 		"types": "tsc --noEmit",
@@ -67,20 +70,15 @@
 	"devDependencies": {
 		"@prismicio/e2e-tests-utils": "^1.16.0",
 		"@prismicio/types-internal": "^3.17.0",
-		"@trivago/prettier-plugin-sort-imports": "^6.0.2",
 		"@types/node": "^25.5.0",
 		"@vitest/coverage-v8": "^4.1.2",
+		"oxfmt": "^0.43.0",
 		"oxlint": "^1.58.0",
-		"prettier": "^3.8.1",
-		"prettier-plugin-jsdoc": "1.8.0",
 		"tsdown": "^0.21.7",
 		"typescript": "^6.0.2",
 		"vitest": "^4.1.2"
 	},
 	"engines": {
-		"node": ">=14.15.0"
-	},
-	"publishConfig": {
-		"access": "public"
+		"node": ">=20"
 	}
 }

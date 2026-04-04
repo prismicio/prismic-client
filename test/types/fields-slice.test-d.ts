@@ -1,12 +1,6 @@
 import { assertType, it } from "vitest"
 
-import type {
-	BooleanField,
-	GroupField,
-	KeyTextField,
-	Slice,
-	SliceZone,
-} from "../../src"
+import type { BooleanField, GroupField, KeyTextField, Slice, SliceZone } from "../../src"
 
 it("supports basic structure", () => {
 	assertType<Slice>({

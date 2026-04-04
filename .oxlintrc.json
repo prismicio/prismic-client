@@ -4,7 +4,6 @@
 	"rules": {
 		"no-console": ["warn", { "allow": ["info", "warn", "error"] }],
 		"no-debugger": "warn",
-		"curly": "error",
 		"prefer-const": "error",
 		"no-unused-vars": [
 			"error",

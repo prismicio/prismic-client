@@ -15,11 +15,7 @@ it("uses form endpoint if available", async ({ expect, client, endpoint }) => {
 	expect(url).toBe(new URL("tags", endpoint).toString())
 })
 
-it("sends access token to the form endpoint", async ({
-	expect,
-	client,
-	accessToken,
-}) => {
+it("sends access token to the form endpoint", async ({ expect, client, accessToken }) => {
 	client.accessToken = accessToken
 	await client.getTags()
 	const url = vi.mocked(client.fetchFn).mock.lastCall![0]
@@ -27,9 +23,7 @@ it("sends access token to the form endpoint", async ({
 })
 
 it("uses repo meta if tags form is undefined", async ({ expect, client }) => {
-	vi.mocked(client.fetchFn).mockResolvedValue(
-		Response.json({ tags: ["foo"], forms: {} }),
-	)
+	vi.mocked(client.fetchFn).mockResolvedValue(Response.json({ tags: ["foo"], forms: {} }))
 	const res = await client.getTags()
 	expect(res).toStrictEqual(["foo"])
 })
@@ -47,10 +41,7 @@ it("uses cached repository within the client's repository cache TTL", async ({
 	vi.useRealTimers()
 })
 
-it("shares concurrent equivalent network requests", async ({
-	expect,
-	client,
-}) => {
+it("shares concurrent equivalent network requests", async ({ expect, client }) => {
 	const controller1 = new AbortController()
 	const controller2 = new AbortController()
 	await Promise.all([

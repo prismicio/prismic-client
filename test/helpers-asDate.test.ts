@@ -1,6 +1,5 @@
-import { it } from "./it"
-
 import { asDate } from "../src"
+import { it } from "./it"
 
 it("returns a Date from a date field", async ({ expect }) => {
 	const res = asDate("2021-05-12")
@@ -12,18 +11,12 @@ it("returns a Date from a timestamp field", async ({ expect }) => {
 	expect(res).toBeInstanceOf(Date)
 })
 
-it("returns a Date from a document's first_publication_date", async ({
-	expect,
-	docs,
-}) => {
+it("returns a Date from a document's first_publication_date", async ({ expect, docs }) => {
 	const res = asDate(docs.default.first_publication_date)
 	expect(res).toEqual(new Date(docs.default.first_publication_date))
 })
 
-it("returns a Date from a document's last_publication_date", async ({
-	expect,
-	docs,
-}) => {
+it("returns a Date from a document's last_publication_date", async ({ expect, docs }) => {
 	const res = asDate(docs.default.last_publication_date)
 	expect(res).toEqual(new Date(docs.default.last_publication_date))
 })

@@ -1,8 +1,6 @@
 import type { AssetTag } from "./tag"
 
-/**
- * Asset types.
- */
+/** Asset types. */
 export const AssetType = {
 	All: "all",
 	Audio: "audio",
@@ -17,92 +15,55 @@ export const AssetType = {
  * @see Prismic Asset API technical reference: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
 export type Asset = {
-	/**
-	 * Asset ID.
-	 */
+	/** Asset ID. */
 	id: string
 
-	/**
-	 * Asset URL.
-	 */
+	/** Asset URL. */
 	url: string
 
-	/**
-	 * Asset creation date.
-	 */
+	/** Asset creation date. */
 	created_at: number
 
-	/**
-	 * Asset last modification date.
-	 */
+	/** Asset last modification date. */
 	last_modified: number
 
-	/**
-	 * Asset filename.
-	 */
+	/** Asset filename. */
 	filename: string
 
-	/**
-	 * Asset extension.
-	 */
+	/** Asset extension. */
 	extension: string
 
-	/**
-	 * Asset size in bytes.
-	 */
+	/** Asset size in bytes. */
 	size: number
 
-	/**
-	 * Asset kind.
-	 */
-	kind: Exclude<
-		(typeof AssetType)[keyof typeof AssetType],
-		(typeof AssetType)["All"]
-	>
+	/** Asset kind. */
+	kind: Exclude<(typeof AssetType)[keyof typeof AssetType], (typeof AssetType)["All"]>
 
-	/**
-	 * Asset width in pixels.
-	 */
+	/** Asset width in pixels. */
 	width?: number
 
-	/**
-	 * Asset height in pixels.
-	 */
+	/** Asset height in pixels. */
 	height?: number
 
-	/**
-	 * Asset notes.
-	 */
+	/** Asset notes. */
 	notes?: string
 
-	/**
-	 * Asset credits.
-	 */
+	/** Asset credits. */
 	credits?: string
 
-	/**
-	 * Asset alt text.
-	 */
+	/** Asset alt text. */
 	alt?: string
 
-	/**
-	 * Asset tags.
-	 */
+	/** Asset tags. */
 	tags?: AssetTag[]
 
-	/**
-	 * @internal
-	 */
+	/** @internal */
 	origin_url?: string
 
-	/**
-	 * @internal
-	 */
+	/** @internal */
 	uploader_id?: string
 
-	/**
-	 * @internal
-	 */
+	/** @internal */
 	search_highlight?: {
 		filename?: string[]
 		notes?: string[]
@@ -118,34 +79,22 @@ export type Asset = {
  */
 export type GetAssetsParams = {
 	// Pagination
-	/**
-	 * Number of items to return.
-	 */
+	/** Number of items to return. */
 	pageSize?: number
-	/**
-	 * @internal
-	 */
+	/** @internal */
 	cursor?: string
 
 	// Filtering
-	/**
-	 * Asset type to filter by.
-	 */
+	/** Asset type to filter by. */
 	assetType?: (typeof AssetType)[keyof typeof AssetType]
 
-	/**
-	 * Search query.
-	 */
+	/** Search query. */
 	keyword?: string
 
-	/**
-	 * Asset IDs to filter by.
-	 */
+	/** Asset IDs to filter by. */
 	ids?: string[]
 
-	/**
-	 * Asset tags to filter by.
-	 */
+	/** Asset tags to filter by. */
 	tags?: string[]
 }
 

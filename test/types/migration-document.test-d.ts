@@ -38,9 +38,7 @@ it("supports any field when generic", () => {
 })
 
 it("PrismicDocument is assignable to PendingPrismicDocument with added title", () => {
-	expectTypeOf<
-		PrismicDocument & { title: string }
-	>().toExtend<PendingPrismicDocument>()
+	expectTypeOf<PrismicDocument & { title: string }>().toExtend<PendingPrismicDocument>()
 })
 
 it("infers data type from document type", () => {
@@ -105,11 +103,7 @@ it("accepts migration field types", () => {
 			slices: SliceZone<
 				SharedSlice<
 					"default",
-					SharedSliceVariation<
-						"default",
-						Fields & { group: GroupField<Fields> },
-						Fields
-					>
+					SharedSliceVariation<"default", Fields & { group: GroupField<Fields> }, Fields>
 				>
 			>
 		},
@@ -179,8 +173,7 @@ it("accepts migration field types", () => {
 								linkToMedia: {} as LinkToMediaField,
 								migrationLinkToMedia: {} as MigrationLinkToMedia,
 								contentRelationship: {} as ContentRelationshipField,
-								migrationContentRelationship:
-									{} as MigrationContentRelationship,
+								migrationContentRelationship: {} as MigrationContentRelationship,
 								embedField: {} as EmbedField,
 								migrationEmbedField: { embed_url: "https://example.com" },
 							},

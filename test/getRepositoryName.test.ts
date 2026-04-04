@@ -1,10 +1,7 @@
+import { PrismicError, getRepositoryName } from "../src"
 import { it } from "./it"
 
-import { PrismicError, getRepositoryName } from "../src"
-
-it("returns the repository name from a valid Prismic Document API endpoint", async ({
-	expect,
-}) => {
+it("returns the repository name from a valid Prismic Document API endpoint", async ({ expect }) => {
 	expect(getRepositoryName("https://example.cdn.prismic.io/api/v2")).toBe("example")
 	expect(getRepositoryName("https://example.cdn.wroom.io/api/v2")).toBe("example")
 	expect(getRepositoryName("https://example.cdn.dev-tools-wroom.com/api/v2")).toBe("example")
@@ -21,8 +18,6 @@ it("throws if the input is not a Content API endpoint", async ({ expect }) => {
 })
 
 it("throws if the input is not a valid URL", async ({ expect }) => {
-	expect(() => getRepositoryName("example")).toThrow(
-		/invalid prismic document api endpoint/i,
-	)
+	expect(() => getRepositoryName("example")).toThrow(/invalid prismic document api endpoint/i)
 	expect(() => getRepositoryName("example")).toThrow(PrismicError)
 })

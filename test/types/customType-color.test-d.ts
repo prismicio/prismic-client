@@ -1,6 +1,5 @@
-import { assertType, expectTypeOf, it } from "vitest"
-
 import type { Color } from "@prismicio/types-internal/lib/customtypes"
+import { assertType, expectTypeOf, it } from "vitest"
 
 import type { CustomTypeModelColorField } from "../../src"
 

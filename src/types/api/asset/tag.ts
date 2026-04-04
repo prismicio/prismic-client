@@ -4,34 +4,22 @@
  * @see Prismic Asset API technical reference: {@link https://prismic.io/docs/asset-api-technical-reference}
  */
 export type AssetTag = {
-	/**
-	 * Tag ID.
-	 */
+	/** Tag ID. */
 	id: string
 
-	/**
-	 * Tag name.
-	 */
+	/** Tag name. */
 	name: string
 
-	/**
-	 * Tag creation date.
-	 */
+	/** Tag creation date. */
 	created_at: number
 
-	/**
-	 * Tag last modification date.
-	 */
+	/** Tag last modification date. */
 	last_modified: number
 
-	/**
-	 * @internal
-	 */
+	/** @internal */
 	uploader_id?: string
 
-	/**
-	 * Number of assets tagged with this tag.
-	 */
+	/** Number of assets tagged with this tag. */
 	count?: number
 }
 

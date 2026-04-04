@@ -1,8 +1,7 @@
 import { describe } from "vitest"
 
-import { it } from "./it"
-
 import { LinkType, isFilled } from "../src"
+import { it } from "./it"
 
 describe("color", () => {
 	it("returns true for filled value", async ({ expect }) => {
@@ -263,15 +262,11 @@ describe("number", () => {
 
 describe("richText", () => {
 	it("returns true for filled content", async ({ expect }) => {
-		expect(
-			isFilled.richText([{ type: "paragraph", text: "text", spans: [] }]),
-		).toBe(true)
+		expect(isFilled.richText([{ type: "paragraph", text: "text", spans: [] }])).toBe(true)
 	})
 
 	it("returns false for empty paragraph", async ({ expect }) => {
-		expect(
-			isFilled.richText([{ type: "paragraph", text: "", spans: [] }]),
-		).toBe(false)
+		expect(isFilled.richText([{ type: "paragraph", text: "", spans: [] }])).toBe(false)
 	})
 
 	it("returns false for empty array", async ({ expect }) => {
@@ -376,15 +371,11 @@ describe("timestamp", () => {
 
 describe("title", () => {
 	it("returns true for filled text", async ({ expect }) => {
-		expect(
-			isFilled.title([{ type: "heading1", text: "text", spans: [] }]),
-		).toBe(true)
+		expect(isFilled.title([{ type: "heading1", text: "text", spans: [] }])).toBe(true)
 	})
 
 	it("returns false for empty text", async ({ expect }) => {
-		expect(isFilled.title([{ type: "heading1", text: "", spans: [] }])).toBe(
-			false,
-		)
+		expect(isFilled.title([{ type: "heading1", text: "", spans: [] }])).toBe(false)
 	})
 
 	it("returns false for empty array", async ({ expect }) => {

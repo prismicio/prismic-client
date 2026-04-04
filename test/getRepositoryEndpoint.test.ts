@@ -1,6 +1,5 @@
-import { it } from "./it"
-
 import { PrismicError, getRepositoryEndpoint } from "../src"
+import { it } from "./it"
 
 it("returns Content API CDN URL", async ({ expect }) => {
 	const endpoint = getRepositoryEndpoint("example")
@@ -8,8 +7,6 @@ it("returns Content API CDN URL", async ({ expect }) => {
 })
 
 it("throws if an invalid repository name is given", async ({ expect }) => {
-	expect(() => getRepositoryEndpoint("this is invalid")).toThrow(
-		/invalid Prismic repository name/i,
-	)
+	expect(() => getRepositoryEndpoint("this is invalid")).toThrow(/invalid Prismic repository name/i)
 	expect(() => getRepositoryEndpoint("this is invalid")).toThrow(PrismicError)
 })

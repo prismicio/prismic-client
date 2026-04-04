@@ -10,32 +10,25 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 /**
  * @param fn - Promise-returning/async function.
- * @param arguments - Any arguments to pass through to `fn`. Support for passing
- *   arguments on to the `fn` is provided in order to be able to avoid creating
- *   unnecessary closures. You probably don't need this optimization unless
- *   you're pushing a lot of functions.
- *
+ * @param arguments - Any arguments to pass through to `fn`. Support for passing arguments on to the
+ *   `fn` is provided in order to be able to avoid creating unnecessary closures. You probably don't
+ *   need this optimization unless you're pushing a lot of functions.
  * @returns The promise returned by calling `fn(...arguments)`.
  */
 export type LimitFunction = <TArguments extends unknown[], TReturnType>(
-	function_: (
-		...arguments_: TArguments
-	) => PromiseLike<TReturnType> | TReturnType,
+	function_: (...arguments_: TArguments) => PromiseLike<TReturnType> | TReturnType,
 	...arguments_: TArguments
 ) => Promise<TReturnType>
 
 /**
- * Creates a limiting function that will only execute one promise at a time and
- * respect a given interval between each call.
+ * Creates a limiting function that will only execute one promise at a time and respect a given
+ * interval between each call.
  *
- * @param args - Options for the function, `interval` is the minimum time to
- *   wait between each promise execution.
- *
+ * @param args - Options for the function, `interval` is the minimum time to wait between each
+ *   promise execution.
  * @returns A limiting function as per configuration, see {@link LimitFunction}.
  */
-export const pLimit = ({
-	interval,
-}: { interval?: number } = {}): LimitFunction => {
+export const pLimit = ({ interval }: { interval?: number } = {}): LimitFunction => {
 	const queue: AnyFunction[] = []
 	let busy = false
 	let lastCompletion = 0

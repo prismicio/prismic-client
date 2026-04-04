@@ -1,7 +1,6 @@
-import { it } from "./it"
-
 import type { ImageField } from "../src"
 import { asImageWidthSrcSet } from "../src"
+import { it } from "./it"
 
 const field: ImageField = {
 	id: "id",
@@ -115,9 +114,7 @@ it("uses default widths when widths is thumbnails but field has no responsive vi
 	})
 })
 
-it("ignores responsive views when custom widths are provided", async ({
-	expect,
-}) => {
+it("ignores responsive views when custom widths are provided", async ({ expect }) => {
 	const res = asImageWidthSrcSet(fieldWithThumbnails, {
 		widths: [400, 800, 1600],
 	})

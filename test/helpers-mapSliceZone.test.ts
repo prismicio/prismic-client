@@ -1,9 +1,8 @@
 import { vi } from "vitest"
 
-import { it } from "./it"
-
 import type { SharedSlice, Slice } from "../src"
 import { mapSliceZone } from "../src"
+import { it } from "./it"
 
 const slice1: SharedSlice = {
 	id: "id1",

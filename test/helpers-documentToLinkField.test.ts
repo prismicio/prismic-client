@@ -1,6 +1,5 @@
-import { it } from "./it"
-
 import { LinkType, documentToLinkField } from "../src"
+import { it } from "./it"
 
 it("returns equivalent link field from document", async ({ expect, docs }) => {
 	const res = documentToLinkField(docs.default)

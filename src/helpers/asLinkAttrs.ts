@@ -1,10 +1,8 @@
 import { isInternalURL } from "../lib/isInternalURL"
-
 import type { FilledContentRelationshipField } from "../types/value/contentRelationship"
 import type { PrismicDocument } from "../types/value/document"
 import type { FilledLinkToWebField, LinkField } from "../types/value/link"
 import type { FilledLinkToMediaField } from "../types/value/linkToMedia"
-
 import type { AsLinkReturnType, LinkResolverFunction } from "./asLink"
 import { asLink } from "./asLink"
 import { link as isFilledLink } from "./isFilled"
@@ -17,9 +15,7 @@ type AsLinkAttrsConfigRelArgs<
 		| null
 		| undefined,
 > = {
-	href:
-		| NonNullable<AsLinkReturnType<LinkResolverFunctionReturnType, Field>>
-		| undefined
+	href: NonNullable<AsLinkReturnType<LinkResolverFunctionReturnType, Field>> | undefined
 	isExternal: boolean
 	target?: string
 }
@@ -38,9 +34,7 @@ export type AsLinkAttrsConfig<
 	) => string | undefined | void
 }
 
-/**
- * The return type of `asLinkAttrs()`.
- */
+/** The return type of `asLinkAttrs()`. */
 type AsLinkAttrsReturnType<
 	LinkResolverFunctionReturnType = ReturnType<LinkResolverFunction>,
 	Field extends LinkField | PrismicDocument | null | undefined =
@@ -54,9 +48,7 @@ type AsLinkAttrsReturnType<
 	| FilledContentRelationshipField
 	| PrismicDocument
 	? {
-			href:
-				| NonNullable<AsLinkReturnType<LinkResolverFunctionReturnType, Field>>
-				| undefined
+			href: NonNullable<AsLinkReturnType<LinkResolverFunctionReturnType, Field>> | undefined
 			target?: string
 			rel?: string
 		}
@@ -67,22 +59,19 @@ type AsLinkAttrsReturnType<
 		}
 
 /**
- * Resolves any type of link field or Prismic page to a set of link attributes.
- * The attributes are designed to be passed to link HTML elements, like `<a>`.
+ * Resolves any type of link field or Prismic page to a set of link attributes. The attributes are
+ * designed to be passed to link HTML elements, like `<a>`.
  *
- * If a resolved URL is external (i.e. starts with a protocol like `https://`),
- * `rel` is returned as `"noreferrer"`.
+ * If a resolved URL is external (i.e. starts with a protocol like `https://`), `rel` is returned as
+ * `"noreferrer"`.
  *
- * @typeParam LinkResolverFunctionReturnType - link resolver function return
- *   type
+ * @typeParam LinkResolverFunctionReturnType - Link resolver function return
+ * type
  * @typeParam Field - Link field or Prismic page to resolve to link attributes
- *
  * @param linkFieldOrDocument - Any kind of link field or a page to resolve
  * @param config - Configuration that determines the output of `asLinkAttrs()`
- *
- * @returns Resolved set of link attributes or, if the provided link field or
- *   page is empty, and empty object
- *
+ * @returns Resolved set of link attributes or, if the provided link field or page is empty, and
+ *   empty object
  * @see Learn about route resolvers and link resolvers: {@link https://prismic.io/docs/routes}
  */
 export const asLinkAttrs = <
@@ -98,16 +87,12 @@ export const asLinkAttrs = <
 ): AsLinkAttrsReturnType<LinkResolverFunctionReturnType> => {
 	if (
 		linkFieldOrDocument &&
-		("link_type" in linkFieldOrDocument
-			? isFilledLink(linkFieldOrDocument)
-			: linkFieldOrDocument)
+		("link_type" in linkFieldOrDocument ? isFilledLink(linkFieldOrDocument) : linkFieldOrDocument)
 	) {
-		const target =
-			"target" in linkFieldOrDocument ? linkFieldOrDocument.target : undefined
+		const target = "target" in linkFieldOrDocument ? linkFieldOrDocument.target : undefined
 
 		const rawHref = asLink(linkFieldOrDocument, config.linkResolver)
-		const href =
-			rawHref == null ? undefined : (rawHref as NonNullable<typeof rawHref>)
+		const href = rawHref == null ? undefined : (rawHref as NonNullable<typeof rawHref>)
 
 		const isExternal = typeof href === "string" ? !isInternalURL(href) : false
 

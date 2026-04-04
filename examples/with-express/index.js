@@ -8,9 +8,9 @@ const cache = new QuickLRU({
 })
 
 /**
- * This function returns a Prismic client for the repository. A new client
- * should be created for each Express request since a client can contain
- * request-specific settings, such as enabling Preview mode.
+ * This function returns a Prismic client for the repository. A new client should be created for
+ * each Express request since a client can contain request-specific settings, such as enabling
+ * Preview mode.
  *
  * The cache will be shared between all clients.
  */
@@ -47,8 +47,8 @@ const createClient = ({ req } = {}) => {
 const app = express()
 
 /**
- * This route will fetch all Article documents from the Prismic repository and
- * return a list of objects with formatted content.
+ * This route will fetch all Article documents from the Prismic repository and return a list of
+ * objects with formatted content.
  */
 app.get("/articles", async (req, res) => {
 	const client = createClient({ req })
