@@ -28,6 +28,20 @@ describe("publishMigrationRelease", () => {
 		)
 	})
 
+	it("sends a body so the request is treated as a write (not deduplicated or unthrottled)", async ({
+		expect,
+		writeClient,
+	}) => {
+		vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(
+			Response.json({ totalItems: 0 }, { status: 202 }),
+		)
+
+		await writeClient.publishMigrationRelease()
+
+		const init = vi.mocked(writeClient.fetchFn).mock.calls[0][1]
+		expect(init?.body).toBeTruthy()
+	})
+
 	it("includes the required headers", async ({ expect, writeClient }) => {
 		vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(
 			Response.json({ totalItems: 0 }, { status: 202 }),

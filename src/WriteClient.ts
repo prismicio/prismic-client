@@ -267,6 +267,11 @@ export class WriteClient<
 
 		const response = await this.#request(url, params, {
 			method: "POST",
+			// A body is included so `request()` treats this as a write: it is
+			// routed through the per-host write throttle and, crucially, is not
+			// deduplicated with concurrent publishes from other repositories
+			// (which share this URL but differ only by auth headers).
+			body: JSON.stringify({}),
 			headers: {
 				"content-type": "application/json",
 				"x-client": CLIENT_IDENTIFIER,
