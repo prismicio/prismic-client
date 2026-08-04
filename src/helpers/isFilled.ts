@@ -8,10 +8,7 @@ import type { AnyOEmbed, EmbedField } from "../types/value/embed"
 import type { GeoPointField } from "../types/value/geoPoint"
 import type { GroupField, NestedGroupField } from "../types/value/group"
 import type { ImageField, ImageFieldImage } from "../types/value/image"
-import type {
-	IntegrationField,
-	IntegrationFieldData,
-} from "../types/value/integration"
+import type { IntegrationField, IntegrationFieldData } from "../types/value/integration"
 import type { KeyTextField } from "../types/value/keyText"
 import type { LinkField } from "../types/value/link"
 import type { LinkToMediaField } from "../types/value/linkToMedia"
@@ -27,11 +24,10 @@ import type { TitleField } from "../types/value/title"
 import type { AnyRegularField, Repeatable } from "../types/value/types"
 
 /**
- * Determines if a value is not nullish (i.e. not `null` or `undefined`). This
- * is used to check if nullable field values are filled.
+ * Determines if a value is not nullish (i.e. not `null` or `undefined`). This is used to check if
+ * nullable field values are filled.
  *
  * @param input - The value to check.
- *
  * @returns `true` if `input` is not nullish, `false` otherwise.
  */
 const isNonNullish = <T>(input: T): input is NonNullable<T> => {
@@ -39,11 +35,9 @@ const isNonNullish = <T>(input: T): input is NonNullable<T> => {
 }
 
 /**
- * Determines if an array is not empty. This is used to check if array-based
- * fields are filled.
+ * Determines if an array is not empty. This is used to check if array-based fields are filled.
  *
  * @param input - The array to check.
- *
  * @returns `true` if `input` has at least one element, `false` otherwise.
  */
 const isNonEmptyArray = <T>(input: T[]): input is [T, ...T[]] => {
@@ -53,8 +47,7 @@ const isNonEmptyArray = <T>(input: T[]): input is [T, ...T[]] => {
 /**
  * Determines if a rich text field is filled.
  *
- * @param field - rich text field to check.
- *
+ * @param field - Rich text field to check.
  * @returns `true` if `field` is filled, `false` otherwise.
  */
 export const richText = (
@@ -73,7 +66,6 @@ export const richText = (
  * Determines if a title field is filled.
  *
  * @param field - Title field to check.
- *
  * @returns `true` if `field` is filled, `false` otherwise.
  */
 export const title = richText as (
@@ -84,7 +76,6 @@ export const title = richText as (
  * Determines if an image thumbnail is filled.
  *
  * @param thumbnail - Image thumbnail to check.
- *
  * @returns `true` if the thumbnail is filled, `false` otherwise.
  */
 export const imageThumbnail = (
@@ -97,12 +88,9 @@ export const imageThumbnail = (
  * Determines if an image field is filled.
  *
  * @param field - Image field to check.
- *
  * @returns `true` if `field` is filled, `false` otherwise.
  */
-export const image = imageThumbnail as <
-	ThumbnailNames extends string | null = never,
->(
+export const image = imageThumbnail as <ThumbnailNames extends string | null = never>(
 	field: ImageField<ThumbnailNames> | null | undefined,
 ) => field is ImageField<ThumbnailNames, "filled">
 
@@ -110,15 +98,13 @@ export const image = imageThumbnail as <
  * Determines if a link field is filled.
  *
  * @param field - Link field to check.
- *
  * @returns `true` if `field` is filled, `false` otherwise.
  */
 export const link = <
 	TypeEnum = string,
 	LangEnum = string,
-	DataInterface extends
-		| Record<string, AnyRegularField | GroupField | SliceZone>
-		| unknown = unknown,
+	DataInterface extends Record<string, AnyRegularField | GroupField | SliceZone> | unknown =
+		unknown,
 >(
 	field: LinkField<TypeEnum, LangEnum, DataInterface> | null | undefined,
 ): field is LinkField<TypeEnum, LangEnum, DataInterface, "filled"> => {
@@ -129,7 +115,6 @@ export const link = <
  * Determines if a link to media field is filled.
  *
  * @param field - Link to media field to check.
- *
  * @returns `true` if `field` is filled, `false` otherwise.
  */
 export const linkToMedia = link as (
@@ -140,12 +125,9 @@ export const linkToMedia = link as (
  * Determines if a content relationship field is filled.
  *
  * @param field - Content relationship field to check.
- *
  * @returns `true` if the field is filled, `false` otherwise.
  */
-export const contentRelationship = link as <
-	Field extends ContentRelationshipField,
->(
+export const contentRelationship = link as <Field extends ContentRelationshipField>(
 	field: Field | null | undefined,
 ) => field is Exclude<Field, EmptyContentRelationshipField>
 
@@ -153,7 +135,6 @@ export const contentRelationship = link as <
  * Determines if a date field is filled.
  *
  * @param field - Date field to check.
- *
  * @returns `true` if `field` is filled, `false` otherwise.
  */
 export const date = isNonNullish as (
@@ -164,7 +145,6 @@ export const date = isNonNullish as (
  * Determines if a timestamp field is filled.
  *
  * @param field - Timestamp field to check.
- *
  * @returns `true` if `field` is filled, `false` otherwise.
  */
 export const timestamp = isNonNullish as (
@@ -175,7 +155,6 @@ export const timestamp = isNonNullish as (
  * Determines if a color field is filled.
  *
  * @param field - Color field to check.
- *
  * @returns `true` if `field` is filled, `false` otherwise.
  */
 export const color = isNonNullish as (
@@ -186,7 +165,6 @@ export const color = isNonNullish as (
  * Determines if a number field is filled.
  *
  * @param field - Number field to check.
- *
  * @returns `true` if `field` is filled, `false` otherwise.
  */
 export const number = isNonNullish as (
@@ -197,7 +175,6 @@ export const number = isNonNullish as (
  * Determines if a key text field is filled.
  *
  * @param field - Key text field to check.
- *
  * @returns `true` if the field is filled, `false` otherwise.
  */
 export const keyText = (
@@ -210,7 +187,6 @@ export const keyText = (
  * Determines if a select field is filled.
  *
  * @param field - Select field to check.
- *
  * @returns `true` if `field` is filled, `false` otherwise.
  */
 export const select = isNonNullish as <Enum extends string>(
@@ -221,7 +197,6 @@ export const select = isNonNullish as <Enum extends string>(
  * Determines if an embed field is filled.
  *
  * @param field - Embed field to check.
- *
  * @returns `true` if `field` is filled, `false` otherwise.
  */
 export const embed = <Field extends EmbedField<AnyOEmbed>>(
@@ -234,7 +209,6 @@ export const embed = <Field extends EmbedField<AnyOEmbed>>(
  * Determines if a geopoint field is filled.
  *
  * @param field - Geopoint field to check.
- *
  * @returns `true` if the field is filled, `false` otherwise.
  */
 export const geoPoint = (
@@ -247,7 +221,6 @@ export const geoPoint = (
  * Determines if a table field is filled.
  *
  * @param field - Table field to check.
- *
  * @returns `true` if `field` is filled, `false` otherwise.
  */
 export const table = isNonNullish as (
@@ -258,20 +231,15 @@ export const table = isNonNullish as (
  * Determines if an integration field is filled.
  *
  * @param field - Integration field to check.
- *
  * @returns `true` if `field` is filled, `false` otherwise.
  */
 export const integration = isNonNullish as <Data extends IntegrationFieldData>(
 	field: IntegrationField<Data> | null | undefined,
 ) => field is IntegrationField<Data, "filled">
-/**
- * @deprecated Renamed to `integration`.
- */
+/** @deprecated Renamed to `integration`. */
 // TODO: Remove when we remove support for deprecated `integrationField` export.
 export const integrationField = integration
-/**
- * @deprecated Renamed to `integrationField`.
- */
+/** @deprecated Renamed to `integrationField`. */
 // TODO: Remove when we remove support for deprecated `integrationFields` export.
 export const integrationFields = integration
 
@@ -279,9 +247,8 @@ export const integrationFields = integration
  * Determines if a repeatable field has at least one item.
  *
  * @param repeatable - Repeatable to check.
- *
  * @returns `true` if `repeatable` contains at least one item, `false`
- *   otherwise.
+ * otherwise.
  */
 export const repeatable = <T extends LinkField>(
 	repeatable: Repeatable<T> | null | undefined,
@@ -293,12 +260,9 @@ export const repeatable = <T extends LinkField>(
  * Determines if a group has at least one item.
  *
  * @param group - Group to check.
- *
  * @returns `true` if the group contains at least one item, `false` otherwise.
  */
-export const group = <
-	Fields extends Record<string, AnyRegularField | NestedGroupField>,
->(
+export const group = <Fields extends Record<string, AnyRegularField | NestedGroupField>>(
 	group: GroupField<Fields> | null | undefined,
 ): group is GroupField<Fields, "filled"> => {
 	return isNonNullish(group) && isNonEmptyArray(group)
@@ -308,9 +272,8 @@ export const group = <
  * Determines if a slice zone has at least one slice.
  *
  * @param slices - Slice zone to check.
- *
  * @returns `true` if the slice zone contains at least one slice, `false`
- *   otherwise.
+ * otherwise.
  */
 export const sliceZone = <Slices extends Slice | SharedSlice>(
 	slices: SliceZone<Slices> | null | undefined,

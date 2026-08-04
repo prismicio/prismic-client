@@ -1,3 +1,5 @@
+import * as isFilled from "../helpers/isFilled"
+import type { Migration } from "../Migration"
 import type { MigrationLinkToMediaField } from "../types/migration/Asset"
 import {
 	type MigrationImage,
@@ -16,18 +18,13 @@ import type { LinkField, OptionalLinkProperties } from "../types/value/link"
 import { LinkType } from "../types/value/link"
 import type { RTImageNode } from "../types/value/richText"
 import { RichTextNodeType } from "../types/value/richText"
-
-import * as isFilled from "../helpers/isFilled"
-import type { Migration } from "../Migration"
-
-import * as isMigration from "./isMigrationValue"
 import { getOptionalLinkProperties } from "./getOptionalLinkProperties"
+import * as isMigration from "./isMigrationValue"
 
 /**
  * Resolves a migration content relationship to a content relationship field.
  *
  * @param relation - Content relationship to resolve.
- *
  * @returns Resolved content relationship field.
  */
 export async function resolveMigrationContentRelationship(
@@ -44,15 +41,10 @@ export async function resolveMigrationContentRelationship(
 	}
 
 	const optionalLinkProperties =
-		relation && "link_type" in relation
-			? getOptionalLinkProperties(relation)
-			: undefined
+		relation && "link_type" in relation ? getOptionalLinkProperties(relation) : undefined
 
 	if (relation) {
-		if (
-			isMigration.contentRelationship(relation.id) ||
-			typeof relation.id !== "string"
-		) {
+		if (isMigration.contentRelationship(relation.id) || typeof relation.id !== "string") {
 			return {
 				...optionalLinkProperties,
 				...(await resolveMigrationContentRelationship(relation.id)),
@@ -81,7 +73,6 @@ export async function resolveMigrationContentRelationship(
  * @param migrationAsset - Asset to resolve.
  * @param migration - Migration instance.
  * @param withThumbnails - Whether to include thumbnails.
- *
  * @returns Resolved image field.
  */
 export const resolveMigrationImage = (
@@ -137,7 +128,6 @@ export const resolveMigrationImage = (
  *
  * @param rtImageNode - Migration rich text image node to resolve.
  * @param migration - Migration instance.
- *
  * @returns Resolved rich text image node.
  */
 export const resolveMigrationRTImageNode = async (
@@ -147,10 +137,7 @@ export const resolveMigrationRTImageNode = async (
 	const image = resolveMigrationImage(rtImageNode.id, migration)
 
 	if (image) {
-		const linkTo = (await resolveMigrationDocumentData(
-			rtImageNode.linkTo,
-			migration,
-		)) as LinkField
+		const linkTo = (await resolveMigrationDocumentData(rtImageNode.linkTo, migration)) as LinkField
 
 		return {
 			...image,
@@ -165,7 +152,6 @@ export const resolveMigrationRTImageNode = async (
  *
  * @param linkToMedia - Migration link to media to resolve.
  * @param migration - Migration instance.
- *
  * @returns Resolved link to media field.
  */
 export const resolveMigrationLinkToMedia = (
@@ -190,12 +176,10 @@ export const resolveMigrationLinkToMedia = (
 }
 
 /**
- * Resolves a migration document data to actual data ready to be sent to the
- * Migration API.
+ * Resolves a migration document data to actual data ready to be sent to the Migration API.
  *
  * @param input - Migration link to media to resolve.
  * @param migration - Migration instance.
- *
  * @returns Resolved data.
  */
 export async function resolveMigrationDocumentData(
@@ -238,10 +222,7 @@ export async function resolveMigrationDocumentData(
 		const res: Record<PropertyKey, unknown> = {}
 
 		for (const key in input) {
-			res[key] = await resolveMigrationDocumentData(
-				input[key as keyof typeof input],
-				migration,
-			)
+			res[key] = await resolveMigrationDocumentData(input[key as keyof typeof input], migration)
 		}
 
 		return res

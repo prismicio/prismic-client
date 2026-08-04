@@ -1,13 +1,7 @@
+import { PrismicError } from "../src"
 import { it } from "./it"
 
-import { PrismicError } from "../src"
-
-it("returns ref with matching ID", async ({
-	expect,
-	client,
-	accessToken,
-	release,
-}) => {
+it("returns ref with matching ID", async ({ expect, client, accessToken, release }) => {
 	client.accessToken = accessToken
 	const res = await client.getRefByID(release.id)
 	expect(res).toMatchObject({ ref: release.ref })

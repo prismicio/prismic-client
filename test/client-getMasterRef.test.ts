@@ -5,10 +5,7 @@ it("returns master ref", async ({ expect, client, masterRef }) => {
 	expect(res).toMatchObject({ ref: masterRef })
 })
 
-it("shares concurrent equivalent network requests", async ({
-	expect,
-	client,
-}) => {
+it("shares concurrent equivalent network requests", async ({ expect, client }) => {
 	const controller1 = new AbortController()
 	const controller2 = new AbortController()
 	await Promise.all([

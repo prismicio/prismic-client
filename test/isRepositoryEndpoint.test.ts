@@ -1,6 +1,5 @@
-import { it } from "./it"
-
 import { isRepositoryEndpoint } from "../src"
+import { it } from "./it"
 
 it("returns true if the input is a valid url", async ({ expect }) => {
 	const res = isRepositoryEndpoint("https://example.com/endpoint")

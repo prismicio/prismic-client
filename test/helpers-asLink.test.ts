@@ -1,7 +1,6 @@
-import { it } from "./it"
-
 import type { LinkField } from "../src"
 import { LinkType, asLink } from "../src"
+import { it } from "./it"
 
 const docLink: LinkField = {
 	id: "XvoFFREAAM0WGBng",
@@ -63,16 +62,12 @@ it("prioritizes link resolver over route resolver", async ({ expect }) => {
 	expect(res).toBe("/link-resolver")
 })
 
-it("falls back to route resolver when link resolver returns undefined", async ({
-	expect,
-}) => {
+it("falls back to route resolver when link resolver returns undefined", async ({ expect }) => {
 	const res = asLink(docLinkWithURL, { linkResolver: () => {} })
 	expect(res).toBe(docLinkWithURL.url)
 })
 
-it("falls back to route resolver when link resolver returns null", async ({
-	expect,
-}) => {
+it("falls back to route resolver when link resolver returns null", async ({ expect }) => {
 	const res = asLink(docLinkWithURL, { linkResolver: () => null })
 	expect(res).toBe(docLinkWithURL.url)
 })

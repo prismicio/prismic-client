@@ -1,3 +1,9 @@
+import { name, version } from "../package.json"
+import { Client } from "./Client"
+import type { ClientConfig, FetchParams } from "./Client"
+// oxlint-disable-next-line no-unused-vars
+import type { createMigration } from "./createMigration"
+import { ForbiddenError, InvalidDataError, NotFoundError, PrismicError } from "./errors"
 import { devMsg } from "./lib/devMsg"
 import { pLimit } from "./lib/pLimit"
 import type { ResponseLike } from "./lib/request"
@@ -6,18 +12,14 @@ import {
 	resolveMigrationContentRelationship,
 	resolveMigrationDocumentData,
 } from "./lib/resolveMigrationDocumentData"
-
+import type { Migration } from "./Migration"
 import type {
 	Asset,
 	PatchAssetParams,
 	PostAssetParams,
 	PostAssetResult,
 } from "./types/api/asset/asset"
-import type {
-	AssetTag,
-	GetAssetTagsResult,
-	PostAssetTagResult,
-} from "./types/api/asset/tag"
+import type { AssetTag, GetAssetTagsResult, PostAssetTagResult } from "./types/api/asset/tag"
 import { type PostDocumentResult } from "./types/api/migration/document"
 import type { PublishMigrationReleaseResult } from "./types/api/migration/release"
 import type { PrismicMigrationAsset } from "./types/migration/Asset"
@@ -28,27 +30,12 @@ import type {
 } from "./types/migration/Document"
 import type { PrismicDocument } from "./types/value/document"
 
-import {
-	ForbiddenError,
-	InvalidDataError,
-	NotFoundError,
-	PrismicError,
-} from "./errors"
-
-import { name, version } from "../package.json"
-
-import { Client } from "./Client"
-import type { ClientConfig, FetchParams } from "./Client"
-import type { Migration } from "./Migration"
-// oxlint-disable-next-line no-unused-vars
-import type { createMigration } from "./createMigration"
-
 const CLIENT_IDENTIFIER = `${name.replace("@", "").replace("/", "-")}/${version}`
 
 /**
- * Extracts one or more Prismic document types that match a given Prismic
- * document type. If no matches are found, no extraction is performed and the
- * union of all provided Prismic document types are returned.
+ * Extracts one or more Prismic document types that match a given Prismic document type. If no
+ * matches are found, no extraction is performed and the union of all provided Prismic document
+ * types are returned.
  *
  * @typeParam TDocuments - Prismic document types from which to extract.
  * @typeParam TDocumentType - Type(s) to match `TDocuments` against.
@@ -61,22 +48,15 @@ type ExtractDocumentType<
 		? TDocuments
 		: Extract<TDocuments, { type: TDocumentType }>
 
-/**
- * Utility type to construct events reported by the migration process.
- */
-type MigrateReporterEvent<
-	TType extends string,
-	TData = never,
-> = TData extends never
+/** Utility type to construct events reported by the migration process. */
+type MigrateReporterEvent<TType extends string, TData = never> = TData extends never
 	? { type: TType }
 	: {
 			type: TType
 			data: TData
 		}
 
-/**
- * A map of event types and their data reported by the migration process.
- */
+/** A map of event types and their data reported by the migration process. */
 type MigrateReporterEventMap = {
 	start: {
 		pending: {
@@ -122,61 +102,41 @@ type MigrateReporterEventMap = {
 	}
 }
 
-/**
- * Available event types reported by the migration process.
- */
+/** Available event types reported by the migration process. */
 type MigrateReporterEventTypes = keyof MigrateReporterEventMap
 
 /**
- * All events reported by the migration process. Events can be listened to by
- * providing a `reporter` function to the `migrate` method.
+ * All events reported by the migration process. Events can be listened to by providing a `reporter`
+ * function to the `migrate` method.
  */
 export type MigrateReporterEvents = {
-	[K in MigrateReporterEventTypes]: MigrateReporterEvent<
-		K,
-		MigrateReporterEventMap[K]
-	>
+	[K in MigrateReporterEventTypes]: MigrateReporterEvent<K, MigrateReporterEventMap[K]>
 }[MigrateReporterEventTypes]
 
-/**
- * Additional parameters for creating an asset in the Prismic media library.
- */
+/** Additional parameters for creating an asset in the Prismic media library. */
 export type CreateAssetParams = {
-	/**
-	 * Asset notes.
-	 */
+	/** Asset notes. */
 	notes?: string
 
-	/**
-	 * Asset credits.
-	 */
+	/** Asset credits. */
 	credits?: string
 
-	/**
-	 * Asset alt text.
-	 */
+	/** Asset alt text. */
 	alt?: string
 
-	/**
-	 * Asset tags.
-	 */
+	/** Asset tags. */
 	tags?: string[]
 }
 
-/**
- * Configuration for clients that determine how content is queried.
- */
+/** Configuration for clients that determine how content is queried. */
 export type WriteClientConfig = {
-	/**
-	 * A Prismic write token that allows writing content to the repository.
-	 */
+	/** A Prismic write token that allows writing content to the repository. */
 	writeToken: string
 
 	/**
 	 * The Prismic Asset API endpoint.
 	 *
 	 * @defaultValue `"https://asset-api.prismic.io/"`
-	 *
 	 * @see Prismic Asset API technical reference: {@link https://prismic.io/docs/asset-api-technical-reference}
 	 */
 	assetAPIEndpoint?: string
@@ -185,7 +145,6 @@ export type WriteClientConfig = {
 	 * The Prismic Migration API endpoint.
 	 *
 	 * @defaultValue `"https://migration.prismic.io/"`
-	 *
 	 * @see Prismic Migration API technical reference: {@link https://prismic.io/docs/migration-api-technical-reference}
 	 */
 	migrationAPIEndpoint?: string
@@ -194,12 +153,11 @@ export type WriteClientConfig = {
 /**
  * A client that allows querying and writing content to a Prismic repository.
  *
- * If used in an environment where a global `fetch` function is unavailable,
- * such as Node.js, the `fetch` option must be provided as part of the `options`
- * parameter.
+ * If used in an environment where a global `fetch` function is unavailable, such as Node.js, the
+ * `fetch` option must be provided as part of the `options` parameter.
  *
- * @typeParam TDocuments - Document types that are registered for the Prismic
- *   repository. Query methods will automatically be typed based on this type.
+ * @typeParam TDocuments - Document types that are registered for the Prismic repository. Query
+ *   methods will automatically be typed based on this type.
  */
 export class WriteClient<
 	TDocuments extends PrismicDocument = PrismicDocument,
@@ -210,17 +168,14 @@ export class WriteClient<
 	migrationAPIEndpoint = "https://migration.prismic.io/"
 
 	/**
-	 * Creates a Prismic client that can be used to query and write content to a
-	 * repository.
+	 * Creates a Prismic client that can be used to query and write content to a repository.
 	 *
-	 * If used in an environment where a global `fetch` function is unavailable,
-	 * such as in some Node.js versions, the `fetch` option must be provided as
-	 * part of the `options` parameter.
+	 * If used in an environment where a global `fetch` function is unavailable, such as in some
+	 * Node.js versions, the `fetch` option must be provided as part of the `options` parameter.
 	 *
 	 * @param repositoryName - The Prismic repository name for the repository.
-	 * @param options - Configuration that determines how content will be queried
-	 *   from and written to the Prismic repository.
-	 *
+	 * @param options - Configuration that determines how content will be queried from and written to
+	 *   the Prismic repository.
 	 * @returns A client that can query and write content to the repository.
 	 */
 	constructor(repositoryName: string, options: WriteClientConfig) {
@@ -244,12 +199,10 @@ export class WriteClient<
 	}
 
 	/**
-	 * Creates a migration release on the Prismic repository based on the provided
-	 * prepared migration.
+	 * Creates a migration release on the Prismic repository based on the provided prepared migration.
 	 *
 	 * @param migration - A migration prepared with {@link createMigration}.
 	 * @param params - An event listener and additional fetch parameters.
-	 *
 	 * @see Prismic Migration API technical reference: {@link https://prismic.io/docs/migration-api-technical-reference}
 	 */
 	async migrate(
@@ -336,7 +289,6 @@ export class WriteClient<
 	 *
 	 * @param migration - A migration prepared with {@link createMigration}.
 	 * @param params - An event listener and additional fetch parameters.
-	 *
 	 * @internal This method is one of the step performed by the {@link migrate} method.
 	 */
 	private async migrateCreateAssets(
@@ -358,8 +310,7 @@ export class WriteClient<
 				},
 			})
 
-			const { file, filename, notes, credits, alt, tags } =
-				migrationAsset.config
+			const { file, filename, notes, credits, alt, tags } = migrationAsset.config
 
 			let resolvedFile: PostAssetParams["file"] | File
 			if (typeof file === "string") {
@@ -372,20 +323,14 @@ export class WriteClient<
 
 				if (url) {
 					// File is a URL, fetch it
-					resolvedFile = await this.fetchForeignAsset(
-						url.toString(),
-						fetchParams,
-					)
+					resolvedFile = await this.fetchForeignAsset(url.toString(), fetchParams)
 				} else {
 					// File is actual file content, use it as-is
 					resolvedFile = file
 				}
 			} else if (file instanceof URL) {
 				// File is a URL instance, fetch it
-				resolvedFile = await this.fetchForeignAsset(
-					file.toString(),
-					fetchParams,
-				)
+				resolvedFile = await this.fetchForeignAsset(file.toString(), fetchParams)
 			} else {
 				resolvedFile = file
 			}
@@ -414,7 +359,6 @@ export class WriteClient<
 	 *
 	 * @param migration - A migration prepared with {@link createMigration}.
 	 * @param params - An event listener and additional fetch parameters.
-	 *
 	 * @internal This method is one of the step performed by the {@link migrate} method.
 	 */
 	private async migrateCreateDocuments(
@@ -462,20 +406,19 @@ export class WriteClient<
 			// Resolve master language document ID for non-master locale documents
 			let masterLanguageDocumentID: string | undefined
 			if (doc.masterLanguageDocument) {
-				const masterLanguageDocument =
-					await resolveMigrationContentRelationship(doc.masterLanguageDocument)
+				const masterLanguageDocument = await resolveMigrationContentRelationship(
+					doc.masterLanguageDocument,
+				)
 
 				masterLanguageDocumentID =
 					"id" in masterLanguageDocument ? masterLanguageDocument.id : undefined
 			} else if (doc.originalPrismicDocument) {
-				const maybeOriginalID =
-					doc.originalPrismicDocument.alternate_languages.find(
-						({ lang }) => lang === masterLocale,
-					)?.id
+				const maybeOriginalID = doc.originalPrismicDocument.alternate_languages.find(
+					({ lang }) => lang === masterLocale,
+				)?.id
 
 				if (maybeOriginalID) {
-					masterLanguageDocumentID =
-						migration._getByOriginalID(maybeOriginalID)?.document.id
+					masterLanguageDocumentID = migration._getByOriginalID(maybeOriginalID)?.document.id
 				}
 			}
 
@@ -499,12 +442,10 @@ export class WriteClient<
 	}
 
 	/**
-	 * Updates documents in the Prismic repository's migration release with their
-	 * patched data.
+	 * Updates documents in the Prismic repository's migration release with their patched data.
 	 *
 	 * @param migration - A migration prepared with {@link createMigration}.
 	 * @param params - An event listener and additional fetch parameters.
-	 *
 	 * @internal This method is one of the step performed by the {@link migrate} method.
 	 */
 	private async migrateUpdateDocuments(
@@ -533,10 +474,7 @@ export class WriteClient<
 				{
 					...doc.document,
 					documentTitle: doc.title,
-					data: await resolveMigrationDocumentData(
-						doc.document.data,
-						migration,
-					),
+					data: await resolveMigrationDocumentData(doc.document.data, migration),
 				},
 				fetchParams,
 			)
@@ -556,19 +494,12 @@ export class WriteClient<
 	 * @param file - The file to upload as an asset.
 	 * @param filename - The filename of the asset.
 	 * @param params - Additional asset data and fetch parameters.
-	 *
 	 * @returns The created asset.
 	 */
 	private async createAsset(
 		file: PostAssetParams["file"] | File,
 		filename: string,
-		{
-			notes,
-			credits,
-			alt,
-			tags,
-			...params
-		}: CreateAssetParams & FetchParams = {},
+		{ notes, credits, alt, tags, ...params }: CreateAssetParams & FetchParams = {},
 	): Promise<Asset> {
 		const url = new URL("assets", this.assetAPIEndpoint)
 
@@ -617,19 +548,11 @@ export class WriteClient<
 	 *
 	 * @param id - The ID of the asset to update.
 	 * @param params - The asset data to update and additional fetch parameters.
-	 *
 	 * @returns The updated asset.
 	 */
 	private async updateAsset(
 		id: string,
-		{
-			notes,
-			credits,
-			alt,
-			filename,
-			tags,
-			...params
-		}: PatchAssetParams & FetchParams = {},
+		{ notes, credits, alt, filename, tags, ...params }: PatchAssetParams & FetchParams = {},
 	): Promise<Asset> {
 		const url = new URL(`assets/${id}`, this.assetAPIEndpoint)
 
@@ -669,39 +592,31 @@ export class WriteClient<
 	 *
 	 * @param url - The URL of the asset to fetch.
 	 * @param params - Additional fetch parameters.
-	 *
 	 * @returns A file representing the fetched asset.
 	 */
-	private async fetchForeignAsset(
-		url: string,
-		params: FetchParams = {},
-	): Promise<Blob> {
+	private async fetchForeignAsset(url: string, params: FetchParams = {}): Promise<Blob> {
 		const res = await this.#request(new URL(url), params)
 
 		if (!res.ok) {
 			throw new PrismicError("Could not fetch foreign asset", url, undefined)
 		}
 
-		const blob = await res.blob()
+		const buffer = await res.arrayBuffer()
 
 		// Ensure a correct content type is attached to the blob.
-		return new File([blob], "", {
+		return new File([buffer], "", {
 			type: res.headers.get("content-type") || undefined,
 		})
 	}
 
-	/**
-	 * {@link resolveAssetTagIDs} rate limiter.
-	 */
+	/** {@link resolveAssetTagIDs} rate limiter. */
 	private _resolveAssetTagIDsLimit = pLimit()
 
 	/**
 	 * Resolves asset tag IDs from tag names.
 	 *
 	 * @param tagNames - An array of tag names to resolve.
-	 * @param params - Whether or not missing tags should be created and
-	 *   additional fetch parameters.
-	 *
+	 * @param params - Whether or not missing tags should be created and additional fetch parameters.
 	 * @returns An array of resolved tag IDs.
 	 */
 	private async resolveAssetTagIDs(
@@ -736,17 +651,12 @@ export class WriteClient<
 	 * Creates a tag in the Asset API.
 	 *
 	 * @remarks
-	 * Tags should be at least 3 characters long and 20 characters at most.
-	 *
+	 *   Tags should be at least 3 characters long and 20 characters at most.
 	 * @param name - The name of the tag to create.
 	 * @param params - Additional fetch parameters.
-	 *
 	 * @returns The created tag.
 	 */
-	private async createAssetTag(
-		name: string,
-		params?: FetchParams,
-	): Promise<AssetTag> {
+	private async createAssetTag(name: string, params?: FetchParams): Promise<AssetTag> {
 		const url = new URL("tags", this.assetAPIEndpoint)
 
 		const response = await this.#request(url, params, {
@@ -770,7 +680,6 @@ export class WriteClient<
 	 * Queries existing tags from the Asset API.
 	 *
 	 * @param params - Additional fetch parameters.
-	 *
 	 * @returns An array of existing tags.
 	 */
 	private async getAssetTags(params?: FetchParams): Promise<AssetTag[]> {
@@ -793,15 +702,11 @@ export class WriteClient<
 	 * Creates a document in the repository's migration release.
 	 *
 	 * @typeParam TType - Type of Prismic documents to create.
-	 *
 	 * @param document - The document to create.
-	 * @param documentTitle - The title of the document to create which will be
-	 *   displayed in the editor.
-	 * @param params - Document master language document ID and additional fetch
-	 *   parameters.
-	 *
+	 * @param documentTitle - The title of the document to create which will be displayed in the
+	 *   editor.
+	 * @param params - Document master language document ID and additional fetch parameters.
 	 * @returns The ID of the created document.
-	 *
 	 * @see Prismic Migration API technical reference: {@link https://prismic.io/docs/migration-api-technical-reference}
 	 */
 	private async createDocument<TType extends TDocuments["type"]>(
@@ -846,11 +751,9 @@ export class WriteClient<
 	 * Updates an existing document in the repository's migration release.
 	 *
 	 * @typeParam TType - Type of Prismic documents to update.
-	 *
 	 * @param id - The ID of the document to update.
 	 * @param document - The document content to update.
 	 * @param params - Additional fetch parameters.
-	 *
 	 * @see Prismic Migration API technical reference: {@link https://prismic.io/docs/migration-api-technical-reference}
 	 */
 	private async updateDocument<TType extends TDocuments["type"]>(
@@ -886,21 +789,15 @@ export class WriteClient<
 	}
 
 	/**
-	 * Makes an authenticated HTTP request for write operations using the client's
-	 * configured fetch function and options.
+	 * Makes an authenticated HTTP request for write operations using the client's configured fetch
+	 * function and options.
 	 *
 	 * @param url - The URL to request.
 	 * @param params - Fetch options from the user.
-	 * @param init - Additional fetch options to merge with the user-provided
-	 *   options.
-	 *
+	 * @param init - Additional fetch options to merge with the user-provided options.
 	 * @returns The response from the fetch request.
 	 */
-	async #request(
-		url: URL,
-		params?: FetchParams,
-		init?: RequestInitLike,
-	): Promise<ResponseLike> {
+	async #request(url: URL, params?: FetchParams, init?: RequestInitLike): Promise<ResponseLike> {
 		return await request(
 			url,
 			{
@@ -914,21 +811,16 @@ export class WriteClient<
 					repository: this.repositoryName,
 					authorization: `Bearer ${this.writeToken}`,
 				},
-				signal:
-					params?.fetchOptions?.signal ||
-					params?.signal ||
-					this.fetchOptions?.signal,
+				signal: params?.fetchOptions?.signal || params?.signal || this.fetchOptions?.signal,
 			},
 			this.fetchFn,
 		)
 	}
 
 	/**
-	 * Handles error responses from the Asset API with comprehensive error
-	 * parsing.
+	 * Handles error responses from the Asset API with comprehensive error parsing.
 	 *
 	 * @param response - The HTTP response from the Asset API.
-	 *
 	 * @throws {@link InvalidDataError} For 400 errors.
 	 * @throws {@link ForbiddenError} For 401 and 403 errors.
 	 * @throws {@link NotFoundError} For 404 errors.
@@ -955,11 +847,9 @@ export class WriteClient<
 	}
 
 	/**
-	 * Handles error responses from the Migration API with comprehensive error
-	 * parsing.
+	 * Handles error responses from the Migration API with comprehensive error parsing.
 	 *
 	 * @param response - The HTTP response from the Migration API.
-	 *
 	 * @throws {@link InvalidDataError} For 400 errors.
 	 * @throws {@link ForbiddenError} For 401 and 403 errors.
 	 * @throws {@link NotFoundError} For 404 errors.

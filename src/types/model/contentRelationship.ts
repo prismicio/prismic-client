@@ -1,48 +1,35 @@
+import type { CustomTypeModelLinkSelectType } from "./link"
 import type { CustomTypeModelFieldType } from "./types"
 
-import type { CustomTypeModelLinkSelectType } from "./link"
-
-/**
- * @internal
- */
+/** @internal */
 export type CustomTypeModelFetchGroupLevel2 = {
 	id: string
 	fields: ReadonlyArray<string>
 }
 
-/**
- * @internal
- */
+/** @internal */
 export type CustomTypeModelFetchCustomTypeLevel2 = {
 	id: string
 	fields: ReadonlyArray<string | CustomTypeModelFetchGroupLevel2>
 }
 
-/**
- * @internal
- */
+/** @internal */
 export type CustomTypeModelFetchGroupLevel1 = {
 	id: string
 	fields: ReadonlyArray<string | CustomTypeModelFetchContentRelationshipLevel1>
 }
 
-/**
- * @internal
- */
+/** @internal */
 export type CustomTypeModelFetchContentRelationshipLevel1 = {
 	id: string
 	customtypes: ReadonlyArray<string | CustomTypeModelFetchCustomTypeLevel2>
 }
 
-/**
- * @internal
- */
+/** @internal */
 export type CustomTypeModelFetchCustomTypeLevel1 = {
 	id: string
 	fields: ReadonlyArray<
-		| string
-		| CustomTypeModelFetchGroupLevel1
-		| CustomTypeModelFetchContentRelationshipLevel1
+		string | CustomTypeModelFetchGroupLevel1 | CustomTypeModelFetchContentRelationshipLevel1
 	>
 }
 

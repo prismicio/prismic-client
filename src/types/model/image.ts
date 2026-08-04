@@ -15,8 +15,9 @@ export interface CustomTypeModelImageConstraint {
  *
  * More details: {@link https://prismic.io/docs/image}
  */
-export interface CustomTypeModelImageThumbnail<Name extends string = string>
-	extends CustomTypeModelImageConstraint {
+export interface CustomTypeModelImageThumbnail<
+	Name extends string = string,
+> extends CustomTypeModelImageConstraint {
 	name: Name
 }
 
@@ -25,9 +26,7 @@ export interface CustomTypeModelImageThumbnail<Name extends string = string>
  *
  * More details: {@link https://prismic.io/docs/image}
  */
-export interface CustomTypeModelImageField<
-	ThumbnailNames extends string = string,
-> {
+export interface CustomTypeModelImageField<ThumbnailNames extends string = string> {
 	type: typeof CustomTypeModelFieldType.Image
 	config?: {
 		label?: string | null

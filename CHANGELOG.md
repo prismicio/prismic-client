@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.21.8](https://github.com/prismicio/prismic-client/compare/v7.21.7...v7.21.8) (2026-04-04)
+
+
+### Bug Fixes
+
+* update dependencies ([#444](https://github.com/prismicio/prismic-client/issues/444)) ([bdf131b](https://github.com/prismicio/prismic-client/commit/bdf131bdd4507b515afb62c7d95c7c1a7c3f1669))
+
+## [7.21.7](https://github.com/prismicio/prismic-client/compare/v7.21.6...v7.21.7) (2026-04-02)
+
+
+### Bug Fixes
+
+* use `arrayBuffer` instead of `blob` when memoizing ([#442](https://github.com/prismicio/prismic-client/issues/442)) ([bda71f4](https://github.com/prismicio/prismic-client/commit/bda71f4a4089d31ce710d10d4a3f293b82c098c3))
+
+## [7.21.6](https://github.com/prismicio/prismic-client/compare/v7.21.5...v7.21.6) (2026-02-10)
+
+
+### Bug Fixes
+
+* resolve request hang with large API responses ([#437](https://github.com/prismicio/prismic-client/issues/437)) ([e5828e2](https://github.com/prismicio/prismic-client/commit/e5828e27bfa04512f8a1879f4433161141f93a61))
+
+## [7.21.5](https://github.com/prismicio/prismic-client/compare/v7.21.4...v7.21.5) (2026-02-02)
+
+
+### Bug Fixes
+
+* parse squad env urls ([3d6ca1f](https://github.com/prismicio/prismic-client/commit/3d6ca1fc63b5463c0c6da747930b9d82f7f9ec12))
+
+## [7.21.4](https://github.com/prismicio/prismic-client/compare/v7.21.3...v7.21.4) (2026-01-30)
+
+
+### Bug Fixes
+
+* replace regex negative lookbehind for Safari compatibility ([#436](https://github.com/prismicio/prismic-client/issues/436)) ([582b31f](https://github.com/prismicio/prismic-client/commit/582b31fb1fe9a67dcdea6283ab4a1fe7efc74b72)), closes [#424](https://github.com/prismicio/prismic-client/issues/424)
+
 ## [7.21.3](https://github.com/prismicio/prismic-client/compare/v7.21.2...v7.21.3) (2026-01-06)
 
 

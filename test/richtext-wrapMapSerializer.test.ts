@@ -1,8 +1,7 @@
-import { it } from "./it"
-
 import type { RichTextField } from "../src"
 import type { RichTextMapSerializer } from "../src/richtext"
 import { serialize, wrapMapSerializer } from "../src/richtext"
+import { it } from "./it"
 
 const field: RichTextField = [
 	{
@@ -36,8 +35,5 @@ it("converts a map serializer to a function serializer", async ({ expect }) => {
 it("supports undefined block types", async ({ expect }) => {
 	const res = wrapMapSerializer({ ...serializer, strong: undefined })
 	const serialized = serialize(field, res)
-	expect(serialized).toStrictEqual([
-		"<p data-foo>foo </p>",
-		"<p data-foo>baz</p>",
-	])
+	expect(serialized).toStrictEqual(["<p data-foo>foo </p>", "<p data-foo>baz</p>"])
 })

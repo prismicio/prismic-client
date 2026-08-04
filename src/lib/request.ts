@@ -1,21 +1,16 @@
 import { type LimitFunction, pLimit } from "./pLimit"
 
 /**
- * The default number of milliseconds to wait before retrying a rate-limited
- * `fetch()` request (429 response code). The default value is only used if the
- * response does not include a `retry-after` header.
+ * The default number of milliseconds to wait before retrying a rate-limited `fetch()` request (429
+ * response code). The default value is only used if the response does not include a `retry-after`
+ * header.
  */
 export const DEFAULT_RETRY_AFTER = 1500 // ms
 
-/**
- * A record of URLs mapped to throttled task runners.
- */
+/** A record of URLs mapped to throttled task runners. */
 const THROTTLED_RUNNERS: Partial<Record<string, LimitFunction>> = {}
 
-/**
- * A record of URLs mapped to active deduplicated jobs. Jobs are keyed by their
- * optional signal.
- */
+/** A record of URLs mapped to active deduplicated jobs. Jobs are keyed by their optional signal. */
 const DEDUPLICATED_JOBS: Partial<
 	Record<string, Map<AbortSignalLike | undefined, Promise<ResponseLike>>>
 > = {}
@@ -25,14 +20,10 @@ const DEDUPLICATED_JOBS: Partial<
  *
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/fetch}
  */
-export type FetchLike = (
-	input: string,
-	init?: RequestInitLike,
-) => Promise<ResponseLike>
+export type FetchLike = (input: string, init?: RequestInitLike) => Promise<ResponseLike>
 
 /**
- * An object that allows you to abort a `fetch()` request if needed via an
- * `AbortController` object
+ * An object that allows you to abort a `fetch()` request if needed via an `AbortController` object
  *
  * {@link https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal}
  */
@@ -43,31 +34,23 @@ export type FetchLike = (
 // oxlint-disable-next-line no-explicit-any
 export type AbortSignalLike = any
 
-/**
- * A subset of RequestInit properties to configure a `fetch()` request.
- */
+/** A subset of RequestInit properties to configure a `fetch()` request. */
 // Only options relevant to the client are included. Extending from the full
 // RequestInit would cause issues, such as accepting Header objects.
 //
 // An interface is used to allow other libraries to augment the type with
 // environment-specific types.
 export interface RequestInitLike extends Pick<RequestInit, "cache"> {
-	/**
-	 * The HTTP method to use for the request.
-	 */
+	/** The HTTP method to use for the request. */
 	method?: string
 
-	/**
-	 * The request body to send with the request.
-	 */
+	/** The request body to send with the request. */
 	// We want to keep the body type as compatible as possible, so
 	// we only declare the type we need and accept anything else.
 	// oxlint-disable-next-line no-explicit-any
 	body?: any | FormData | string
 
-	/**
-	 * An object literal to set the `fetch()` request's headers.
-	 */
+	/** An object literal to set the `fetch()` request's headers. */
 	headers?: Record<string, string>
 
 	/**
@@ -82,9 +65,7 @@ export interface RequestInitLike extends Pick<RequestInit, "cache"> {
 	signal?: AbortSignalLike
 }
 
-/**
- * The minimum required properties from Response.
- */
+/** The minimum required properties from Response. */
 export interface ResponseLike {
 	ok: boolean
 	status: number
@@ -93,25 +74,43 @@ export interface ResponseLike {
 	// oxlint-disable-next-line no-explicit-any
 	json(): Promise<any>
 	text(): Promise<string>
+	arrayBuffer(): Promise<ArrayBuffer>
 	blob(): Promise<Blob>
 	clone(): ResponseLike
 }
 
-/**
- * The minimum required properties from Headers.
- */
+/** The minimum required properties from Headers. */
 export interface HeadersLike {
 	get(name: string): string | null
 }
 
+async function memoizeResponse(response: ResponseLike): Promise<ResponseLike> {
+	// Deduplicated responses are shared across multiple callers. Calling
+	// response.clone() on a shared response can cause backpressure hangs
+	// in Node.js, so we buffer the body as an ArrayBuffer upfront instead.
+	const buffer = await response.arrayBuffer()
+
+	const memoized: ResponseLike = {
+		ok: response.ok,
+		status: response.status,
+		headers: response.headers,
+		url: response.url,
+		text: async () => new TextDecoder().decode(buffer),
+		json: async () => JSON.parse(new TextDecoder().decode(buffer)),
+		arrayBuffer: async () => buffer,
+		blob: async () => new Blob([buffer]),
+		clone: () => memoized,
+	}
+
+	return memoized
+}
+
 /**
- * Makes an HTTP request with automatic retry for rate limits and request
- * deduplication.
+ * Makes an HTTP request with automatic retry for rate limits and request deduplication.
  *
  * @param url - The URL to request.
  * @param init - Fetch options.
  * @param fetchFn - The fetch function to use.
- *
  * @returns The response from the fetch request.
  */
 export async function request(
@@ -137,12 +136,14 @@ export async function request(
 		if (existingJob) {
 			job = existingJob
 		} else {
-			job = fetchFn(stringURL, init).finally(() => {
-				DEDUPLICATED_JOBS[stringURL]?.delete(init?.signal)
-				if (DEDUPLICATED_JOBS[stringURL]?.size === 0) {
-					delete DEDUPLICATED_JOBS[stringURL]
-				}
-			})
+			job = fetchFn(stringURL, init)
+				.then(memoizeResponse)
+				.finally(() => {
+					DEDUPLICATED_JOBS[stringURL]?.delete(init?.signal)
+					if (DEDUPLICATED_JOBS[stringURL]?.size === 0) {
+						delete DEDUPLICATED_JOBS[stringURL]
+					}
+				})
 			const map = (DEDUPLICATED_JOBS[stringURL] ||= new Map())
 			map.set(init?.signal, job)
 		}
@@ -153,14 +154,12 @@ export async function request(
 	// Retry rate limited requests.
 	if (response.status === 429) {
 		const retryAfter = Number(response.headers.get("retry-after"))
-		const resolvedRetryAfter = Number.isNaN(retryAfter)
-			? DEFAULT_RETRY_AFTER
-			: retryAfter * 1000
+		const resolvedRetryAfter = Number.isNaN(retryAfter) ? DEFAULT_RETRY_AFTER : retryAfter * 1000
 
 		await new Promise((resolve) => setTimeout(resolve, resolvedRetryAfter))
 
 		return request(url, init, fetchFn)
 	}
 
-	return response.clone()
+	return response
 }

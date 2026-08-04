@@ -24,18 +24,12 @@ type ForbiddenErrorQueryAPIResponse = {
 }
 
 export class ForbiddenError<
-	TResponse =
-		| ForbiddenErrorRepositoryAPIResponse
-		| ForbiddenErrorQueryAPIResponse,
+	TResponse = ForbiddenErrorRepositoryAPIResponse | ForbiddenErrorQueryAPIResponse,
 > extends PrismicError<TResponse> {}
 
-export class NotFoundError<
-	TResponse = undefined,
-> extends PrismicError<TResponse> {}
+export class NotFoundError<TResponse = undefined> extends PrismicError<TResponse> {}
 
-export class RepositoryNotFoundError<
-	TResponse = undefined,
-> extends NotFoundError<TResponse> {}
+export class RepositoryNotFoundError<TResponse = undefined> extends NotFoundError<TResponse> {}
 
 type ParsingErrorAPIResponse = {
 	type: "parsing-error"
@@ -48,13 +42,9 @@ type ParsingErrorAPIResponse = {
 	}
 }
 
-export class ParsingError<
-	TResponse = ParsingErrorAPIResponse,
-> extends PrismicError<TResponse> {}
+export class ParsingError<TResponse = ParsingErrorAPIResponse> extends PrismicError<TResponse> {}
 
-export class InvalidDataError<
-	TResponse = undefined,
-> extends PrismicError<TResponse> {}
+export class InvalidDataError<TResponse = undefined> extends PrismicError<TResponse> {}
 
 type RefExpiredErrorAPIResponse = {
 	type: "api_validation_error"

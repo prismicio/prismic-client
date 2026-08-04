@@ -1,32 +1,24 @@
 import type { RichTextField } from "../types/value/richText"
-import type { RichTextFunctionSerializer, TreeNode } from "./types"
-
 import { asTree } from "./asTree"
+import type { RichTextFunctionSerializer, TreeNode } from "./types"
 
 /**
  * Serializes a rich text field with a given serializer.
  *
  * @remarks
- * This is a low-level helper mainly intended to be used by higher-level
- * packages. Most users aren't expected to use this function directly.
- *
+ *   This is a low-level helper mainly intended to be used by higher-level packages. Most users
+ *   aren't expected to use this function directly.
  * @typeParam SerializerReturnType - Return type of the serializer.
- *
  * @param richTextField - A rich text field from Prismic.
  * @param serializer - A function serializer to apply.
- *
  * @returns An array of serialized nodes.
- *
  * @see Learn how to work with rich text fields: {@link https://prismic.io/docs/fields/rich-text}
  */
 export const serialize = <SerializerReturnType>(
 	richTextField: RichTextField,
 	serializer: RichTextFunctionSerializer<SerializerReturnType>,
 ): SerializerReturnType[] => {
-	return serializeTreeNodes<SerializerReturnType>(
-		asTree(richTextField).children,
-		serializer,
-	)
+	return serializeTreeNodes<SerializerReturnType>(asTree(richTextField).children, serializer)
 }
 
 const serializeTreeNodes = <T>(

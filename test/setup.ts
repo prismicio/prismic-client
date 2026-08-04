@@ -1,9 +1,8 @@
-import type { MockInstance } from "vitest"
-import { afterEach, beforeEach, expect, vi } from "vitest"
-
 import { deepEqual } from "node:assert/strict"
 
 import type { CoreApiDocumentsResponse } from "@prismicio/e2e-tests-utils"
+import type { MockInstance } from "vitest"
+import { afterEach, beforeEach, expect, vi } from "vitest"
 
 import { Client } from "../src"
 
@@ -22,15 +21,11 @@ expect.extend({
 			throw new Error("Not a map")
 		}
 
-		const pass =
-			value === undefined
-				? map.has(key)
-				: map.has(key) && map.get(key) === value
+		const pass = value === undefined ? map.has(key) : map.has(key) && map.get(key) === value
 
 		return {
 			pass,
-			message: () =>
-				`The Map ${!pass || this.isNot ? "does not have" : "has"} the entry.`,
+			message: () => `The Map ${!pass || this.isNot ? "does not have" : "has"} the entry.`,
 		}
 	},
 	toHaveFetchedContentAPI(client: unknown, expectedParams, expectedInit = {}) {
@@ -40,10 +35,7 @@ expect.extend({
 
 		const pass = vi.mocked(client.fetchFn).mock.calls.some(([url, init]) => {
 			const urlMatches =
-				filterURLParams(
-					url,
-					Array.from(parsedExpectedParams.keys()),
-				).toString() ===
+				filterURLParams(url, Array.from(parsedExpectedParams.keys())).toString() ===
 				getContentAPIURL(client, parsedExpectedParams).toString()
 			const initMatches = isDeepEqual(
 				filterRequestInit(init, Object.keys(expectedInit)),
@@ -59,11 +51,7 @@ expect.extend({
 				`Client ${!pass || !this.isNot ? "did not call" : "called"} the Content API${parsedExpectedParams.size > 0 ? ` with the required params` : ""}`,
 		}
 	},
-	toHaveLastFetchedContentAPI(
-		client: unknown,
-		expectedParams,
-		expectedInit = {},
-	) {
+	toHaveLastFetchedContentAPI(client: unknown, expectedParams, expectedInit = {}) {
 		assertMockedClient(client)
 		assertHasBeenCalled(client.fetchFn)
 
@@ -71,10 +59,8 @@ expect.extend({
 		const [url, init] = client.fetchFn.mock.lastCall
 
 		const urlMatches =
-			filterURLParams(
-				url,
-				Array.from(parsedExpectedParams.keys()),
-			).toString() === getContentAPIURL(client, parsedExpectedParams).toString()
+			filterURLParams(url, Array.from(parsedExpectedParams.keys())).toString() ===
+			getContentAPIURL(client, parsedExpectedParams).toString()
 		const initMatches = isDeepEqual(
 			filterRequestInit(init, Object.keys(expectedInit)),
 			expectedInit,
@@ -85,10 +71,7 @@ expect.extend({
 			filterURLParams(url, Array.from(parsedExpectedParams.keys())),
 			filterRequestInit(init, Object.keys(expectedInit)),
 		)
-		const expected = new Request(
-			getContentAPIURL(client, parsedExpectedParams),
-			expectedInit,
-		)
+		const expected = new Request(getContentAPIURL(client, parsedExpectedParams), expectedInit)
 
 		return {
 			pass,
@@ -107,8 +90,7 @@ expect.extend({
 
 		return {
 			pass: actual === expected,
-			message: () =>
-				`Client fetched Content API ${actual} time${actual === 1 ? "" : "s"}.`,
+			message: () => `Client fetched Content API ${actual} time${actual === 1 ? "" : "s"}.`,
 			actual,
 			expected,
 		}
@@ -120,10 +102,8 @@ expect.extend({
 
 		const pass = vi.mocked(client.fetchFn).mock.calls.some(([url, init]) => {
 			const urlMatches =
-				filterURLParams(
-					url,
-					Array.from(parsedExpectedParams.keys()),
-				).toString() === getRepoURL(client, parsedExpectedParams).toString()
+				filterURLParams(url, Array.from(parsedExpectedParams.keys())).toString() ===
+				getRepoURL(client, parsedExpectedParams).toString()
 			const initMatches = isDeepEqual(
 				filterRequestInit(init, Object.keys(expectedInit)),
 				expectedInit,
@@ -146,10 +126,8 @@ expect.extend({
 		const [url, init] = client.fetchFn.mock.lastCall
 
 		const urlMatches =
-			filterURLParams(
-				url,
-				Array.from(parsedExpectedParams.keys()),
-			).toString() === getRepoURL(client, parsedExpectedParams).toString()
+			filterURLParams(url, Array.from(parsedExpectedParams.keys())).toString() ===
+			getRepoURL(client, parsedExpectedParams).toString()
 		const initMatches = isDeepEqual(
 			filterRequestInit(init, Object.keys(expectedInit)),
 			expectedInit,
@@ -160,10 +138,7 @@ expect.extend({
 			filterURLParams(url, Array.from(parsedExpectedParams.keys())),
 			filterRequestInit(init, Object.keys(expectedInit)),
 		)
-		const expected = new Request(
-			getRepoURL(client, parsedExpectedParams),
-			expectedInit,
-		)
+		const expected = new Request(getRepoURL(client, parsedExpectedParams), expectedInit)
 
 		return {
 			pass,
@@ -182,8 +157,7 @@ expect.extend({
 
 		return {
 			pass: actual === expected,
-			message: () =>
-				`Client fetched repo ${actual} time${actual === 1 ? "" : "s"}.`,
+			message: () => `Client fetched repo ${actual} time${actual === 1 ? "" : "s"}.`,
 			actual,
 			expected,
 		}
@@ -195,16 +169,14 @@ expect.extend({
 
 		return {
 			pass,
-			message: () =>
-				`${id} is ${!pass || this.isNot ? "not" : ""} in the documents.`,
+			message: () => `${id} is ${!pass || this.isNot ? "not" : ""} in the documents.`,
 		}
 	},
 	toContainDocumentWithUID(documents: unknown, type, uid) {
 		assertDocuments(documents)
 
 		const pass = documents.results.some(
-			(result) =>
-				result.custom_type_id === type && result.versions[0].uid === uid,
+			(result) => result.custom_type_id === type && result.versions[0].uid === uid,
 		)
 
 		return {
@@ -242,9 +214,7 @@ function assertMockedClient(
 	}
 }
 
-function assertHasBeenCalled(
-	mock: MockInstance,
-): asserts mock is typeof mock & {
+function assertHasBeenCalled(mock: MockInstance): asserts mock is typeof mock & {
 	mock: { lastCall: NonNullable<typeof mock.mock.lastCall> }
 } {
 	if (!mock.mock.lastCall) {
@@ -252,9 +222,7 @@ function assertHasBeenCalled(
 	}
 }
 
-function assertDocuments(
-	input: unknown,
-): asserts input is CoreApiDocumentsResponse {
+function assertDocuments(input: unknown): asserts input is CoreApiDocumentsResponse {
 	if (
 		typeof input === "object" &&
 		input !== null &&

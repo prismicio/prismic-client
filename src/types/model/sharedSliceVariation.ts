@@ -13,14 +13,14 @@ import type {
  */
 export interface SharedSliceModelVariation<
 	ID extends string = string,
-	PrimaryFields extends Record<
+	PrimaryFields extends Record<string, CustomTypeModelFieldForSlicePrimary> = Record<
 		string,
 		CustomTypeModelFieldForSlicePrimary
-	> = Record<string, CustomTypeModelFieldForSlicePrimary>,
-	ItemFields extends Record<
+	>,
+	ItemFields extends Record<string, CustomTypeModelFieldForNestedGroup> = Record<
 		string,
 		CustomTypeModelFieldForNestedGroup
-	> = Record<string, CustomTypeModelFieldForNestedGroup>,
+	>,
 > {
 	id: ID
 	name: string

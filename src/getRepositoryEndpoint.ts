@@ -1,23 +1,18 @@
 import { PrismicError } from "./errors"
-
 import { isRepositoryName } from "./isRepositoryName"
 
 /**
  * Get a repository's Prismic Content API endpoint.
  *
  * @example
- *
- * ```ts
- * getRepositoryEndpoint("my-repo")
- * // => "https://my-repo.cdn.prismic.io/api/v2"
- * ```
+ * 	;```ts
+ * 	getRepositoryEndpoint("my-repo")
+ * 	// => "https://my-repo.cdn.prismic.io/api/v2"
+ * 	```
  *
  * @typeParam RepositoryName - Name of the Prismic repository.
- *
  * @param repositoryName - Name of the repository.
- *
  * @returns The repository's Prismic Content API endpoint.
- *
  * @throws {@link Error} Thrown if an invalid repository name is provided.
  */
 export const getRepositoryEndpoint = <RepositoryName extends string>(

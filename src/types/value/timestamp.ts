@@ -5,5 +5,6 @@ import type { FieldState } from "./types"
  *
  * @typeParam State - State of the field which determines its shape.
  */
-export type TimestampField<State extends FieldState = FieldState> =
-	State extends "empty" ? null : string
+export type TimestampField<State extends FieldState = FieldState> = State extends "empty"
+	? null
+	: string

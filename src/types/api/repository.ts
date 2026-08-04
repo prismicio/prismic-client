@@ -1,8 +1,8 @@
 import type { Ref } from "./ref"
 
 /**
- * Repository metadata returned from the Prismic REST API V2. This data can be
- * fetched by sending a `GET` a request to a repository's `/api/v2` endpoint.
+ * Repository metadata returned from the Prismic REST API V2. This data can be fetched by sending a
+ * `GET` a request to a repository's `/api/v2` endpoint.
  *
  * @see More details on the `/api/v2` endpoint: {@link https://prismic.io/docs/api#refs-and-the-entry-api}
  */
@@ -14,10 +14,7 @@ export interface Repository {
 	 */
 	refs: Ref[]
 
-	/**
-	 * An identifier used to query content with the latest integration fields
-	 * data.
-	 */
+	/** An identifier used to query content with the latest integration fields data. */
 	integrationFieldsRef: string | null
 
 	/**
@@ -27,15 +24,11 @@ export interface Repository {
 	 */
 	languages: Language[]
 
-	/**
-	 * A list of the repository's custom type API IDs mapped to their
-	 * human-readable name.
-	 */
+	/** A list of the repository's custom type API IDs mapped to their human-readable name. */
 	types: Record<string, string>
 
 	/**
 	 * @deprecated Tags are only available in the forms object.
-	 *
 	 * @see More details in the blog post "A change to how the Prismic API handles tags": {@link https://prismic.io/blog/a-change-to-how-the-prismic-api-handles-tags}
 	 */
 	tags: string[]
@@ -47,60 +40,40 @@ export interface Repository {
 	 */
 	forms: Record<string, Form>
 
-	/**
-	 * The URL used to begin the OAuth process for the repository.
-	 */
+	/** The URL used to begin the OAuth process for the repository. */
 	oauth_initiate: string
 
-	/**
-	 * The token used for the OAuth process for the repository.
-	 */
+	/** The token used for the OAuth process for the repository. */
 	oauth_token: string
 
-	/**
-	 * The version of the API.
-	 */
+	/** The version of the API. */
 	version: string
 
-	/**
-	 * Licensing information for the repository content.
-	 */
+	/** Licensing information for the repository content. */
 	license: string
 
-	/**
-	 * @deprecated Experiments are no longer part of Prismic.
-	 */
+	/** @deprecated Experiments are no longer part of Prismic. */
 	experiments: unknown
 
-	/**
-	 * @deprecated Bookmarks are not longer part of Prismic.
-	 */
+	/** @deprecated Bookmarks are not longer part of Prismic. */
 	bookmarks: Record<string, string>
 }
 
-/**
- * Metadata for a language that has been configured for a repository.
- */
+/** Metadata for a language that has been configured for a repository. */
 export interface Language {
-	/**
-	 * A unique identifier for the language.
-	 */
+	/** A unique identifier for the language. */
 	id: string
 
-	/**
-	 * The name of the language.
-	 */
+	/** The name of the language. */
 	name: string
 
-	/**
-	 * Whether or not the language is the default language of the repository.
-	 */
+	/** Whether or not the language is the default language of the repository. */
 	is_master: boolean
 }
 
 /**
- * A Prismic REST API V2 feature supported by the repository. It contains
- * metadata about the feature and how to interact with it via the API.
+ * A Prismic REST API V2 feature supported by the repository. It contains metadata about the feature
+ * and how to interact with it via the API.
  *
  * @internal
  */
@@ -114,8 +87,8 @@ export interface Form {
 }
 
 /**
- * A field for a feature of the Prismic REST API V2. It contains metadata about
- * the feature's field and how to interact with it via the API.
+ * A field for a feature of the Prismic REST API V2. It contains metadata about the feature's field
+ * and how to interact with it via the API.
  *
  * @internal
  */

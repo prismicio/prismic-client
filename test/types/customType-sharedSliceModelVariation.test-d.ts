@@ -1,6 +1,5 @@
-import { assertType, expectTypeOf, it } from "vitest"
-
 import type { Variation } from "@prismicio/types-internal/lib/customtypes"
+import { assertType, expectTypeOf, it } from "vitest"
 
 import type {
 	CustomTypeModelBooleanField,
@@ -81,11 +80,7 @@ it("supports custom primary fields", () => {
 
 it("supports custom items fields", () => {
 	assertType<
-		SharedSliceModelVariation<
-			string,
-			Record<string, never>,
-			{ foo: CustomTypeModelBooleanField }
-		>
+		SharedSliceModelVariation<string, Record<string, never>, { foo: CustomTypeModelBooleanField }>
 	>({
 		id: "foo",
 		items: {

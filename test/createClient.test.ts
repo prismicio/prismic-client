@@ -1,8 +1,7 @@
 import { vi } from "vitest"
 
-import { it } from "./it"
-
 import { Client, PrismicError, createClient } from "../src"
+import { it } from "./it"
 
 it("returns a Client", ({ expect }) => {
 	const client = createClient("example")
@@ -12,17 +11,13 @@ it("returns a Client", ({ expect }) => {
 it("accepts a repository name", ({ expect }) => {
 	const client = createClient("example")
 	expect(client.repositoryName).toBe("example")
-	expect(client.documentAPIEndpoint).toBe(
-		"https://example.cdn.prismic.io/api/v2",
-	)
+	expect(client.documentAPIEndpoint).toBe("https://example.cdn.prismic.io/api/v2")
 })
 
 it("accepts an endpoint", ({ expect }) => {
 	const client = createClient("https://example.cdn.prismic.io/api/v2")
 	expect(client.repositoryName).toBe("example")
-	expect(client.documentAPIEndpoint).toBe(
-		"https://example.cdn.prismic.io/api/v2",
-	)
+	expect(client.documentAPIEndpoint).toBe("https://example.cdn.prismic.io/api/v2")
 })
 
 it("throws when given an invalid repository name", ({ expect }) => {
@@ -37,9 +32,7 @@ it("throws when given an invalid endpoint", ({ expect }) => {
 	expect(fn).toThrow(/invalid prismic repository name/i)
 })
 
-it("throws in development when given an incompatible endpoint", ({
-	expect,
-}) => {
+it("throws in development when given an incompatible endpoint", ({ expect }) => {
 	vi.stubEnv("NODE_ENV", "development")
 	const invalid = () => createClient("https://example.cdn.prismic.io/api/v1")
 	expect(invalid).toThrow(PrismicError)
@@ -51,18 +44,12 @@ it("throws in development when given an incompatible endpoint", ({
 it("warns in development when given a non-CDN endpoint", ({ expect }) => {
 	vi.stubEnv("NODE_ENV", "development")
 	createClient("https://example.prismic.io/api/v2")
-	expect(console.warn).toBeCalledWith(
-		expect.stringMatching(/endpoint-must-use-cdn/i),
-	)
+	expect(console.warn).toBeCalledWith(expect.stringMatching(/endpoint-must-use-cdn/i))
 	vi.mocked(console.warn).mockClear()
 	createClient("https://example.com/custom")
-	expect(console.warn).not.toBeCalledWith(
-		expect.stringMatching(/endpoint-must-use-cdn/i),
-	)
+	expect(console.warn).not.toBeCalledWith(expect.stringMatching(/endpoint-must-use-cdn/i))
 	createClient("https://example.cdn.prismic.io/api/v2")
-	expect(console.warn).not.toBeCalledWith(
-		expect.stringMatching(/endpoint-must-use-cdn/i),
-	)
+	expect(console.warn).not.toBeCalledWith(expect.stringMatching(/endpoint-must-use-cdn/i))
 	vi.unstubAllEnvs()
 })
 
@@ -73,9 +60,7 @@ it("warns in development when endpoint and documentAPIEndpoint option don't matc
 	createClient("https://foo.cdn.prismic.io/api/v2", {
 		documentAPIEndpoint: "https://bar.prismic.io/api/v2",
 	})
-	expect(console.warn).toBeCalledWith(
-		expect.stringMatching(/prefer-repository-name/i),
-	)
+	expect(console.warn).toBeCalledWith(expect.stringMatching(/prefer-repository-name/i))
 	vi.unstubAllEnvs()
 })
 
@@ -84,9 +69,7 @@ it("warns in development when a repository name cannot be inferred from an endpo
 }) => {
 	vi.stubEnv("NODE_ENV", "development")
 	createClient("https://example.com/custom")
-	expect(console.warn).toBeCalledWith(
-		expect.stringMatching(/prefer-repository-name/i),
-	)
+	expect(console.warn).toBeCalledWith(expect.stringMatching(/prefer-repository-name/i))
 	vi.unstubAllEnvs()
 })
 

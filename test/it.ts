@@ -1,5 +1,3 @@
-import { inject, test, vi } from "vitest"
-
 import type {
 	AssetApiCreateResponse,
 	ContentApiDocument,
@@ -8,11 +6,11 @@ import type {
 	CoreApiDocumentCreationPayload,
 	RepositoryManager,
 } from "@prismicio/e2e-tests-utils"
-
-import { createDocument, repositories } from "./setup.global"
+import { inject, test, expect, vi } from "vitest"
 
 import type { Client, Migration, WriteClient } from "../src"
 import { createClient, createMigration, createWriteClient } from "../src"
+import { createDocument, repositories } from "./setup.global"
 
 export type Fixtures = {
 	repository: RepositoryManager
@@ -97,9 +95,7 @@ export const it = test.extend<Fixtures>({
 	},
 	release: async ({ repository, accessToken }, use) => {
 		const release = JSON.parse(inject("release"))
-		const ref = await repository
-			.getContentApiClient({ accessToken })
-			.getRefByReleaseID(release.id)
+		const ref = await repository.getContentApiClient({ accessToken }).getRefByReleaseID(release.id)
 		await use({ ...release, ref })
 	},
 	// oxlint-disable-next-line no-empty-pattern
@@ -153,16 +149,14 @@ export const it = test.extend<Fixtures>({
 			return createDocument(repository, type, params)
 		})
 	},
-	getAsset: async ({ expect, repository }, use) => {
+	getAsset: async ({ repository }, use) => {
 		const assetAPIClient = repository.getAssetApiClient()
 		await use(async (params) => {
 			// Need to wait for new assets to be indexed.
 			return await vi.waitFor(async () => {
 				const assets = await assetAPIClient.search({ limit: 100 })
 				const asset = assets.items.find((item) => {
-					return params.filename
-						? item.filename === params.filename
-						: item.id === params.id
+					return params.filename ? item.filename === params.filename : item.id === params.id
 				})
 				expect(asset).toBeDefined()
 

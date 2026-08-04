@@ -29,7 +29,6 @@ import { RichTextNodeType } from "../types/value/richText"
  * Serializes a node from a rich text or title field with a function
  *
  * @typeParam ReturnType - Return type of the function serializer.
- *
  * @see Learn how to work with rich text fields: {@link https://prismic.io/docs/fields/rich-text}
  */
 export type RichTextFunctionSerializer<ReturnType> = (
@@ -41,8 +40,7 @@ export type RichTextFunctionSerializer<ReturnType> = (
 ) => ReturnType | null | undefined
 
 /**
- * Map serializer's tag function serializer, can be helpful for typing those
- * handlers
+ * Map serializer's tag function serializer, can be helpful for typing those handlers
  *
  * @typeParam ReturnType - Return type of the tag serializer
  */
@@ -62,66 +60,24 @@ export type RichTextMapSerializerFunction<
  * Serializes a node from a rich text field with a map.
  *
  * @remarks
- * This type of serializer needs to be processed through
- * {@link wrapMapSerializer} before being used with {@link serialize}.
- *
+ *   This type of serializer needs to be processed through {@link wrapMapSerializer} before being
+ *   used with {@link serialize}.
  * @typeParam ReturnType - Return type of the map serializer.
- *
  * @see Learn how to work with rich text fields: {@link https://prismic.io/docs/fields/rich-text}
  */
 export type RichTextMapSerializer<ReturnType> = {
-	heading1?: RichTextMapSerializerFunction<
-		ReturnType,
-		RTHeading1Node,
-		undefined
-	>
-	heading2?: RichTextMapSerializerFunction<
-		ReturnType,
-		RTHeading2Node,
-		undefined
-	>
-	heading3?: RichTextMapSerializerFunction<
-		ReturnType,
-		RTHeading3Node,
-		undefined
-	>
-	heading4?: RichTextMapSerializerFunction<
-		ReturnType,
-		RTHeading4Node,
-		undefined
-	>
-	heading5?: RichTextMapSerializerFunction<
-		ReturnType,
-		RTHeading5Node,
-		undefined
-	>
-	heading6?: RichTextMapSerializerFunction<
-		ReturnType,
-		RTHeading6Node,
-		undefined
-	>
-	paragraph?: RichTextMapSerializerFunction<
-		ReturnType,
-		RTParagraphNode,
-		undefined
-	>
-	preformatted?: RichTextMapSerializerFunction<
-		ReturnType,
-		RTPreformattedNode,
-		undefined
-	>
+	heading1?: RichTextMapSerializerFunction<ReturnType, RTHeading1Node, undefined>
+	heading2?: RichTextMapSerializerFunction<ReturnType, RTHeading2Node, undefined>
+	heading3?: RichTextMapSerializerFunction<ReturnType, RTHeading3Node, undefined>
+	heading4?: RichTextMapSerializerFunction<ReturnType, RTHeading4Node, undefined>
+	heading5?: RichTextMapSerializerFunction<ReturnType, RTHeading5Node, undefined>
+	heading6?: RichTextMapSerializerFunction<ReturnType, RTHeading6Node, undefined>
+	paragraph?: RichTextMapSerializerFunction<ReturnType, RTParagraphNode, undefined>
+	preformatted?: RichTextMapSerializerFunction<ReturnType, RTPreformattedNode, undefined>
 	strong?: RichTextMapSerializerFunction<ReturnType, RTStrongNode, string>
 	em?: RichTextMapSerializerFunction<ReturnType, RTEmNode, string>
-	listItem?: RichTextMapSerializerFunction<
-		ReturnType,
-		RTListItemNode,
-		undefined
-	>
-	oListItem?: RichTextMapSerializerFunction<
-		ReturnType,
-		RTOListItemNode,
-		undefined
-	>
+	listItem?: RichTextMapSerializerFunction<ReturnType, RTListItemNode, undefined>
+	oListItem?: RichTextMapSerializerFunction<ReturnType, RTOListItemNode, undefined>
 	list?: RichTextMapSerializerFunction<ReturnType, RTListNode, undefined>
 	oList?: RichTextMapSerializerFunction<ReturnType, RTOListNode, undefined>
 	image?: RichTextMapSerializerFunction<ReturnType, RTImageNode, undefined>

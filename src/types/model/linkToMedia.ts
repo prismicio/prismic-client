@@ -1,6 +1,5 @@
-import type { CustomTypeModelFieldType } from "./types"
-
 import type { CustomTypeModelLinkSelectType } from "./link"
+import type { CustomTypeModelFieldType } from "./types"
 
 /**
  * A link to media custom type field.

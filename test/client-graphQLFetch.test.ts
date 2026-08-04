@@ -23,12 +23,7 @@ it("includes prismic-ref header with master ref", async ({
 	expect(init.headers).toHaveProperty("prismic-ref", masterRef)
 })
 
-it("supports access token", async ({
-	expect,
-	client,
-	endpoint,
-	accessToken,
-}) => {
+it("supports access token", async ({ expect, client, endpoint, accessToken }) => {
 	const input = new URL("/graphql", endpoint)
 	input.searchParams.set("query", "{_allDocuments{totalCount}}")
 	client.accessToken = accessToken
@@ -37,12 +32,7 @@ it("supports access token", async ({
 	expect(init.headers).toHaveProperty("authorization", `Token ${accessToken}`)
 })
 
-it("supports custom headers", async ({
-	expect,
-	client,
-	endpoint,
-	masterRef,
-}) => {
+it("supports custom headers", async ({ expect, client, endpoint, masterRef }) => {
 	const input = new URL("/graphql", endpoint)
 	input.searchParams.set("query", "{_allDocuments{totalCount}}")
 	await client.graphQLFetch(input.toString(), { headers: { foo: "bar" } })
@@ -64,11 +54,7 @@ it("includes ref URL parameter for cache-busting", async ({
 	expect(url).toHaveSearchParam("ref", masterRef)
 })
 
-it("optimizes queries by removing whitespace", async ({
-	expect,
-	client,
-	endpoint,
-}) => {
+it("optimizes queries by removing whitespace", async ({ expect, client, endpoint }) => {
 	const input = new URL("/graphql", endpoint)
 	input.searchParams.set(
 		"query",
@@ -99,10 +85,7 @@ it("does not share concurrent equivalent network requests", async ({
 }) => {
 	const input = new URL("/graphql", endpoint)
 	input.searchParams.set("query", "{_allDocuments{totalCount}}")
-	await Promise.all([
-		client.graphQLFetch(input.toString()),
-		client.graphQLFetch(input.toString()),
-	])
+	await Promise.all([client.graphQLFetch(input.toString()), client.graphQLFetch(input.toString())])
 	expect(client).toHaveFetchedRepoTimes(1)
 	const graphqlCalls = vi
 		.mocked(client.fetchFn)

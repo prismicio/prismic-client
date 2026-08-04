@@ -17,8 +17,7 @@ wpFetch.use(wpFetch.createRootURLMiddleware("https://example.com/wp-json"))
 const wpClient = {
 	getPages: () => wpFetch<WP_REST_API_Pages>({ path: "/wp/v2/pages?_embed" }),
 	getPosts: () => wpFetch<WP_REST_API_Posts>({ path: "/wp/v2/posts?_embed" }),
-	getSettings: () =>
-		wpFetch<WP_REST_API_Settings>({ path: "/wp/v2/settings?_embed" }),
+	getSettings: () => wpFetch<WP_REST_API_Settings>({ path: "/wp/v2/settings?_embed" }),
 }
 
 // Prismic setup

@@ -1,7 +1,6 @@
-import type { FieldState } from "./types"
-
 import type { EmbedField } from "./embed"
 import type { FilledLinkField } from "./link"
+import type { FieldState } from "./types"
 
 /**
  * Types enum for RichTextNodes
@@ -35,116 +34,85 @@ export const RichTextNodeType = {
  *
  * @see More details: {@link https://prismic.io/docs/rich-text-title}
  */
-export type RichTextNodeTypes =
-	(typeof RichTextNodeType)[keyof typeof RichTextNodeType]
+export type RichTextNodeTypes = (typeof RichTextNodeType)[keyof typeof RichTextNodeType]
 
 // Text nodes
 
-/**
- * Base to be extended by other rich text nodes.
- */
+/** Base to be extended by other rich text nodes. */
 export interface RTTextNodeBase {
 	text: string
 	spans: RTInlineNode[]
 	direction?: "ltr" | "rtl"
 }
 
-/**
- * Rich text `heading1` node
- */
+/** Rich text `heading1` node */
 export interface RTHeading1Node extends RTTextNodeBase {
 	type: typeof RichTextNodeType.heading1
 }
 
-/**
- * Rich text `heading2` node
- */
+/** Rich text `heading2` node */
 export interface RTHeading2Node extends RTTextNodeBase {
 	type: typeof RichTextNodeType.heading2
 }
 
-/**
- * Rich text `heading3` node
- */
+/** Rich text `heading3` node */
 export interface RTHeading3Node extends RTTextNodeBase {
 	type: typeof RichTextNodeType.heading3
 }
 
-/**
- * Rich text `heading4` node
- */
+/** Rich text `heading4` node */
 export interface RTHeading4Node extends RTTextNodeBase {
 	type: typeof RichTextNodeType.heading4
 }
 
-/**
- * Rich text `heading5` node
- */
+/** Rich text `heading5` node */
 export interface RTHeading5Node extends RTTextNodeBase {
 	type: typeof RichTextNodeType.heading5
 }
 
-/**
- * Rich text `heading6` node
- */
+/** Rich text `heading6` node */
 export interface RTHeading6Node extends RTTextNodeBase {
 	type: typeof RichTextNodeType.heading6
 }
 
-/**
- * Rich text `paragraph` node
- */
+/** Rich text `paragraph` node */
 export interface RTParagraphNode extends RTTextNodeBase {
 	type: typeof RichTextNodeType.paragraph
 }
 
-/**
- * Rich text `preformatted` node
- */
+/** Rich text `preformatted` node */
 export interface RTPreformattedNode extends RTTextNodeBase {
 	type: typeof RichTextNodeType.preformatted
 }
 
-/**
- * Rich text `list-item` node
- */
+/** Rich text `list-item` node */
 export interface RTListItemNode extends RTTextNodeBase {
 	type: typeof RichTextNodeType.listItem
 }
 
-/**
- * Rich text `o-list-item` node for ordered lists
- */
+/** Rich text `o-list-item` node for ordered lists */
 export interface RTOListItemNode extends RTTextNodeBase {
 	type: typeof RichTextNodeType.oListItem
 }
 
 // Span nodes
 
-/**
- * @internal Span Node base to be extended for other Span nodes
- */
+/** @internal Span Node base to be extended for other Span nodes */
 export interface RTSpanNodeBase {
 	start: number
 	end: number
 }
-/**
- * Rich text `strong` node
- */
+/** Rich text `strong` node */
 export interface RTStrongNode extends RTSpanNodeBase {
 	type: typeof RichTextNodeType.strong
 }
 
-/**
- * Rich text `embed` node
- */
+/** Rich text `embed` node */
 export interface RTEmNode extends RTSpanNodeBase {
 	type: typeof RichTextNodeType.em
 }
 
-/**
- * Rich text `label` node
- */
+/** Rich text `label` node */
 export interface RTLabelNode extends RTSpanNodeBase {
 	type: typeof RichTextNodeType.label
 	data: {
@@ -154,10 +122,7 @@ export interface RTLabelNode extends RTSpanNodeBase {
 
 // Media nodes
 
-/**
- * Rich text `image` nodes. They could link to other documents, external web
- * links and media fields
- */
+/** Rich text `image` nodes. They could link to other documents, external web links and media fields */
 export type RTImageNode = {
 	type: typeof RichTextNodeType.image
 	id: string
@@ -177,9 +142,7 @@ export type RTImageNode = {
 	linkTo?: FilledLinkField
 }
 
-/**
- * Rich text `embed` node
- */
+/** Rich text `embed` node */
 export type RTEmbedNode = {
 	type: typeof RichTextNodeType.embed
 	oembed: EmbedField
@@ -199,35 +162,27 @@ export interface RTLinkNode extends RTSpanNodeBase {
 
 // Serialization related nodes
 
-/**
- * Rich text `list` node
- */
+/** Rich text `list` node */
 export interface RTListNode {
 	type: typeof RichTextNodeType.list
 	items: RTListItemNode[]
 }
 
-/**
- * Rich text o-lost node
- */
+/** Rich text o-lost node */
 export interface RTOListNode {
 	type: typeof RichTextNodeType.oList
 	items: RTOListItemNode[]
 }
 
 // This one is confusing but it's actually the inner content of a block
-/**
- * Rich text `span` node
- */
+/** Rich text `span` node */
 export interface RTSpanNode extends RTTextNodeBase {
 	type: typeof RichTextNodeType.span
 }
 
 // Helpers
 
-/**
- * Nodes from a rich text field
- */
+/** Nodes from a rich text field */
 export type RTNode =
 	| RTHeading1Node
 	| RTHeading2Node
@@ -242,9 +197,7 @@ export type RTNode =
 	| RTImageNode
 	| RTEmbedNode
 
-/**
- * Rich text nodes with text
- */
+/** Rich text nodes with text */
 export type RTTextNode =
 	| RTHeading1Node
 	| RTHeading2Node
@@ -257,9 +210,7 @@ export type RTTextNode =
 	| RTListItemNode
 	| RTOListItemNode
 
-/**
- * Rich text block nodes
- */
+/** Rich text block nodes */
 export type RTBlockNode =
 	| RTHeading1Node
 	| RTHeading2Node
@@ -276,14 +227,10 @@ export type RTBlockNode =
 	| RTImageNode
 	| RTEmbedNode
 
-/**
- * Inline rich text nodes
- */
+/** Inline rich text nodes */
 export type RTInlineNode = RTStrongNode | RTEmNode | RTLabelNode | RTLinkNode
 
-/**
- * All rich text nodes
- */
+/** All rich text nodes */
 export type RTAnyNode = RTBlockNode | RTInlineNode | RTSpanNode
 
 /**
@@ -291,5 +238,6 @@ export type RTAnyNode = RTBlockNode | RTInlineNode | RTSpanNode
  *
  * @see Rich text field documentation: {@link https://prismic.io/docs/rich-text-title}
  */
-export type RichTextField<State extends FieldState = FieldState> =
-	State extends "empty" ? [] : [RTNode, ...RTNode[]]
+export type RichTextField<State extends FieldState = FieldState> = State extends "empty"
+	? []
+	: [RTNode, ...RTNode[]]

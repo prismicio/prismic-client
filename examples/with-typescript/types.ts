@@ -1,13 +1,9 @@
 import type * as prismic from "@prismicio/client"
 
-/**
- * A union of all possible Prismic Document types.
- */
+/** A union of all possible Prismic Document types. */
 export type AllDocumentTypes = PageDocument | BlogPostDocument
 
-/**
- * A Page document from Prismic.
- */
+/** A Page document from Prismic. */
 export type PageDocument = prismic.PrismicDocument<
 	{
 		title: prismic.KeyTextField
@@ -17,9 +13,7 @@ export type PageDocument = prismic.PrismicDocument<
 	"en-us" | "fr-fr"
 >
 
-/**
- * A Blog Post document from Prismic. This example contains Slices.
- */
+/** A Blog Post document from Prismic. This example contains Slices. */
 export type BlogPostDocument = prismic.PrismicDocument<
 	{
 		title: prismic.KeyTextField

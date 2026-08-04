@@ -13,7 +13,7 @@ const client = prismic.createClient("example-prismic-repo")
 When creating a `@prismicio/client` with a repository endpoint (not recommended), the endpoint's subdomain must feature the `.cdn` suffix.
 
 ```typescript
-import * as prismic from "@prismicio/client";
+import * as prismic from "@prismicio/client"
 
 // ✅ Correct
 const client = prismic.createClient("https://example-prismic-repo.cdn.prismic.io/api/v2")

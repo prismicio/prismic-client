@@ -4,10 +4,7 @@ import type { CustomTypeModelContentRelationshipField } from "./contentRelations
 import type { CustomTypeModelDateField } from "./date"
 import type { CustomTypeModelEmbedField } from "./embed"
 import type { CustomTypeModelGeoPointField } from "./geoPoint"
-import type {
-	CustomTypeModelGroupField,
-	CustomTypeModelNestedGroupField,
-} from "./group"
+import type { CustomTypeModelGroupField, CustomTypeModelNestedGroupField } from "./group"
 import type { CustomTypeModelImageField } from "./image"
 import type { CustomTypeModelIntegrationField } from "./integration"
 import type { CustomTypeModelKeyTextField } from "./keyText"
@@ -24,9 +21,7 @@ import type { CustomTypeModelTimestampField } from "./timestamp"
 import type { CustomTypeModelTitleField } from "./title"
 import type { CustomTypeModelUIDField } from "./uid"
 
-/**
- * Type identifier for a custom type field.
- */
+/** Type identifier for a custom type field. */
 export const CustomTypeModelFieldType = {
 	Boolean: "Boolean",
 	Color: "Color",
@@ -45,50 +40,34 @@ export const CustomTypeModelFieldType = {
 	Text: "Text",
 	Timestamp: "Timestamp",
 	UID: "UID",
-	/**
-	 * @deprecated - Renamed to `Integration`.
-	 */
+	/** @deprecated - Renamed to `Integration`. */
 	IntegrationFields: "IntegrationFields",
-	/**
-	 * @deprecated - Legacy field type. Use `Number` instead.
-	 */
+	/** @deprecated - Legacy field type. Use `Number` instead. */
 	Range: "Range",
-	/**
-	 * @deprecated - Legacy field type. Do not use.
-	 */
+	/** @deprecated - Legacy field type. Do not use. */
 	Separator: "Separator",
-	/**
-	 * @deprecated - Legacy field type. Use `Slices` instead.
-	 */
+	/** @deprecated - Legacy field type. Use `Slices` instead. */
 	LegacySlices: "Choice",
 } as const
 
-/**
- * A custom type field.
- */
+/** A custom type field. */
 export type CustomTypeModelField =
 	| CustomTypeModelUIDField
 	| CustomTypeModelGroupField
 	| CustomTypeModelSliceZoneField
 	| CustomTypeModelFieldForNestedGroup
 
-/**
- * Any custom type field that is valid for a slice's primary section.
- */
+/** Any custom type field that is valid for a slice's primary section. */
 export type CustomTypeModelFieldForSlicePrimary =
 	| CustomTypeModelGroupField
 	| CustomTypeModelFieldForNestedGroup
 
-/**
- * Any custom type field that is valid for a group field.
- */
+/** Any custom type field that is valid for a group field. */
 export type CustomTypeModelFieldForGroup =
 	| CustomTypeModelNestedGroupField
 	| CustomTypeModelFieldForNestedGroup
 
-/**
- * Any custom type field that is valid for a nested group field.
- */
+/** Any custom type field that is valid for a nested group field. */
 export type CustomTypeModelFieldForNestedGroup =
 	| CustomTypeModelBooleanField
 	| CustomTypeModelColorField

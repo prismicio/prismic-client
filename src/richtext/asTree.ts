@@ -19,11 +19,9 @@ uuid.i = 0
  * Parses a rich text or title field into a tree
  *
  * @remarks
- * This is a low level helper mainly intended to be used by higher level
- * packages. Most users aren't expected to this function directly.
- *
+ *   This is a low level helper mainly intended to be used by higher level packages. Most users
+ *   aren't expected to this function directly.
  * @param nodes - A rich text or title field from Prismic
- *
  * @returns Tree from given rich text or title field
  */
 export const asTree = (nodes: RTNode[]): Tree => {
@@ -40,10 +38,7 @@ export const asTree = (nodes: RTNode[]): Tree => {
 	}
 }
 
-const createTreeNode = (
-	node: RTAnyNode,
-	children: TreeNode[] = [],
-): TreeNode => {
+const createTreeNode = (node: RTAnyNode, children: TreeNode[] = []): TreeNode => {
 	return {
 		key: uuid(),
 		type: node.type,
@@ -67,13 +62,8 @@ const prepareNodes = (nodes: RTNode[]): RTBlockNode[] => {
 	for (let i = 0; i < mutNodes.length; i++) {
 		const node = mutNodes[i]
 
-		if (
-			node.type === RichTextNodeType.listItem ||
-			node.type === RichTextNodeType.oListItem
-		) {
-			const items: (RTListItemNode | RTOListItemNode)[] = [
-				node as RTListItemNode | RTOListItemNode,
-			]
+		if (node.type === RichTextNodeType.listItem || node.type === RichTextNodeType.oListItem) {
+			const items: (RTListItemNode | RTOListItemNode)[] = [node as RTListItemNode | RTOListItemNode]
 
 			while (mutNodes[i + 1] && mutNodes[i + 1].type === node.type) {
 				items.push(mutNodes[i + 1] as RTListItemNode | RTOListItemNode)
@@ -99,10 +89,7 @@ const prepareNodes = (nodes: RTNode[]): RTBlockNode[] => {
 
 const nodeToTreeNode = (node: RTBlockNode): TreeNode => {
 	if ("text" in node) {
-		return createTreeNode(
-			node,
-			textNodeSpansToTreeNodeChildren(node.spans, node),
-		)
+		return createTreeNode(node, textNodeSpansToTreeNodeChildren(node.spans, node))
 	}
 
 	if ("items" in node) {
@@ -158,10 +145,7 @@ const textNodeSpansToTreeNodeChildren = (
 					childSpans.push(siblingSpan)
 					mutSpans.splice(j, 1)
 					j--
-				} else if (
-					siblingSpan.start < span.end &&
-					siblingSpan.end > span.start
-				) {
+				} else if (siblingSpan.start < span.end && siblingSpan.end > span.start) {
 					childSpans.push({
 						...siblingSpan,
 						end: span.end,
@@ -198,9 +182,7 @@ const textNodeSpansToTreeNodeChildren = (
 				createTextTreeNode(
 					node.text.slice(
 						spanEnd,
-						mutSpans[i + 1]
-							? mutSpans[i + 1].start - parentSpanStart
-							: undefined,
+						mutSpans[i + 1] ? mutSpans[i + 1].start - parentSpanStart : undefined,
 					),
 				),
 			)

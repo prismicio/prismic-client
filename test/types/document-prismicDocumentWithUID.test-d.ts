@@ -1,11 +1,6 @@
 import { assertType, it } from "vitest"
 
-import type {
-	BooleanField,
-	GroupField,
-	PrismicDocumentWithUID,
-	SliceZone,
-} from "../../src"
+import type { BooleanField, GroupField, PrismicDocumentWithUID, SliceZone } from "../../src"
 
 it("supports basic document with UID structure", () => {
 	assertType<PrismicDocumentWithUID>({

@@ -116,13 +116,9 @@ it("narrows ContentRelationshipField from generic to filled/empty", () => {
 	const value = undefined as unknown as ContentRelationshipField
 
 	if (isFilled.contentRelationship(value)) {
-		assertType<ContentRelationshipField<string, string, unknown, "filled">>(
-			value,
-		)
+		assertType<ContentRelationshipField<string, string, unknown, "filled">>(value)
 	} else {
-		assertType<ContentRelationshipField<string, string, unknown, "empty">>(
-			value,
-		)
+		assertType<ContentRelationshipField<string, string, unknown, "empty">>(value)
 	}
 })
 
@@ -135,13 +131,9 @@ it("narrows ContentRelationshipField with type, lang, and data from generic to f
 	>
 
 	if (isFilled.contentRelationship(value)) {
-		assertType<
-			ContentRelationshipField<"foo", "bar", ContentRelationshipData, "filled">
-		>(value)
+		assertType<ContentRelationshipField<"foo", "bar", ContentRelationshipData, "filled">>(value)
 	} else {
-		assertType<
-			ContentRelationshipField<"foo", "bar", ContentRelationshipData, "empty">
-		>(value)
+		assertType<ContentRelationshipField<"foo", "bar", ContentRelationshipData, "empty">>(value)
 	}
 })
 

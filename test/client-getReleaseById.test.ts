@@ -1,22 +1,14 @@
+import { PrismicError } from "../src"
 import { it } from "./it"
 
-import { PrismicError } from "../src"
-
-it("returns release with matching ID", async ({
-	expect,
-	client,
-	accessToken,
-	release,
-}) => {
+it("returns release with matching ID", async ({ expect, client, accessToken, release }) => {
 	client.accessToken = accessToken
 	const res = await client.getReleaseByID(release.id)
 	expect(res).toMatchObject({ ref: release.ref })
 })
 
 it("throws if release with ID is not found", async ({ expect, client }) => {
-	await expect(() => client.getReleaseByID("invalid")).rejects.toThrow(
-		PrismicError,
-	)
+	await expect(() => client.getReleaseByID("invalid")).rejects.toThrow(PrismicError)
 })
 
 it("shares concurrent equivalent network requests", async ({

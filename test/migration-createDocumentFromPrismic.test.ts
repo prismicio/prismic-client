@@ -1,9 +1,8 @@
 import { describe } from "vitest"
 
-import { it } from "./it"
-
 import type { ImageField, LinkToMediaField } from "../src"
 import { PrismicMigrationDocument } from "../src"
+import { it } from "./it"
 
 const image: ImageField = {
 	id: "foo",
@@ -38,11 +37,7 @@ it("returns a migration document from an existing Prismic document", async ({
 	expect(res.title).toBe("title")
 })
 
-it("adds a Prismic document to the migration", async ({
-	expect,
-	docs,
-	migration,
-}) => {
+it("adds a Prismic document to the migration", async ({ expect, docs, migration }) => {
 	const res = migration.createDocumentFromPrismic(docs.default, "title")
 	expect(migration._documents).toContain(res)
 })
@@ -143,31 +138,19 @@ describe.each([
 		},
 	},
 ])("$name", ({ id, field, expectedConfig }) => {
-	it("extracts assets from regular fields", async ({
-		expect,
-		docs,
-		migration,
-	}) => {
+	it("extracts assets from regular fields", async ({ expect, docs, migration }) => {
 		const document = { ...docs.default, data: { field } }
 		migration.createDocumentFromPrismic(document, "title")
 		expect(migration._assets.get(id)?.config).toStrictEqual(expectedConfig)
 	})
 
-	it("extracts assets from group fields", async ({
-		expect,
-		docs,
-		migration,
-	}) => {
+	it("extracts assets from group fields", async ({ expect, docs, migration }) => {
 		const document = { ...docs.default, data: { group: [{ field }] } }
 		migration.createDocumentFromPrismic(document, "title")
 		expect(migration._assets.get(id)?.config).toStrictEqual(expectedConfig)
 	})
 
-	it("extracts assets from slice primary fields", async ({
-		expect,
-		docs,
-		migration,
-	}) => {
+	it("extracts assets from slice primary fields", async ({ expect, docs, migration }) => {
 		const document = {
 			...docs.default,
 			data: {
@@ -186,11 +169,7 @@ describe.each([
 		expect(migration._assets.get(id)?.config).toStrictEqual(expectedConfig)
 	})
 
-	it("extracts assets from slice items", async ({
-		expect,
-		docs,
-		migration,
-	}) => {
+	it("extracts assets from slice items", async ({ expect, docs, migration }) => {
 		const document = {
 			...docs.default,
 			data: {
