@@ -31,7 +31,10 @@ describe("publishMigrationRelease", () => {
 		await writeClient.publishMigrationRelease()
 
 		expect(writeClient.fetchFn).toHaveBeenCalledWith(
-			new URL("migration-release/publish", writeClient.migrationAPIEndpoint),
+			new URL(
+				"migration-release/publish",
+				writeClient.migrationAPIEndpoint,
+			).toString(),
 			expect.objectContaining({ method: "POST" }),
 		)
 	})
