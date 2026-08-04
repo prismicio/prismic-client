@@ -19,6 +19,7 @@ import type {
 	PostAssetTagResult,
 } from "./types/api/asset/tag"
 import { type PostDocumentResult } from "./types/api/migration/document"
+import type { PublishMigrationReleaseResult } from "./types/api/migration/release"
 import type { PrismicMigrationAsset } from "./types/migration/Asset"
 import type {
 	MigrationDocument,
@@ -280,6 +281,54 @@ export class WriteClient<
 				},
 			},
 		})
+	}
+
+	/**
+	 * Publishes the repository's migration release, moving its documents into the
+	 * repository as published content.
+	 *
+	 * @param params - Additional fetch parameters.
+	 *
+	 * @returns The result of the publish operation, including the total number of
+	 *   documents that were published.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * const migration = createMigration()
+	 *
+	 * // Prepare and run a migration.
+	 * migration.createDocument(doc, "My document")
+	 * await writeClient.migrate(migration)
+	 *
+	 * // Publish the migration release.
+	 * const { total } = await writeClient.publishMigrationRelease()
+	 * ```
+	 *
+	 * @see Prismic Migration API technical reference: {@link https://prismic.io/docs/migration-api-technical-reference}
+	 */
+	async publishMigrationRelease(
+		params?: FetchParams,
+	): Promise<PublishMigrationReleaseResult> {
+		const url = new URL("migration-release/publish", this.migrationAPIEndpoint)
+
+		const response = await this.#request(url, params, {
+			method: "POST",
+			headers: {
+				"content-type": "application/json",
+				"x-client": CLIENT_IDENTIFIER,
+			},
+		})
+		switch (response.status) {
+			case 202: {
+				const json = (await response.json()) as PublishMigrationReleaseResult
+
+				return { total: json.total }
+			}
+			default: {
+				return await this.#handleMigrationAPIError(response)
+			}
+		}
 	}
 
 	/**

@@ -366,6 +366,8 @@ export type { MigrationContentRelationship } from "./types/migration/ContentRela
 // API - Types representing Prismic Content API responses.
 export type { Query } from "./types/api/query"
 
+export type { PublishMigrationReleaseResult } from "./types/api/migration/release"
+
 export type { Ref } from "./types/api/ref"
 
 export type { Release } from "./types/api/release"
