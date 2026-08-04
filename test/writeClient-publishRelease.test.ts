@@ -12,12 +12,12 @@ describe("publishMigrationRelease", () => {
 		writeClient,
 	}) => {
 		vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(
-			Response.json({ total: 3 }, { status: 202 }),
+			Response.json({ totalItems: 3 }, { status: 202 }),
 		)
 
 		const result = await writeClient.publishMigrationRelease()
 
-		expect(result).toStrictEqual({ total: 3 })
+		expect(result).toStrictEqual({ totalItems: 3 })
 	})
 
 	it("POSTs to the migration-release/publish endpoint", async ({
@@ -25,7 +25,7 @@ describe("publishMigrationRelease", () => {
 		writeClient,
 	}) => {
 		vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(
-			Response.json({ total: 0 }, { status: 202 }),
+			Response.json({ totalItems: 0 }, { status: 202 }),
 		)
 
 		await writeClient.publishMigrationRelease()
@@ -38,7 +38,7 @@ describe("publishMigrationRelease", () => {
 
 	it("includes the required headers", async ({ expect, writeClient }) => {
 		vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(
-			Response.json({ total: 0 }, { status: 202 }),
+			Response.json({ totalItems: 0 }, { status: 202 }),
 		)
 
 		await writeClient.publishMigrationRelease()
@@ -57,7 +57,7 @@ describe("publishMigrationRelease", () => {
 
 	it("supports fetch options", async ({ expect, writeClient }) => {
 		vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(
-			Response.json({ total: 0 }, { status: 202 }),
+			Response.json({ totalItems: 0 }, { status: 202 }),
 		)
 
 		await writeClient.publishMigrationRelease({

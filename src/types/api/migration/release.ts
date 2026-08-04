@@ -8,5 +8,5 @@ export type PublishMigrationReleaseResult = {
 	/**
 	 * The total number of documents included in the published migration release.
 	 */
-	total: number
+	totalItems: number
 }

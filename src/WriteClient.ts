@@ -302,7 +302,7 @@ export class WriteClient<
 	 * await writeClient.migrate(migration)
 	 *
 	 * // Publish the migration release.
-	 * const { total } = await writeClient.publishMigrationRelease()
+	 * const { totalItems } = await writeClient.publishMigrationRelease()
 	 * ```
 	 *
 	 * @see Prismic Migration API technical reference: {@link https://prismic.io/docs/migration-api-technical-reference}
@@ -323,7 +323,7 @@ export class WriteClient<
 			case 202: {
 				const json = (await response.json()) as PublishMigrationReleaseResult
 
-				return { total: json.total }
+				return { totalItems: json.totalItems }
 			}
 			default: {
 				return await this.#handleMigrationAPIError(response)
