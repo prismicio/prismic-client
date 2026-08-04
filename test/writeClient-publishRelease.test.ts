@@ -1,16 +1,11 @@
 import { describe, vi } from "vitest"
 
 import { version } from "../package.json"
-
+import { ForbiddenError, NotFoundError, PrismicError } from "../src"
 import { it } from "./it"
 
-import { ForbiddenError, NotFoundError, PrismicError } from "../src"
-
 describe("publishMigrationRelease", () => {
-	it("publishes the migration release and returns the total", async ({
-		expect,
-		writeClient,
-	}) => {
+	it("publishes the migration release and returns the total", async ({ expect, writeClient }) => {
 		vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(
 			Response.json({ totalItems: 3 }, { status: 202 }),
 		)
@@ -20,10 +15,7 @@ describe("publishMigrationRelease", () => {
 		expect(result).toStrictEqual({ totalItems: 3 })
 	})
 
-	it("POSTs to the migration-release/publish endpoint", async ({
-		expect,
-		writeClient,
-	}) => {
+	it("POSTs to the migration-release/publish endpoint", async ({ expect, writeClient }) => {
 		vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(
 			Response.json({ totalItems: 0 }, { status: 202 }),
 		)
@@ -31,10 +23,7 @@ describe("publishMigrationRelease", () => {
 		await writeClient.publishMigrationRelease()
 
 		expect(writeClient.fetchFn).toHaveBeenCalledWith(
-			new URL(
-				"migration-release/publish",
-				writeClient.migrationAPIEndpoint,
-			).toString(),
+			new URL("migration-release/publish", writeClient.migrationAPIEndpoint).toString(),
 			expect.objectContaining({ method: "POST" }),
 		)
 	})
@@ -81,42 +70,27 @@ describe("publishMigrationRelease", () => {
 		).rejects.toThrow(/aborted/i)
 	})
 
-	it("throws a ForbiddenError on a 401 response", async ({
-		expect,
-		writeClient,
-	}) => {
+	it("throws a ForbiddenError on a 401 response", async ({ expect, writeClient }) => {
 		vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(
 			Response.json({ message: "unauthorized" }, { status: 401 }),
 		)
 
-		await expect(() => writeClient.publishMigrationRelease()).rejects.toThrow(
-			ForbiddenError,
-		)
+		await expect(() => writeClient.publishMigrationRelease()).rejects.toThrow(ForbiddenError)
 	})
 
-	it("throws a NotFoundError on a 404 response", async ({
-		expect,
-		writeClient,
-	}) => {
+	it("throws a NotFoundError on a 404 response", async ({ expect, writeClient }) => {
 		vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(
 			Response.json({ message: "not found" }, { status: 404 }),
 		)
 
-		await expect(() => writeClient.publishMigrationRelease()).rejects.toThrow(
-			NotFoundError,
-		)
+		await expect(() => writeClient.publishMigrationRelease()).rejects.toThrow(NotFoundError)
 	})
 
-	it("throws a PrismicError on a 500 response", async ({
-		expect,
-		writeClient,
-	}) => {
+	it("throws a PrismicError on a 500 response", async ({ expect, writeClient }) => {
 		vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(
 			Response.json({ message: "server error" }, { status: 500 }),
 		)
 
-		await expect(() => writeClient.publishMigrationRelease()).rejects.toThrow(
-			PrismicError,
-		)
+		await expect(() => writeClient.publishMigrationRelease()).rejects.toThrow(PrismicError)
 	})
 })
