@@ -1,79 +1,82 @@
-import { describe, vi } from "vitest"
+import type { CustomType } from "@prismicio/types-internal/lib/customtypes"
+import { beforeAll, describe, inject, vi } from "vitest"
 
-import { version } from "../package.json"
-import { ForbiddenError, NotFoundError, PrismicError } from "../src"
+import {
+	ForbiddenError,
+	NotFoundError,
+	PrismicError,
+	createMigration,
+	createWriteClient,
+	type WriteClient,
+} from "../src"
 import { it } from "./it"
+import { repositories } from "./setup.global"
+
+const model: CustomType = {
+	id: "page",
+	status: true,
+	label: "Page",
+	format: "page",
+	repeatable: true,
+	json: {
+		Main: {
+			uid: {
+				type: "UID",
+			},
+		},
+	},
+}
+
+// The Migration API is slow and has low rate limits.
+vi.setConfig({ testTimeout: 20000 })
 
 describe("publishMigrationRelease", () => {
-	it("publishes the migration release and returns the total", async ({ expect, writeClient }) => {
-		vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(
-			Response.json({ totalItems: 3 }, { status: 202 }),
+	let isolatedWriteClient: WriteClient
+
+	// Isolated repository so publishing the migration-release singleton cannot
+	// race with concurrent migrate tests on the shared suite repository.
+	beforeAll(async () => {
+		const writeToken = inject("writeToken")
+		const repository = await repositories.createRepository({
+			prefix: "e2e-tests-prismicio-client-publish",
+			defaultLocale: "en-us",
+			locales: ["en-us"],
+			customTypes: [model],
+			slices: [],
+		})
+		isolatedWriteClient = createWriteClient(repository.name, { writeToken })
+		vi.spyOn(isolatedWriteClient, "fetchFn")
+	}, 60000)
+
+	it("publishes the migration release and returns the total", async ({ expect }) => {
+		const migration = createMigration()
+		migration.createDocument(
+			{
+				type: model.id,
+				lang: "en-us",
+				uid: crypto.randomUUID(),
+				data: {},
+			},
+			"title",
 		)
+		await isolatedWriteClient.migrate(migration)
 
-		const result = await writeClient.publishMigrationRelease()
+		const result = await isolatedWriteClient.publishMigrationRelease()
 
-		expect(result).toStrictEqual({ totalItems: 3 })
+		expect(result).toStrictEqual({ totalItems: 1 })
 	})
 
-	it("POSTs to the migration-release/publish endpoint", async ({ expect, writeClient }) => {
-		vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(
-			Response.json({ totalItems: 0 }, { status: 202 }),
-		)
-
-		await writeClient.publishMigrationRelease()
-
-		expect(writeClient.fetchFn).toHaveBeenCalledWith(
-			new URL("migration-release/publish", writeClient.migrationAPIEndpoint).toString(),
-			expect.objectContaining({ method: "POST" }),
-		)
-	})
-
-	it("sends a body so the request is treated as a write (not deduplicated or unthrottled)", async ({
-		expect,
-		writeClient,
-	}) => {
-		vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(
-			Response.json({ totalItems: 0 }, { status: 202 }),
-		)
-
-		await writeClient.publishMigrationRelease()
-
-		const init = vi.mocked(writeClient.fetchFn).mock.calls[0][1]
-		expect(init?.body).toBeTruthy()
-	})
-
-	it("includes the required headers", async ({ expect, writeClient }) => {
-		vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(
-			Response.json({ totalItems: 0 }, { status: 202 }),
-		)
-
-		await writeClient.publishMigrationRelease()
-
-		expect(writeClient.fetchFn).toHaveBeenCalledWith(
-			expect.anything(),
-			expect.objectContaining({
-				headers: expect.objectContaining({
-					"x-client": `prismicio-client/${version}`,
-					repository: writeClient.repositoryName,
-					authorization: `Bearer ${writeClient.writeToken}`,
-				}),
-			}),
-		)
-	})
-
-	it("supports fetch options", async ({ expect, writeClient }) => {
-		vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(
-			Response.json({ totalItems: 0 }, { status: 202 }),
-		)
-
-		await writeClient.publishMigrationRelease({
+	it("supports fetch options", async ({ expect }) => {
+		await isolatedWriteClient.publishMigrationRelease({
 			fetchOptions: { headers: { foo: "bar" } },
 		})
 
-		expect(writeClient.fetchFn).toHaveBeenCalledWith(
+		expect(isolatedWriteClient.fetchFn).toHaveBeenCalledWith(
 			expect.anything(),
 			expect.objectContaining({
-				headers: expect.objectContaining({ foo: "bar" }),
+				headers: expect.objectContaining({
+					foo: "bar",
+				}),
 			}),
 		)
 	})
@@ -84,11 +87,8 @@ describe("publishMigrationRelease", () => {
 		).rejects.toThrow(/aborted/i)
 	})
 
-	it("throws a ForbiddenError on a 401 response", async ({ expect, writeClient }) => {
-		vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(
-			Response.json({ message: "unauthorized" }, { status: 401 }),
-		)
-
+	it("throws if using an invalid token", async ({ expect, writeClient }) => {
+		writeClient.writeToken = "invalid"
 		await expect(() => writeClient.publishMigrationRelease()).rejects.toThrow(ForbiddenError)
 	})
 

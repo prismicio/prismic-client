@@ -44,11 +44,3 @@ it("supports custom migration api endpoint", async ({ expect, writeToken }) => {
 	})
 	expect(res.migrationAPIEndpoint).toBe("https://example.com/")
 })
-
-it("exposes a publishMigrationRelease method", async ({
-	expect,
-	writeToken,
-}) => {
-	const res = createWriteClient("example", { writeToken })
-	expect(typeof res.publishMigrationRelease).toBe("function")
-})
