@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [8.0.0](https://github.com/prismicio/prismic-client/compare/v7.21.8...v8.0.0) (2026-08-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* `PublishMigrationReleaseResult.total` has been renamed to `totalItems`.
+
+### Features
+
+* add WriteClient.publishMigrationRelease() ([ed5a769](https://github.com/prismicio/prismic-client/commit/ed5a769f3931ce0616e0fe585f5b72ccadacec9c))
+* add WriteClient.publishMigrationRelease() ([00424c6](https://github.com/prismicio/prismic-client/commit/00424c6f5f6aa517552085a66e991f3510d5a560))
+
+
+### Bug Fixes
+
+* send body in publishMigrationRelease POST to avoid dedup ([5cc97b1](https://github.com/prismicio/prismic-client/commit/5cc97b1480027645c249b51b813adce47ad13f96))
+
+
+### Code Refactoring
+
+* rename `total` to `totalItems` in publish migration release result ([07b2767](https://github.com/prismicio/prismic-client/commit/07b27675700fd850bd47f951d7cd924dc766078e))
+
 ## [7.21.8](https://github.com/prismicio/prismic-client/compare/v7.21.7...v7.21.8) (2026-04-04)
 
 
