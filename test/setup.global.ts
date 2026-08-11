@@ -28,7 +28,7 @@ export const repositories = createRepositoriesManager({
 	},
 })
 
-const model: CustomType = {
+export const model: CustomType = {
 	id: "page",
 	status: true,
 	label: "Page",
@@ -58,7 +58,7 @@ const model: CustomType = {
 		},
 	},
 }
-const singleModel: CustomType = {
+export const singleModel: CustomType = {
 	id: "single",
 	status: true,
 	label: "Single",
@@ -69,13 +69,7 @@ const singleModel: CustomType = {
 const routes = JSON.stringify([{ type: model.id, path: "/:uid" }])
 
 export async function setup({ provide }: TestProject): Promise<void> {
-	const repository = await repositories.createRepository({
-		prefix: "e2e-tests-prismicio-client",
-		defaultLocale: "en-us",
-		locales: ["en-us", "fr-fr"],
-		customTypes: [model, singleModel],
-		slices: [],
-	})
+	const repository = await createRepository()
 	provide("repositoryName", repository.name)
 
 	const [repositoryMeta, writeToken, accessToken, initRelease, testReleaseMeta] = await Promise.all(
@@ -140,6 +134,16 @@ export async function setup({ provide }: TestProject): Promise<void> {
 
 export async function teardown(): Promise<void> {
 	await repositories.tearDown()
+}
+
+export async function createRepository(): Promise<RepositoryManager> {
+	return await repositories.createRepository({
+		prefix: "e2e-tests-prismicio-client",
+		defaultLocale: "en-us",
+		locales: ["en-us", "fr-fr"],
+		customTypes: [model, singleModel],
+		slices: [],
+	})
 }
 
 export async function createDocument(
