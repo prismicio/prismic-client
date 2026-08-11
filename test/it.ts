@@ -10,13 +10,15 @@ import { inject, test, expect, vi } from "vitest"
 
 import type { Client, Migration, WriteClient } from "../src"
 import { createClient, createMigration, createWriteClient } from "../src"
-import { createDocument, repositories } from "./setup.global"
+import { createDocument, createRepository, repositories } from "./setup.global"
 
 export type Fixtures = {
 	repository: RepositoryManager
+	isolatedRepository: RepositoryManager
 	endpoint: string
 	client: Client
 	writeClient: WriteClient
+	isolatedWriteClient: WriteClient
 	writeToken: string
 	accessToken: string
 	masterRef: string
@@ -57,6 +59,11 @@ export const it = test.extend<Fixtures>({
 		const repository = repositories.getRepositoryManager(name)
 		await use(repository)
 	},
+	// oxlint-disable-next-line no-empty-pattern
+	isolatedRepository: async ({}, use) => {
+		const repository = await createRepository()
+		await use(repository)
+	},
 	endpoint: async ({ repository }, use) => {
 		const endpoint = new URL("api/v2/", repository.getBaseCdnURL()).toString()
 		await use(endpoint)
@@ -74,6 +81,14 @@ export const it = test.extend<Fixtures>({
 	writeClient: async ({ repository, endpoint, writeToken }, use) => {
 		const client = createWriteClient(repository.name, {
 			documentAPIEndpoint: endpoint,
+			writeToken: writeToken,
+		})
+		vi.spyOn(client, "fetchFn")
+		await use(client)
+	},
+	isolatedWriteClient: async ({ isolatedRepository, writeToken }, use) => {
+		const client = createWriteClient(isolatedRepository.name, {
+			documentAPIEndpoint: new URL("api/v2/", isolatedRepository.getBaseCdnURL()).toString(),
 			writeToken: writeToken,
 		})
 		vi.spyOn(client, "fetchFn")
