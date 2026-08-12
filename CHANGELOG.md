@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.22.0](https://github.com/prismicio/prismic-client/compare/v7.21.8...v7.22.0) (2026-08-11)
+
+
+### Features
+
+* add `WriteClient.publishMigrationRelease()` ([ed5a769](https://github.com/prismicio/prismic-client/commit/ed5a769f3931ce0616e0fe585f5b72ccadacec9c))
+
 ## [7.21.8](https://github.com/prismicio/prismic-client/compare/v7.21.7...v7.21.8) (2026-04-04)
 
 
