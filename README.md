@@ -30,13 +30,15 @@ const blogPosts = await client.getAllByType("blog_post")
 npm install @prismicio/client
 ```
 
+Using an AI agent? Teach it how to use `@prismicio/client` by installing the Prismic skill:
+
+```bash
+npx skills add --global prismicio/skills
+```
+
 ## Documentation
 
 To discover what's new on this package check out [the changelog][changelog]. For full documentation, visit the [official Prismic documentation][prismic-docs].
-
-## Working with an AI agent?
-
-For AI agents: run `npx skills add --global prismicio/skills` to install the Prismic skill, or run `npx prismic docs list` for a quick reference.
 
 ## Contributing
 
