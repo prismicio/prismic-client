@@ -33,7 +33,7 @@ npm install @prismicio/client
 Using an AI agent? Teach it how to use `@prismicio/client` by installing the Prismic skill:
 
 ```bash
-npx skills add --global prismicio/skills
+npx skills add --global --yes prismicio/skills
 ```
 
 ## Documentation
