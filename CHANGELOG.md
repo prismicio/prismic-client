@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.22.1](https://github.com/prismicio/prismic-client/compare/v7.22.0...v7.22.1) (2026-09-17)
+
+
+### Miscellaneous Chores
+
+* release 7.22.1 ([f8e3ad5](https://github.com/prismicio/prismic-client/commit/f8e3ad514325fcac2c5f921a480cda5d331e894b))
+
 ## [7.22.0](https://github.com/prismicio/prismic-client/compare/v7.21.8...v7.22.0) (2026-08-11)
 
 
