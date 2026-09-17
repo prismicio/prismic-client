@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.22.1](https://github.com/prismicio/prismic-client/compare/v7.22.0...v7.22.1) (2026-09-17)
+
+
+### Documentation
+
+* add a README note that tells AI agents to install the Prismic skill ([044e4ee](https://github.com/prismicio/prismic-client/commit/044e4eeb8323f0b91954d24598a86724d229000a))
+
 ## [7.22.0](https://github.com/prismicio/prismic-client/compare/v7.21.8...v7.22.0) (2026-08-11)
 
 
