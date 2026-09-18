@@ -80,7 +80,7 @@ export const resolveMigrationImage = (
 	migration: Migration,
 	withThumbnails?: boolean,
 ): FilledImageFieldImage | undefined => {
-	const { id: master, ...thumbnails } =
+	const { id: master, ...thumbnails }: Exclude<MigrationImage, PrismicMigrationAsset> =
 		image instanceof PrismicMigrationAsset ? { id: image } : image
 
 	const asset = migration._assets.get(master.config.id)?.asset

@@ -237,32 +237,27 @@ export class WriteClient<
 	}
 
 	/**
-	 * Publishes the repository's migration release, moving its documents into the
-	 * repository as published content.
-	 *
-	 * @param params - Additional fetch parameters.
-	 *
-	 * @returns The result of the publish operation, including the total number of
-	 *   documents that were published.
+	 * Publishes the repository's migration release, moving its documents into the repository as
+	 * published content.
 	 *
 	 * @example
+	 * 	```ts
+	 * 	const migration = createMigration()
 	 *
-	 * ```ts
-	 * const migration = createMigration()
+	 * 	// Prepare and run a migration.
+	 * 	migration.createDocument(doc, "My document")
+	 * 	await writeClient.migrate(migration)
 	 *
-	 * // Prepare and run a migration.
-	 * migration.createDocument(doc, "My document")
-	 * await writeClient.migrate(migration)
+	 * 	// Publish the migration release.
+	 * 	const { totalItems } = await writeClient.publishMigrationRelease()
+	 * 	```
 	 *
-	 * // Publish the migration release.
-	 * const { totalItems } = await writeClient.publishMigrationRelease()
-	 * ```
-	 *
+	 * @param params - Additional fetch parameters.
+	 * @returns The result of the publish operation, including the total number of documents that were
+	 *   published.
 	 * @see Prismic Migration API technical reference: {@link https://prismic.io/docs/migration-api-technical-reference}
 	 */
-	async publishMigrationRelease(
-		params?: FetchParams,
-	): Promise<PublishMigrationReleaseResult> {
+	async publishMigrationRelease(params?: FetchParams): Promise<PublishMigrationReleaseResult> {
 		const url = new URL("migration-release/publish", this.migrationAPIEndpoint)
 
 		const response = await this.#request(url, params, {
