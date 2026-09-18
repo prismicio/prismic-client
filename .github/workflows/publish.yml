@@ -20,17 +20,17 @@ jobs:
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
     steps:
-      - uses: googleapis/release-please-action@v4
+      - uses: googleapis/release-please-action@v5
         id: release
         continue-on-error: true
         with:
           release-type: node
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         if: steps.release.outputs.release_created == 'true'
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: steps.release.outputs.release_created == 'true'
         with:
-          node-version: 24
+          node-version: 26
           registry-url: "https://registry.npmjs.org"
       - if: steps.release.outputs.release_created == 'true'
         run: npm ci
@@ -48,10 +48,10 @@ jobs:
     env:
       MODE: production
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: 24
+          node-version: 26
           registry-url: "https://registry.npmjs.org"
 
       # Canary
