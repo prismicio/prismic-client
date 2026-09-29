@@ -30,7 +30,7 @@ it("uses cached repository metadata within the client's repository cache TTL", a
 	expect,
 	client,
 }) => {
-	vi.useFakeTimers()
+	vi.useFakeTimers({ toFake: ["Date"] })
 	await client.buildQueryURL()
 	await client.buildQueryURL()
 	vi.advanceTimersByTime(5000)
