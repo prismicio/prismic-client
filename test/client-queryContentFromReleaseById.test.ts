@@ -14,7 +14,7 @@ it("uses the cached release ref within the refs TTL", async ({
 	accessToken,
 	release,
 }) => {
-	vi.useFakeTimers()
+	vi.useFakeTimers({ toFake: ["Date"] })
 	client.queryContentFromReleaseByID(release.id)
 	await client.get({ accessToken })
 	await client.get({ accessToken })

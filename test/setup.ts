@@ -13,6 +13,7 @@ beforeEach(() => {
 
 afterEach(() => {
 	vi.resetAllMocks()
+	vi.useRealTimers()
 })
 
 expect.extend({
