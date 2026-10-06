@@ -457,10 +457,15 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		while ((!latestResult || latestResult.next_page) && documents.length < limit) {
 			const page = latestResult ? latestResult.page + 1 : undefined
 
-			latestResult = await this.get<TDocument>({ ...resolvedParams, page })
+			const response = await this.#internalGet({ ...resolvedParams, page })
+			latestResult = (await response.json()) as Query<TDocument>
 			documents.push(...latestResult.results)
 
-			if (latestResult.next_page) {
+			// Pages served from the CDN cache don't reach the API, so
+			// throttling the next request is unnecessary.
+			const isCDNCacheHit = /^hit\b/i.test(response.headers.get("x-cache") ?? "")
+
+			if (latestResult.next_page && !isCDNCacheHit) {
 				await new Promise((res) => setTimeout(res, GET_ALL_QUERY_DELAY))
 			}
 		}
