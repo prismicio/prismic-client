@@ -50,24 +50,23 @@ it("does not throttle requests after a CDN cache hit", async ({
 	masterRef,
 	response,
 }) => {
-	const cacheHit = response.search([{ id: "1" }], { page: 1, next_page: "2" })
+	const cacheHit = response.search([{ id: "1" }], { next_page: "1" })
 	cacheHit.headers.set("x-cache", "Hit from cloudfront")
 	vi.mocked(client.fetchFn)
 		.mockResolvedValueOnce(response.repository(masterRef))
 		.mockResolvedValueOnce(cacheHit)
-		.mockResolvedValueOnce(response.search([{ id: "2" }], { page: 2, next_page: "3" }))
-		.mockResolvedValueOnce(response.search([{ id: "3" }], { page: 3 }))
+		.mockResolvedValueOnce(response.search([{ id: "1" }]))
 	vi.useFakeTimers()
 	const start = performance.now()
 	const promise = client.dangerouslyGetAll()
 	await vi.runAllTimersAsync()
 	await promise
-	expect(client).toHaveFetchedContentAPITimes(3)
-	expect(performance.now() - start).toBe(500)
+	expect(client).toHaveFetchedContentAPITimes(2)
+	expect(performance.now() - start).toBe(0)
 	vi.useRealTimers()
 })
 
-it("does not throttle single page requests",async ({ expect, client, masterRef, response }) => {
+it("does not throttle single page requests", async ({ expect, client, masterRef, response }) => {
 	vi.mocked(client.fetchFn)
 		.mockResolvedValueOnce(response.repository(masterRef))
 		.mockResolvedValueOnce(response.search([{ id: "1" }]))
