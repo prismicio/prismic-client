@@ -457,10 +457,11 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		while ((!latestResult || latestResult.next_page) && documents.length < limit) {
 			const page = latestResult ? latestResult.page + 1 : undefined
 
-			latestResult = await this.get<TDocument>({ ...resolvedParams, page })
+			const response = await this.#internalGet({ ...resolvedParams, page })
+			latestResult = (await response.json()) as Query<TDocument>
 			documents.push(...latestResult.results)
 
-			if (latestResult.next_page) {
+			if (latestResult.next_page && !response.headers.get("x-cache")?.startsWith("Hit")) {
 				await new Promise((res) => setTimeout(res, GET_ALL_QUERY_DELAY))
 			}
 		}
