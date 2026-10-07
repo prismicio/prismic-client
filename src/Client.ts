@@ -461,7 +461,6 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			latestResult = (await response.json()) as Query<TDocument>
 			documents.push(...latestResult.results)
 
-			// CDN cache hits don't reach the API, so they don't need throttling.
 			if (latestResult.next_page && !response.headers.get("x-cache")?.startsWith("Hit")) {
 				await new Promise((res) => setTimeout(res, GET_ALL_QUERY_DELAY))
 			}
