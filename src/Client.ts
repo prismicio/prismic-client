@@ -457,11 +457,17 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		while ((!latestResult || latestResult.next_page) && documents.length < limit) {
 			const page = latestResult ? latestResult.page + 1 : undefined
 
+			const requestedAt = Date.now()
 			const response = await this.#internalGet({ ...resolvedParams, page })
 			latestResult = (await response.json()) as Query<TDocument>
 			documents.push(...latestResult.results)
 
-			if (latestResult.next_page && !response.headers.get("x-cache")?.startsWith("Hit")) {
+			// Caches (CDN, Next.js Data Cache) replay the origin's `Date` header, even
+			// when they also replay an `x-cache: Miss`. The margin covers clock skew.
+			const isCached =
+				response.headers.get("x-cache")?.startsWith("Hit") ||
+				Date.parse(response.headers.get("date") ?? "") < requestedAt - 5000
+			if (latestResult.next_page && !isCached) {
 				await new Promise((res) => setTimeout(res, GET_ALL_QUERY_DELAY))
 			}
 		}
