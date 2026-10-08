@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.22.3](https://github.com/prismicio/prismic-client/compare/v7.22.2...v7.22.3) (2026-10-08)
+
+
+### Bug Fixes
+
+* skip the `getAll*` delay when the previous page was replayed from any cache ([#467](https://github.com/prismicio/prismic-client/issues/467)) ([7a74519](https://github.com/prismicio/prismic-client/commit/7a745191b13e8ac89a66bd3d7b84a326f61dab27))
+
 ## [7.22.2](https://github.com/prismicio/prismic-client/compare/v7.22.1...v7.22.2) (2026-10-07)
 
 
