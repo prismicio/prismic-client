@@ -27,7 +27,6 @@ import type { PrismicDocument } from "./types/value/document"
 const MAX_PAGE_SIZE = 100
 const REPOSITORY_CACHE_TTL = 5000
 const GET_ALL_QUERY_DELAY = 500
-const CACHED_RESPONSE_DATE_TOLERANCE = 5000
 const MAX_INVALID_REF_RETRY_ATTEMPTS = 3
 
 /** Extracts a document type with a matching `type` property from a union of document types. */
@@ -463,7 +462,12 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			latestResult = (await response.json()) as Query<TDocument>
 			documents.push(...latestResult.results)
 
-			if (latestResult.next_page && !isCachedResponse(response, requestedAt)) {
+			// Caches (CDN, Next.js Data Cache) replay the origin's `Date` header, even
+			// when they also replay an `x-cache: Miss`. The margin covers clock skew.
+			const isCached =
+				response.headers.get("x-cache")?.startsWith("Hit") ||
+				Date.parse(response.headers.get("date") ?? "") < requestedAt - 5000
+			if (latestResult.next_page && !isCached) {
 				await new Promise((res) => setTimeout(res, GET_ALL_QUERY_DELAY))
 			}
 		}
@@ -1376,21 +1380,6 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 			this.fetchFn,
 		)
 	}
-}
-
-/**
- * Checks if a response was served from a cache (e.g. CDN, Next.js Data Cache) rather than generated
- * for the request. Cached responses keep the `Date` header from when they were generated, even when
- * replayed with their original `x-cache` header.
- */
-function isCachedResponse(response: ResponseLike, requestedAt: number): boolean {
-	if (response.headers.get("x-cache")?.startsWith("Hit")) {
-		return true
-	}
-
-	// The tolerance accounts for the `Date` header's second precision and clock skew.
-	const date = Date.parse(response.headers.get("date") ?? "")
-	return date < requestedAt - CACHED_RESPONSE_DATE_TOLERANCE
 }
 
 /** Appends filters to a params object. */

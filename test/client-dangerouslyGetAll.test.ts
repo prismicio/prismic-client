@@ -97,7 +97,6 @@ it("throttles requests after a freshly generated response", async ({
 }) => {
 	vi.useFakeTimers()
 	const fresh = response.search([{ id: "1" }], { next_page: "1" })
-	fresh.headers.set("x-cache", "Miss from cloudfront")
 	fresh.headers.set("date", new Date(Date.now() - 1_000).toUTCString())
 	vi.mocked(client.fetchFn)
 		.mockResolvedValueOnce(response.repository(masterRef))
