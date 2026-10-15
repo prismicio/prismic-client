@@ -193,23 +193,20 @@ async function waitFor<T>(
 	fn: () => T | Promise<T>,
 	config: { timeout?: number; interval?: number } = {},
 ): Promise<T> {
-	const { timeout = 3000, interval = 1000 } = config
+	const { timeout = 30000, interval = 1000 } = config
 
 	let error: unknown
 
-	const timer = setTimeout(() => {
-		throw error
-	}, timeout)
+	const deadline = Date.now() + timeout
 
 	while (true) {
 		try {
 			const res = await fn()
-			clearTimeout(timer)
-
 			return res
 		} catch (e) {
 			error = e
-			await wait(interval)
+			if (Date.now() >= deadline) throw error
+			await wait(Math.min(interval, deadline - Date.now()))
 		}
 	}
 }

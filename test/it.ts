@@ -81,6 +81,8 @@ export const it = test.extend<Fixtures>({
 	writeClient: async ({ repository, endpoint, writeToken }, use) => {
 		const client = createWriteClient(repository.name, {
 			documentAPIEndpoint: endpoint,
+			migrationAPIEndpoint: process.env.E2E_PRISMIC_MIGRATION_API_ENDPOINT,
+			assetAPIEndpoint: process.env.E2E_PRISMIC_ASSET_API_ENDPOINT,
 			writeToken: writeToken,
 		})
 		vi.spyOn(client, "fetchFn")
@@ -88,6 +90,8 @@ export const it = test.extend<Fixtures>({
 	},
 	isolatedWriteClient: async ({ isolatedRepository, writeToken }, use) => {
 		const client = createWriteClient(isolatedRepository.name, {
+			migrationAPIEndpoint: process.env.E2E_PRISMIC_MIGRATION_API_ENDPOINT,
+			assetAPIEndpoint: process.env.E2E_PRISMIC_ASSET_API_ENDPOINT,
 			documentAPIEndpoint: new URL("api/v2/", isolatedRepository.getBaseCdnURL()).toString(),
 			writeToken: writeToken,
 		})
