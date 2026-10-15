@@ -6,14 +6,14 @@ import type {
 	RTNode,
 	RTOListItemNode,
 	RTTextNode,
-} from "../types/value/richText"
-import { RichTextNodeType } from "../types/value/richText"
-import type { Tree, TreeNode } from "./types"
+} from "../types/value/richText";
+import { RichTextNodeType } from "../types/value/richText";
+import type { Tree, TreeNode } from "./types";
 
 const uuid = (): string => {
-	return (++uuid.i).toString()
-}
-uuid.i = 0
+	return (++uuid.i).toString();
+};
+uuid.i = 0;
 
 /**
  * Parses a rich text or title field into a tree
@@ -25,84 +25,157 @@ uuid.i = 0
  * @returns Tree from given rich text or title field
  */
 export const asTree = (nodes: RTNode[]): Tree => {
-	const preparedNodes = prepareNodes(nodes)
+	if (
+		nodes.some(
+			(node) =>
+				(node.type === RichTextNodeType.listItem ||
+					node.type === RichTextNodeType.oListItem) &&
+				(node.depth ?? 0) > 0,
+		)
+	) {
+		return nestedListsToTree(nodes);
+	}
+	const preparedNodes = prepareNodes(nodes);
 
-	const children: TreeNode[] = []
+	const children: TreeNode[] = [];
 	for (let i = 0; i < preparedNodes.length; i++) {
-		children.push(nodeToTreeNode(preparedNodes[i]))
+		children.push(nodeToTreeNode(preparedNodes[i]));
 	}
 
 	return {
 		key: uuid(),
 		children,
-	}
-}
+	};
+};
 
-const createTreeNode = (node: RTAnyNode, children: TreeNode[] = []): TreeNode => {
+const nestedListsToTree = (nodes: RTNode[]): Tree => {
+	const children: TreeNode[] = [];
+	const levels: { list: TreeNode; lastItem?: TreeNode }[] = [];
+	for (const node of nodes) {
+		if (
+			node.type !== RichTextNodeType.listItem &&
+			node.type !== RichTextNodeType.oListItem
+		) {
+			levels.length = 0;
+			children.push(nodeToTreeNode(node));
+			continue;
+		}
+		const requested = node.depth ?? 0;
+		const depth =
+			Number.isSafeInteger(requested) && requested >= 0
+				? Math.min(requested, levels.length)
+				: 0;
+		levels.length = Math.min(levels.length, depth + 1);
+		const listType =
+			node.type === RichTextNodeType.listItem
+				? RichTextNodeType.list
+				: RichTextNodeType.oList;
+		let level = levels[depth];
+		if (!level || level.list.type !== listType) {
+			const list = createTreeNode(
+				listType === RichTextNodeType.list
+					? { type: listType, items: [] }
+					: { type: listType, items: [] },
+			);
+			const siblings =
+				depth === 0 ? children : levels[depth - 1].lastItem!.children;
+			siblings.push(list);
+			level = { list };
+			levels[depth] = level;
+		}
+		const item = nodeToTreeNode(node);
+		level.list.children.push(item);
+		if (
+			level.list.node.type === RichTextNodeType.list &&
+			node.type === RichTextNodeType.listItem
+		)
+			level.list.node.items.push(node);
+		if (
+			level.list.node.type === RichTextNodeType.oList &&
+			node.type === RichTextNodeType.oListItem
+		)
+			level.list.node.items.push(node);
+		level.lastItem = item;
+	}
+	return { key: uuid(), children };
+};
+
+const createTreeNode = (
+	node: RTAnyNode,
+	children: TreeNode[] = [],
+): TreeNode => {
 	return {
 		key: uuid(),
 		type: node.type,
 		text: "text" in node ? node.text : undefined,
 		node,
 		children,
-	}
-}
+	};
+};
 
 const createTextTreeNode = (text: string): TreeNode => {
 	return createTreeNode({
 		type: RichTextNodeType.span,
 		text,
 		spans: [],
-	})
-}
+	});
+};
 
 const prepareNodes = (nodes: RTNode[]): RTBlockNode[] => {
-	const mutNodes: RTBlockNode[] = nodes.slice(0)
+	const mutNodes: RTBlockNode[] = nodes.slice(0);
 
 	for (let i = 0; i < mutNodes.length; i++) {
-		const node = mutNodes[i]
+		const node = mutNodes[i];
 
-		if (node.type === RichTextNodeType.listItem || node.type === RichTextNodeType.oListItem) {
-			const items: (RTListItemNode | RTOListItemNode)[] = [node as RTListItemNode | RTOListItemNode]
+		if (
+			node.type === RichTextNodeType.listItem ||
+			node.type === RichTextNodeType.oListItem
+		) {
+			const items: (RTListItemNode | RTOListItemNode)[] = [
+				node as RTListItemNode | RTOListItemNode,
+			];
 
 			while (mutNodes[i + 1] && mutNodes[i + 1].type === node.type) {
-				items.push(mutNodes[i + 1] as RTListItemNode | RTOListItemNode)
-				mutNodes.splice(i, 1)
+				items.push(mutNodes[i + 1] as RTListItemNode | RTOListItemNode);
+				mutNodes.splice(i, 1);
 			}
 
 			if (node.type === RichTextNodeType.listItem) {
 				mutNodes[i] = {
 					type: RichTextNodeType.list,
 					items: items as RTListItemNode[],
-				}
+				};
 			} else {
 				mutNodes[i] = {
 					type: RichTextNodeType.oList,
 					items: items as RTOListItemNode[],
-				}
+				};
 			}
 		}
 	}
 
-	return mutNodes
-}
+	return mutNodes;
+};
 
 const nodeToTreeNode = (node: RTBlockNode): TreeNode => {
 	if ("text" in node) {
-		return createTreeNode(node, textNodeSpansToTreeNodeChildren(node.spans, node))
+		return createTreeNode(
+			node,
+			textNodeSpansToTreeNodeChildren(node.spans, node),
+		);
 	}
 
 	if ("items" in node) {
-		const children: TreeNode[] = []
+		const children: TreeNode[] = [];
 		for (let i = 0; i < node.items.length; i++) {
-			children.push(nodeToTreeNode(node.items[i]))
+			children.push(nodeToTreeNode(node.items[i]));
 		}
 
-		return createTreeNode(node, children)
+		return createTreeNode(node, children);
 	}
 
-	return createTreeNode(node)
-}
+	return createTreeNode(node);
+};
 
 const textNodeSpansToTreeNodeChildren = (
 	spans: RTInlineNode[],
@@ -110,10 +183,10 @@ const textNodeSpansToTreeNodeChildren = (
 	parentSpan?: RTInlineNode,
 ): TreeNode[] => {
 	if (!spans.length) {
-		return [createTextTreeNode(node.text)]
+		return [createTextTreeNode(node.text)];
 	}
 
-	const mutSpans: RTInlineNode[] = spans.slice(0)
+	const mutSpans: RTInlineNode[] = spans.slice(0);
 
 	// Sort spans using the following criteria:
 	//
@@ -125,44 +198,47 @@ const textNodeSpansToTreeNodeChildren = (
 	//
 	// Sorting using this algorithm ensures proper detection of child
 	// spans.
-	mutSpans.sort((a, b) => a.start - b.start || b.end - a.end)
+	mutSpans.sort((a, b) => a.start - b.start || b.end - a.end);
 
-	const children: TreeNode[] = []
+	const children: TreeNode[] = [];
 
 	for (let i = 0; i < mutSpans.length; i++) {
-		const span = mutSpans[i]
-		const parentSpanStart = (parentSpan && parentSpan.start) || 0
-		const spanStart = span.start - parentSpanStart
-		const spanEnd = span.end - parentSpanStart
-		const text = node.text.slice(spanStart, spanEnd)
+		const span = mutSpans[i];
+		const parentSpanStart = (parentSpan && parentSpan.start) || 0;
+		const spanStart = span.start - parentSpanStart;
+		const spanEnd = span.end - parentSpanStart;
+		const text = node.text.slice(spanStart, spanEnd);
 
-		const childSpans: RTInlineNode[] = []
+		const childSpans: RTInlineNode[] = [];
 		for (let j = i; j < mutSpans.length; j++) {
-			const siblingSpan = mutSpans[j]
+			const siblingSpan = mutSpans[j];
 
 			if (siblingSpan !== span) {
 				if (siblingSpan.start >= span.start && siblingSpan.end <= span.end) {
-					childSpans.push(siblingSpan)
-					mutSpans.splice(j, 1)
-					j--
-				} else if (siblingSpan.start < span.end && siblingSpan.end > span.start) {
+					childSpans.push(siblingSpan);
+					mutSpans.splice(j, 1);
+					j--;
+				} else if (
+					siblingSpan.start < span.end &&
+					siblingSpan.end > span.start
+				) {
 					childSpans.push({
 						...siblingSpan,
 						end: span.end,
-					})
+					});
 					mutSpans[j] = {
 						...siblingSpan,
 						start: span.end,
-					}
+					};
 				}
 			}
 		}
 
 		if (i === 0 && spanStart > 0) {
-			children.push(createTextTreeNode(node.text.slice(0, spanStart)))
+			children.push(createTextTreeNode(node.text.slice(0, spanStart)));
 		}
 
-		const spanWithText = { ...span, text }
+		const spanWithText = { ...span, text };
 		children.push(
 			createTreeNode(
 				spanWithText,
@@ -175,19 +251,21 @@ const textNodeSpansToTreeNodeChildren = (
 					span,
 				),
 			),
-		)
+		);
 
 		if (spanEnd < node.text.length) {
 			children.push(
 				createTextTreeNode(
 					node.text.slice(
 						spanEnd,
-						mutSpans[i + 1] ? mutSpans[i + 1].start - parentSpanStart : undefined,
+						mutSpans[i + 1]
+							? mutSpans[i + 1].start - parentSpanStart
+							: undefined,
 					),
 				),
-			)
+			);
 		}
 	}
 
-	return children
-}
+	return children;
+};

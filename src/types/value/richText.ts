@@ -88,11 +88,15 @@ export interface RTPreformattedNode extends RTTextNodeBase {
 /** Rich text `list-item` node */
 export interface RTListItemNode extends RTTextNodeBase {
 	type: typeof RichTextNodeType.listItem
+	/** Indentation level; omitted for a root list item. */
+	depth?: number
 }
 
 /** Rich text `o-list-item` node for ordered lists */
 export interface RTOListItemNode extends RTTextNodeBase {
 	type: typeof RichTextNodeType.oListItem
+	/** Indentation level; omitted for a root list item. */
+	depth?: number
 }
 
 // Span nodes
@@ -238,6 +242,5 @@ export type RTAnyNode = RTBlockNode | RTInlineNode | RTSpanNode
  *
  * @see Rich text field documentation: {@link https://prismic.io/docs/rich-text-title}
  */
-export type RichTextField<State extends FieldState = FieldState> = State extends "empty"
-	? []
-	: [RTNode, ...RTNode[]]
+export type RichTextField<State extends FieldState = FieldState> =
+	State extends "empty" ? [] : [RTNode, ...RTNode[]]
