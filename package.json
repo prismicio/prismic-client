@@ -71,12 +71,12 @@
 		"@prismicio/e2e-tests-utils": "^1.20.0",
 		"@prismicio/types-internal": "^3.17.2",
 		"@types/node": "^26.6.5",
-		"@vitest/coverage-v8": "^5.0.4",
-		"oxfmt": "^0.72.0",
-		"oxlint": "^1.87.0",
+		"@vitest/coverage-v8": "^5.0.5",
+		"oxfmt": "^0.73.0",
+		"oxlint": "^1.88.0",
 		"tsdown": "^0.23.1",
 		"typescript": "^7.0.2",
-		"vitest": "^5.0.4"
+		"vitest": "^5.0.5"
 	},
 	"engines": {
 		"node": ">=22"
