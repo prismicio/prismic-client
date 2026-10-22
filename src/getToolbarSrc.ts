@@ -34,12 +34,9 @@ import { isRepositoryName } from "./isRepositoryName"
  *   stores the preview session in the `cookie.previewSession` cookie. Defaults to v4.
  * @returns The URL for the given Prismic repository's Prismic Toolbar script.
  */
-export const getToolbarSrc = <TRepositoryName extends string, TVersion extends 4 | 5 = 4>(
-	repositoryName: TRepositoryName,
-	config?: { version?: TVersion },
-): `https://static.cdn.prismic.io/prismic.js?repo=${TRepositoryName}${TVersion extends 5 ? "&v=5" : ""}` => {
+export const getToolbarSrc = (repositoryName: string, config?: { version?: 4 | 5 }): string => {
 	if (isRepositoryName(repositoryName)) {
-		return `https://static.cdn.prismic.io/prismic.js?repo=${repositoryName}${config?.version === 5 ? "&v=5" : ""}` as never
+		return `https://static.cdn.prismic.io/prismic.js?repo=${repositoryName}${config?.version === 5 ? "&v=5" : ""}`
 	} else {
 		throw new PrismicError(
 			`An invalid Prismic repository name was given: ${repositoryName}`,
