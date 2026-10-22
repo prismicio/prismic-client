@@ -36,7 +36,7 @@ import { isRepositoryName } from "./isRepositoryName"
  */
 export const getToolbarSrc = (repositoryName: string, config?: { version?: 4 | 5 }): string => {
 	if (isRepositoryName(repositoryName)) {
-		return `https://static.cdn.prismic.io/prismic.js?repo=${repositoryName}${config?.version === 5 ? "&v=5" : ""}`
+		return `https://static.cdn.prismic.io/prismic.js?repo=${repositoryName}${config?.version ? `&v=${config.version}` : ""}`
 	} else {
 		throw new PrismicError(
 			`An invalid Prismic repository name was given: ${repositoryName}`,
