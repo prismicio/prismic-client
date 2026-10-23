@@ -72,8 +72,8 @@
 		"@prismicio/types-internal": "^3.17.2",
 		"@types/node": "^26.6.5",
 		"@vitest/coverage-v8": "^5.0.5",
-		"oxfmt": "^0.73.0",
-		"oxlint": "^1.88.0",
+		"oxfmt": "^0.74.0",
+		"oxlint": "^1.89.0",
 		"tsdown": "^0.23.1",
 		"typescript": "^7.0.2",
 		"vitest": "^5.0.5"
