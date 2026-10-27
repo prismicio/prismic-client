@@ -30,13 +30,27 @@ import { isRepositoryName } from "./isRepositoryName"
  *
  * @param repositoryName - The name of the Prismic repository. For example, `"my-repo"` if the
  *   repository URL is `my-repo.prismic.io`.
+ * @param config - Options that configure the toolbar URL.
  * @returns The URL for the given Prismic repository's Prismic Toolbar script.
  */
-export const getToolbarSrc = <TRepositoryName extends string>(
-	repositoryName: TRepositoryName,
-): `https://static.cdn.prismic.io/prismic.js?new=true&repo=${TRepositoryName}` => {
+export const getToolbarSrc = (
+	repositoryName: string,
+	config?: {
+		/** The version of the Prismic Toolbar to load. Defaults to 4. */
+		version?: 4 | 5
+		/**
+		 * The URL the toolbar script is loaded from, without a trailing slash. For example, a toolbar
+		 * preview build. Defaults to `https://static.cdn.prismic.io`.
+		 */
+		host?: string
+	},
+): string => {
 	if (isRepositoryName(repositoryName)) {
-		return `https://static.cdn.prismic.io/prismic.js?new=true&repo=${repositoryName}` as const
+		const url = new URL(`${config?.host ?? "https://static.cdn.prismic.io"}/prismic.js`)
+		url.searchParams.set("repo", repositoryName)
+		if (config?.version) url.searchParams.set("v", config.version.toString())
+
+		return url.toString()
 	} else {
 		throw new PrismicError(
 			`An invalid Prismic repository name was given: ${repositoryName}`,
