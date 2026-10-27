@@ -1,9 +1,19 @@
 import { PrismicError, getToolbarSrc } from "../src"
 import { it } from "./it"
 
-it("returns a URL for the Prismic Toolbar script", async ({ expect }) => {
+it("returns the default URL for the Prismic Toolbar script", async ({ expect }) => {
 	const res = getToolbarSrc("example")
-	expect(res).toBe("https://static.cdn.prismic.io/prismic.js?new=true&repo=example")
+	expect(res).toBe("https://static.cdn.prismic.io/prismic.js?repo=example")
+})
+
+it("returns a URL for the Prismic Toolbar v5 script with version 5", async ({ expect }) => {
+	const res = getToolbarSrc("example", { version: 5 })
+	expect(res).toBe("https://static.cdn.prismic.io/prismic.js?repo=example&v=5")
+})
+
+it("returns a URL on the given host", async ({ expect }) => {
+	const res = getToolbarSrc("example", { host: "https://prismic.io/prismic-toolbar/pr-42" })
+	expect(res).toBe("https://prismic.io/prismic-toolbar/pr-42/prismic.js?repo=example")
 })
 
 it("throws if an invalid repository name is given", async ({ expect }) => {
