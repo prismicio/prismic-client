@@ -1,6 +1,6 @@
 {
 	"name": "@prismicio/client",
-	"version": "7.22.3",
+	"version": "7.23.0",
 	"description": "The official JavaScript + TypeScript client library for Prismic",
 	"keywords": [
 		"client",

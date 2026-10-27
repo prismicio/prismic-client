@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.23.0](https://github.com/prismicio/prismic-client/compare/v7.22.3...v7.23.0) (2026-10-27)
+
+
+### Features
+
+* support Prismic toolbar v5 in getToolbarSrc ([#477](https://github.com/prismicio/prismic-client/issues/477)) ([15d0e36](https://github.com/prismicio/prismic-client/commit/15d0e366919585a3f7c63f925f111518da783d57))
+
 ## [7.22.3](https://github.com/prismicio/prismic-client/compare/v7.22.2...v7.22.3) (2026-10-08)
 
 
