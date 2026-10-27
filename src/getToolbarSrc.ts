@@ -38,10 +38,17 @@ export const getToolbarSrc = (
 	config?: {
 		/** The version of the Prismic Toolbar to load. Defaults to 4. */
 		version?: 4 | 5
+		/**
+		 * The URL the toolbar script is loaded from, without a trailing slash. For example, a toolbar
+		 * preview build. Defaults to `https://static.cdn.prismic.io`.
+		 */
+		host?: string
 	},
 ): string => {
 	if (isRepositoryName(repositoryName)) {
-		return `https://static.cdn.prismic.io/prismic.js?repo=${repositoryName}${config?.version ? `&v=${config.version}` : ""}`
+		const host = config?.host ?? "https://static.cdn.prismic.io"
+
+		return `${host}/prismic.js?repo=${repositoryName}${config?.version ? `&v=${config.version}` : ""}`
 	} else {
 		throw new PrismicError(
 			`An invalid Prismic repository name was given: ${repositoryName}`,
