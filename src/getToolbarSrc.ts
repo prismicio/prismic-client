@@ -46,9 +46,11 @@ export const getToolbarSrc = (
 	},
 ): string => {
 	if (isRepositoryName(repositoryName)) {
-		const host = config?.host ?? "https://static.cdn.prismic.io"
+		const url = new URL(`${config?.host ?? "https://static.cdn.prismic.io"}/prismic.js`)
+		url.searchParams.set("repo", repositoryName)
+		if (config?.version) url.searchParams.set("v", config.version.toString())
 
-		return `${host}/prismic.js?repo=${repositoryName}${config?.version ? `&v=${config.version}` : ""}`
+		return url.toString()
 	} else {
 		throw new PrismicError(
 			`An invalid Prismic repository name was given: ${repositoryName}`,
