@@ -1,7 +1,7 @@
 import { PrismicError, getToolbarSrc } from "../src"
 import { it } from "./it"
 
-it("returns a URL for the Prismic Toolbar v4 script by default", async ({ expect }) => {
+it("returns the default URL for the Prismic Toolbar script", async ({ expect }) => {
 	const res = getToolbarSrc("example")
 	expect(res).toBe("https://static.cdn.prismic.io/prismic.js?repo=example")
 })
