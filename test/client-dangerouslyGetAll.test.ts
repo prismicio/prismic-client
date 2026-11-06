@@ -152,7 +152,7 @@ it("uses cached repository metadata within the client's repository cache TTL", a
 	expect,
 	client,
 }) => {
-	vi.useFakeTimers({ toFake: ["Date"] })
+	vi.useFakeTimers({ toFake: ["Date", "performance"] })
 	await client.dangerouslyGetAll()
 	await client.dangerouslyGetAll()
 	vi.advanceTimersByTime(5000)

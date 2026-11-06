@@ -214,7 +214,10 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	#autoPreviewsRequest?: HttpRequestLike
 
 	#cachedRepository: Repository | undefined
-	#cachedRepositoryExpiration = 0 // Timestamp
+	// A `performance.now()` timestamp. `performance.now()` is used rather than
+	// `Date.now()` because it is monotonic and, unlike `Date.now()`, is allowed
+	// during a Next.js Cache Components prerender.
+	#cachedRepositoryExpiration = 0
 
 	/**
 	 * @param repositoryNameOrEndpoint - The Prismic repository name or full Content API endpoint for
@@ -802,7 +805,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	async getRepository(
 		params?: Pick<BuildQueryURLArgs, "accessToken"> & FetchParams,
 	): Promise<Repository> {
-		if (this.#cachedRepository && this.#cachedRepositoryExpiration > Date.now()) {
+		if (this.#cachedRepository && this.#cachedRepositoryExpiration > performance.now()) {
 			return this.#cachedRepository
 		}
 
@@ -817,7 +820,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 
 		if (response.ok) {
 			this.#cachedRepository = (await response.json()) as Repository
-			this.#cachedRepositoryExpiration = Date.now() + REPOSITORY_CACHE_TTL
+			this.#cachedRepositoryExpiration = performance.now() + REPOSITORY_CACHE_TTL
 
 			return this.#cachedRepository
 		}
