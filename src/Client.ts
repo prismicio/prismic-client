@@ -214,10 +214,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	#autoPreviewsRequest?: HttpRequestLike
 
 	#cachedRepository: Repository | undefined
-	// A `performance.now()` timestamp. `performance.now()` is used rather than
-	// `Date.now()` because it is monotonic and, unlike `Date.now()`, is allowed
-	// during a Next.js Cache Components prerender.
-	#cachedRepositoryExpiration = 0
+	#cachedRepositoryExpiration = 0 // Timestamp
 
 	/**
 	 * @param repositoryNameOrEndpoint - The Prismic repository name or full Content API endpoint for
@@ -460,17 +457,17 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 		while ((!latestResult || latestResult.next_page) && documents.length < limit) {
 			const page = latestResult ? latestResult.page + 1 : undefined
 
-			const requestedAt = Date.now()
 			const response = await this.#internalGet({ ...resolvedParams, page })
 			latestResult = (await response.json()) as Query<TDocument>
 			documents.push(...latestResult.results)
 
 			// Caches (CDN, Next.js Data Cache) replay the origin's `Date` header, even
 			// when they also replay an `x-cache: Miss`. The margin covers clock skew.
-			const isCached =
+			// Lazy, because Next.js forbids `Date.now()` during a prerender.
+			const isCached = () =>
 				response.headers.get("x-cache")?.startsWith("Hit") ||
-				Date.parse(response.headers.get("date") ?? "") < requestedAt - 5000
-			if (latestResult.next_page && !isCached) {
+				Date.parse(response.headers.get("date") ?? "") < Date.now() - 5000
+			if (latestResult.next_page && !isCached()) {
 				await new Promise((res) => setTimeout(res, GET_ALL_QUERY_DELAY))
 			}
 		}

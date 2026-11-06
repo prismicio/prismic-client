@@ -12,13 +12,13 @@ let lastCalledAt = 0
  * @param config - Configuration for the log.
  */
 export const throttledWarn = (message: string): void => {
-	if (message === lastMessage && Date.now() - lastCalledAt < THROTTLE_THRESHOLD_MS) {
-		lastCalledAt = Date.now()
+	if (message === lastMessage && performance.now() - lastCalledAt < THROTTLE_THRESHOLD_MS) {
+		lastCalledAt = performance.now()
 
 		return
 	}
 
-	lastCalledAt = Date.now()
+	lastCalledAt = performance.now()
 	lastMessage = message
 
 	console.warn(message)
