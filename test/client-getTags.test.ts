@@ -32,7 +32,7 @@ it("uses cached repository within the client's repository cache TTL", async ({
 	expect,
 	client,
 }) => {
-	vi.useFakeTimers({ toFake: ["Date"] })
+	vi.useFakeTimers({ toFake: ["Date", "performance"] })
 	await client.getTags()
 	await client.getTags()
 	vi.advanceTimersByTime(5000)

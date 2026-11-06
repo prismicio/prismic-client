@@ -51,7 +51,7 @@ export const pLimit = ({ interval }: { interval?: number } = {}): LimitFunction 
 		resolve: (value: unknown) => void,
 		arguments_: unknown[],
 	) => {
-		const timeSinceLastCompletion = Date.now() - lastCompletion
+		const timeSinceLastCompletion = performance.now() - lastCompletion
 
 		if (interval && timeSinceLastCompletion < interval) {
 			await sleep(interval - timeSinceLastCompletion)
@@ -64,7 +64,7 @@ export const pLimit = ({ interval }: { interval?: number } = {}): LimitFunction 
 			await result
 		} catch {}
 
-		lastCompletion = Date.now()
+		lastCompletion = performance.now()
 
 		next()
 	}

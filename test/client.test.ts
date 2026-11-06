@@ -121,7 +121,7 @@ describe.for(queryCases)("$name", async ({ fn }) => {
 		client,
 		docs,
 	}) => {
-		vi.useFakeTimers({ toFake: ["Date"] })
+		vi.useFakeTimers({ toFake: ["Date", "performance"] })
 		await fn({ client, docs })
 		await fn({ client, docs })
 		vi.advanceTimersByTime(5000)
