@@ -7,6 +7,19 @@ import { model } from "./setup.global"
 // The Migration API is slow and has low rate limits.
 vi.setConfig({ testTimeout: 20000 })
 
+it("does not throttle the first request", async ({ expect, writeClient }) => {
+	vi.mocked(writeClient.fetchFn).mockResolvedValueOnce(
+		Response.json({ totalItems: 0 }, { status: 202 }),
+	)
+	vi.useFakeTimers()
+	const start = performance.now()
+	const promise = writeClient.publishMigrationRelease()
+	await vi.runAllTimersAsync()
+	await promise
+	expect(performance.now() - start).toBe(0)
+	vi.useRealTimers()
+})
+
 it("publishes the migration release and returns the total", async ({
 	expect,
 	isolatedWriteClient,
