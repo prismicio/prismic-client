@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.23.1](https://github.com/prismicio/prismic-client/compare/v7.23.0...v7.23.1) (2026-11-11)
+
+
+### Bug Fixes
+
+* support Next.js Cache Components prerendering ([#487](https://github.com/prismicio/prismic-client/issues/487)) ([35b4a42](https://github.com/prismicio/prismic-client/commit/35b4a420cbce3bbca89a12220f10d64f3c146544))
+
 ## [7.23.0](https://github.com/prismicio/prismic-client/compare/v7.22.3...v7.23.0) (2026-10-27)
 
 
