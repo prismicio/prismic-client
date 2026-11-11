@@ -31,7 +31,7 @@ export type LimitFunction = <TArguments extends unknown[], TReturnType>(
 export const pLimit = ({ interval }: { interval?: number } = {}): LimitFunction => {
 	const queue: AnyFunction[] = []
 	let busy = false
-	let lastCompletion = 0
+	let lastCompletion = -Infinity
 
 	const resumeNext = () => {
 		if (!busy && queue.length > 0) {
