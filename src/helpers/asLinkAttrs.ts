@@ -65,8 +65,7 @@ type AsLinkAttrsReturnType<
  * If a resolved URL is external (i.e. starts with a protocol like `https://`), `rel` is returned as
  * `"noreferrer"`.
  *
- * @typeParam LinkResolverFunctionReturnType - Link resolver function return
- * type
+ * @typeParam LinkResolverFunctionReturnType - Link resolver function return type
  * @typeParam Field - Link field or Prismic page to resolve to link attributes
  * @param linkFieldOrDocument - Any kind of link field or a page to resolve
  * @param config - Configuration that determines the output of `asLinkAttrs()`

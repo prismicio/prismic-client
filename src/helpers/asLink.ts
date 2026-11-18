@@ -60,8 +60,7 @@ export const asLink: {
 	 * 	// => "/blog/my-post"
 	 * 	```
 	 *
-	 * @typeParam LinkResolverFunctionReturnType - Link resolver function return
-	 * type.
+	 * @typeParam LinkResolverFunctionReturnType - Link resolver function return type.
 	 * @typeParam Field - Link field or Prismic page to resolve to a URL.
 	 * @param linkFieldOrDocument - Any kind of link field or a page to resolve.
 	 * @param config - Configuration that determines the output of `asLink()`.
@@ -84,8 +83,7 @@ export const asLink: {
 	 * Converts any type of link field or Prismic page to a URL.
 	 *
 	 * @deprecated Use object-style configuration instead.
-	 * @typeParam LinkResolverFunctionReturnType - Link resolver function return
-	 * type.
+	 * @typeParam LinkResolverFunctionReturnType - Link resolver function return type.
 	 * @typeParam Field - Link field or Prismic page to resolve to a URL.
 	 * @param linkFieldOrDocument - Any kind of link field or a page to resolve.
 	 * @param linkResolver - An optional link resolver function. Without it, you're expected to use
