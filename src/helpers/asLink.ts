@@ -55,10 +55,8 @@ export const asLink: {
 	 * Converts any type of link field or Prismic page to a URL.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const url = asLink(document.data.link)
 	 * 	// => "/blog/my-post"
-	 * 	```
 	 *
 	 * @typeParam LinkResolverFunctionReturnType - Link resolver function return type.
 	 * @typeParam Field - Link field or Prismic page to resolve to a URL.

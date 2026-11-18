@@ -302,11 +302,9 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Queries a document from the migration instance with a specific UID and custom type.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const contentRelationship = migration.createContentRelationship(() =>
 	 * 		migration.getByUID("blog_post", "my-first-post"),
 	 * 	)
-	 * 	```
 	 *
 	 * @typeParam TType - Type of the Prismic document returned.
 	 * @param type - The API ID of the document's custom type.
@@ -328,11 +326,9 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Queries a singleton document from the migration instance for a specific custom type.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const contentRelationship = migration.createContentRelationship(() =>
 	 * 		migration.getSingle("settings"),
 	 * 	)
-	 * 	```
 	 *
 	 * @typeParam TType - Type of the Prismic document returned.
 	 * @param type - The API ID of the singleton custom type.
@@ -448,11 +444,9 @@ export class Migration<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Queries a document from the migration instance for a specific original ID.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const contentRelationship = migration.createContentRelationship(() =>
 	 * 		migration._getByOriginalID("YhdrDxIAACgAcp_b"),
 	 * 	)
-	 * 	```
 	 *
 	 * @typeParam TType - Type of the Prismic document returned.
 	 * @param id - The original ID of the Prismic document.

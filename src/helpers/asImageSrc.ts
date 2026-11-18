@@ -12,10 +12,8 @@ type AsImageSrcReturnType<Field extends ImageFieldImage | null | undefined> =
  * Returns the URL of an image field with optional image transformations via imgix URL parameters.
  *
  * @example
- * 	;```ts
  * 	const src = asImageSrc(document.data.photo, { sat: -100 })
  * 	// => "https://images.prismic.io/repo/image.png?sat=-100"
- * 	```
  *
  * @param field - An image field (or one of its responsive views) from which to get an image URL.
  * @param config - An object of imgix URL API parameters to transform the image.

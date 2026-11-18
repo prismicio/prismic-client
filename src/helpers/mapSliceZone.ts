@@ -176,13 +176,11 @@ type MapSliceLike<
  * Whenever possible, use this function on the server to minimize client-side processing.
  *
  * @example
- * 	;```typescript
  * 	const mappedSliceZone = await mapSliceZone(page.data.slices, {
  * 	code_block: ({ slice }) => ({
  * 	codeHTML: await highlight(slice.primary.code),
  * 	}),
  * 	});
- * 	```
  */
 export function mapSliceZone<
 	TSliceLike extends SliceLike,

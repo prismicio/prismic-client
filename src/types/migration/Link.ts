@@ -5,10 +5,8 @@ import type { LinkType, OptionalLinkProperties } from "../value/link"
  * valid `link_type` property).
  *
  * @example
- * 	;```ts
  * 	type Example = MaybeLink<PrismicDocument | LinkField>
  * 	// PrismicDocument | (LinkField & OptionalLinkProperties)
- * 	```
  *
  * @typeParam T - The type to augment.
  */

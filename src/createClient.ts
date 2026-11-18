@@ -13,13 +13,11 @@ export interface CreateClient {
  * Creates a Prismic client that can be used to query content from a repository.
  *
  * @example
- * 	;```ts
  * 	// With a repository name
  * 	createClient("my-repo")
  *
  * 	// With a full Prismic Content API endpoint
  * 	createClient("https://my-repo.cdn.prismic.io/api/v2")
- * 	```
  *
  * @typeParam TDocuments - A union of Prismic page and custom types for the repository.
  * @param repositoryNameOrEndpoint - The Prismic repository name or full Content API endpoint for
