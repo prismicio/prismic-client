@@ -288,10 +288,8 @@ export const asHTML: {
 	 * Converts a rich text field to an HTML string.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const html = asHTML(document.data.content)
 	 * 	// => "<p>Hello world</p>"
-	 * 	```
 	 *
 	 * @param richTextField - A rich text field from Prismic.
 	 * @param config - Configuration that determines the output of `asHTML()`.

@@ -5,10 +5,8 @@ import { isRepositoryName } from "./isRepositoryName"
  * Get a repository's Prismic Content API endpoint.
  *
  * @example
- * 	;```ts
  * 	getRepositoryEndpoint("my-repo")
  * 	// => "https://my-repo.cdn.prismic.io/api/v2"
- * 	```
  *
  * @typeParam RepositoryName - Name of the Prismic repository.
  * @param repositoryName - Name of the repository.

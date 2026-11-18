@@ -158,14 +158,12 @@ export interface QueryParams {
 	 *   Strings and arrays of strings are deprecated as of `@prismicio/client@7.0.0`. Please migrate
 	 *   to the more explicit array of objects.
 	 * @example
-	 * 	;```typescript
 	 * 	buildQueryURL(endpoint, {
 	 * 		orderings: [
 	 * 			{ field: "my.product.price", direction: "desc" },
 	 * 			{ field: "my.product.title" },
 	 * 		],
 	 * 	})
-	 * 	```
 	 */
 	// TODO: Update TSDoc with deprecated API removal in v8
 	orderings?: string | Ordering | (string | Ordering)[]
@@ -273,12 +271,10 @@ export type BuildQueryURLArgs = QueryParams & BuildQueryURLParams
  * Type the JSON response with `Query`.
  *
  * @example
- * 	;```ts
  * 	const url = buildQueryURL("https://my-repo.cdn.prismic.io/api/v2", {
  * 		ref: "my-ref",
  * 		filters: [filter.at("document.type", "blog_post")],
  * 	})
- * 	```
  *
  * @param endpoint - URL to the repository's Content API.
  * @param args - Arguments to filter and scope the query.

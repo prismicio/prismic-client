@@ -345,9 +345,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Enables the client to automatically query content from a preview session.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	client.enableAutoPreviews()
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#enableautopreviews}
 	 */
@@ -360,9 +358,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * object.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	client.enableAutoPreviewsFromReq(req)
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#enableautopreviewsfromreq}
 	 */
@@ -375,9 +371,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Disables the client from automatically querying content from a preview session.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	client.disableAutoPreviews()
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#disableautopreviews}
 	 */
@@ -390,9 +384,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Fetches pages based on the `params` argument. Results are paginated.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const response = await client.get({ pageSize: 10 })
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#get}
 	 */
@@ -408,9 +400,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Fetches the first page returned based on the `params` argument.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const page = await client.getFirst()
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getfirst}
 	 */
@@ -433,9 +423,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * requests to fetch all matching pages.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const pages = await client.dangerouslyGetAll()
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#dangerouslygetall}
 	 */
@@ -479,9 +467,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Fetches a page with a specific ID.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const page = await client.getByID("WW4bKScAAMAqmluX")
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getbyid}
 	 */
@@ -496,9 +482,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Fetches pages with specific IDs. Results are paginated.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const response = await client.getByIDs(["WW4bKScAAMAqmluX", "U1kTRgEAAC8A5ldS"])
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getbyids}
 	 */
@@ -514,9 +498,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * matching pages.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const pages = await client.getAllByIDs(["WW4bKScAAMAqmluX", "U1kTRgEAAC8A5ldS"])
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getallbyids}
 	 */
@@ -533,9 +515,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Fetches a page with a specific UID and type.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const page = await client.getByUID("blog_post", "my-first-post")
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getbyuid}
 	 */
@@ -560,9 +540,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Fetches pages with specific UIDs and a specific type. Results are paginated.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const response = await client.getByUIDs("blog_post", ["my-first-post", "my-second-post"])
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getbyuids}
 	 */
@@ -588,9 +566,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * requests to fetch all matching pages.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const pages = await client.getAllByUIDs("blog_post", ["my-first-post", "my-second-post"])
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getallbyuids}
 	 */
@@ -615,9 +591,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Fetches a specific single type page.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const page = await client.getSingle("settings")
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getsingle}
 	 */
@@ -637,9 +611,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Fetches pages with a specific type. Results are paginated.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const response = await client.getByType("blog_post")
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getbytype}
 	 */
@@ -660,9 +632,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * matching documents.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const pages = await client.getAllByType("blog_post")
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getallbytype}
 	 */
@@ -682,9 +652,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Fetches pages with a specific tag. Results are paginated.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const response = await client.getByTag("featured")
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getbytag}
 	 */
@@ -700,9 +668,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * matching documents.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const pages = await client.getAllByTag("featured")
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getallbytag}
 	 */
@@ -719,9 +685,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Fetches pages with every tag from a list of tags. Results are paginated.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const response = await client.getByEveryTag(["featured", "homepage"])
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getbyeverytag}
 	 */
@@ -737,9 +701,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * requests to fetch all matching pages.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const pages = await client.getAllByEveryTag(["featured", "homepage"])
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getallbyeverytag}
 	 */
@@ -756,9 +718,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Fetches pages with at least one tag from a list of tags. Results are paginated.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const response = await client.getBySomeTags(["featured", "homepage"])
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getbysometags}
 	 */
@@ -774,9 +734,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * requests to fetch all matching documents.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const pages = await client.getAllBySomeTags(["featured", "homepage"])
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getallbysometags}
 	 */
@@ -793,9 +751,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Fetches metadata about the client's Prismic repository.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const repository = await client.getRepository()
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getrepository}
 	 */
@@ -837,9 +793,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Fetches the repository's active refs.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const refs = await client.getRefs()
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getrefs}
 	 */
@@ -853,9 +807,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Fetches a ref by its ID.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const ref = await client.getRefByID("YhE3YhEAACIA4321")
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getrefbyid}
 	 */
@@ -874,9 +826,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Fetches a ref by its label. A release ref's label is its name shown in the Page Builder.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const ref = await client.getRefByLabel("My Release")
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getrefbylabel}
 	 */
@@ -895,9 +845,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Fetches the repository's master ref.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const masterRef = await client.getMasterRef()
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getmasterref}
 	 */
@@ -916,9 +864,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Fetches the repository's active releases.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const releases = await client.getReleases()
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getreleases}
 	 */
@@ -932,9 +878,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Fetches a release with a specific ID.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const release = await client.getReleaseByID("YhE3YhEAACIA4321")
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getreleasebyid}
 	 */
@@ -953,9 +897,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Fetches a release by its label. A release ref's label is its name shown in the Page Builder.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const release = await client.getReleaseByLabel("My Release")
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#getreleasebylabel}
 	 */
@@ -978,9 +920,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Fetches the repository's page tags.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const tags = await client.getTags()
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#gettags}
 	 */
@@ -1006,11 +946,9 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Builds a Content API query URL with a set of parameters.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const url = await client.buildQueryURL({
 	 * 		filters: [filter.at("document.type", "blog_post")],
 	 * 	})
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#buildqueryurl}
 	 */
@@ -1052,12 +990,10 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Fetches a previewed page's URL using a preview token and page ID.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const url = await client.resolvePreviewURL({
 	 * 		linkResolver,
 	 * 		defaultURL: "/",
 	 * 	})
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#resolvepreviewurl}
 	 */
@@ -1120,9 +1056,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Configures the client to query the latest published content. This is the client's default mode.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	client.queryLatestContent()
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#querylatestcontent}
 	 */
@@ -1134,9 +1068,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Configures the client to query content from a release with a specific ID.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	client.queryContentFromReleaseByID("YhE3YhEAACIA4321")
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#querycontentfromreleasebyid}
 	 */
@@ -1151,9 +1083,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Configures the client to query content from a release with a specific label.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	client.queryContentFromReleaseByLabel("My Release")
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#querycontentfromreleasebylabel}
 	 */
@@ -1168,9 +1098,7 @@ export class Client<TDocuments extends PrismicDocument = PrismicDocument> {
 	 * Configures the client to query content from a specific ref.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	client.queryContentFromRef("my-ref")
-	 * 	```
 	 *
 	 * @see {@link https://prismic.io/docs/technical-reference/prismicio-client/v7#querycontentfromref}
 	 */

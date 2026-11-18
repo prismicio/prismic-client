@@ -38,7 +38,6 @@ type AsImageWidthSrcSetConfig = Omit<BuildWidthSrcSetParams, "widths"> & {
  * resulting `srcset` by passing `"thumbnails"` as the `widths` parameter.
  *
  * @example
- * 	;```ts
  * 	const srcset = asImageWidthSrcSet(document.data.photo, {
  * 		widths: [400, 800, 1600],
  * 		sat: -100,
@@ -49,7 +48,6 @@ type AsImageWidthSrcSetConfig = Omit<BuildWidthSrcSetParams, "widths"> & {
  * 	//           "https://images.prismic.io/repo/image.png?sat=-100&width=800 800w, " +
  * 	//           "https://images.prismic.io/repo/image.png?sat=-100&width=1600 1600w"
  * 	// }
- * 	```
  *
  * @param field - An image field (or one of its responsive views) from which to get an image URL.
  * @param config - An object of imgix URL API parameters. The `widths` parameter defines the

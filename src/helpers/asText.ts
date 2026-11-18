@@ -25,10 +25,8 @@ export const asText: {
 	 * Converts a rich text field to a plain text string.
 	 *
 	 * @example
-	 * 	;```ts
 	 * 	const text = asText(document.data.content)
 	 * 	// => "Hello world"
-	 * 	```
 	 *
 	 * @param richTextField - A rich text field from Prismic.
 	 * @param config - Configuration that determines the output of `asText()`.

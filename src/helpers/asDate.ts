@@ -12,10 +12,8 @@ type AsDateReturnType<Field extends DateField | TimestampField | null | undefine
  * Converts a date or timestamp field to a JavaScript Date object.
  *
  * @example
- * 	;```ts
  * 	const date = asDate(document.data.release_date)
  * 	// => Date object or null
- * 	```
  *
  * @param dateOrTimestampField - A date or timestamp field from Prismic.
  * @returns A Date object, or `null` if the field is empty.

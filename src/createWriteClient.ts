@@ -19,9 +19,7 @@ export interface CreateWriteClient {
  *   This client works in environments supporting File, Blob, and FormData, including Node.js 20 and
  *   later.
  * @example
- * 	;```ts
  * 	createWriteClient("qwerty", { writeToken: "***" })
- * 	```
  *
  * @typeParam TDocuments - A union of Prismic document types for the repository.
  * @param repositoryName - The Prismic repository name for the repository.
