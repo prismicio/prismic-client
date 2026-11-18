@@ -241,7 +241,6 @@ export class WriteClient<
 	 * published content.
 	 *
 	 * @example
-	 * 	```ts
 	 * 	const migration = createMigration()
 	 *
 	 * 	// Prepare and run a migration.
@@ -250,7 +249,6 @@ export class WriteClient<
 	 *
 	 * 	// Publish the migration release.
 	 * 	const { totalItems } = await writeClient.publishMigrationRelease()
-	 * 	```
 	 *
 	 * @param params - Additional fetch parameters.
 	 * @returns The result of the publish operation, including the total number of documents that were

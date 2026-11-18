@@ -57,8 +57,7 @@ export type FilledLinkField<
 /**
  * A link field that is not filled.
  *
- * @typeParam _Unused - THIS PARAMETER IS NOT USED. If you are passing a type,
- * **please remove it**.
+ * @typeParam _Unused - THIS PARAMETER IS NOT USED. If you are passing a type, **please remove it**.
  * @typeParam Variant - Variants of the link.
  */
 export type EmptyLinkField<

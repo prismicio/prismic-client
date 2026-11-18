@@ -80,8 +80,7 @@ type HTMLRichTextMapSerializerFunction<BlockType extends keyof RichTextMapSerial
 /**
  * Returns the `Node` generic from {@link RichTextMapSerializerFunction}.
  *
- * @typeParam T - The `RichTextMapSerializerFunction` containing the needed
- * `Node` generic.
+ * @typeParam T - The `RichTextMapSerializerFunction` containing the needed `Node` generic.
  */
 type ExtractNodeGeneric<T> =
 	T extends RichTextMapSerializerFunction<
@@ -97,8 +96,7 @@ type ExtractNodeGeneric<T> =
 /**
  * Returns the `TextType` generic from {@link RichTextMapSerializerFunction}.
  *
- * @typeParam T - The `RichTextMapSerializerFunction` containing the needed
- * `TextType` generic.
+ * @typeParam T - The `RichTextMapSerializerFunction` containing the needed `TextType` generic.
  */
 type ExtractTextTypeGeneric<T> =
 	T extends RichTextMapSerializerFunction<
